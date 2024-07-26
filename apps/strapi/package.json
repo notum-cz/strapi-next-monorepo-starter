@@ -1,0 +1,70 @@
+{
+  "name": "@repo/strapi",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "types": "./types",
+  "scripts": {
+    "build": "strapi build",
+    "config:dump": "strapi configuration:dump -f dump.json",
+    "config:restore": "strapi configuration:restore -f dump.json",
+    "dev": "yarn run:db && yarn develop",
+    "develop": "strapi develop",
+    "develop:watch": "strapi develop --watch-admin",
+    "export:all": "strapi export --file strapi-export --no-encrypt",
+    "export:content": "strapi export --only content --no-encrypt --file strapi-export",
+    "generate": "strapi generate",
+    "generate:types": "strapi ts:generate-types",
+    "import": "strapi import -f strapi-export.tar.gz",
+    "run:db": "docker compose up -d db",
+    "start": "strapi start",
+    "strapi": "strapi",
+    "stripe:local": "stripe listen --forward-to http://localhost:1337/stripe-integration/handleStripeWebhook",
+    "test": "jest --forceExit --detectOpenHandles",
+    "transfer": "strapi transfer"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      ".tmp",
+      ".cache"
+    ]
+  },
+  "dependencies": {
+    "@strapi/plugin-color-picker": "4.24.5",
+    "@strapi/plugin-i18n": "4.24.0",
+    "@strapi/plugin-sentry": "4.24.5",
+    "@strapi/plugin-seo": "^1.9.9",
+    "@strapi/plugin-users-permissions": "4.24.5",
+    "@strapi/provider-email-mailgun": "4.24.0",
+    "@strapi/provider-upload-aws-s3": "4.24.5",
+    "@strapi/strapi": "4.24.5",
+    "lodash": "^4.17.21",
+    "pg": "^8.12.0",
+    "qs": "^6.12.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "5.3.4",
+    "slugify": "^1.6.6",
+    "strapi-plugin-config-sync": "^1.2.5",
+    "strapi-plugin-populate-deep": "^3.0.1",
+    "stripe": "^15.8.0",
+    "styled-components": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.12",
+    "typescript": "^5.5.4"
+  },
+  "engines": {
+    "node": "20.x.x",
+    "yarn": "1.22.x"
+  },
+  "comments": {
+    "styled-components": "Bump from 5.3.3 may won't work",
+    "react-router-dom": "Bump to v6 wont currently work"
+  },
+  "strapi": {
+    "uuid": "@repo/strapi"
+  }
+}

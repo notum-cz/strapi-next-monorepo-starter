@@ -1,0 +1,157 @@
+{
+  "key": "plugin_content_manager_configuration_components::sections.feature-grid",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "mainField": "title",
+      "defaultSortBy": "title",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "title": {
+        "edit": {
+          "label": "title",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "title",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "items": {
+        "edit": {
+          "label": "items",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "items",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "imageSize": {
+        "edit": {
+          "label": "imageSize",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "imageSize",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "gridCol": {
+        "edit": {
+          "label": "gridCol",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "gridCol",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "isVisible": {
+        "edit": {
+          "label": "isVisible",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "isVisible",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "imageRadius": {
+        "edit": {
+          "label": "imageRadius",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "imageRadius",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "title",
+        "items",
+        "imageSize"
+      ],
+      "edit": [
+        [
+          {
+            "name": "title",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "items",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "imageSize",
+            "size": 4
+          }
+        ],
+        [
+          {
+            "name": "gridCol",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "isVisible",
+            "size": 4
+          },
+          {
+            "name": "imageRadius",
+            "size": 6
+          }
+        ]
+      ]
+    },
+    "uid": "sections.feature-grid",
+    "isComponent": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

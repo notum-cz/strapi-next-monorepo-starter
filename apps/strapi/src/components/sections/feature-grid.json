@@ -1,0 +1,37 @@
+{
+  "collectionName": "components_sections_feature_grids",
+  "info": {
+    "displayName": "FeatureGrid",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.feature-grid-item"
+    },
+    "imageSize": {
+      "type": "integer",
+      "required": true
+    },
+    "gridCol": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.grid-column"
+    },
+    "isVisible": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "imageRadius": {
+      "type": "enumeration",
+      "enum": ["sm", "md", "lg", "xl", "full"]
+    }
+  }
+}

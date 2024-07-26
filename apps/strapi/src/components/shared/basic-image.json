@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_shared_basic_images",
+  "info": {
+    "displayName": "BasicImage",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "media": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["images", "videos"]
+    },
+    "alt": {
+      "type": "string",
+      "required": true
+    },
+    "width": {
+      "type": "integer",
+      "required": false
+    },
+    "height": {
+      "type": "integer",
+      "required": false
+    },
+    "fallbackSrc": {
+      "type": "string"
+    }
+  }
+}

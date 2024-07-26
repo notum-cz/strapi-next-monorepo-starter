@@ -1,0 +1,47 @@
+{
+  "collectionName": "components_shared_seos",
+  "info": {
+    "displayName": "seo",
+    "icon": "search"
+  },
+  "options": {},
+  "attributes": {
+    "metaTitle": {
+      "required": false,
+      "type": "string",
+      "maxLength": 60
+    },
+    "metaDescription": {
+      "type": "string",
+      "required": false,
+      "maxLength": 160
+    },
+    "metaImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "keywords": {
+      "type": "text",
+      "regex": "[^,]+"
+    },
+    "metaRobots": {
+      "type": "string"
+    },
+    "twitter": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo-twitter"
+    },
+    "applicationName": {
+      "type": "string"
+    },
+    "siteName": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,3 @@
+echo '🏗️👷 Styling your changes before committing 👷‍♂️🏗️'
+ 
+git rev-parse -q --no-revs --verify MERGE_HEAD || npx lint-staged --verbose --concurrent false

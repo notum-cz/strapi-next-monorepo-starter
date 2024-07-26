@@ -1,0 +1,99 @@
+{
+  "key": "plugin_content_manager_configuration_components::sections.carousel",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "mainField": "id",
+      "defaultSortBy": "id",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "images": {
+        "edit": {
+          "label": "images",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "images",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "radius": {
+        "edit": {
+          "label": "radius",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "radius",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "isVisible": {
+        "edit": {
+          "label": "isVisible",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "isVisible",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "images",
+        "radius",
+        "isVisible"
+      ],
+      "edit": [
+        [
+          {
+            "name": "radius",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "isVisible",
+            "size": 4
+          }
+        ],
+        [
+          {
+            "name": "images",
+            "size": 12
+          }
+        ]
+      ]
+    },
+    "uid": "sections.carousel",
+    "isComponent": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

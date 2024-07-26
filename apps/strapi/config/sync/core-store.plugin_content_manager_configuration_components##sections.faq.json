@@ -1,0 +1,117 @@
+{
+  "key": "plugin_content_manager_configuration_components::sections.faq",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "mainField": "title",
+      "defaultSortBy": "title",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "title": {
+        "edit": {
+          "label": "title",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "title",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "accordions": {
+        "edit": {
+          "label": "accordions",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "accordions",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "subTitle": {
+        "edit": {
+          "label": "subTitle",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "subTitle",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "isVisible": {
+        "edit": {
+          "label": "isVisible",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "isVisible",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "title",
+        "accordions",
+        "subTitle"
+      ],
+      "edit": [
+        [
+          {
+            "name": "title",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "accordions",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "subTitle",
+            "size": 6
+          },
+          {
+            "name": "isVisible",
+            "size": 4
+          }
+        ]
+      ]
+    },
+    "uid": "sections.faq",
+    "isComponent": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

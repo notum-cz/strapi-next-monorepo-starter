@@ -1,0 +1,95 @@
+{
+  "key": "plugin_content_manager_configuration_components::shared.grid-column",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "mainField": "id",
+      "defaultSortBy": "id",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "desktop": {
+        "edit": {
+          "label": "desktop",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "desktop",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "tablet": {
+        "edit": {
+          "label": "tablet",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "tablet",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "mobile": {
+        "edit": {
+          "label": "mobile",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "mobile",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "edit": [
+        [
+          {
+            "name": "desktop",
+            "size": 4
+          },
+          {
+            "name": "tablet",
+            "size": 4
+          },
+          {
+            "name": "mobile",
+            "size": 4
+          }
+        ]
+      ]
+    },
+    "uid": "shared.grid-column",
+    "isComponent": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

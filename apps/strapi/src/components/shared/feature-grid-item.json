@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_shared_feature_grid_items",
+  "info": {
+    "displayName": "FeatureGridItem",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "subTitle": {
+      "type": "string",
+      "required": false
+    },
+    "image": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.basic-image"
+    }
+  }
+}

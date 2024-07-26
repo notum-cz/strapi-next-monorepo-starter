@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_shared_grid_columns",
+  "info": {
+    "displayName": "GridColumn"
+  },
+  "options": {},
+  "attributes": {
+    "desktop": {
+      "type": "integer",
+      "required": true
+    },
+    "tablet": {
+      "type": "integer",
+      "required": true
+    },
+    "mobile": {
+      "type": "integer",
+      "required": true
+    }
+  }
+}

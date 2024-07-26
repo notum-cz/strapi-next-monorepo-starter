@@ -1,0 +1,236 @@
+{
+  "seo": {
+    "metaTitle": "DEV-TEMPLATE-SEO",
+    "metaDescription": "DEV-TEMPLATE-SEO",
+    "metaImageUrl": "DEV-TEMPLATE-SEO",
+    "keywords": "DEV-TEMPLATE-SEO",
+    "metaRobots": "DEV-TEMPLATE-SEO",
+    "applicationName": "DEV-TEMPLATE-SEO",
+    "siteName": "DEV-TEMPLATE-SEO",
+    "email": "DEV-TEMPLATE-SEO",
+    "twitter": {
+      "card": "DEV-TEMPLATE-SEO",
+      "title": "DEV-TEMPLATE-SEO",
+      "description": "DEV-TEMPLATE-SEO",
+      "siteId": "DEV-TEMPLATE-SEO",
+      "creator": "DEV-TEMPLATE-SEO",
+      "creatorId": "DEV-TEMPLATE-SEO",
+      "imageUrl": "DEV-TEMPLATE-SEO"
+    }
+  },
+
+  "general": {
+    "noOptionsAvailable": "No options available",
+    "search": "Search",
+    "loading": "Loading",
+    "cancel": "Cancel",
+    "close": "Close",
+    "submitForm": "Submit",
+    "saveChanges": "Save changes"
+  },
+
+  "tables": {
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "lastPage": "Last page",
+    "firstPage": "First page",
+    "rowsPerPage": "Rows per page",
+    "pageXOfY": "Page {x} of {y}",
+    "ascending": "Ascending",
+    "descending": "Descending",
+    "noData": "No data"
+  },
+
+  "navbar": {
+    "account": "Account",
+    "actions": {
+      "profile": "Profile",
+      "signOut": "Sign out",
+      "signIn": "Sign in"
+    }
+  },
+
+  "comps": {
+    "fileInput": {
+      "label": "Select file",
+      "dragAndDrop": "Add file by dragging or select by clicking",
+      "validFileTypes": "File must be in {validFileTypes} format",
+      "wrongFileType": "This file type is not supported",
+      "selectedFile": "Selected file: {fileName}",
+      "removeFile": "Remove file"
+    },
+    "datePicker": {
+      "label": "Select date"
+    },
+    "dateRangePicker": {
+      "label": "Select date range"
+    },
+    "themeToggle": {
+      "label": "Toggle theme"
+    },
+    "dialog": {
+      "confirmClose": "Do you want to close the dialog? You will lose all unsaved changes."
+    }
+  },
+
+  "errors": {
+    "global": {
+      "title": "An unknown error occurred",
+      "goBack": "Go back"
+    },
+
+    "notFound": {
+      "title": "Page not found",
+      "description": "The page you are looking for was not found.",
+      "solution": "Please check if you have entered the correct URL or return to the home page.",
+      "redirect": "Go to home page"
+    },
+
+    "forms": {
+      "errorsInForm": "The form contains errors",
+      "checkFormForErrors": "Please check if any values are missing"
+    },
+
+    "zodValidation": {
+      "invalid_type": "Expected type is {expected}, but received {received}",
+      "invalid_type_received_undefined": "Field is required",
+      "invalid_literal": "Invalid value, expected {expected}",
+
+      "invalid_string": {
+        "regex": "Invalid format"
+      },
+      "too_small": {
+        "string": {
+          "exact": "String must be exactly {minimum} characters",
+          "inclusive": "String must be at least {minimum} characters",
+          "not_inclusive": "String must be more than {minimum} characters"
+        },
+        "number": {
+          "exact": "Value must be exactly {minimum}",
+          "inclusive": "Minimum value is {minimum}",
+          "not_inclusive": "Number must be greater than {minimum}"
+        }
+      },
+      "too_big": {
+        "string": {
+          "exact": "String must be exactly {maximum} characters",
+          "inclusive": "String must be at most {maximum} characters",
+          "not_inclusive": "String must be less than {maximum} characters"
+        },
+        "number": {
+          "exact": "Value must be exactly {maximum}",
+          "inclusive": "Maximum value is {maximum}",
+          "not_inclusive": "Number must be less than {maximum}"
+        }
+      },
+      "custom": {
+        "password": "Passwords do not match",
+        "passwordWithNumber": "String must contain at least 1 number",
+        "phoneNumber": "This field must contain 9 numbers"
+      }
+    },
+
+    "http": {
+      "400": "Something went wrong. Please try again or contact support.",
+      "401": "Session expired. Please sign in again.",
+      "403": "You do not have access to this data",
+      "404": "Requested data not found.",
+      "408": "Request timed out. Please try again.",
+      "413": "You are uploading a file that is too large.",
+      "415": "The file you are uploading is of an unsupported type.",
+      "429": "You have sent too many requests.",
+      "500": "Server is unavailable or something went wrong. Please try again or contact support.",
+      "503": "Server is unavailable. Please try again or contact support"
+    }
+  },
+
+  "auth": {
+    "signIn": {
+      "status": {
+        "fail": "Sign in failed",
+        "success": "Sign in successful",
+        "checkCredentials": "Please check your login credentials"
+      },
+      "errors": {
+        "CredentialsSignin": "You have entered incorrect login credentials."
+      },
+      "header": "Sign in",
+      "description": "Enter your login details.",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "forgotPassword": "Forgot password",
+      "createAccount": "Create an account"
+    },
+
+    "register": {
+      "status": {
+        "fail": "Registration failed",
+        "success": "Registration successful",
+        "checkCredentials": "Please check your credentials"
+      },
+      "errors": {
+        "credentials": "Incorrect credentials provided",
+        "unexpectedError": "Registration failed. Please try again later.",
+        "emailUsernameTaken": "Email is already taken. Please choose another one.",
+        "passwordsDoNotMatch": "Passwords do not match"
+      },
+      "header": "Registration",
+      "description": "Create an account to access the system.",
+      "email": "E-mail address",
+      "password": "Create password",
+      "checkPassword": "Confirm password",
+      "submit": "Create account",
+      "forgotPassword": "Already have an account? Sign in.",
+      "checkEmail": "Follow instructions in your email to confirm your email address.",
+      "signInLinkLinkDescription": "Already have an account?",
+      "signInLink": "Sign in"
+    },
+
+    "changePassword": {
+      "errors": {
+        "The provided current password is invalid": "Current password does not match"
+      },
+      "successfullyChanged": "Password successfully changed",
+      "header": "Change password",
+      "description": "Choose a new password to use for logging in.",
+      "currentPassword": "Current password",
+      "password": "New password",
+      "confirmPassword": "Confirm new password",
+      "submit": "Change password"
+    },
+
+    "accountActivation": {
+      "successfullySet": "Account successfully activated. You can now sign in.",
+      "errors": {
+        "Incorrect code provided": "An incorrect link was generated for you. Contact support."
+      },
+      "welcome": "Welcome",
+      "activateAccount": "A new account has been created with the email {email}.",
+      "invalidLink": "This link is not valid.",
+      "activate": "Activate account",
+      "header": "Set password",
+      "description": "Choose a password to use for logging in.",
+      "submit": "Activate account",
+      "password": "New password",
+      "confirmPassword": "Confirm password"
+    },
+
+    "resetPassword": {
+      "successfullySet": "Password successfully changed.",
+      "header": "Reset password",
+      "description": "Choose a new password to use for logging in.",
+      "submit": "Set password",
+      "password": "New password",
+      "confirmPassword": "Confirm password"
+    },
+
+    "forgotPassword": {
+      "passwordChangeEmailSent": "An email with password reset instructions has been sent to you.",
+      "header": "Forgot password",
+      "description": "Enter the email you usually use to sign in. We will send instructions to reset your password to this email.",
+      "email": "Email",
+      "submit": "Recover account"
+    }
+  }
+}

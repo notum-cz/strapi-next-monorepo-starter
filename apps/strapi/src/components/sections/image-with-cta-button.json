@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_sections_image_with_cta_buttons",
+  "info": {
+    "displayName": "ImageWithCTAButton",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "subText": {
+      "type": "string",
+      "required": false
+    },
+    "image": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.basic-image"
+    },
+    "link": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.link"
+    },
+    "isVisible": {
+      "type": "boolean",
+      "default": true,
+      "required": false
+    }
+  }
+}
