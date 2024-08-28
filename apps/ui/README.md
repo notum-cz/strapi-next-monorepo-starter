@@ -1,25 +1,18 @@
-# DEV TEMPLATES - STRAPI
+# 🔥 UI Starter Template
 
-## How to use this project template?
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-To turn this project template into a project:
-
-- Remove packages you don't need from `package.json` and reinstall dependencies.
-- Remove `src/app/[locale]/docs` as it isn't needed in final app.
-- Remove `src/app/[locale]/builder` and `src/components/page-builder` directories if builder isn't developed.
-
-[After this preparation is done, delete this section]
-
-## Tech stack
+## 🥞 Tech stack
 
 - node 20
 - yarn 1.22
-- NextJS 14 App router + TypeScript
+- NextJS 14 App router
 - React 18
+- TypeScript
 - [shadcn/ui](https://ui.shadcn.com/)
 - [Lucide icons](https://lucide.dev)
 
-## Included basic packages:
+## 📦 Included packages
 
 - next-auth
 - next-intl
@@ -33,24 +26,25 @@ To turn this project template into a project:
 - dayjs
 - lodash
 - plaiceholder
-- tailwindcss
+- tailwindcss, cva, tailwindcss-animate
 
-## Included code:
+## 🚀 Get up and develop
 
-There is a lot of code prepared in this template:
+#### Transform this template to a project
 
-- `src/app/[locale]` - pages for authorization, builder, docs, profile page
-- `src/components` - the most common components
+To turn this project template into a project:
 
-For more details see [project structure](#project-structure) section below.
+- Remove packages you don't need from `package.json` and reinstall dependencies.
+- Remove `src/app/[locale]/docs` as it isn't needed in final app.
+- Remove `src/app/[locale]/builder` and `src/components/page-builder` directories if builder isn't developed.
 
-Not all of them are needed in the final app, so you should remove unnecessary parts. There is a function `removeThisWhenYouNeedMe` which is called at the top of each route or component and logs a warning message to the console. It serves to identify unused parts of the code. If the function, components or page is needed, you should remove the function call. Code with remaining `removeThisWhenYouNeedMe` calls should be removed as development progresses.
+_[After this preparation is done, delete this section]_
 
-## Development setup
+### Environment variables
 
 Copy & rename `.env.local.example` to `.env.local` and fill or update in the values.
 
-## Run locally in develop mode (with hot-reloading)
+### Run locally in dev mode (with hot-reloading)
 
 To run the app locally use:
 
@@ -61,11 +55,9 @@ To run the app locally use:
 yarn dev
 ```
 
-## Addresses
+App runs on [http://localhost:3000](http://localhost:3000) by default.
 
-- NextJS dev app runs on [http://localhost:3000](http://localhost:3000)
-
-## Production build using Docker
+## 🛠️ Production build (Docker)
 
 To build and run NextJS in Docker container use [Dockerfile](Dockerfile) prepared for **production** environment. It follows recommended way of running app in Turborepo monorepo structure. Note, that Turborepo requires access to root `package.json`, `yarn.lock` and `turbo.json` files so you have to build it within whole monorepo context - run `docker build` from monorepo root. [More info here](https://turbo.build/repo/docs/handbook/deploying-with-docker).
 
@@ -85,11 +77,22 @@ Dockerfile assumes that NextJS app is ["outputed"](https://nextjs.org/docs/pages
 
 It can be changed using `NEXT_OUTPUT` env variable. If type of build output is different, you have to adjust `runner` stage in [Dockerfile](Dockerfile). For default - `undefined` mode - you would probably need to copy more files/deps into container (not tested yet).
 
-## Deploy to Heroku
+## 🚢 Deploy to Heroku
 
 Use buildpacks and setup scripts from [this @notum-cz repository](https://github.com/notum-cz/heroku-scripts). Working `output` mode for app built and served from Heroku is default - `undefined`. App contains all files/dependencies and is started using `next start`.
 
-## Project structure
+## ⛺ Included code
+
+There is a lot of code prepared in this template:
+
+- `src/app/[locale]` - pages for authorization, builder, docs, profile page
+- `src/components` - the most common components
+
+For more details see [project structure](#project-structure) section below.
+
+Not all of them are needed in the final app, so you should remove unnecessary parts. There is a function `removeThisWhenYouNeedMe` which is called at the top of each route or component and logs a warning message to the console. It serves to identify unused parts of the code. If the function, components or page is needed, you should remove the function call. Code with remaining `removeThisWhenYouNeedMe` calls should be removed as development progresses.
+
+## 🧬 Project structure
 
 - `src/app` - NextJS App router main application. Components related to specific `page` (e.g. usage is only that page or its nested pages) should be placed in `src/pageName/_components` folder. eg. don't place `SignInForm` component in shared folder (e.g. `src/components/forms`) as it is used only in one page.
 - `src/components` - shared components, which are used in multiple pages or globally (like providers). Divide them into folders based on their purpose, e.g:
@@ -125,7 +128,7 @@ import { cn } from "@/lib/styles"
 ;<div className={cn("flex items-center justify-center", className)}>...</div>
 ```
 
-## Features
+## ✨ Features
 
 ### Authorization
 

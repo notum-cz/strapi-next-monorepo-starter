@@ -1,26 +1,16 @@
-# DEV TEMPLATES - STRAPI
+# 🔥 STRAPI Starter Template
 
-## How to use this project template?
+This is a [Stapi](https://strapi.io/) project bootstrapped with TypeScript using [Strapi CLI](https://docs.strapi.io/dev-docs/cli).
 
-To turn this project template into a project:
-
-- Remove packages you don't need from `package.json` and reinstall dependencies.
-- Remove [Stripe integration plugin](src/plugins/stripe-integration/README.md) if not needed.
-- In `docker-compose.yml` change top-level name "dev-templates" (optionally network name too) according to project name to overcome name clashes in dev's computers.
-- For Heroku deployment you have to create S3 bucket and set up ENV variables (Heroku removes uploaded files after dyno restart).
-
-[After this preparation is done, delete this section]
-
-## Tech stack
+## 🥞 Tech stack
 
 - node 20
 - yarn 1.22
-- Strapi 4.25 + TypeScript
-- Postgres 16.0-alpine (in local docker container)
+- Strapi 4
+- TypeScript
+- Postgres 16 alpine (in local docker container)
 
-## Included packages
-
-### Strapi plugins
+## 📦 Included plugins and packages
 
 - @strapi/plugin-color-picker
 - @strapi/plugin-i18n
@@ -31,41 +21,58 @@ To turn this project template into a project:
 - @strapi/provider-upload-aws-s3
 - strapi-plugin-config-sync
 - strapi-plugin-populate-deep
+- qs, slugify
+- lodash
+- pg
+- stripe
 
-## Development setup
+## 🚀 Get up and develop
+
+#### Transform this template to a project
+
+- Remove packages you don't need from `package.json` and reinstall dependencies.
+- Remove [Stripe integration plugin](src/plugins/stripe-integration/README.md) if not needed.
+- In `docker-compose.yml` change top-level name "dev-templates" (optionally network name too) according to project name to overcome name clashes in dev's computers.
+- For Heroku deployment you have to create S3 bucket and set up ENV variables (Heroku removes uploaded files after dyno restart).
+
+_[After this preparation is done, delete this section]_
+
+### Environment variables
 
 Copy & rename `.env.example` to `.env` and fill or update the values (most of the values are already set to default values, but you probably want to tweak them for your needs).
 
-## Run locally in dev mode
+### Run locally in dev mode (with hot-reloading)
 
-### DB in docker, Strapi locally [preferred way]
-
-To start Postgres in docker container:
-
-```bash
-# in this directory
-
-docker compose up -d db
-```
-
-To start Strapi locally:
+Preferred way of running Strapi locally is to run **Postgres in docker** container and **Strapi locally**.
 
 ```bash
 (nvm use) # switch node version
 (yarn) # deps are probably already installed running `yarn` in root
 
-yarn develop
-```
-
-Or run both (DB and Strapi) in 1 script [easiest way]:
-
-```bash
+# start both services in 1 command [easiest way]
 yarn dev
 ```
 
-### DB in docker, Strapi in docker
+or
 
-Currently, an available Strapi [Dockerfile](Dockerfile) is prepared only for **production** run (see below). Development `Dockerfile.dev` is **not** ready yet. For now, you have to run Strapi locally using `yarn develop` (see above).
+```bash
+(nvm use) # switch node version
+(yarn) # deps are probably already installed running `yarn` in root
+
+# start Postgres in docker container
+docker compose up -d db
+
+# start Strapi locally
+yarn develop
+```
+
+Another way is to run **Strapi in docker** container too. Currently, an available Strapi [Dockerfile](Dockerfile) is prepared only for **production** run (see below). Development `Dockerfile.dev` is **not** ready yet.
+
+#### Default dev addresses
+
+- Strapi runs on [http://localhost:1337](http://localhost:1337)
+- Admin panel is available on [http://localhost:1337/admin](http://localhost:1337/admin)
+- Postgres runs on [http://localhost:5432](http://localhost:5432)
 
 ### Init database
 
@@ -77,13 +84,7 @@ There is `strapi-export.tar.gz` file in root directory with some init data. You 
 yarn strapi import -f strapi-export.tar.gz
 ```
 
-## Default dev addresses
-
-- Strapi runs on [http://localhost:1337](http://localhost:1337)
-- Admin panel is available on [http://localhost:1337/admin](http://localhost:1337/admin)
-- Postgres runs on [http://localhost:5432](http://localhost:5432)
-
-## Production build using Docker
+## 🛠️ Production build (Docker)
 
 To build and run Strapi in Docker container use [Dockerfile](Dockerfile) prepared for **production** environment. It follows Strapi official documentation and recommended way of running app in Turborepo monorepo structure. Note, that Turborepo requires access to root `package.json`, `yarn.lock` and `turbo.json` files so you have to build it within whole monorepo context - run `docker build` from monorepo root. [More info here](https://turbo.build/repo/docs/handbook/deploying-with-docker).
 
@@ -114,11 +115,11 @@ docker run -it --rm --name strapi -p 1337:1337 --env-file apps/strapi/.env --net
 DATABASE_HOST=db
 ```
 
-## Deploy to Heroku
+## 🚢 Deploy to Heroku
 
 Use buildpacks and setup scripts from [this @notum-cz repository](https://github.com/notum-cz/heroku-scripts). `DATABASE_URL` connection string is provided by Heroku Postgres addon automatically.
 
-## Features
+## ✨ Features
 
 ### Plugins
 
