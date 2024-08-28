@@ -41,6 +41,6 @@ jobs:
           NEXTAUTH_SECRET: only_for_build_so_this_can_be_public
           NEXTAUTH_URL: http://localhost:3000
           NEXT_PUBLIC_APP_PUBLIC_URL: http://localhost:3000
-          NEXT_PUBLIC_STRAPI_URL: http://127.0.0.1:1337/api
+          NEXT_PUBLIC_STRAPI_URL: http://127.0.0.1:1337
 
 
