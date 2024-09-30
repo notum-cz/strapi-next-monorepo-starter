@@ -76,7 +76,7 @@
   "errors": {
     "global": {
       "title": "Nastala neznámá chyba",
-      "cta": "Vrátit se zpátky"
+      "tryAgain": "Zkusit znovu"
     },
 
     "notFound": {

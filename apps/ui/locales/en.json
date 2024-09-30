@@ -76,7 +76,7 @@
   "errors": {
     "global": {
       "title": "An unknown error occurred",
-      "goBack": "Go back"
+      "tryAgain": "Try again"
     },
 
     "notFound": {
