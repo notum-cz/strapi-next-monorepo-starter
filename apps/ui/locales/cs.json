@@ -76,7 +76,9 @@
   "errors": {
     "global": {
       "title": "Nastala neznámá chyba",
-      "tryAgain": "Zkusit znovu"
+      "tryAgain": "Zkusit znovu",
+      "invalidContent": "Tenhle obsah se nepodařilo načíst",
+      "somethingWentWrong": "Něco se pokazilo 🥺"
     },
 
     "notFound": {
