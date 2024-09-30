@@ -52,10 +52,9 @@ const withConfig = (() => {
       // For all available options, see:
       // https://github.com/getsentry/sentry-webpack-plugin#options
 
+      // Pass org, project and auth token to be able to upload source maps
       org: env.SENTRY_ORG,
       project: env.SENTRY_PROJECT,
-
-      // Pass auth token to be able to upload source maps
       authToken: env.SENTRY_AUTH_TOKEN,
 
       // Only print logs for uploading source maps in CI

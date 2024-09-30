@@ -23,6 +23,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 - @tanstack/react-table
 - react-use
 - react-device-detect
+- @sentry/nextjs
 - dayjs
 - lodash
 - plaiceholder
@@ -231,6 +232,31 @@ console.log(env.NEXT_PUBLIC_STRAPI_URL)
 // ❌ NOT OK
 console.log(process.env.NEXT_PUBLIC_STRAPI_URL)
 ```
+
+### Error handling
+
+General unexpected **rendering** and **lifecycle** errors (not event handlers, not async code) are automatically caught by boundary defined in root [error.tsx](src/app/[locale]/error.tsx). This file [can be defined](https://nextjs.org/docs/app/building-your-application/routing/error-handling) at different levels/segments in route hierarchy.
+
+For even more granular error handling use custom [ErrorBoundary](src/components/elementary/ErrorBoundary.tsx) component. ErrorBoundary is easily configurable client-side component that utilizes [react-error-boundary](https://github.com/bvaughn/react-error-boundary) package and catches errors in smaller parts of the UI or individual components. By default it wraps Strapi components as their content is fetched from CMS and don't guarantee correctness.
+
+```tsx
+import { ErrorBoundary } from "@/components/elementary/ErrorBoundary"
+
+export default function Page() {
+  return (
+    <ErrorBoundary
+      customErrorTitle="Uh-oh, we broke something! Again..."
+      showErrorMessage
+    >
+      <PageBuilderNavbar />
+    </ErrorBoundary>
+  )
+}
+```
+
+#### Sentry logging
+
+Errors passed through `<ErrorBoundary />` or `error.tsx` are automatically logged to Sentry. To turn on the Sentry, set `NEXT_PUBLIC_SENTRY_DSN` to environment variables. `SENTRY_AUTH_TOKEN`, `SENTRY_ORG` and `SENTRY_PROJECT` are optional and serve for uploading source maps to Sentry during deployment. Configuration is done in [sentry.client.config.ts](sentry.client.config.ts), [sentry.server.config.ts](sentry.server.config.ts), [sentry.edge.config.ts](sentry.edge.config.ts), [instrumentation.ts](src/instrumentation.ts) and [next.config.mjs](next.config.mjs) files. More information can be found in [Sentry documentation](https://docs.sentry.io/platforms/javascript/guides/nextjs/).
 
 ### Data fetching
 
