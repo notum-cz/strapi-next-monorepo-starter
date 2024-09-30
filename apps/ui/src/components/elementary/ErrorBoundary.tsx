@@ -33,6 +33,7 @@ function ErrorBoundaryFallback({
   }
 
   const handleTryAgain = () => {
+    // Attempt to recover by trying to re-render the segment
     resetErrorBoundary()
   }
 
@@ -42,14 +43,21 @@ function ErrorBoundaryFallback({
     <Alert variant="destructive" className="relative">
       <ExclamationTriangleIcon className="s-4" />
       <AlertTitle>{customErrorTitle ?? t("invalidContent")}</AlertTitle>
-      <AlertDescription className="overflow-y-auto">
-        {(showErrorMessage || isDev) && <pre>{error.message}</pre>}
+      <AlertDescription>
+        {(showErrorMessage || isDev) && (
+          <p className="mt-1 text-sm text-black">{error.message}</p>
+        )}
 
-        {isDev && <pre>{error.stack?.split("\n").slice(0, 5).join("\n")}</pre>}
+        {isDev && (
+          <div className="mt-2 w-full overflow-x-auto bg-gray-100 p-3 text-xs">
+            <pre>{error.stack?.split("\n").slice(0, 5).join("\n")}</pre>
+          </div>
+        )}
 
         {!hideReset && (
           <Button
             type="button"
+            size="sm"
             variant="destructive"
             onClick={handleTryAgain}
             className="mt-2"
