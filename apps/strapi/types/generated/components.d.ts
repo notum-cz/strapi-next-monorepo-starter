@@ -144,6 +144,18 @@ export interface SectionsImageWithCtaButton extends Schema.Component {
   }
 }
 
+export interface SectionsNewsletter extends Schema.Component {
+  collectionName: "components_sections_newsletters"
+  info: {
+    displayName: "Newsletter"
+  }
+  attributes: {
+    title: Attribute.String
+    description: Attribute.String
+    gdpr: Attribute.Component<"shared.link">
+  }
+}
+
 export interface SharedAccordions extends Schema.Component {
   collectionName: "components_shared_accordions"
   info: {
@@ -310,6 +322,7 @@ declare module "@strapi/types" {
       "sections.hero": SectionsHero
       "sections.horizontal-images": SectionsHorizontalImages
       "sections.image-with-cta-button": SectionsImageWithCtaButton
+      "sections.newsletter": SectionsNewsletter
       "shared.accordions": SharedAccordions
       "shared.basic-image": SharedBasicImage
       "shared.feature-grid-item": SharedFeatureGridItem

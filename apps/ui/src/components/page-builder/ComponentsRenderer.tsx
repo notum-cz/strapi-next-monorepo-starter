@@ -10,6 +10,7 @@ import { HeadingWithCTAButton } from "./components/HeadingWithCTAButton"
 import { Hero } from "./components/Hero"
 import { HorizontalImages } from "./components/HorizontalImagesSlider"
 import { ImageWithCTAButton } from "./components/ImageWithCTAButton"
+import { Newsletter } from "./components/Newsletter"
 
 // Define page-level components supported by this switch
 const printableComps: {
@@ -24,6 +25,7 @@ const printableComps: {
   "sections.image-with-cta-button": ImageWithCTAButton,
   "sections.animated-logo-row": AnimatedLogoRow,
   "sections.horizontal-images": HorizontalImages,
+  "sections.newsletter": Newsletter,
   // Add more components here
 }
 
