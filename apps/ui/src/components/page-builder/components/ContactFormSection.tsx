@@ -1,7 +1,7 @@
 import { Attribute } from "@repo/strapi"
 
 import { Container } from "@/components/elementary/Container"
-import { ContactForm } from "@/components/forms/ContactForm"
+import { ContactForm } from "@/components/elementary/forms/ContactForm"
 
 export function ContactFormSection({
   component,

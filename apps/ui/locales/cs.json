@@ -153,7 +153,8 @@
     "gdpr": "Odesláním souhlasíte se ",
     "submit": "Odeslat",
     "success": "Formulář byl úspěšně odeslán",
-    "error": "Při odesílání formuláře došlo k chybě, zkuste to prosím znovu"
+    "error": "Při odesílání formuláře došlo k chybě, zkuste to prosím znovu",
+    "gdprLink": "Informace o zpracování osobních údajů"
   },
 
   "auth": {

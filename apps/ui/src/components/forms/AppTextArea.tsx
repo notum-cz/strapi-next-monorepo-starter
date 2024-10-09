@@ -17,7 +17,6 @@ import { Textarea } from "@/components/ui/textarea"
 type Props = {
   readonly name: string
   readonly label?: React.ReactNode
-  readonly endAdornment?: React.ReactNode
   readonly containerClassName?: string
   readonly fieldClassName?: string
   readonly description?: React.ReactNode
@@ -26,7 +25,6 @@ type Props = {
 export function AppTextArea({
   name,
   label,
-  endAdornment,
   containerClassName,
   fieldClassName,
   description,
@@ -47,19 +45,7 @@ export function AppTextArea({
               <Textarea
                 {...field}
                 value={field.value ?? ""}
-                onChange={(event) => {
-                  const value = event.target.value
-                  if (nativeProps.type === "number") {
-                    if (value === "") {
-                      const defaultValue = formState.defaultValues?.[name]
-                      field.onChange(defaultValue)
-                    } else {
-                      field.onChange(parseFloat(value))
-                    }
-                  } else {
-                    field.onChange(value)
-                  }
-                }}
+                onChange={field.onChange}
                 className={cn(
                   "w-full border ease-in-out",
                   {
@@ -69,16 +55,6 @@ export function AppTextArea({
                   fieldClassName
                 )}
               />
-              {endAdornment && (
-                <div
-                  className={cn("flex items-center border px-2", {
-                    "border-y-red-600 border-r-red-600 text-red-600":
-                      fieldState.invalid,
-                  })}
-                >
-                  {endAdornment}
-                </div>
-              )}
             </div>
           </FormControl>
 

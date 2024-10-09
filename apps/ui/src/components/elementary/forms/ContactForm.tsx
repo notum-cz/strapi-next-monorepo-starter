@@ -3,7 +3,6 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Attribute } from "@repo/strapi"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -16,9 +15,7 @@ import { Button } from "@/components/ui/button"
 export function ContactForm({
   gdpr,
 }: Readonly<{
-  title?: string | undefined
-  description?: string | undefined
-  gdpr?: Attribute.GetValues<"shared.link">
+  gdpr?: { href?: string; label?: string }
 }>) {
   const t = useTranslations("contactForm")
 
@@ -69,14 +66,14 @@ export function ContactForm({
         />
       </AppForm>
       <div className="flex w-full flex-col gap-4">
-        {gdpr && gdpr.href ? (
+        {gdpr?.href && (
           <div className="mt-5 flex flex-col items-center sm:flex-row">
             <p>{t("gdpr")}</p>
             <Link className="p-0 pl-1 font-medium" href={gdpr?.href}>
-              {gdpr?.label}
+              {gdpr.label || t("gdprLink")}
             </Link>
           </div>
-        ) : null}
+        )}
 
         <Button
           type="submit"
