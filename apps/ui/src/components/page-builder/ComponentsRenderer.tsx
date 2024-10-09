@@ -4,6 +4,7 @@ import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
 import { AnimatedLogoRow } from "./components/AnimatedLogoRow"
 import { CarouselGrid } from "./components/CarouselGrid"
+import { ContactFormSection } from "./components/ContactFormSection"
 import { Faq } from "./components/Faq"
 import { FeatureGrid } from "./components/FeatureGrid"
 import { HeadingWithCTAButton } from "./components/HeadingWithCTAButton"
@@ -24,6 +25,7 @@ const printableComps: {
   "sections.image-with-cta-button": ImageWithCTAButton,
   "sections.animated-logo-row": AnimatedLogoRow,
   "sections.horizontal-images": HorizontalImages,
+  "sections.contact-form": ContactFormSection,
   // Add more components here
 }
 
