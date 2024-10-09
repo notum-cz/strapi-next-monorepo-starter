@@ -9,6 +9,13 @@ const optionalZodBoolean = z
   .optional()
 
 export const env = createEnv({
+  emptyStringAsUndefined: true,
+
+  onValidationError: (error) => {
+    console.error(error)
+    console.error(process.env)
+  },
+
   /*
    * Serverside Environment variables, not available on the client.
    * Will throw if you access these variables on the client.
