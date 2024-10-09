@@ -49,7 +49,8 @@
         "sections.heading-with-cta-button",
         "sections.image-with-cta-button",
         "sections.animated-logo-row",
-        "sections.newsletter"
+        "sections.newsletter",
+        "sections.contact-form"
       ],
       "pluginOptions": {
         "i18n": {

@@ -76,7 +76,9 @@
   "errors": {
     "global": {
       "title": "Nastala neznámá chyba",
-      "cta": "Vrátit se zpátky"
+      "tryAgain": "Zkusit znovu",
+      "invalidContent": "Tenhle obsah se nepodařilo načíst",
+      "somethingWentWrong": "Něco se pokazilo 🥺"
     },
 
     "notFound": {
@@ -142,6 +144,19 @@
       "500": "Server není dostupný nebo se něco pokazilo. Zkuste to prosím znovu nebo kontaktujte podporu.",
       "503": "Server není dostupný. Zkuste to prosím znovu nebo kontaktujte podporu"
     }
+  },
+
+  "contactForm": {
+    "name": "Jméno a Přijmení",
+    "namePlaceholder": "Jan Novák",
+    "email": "Email",
+    "emailPlaceholder": "jan.novak@gmail.com",
+    "message": "Zpráva",
+    "gdpr": "Odesláním souhlasíte se ",
+    "submit": "Odeslat",
+    "success": "Formulář byl úspěšně odeslán",
+    "error": "Při odesílání formuláře došlo k chybě, zkuste to prosím znovu",
+    "gdprLink": "Informace o zpracování osobních údajů"
   },
 
   "auth": {

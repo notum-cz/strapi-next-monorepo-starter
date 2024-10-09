@@ -1,4 +1,4 @@
-name: Builder
+name: Verify build
 
 on:
   workflow_dispatch:
@@ -34,13 +34,17 @@ jobs:
       - name: Install dependencies
         run: yarn
       
-      - name: Build
-        run: yarn build
+      - name: Build UI
+        run: yarn build:ui
         env:
-          # pass placehoder env vars to the build script to avoid errors while validating env vars of UI app
-          NEXTAUTH_SECRET: only_for_build_so_this_can_be_public
-          NEXTAUTH_URL: http://localhost:3000
-          NEXT_PUBLIC_APP_PUBLIC_URL: http://localhost:3000
-          NEXT_PUBLIC_STRAPI_URL: http://127.0.0.1:1337
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: ${{ vars.NEXTAUTH_URL }}
+          NEXT_PUBLIC_APP_PUBLIC_URL: ${{ vars.NEXT_PUBLIC_APP_PUBLIC_URL }}
+          NEXT_PUBLIC_STRAPI_URL: ${{ vars.NEXT_PUBLIC_STRAPI_URL }}
+
+      - name: Build Strapi
+        run: yarn build:strapi
+        
+
 
 

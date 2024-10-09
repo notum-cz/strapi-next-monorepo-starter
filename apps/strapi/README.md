@@ -123,9 +123,9 @@ Use buildpacks and setup scripts from [this @notum-cz repository](https://github
 
 ### Plugins
 
-Some preinstalled plugins (sentry, mailgun, stripe) are disabled by default. To turn them on go to [config/plugins.ts](config/plugins.ts) file and uncomment the lines. Some of them may require additional setting of API keys or different ENV variables.
+Some preinstalled plugins (mailgun, stripe) are disabled by default. To turn them on go to [config/plugins.ts](config/plugins.ts) file and uncomment the lines. Some of them may require additional setting of API keys or different ENV variables.
 
-User-permissions, seo and config-sync plugins are enabled by default.
+User-permissions, seo and config-sync plugins are enabled by default. Sentry plugin requires setting up DSN key in ENV variables (see below).
 
 #### AWS S3 caveats
 
@@ -138,6 +138,35 @@ Steps:
 - in [config/middlewares.ts](config/middlewares.ts) whitelist URL of that S3 bucket in `directives` and `img-src` objects. Otherwise Strapi blocks these URLs and images are broken in UI. By default whole "amazonaws.com" is whitelisted, but you can be more specific here.
 
 [More info here](https://market.strapi.io/providers/@strapi-provider-upload-aws-s3)
+
+#### Sentry logging
+
+Tu enable Sentry plugin, set `SENTRY_DSN` to environment variables. By default, Sentry runs only in production mode, but you can change it in [config/plugins.ts](config/plugins.ts) file.
+
+Sentry service can be used in Strapi controllers and services as any other service. Uncaught errors are logged automatically. More information can be found in [Sentry](https://docs.sentry.io/platforms/javascript/) and [Strapi](https://docs.strapi.io/dev-docs/plugins/sentry) docs.
+
+```tsx
+// example of how to use Sentry in controller
+
+async find(ctx) {
+    // this will log error to Sentry automatically
+    throw new Error("Not implemented")
+
+    // get sentry service
+    const sentry = strapi.plugin("sentry").service("sentry")
+
+    // manual error logging
+    sentry.sendError(new Error("My custom error"))
+
+    // get direct access to the Sentry instance
+    const instance = sentry.getInstance()
+    // call captureMessage or other Sentry functions
+    // pay attention, instance is undefined if Sentry is disabled (during development)
+    instance?.captureMessage("My custom message")
+
+    return []
+},
+```
 
 #### Config-sync
 

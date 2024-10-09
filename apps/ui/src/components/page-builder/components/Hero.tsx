@@ -2,6 +2,8 @@ import { Attribute } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
+import Heading from "@/components/typography/Heading"
+import { Paragraph } from "@/components/typography/Paragraph"
 
 import { BasicImage } from "./BasicImage"
 import { LinkStrapi } from "./LinkStrapi"
@@ -19,13 +21,17 @@ export function Hero({
     <section style={{ backgroundColor: component.bgColor ?? "transparent" }}>
       <Container className="grid gap-8 px-4 py-8 md:grid-cols-12 lg:py-16 xl:gap-0">
         <div className="mr-auto flex w-full flex-col items-center justify-center md:col-span-7">
-          <h1 className="mb-4 max-w-2xl text-center text-4xl font-extrabold leading-none tracking-tight md:text-5xl xl:text-6xl">
+          <Heading
+            tag="h1"
+            variant="heading1"
+            className="mb-4 max-w-2xl text-center"
+          >
             {component.title}
-          </h1>
+          </Heading>
           {component.subTitle && (
-            <p className="mb-6 max-w-2xl font-light text-gray-500 md:text-lg lg:mb-8 lg:text-xl">
+            <Paragraph className="mb-6 max-w-2xl font-light text-gray-500">
               {component.subTitle}
-            </p>
+            </Paragraph>
           )}
 
           {component.links && (
