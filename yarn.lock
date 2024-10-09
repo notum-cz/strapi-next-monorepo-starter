@@ -5031,17 +5031,17 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
-"@t3-oss/env-core@0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@t3-oss/env-core/-/env-core-0.11.0.tgz#f4eff11fc928527f4ebb26b9f0ee38c40c00c3a5"
-  integrity sha512-PSalC5bG0a7XbyoLydiQdAnx3gICX6IQNctvh+TyLrdFxsxgocdj9Ui7sd061UlBzi+z4aIGjnem1kZx9QtUgQ==
+"@t3-oss/env-core@0.9.2":
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/@t3-oss/env-core/-/env-core-0.9.2.tgz#4e45c23dc7d2491b8acc0791ed6092026be56fbd"
+  integrity sha512-KgWXljUTHgO3o7GMZQPAD5+P+HqpauMNNHowlm7V2b9IeMitSUpNKwG6xQrup/xARWHTdxRVIl0mSI4wCevQhQ==
 
-"@t3-oss/env-nextjs@^0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@t3-oss/env-nextjs/-/env-nextjs-0.11.0.tgz#46ae1be6aa1344af97bf7ad51ec1506183041785"
-  integrity sha512-gcRrY2CzSMSrxDf5+fKCUfzbBK125IxOcJHcoMVdjcTmYxEgIZFZ5qPPtngOY3UmTeXSqRZOGuNiosqWTFTkMw==
+"@t3-oss/env-nextjs@^0.9.2":
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/@t3-oss/env-nextjs/-/env-nextjs-0.9.2.tgz#c6702de1b4eb3fbd48587e7f3f030fb4c231eb93"
+  integrity sha512-dklHrgKLESStNVB67Jdbu6osxDYA+xNKaPBRerlnkEvzbCccSKMvZENx6EZebJuR4snqB3/yRykNMn/bdIAyiQ==
   dependencies:
-    "@t3-oss/env-core" "0.11.0"
+    "@t3-oss/env-core" "0.9.2"
 
 "@tanstack/query-core@5.51.9":
   version "5.51.9"
