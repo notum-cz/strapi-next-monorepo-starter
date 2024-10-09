@@ -3,6 +3,8 @@ import React from "react"
 import { cn } from "@/lib/styles"
 
 const variantStyles = {
+  heading1:
+    "text-4xl font-extrabold leading-none tracking-tight md:text-5xl xl:text-6xl",
   heading3: "md:text-4xl text-2xl font-bold",
   // more variants will be added here
 }
