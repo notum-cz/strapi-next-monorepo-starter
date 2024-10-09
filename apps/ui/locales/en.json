@@ -146,6 +146,19 @@
     }
   },
 
+  "contactForm": {
+    "name": "First name and last name",
+    "namePlaceholder": "John Doe",
+    "email": "Email",
+    "emailPlaceholder": "john.doe@gmail.com",
+    "message": "Message",
+    "gdpr": "I agree to the processing of personal data",
+    "submit": "Send",
+    "success": "The form has been sent successfully.",
+    "error": "The form could not be sent. Please try again later.",
+    "gdprLink": "Read more about the processing of personal data"
+  },
+
   "auth": {
     "signIn": {
       "status": {

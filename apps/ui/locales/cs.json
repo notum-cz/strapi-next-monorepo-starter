@@ -146,6 +146,19 @@
     }
   },
 
+  "contactForm": {
+    "name": "Jméno a Přijmení",
+    "namePlaceholder": "Jan Novák",
+    "email": "Email",
+    "emailPlaceholder": "jan.novak@gmail.com",
+    "message": "Zpráva",
+    "gdpr": "Odesláním souhlasíte se ",
+    "submit": "Odeslat",
+    "success": "Formulář byl úspěšně odeslán",
+    "error": "Při odesílání formuláře došlo k chybě, zkuste to prosím znovu",
+    "gdprLink": "Informace o zpracování osobních údajů"
+  },
+
   "auth": {
     "signIn": {
       "status": {
