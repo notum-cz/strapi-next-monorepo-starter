@@ -50,7 +50,10 @@ export default async function StrapiPage({ params }: Props) {
     | undefined
 
   const pageComponents = page.content.filter((x) => {
-    return !(x.__component === "layout.navbar" || x.isVisible === false)
+    return (
+      x.__component !== "layout.navbar" &&
+      ("isVisible" in x ? x.isVisible : true)
+    )
   })
 
   return (

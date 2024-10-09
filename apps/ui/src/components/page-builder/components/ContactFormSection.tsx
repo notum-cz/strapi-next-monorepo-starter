@@ -20,7 +20,7 @@ export function ContactFormSection({
           </div>
         </div>
         <div className="flex flex-1">
-          <ContactForm {...component} />
+          <ContactForm gdpr={component.gdpr} />
         </div>
       </Container>
     </div>

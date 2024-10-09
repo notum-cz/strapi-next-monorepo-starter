@@ -30,6 +30,7 @@ export function ContactForm({
 
   const onSubmit = (values: z.infer<FormSchemaType>) => {
     // TODO: Add submit logic
+    // eslint-disable-next-line no-console
     console.log("values", values)
   }
 
