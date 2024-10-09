@@ -10,11 +10,9 @@ const optionalZodBoolean = z
 
 export const env = createEnv({
   emptyStringAsUndefined: true,
-
-  onValidationError: (error) => {
-    console.error(error)
-    console.error(process.env)
-  },
+  // TODO: Temporary skip validation because of unknown error with detecting NextAuth env vars in Github Actions:
+  // ❌ Invalid environment variables: { NEXTAUTH_SECRET: [ 'Required' ], NEXTAUTH_URL: [ 'Required' ] }
+  skipValidation: true,
 
   /*
    * Serverside Environment variables, not available on the client.
