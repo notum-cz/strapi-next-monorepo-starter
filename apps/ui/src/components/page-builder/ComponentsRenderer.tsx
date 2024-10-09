@@ -2,6 +2,7 @@ import { Attribute, Types } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
+import { ErrorBoundary } from "../elementary/ErrorBoundary"
 import { AnimatedLogoRow } from "./components/AnimatedLogoRow"
 import { CarouselGrid } from "./components/CarouselGrid"
 import { Faq } from "./components/Faq"
@@ -56,7 +57,11 @@ export function ComponentsRenderer({
             )
           }
 
-          return <Component key={key} component={comp} />
+          return (
+            <ErrorBoundary key={key}>
+              <Component component={comp} />
+            </ErrorBoundary>
+          )
         })}
     </section>
   )
