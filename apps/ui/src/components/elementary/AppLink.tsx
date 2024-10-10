@@ -1,8 +1,7 @@
 import React from "react"
-import Link from "next/link"
 import { VariantProps } from "class-variance-authority"
 
-import { isLocalLink } from "@/lib/isLocalLink"
+import { isAppLink, Link } from "@/lib/navigation"
 import { cn } from "@/lib/styles"
 import { buttonVariants } from "@/components/ui/button"
 
@@ -30,7 +29,7 @@ const AppLink = React.forwardRef<HTMLAnchorElement, AppLinkProps>(
   }) => {
     const combinedClassName = cn(buttonVariants({ variant, size }), className)
 
-    if (isLocalLink(href)) {
+    if (isAppLink(href)) {
       return (
         <Link href={href} className={combinedClassName} {...props}>
           <div className="group flex flex-row items-center">
