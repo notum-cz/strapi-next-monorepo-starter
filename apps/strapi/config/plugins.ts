@@ -27,6 +27,15 @@ export default ({ env }) => {
       },
     },
 
+    sentry: {
+      enabled: true,
+      config: {
+        // Only set `dsn` property in production
+        dsn: env("NODE_ENV") === "production" ? env("SENTRY_DSN") : null,
+        sendMetadata: true,
+      },
+    },
+
     // "stripe-integration": {
     //   enabled: true,
     //   resolve: "./src/plugins/stripe-integration",
@@ -44,14 +53,6 @@ export default ({ env }) => {
     //       defaultFrom: env("MAILGUN_EMAIL"),
     //       defaultReplyTo: env("MAILGUN_EMAIL"),
     //     },
-    //   },
-    // },
-
-    // sentry: {
-    //   enabled: env("SENTRY_DSN") != null,
-    //   config: {
-    //     dsn: env("SENTRY_DSN"),
-    //     sendMetadata: true,
     //   },
     // },
   }

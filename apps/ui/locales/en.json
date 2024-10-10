@@ -76,7 +76,9 @@
   "errors": {
     "global": {
       "title": "An unknown error occurred",
-      "goBack": "Go back"
+      "tryAgain": "Try again",
+      "invalidContent": "This content could not be displayed",
+      "somethingWentWrong": "Something went wrong 🥺"
     },
 
     "notFound": {
@@ -142,6 +144,19 @@
       "500": "Server is unavailable or something went wrong. Please try again or contact support.",
       "503": "Server is unavailable. Please try again or contact support"
     }
+  },
+
+  "contactForm": {
+    "name": "First name and last name",
+    "namePlaceholder": "John Doe",
+    "email": "Email",
+    "emailPlaceholder": "john.doe@gmail.com",
+    "message": "Message",
+    "gdpr": "I agree to the processing of personal data",
+    "submit": "Send",
+    "success": "The form has been sent successfully.",
+    "error": "The form could not be sent. Please try again later.",
+    "gdprLink": "Read more about the processing of personal data"
   },
 
   "auth": {

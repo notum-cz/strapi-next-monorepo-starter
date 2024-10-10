@@ -552,7 +552,9 @@ export interface ApiPagePage extends Schema.CollectionType {
         "sections.carousel",
         "sections.heading-with-cta-button",
         "sections.image-with-cta-button",
-        "sections.animated-logo-row"
+        "sections.animated-logo-row",
+        "sections.contact-form",
+        "sections.newsletter"
       ]
     > &
       Attribute.SetPluginOptions<{
