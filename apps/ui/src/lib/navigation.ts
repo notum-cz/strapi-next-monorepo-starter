@@ -1,5 +1,4 @@
-import { env } from "process"
-
+import { env } from "@/env.mjs"
 import { createSharedPathnamesNavigation } from "next-intl/navigation"
 
 import { locales } from "./i18n"
