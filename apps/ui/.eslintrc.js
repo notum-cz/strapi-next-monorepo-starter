@@ -26,6 +26,13 @@ module.exports = {
     "react/jsx-no-leaked-render": "off",
     "react/jsx-sort-props": "off",
     "react/no-array-index-key": "off",
+    "react/no-unstable-nested-components": [
+      "warn",
+      {
+        allowAsProps: true,
+        customValidators: [],
+      },
+    ],
     "tailwindcss/no-custom-classname": "off",
     "turbo/no-undeclared-env-vars": "off",
     "no-extra-boolean-cast": "warn",

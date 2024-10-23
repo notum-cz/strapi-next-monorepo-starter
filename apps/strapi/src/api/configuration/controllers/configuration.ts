@@ -7,6 +7,21 @@ export default factories.createCoreController(
   "api::configuration.configuration",
   ({ strapi }) => ({
     async demonstrativeCustomEndpoint(ctx) {
+      // this will log error to Sentry automatically
+      // throw new Error("Not implemented")
+
+      // get sentry service
+      const sentry = strapi.plugin("sentry").service("sentry")
+
+      // manual error logging
+      sentry.sendError(new Error("My custom error"))
+
+      // get direct access to the Sentry instance
+      const instance = sentry.getInstance()
+      // call captureMessage or other Sentry functions (mentioned above)
+      // pay attention, instance is undefined if Sentry is disabled (during development)
+      instance?.captureMessage("My custom message")
+
       const config = await strapi.entityService.findOne(
         "api::configuration.configuration",
         1

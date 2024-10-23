@@ -7,6 +7,7 @@ import { PageProps } from "@/types/next"
 import { locales } from "@/lib/i18n"
 import { getMetadataFromStrapi } from "@/lib/next-helpers"
 import Strapi from "@/lib/strapi"
+import { ErrorBoundary } from "@/components/elementary/ErrorBoundary"
 import { ComponentsRenderer } from "@/components/page-builder/ComponentsRenderer"
 import { PageBuilderFooter } from "@/components/page-builder/single-types/Footer"
 import { PageBuilderNavbar } from "@/components/page-builder/single-types/Navbar"
@@ -73,17 +74,26 @@ export default async function StrapiPage({ params }: Props) {
     | undefined
 
   const pageComponents = page.content.filter((x) => {
-    return !(x.__component === "layout.navbar" || x.isVisible === false)
+    return (
+      x.__component !== "layout.navbar" &&
+      ("isVisible" in x ? x.isVisible : true)
+    )
   })
 
   return (
     <main className="w-full overflow-x-hidden">
-      <PageBuilderNavbar
-        locale={params.locale}
-        pageSpecificNavbar={pageSpecificNavbar}
-      />
+      <ErrorBoundary hideFallback>
+        <PageBuilderNavbar
+          locale={params.locale}
+          pageSpecificNavbar={pageSpecificNavbar}
+        />
+      </ErrorBoundary>
+
       <ComponentsRenderer pageComponents={pageComponents} />
-      <PageBuilderFooter locale={params.locale} />
+
+      <ErrorBoundary hideFallback>
+        <PageBuilderFooter locale={params.locale} />
+      </ErrorBoundary>
     </main>
   )
 }
