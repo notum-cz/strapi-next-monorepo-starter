@@ -12,15 +12,14 @@ export const env = createEnv({
   emptyStringAsUndefined: true,
   // TODO: Temporary skip validation because of unknown error with detecting NextAuth env vars in Github Actions:
   // ❌ Invalid environment variables: { NEXTAUTH_SECRET: [ 'Required' ], NEXTAUTH_URL: [ 'Required' ] }
-  skipValidation: true,
 
   /*
    * Serverside Environment variables, not available on the client.
    * Will throw if you access these variables on the client.
    */
   server: {
-    NEXTAUTH_SECRET: z.string(),
-    NEXTAUTH_URL: z.string().url(),
+    NEXTAUTH_SECRET: z.string().optional(),
+    NEXTAUTH_URL: z.string().url().optional(),
     NEXT_OUTPUT: z.string().optional(),
     NEXT_IMAGES_UNOPTIMIZED: optionalZodBoolean,
     NODE_ENV: z.string().optional(),
