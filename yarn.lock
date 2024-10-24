@@ -1910,7 +1910,7 @@
     "@formatjs/intl-localematcher" "0.2.32"
     tslib "^2.4.0"
 
-"@formatjs/intl-localematcher@0.2.32", "@formatjs/intl-localematcher@^0.2.32":
+"@formatjs/intl-localematcher@0.2.32":
   version "0.2.32"
   resolved "https://registry.yarnpkg.com/@formatjs/intl-localematcher/-/intl-localematcher-0.2.32.tgz#00d4d307cd7d514b298e15a11a369b86c8933ec1"
   integrity sha512-k/MEBstff4sttohyEpXxCmC3MqbUn9VvHGlZ8fauLzkbwXmVrEeyzS+4uhrvAk9DWU9/7otYWxyDox4nT/KVLQ==
@@ -1923,6 +1923,13 @@
   integrity sha512-zTwEpWOzZ2CiKcB93BLngUX59hQkuZjT2+SAQEscSm52peDW/getsawMcWF1rGRpMCX6D7nSJA3CzJ8gn13N/g==
   dependencies:
     tslib "^2.4.0"
+
+"@formatjs/intl-localematcher@^0.5.4":
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl-localematcher/-/intl-localematcher-0.5.5.tgz#b24f100f30658104d5f6db35b0b8d97235298681"
+  integrity sha512-t5tOGMgZ/i5+ALl2/offNqAQq/lfUnKLEw0mXQI4N4bqpedhrSE+fyKLpwnd22sK0dif6AV+ufQcTsKShB9J1g==
+  dependencies:
+    tslib "^2.7.0"
 
 "@formatjs/intl@2.7.1":
   version "2.7.1"
@@ -12036,14 +12043,14 @@ next-auth@^4.24.7:
     preact-render-to-string "^5.1.19"
     uuid "^8.3.2"
 
-next-intl@^3.17.2:
-  version "3.17.2"
-  resolved "https://registry.yarnpkg.com/next-intl/-/next-intl-3.17.2.tgz#4f56a6c54bd4355254c5ae35dfef89561492abbb"
-  integrity sha512-X2ly23e1lC5vdWHaJFBDZi/0iornEdFQQtqJmmPOb7WD+LDssm9vAnx+hJshYGjddaP3rUmyWaPgePCQqaxm1g==
+next-intl@^3.23.2:
+  version "3.23.2"
+  resolved "https://registry.yarnpkg.com/next-intl/-/next-intl-3.23.2.tgz#2ab3ee3d05cb692f3fad41dff52757ade595572d"
+  integrity sha512-SCYEG2i0kYz+OupN6+qH9T+GDRfLCmJuT835uI9ac7AOlYCUbBizj28cti+oGhDkIjueZrweVw7iEiTkqCpKpQ==
   dependencies:
-    "@formatjs/intl-localematcher" "^0.2.32"
+    "@formatjs/intl-localematcher" "^0.5.4"
     negotiator "^0.6.3"
-    use-intl "^3.17.2"
+    use-intl "^3.23.2"
 
 next-themes@^0.3.0:
   version "0.3.0"
@@ -15536,6 +15543,11 @@ tslib@^2.0.0, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.3.1, tslib@^2.4.0, tslib@^2.5
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.2.tgz#703ac29425e7b37cd6fd456e92404d46d1f3e4ae"
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
 
+tslib@^2.7.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.8.0.tgz#d124c86c3c05a40a91e6fdea4021bd31d377971b"
+  integrity sha512-jWVzBLplnCmoaTr13V9dYbiQ99wvZRd0vNWaDRg+aVYRcjDF3nDksxFDE/+fkXnKhpnUUkmx5pK/v8mCtLVqZA==
+
 tsscmp@1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/tsscmp/-/tsscmp-1.0.6.tgz#85b99583ac3589ec4bfef825b5000aa911d605eb"
@@ -15880,10 +15892,10 @@ use-callback-ref@^1.3.0:
   dependencies:
     tslib "^2.0.0"
 
-use-intl@^3.17.2:
-  version "3.17.2"
-  resolved "https://registry.yarnpkg.com/use-intl/-/use-intl-3.17.2.tgz#0dc9a630cf7631e7fb2802b9591847ec6135fcd0"
-  integrity sha512-9lPgt41nS8x4AYCLfIC9VKCmamnVxzPM2nze7lpp/I1uaSSQvIz5MQpYUFikv08cMUsCwAWahU0e+arHInpdcw==
+use-intl@^3.23.2:
+  version "3.23.2"
+  resolved "https://registry.yarnpkg.com/use-intl/-/use-intl-3.23.2.tgz#26534f96877b7db15de18f71f75befcbca378a8d"
+  integrity sha512-lrKb5M6zr9YoHK+OuUsRApPPNEMHX8ntx0PDGZ0fxlMmj6W2u/3y++UB4uE/o0C8Jyn7oiHCjShYjgPjDaB1cg==
   dependencies:
     "@formatjs/fast-memoize" "^2.2.0"
     intl-messageformat "^10.5.14"

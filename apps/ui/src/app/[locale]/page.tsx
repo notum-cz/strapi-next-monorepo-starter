@@ -1,3 +1,5 @@
+import { setRequestLocale } from "next-intl/server"
+
 import { PageProps } from "@/types/next"
 
 import { getAuth } from "@/lib/auth"
@@ -22,6 +24,9 @@ const pageUrl = "/"
 
 export default async function RootPage({ params }: PageProps) {
   const session = await getAuth()
+
+  // Enable static rendering
+  setRequestLocale(params.locale)
 
   return (
     <div className="space-y-10">
