@@ -80,10 +80,16 @@ export async function getMetadataFromStrapi({
       throw new Error("No slug provided")
     }
 
-    const res = await Strapi.fetchOneBySlug(uid, pageUrl, {
-      locale,
-      populate: "seo,seo.metaImage,seo.metaSocial,seo.twitter",
-    }, undefined, { omitAuthorization: true })
+    const res = await Strapi.fetchOneBySlug(
+      uid,
+      pageUrl,
+      {
+        locale,
+        populate: "seo,seo.metaImage,seo.metaSocial,seo.twitter",
+      },
+      undefined,
+      { omitAuthorization: true }
+    )
 
     const seo = res.data?.attributes.seo
 
