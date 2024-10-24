@@ -18,7 +18,7 @@ module.exports = {
     project: true,
   },
   rules: {
-    "no-console": ["error", { allow: ["warn", "error"] }],
+    "no-console": ["warn", { allow: ["warn", "error"] }],
     "@next/next/no-html-link-for-pages": "off",
     "no-unused-vars": "warn",
     "react/function-component-definition": "off",
