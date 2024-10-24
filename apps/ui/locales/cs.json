@@ -174,7 +174,8 @@
       "email": "E-mail",
       "password": "Heslo",
       "submit": "Přihlásit se",
-      "forgotPassword": "Zapomenuté heslo"
+      "forgotPassword": "Zapomenuté heslo",
+      "createAccount": "Vytvořit účet"
     },
 
     "register": {
