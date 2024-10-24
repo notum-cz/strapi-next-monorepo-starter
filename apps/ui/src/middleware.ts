@@ -3,14 +3,10 @@ import { withAuth } from "next-auth/middleware"
 import createMiddleware from "next-intl/middleware"
 
 import { env } from "./env.mjs"
-import { defaultLocale, locales } from "./lib/i18n"
+import { routing } from "./lib/navigation"
 
 // https://next-intl-docs.vercel.app/docs/getting-started/app-router
-const intlMiddleware = createMiddleware({
-  locales,
-  defaultLocale,
-  localePrefix: "as-needed",
-})
+const intlMiddleware = createMiddleware(routing)
 
 const publicPages = [
   "/",
@@ -41,6 +37,7 @@ const authMiddleware = withAuth(
 
 export default function middleware(req: NextRequest) {
   // Handle HTTPS redirection in production in Heroku servers
+  // Comment this block when running locally (using `next start`)
   const xForwardedProtoHeader = req.headers.get("x-forwarded-proto")
   if (
     env.NODE_ENV === "production" &&
@@ -54,7 +51,7 @@ export default function middleware(req: NextRequest) {
   }
 
   const publicPathnameRegex = RegExp(
-    `^(/(${locales.join("|")}))?(${publicPages
+    `^(/(${routing.locales.join("|")}))?(${publicPages
       .flatMap((p) => (p === "/" ? ["", "/"] : p))
       .join("|")})/?$`,
     "i"

@@ -1,8 +1,9 @@
+import { setRequestLocale } from "next-intl/server"
+
 import { PageProps } from "@/types/next"
 
 import { getAuth } from "@/lib/auth"
 import { Link } from "@/lib/navigation"
-import { getMetadataFromStrapi } from "@/lib/next-helpers"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -15,13 +16,17 @@ import {
 
 import { ConfigurationExample } from "./_components/Configuration"
 
-export async function generateMetadata({ params }: PageProps) {
-  const pageUrl = "/"
-  return getMetadataFromStrapi({ pageUrl, locale: params.locale })
-}
+const pageUrl = "/"
 
-export default async function RootPage() {
+// export async function generateMetadata({ params }: PageProps) {
+//   return getMetadataFromStrapi({ pageUrl, locale: params.locale })
+// }
+
+export default async function RootPage({ params }: PageProps) {
   const session = await getAuth()
+
+  // Enable static rendering
+  setRequestLocale(params.locale)
 
   return (
     <div className="space-y-10">

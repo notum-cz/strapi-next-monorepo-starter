@@ -34,10 +34,15 @@ export function RegisterForm() {
       password: string
       checkPassword: string
     }) =>
-      Strapi.fetchAPI(`/auth/local/register`, undefined, {
-        body: JSON.stringify(values),
-        method: "POST",
-      }),
+      Strapi.fetchAPI(
+        `/auth/local/register`,
+        undefined,
+        {
+          body: JSON.stringify(values),
+          method: "POST",
+        },
+        { omitAuthorization: true }
+      ),
   })
 
   const form = useForm<z.infer<FormSchemaType>>({

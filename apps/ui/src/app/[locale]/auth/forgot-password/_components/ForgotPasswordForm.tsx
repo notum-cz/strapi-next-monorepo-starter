@@ -28,10 +28,15 @@ export function ForgotPasswordForm() {
 
   const { mutate } = useMutation({
     mutationFn: (values: { email: string }) => {
-      return Strapi.fetchAPI(`/auth/forgot-password`, undefined, {
-        body: JSON.stringify(values),
-        method: "POST",
-      })
+      return Strapi.fetchAPI(
+        `/auth/forgot-password`,
+        undefined,
+        {
+          body: JSON.stringify(values),
+          method: "POST",
+        },
+        { omitAuthorization: true }
+      )
     },
   })
 

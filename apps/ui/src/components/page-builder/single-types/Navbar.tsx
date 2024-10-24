@@ -12,11 +12,17 @@ import { ImageWithLink } from "../components/ImageWithLink"
 
 async function fetchData(locale: string) {
   try {
-    return await Strapi.fetchOne("api::navbar.navbar", undefined, {
-      // @ts-ignore - "deep" is not recognized as it comes from strapi extension
-      populate: "deep" as "*",
-      locale,
-    })
+    return await Strapi.fetchOne(
+      "api::navbar.navbar",
+      undefined,
+      {
+        // @ts-ignore - "deep" is not recognized as it comes from strapi extension
+        populate: "deep" as "*",
+        locale,
+      },
+      undefined,
+      { omitAuthorization: true }
+    )
   } catch (e: any) {
     console.error(
       `Data for "api::navbar.navbar" content type wasn't fetched: `,

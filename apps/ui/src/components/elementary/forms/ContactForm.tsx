@@ -32,6 +32,7 @@ export function ContactForm({
     // TODO: Add submit logic
     // eslint-disable-next-line no-console
     console.log("values", values)
+    setErrorMessage(null)
   }
 
   return (

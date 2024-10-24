@@ -18,7 +18,9 @@ export function NewsletterForm() {
   })
 
   async function onSubmit(values: z.infer<FormSchemaType>) {
-    // TODO - Add your own logic here
+    // TODO: Add submit logic
+    // eslint-disable-next-line no-console
+    console.log("Form submitted", values)
   }
 
   return (

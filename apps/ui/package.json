@@ -46,7 +46,7 @@
     "markdown-to-jsx": "^7.4.7",
     "next": "^14.2.5",
     "next-auth": "^4.24.7",
-    "next-intl": "^3.17.2",
+    "next-intl": "^3.23.2",
     "next-themes": "^0.3.0",
     "plaiceholder": "^3.0.0",
     "qs": "^6.12.3",

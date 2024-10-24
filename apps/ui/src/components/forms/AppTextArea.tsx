@@ -36,7 +36,7 @@ export function AppTextArea({
     <FormField
       control={control}
       name={name}
-      render={({ field, fieldState, formState }) => (
+      render={({ field, fieldState }) => (
         <FormItem className={cn(containerClassName)}>
           <AppFormLabel label={label} required={nativeProps.required} />
 

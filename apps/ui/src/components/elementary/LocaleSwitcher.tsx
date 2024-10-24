@@ -6,8 +6,7 @@ import { useSearchParams } from "next/navigation"
 import { AppLocale } from "@/types/general"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { locales } from "@/lib/i18n"
-import { usePathname, useRouter } from "@/lib/navigation"
+import { routing, usePathname, useRouter } from "@/lib/navigation"
 import {
   Select,
   SelectContent,
@@ -49,12 +48,12 @@ const LocaleSwitcher = ({ locale }: { locale: AppLocale }) => {
         {locale}
       </SelectTrigger>
       <SelectContent>
-        {locales.map((locale, index) => (
+        {routing.locales.map((locale, index) => (
           <React.Fragment key={locale}>
             <SelectItem key={locale} value={locale}>
               {localeTranslation[locale]}
             </SelectItem>
-            {index < locales.length - 1 && (
+            {index < routing.locales.length - 1 && (
               <SelectSeparator key={`${locale}-separator`} />
             )}
           </React.Fragment>

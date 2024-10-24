@@ -74,9 +74,15 @@ docker run -it --rm --name ui -p 3000:3000 --env-file apps/ui/.env ui:latest
 
 To change port, set `PORT` env variable in `.env` file and in `docker run` command (`-p` flag means port mapping between host:container).
 
-Dockerfile assumes that NextJS app is ["outputed"](https://nextjs.org/docs/pages/api-reference/next-config-js/output) in `standalone` mode (see [next.config.mjs's output option](next.config.mjs) for details), which is useful for self-hosting in a Docker container (includes only necessary files and dependencies).
+Dockerfile assumes that NextJS app is ["outputed"](https://nextjs.org/docs/pages/api-reference/next-config-js/output) in `standalone` mode (see [next.config.mjs's output option](next.config.mjs) for details), which is useful for self-hosting in a Docker container (includes only necessary files and dependencies). It is controlled using `NEXT_OUTPUT` env variable. Any other value than `standalone` will require changes in Dockerfile (eg. `runner` stage).
 
-It can be changed using `NEXT_OUTPUT` env variable. If type of build output is different, you have to adjust `runner` stage in [Dockerfile](Dockerfile). For default - `undefined` mode - you would probably need to copy more files/deps into container (not tested yet).
+### Output modes
+
+NextJS has three `output` modes:
+
+- `export` - static HTML/CSS/JS files [are generated at build time](https://nextjs.org/docs/app/building-your-application/deploying/static-exports) and served by any static hosting/CDN. No Node.js server is needed. [Dynamic logic is not supported](https://nextjs.org/docs/app/building-your-application/deploying/static-exports#unsupported-features). This mode is **not supported** in this starter repo because of the dynamic nature (NextAuth and [POST endpoint](src/app/api/auth/[...nextauth]/route.ts))
+- `standalone` - useful for self-hosting in a Docker container (see above) because it includes only necessary files and dependencies
+- `undefined` - default build output, `.next` directory, that works with production mode `next start` or a hosting provider like Vercel
 
 ## 🚢 Deploy to Heroku
 
@@ -343,6 +349,8 @@ Strapi API endpoints are usually protected by JWT token. To fetch data from prot
 To avoid passing the token manually in each request (into `fetch` functions above), you can leverage the `Strapi.prepareHeader()` function, which tries to get the token from the session according to the request context (server or client) and adds it to the headers automatically.
 
 In client components `Strapi` uses `getSession()` which first makes HTTP request to NextAuth's `/api/auth/session` endpoint to get the session object and then makes the actual request to Strapi API. This isn't optimal but `useSession()` hook doesn't work outside of React components and currently you haven't implemented a better way to get the session on the client side. As a workaround (in most cases this additional request is not problematic), you can pass the `strapiJWT` directly to the `fetch` functions as shown in the example below.
+
+To omit `Authorization` header and token detection, you can pass `omitAuthorization: true` in the `options` object of `fetchAPI` function. Token detection is dynamic operation so it blocks static rendering of the page.
 
 ```ts
 "use client"

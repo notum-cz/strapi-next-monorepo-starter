@@ -92,6 +92,7 @@ export function ErrorBoundary({
   customErrorTitle?: string
   showErrorMessage?: boolean
   onReset?: () => void
+  // eslint-disable-next-line no-unused-vars
   onError?: (error: Error, info: { componentStack?: string | null }) => void
 }) {
   const handleError = (

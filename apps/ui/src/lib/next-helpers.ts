@@ -4,7 +4,7 @@ import { mergeWith } from "lodash"
 import { getTranslations } from "next-intl/server"
 
 import { removeThisWhenYouNeedMe } from "./general-helpers"
-import { locales } from "./i18n"
+import { routing } from "./navigation"
 import Strapi, { API_ENDPOINTS } from "./strapi"
 
 export async function getMetadataFromStrapi({
@@ -37,7 +37,7 @@ export async function getMetadataFromStrapi({
 
     alternates: {
       canonical: feAppBaseUrl,
-      languages: locales.reduce(
+      languages: routing.locales.reduce(
         (acc, locale) => ({
           ...acc,
           [locale]: `${feAppBaseUrl}/${locale}`,
@@ -80,10 +80,16 @@ export async function getMetadataFromStrapi({
       throw new Error("No slug provided")
     }
 
-    const res = await Strapi.fetchOneBySlug(uid, pageUrl, {
-      locale,
-      populate: "seo,seo.metaImage,seo.metaSocial,seo.twitter",
-    })
+    const res = await Strapi.fetchOneBySlug(
+      uid,
+      pageUrl,
+      {
+        locale,
+        populate: "seo,seo.metaImage,seo.metaSocial,seo.twitter",
+      },
+      undefined,
+      { omitAuthorization: true }
+    )
 
     const seo = res.data?.attributes.seo
 
