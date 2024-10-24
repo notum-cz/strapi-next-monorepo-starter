@@ -29,13 +29,18 @@ export const authOptions: NextAuthOptions = {
         }
 
         return (
-          Strapi.fetchAPI(`/auth/local`, undefined, {
-            body: JSON.stringify({
-              identifier: credentials.email,
-              password: credentials.password,
-            }),
-            method: "POST",
-          })
+          Strapi.fetchAPI(
+            `/auth/local`,
+            undefined,
+            {
+              body: JSON.stringify({
+                identifier: credentials.email,
+                password: credentials.password,
+              }),
+              method: "POST",
+            },
+            { omitAuthorization: true }
+          )
             .then((data) => {
               const { jwt, user } = data
               if (jwt == null || user == null) {

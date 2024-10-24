@@ -1,20 +1,20 @@
-import { unstable_setRequestLocale } from "next-intl/server"
+import { setRequestLocale } from "next-intl/server"
 
 import { AppLocale } from "@/types/general"
 import { PageProps } from "@/types/next"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { locales } from "@/lib/i18n"
 import { Link } from "@/lib/navigation"
 import Strapi from "@/lib/strapi"
 
-export function generateStaticParams() {
-  return locales.map((locale) => ({ locale }))
-}
-
 async function getData(locale: AppLocale) {
   try {
-    const pages = await Strapi.fetchMany("api::page.page", { locale })
+    const pages = await Strapi.fetchMany(
+      "api::page.page",
+      { locale },
+      undefined,
+      { omitAuthorization: true }
+    )
     return pages.data
   } catch (e) {
     console.error(`No page defined in Strapi or invalid permissions.`, e)
@@ -25,7 +25,7 @@ async function getData(locale: AppLocale) {
 export default async function RootBuilderPage({ params }: PageProps) {
   removeThisWhenYouNeedMe("RootBuilderPage")
 
-  unstable_setRequestLocale(params.locale)
+  setRequestLocale(params.locale)
 
   const pages = await getData(params.locale)
 

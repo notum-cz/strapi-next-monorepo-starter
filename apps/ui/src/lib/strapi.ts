@@ -11,7 +11,12 @@ import { AppSession } from "@/types/next-auth"
 import { getAuth } from "./auth"
 
 type CustomFetchOptions = {
+  // force JWT token for the request
+  // if omitted, the token will be retrieved from the session
   strapiJWT?: AppSession["strapiJWT"]
+  // omit "Authorization" header from the request
+  omitAuthorization?: boolean
+  // map error messages to translation keys
   translateKeyPrefixForErrors?: Parameters<typeof useTranslations>[0]
 }
 
@@ -40,10 +45,11 @@ export default class Strapi {
     const { url, headers } = await this.prepareRequest(
       path,
       params,
-      options?.strapiJWT
+      options?.strapiJWT,
+      options?.omitAuthorization
     )
     const response = await fetch(url, {
-      next: { revalidate: env.NEXT_PUBLIC_REVALIDATE }, // cache: "no-cache" // set for dynamic apps
+      next: { revalidate: env.NEXT_PUBLIC_REVALIDATE }, // cache: "no-cache" // for dynamic apps
       ...requestInit,
       headers: { ...requestInit?.headers, ...headers },
     })
@@ -107,11 +113,17 @@ export default class Strapi {
   >(
     uid: TContentTypeUID,
     params?: TParams,
-    requestInit?: RequestInit
+    requestInit?: RequestInit,
+    options?: CustomFetchOptions
   ): Promise<APIResponseCollection<TContentTypeUID>> {
     const path = this.getStrapiApiPathByUId(uid)
 
-    const firstPage = await this.fetchAPI(path, { ...params }, requestInit)
+    const firstPage = await this.fetchAPI(
+      path,
+      { ...params },
+      requestInit,
+      options
+    )
 
     if (firstPage.meta.pagination.pageCount === 1) {
       return firstPage
@@ -126,7 +138,8 @@ export default class Strapi {
             ...params,
             pagination: { page: i + 2 },
           },
-          requestInit
+          requestInit,
+          options
         )
     )
 
@@ -175,7 +188,8 @@ export default class Strapi {
   public static async prepareRequest(
     path: string,
     params: Object,
-    jwt?: string
+    jwt?: string,
+    omitAuthorization?: boolean
   ) {
     let url = `/api${path.startsWith("/") ? path : `/${path}`}`
 
@@ -185,9 +199,9 @@ export default class Strapi {
       url += `?${queryString}`
     }
 
-    let strapiToken = jwt
+    let strapiToken = omitAuthorization ? undefined : jwt
 
-    if (!strapiToken) {
+    if (!omitAuthorization && !strapiToken) {
       // try to get token from session and use it for the request
 
       const isRSC = typeof window === "undefined"

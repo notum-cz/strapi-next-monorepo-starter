@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation"
 import { Attribute } from "@repo/strapi"
-import { unstable_setRequestLocale } from "next-intl/server"
+import { setRequestLocale } from "next-intl/server"
 
 import { PageProps } from "@/types/next"
 
-import { locales } from "@/lib/i18n"
+import { routing } from "@/lib/navigation"
 import { getMetadataFromStrapi } from "@/lib/next-helpers"
 import Strapi from "@/lib/strapi"
 import { ErrorBoundary } from "@/components/elementary/ErrorBoundary"
@@ -13,8 +13,10 @@ import { PageBuilderFooter } from "@/components/page-builder/single-types/Footer
 import { PageBuilderNavbar } from "@/components/page-builder/single-types/Navbar"
 
 export async function generateStaticParams() {
-  const promises = locales.map((locale) =>
-    Strapi.fetchAll("api::page.page", { locale })
+  const promises = routing.locales.map((locale) =>
+    Strapi.fetchAll("api::page.page", { locale }, undefined, {
+      omitAuthorization: true,
+    })
   )
 
   const results = await Promise.allSettled(promises)
@@ -33,11 +35,17 @@ export async function generateStaticParams() {
 
 async function fetchData(pageUrl: string, locale: string) {
   try {
-    return Strapi.fetchOneBySlug("api::page.page", pageUrl, {
-      // @ts-ignore - "deep" is not recognized as it comes from strapi extension
-      populate: "deep" as "*",
-      locale,
-    })
+    return Strapi.fetchOneBySlug(
+      "api::page.page",
+      pageUrl,
+      {
+        // @ts-ignore - "deep" is not recognized as it comes from strapi extension
+        populate: "deep" as "*",
+        locale,
+      },
+      undefined,
+      { omitAuthorization: true }
+    )
   } catch (e: any) {
     console.error(`"api::page.page" wasn't fetched: `, e?.message)
     return undefined
@@ -54,7 +62,7 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function StrapiPage({ params }: Props) {
-  unstable_setRequestLocale(params.locale)
+  setRequestLocale(params.locale)
 
   const pageUrl = params.rest.filter((part) => part != "builder").join("/")
   const response = await fetchData(pageUrl, params.locale)
