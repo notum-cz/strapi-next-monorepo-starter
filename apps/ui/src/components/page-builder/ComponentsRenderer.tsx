@@ -1,4 +1,4 @@
-import { Attribute, Types } from "@repo/strapi"
+import { Schema, UID } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
@@ -17,7 +17,7 @@ import { Newsletter } from "./components/Newsletter"
 // Define page-level components supported by this switch
 const printableComps: {
   // eslint-disable-next-line no-unused-vars
-  [K in Types.Common.UID.Component]?: React.ComponentType<any>
+  [K in UID.Component]?: React.ComponentType<any>
 } = {
   "sections.faq": Faq,
   "sections.hero": Hero,
@@ -35,8 +35,8 @@ const printableComps: {
 export function ComponentsRenderer({
   pageComponents,
 }: {
-  readonly pageComponents: Attribute.GetDynamicZoneValue<
-    Attribute.DynamicZone<Types.Common.UID.Component[]>
+  readonly pageComponents: Schema.Attribute.GetDynamicZoneValue<
+    Schema.Attribute.DynamicZone<UID.Component[]>
   >
 }) {
   removeThisWhenYouNeedMe("ComponentsRenderer")

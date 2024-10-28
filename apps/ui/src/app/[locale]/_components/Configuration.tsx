@@ -4,8 +4,7 @@ async function getData() {
   try {
     const configuration = await Strapi.fetchOne(
       "api::configuration.configuration",
-      undefined,
-      { populate: "*" }
+      undefined
     )
 
     return configuration.data
@@ -25,7 +24,7 @@ export async function ConfigurationExample() {
     return null
   }
 
-  const { darkMode } = configuration.attributes
+  const { darkMode } = configuration
 
   return (
     <div className="p-3">

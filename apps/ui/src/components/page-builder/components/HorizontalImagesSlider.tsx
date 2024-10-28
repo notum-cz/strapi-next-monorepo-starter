@@ -1,4 +1,4 @@
-import { Attribute } from "@repo/strapi"
+import { Schema } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
@@ -9,9 +9,10 @@ import { ImageWithLink } from "./ImageWithLink"
 export function HorizontalImages({
   component,
 }: {
-  readonly component: Attribute.GetDynamicZoneValue<
-    Attribute.DynamicZone<["sections.horizontal-images"]>
-  >[number]
+  readonly component: Schema.Attribute.ComponentValue<
+    "sections.horizontal-images",
+    false
+  >
 }) {
   removeThisWhenYouNeedMe("HorizontalImages")
 

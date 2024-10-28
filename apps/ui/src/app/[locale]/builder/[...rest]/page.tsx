@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation"
-import { Attribute } from "@repo/strapi"
 import { setRequestLocale } from "next-intl/server"
 
 import { PageProps } from "@/types/next"
@@ -26,8 +25,8 @@ export async function generateStaticParams() {
     .map((result) => result.value.data)
     .flat()
     .map((page) => ({
-      locale: page.attributes.locale,
-      rest: [page.attributes.slug],
+      locale: page.locale,
+      rest: [page.slug],
     }))
 
   return params
@@ -39,8 +38,8 @@ async function fetchData(pageUrl: string, locale: string) {
       "api::page.page",
       pageUrl,
       {
-        // @ts-ignore - "deep" is not recognized as it comes from strapi extension
-        populate: "deep" as "*",
+        populate: ["content"],
+        pLevel: 10,
         locale,
       },
       undefined,
@@ -67,7 +66,7 @@ export default async function StrapiPage({ params }: Props) {
   const pageUrl = params.rest.filter((part) => part != "builder").join("/")
   const response = await fetchData(pageUrl, params.locale)
 
-  const page = response?.data?.attributes
+  const page = response?.data
 
   if (page?.content == null) {
     notFound()
@@ -75,11 +74,7 @@ export default async function StrapiPage({ params }: Props) {
 
   const pageSpecificNavbar = page.content.find(
     (x) => x.__component === "layout.navbar"
-  ) as
-    | Attribute.GetDynamicZoneValue<
-        Attribute.DynamicZone<["layout.navbar"]>
-      >[number]
-    | undefined
+  )
 
   const pageComponents = page.content.filter((x) => {
     return (

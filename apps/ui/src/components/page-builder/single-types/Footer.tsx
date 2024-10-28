@@ -16,9 +16,9 @@ async function fetchData(locale: string) {
       "api::footer.footer",
       undefined,
       {
-        // @ts-ignore - "deep" is not recognized as it comes from strapi extension
-        populate: "deep" as "*",
         locale,
+        populate: ["sections", "gridCols", "logoImage", "links"],
+        pLevel: 5,
       },
       undefined,
       { omitAuthorization: true }
@@ -40,7 +40,7 @@ export async function PageBuilderFooter({
   removeThisWhenYouNeedMe("PageBuilderFooter")
 
   const response = await fetchData(locale)
-  const component = response?.data?.attributes
+  const component = response?.data
 
   if (component == null) {
     return null

@@ -1,14 +1,3 @@
-import type { Attribute, Common, Entity, Params } from "@repo/strapi"
-
-interface APIIdProperty {
-  id: number
-}
-
-export interface APIResponseData<TContentTypeUID extends Common.UID.ContentType>
-  extends APIIdProperty {
-  attributes: Attribute.GetValues<TContentTypeUID>
-}
-
 export interface APIResponseCollectionPagination {
   page: number
   pageSize: number
@@ -17,51 +6,22 @@ export interface APIResponseCollectionPagination {
 }
 
 export interface APIResponseCollectionMetadata {
-  pagination: APIResponseCollectionPagination
+  pagination: {
+    page: number
+    pageSize: number
+    pageCount: number
+    total: number
+  }
 }
 
-export interface APIResponse<TContentTypeUID extends Common.UID.ContentType> {
-  data: APIResponseData<TContentTypeUID> | null
+export interface APIResponse<T> {
+  data: T | null
   meta: object
 }
 
-export interface APIResponseCollection<
-  TContentTypeUID extends Common.UID.ContentType,
-> {
-  data: APIResponseData<TContentTypeUID>[]
+export interface APIResponseCollection<T> {
+  data: T[]
   meta: APIResponseCollectionMetadata
-}
-
-export type APILocaleCode = string
-
-type WithLocale<T> = T & { locale?: APILocaleCode }
-
-export type APIUrlParams<TContentTypeUID extends Common.UID.ContentType> =
-  WithLocale<
-    Params.Pick<
-      TContentTypeUID,
-      | "fields"
-      | "filters"
-      | "sort"
-      | "populate"
-      | "publicationState"
-      | "pagination"
-    >
-  >
-
-export interface ApiLocale {
-  id: Entity.ID
-  createdAt: string
-  updatedAt: string
-  code: string
-  isDefault: boolean
-  name: string
-}
-
-export type UnwrappedAPIResponseData<
-  T extends APIResponseData<Common.UID.ContentType>,
-> = T["attributes"] & {
-  id: T["id"]
 }
 
 type StrapiImageMediaFormat = {
@@ -77,6 +37,8 @@ type StrapiImageMediaFormat = {
 }
 
 export type StrapiImageMedia = {
+  documentId: string
+  id: number
   name?: string
   alternativeText?: string
   caption?: string
@@ -99,11 +61,4 @@ export type StrapiImageMedia = {
   previewUrl?: string
   provider?: string
   provider_metadata?: string
-}
-
-export type StrapiDataWrapper<T> = {
-  data: {
-    id: Entity.ID
-    attributes: T
-  }
 }

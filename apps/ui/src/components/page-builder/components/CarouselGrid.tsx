@@ -1,4 +1,4 @@
-import { Attribute } from "@repo/strapi"
+import { Schema } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
@@ -18,9 +18,10 @@ const DEFAULT_IMG_SIZE = 110
 export function CarouselGrid({
   component,
 }: {
-  readonly component: Attribute.GetDynamicZoneValue<
-    Attribute.DynamicZone<["sections.carousel"]>
-  >[number]
+  readonly component: Schema.Attribute.ComponentValue<
+    "sections.carousel",
+    false
+  >
 }) {
   removeThisWhenYouNeedMe("CarouselGrid")
 
