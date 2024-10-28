@@ -32,37 +32,34 @@
     ]
   },
   "dependencies": {
-    "@strapi/plugin-color-picker": "4.24.5",
-    "@strapi/plugin-i18n": "4.24.0",
-    "@strapi/plugin-sentry": "4.24.5",
-    "@strapi/plugin-seo": "^1.9.9",
-    "@strapi/plugin-users-permissions": "4.24.5",
-    "@strapi/provider-email-mailgun": "4.24.0",
-    "@strapi/provider-upload-aws-s3": "4.24.5",
-    "@strapi/strapi": "4.24.5",
+    "@strapi/plugin-color-picker": "^5.1.1",
+    "@strapi/plugin-sentry": "^5.1.1",
+    "@strapi/plugin-seo": "^2.0.0",
+    "@strapi/plugin-users-permissions": "^5.1.1",
+    "@strapi/provider-email-mailgun": "^5.1.1",
+    "@strapi/provider-upload-aws-s3": "^5.1.1",
+    "@strapi/strapi": "^5.1.1",
     "lodash": "^4.17.21",
-    "pg": "^8.12.0",
-    "qs": "^6.12.3",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "5.3.4",
+    "pg": "^8.13.1",
+    "qs": "^6.13.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.0.0",
     "slugify": "^1.6.6",
-    "strapi-plugin-config-sync": "^1.2.5",
-    "strapi-plugin-populate-deep": "^3.0.1",
+    "strapi-plugin-config-sync": "2",
+    "strapi-v5-plugin-populate-deep": "^4.0.4",
     "stripe": "^15.8.0",
-    "styled-components": "^5.3.3"
+    "styled-components": "^6.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.14.12",
-    "typescript": "^5.5.4"
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "typescript": "^5"
   },
   "engines": {
     "node": "20.x.x",
     "yarn": "1.22.x"
-  },
-  "comments": {
-    "styled-components": "Bump from 5.3.3 may won't work",
-    "react-router-dom": "Bump to v6 wont currently work"
   },
   "strapi": {
     "uuid": "@repo/strapi"

@@ -1,5 +1,6 @@
-import { Strapi } from "@strapi/strapi"
 import { GetValues } from "@strapi/types/dist/modules/entity-service/result"
+
+import type { Core } from "@strapi/strapi"
 
 const crypto = require("crypto")
 
@@ -19,7 +20,7 @@ export default {
    * This gives you an opportunity to set up your data model,
    * run jobs, or perform some special logic.
    */
-  bootstrap({ strapi }: { strapi: Strapi }) {
+  bootstrap({ strapi }: { strapi: Core.Strapi }) {
     // Send email after registration to admin strapi panel
     // strapi.db.lifecycles.subscribe({
     //   models: ["admin::user"],
