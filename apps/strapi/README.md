@@ -6,7 +6,7 @@ This is a [Stapi](https://strapi.io/) project bootstrapped with TypeScript using
 
 - node 20
 - yarn 1.22
-- Strapi 4
+- Strapi 5
 - TypeScript
 - Postgres 16 alpine (in local docker container)
 
@@ -20,7 +20,7 @@ This is a [Stapi](https://strapi.io/) project bootstrapped with TypeScript using
 - @strapi/provider-email-mailgun
 - @strapi/provider-upload-aws-s3
 - strapi-plugin-config-sync
-- strapi-plugin-populate-deep
+- strapi-v5-plugin-populate-deep
 - qs, slugify
 - lodash
 - pg
@@ -172,6 +172,14 @@ async find(ctx) {
 
 [strapi-plugin-config-sync](https://www.npmjs.com/package/strapi-plugin-config-sync) plugin is installed by default to sync configuration between environments.
 
+#### Relation population
+
+[strapi-v5-plugin-populate-deep](https://www.npmjs.com/package/strapi-v5-plugin-populate-deep) plugin is installed by default to automatically populate relations in Strapi queries. This plugin is v5 compatible fork of original [strapi-plugin-populate-deep](https://www.npmjs.com/package/strapi-plugin-populate-deep).
+
+Default depth level is set in [config/plugins.ts](config/plugins.ts) file. To apply default depth level add **empty** `pLevel` query parameter (without value or "=") to requests (`GET /articles?pLevel`) - this is not programmatically-friendly, so it's better to define depth level in the each fetch as parameter.
+
+The limitation of using this plugin is that inferred type of response is not affected by `pLevel` value. To have native Strapi typing based on reality, it's better to use `populate` query parameter if possible.
+
 #### Stripe integration
 
 There is our [stripe integration plugin](src/plugins//stripe-integration/README.md) prepared in this template. It's a simple example of how to integrate [Stripe](https://stripe.com) services with Strapi. It's disabled by default. To enable it, go to [config/plugins.ts](config/plugins.ts) file and uncomment the lines.
@@ -196,7 +204,3 @@ Data can be easily transferred between environments in multiple ways. Check out 
 ### Cron jobs
 
 Edit `config/cron-tasks.ts` to add cron jobs. Enable them by setting `CRON_ENABLED=true` in `.env` file.
-
-### Patch package
-
-There is temporal patch for 'strapi-plugin-content-type-builder' package in `patches` directory. It's applied automatically by `postinstall` script in `package.json`. It allows creating nested components in Strapi by disabling the validation.
