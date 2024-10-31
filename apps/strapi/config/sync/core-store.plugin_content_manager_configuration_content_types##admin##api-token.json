@@ -193,7 +193,12 @@
       }
     },
     "layouts": {
-      "list": ["id", "name", "description", "type"],
+      "list": [
+        "id",
+        "name",
+        "description",
+        "type"
+      ],
       "edit": [
         [
           {

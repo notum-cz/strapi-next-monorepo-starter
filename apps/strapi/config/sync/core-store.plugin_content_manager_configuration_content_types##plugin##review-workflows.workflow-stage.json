@@ -1,14 +1,13 @@
 {
-  "key": "plugin_content_manager_configuration_content_types::plugin::users-permissions.user",
+  "key": "plugin_content_manager_configuration_content_types::plugin::review-workflows.workflow-stage",
   "value": {
-    "uid": "plugin::users-permissions.user",
     "settings": {
       "bulkable": true,
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "username",
-      "defaultSortBy": "username",
+      "mainField": "name",
+      "defaultSortBy": "name",
       "defaultSortOrder": "ASC"
     },
     "metadatas": {
@@ -20,121 +19,37 @@
           "sortable": true
         }
       },
-      "username": {
+      "name": {
         "edit": {
-          "label": "username",
+          "label": "name",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "username",
+          "label": "name",
           "searchable": true,
           "sortable": true
         }
       },
-      "email": {
+      "color": {
         "edit": {
-          "label": "email",
+          "label": "color",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "email",
+          "label": "color",
           "searchable": true,
           "sortable": true
         }
       },
-      "provider": {
+      "workflow": {
         "edit": {
-          "label": "provider",
-          "description": "",
-          "placeholder": "",
-          "visible": false,
-          "editable": true
-        },
-        "list": {
-          "label": "provider",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "password": {
-        "edit": {
-          "label": "password",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "password",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "resetPasswordToken": {
-        "edit": {
-          "label": "resetPasswordToken",
-          "description": "",
-          "placeholder": "",
-          "visible": false,
-          "editable": true
-        },
-        "list": {
-          "label": "resetPasswordToken",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "confirmationToken": {
-        "edit": {
-          "label": "confirmationToken",
-          "description": "",
-          "placeholder": "",
-          "visible": false,
-          "editable": true
-        },
-        "list": {
-          "label": "confirmationToken",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "confirmed": {
-        "edit": {
-          "label": "confirmed",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "confirmed",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "blocked": {
-        "edit": {
-          "label": "blocked",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "blocked",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "role": {
-        "edit": {
-          "label": "role",
+          "label": "workflow",
           "description": "",
           "placeholder": "",
           "visible": true,
@@ -142,9 +57,24 @@
           "mainField": "name"
         },
         "list": {
-          "label": "role",
+          "label": "workflow",
           "searchable": true,
           "sortable": true
+        }
+      },
+      "permissions": {
+        "edit": {
+          "label": "permissions",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "action"
+        },
+        "list": {
+          "label": "permissions",
+          "searchable": false,
+          "sortable": false
         }
       },
       "createdAt": {
@@ -209,43 +139,34 @@
     "layouts": {
       "list": [
         "id",
-        "username",
-        "email",
-        "confirmed"
+        "name",
+        "color",
+        "workflow"
       ],
       "edit": [
         [
           {
-            "name": "username",
+            "name": "name",
             "size": 6
           },
           {
-            "name": "email",
+            "name": "color",
             "size": 6
           }
         ],
         [
           {
-            "name": "password",
+            "name": "workflow",
             "size": 6
           },
           {
-            "name": "confirmed",
-            "size": 4
-          }
-        ],
-        [
-          {
-            "name": "blocked",
-            "size": 4
-          },
-          {
-            "name": "role",
+            "name": "permissions",
             "size": 6
           }
         ]
       ]
-    }
+    },
+    "uid": "plugin::review-workflows.workflow-stage"
   },
   "type": "object",
   "environment": null,

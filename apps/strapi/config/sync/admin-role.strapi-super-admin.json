@@ -2,6 +2,8 @@
   "name": "Super Admin",
   "code": "strapi-super-admin",
   "description": "Super Admins can access and manage all features and settings.",
+  "documentId": "anfuqjr17tzzymqqgicfisqv",
+  "locale": null,
   "permissions": [
     {
       "action": "plugin::content-manager.explorer.create",
@@ -9,17 +11,31 @@
       "subject": "api::configuration.configuration",
       "properties": {
         "fields": [
-          "darkMode"
+          "darkMode",
+          "example.author"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "z3zwg0h9fy17ibt245uh9jap",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.delete",
       "actionParameters": {},
       "subject": "api::configuration.configuration",
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "fui1i75zf3e5t203dyaox18o",
+      "locale": null
+    },
+    {
+      "action": "plugin::content-manager.explorer.publish",
+      "actionParameters": {},
+      "subject": "api::configuration.configuration",
+      "properties": {},
+      "conditions": [],
+      "documentId": "xi0w9ob6yhg9bgmpsnsjl4e5",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.read",
@@ -27,10 +43,13 @@
       "subject": "api::configuration.configuration",
       "properties": {
         "fields": [
-          "darkMode"
+          "darkMode",
+          "example.author"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "mnib9pflo3hs4vatcgr1v04p",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.update",
@@ -38,10 +57,13 @@
       "subject": "api::configuration.configuration",
       "properties": {
         "fields": [
-          "darkMode"
+          "darkMode",
+          "example.author"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "uyyncy9iymwyk1nr01mkwagl",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.create",
@@ -70,10 +92,13 @@
           "logoImage.link.label"
         ],
         "locales": [
-          "en"
+          "en",
+          "cs"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "oo0w2d4v5m5p57vy27dqh4cp",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.delete",
@@ -81,10 +106,27 @@
       "subject": "api::footer.footer",
       "properties": {
         "locales": [
-          "en"
+          "en",
+          "cs"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "fo5iz77654daud85iogcqc99",
+      "locale": null
+    },
+    {
+      "action": "plugin::content-manager.explorer.publish",
+      "actionParameters": {},
+      "subject": "api::footer.footer",
+      "properties": {
+        "locales": [
+          "en",
+          "cs"
+        ]
+      },
+      "conditions": [],
+      "documentId": "pd76hn5iws730z4zv08bbl47",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.read",
@@ -113,10 +155,13 @@
           "logoImage.link.label"
         ],
         "locales": [
-          "en"
+          "en",
+          "cs"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "dsx2s5ulcmx7ay7padu56m9b",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.update",
@@ -145,10 +190,13 @@
           "logoImage.link.label"
         ],
         "locales": [
-          "en"
+          "en",
+          "cs"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "qxk1o1r1bsxlzrnq2ibe8wvz",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.create",
@@ -169,10 +217,13 @@
           "logoImage.link.label"
         ],
         "locales": [
-          "en"
+          "en",
+          "cs"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "u19j4bcgpca51prx2gef36v8",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.delete",
@@ -180,10 +231,27 @@
       "subject": "api::navbar.navbar",
       "properties": {
         "locales": [
-          "en"
+          "en",
+          "cs"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "a5jmh56xyntmz21gaxdfjiu8",
+      "locale": null
+    },
+    {
+      "action": "plugin::content-manager.explorer.publish",
+      "actionParameters": {},
+      "subject": "api::navbar.navbar",
+      "properties": {
+        "locales": [
+          "en",
+          "cs"
+        ]
+      },
+      "conditions": [],
+      "documentId": "w7llqj5f94bdkhos5rogmbuj",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.read",
@@ -204,10 +272,13 @@
           "logoImage.link.label"
         ],
         "locales": [
-          "en"
+          "en",
+          "cs"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "z6lbu6rk0usmkw0g8ua4t1dj",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.update",
@@ -228,10 +299,13 @@
           "logoImage.link.label"
         ],
         "locales": [
-          "en"
+          "en",
+          "cs"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "txhx83gk0tpg41t6gojpv4y6",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.create",
@@ -243,22 +317,28 @@
           "seo.metaTitle",
           "seo.metaDescription",
           "seo.metaImage",
-          "seo.metaSocial.socialNetwork",
-          "seo.metaSocial.title",
-          "seo.metaSocial.description",
-          "seo.metaSocial.image",
           "seo.keywords",
           "seo.metaRobots",
-          "seo.structuredData",
-          "seo.metaViewport",
-          "seo.canonicalURL",
+          "seo.twitter.card",
+          "seo.twitter.title",
+          "seo.twitter.description",
+          "seo.twitter.siteId",
+          "seo.twitter.creator",
+          "seo.twitter.creatorId",
+          "seo.twitter.images",
+          "seo.applicationName",
+          "seo.siteName",
+          "seo.email",
           "content"
         ],
         "locales": [
-          "en"
+          "en",
+          "cs"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "p3zliz7ta5eol3b7bzsiq9iu",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.delete",
@@ -266,10 +346,13 @@
       "subject": "api::page.page",
       "properties": {
         "locales": [
-          "en"
+          "en",
+          "cs"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "d01kl6om4548nyljbh3ofgst",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.publish",
@@ -277,10 +360,13 @@
       "subject": "api::page.page",
       "properties": {
         "locales": [
-          "en"
+          "en",
+          "cs"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "pcmhke777f75pc67xghz6mek",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.read",
@@ -292,22 +378,28 @@
           "seo.metaTitle",
           "seo.metaDescription",
           "seo.metaImage",
-          "seo.metaSocial.socialNetwork",
-          "seo.metaSocial.title",
-          "seo.metaSocial.description",
-          "seo.metaSocial.image",
           "seo.keywords",
           "seo.metaRobots",
-          "seo.structuredData",
-          "seo.metaViewport",
-          "seo.canonicalURL",
+          "seo.twitter.card",
+          "seo.twitter.title",
+          "seo.twitter.description",
+          "seo.twitter.siteId",
+          "seo.twitter.creator",
+          "seo.twitter.creatorId",
+          "seo.twitter.images",
+          "seo.applicationName",
+          "seo.siteName",
+          "seo.email",
           "content"
         ],
         "locales": [
-          "en"
+          "en",
+          "cs"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "n6087yogqwrsyt598q1v2lgr",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.update",
@@ -319,239 +411,307 @@
           "seo.metaTitle",
           "seo.metaDescription",
           "seo.metaImage",
-          "seo.metaSocial.socialNetwork",
-          "seo.metaSocial.title",
-          "seo.metaSocial.description",
-          "seo.metaSocial.image",
           "seo.keywords",
           "seo.metaRobots",
-          "seo.structuredData",
-          "seo.metaViewport",
-          "seo.canonicalURL",
+          "seo.twitter.card",
+          "seo.twitter.title",
+          "seo.twitter.description",
+          "seo.twitter.siteId",
+          "seo.twitter.creator",
+          "seo.twitter.creatorId",
+          "seo.twitter.images",
+          "seo.applicationName",
+          "seo.siteName",
+          "seo.email",
           "content"
         ],
         "locales": [
-          "en"
+          "en",
+          "cs"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "l2j2omqfhrlccu5g3lg6cg0a",
+      "locale": null
     },
     {
       "action": "admin::api-tokens.access",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "gu5dy04bp1wla62kg7g0txri",
+      "locale": null
     },
     {
       "action": "admin::api-tokens.create",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "r4a1he86z9e5pzs1pplnvqmq",
+      "locale": null
     },
     {
       "action": "admin::api-tokens.delete",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "gltvfsr3mruhb2kptwzttdou",
+      "locale": null
     },
     {
       "action": "admin::api-tokens.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "vva9utnabcxhed5zfch4j48i",
+      "locale": null
     },
     {
       "action": "admin::api-tokens.regenerate",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "ni90xvzxbjsr8ooqpp6oay59",
+      "locale": null
     },
     {
       "action": "admin::api-tokens.update",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "jg1rhu0xqgauhfmtbq7uwu2o",
+      "locale": null
     },
     {
       "action": "admin::marketplace.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "j8ggxw7ywiokrafq1hac2m9g",
+      "locale": null
     },
     {
       "action": "admin::project-settings.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "r7yc66hsni4hu81mg3igvpi3",
+      "locale": null
     },
     {
       "action": "admin::project-settings.update",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "mjkasd6k0x677r9f249fhbyy",
+      "locale": null
     },
     {
       "action": "admin::roles.create",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "bx8hazztb0jyha53mgjzcog2",
+      "locale": null
     },
     {
       "action": "admin::roles.delete",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "h2n87jfmv3qko4m7qvlh8mtj",
+      "locale": null
     },
     {
       "action": "admin::roles.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "jbrnct4mduar7vucb6h1k6um",
+      "locale": null
     },
     {
       "action": "admin::roles.update",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "g3oe5sw3p88wx1ia0lfmpzld",
+      "locale": null
     },
     {
       "action": "admin::transfer.tokens.access",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "t2ew352f4jho9umg0ra6cbp3",
+      "locale": null
     },
     {
       "action": "admin::transfer.tokens.create",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "rjgymwewjoyr4bn77a4709tx",
+      "locale": null
     },
     {
       "action": "admin::transfer.tokens.delete",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "ok0y75s0ki5jatq24slc9f4l",
+      "locale": null
     },
     {
       "action": "admin::transfer.tokens.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "gnkxyyku6d9gcowzxu07jqu2",
+      "locale": null
     },
     {
       "action": "admin::transfer.tokens.regenerate",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "opkpnmt9qkm7tbob5xn62e56",
+      "locale": null
     },
     {
       "action": "admin::transfer.tokens.update",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "z7f155kain81mko27rc092ho",
+      "locale": null
     },
     {
       "action": "admin::users.create",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "pa8zee0zbt9o2ihs6mk67e41",
+      "locale": null
     },
     {
       "action": "admin::users.delete",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "wl2kfg418043glreqofkex32",
+      "locale": null
     },
     {
       "action": "admin::users.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "tof494roxv1lehhhwnslky9b",
+      "locale": null
     },
     {
       "action": "admin::users.update",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "zvt78w6piaubd310g54o5jnd",
+      "locale": null
     },
     {
       "action": "admin::webhooks.create",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "tukqp0aipbusumkkfrvs4g2f",
+      "locale": null
     },
     {
       "action": "admin::webhooks.delete",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "i284e9q8w6fnjx4cszjvvgia",
+      "locale": null
     },
     {
       "action": "admin::webhooks.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "ph1it90ulw3fshg3i1d1hf5q",
+      "locale": null
     },
     {
       "action": "admin::webhooks.update",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "k75agnhilomcx4icy03ow61m",
+      "locale": null
     },
     {
       "action": "plugin::config-sync.menu-link",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "yg6168r5frmrp3m5r3z4iwzb",
+      "locale": null
     },
     {
       "action": "plugin::config-sync.settings.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "wap16nu9aphk1yo5l11rel5b",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.collection-types.configure-view",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "kmtknitn7ftevefhrg8bxvdf",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.components.configure-layout",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "o5ju5wninja79sw3bm502ts3",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.create",
@@ -570,14 +730,27 @@
           "role"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "ck6be3f02thalmc1j9pt9ce6",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.delete",
       "actionParameters": {},
       "subject": "plugin::users-permissions.user",
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "xm7ewqh6m4dq72w5bvln1tjz",
+      "locale": null
+    },
+    {
+      "action": "plugin::content-manager.explorer.publish",
+      "actionParameters": {},
+      "subject": "plugin::users-permissions.user",
+      "properties": {},
+      "conditions": [],
+      "documentId": "ilp9zag0rmv4ivaoqhzkamuz",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.read",
@@ -596,7 +769,9 @@
           "role"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "nnm1ekxu2vy4g16n3h42e79s",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.explorer.update",
@@ -615,182 +790,234 @@
           "role"
         ]
       },
-      "conditions": []
+      "conditions": [],
+      "documentId": "whwjahsq9p2qd26p8gxw30kl",
+      "locale": null
     },
     {
       "action": "plugin::content-manager.single-types.configure-view",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "zo93ugzessa46smtq6c6w840",
+      "locale": null
     },
     {
       "action": "plugin::content-type-builder.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "qiazqii4u4x2s0gg7yeflig4",
+      "locale": null
     },
     {
       "action": "plugin::email.settings.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "hmrceuxiuu9t8v419af1sh8k",
+      "locale": null
     },
     {
       "action": "plugin::i18n.locale.create",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "r1n2p6uex67wjxae12vcelg8",
+      "locale": null
     },
     {
       "action": "plugin::i18n.locale.delete",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "itc6h4m5cmg5jnzxy2gg4k9w",
+      "locale": null
     },
     {
       "action": "plugin::i18n.locale.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "v3z2bysmlwuwps99r9v6d0qc",
+      "locale": null
     },
     {
       "action": "plugin::i18n.locale.update",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "c3kny7tfdeq7sbnxsnzek5lc",
+      "locale": null
     },
     {
       "action": "plugin::seo.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "xqctobkku0g68yqemgv5j6ck",
+      "locale": null
     },
     {
       "action": "plugin::upload.assets.copy-link",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "yd5y6zflg4bw7hpt5lgjq6pf",
+      "locale": null
     },
     {
       "action": "plugin::upload.assets.create",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "tsvf7j9wwu5zyq3j0dfge0du",
+      "locale": null
     },
     {
       "action": "plugin::upload.assets.download",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "jrou4j7dqb7offw0275zxj5j",
+      "locale": null
     },
     {
       "action": "plugin::upload.assets.update",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "u4c4rvajjvlfrkwgij22trtu",
+      "locale": null
     },
     {
       "action": "plugin::upload.configure-view",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "sv4dw946y0qm7yf9ut4qm2w0",
+      "locale": null
     },
     {
       "action": "plugin::upload.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "wgewuckj1exqovwituk80ek5",
+      "locale": null
     },
     {
       "action": "plugin::upload.settings.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "pqfn24a1garxnousyagal36h",
+      "locale": null
     },
     {
       "action": "plugin::users-permissions.advanced-settings.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "blaslkxfpotc7dlfp7p96o74",
+      "locale": null
     },
     {
       "action": "plugin::users-permissions.advanced-settings.update",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "lgrfxbterby8eyikp4cv2f0k",
+      "locale": null
     },
     {
       "action": "plugin::users-permissions.email-templates.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "rrfdrawym3tw3lumm6lnxzwj",
+      "locale": null
     },
     {
       "action": "plugin::users-permissions.email-templates.update",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "wwy84j3yos0xihv2ty4rx8r7",
+      "locale": null
     },
     {
       "action": "plugin::users-permissions.providers.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "mepzvb8i6az8ynm20s0hc0n9",
+      "locale": null
     },
     {
       "action": "plugin::users-permissions.providers.update",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "cqzsd4anddh8o7l3gmren5dn",
+      "locale": null
     },
     {
       "action": "plugin::users-permissions.roles.create",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "lj2j5aelij0oairix6g4sabh",
+      "locale": null
     },
     {
       "action": "plugin::users-permissions.roles.delete",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "mel9uo240ufzfzw9onkjhuam",
+      "locale": null
     },
     {
       "action": "plugin::users-permissions.roles.read",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "hnkv7msspcehczkz1yr86idn",
+      "locale": null
     },
     {
       "action": "plugin::users-permissions.roles.update",
       "actionParameters": {},
       "subject": null,
       "properties": {},
-      "conditions": []
+      "conditions": [],
+      "documentId": "o1rq0r16cbs8921qoy0b2j2p",
+      "locale": null
     }
   ]
 }

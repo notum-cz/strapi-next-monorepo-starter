@@ -34,6 +34,20 @@
           "sortable": true
         }
       },
+      "example": {
+        "edit": {
+          "label": "example",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "example",
+          "searchable": false,
+          "sortable": false
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -94,12 +108,23 @@
       }
     },
     "layouts": {
-      "list": ["id", "createdAt", "darkMode"],
+      "list": [
+        "id",
+        "createdAt",
+        "darkMode",
+        "example"
+      ],
       "edit": [
         [
           {
             "name": "darkMode",
             "size": 4
+          }
+        ],
+        [
+          {
+            "name": "example",
+            "size": 12
           }
         ]
       ]

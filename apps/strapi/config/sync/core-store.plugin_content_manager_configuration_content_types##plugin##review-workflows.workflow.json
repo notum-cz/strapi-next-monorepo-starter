@@ -1,14 +1,13 @@
 {
-  "key": "plugin_content_manager_configuration_content_types::plugin::users-permissions.permission",
+  "key": "plugin_content_manager_configuration_content_types::plugin::review-workflows.workflow",
   "value": {
-    "uid": "plugin::users-permissions.permission",
     "settings": {
       "bulkable": true,
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "action",
-      "defaultSortBy": "action",
+      "mainField": "name",
+      "defaultSortBy": "name",
       "defaultSortOrder": "ASC"
     },
     "metadatas": {
@@ -20,23 +19,23 @@
           "sortable": true
         }
       },
-      "action": {
+      "name": {
         "edit": {
-          "label": "action",
+          "label": "name",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "action",
+          "label": "name",
           "searchable": true,
           "sortable": true
         }
       },
-      "role": {
+      "stages": {
         "edit": {
-          "label": "role",
+          "label": "stages",
           "description": "",
           "placeholder": "",
           "visible": true,
@@ -44,9 +43,23 @@
           "mainField": "name"
         },
         "list": {
-          "label": "role",
-          "searchable": true,
-          "sortable": true
+          "label": "stages",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "contentTypes": {
+        "edit": {
+          "label": "contentTypes",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "contentTypes",
+          "searchable": false,
+          "sortable": false
         }
       },
       "createdAt": {
@@ -111,23 +124,30 @@
     "layouts": {
       "list": [
         "id",
-        "action",
-        "role",
+        "name",
+        "stages",
         "createdAt"
       ],
       "edit": [
         [
           {
-            "name": "action",
+            "name": "name",
             "size": 6
           },
           {
-            "name": "role",
+            "name": "stages",
             "size": 6
+          }
+        ],
+        [
+          {
+            "name": "contentTypes",
+            "size": 12
           }
         ]
       ]
-    }
+    },
+    "uid": "plugin::review-workflows.workflow"
   },
   "type": "object",
   "environment": null,
