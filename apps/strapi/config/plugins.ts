@@ -42,11 +42,6 @@ export default ({ env }) => {
       },
     },
 
-    // "stripe-integration": {
-    //   enabled: true,
-    //   resolve: "./src/plugins/stripe-integration",
-    // },
-
     // email: {
     //   config: {
     //     provider: "mailgun",

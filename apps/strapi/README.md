@@ -24,14 +24,12 @@ This is a [Stapi](https://strapi.io/) project bootstrapped with TypeScript using
 - qs, slugify
 - lodash
 - pg
-- stripe
 
 ## 🚀 Get up and develop
 
 #### Transform this template to a project
 
 - Remove packages you don't need from `package.json` and reinstall dependencies.
-- Remove [Stripe integration plugin](src/plugins/stripe-integration/README.md) if not needed.
 - In `docker-compose.yml` change top-level name "dev-templates" (optionally network name too) according to project name to overcome name clashes in dev's computers.
 - For Heroku deployment you have to create S3 bucket and set up ENV variables (Heroku removes uploaded files after dyno restart).
 
@@ -123,7 +121,7 @@ Use buildpacks and setup scripts from [this @notum-cz repository](https://github
 
 ### Plugins
 
-Some preinstalled plugins (mailgun, stripe) are disabled by default. To turn them on go to [config/plugins.ts](config/plugins.ts) file and uncomment the lines. Some of them may require additional setting of API keys or different ENV variables.
+Some preinstalled plugins (mailgun) are disabled by default. To turn them on go to [config/plugins.ts](config/plugins.ts) file and uncomment the lines. Some of them may require additional setting of API keys or different ENV variables.
 
 User-permissions, seo and config-sync plugins are enabled by default. Sentry plugin requires setting up DSN key in ENV variables (see below).
 
@@ -179,10 +177,6 @@ async find(ctx) {
 Default depth level is set in [config/plugins.ts](config/plugins.ts) file. To apply default depth level add **empty** `pLevel` query parameter (without value or "=") to requests (`GET /articles?pLevel`) - this is not programmatically-friendly, so it's better to define depth level in the each fetch as parameter.
 
 The limitation of using this plugin is that inferred type of response is not affected by `pLevel` value. To have native Strapi typing based on reality, it's better to use `populate` query parameter if possible.
-
-#### Stripe integration
-
-There is our [stripe integration plugin](src/plugins//stripe-integration/README.md) prepared in this template. It's a simple example of how to integrate [Stripe](https://stripe.com) services with Strapi. It's disabled by default. To enable it, go to [config/plugins.ts](config/plugins.ts) file and uncomment the lines.
 
 ### Typescript
 
