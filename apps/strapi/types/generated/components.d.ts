@@ -1,5 +1,16 @@
 import type { Schema, Struct } from "@strapi/strapi"
 
+export interface ExampleExample extends Struct.ComponentSchema {
+  collectionName: "components_example_examples"
+  info: {
+    displayName: "example"
+    icon: "emotionUnhappy"
+  }
+  attributes: {
+    author: Schema.Attribute.String
+  }
+}
+
 export interface LayoutNavbar extends Struct.ComponentSchema {
   collectionName: "components_layout_navbars"
   info: {
@@ -326,6 +337,7 @@ export interface SharedSeoTwitter extends Struct.ComponentSchema {
 declare module "@strapi/strapi" {
   export module Public {
     export interface ComponentSchemas {
+      "example.example": ExampleExample
       "layout.navbar": LayoutNavbar
       "sections.animated-logo-row": SectionsAnimatedLogoRow
       "sections.carousel": SectionsCarousel

@@ -385,6 +385,7 @@ export interface ApiConfigurationConfiguration extends Struct.SingleTypeSchema {
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
     darkMode: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>
+    example: Schema.Attribute.Component<"example.example", false>
     locale: Schema.Attribute.String & Schema.Attribute.Private
     localizations: Schema.Attribute.Relation<
       "oneToMany",

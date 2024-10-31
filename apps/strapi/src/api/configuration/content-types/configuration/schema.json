@@ -15,6 +15,12 @@
     "darkMode": {
       "type": "boolean",
       "default": false
+    },
+    "example": {
+      "displayName": "example",
+      "type": "component",
+      "repeatable": false,
+      "component": "example.example"
     }
   }
 }
