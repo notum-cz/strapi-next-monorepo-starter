@@ -12,12 +12,12 @@ export async function getMetadataFromStrapi({
   pageUrl,
   locale,
   customMetadata,
-  uid,
+  uid = "api::page.page",
 }: {
   pageUrl?: string
   locale: string
   customMetadata?: Metadata
-  uid: UID.ContentType
+  uid?: UID.ContentType
 }): Promise<Metadata | undefined> {
   removeThisWhenYouNeedMe("getMetadataFromStrapi")
 
