@@ -1,22 +1,23 @@
 import { Metadata } from "next"
 import { env } from "@/env.mjs"
+import { UID } from "@repo/strapi"
 import { mergeWith } from "lodash"
 import { getTranslations } from "next-intl/server"
 
 import { removeThisWhenYouNeedMe } from "./general-helpers"
 import { routing } from "./navigation"
-import Strapi, { API_ENDPOINTS } from "./strapi"
+import Strapi from "./strapi"
 
 export async function getMetadataFromStrapi({
   pageUrl,
   locale,
   customMetadata,
-  uid = "api::page.page",
+  uid,
 }: {
   pageUrl?: string
   locale: string
   customMetadata?: Metadata
-  uid?: Extract<keyof typeof API_ENDPOINTS, "api::page.page">
+  uid: UID.ContentType
 }): Promise<Metadata | undefined> {
   removeThisWhenYouNeedMe("getMetadataFromStrapi")
 
@@ -91,7 +92,7 @@ export async function getMetadataFromStrapi({
       { omitAuthorization: true }
     )
 
-    const seo = res.data?.attributes.seo
+    const seo = (res.data as any)?.seo
 
     const strapiMeta: Metadata = {
       title: seo?.metaTitle,
