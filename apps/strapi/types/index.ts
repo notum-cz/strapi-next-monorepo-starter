@@ -1,11 +1,11 @@
-export {
+export type {
   Document,
   ID,
   Result,
   PaginatedResult,
 } from "@strapi/types/dist/modules/documents"
 
-export {
+export type {
   FindMany,
   FindOne,
   FindFirst,
