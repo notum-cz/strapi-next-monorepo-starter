@@ -1,6 +1,6 @@
 # 🔥 STRAPI Starter Template
 
-This is a [Stapi](https://strapi.io/) project bootstrapped with TypeScript using [Strapi CLI](https://docs.strapi.io/dev-docs/cli).
+This is a [Stapi v5](https://strapi.io/) project bootstrapped with TypeScript using [Strapi CLI](https://docs.strapi.io/dev-docs/cli).
 
 ## 🥞 Tech stack
 

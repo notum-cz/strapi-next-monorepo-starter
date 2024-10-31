@@ -5,13 +5,13 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 ## 🥞 Tech stack
 
 - [Strapi v5](https://strapi.io/) - Headless CMS to manage content
-- [NextJS App Router](https://nextjs.org/) - React framework for building web apps
+- [NextJS App Router v14](https://nextjs.org/) - React framework for building web apps
 - [Shadcn/ui](https://ui.shadcn.com/) - TailwindCSS based UI components
 - [Turborepo](https://turbo.build/) - Monorepo management tool to keep things tidy
 
 ## ✨ Features
 
-- **Strapi**: Fully typed (TypeScript) and up-to-date Strapi controllers and services
+- **Strapi**: Fully typed (TypeScript) and up-to-date Strapi v5 controllers and services
 - **Strapi config**: Pre-configured and pre-installed with the most common plugins, packages and configurations
 - **Page builder**: Multiple content types and components prepared for page builder. Ready to plug-and-play
 - **DB Seed**: Seed script to populate DB with initial data
@@ -37,8 +37,8 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 #### Apps
 
-- `apps/ui` - UI web app based on [NextJS](https://nextjs.org/) and [shadcn/ui](https://ui.shadcn.com/) ([Tailwind](https://tailwindcss.com/)) - [README.md](./apps/ui/README.md)
-- `apps/strapi` - [Strapi](https://strapi.io/) API with prepared page-builder components - [README.md](./apps/strapi/README.md)
+- `apps/ui` - UI web app based on [NextJS 14](https://nextjs.org/) and [shadcn/ui](https://ui.shadcn.com/) ([Tailwind](https://tailwindcss.com/)) - [README.md](./apps/ui/README.md)
+- `apps/strapi` - [Strapi v5](https://strapi.io/) API with prepared page-builder components - [README.md](./apps/strapi/README.md)
 
 #### Packages
 
