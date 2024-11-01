@@ -550,6 +550,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
       }>
     slug: Schema.Attribute.String &
       Schema.Attribute.Required &
+      Schema.Attribute.Unique &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true
