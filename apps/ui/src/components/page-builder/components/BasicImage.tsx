@@ -31,8 +31,6 @@ export function BasicImage({
 }: BasicImageProps) {
   removeThisWhenYouNeedMe("BasicImage")
 
-  component?.media
-
   const media: StrapiImageMedia = component?.media
 
   if (media?.url == null && hideWhenMissing) {
@@ -57,21 +55,14 @@ export function BasicImage({
       undefined,
   }
 
-  const attributes = media
-
   return (
     <ImageComp
       style={{ ...sizes, ...imgProps.style }}
       className={className}
       // @ts-expect-error - src needs to be typed in better way
-      src={attributes?.url}
+      src={media?.url}
       fallbackSrc={component?.fallbackSrc ?? undefined}
-      alt={
-        component?.alt ??
-        attributes?.caption ??
-        attributes?.alternativeText ??
-        ""
-      }
+      alt={component?.alt ?? media?.caption ?? media?.alternativeText ?? ""}
       {...sizes}
       {...imgProps}
     />
