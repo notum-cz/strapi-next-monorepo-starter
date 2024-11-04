@@ -1,38 +1,29 @@
 import Strapi from "@/lib/strapi"
 
 async function getData() {
-  try {
-    const configuration = await Strapi.fetchOne(
-      "api::configuration.configuration",
-      undefined,
-      { populate: "*" }
-    )
-
-    return configuration.data
-  } catch (e) {
-    console.error(
-      "Configuration wasn't fetched. Check Strapi data and permissions.",
-      e
-    )
-    return undefined
-  }
+  return Strapi.fetchOne("api::configuration.configuration", undefined, {
+    populate: { example: true },
+  })
 }
 
 export async function ConfigurationExample() {
-  const configuration = await getData()
+  const response = await getData()
 
-  if (!configuration) {
+  if (!response.data) {
     return null
   }
 
-  const { darkMode } = configuration.attributes
+  const { darkMode, example } = response.data
 
   return (
-    <div className="p-3">
-      <h4>
-        <strong>Configuration fetched from API</strong>
-      </h4>
-      <p>Dark mode (boolean): {String(darkMode)}</p>
+    <div className="m-auto w-[800px] rounded-md border bg-gray-100">
+      <div className="p-3">
+        <h4>
+          <strong>Configuration fetched from API</strong>
+        </h4>
+        <p>Dark mode (boolean): {String(darkMode)}</p>
+        <p>Author: {example?.author ?? "not set"}</p>
+      </div>
     </div>
   )
 }

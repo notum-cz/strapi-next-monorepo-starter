@@ -1,4 +1,4 @@
-import { Attribute } from "@repo/strapi"
+import { Schema } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
@@ -8,9 +8,10 @@ import { BasicImage } from "./BasicImage"
 export function AnimatedLogoRow({
   component,
 }: {
-  readonly component: Attribute.GetDynamicZoneValue<
-    Attribute.DynamicZone<["sections.animated-logo-row"]>
-  >[number]
+  readonly component: Schema.Attribute.ComponentValue<
+    "sections.animated-logo-row",
+    false
+  >
 }) {
   removeThisWhenYouNeedMe("AnimatedLogoRow")
 

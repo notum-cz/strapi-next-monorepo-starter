@@ -1,11 +1,12 @@
 import { Metadata } from "next"
 import { env } from "@/env.mjs"
+import { UID } from "@repo/strapi"
 import { mergeWith } from "lodash"
 import { getTranslations } from "next-intl/server"
 
 import { removeThisWhenYouNeedMe } from "./general-helpers"
 import { routing } from "./navigation"
-import Strapi, { API_ENDPOINTS } from "./strapi"
+import Strapi from "./strapi"
 
 export async function getMetadataFromStrapi({
   pageUrl,
@@ -16,7 +17,8 @@ export async function getMetadataFromStrapi({
   pageUrl?: string
   locale: string
   customMetadata?: Metadata
-  uid?: Extract<keyof typeof API_ENDPOINTS, "api::page.page">
+  // Add more content types here if we want to fetch SEO components for them
+  uid?: Extract<UID.ContentType, "api::page.page">
 }): Promise<Metadata | undefined> {
   removeThisWhenYouNeedMe("getMetadataFromStrapi")
 
@@ -85,13 +87,20 @@ export async function getMetadataFromStrapi({
       pageUrl,
       {
         locale,
-        populate: "seo,seo.metaImage,seo.metaSocial,seo.twitter",
+        populate: {
+          seo: {
+            populate: {
+              metaImage: true,
+              twitter: { populate: { images: true } },
+            },
+          },
+        },
       },
       undefined,
       { omitAuthorization: true }
     )
 
-    const seo = res.data?.attributes.seo
+    const seo = res.data?.seo
 
     const strapiMeta: Metadata = {
       title: seo?.metaTitle,
@@ -102,31 +111,35 @@ export async function getMetadataFromStrapi({
     }
 
     const strapiOgMeta: Metadata["openGraph"] = {
-      siteName: seo?.siteName,
-      title: seo?.metaTitle,
-      description: seo?.metaDescription,
-      emails: seo?.email,
-      images: seo?.metaImage?.data
+      siteName: seo?.siteName ?? undefined,
+      title: seo?.metaTitle ?? undefined,
+      description: seo?.metaDescription ?? undefined,
+      emails: seo?.email ?? undefined,
+      images: seo?.metaImage
         ? [
             {
-              url: seo.metaImage?.data?.attributes?.url,
-              width: seo.metaImage?.data?.attributes?.width,
-              height: seo.metaImage?.data?.attributes?.height,
-              alt: seo.metaImage?.data?.attributes?.alternativeText,
+              url: seo.metaImage.url,
+              width: seo.metaImage.width,
+              height: seo.metaImage.height,
+              alt: seo.metaImage.alternativeText,
             },
           ]
         : undefined,
     }
 
     const twitterSeo = seo?.twitter
+
     const strapiTwitterMeta: Metadata["twitter"] = twitterSeo
       ? {
-          ...twitterSeo,
+          card: twitterSeo.card as any,
+          title: twitterSeo.title ?? undefined,
+          description: twitterSeo.description ?? undefined,
+          siteId: twitterSeo.siteId ?? undefined,
+          creator: twitterSeo.creator ?? undefined,
+          creatorId: twitterSeo.creatorId ?? undefined,
           images:
-            "images" in twitterSeo
-              ? (twitterSeo?.images as any)?.data?.map(
-                  (image: any) => image.attributes.url
-                )
+            twitterSeo.images != null
+              ? twitterSeo.images.map((image: any) => image.url)
               : [],
         }
       : undefined

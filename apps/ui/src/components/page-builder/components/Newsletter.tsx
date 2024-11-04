@@ -1,4 +1,4 @@
-import { Attribute } from "@repo/strapi"
+import { Schema } from "@repo/strapi"
 
 import AppLink from "@/components/elementary/AppLink"
 import { Container } from "@/components/elementary/Container"
@@ -7,9 +7,10 @@ import { NewsletterForm } from "@/components/elementary/forms/NewsletterForm"
 export function Newsletter({
   component,
 }: {
-  readonly component: Attribute.GetDynamicZoneValue<
-    Attribute.DynamicZone<["sections.newsletter"]>
-  >[number]
+  readonly component: Schema.Attribute.ComponentValue<
+    "sections.newsletter",
+    false
+  >
 }) {
   return (
     <div className="bg-blue-light pb-10">
@@ -24,7 +25,7 @@ export function Newsletter({
             <div className="mt-2 flex items-center">
               {component.gdpr && component.gdpr.href && (
                 <AppLink
-                  openExternalInNewTab={component.gdpr.newTab}
+                  openExternalInNewTab={Boolean(component.gdpr.newTab)}
                   className="text-blue-700 underline"
                   href={component.gdpr.href}
                 >

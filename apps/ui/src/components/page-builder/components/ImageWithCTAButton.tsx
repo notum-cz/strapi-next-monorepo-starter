@@ -1,4 +1,4 @@
-import { Attribute } from "@repo/strapi"
+import { Schema } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
@@ -9,9 +9,10 @@ import { LinkStrapi } from "./LinkStrapi"
 export const ImageWithCTAButton = ({
   component,
 }: {
-  readonly component: Attribute.GetDynamicZoneValue<
-    Attribute.DynamicZone<["sections.image-with-cta-button"]>
-  >[number]
+  readonly component: Schema.Attribute.ComponentValue<
+    "sections.image-with-cta-button",
+    false
+  >
 }) => {
   removeThisWhenYouNeedMe("ImageWithCTAButton")
 

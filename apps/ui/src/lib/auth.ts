@@ -1,3 +1,4 @@
+import { Result } from "@repo/strapi"
 import { getServerSession } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
@@ -7,7 +8,6 @@ import type {
   NextApiResponse,
 } from "next"
 import type { NextAuthOptions } from "next-auth"
-import { APIResponseData, UnwrappedAPIResponseData } from "@/types/api"
 
 import Strapi from "./strapi"
 
@@ -129,15 +129,14 @@ export const authOptions: NextAuthOptions = {
         // it can be removed to improve performance but weird things can happen
         // (user is logged in within NextAuth and UI but not in Strapi API)
         try {
-          const fetchedUser: UnwrappedAPIResponseData<
-            APIResponseData<"plugin::users-permissions.user">
-          > = await Strapi.fetchAPI("/users/me", undefined, undefined, {
-            strapiJWT: token.strapiJWT,
-          })
+          const fetchedUser: Result<"plugin::users-permissions.user"> =
+            await Strapi.fetchAPI("/users/me", undefined, undefined, {
+              strapiJWT: token.strapiJWT,
+            })
 
           // API token is valid - update/reload user data or add more data
           token.name = fetchedUser.username
-          token.blocked = fetchedUser.blocked
+          token.blocked = fetchedUser.blocked ?? false
         } catch (error: any) {
           // API token is invalid - send error to client and user is logged out
           // console.error("Strapi JWT token is invalid: ", error.message)

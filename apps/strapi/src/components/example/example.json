@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_example_examples",
+  "info": {
+    "displayName": "example",
+    "icon": "emotionUnhappy"
+  },
+  "options": {},
+  "attributes": {
+    "author": {
+      "type": "string"
+    }
+  }
+}

@@ -187,11 +187,12 @@
       "errors": {
         "credentials": "Zadali jste nesprávné přihlašovací údaje",
         "unexpectedError": "Registrace selhala. Zkuste to prosím později.",
-        "emailUsernameTaken": "E-mail je již obsazen. Vyberte prosím jiný.",
-        "passwordsDoNotMatch": "Hesla se neshodují"
+        "emailUsernameTaken": "E-mail je již obsazen. Vyberte prosím jiný."
       },
       "header": "Registrace",
       "description": "Vytvořte si účet pro přístup do systému.",
+      "firstName": "Jméno",
+      "lastName": "Příjmení",
       "email": "Zadejte svou e-mailovou adresu",
       "password": "Vytvořte heslo",
       "checkPassword": "Potvrďte heslo",

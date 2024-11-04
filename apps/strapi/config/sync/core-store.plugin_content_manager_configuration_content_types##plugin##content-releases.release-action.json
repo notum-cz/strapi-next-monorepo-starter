@@ -47,16 +47,16 @@
           "sortable": true
         }
       },
-      "locale": {
+      "entryDocumentId": {
         "edit": {
-          "label": "locale",
+          "label": "entryDocumentId",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "locale",
+          "label": "entryDocumentId",
           "searchable": true,
           "sortable": true
         }
@@ -171,16 +171,16 @@
           {
             "name": "release",
             "size": 6
-          },
-          {
-            "name": "locale",
-            "size": 6
           }
         ],
         [
           {
             "name": "isEntryValid",
             "size": 4
+          },
+          {
+            "name": "entryDocumentId",
+            "size": 6
           }
         ]
       ]

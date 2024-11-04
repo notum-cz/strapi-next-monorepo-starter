@@ -187,11 +187,12 @@
       "errors": {
         "credentials": "Incorrect credentials provided",
         "unexpectedError": "Registration failed. Please try again later.",
-        "emailUsernameTaken": "Email is already taken. Please choose another one.",
-        "passwordsDoNotMatch": "Passwords do not match"
+        "emailUsernameTaken": "Email is already taken. Please choose another one."
       },
       "header": "Registration",
       "description": "Create an account to access the system.",
+      "firstName": "First name",
+      "lastName": "Last name",
       "email": "E-mail address",
       "password": "Create password",
       "checkPassword": "Confirm password",

@@ -1,4 +1,4 @@
-import { Attribute } from "@repo/strapi"
+import { Schema } from "@repo/strapi"
 
 import { Container } from "@/components/elementary/Container"
 import { ContactForm } from "@/components/elementary/forms/ContactForm"
@@ -6,9 +6,10 @@ import { ContactForm } from "@/components/elementary/forms/ContactForm"
 export function ContactFormSection({
   component,
 }: {
-  readonly component: Attribute.GetDynamicZoneValue<
-    Attribute.DynamicZone<["sections.contact-form"]>
-  >[number]
+  readonly component: Schema.Attribute.ComponentValue<
+    "sections.contact-form",
+    false
+  >
 }) {
   return (
     <div className="bg-white" id="form-section">
@@ -20,7 +21,13 @@ export function ContactFormSection({
           </div>
         </div>
         <div className="flex flex-1">
-          <ContactForm gdpr={component.gdpr} />
+          <ContactForm
+            gdpr={{
+              href: component.gdpr?.href ?? undefined,
+              label: component.gdpr?.label ?? undefined,
+              newTab: component.gdpr?.newTab ?? false,
+            }}
+          />
         </div>
       </Container>
     </div>

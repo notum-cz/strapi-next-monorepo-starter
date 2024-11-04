@@ -1,6 +1,6 @@
 # 🔥 UI Starter Template
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Next.js v14](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## 🥞 Tech stack
 
@@ -276,10 +276,12 @@ To fetch data from API use `Strapi` class defined in [lib/strapi.ts](src/lib/str
   - it's already in use by different handler (e.g. content type `"plugin::users-permissions.user"` is reserved for `GET /users` so `GET /users/me` has to use `fetchAPI` - see bellow):
 
 ```ts
-import { APIResponseData } from "@/types/api"
+import { Result } from "@repo/strapi"
 
-const user: APIResponseData<"plugin::users-permissions.user"> =
-  await Strapi.fetchAPI("/users/me", { populate: "*" })
+const fetchedUser: Result<"plugin::users-permissions.user"> =
+  await Strapi.fetchAPI("/users/me", undefined, undefined, {
+    strapiJWT: token.strapiJWT,
+  })
 ```
 
 - `fetchOne`, `fetchMany`, `fetchAll` or `fetchOneBySlug` - these functions are linked directly to Strapi content types. This means that during the call it is necessary to specify the UUID (`"api::", "admin::"` etc.) of `ContentType` you want to fetch. Based on this, the response is automatically typed. **To make this working** you have to maintain a mapping between `ContentType` UUID and endpoint URL path - see `API_ENDPOINTS` object in [lib/strapi.ts](src/lib/strapi.ts) file.
@@ -289,58 +291,6 @@ In client React components/hooks use `useQuery` (or `useMutation`) hook from `@t
 Next's [server actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations) are not used in this project.
 
 An example of how to fetch data from API and render it in component is shown in [Configuration component](src/app/[locale]/_components/Configuration.tsx).
-
-More example usage:
-
-```ts
-import { APIUrlParams } from "@/types/api"
-
-const pageParams: APIUrlParams<"api::page.page"> = {
-  sort: { createdAt: "desc" },
-  populate: {
-    sections: {
-      populate: "*",
-    },
-    seo: {
-      populate: "*",
-    },
-  },
-}
-
-fetchOne("api::page.page", 1, pageParams)
-  .then((res) => {
-    console.log("fetchOne | res", res)
-    res.data?.attributes.sections?.map((section) => {
-      console.log(section.id)
-    })
-  })
-  .catch((e) => {
-    console.error("fetchOne error", e)
-  })
-
-fetchMany("api::page.page", pageParams)
-  .then((res) => {
-    console.log("fetchMany -> pages | res", res)
-    res.data.map((page) => {
-      console.error("fetchMany -> map | page.attributes", page.attributes)
-    })
-    res.meta.pagination.page
-  })
-  .catch((e) => {
-    console.error("fetchMany error", e)
-  })
-
-fetchOneBySlug("api::page.page", null, pageParams)
-  .then((res) => {
-    console.log("fetchOneBySlug | res", res)
-    res.data?.attributes.sections?.map((section) => {
-      console.log(section.id)
-    })
-  })
-  .catch((e) => {
-    console.error("fetchOneBySlug error", e)
-  })
-```
 
 #### Authorization in API
 

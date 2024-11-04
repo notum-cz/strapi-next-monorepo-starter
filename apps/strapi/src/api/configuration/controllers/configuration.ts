@@ -22,10 +22,9 @@ export default factories.createCoreController(
       // pay attention, instance is undefined if Sentry is disabled (during development)
       instance?.captureMessage("My custom message")
 
-      const config = await strapi.entityService.findOne(
-        "api::configuration.configuration",
-        1
-      )
+      const config = await strapi
+        .documents("api::configuration.configuration")
+        .findFirst()
       console.log("Yey, TS is working! We have intellisense and type checking!")
       // console.log(config.notExistingProperty) // uncomment to see the error
       console.log(config.darkMode) // no error!

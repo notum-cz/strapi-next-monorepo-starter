@@ -1,4 +1,4 @@
-import { Attribute } from "@repo/strapi"
+import { Schema } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
@@ -12,9 +12,7 @@ import {
 export function Faq({
   component,
 }: {
-  readonly component: Attribute.GetDynamicZoneValue<
-    Attribute.DynamicZone<["sections.faq"]>
-  >[number]
+  readonly component: Schema.Attribute.ComponentValue<"sections.faq", false>
 }) {
   removeThisWhenYouNeedMe("Faq")
 

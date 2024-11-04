@@ -11,7 +11,7 @@ async function getData(locale: AppLocale) {
   try {
     const pages = await Strapi.fetchMany(
       "api::page.page",
-      { locale },
+      { locale, populate: ["content"], status: "published" },
       undefined,
       { omitAuthorization: true }
     )
@@ -41,20 +41,16 @@ export default async function RootBuilderPage({ params }: PageProps) {
           <div className="mt-5 flex gap-3">
             {pages.map((page, i) => (
               <Link
-                locale={page.attributes.locale as AppLocale}
-                href={`/builder/${page.attributes.slug}`}
+                locale={page.locale as AppLocale}
+                href={`/builder/${page.slug}`}
                 key={String(page.id) + i}
               >
                 <div className="rounded-md bg-gray-200 p-6 text-center transition-colors duration-200 hover:bg-gray-400">
                   <h3 className="text-lg font-bold text-gray-900">
-                    {page.attributes.slug} [{page.id}]
+                    {page.slug} [{page.id}]
                   </h3>
-                  {page.attributes.createdAt && (
-                    <p>{String(page.attributes.createdAt)}</p>
-                  )}
-                  {page.attributes.locale && (
-                    <p>{String(page.attributes.locale)}</p>
-                  )}
+                  {page.createdAt && <p>{String(page.createdAt)}</p>}
+                  {page.locale && <p>{String(page.locale)}</p>}
                 </div>
               </Link>
             ))}

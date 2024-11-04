@@ -1,11 +1,15 @@
 import React from "react"
-import { Attribute } from "@repo/strapi"
+import { Schema } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Link } from "@/lib/navigation"
 
 export interface LinkStrapiProps {
-  readonly component: Attribute.ComponentValue<"shared.link", false> | undefined
+  readonly component:
+    | Schema.Attribute.ComponentValue<"shared.link", false>
+    | undefined
+    | null
+
   readonly children?: React.ReactNode
   readonly className?: string
   readonly hideWhenMissing?: boolean

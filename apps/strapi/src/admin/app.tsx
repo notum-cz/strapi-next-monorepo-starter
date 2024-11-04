@@ -1,3 +1,5 @@
+import { StrapiApp } from "@strapi/strapi/admin"
+
 import { cs } from "./cs"
 
 export default {
@@ -7,7 +9,7 @@ export default {
       cs,
     },
   },
-  bootstrap(app) {
+  bootstrap(app: StrapiApp) {
     console.log(app)
   },
 }

@@ -1,4 +1,4 @@
-import { Attribute } from "@repo/strapi"
+import { Schema } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
@@ -11,9 +11,7 @@ import { LinkStrapi } from "./LinkStrapi"
 export function Hero({
   component,
 }: {
-  readonly component: Attribute.GetDynamicZoneValue<
-    Attribute.DynamicZone<["sections.hero"]>
-  >[number]
+  readonly component: Schema.Attribute.ComponentValue<"sections.hero", false>
 }) {
   removeThisWhenYouNeedMe("Hero")
 

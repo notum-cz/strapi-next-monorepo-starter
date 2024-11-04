@@ -19,6 +19,12 @@ export default ({ env }) => {
       enabled: true,
     },
 
+    "strapi-v5-plugin-populate-deep": {
+      config: {
+        defaultDepth: 5,
+      },
+    },
+
     "users-permissions": {
       config: {
         jwt: {
@@ -35,11 +41,6 @@ export default ({ env }) => {
         sendMetadata: true,
       },
     },
-
-    // "stripe-integration": {
-    //   enabled: true,
-    //   resolve: "./src/plugins/stripe-integration",
-    // },
 
     // email: {
     //   config: {
@@ -86,8 +87,10 @@ const prepareAwsS3Config = (env) => {
         baseUrl: env("CDN_URL"),
         rootPath: env("CDN_ROOT_PATH"),
         s3Options: {
-          accessKeyId: awsAccessKeyId,
-          secretAccessKey: awsAccessSecret,
+          credentials: {
+            accessKeyId: awsAccessKeyId,
+            secretAccessKey: awsAccessSecret,
+          },
           region: awsRegion,
           params: {
             ACL: env("AWS_ACL", "public-read"),

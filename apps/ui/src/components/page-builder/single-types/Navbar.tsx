@@ -1,4 +1,4 @@
-import { Attribute } from "@repo/strapi"
+import { Schema } from "@repo/strapi"
 
 import { AppLocale } from "@/types/general"
 
@@ -16,9 +16,9 @@ async function fetchData(locale: string) {
       "api::navbar.navbar",
       undefined,
       {
-        // @ts-ignore - "deep" is not recognized as it comes from strapi extension
-        populate: "deep" as "*",
         locale,
+        populate: ["logoImage", "links"],
+        pLevel: 5,
       },
       undefined,
       { omitAuthorization: true }
@@ -37,20 +37,23 @@ export async function PageBuilderNavbar({
   pageSpecificNavbar,
 }: {
   readonly locale: AppLocale
-  readonly pageSpecificNavbar?: Attribute.GetDynamicZoneValue<
-    Attribute.DynamicZone<["layout.navbar"]>
-  >[number]
+  readonly pageSpecificNavbar?: Schema.Attribute.ComponentValue<
+    "layout.navbar",
+    false
+  > | null
 }) {
   removeThisWhenYouNeedMe("PageBuilderNavbar")
 
   const response = await fetchData(locale)
-  const component = response?.data?.attributes
+  const component = response?.data
 
   const navbar = pageSpecificNavbar ?? component
 
   if (navbar == null) {
     return null
   }
+
+  const links = (navbar.links ?? []).filter((link) => link.href)
 
   const session = await getAuth()
 
@@ -66,11 +69,19 @@ export async function PageBuilderNavbar({
             }}
           />
 
-          <nav className="flex gap-6">
-            {navbar.links?.map((link, index) => (
-              <NavbarItem link={link} key={String(index) + index} />
-            ))}
-          </nav>
+          {links.length > 0 ? (
+            <nav className="flex gap-6">
+              {links.map((link, index) => (
+                <NavbarItem
+                  link={{
+                    href: link.href!,
+                    label: link.label ?? undefined,
+                  }}
+                  key={String(index) + index}
+                />
+              ))}
+            </nav>
+          ) : null}
         </div>
 
         <div className="flex flex-1 items-center justify-end space-x-4">
