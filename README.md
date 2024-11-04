@@ -1,4 +1,4 @@
-# 🔥 Strapi & NextJS Monorepo Starter
+# 🔥 Strapi v5 & NextJS Monorepo Starter
 
 This is a ready-to-go starter template for Strapi projects. It combines the power of Strapi, NextJS, Shadcn/ui libraries with Turborepo setup and kickstarts your project development.
 
