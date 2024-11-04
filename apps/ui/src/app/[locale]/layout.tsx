@@ -1,12 +1,13 @@
 import "@/styles/globals.css"
 
 import { notFound } from "next/navigation"
+import { setRequestLocale } from "next-intl/server"
 
 import { LayoutProps } from "@/types/next"
 
 import { fontRoboto } from "@/lib/fonts"
 import { setupLibraries } from "@/lib/general-helpers"
-import { locales } from "@/lib/i18n"
+import { routing } from "@/lib/navigation"
 import { cn } from "@/lib/styles"
 import { Navbar } from "@/components/elementary/navbar/Navbar"
 import { TailwindIndicator } from "@/components/elementary/TailwindIndicator"
@@ -16,10 +17,18 @@ import { Toaster } from "@/components/ui/toaster"
 
 setupLibraries()
 
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
+}
+
 export default async function RootLayout({ children, params }: LayoutProps) {
-  if (!locales.includes(params.locale)) {
+  if (!routing.locales.includes(params.locale)) {
     notFound()
   }
+
+  // Enable static rendering
+  // https://next-intl-docs.vercel.app/docs/getting-started/app-router/with-i18n-routing#static-rendering
+  setRequestLocale(params.locale)
 
   return (
     <html lang={params.locale} suppressHydrationWarning>

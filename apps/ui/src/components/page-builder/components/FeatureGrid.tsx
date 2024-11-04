@@ -1,4 +1,4 @@
-import { Attribute } from "@repo/strapi"
+import { Schema } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
@@ -11,9 +11,10 @@ const DEFAULT_IMG_SIZE = 50
 export function FeatureGrid({
   component,
 }: {
-  readonly component: Attribute.GetDynamicZoneValue<
-    Attribute.DynamicZone<["sections.feature-grid"]>
-  >[number]
+  readonly component: Schema.Attribute.ComponentValue<
+    "sections.feature-grid",
+    false
+  >
 }) {
   removeThisWhenYouNeedMe("FeatureGrid")
 

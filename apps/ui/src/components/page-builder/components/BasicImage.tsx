@@ -1,7 +1,6 @@
-import React from "react"
-import { Attribute } from "@repo/strapi"
+import { Schema } from "@repo/strapi"
 
-import { StrapiDataWrapper, StrapiImageMedia } from "@/types/api"
+import { StrapiImageMedia } from "@/types/api"
 import { ImageExtendedProps } from "@/types/next"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
@@ -11,13 +10,14 @@ import { ImageWithPlaiceholder } from "@/components/elementary/ImageWithPlaiceho
 export interface BasicImageProps
   extends Omit<ImageExtendedProps, "src" | "alt"> {
   readonly component:
-    | Attribute.ComponentValue<"shared.basic-image", false>
+    | Schema.Attribute.ComponentValue<"shared.basic-image", false>
     | undefined
+    | null
   readonly useClient?: boolean
   readonly className?: ImageExtendedProps["className"]
   readonly hideWhenMissing?: boolean
-  readonly fallbackSizes?: { width?: number; height?: number }
-  readonly forcedSizes?: { width?: number; height?: number }
+  readonly fallbackSizes?: { width?: number | null; height?: number | null }
+  readonly forcedSizes?: { width?: number | null; height?: number | null }
 }
 
 export function BasicImage({
@@ -31,9 +31,9 @@ export function BasicImage({
 }: BasicImageProps) {
   removeThisWhenYouNeedMe("BasicImage")
 
-  const media: StrapiDataWrapper<StrapiImageMedia> = component?.media
+  const media: StrapiImageMedia = component?.media
 
-  if (media?.data?.attributes?.url == null && hideWhenMissing) {
+  if (media?.url == null && hideWhenMissing) {
     return null
   }
 
@@ -43,31 +43,26 @@ export function BasicImage({
     width:
       forcedSizes?.width ??
       component?.width ??
-      media?.data?.attributes?.width ??
-      fallbackSizes?.width,
+      media?.width ??
+      fallbackSizes?.width ??
+      undefined,
 
     height:
       forcedSizes?.height ??
       component?.height ??
-      media?.data?.attributes?.height ??
-      fallbackSizes?.height,
+      media?.height ??
+      fallbackSizes?.height ??
+      undefined,
   }
-
-  const attributes = media?.data?.attributes
 
   return (
     <ImageComp
       style={{ ...sizes, ...imgProps.style }}
       className={className}
       // @ts-expect-error - src needs to be typed in better way
-      src={attributes?.url}
-      fallbackSrc={component?.fallbackSrc}
-      alt={
-        component?.alt ??
-        attributes?.caption ??
-        attributes?.alternativeText ??
-        ""
-      }
+      src={media?.url}
+      fallbackSrc={component?.fallbackSrc ?? undefined}
+      alt={component?.alt ?? media?.caption ?? media?.alternativeText ?? ""}
       {...sizes}
       {...imgProps}
     />

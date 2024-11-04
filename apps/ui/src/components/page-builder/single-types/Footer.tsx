@@ -12,11 +12,17 @@ import { LinkStrapi } from "../components/LinkStrapi"
 
 async function fetchData(locale: string) {
   try {
-    return await Strapi.fetchOne("api::footer.footer", undefined, {
-      // @ts-ignore - "deep" is not recognized as it comes from strapi extension
-      populate: "deep" as "*",
-      locale,
-    })
+    return await Strapi.fetchOne(
+      "api::footer.footer",
+      undefined,
+      {
+        locale,
+        populate: ["sections", "gridCols", "logoImage", "links"],
+        pLevel: 5,
+      },
+      undefined,
+      { omitAuthorization: true }
+    )
   } catch (e: any) {
     console.error(
       `Data for "api::footer.footer" content type wasn't fetched: `,
@@ -34,7 +40,7 @@ export async function PageBuilderFooter({
   removeThisWhenYouNeedMe("PageBuilderFooter")
 
   const response = await fetchData(locale)
-  const component = response?.data?.attributes
+  const component = response?.data
 
   if (component == null) {
     return null

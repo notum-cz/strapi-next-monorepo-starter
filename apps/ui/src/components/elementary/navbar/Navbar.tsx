@@ -1,10 +1,9 @@
 import Image from "next/image"
 
-import { AppLink } from "@/types/general"
+import { AppLink, AppLocale } from "@/types/general"
 
 import { getAuth } from "@/lib/auth"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { locales } from "@/lib/i18n"
 import { Link } from "@/lib/navigation"
 
 import LocaleSwitcher from "../LocaleSwitcher"
@@ -26,7 +25,7 @@ const mainNavLinks: Array<AppLink> = [
   },
 ]
 
-export async function Navbar({ locale }: { locale: (typeof locales)[number] }) {
+export async function Navbar({ locale }: { locale: AppLocale }) {
   removeThisWhenYouNeedMe("Navbar")
 
   const session = await getAuth()

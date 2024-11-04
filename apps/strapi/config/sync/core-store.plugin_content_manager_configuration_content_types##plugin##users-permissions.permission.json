@@ -109,7 +109,12 @@
       }
     },
     "layouts": {
-      "list": ["id", "action", "role", "createdAt"],
+      "list": [
+        "id",
+        "action",
+        "role",
+        "createdAt"
+      ],
       "edit": [
         [
           {

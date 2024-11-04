@@ -19,7 +19,7 @@
     "slug": {
       "type": "string",
       "required": true,
-      "unique": false,
+      "unique": true,
       "regex": "^[a-z0-9/-]+$",
       "pluginOptions": {
         "i18n": {
@@ -48,7 +48,9 @@
         "sections.carousel",
         "sections.heading-with-cta-button",
         "sections.image-with-cta-button",
-        "sections.animated-logo-row"
+        "sections.animated-logo-row",
+        "sections.newsletter",
+        "sections.contact-form"
       ],
       "pluginOptions": {
         "i18n": {

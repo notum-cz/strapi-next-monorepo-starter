@@ -76,7 +76,9 @@
   "errors": {
     "global": {
       "title": "An unknown error occurred",
-      "goBack": "Go back"
+      "tryAgain": "Try again",
+      "invalidContent": "This content could not be displayed",
+      "somethingWentWrong": "Something went wrong 🥺"
     },
 
     "notFound": {
@@ -144,6 +146,19 @@
     }
   },
 
+  "contactForm": {
+    "name": "First name and last name",
+    "namePlaceholder": "John Doe",
+    "email": "Email",
+    "emailPlaceholder": "john.doe@gmail.com",
+    "message": "Message",
+    "gdpr": "I agree to the processing of personal data",
+    "submit": "Send",
+    "success": "The form has been sent successfully.",
+    "error": "The form could not be sent. Please try again later.",
+    "gdprLink": "Read more about the processing of personal data"
+  },
+
   "auth": {
     "signIn": {
       "status": {
@@ -172,11 +187,12 @@
       "errors": {
         "credentials": "Incorrect credentials provided",
         "unexpectedError": "Registration failed. Please try again later.",
-        "emailUsernameTaken": "Email is already taken. Please choose another one.",
-        "passwordsDoNotMatch": "Passwords do not match"
+        "emailUsernameTaken": "Email is already taken. Please choose another one."
       },
       "header": "Registration",
       "description": "Create an account to access the system.",
+      "firstName": "First name",
+      "lastName": "Last name",
       "email": "E-mail address",
       "password": "Create password",
       "checkPassword": "Confirm password",

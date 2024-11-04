@@ -61,20 +61,6 @@
           "sortable": false
         }
       },
-      "metaSocial": {
-        "edit": {
-          "label": "metaSocial",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "metaSocial",
-          "searchable": false,
-          "sortable": false
-        }
-      },
       "keywords": {
         "edit": {
           "label": "keywords",
@@ -103,44 +89,58 @@
           "sortable": true
         }
       },
-      "structuredData": {
+      "twitter": {
         "edit": {
-          "label": "structuredData",
+          "label": "twitter",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "structuredData",
+          "label": "twitter",
           "searchable": false,
           "sortable": false
         }
       },
-      "metaViewport": {
+      "applicationName": {
         "edit": {
-          "label": "metaViewport",
+          "label": "applicationName",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "metaViewport",
+          "label": "applicationName",
           "searchable": true,
           "sortable": true
         }
       },
-      "canonicalURL": {
+      "siteName": {
         "edit": {
-          "label": "canonicalURL",
+          "label": "siteName",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "canonicalURL",
+          "label": "siteName",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "email": {
+        "edit": {
+          "label": "email",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "email",
           "searchable": true,
           "sortable": true
         }
@@ -172,12 +172,6 @@
         ],
         [
           {
-            "name": "metaSocial",
-            "size": 12
-          }
-        ],
-        [
-          {
             "name": "keywords",
             "size": 6
           },
@@ -188,17 +182,23 @@
         ],
         [
           {
-            "name": "structuredData",
+            "name": "twitter",
             "size": 12
           }
         ],
         [
           {
-            "name": "metaViewport",
+            "name": "applicationName",
             "size": 6
           },
           {
-            "name": "canonicalURL",
+            "name": "siteName",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "email",
             "size": 6
           }
         ]

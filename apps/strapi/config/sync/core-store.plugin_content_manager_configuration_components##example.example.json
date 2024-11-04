@@ -1,0 +1,57 @@
+{
+  "key": "plugin_content_manager_configuration_components::example.example",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "mainField": "author",
+      "defaultSortBy": "author",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "author": {
+        "edit": {
+          "label": "author",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "author",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "author"
+      ],
+      "edit": [
+        [
+          {
+            "name": "author",
+            "size": 6
+          }
+        ]
+      ]
+    },
+    "uid": "example.example",
+    "isComponent": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

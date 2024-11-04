@@ -18,7 +18,7 @@ module.exports = {
     project: true,
   },
   rules: {
-    "no-console": ["error", { allow: ["warn", "error"] }],
+    "no-console": ["warn", { allow: ["warn", "error"] }],
     "@next/next/no-html-link-for-pages": "off",
     "no-unused-vars": "warn",
     "react/function-component-definition": "off",
@@ -26,6 +26,13 @@ module.exports = {
     "react/jsx-no-leaked-render": "off",
     "react/jsx-sort-props": "off",
     "react/no-array-index-key": "off",
+    "react/no-unstable-nested-components": [
+      "warn",
+      {
+        allowAsProps: true,
+        customValidators: [],
+      },
+    ],
     "tailwindcss/no-custom-classname": "off",
     "turbo/no-undeclared-env-vars": "off",
     "no-extra-boolean-cast": "warn",

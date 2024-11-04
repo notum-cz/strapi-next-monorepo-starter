@@ -2,45 +2,78 @@
   "name": "Authenticated",
   "description": "Default role given to authenticated user.",
   "type": "authenticated",
+  "documentId": "e9yxyd25atehcwzfk9xywzoi",
+  "locale": null,
   "permissions": [
     {
-      "action": "api::configuration.configuration.find"
+      "action": "api::configuration.configuration.find",
+      "documentId": "j56yjr80hkukyrd48z4my2p8",
+      "locale": null
     },
     {
-      "action": "api::footer.footer.find"
+      "action": "api::footer.footer.find",
+      "documentId": "e6pnwu5erim3ass1hd0nwo37",
+      "locale": null
     },
     {
-      "action": "api::navbar.navbar.find"
+      "action": "api::navbar.navbar.find",
+      "documentId": "yami5zx7d5f18cts8kzv1x8f",
+      "locale": null
     },
     {
-      "action": "api::page.page.find"
+      "action": "api::page.page.find",
+      "documentId": "iptpk1lzyv6m6vtaztx93eqg",
+      "locale": null
     },
     {
-      "action": "api::page.page.findOne"
+      "action": "api::page.page.findOne",
+      "documentId": "yvkhrt1ntnqfq9l0gejo5ble",
+      "locale": null
     },
     {
-      "action": "plugin::users-permissions.auth.changePassword"
+      "action": "plugin::upload.content-api.upload",
+      "documentId": "tuve7gz5cl4myckd9p473fjk",
+      "locale": null
     },
     {
-      "action": "plugin::users-permissions.auth.forgotPassword"
+      "action": "plugin::users-permissions.auth.changePassword",
+      "documentId": "cloi0j4k1qnnmm762tzc3yss",
+      "locale": null
     },
     {
-      "action": "plugin::users-permissions.auth.resetPassword"
+      "action": "plugin::users-permissions.auth.forgotPassword",
+      "documentId": "kgxypb8bh6q2prf3iuq7myhx",
+      "locale": null
     },
     {
-      "action": "plugin::users-permissions.role.find"
+      "action": "plugin::users-permissions.auth.resetPassword",
+      "documentId": "gz3kc7vxnoxjhzsk5mcadb5l",
+      "locale": null
     },
     {
-      "action": "plugin::users-permissions.role.findOne"
+      "action": "plugin::users-permissions.role.find",
+      "documentId": "o6pl22rqfjs3v7ixwdwrt00r",
+      "locale": null
     },
     {
-      "action": "plugin::users-permissions.user.find"
+      "action": "plugin::users-permissions.role.findOne",
+      "documentId": "ezakm5ipe64c8sa8g4tx99kq",
+      "locale": null
     },
     {
-      "action": "plugin::users-permissions.user.findOne"
+      "action": "plugin::users-permissions.user.find",
+      "documentId": "pg1uy8zn44i1gx7vlci24usl",
+      "locale": null
     },
     {
-      "action": "plugin::users-permissions.user.me"
+      "action": "plugin::users-permissions.user.findOne",
+      "documentId": "ky47jh6yk0ksjmizdtmcyvxr",
+      "locale": null
+    },
+    {
+      "action": "plugin::users-permissions.user.me",
+      "documentId": "hyop3l6l85ok6ar1na7mp2xd",
+      "locale": null
     }
   ]
 }

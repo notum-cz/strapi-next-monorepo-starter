@@ -1,4 +1,4 @@
-import { Attribute } from "@repo/strapi"
+import { Schema } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
@@ -7,8 +7,9 @@ import { LinkStrapi, LinkStrapiProps } from "./LinkStrapi"
 
 interface Props {
   readonly component:
-    | Attribute.ComponentValue<"shared.image-with-link", false>
+    | Schema.Attribute.ComponentValue<"shared.image-with-link", false>
     | undefined
+    | null
   readonly imageProps?: Omit<BasicImageProps, "component">
   readonly linkProps?: Omit<LinkStrapiProps, "component" | "children">
 }

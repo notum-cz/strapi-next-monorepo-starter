@@ -19,6 +19,12 @@ export default ({ env }) => {
       enabled: true,
     },
 
+    "strapi-v5-plugin-populate-deep": {
+      config: {
+        defaultDepth: 5,
+      },
+    },
+
     "users-permissions": {
       config: {
         jwt: {
@@ -27,10 +33,14 @@ export default ({ env }) => {
       },
     },
 
-    // "stripe-integration": {
-    //   enabled: true,
-    //   resolve: "./src/plugins/stripe-integration",
-    // },
+    sentry: {
+      enabled: true,
+      config: {
+        // Only set `dsn` property in production
+        dsn: env("NODE_ENV") === "production" ? env("SENTRY_DSN") : null,
+        sendMetadata: true,
+      },
+    },
 
     // email: {
     //   config: {
@@ -44,14 +54,6 @@ export default ({ env }) => {
     //       defaultFrom: env("MAILGUN_EMAIL"),
     //       defaultReplyTo: env("MAILGUN_EMAIL"),
     //     },
-    //   },
-    // },
-
-    // sentry: {
-    //   enabled: env("SENTRY_DSN") != null,
-    //   config: {
-    //     dsn: env("SENTRY_DSN"),
-    //     sendMetadata: true,
     //   },
     // },
   }
@@ -85,8 +87,10 @@ const prepareAwsS3Config = (env) => {
         baseUrl: env("CDN_URL"),
         rootPath: env("CDN_ROOT_PATH"),
         s3Options: {
-          accessKeyId: awsAccessKeyId,
-          secretAccessKey: awsAccessSecret,
+          credentials: {
+            accessKeyId: awsAccessKeyId,
+            secretAccessKey: awsAccessSecret,
+          },
           region: awsRegion,
           params: {
             ACL: env("AWS_ACL", "public-read"),
