@@ -24,7 +24,14 @@ export async function getMetadataFromStrapi({
 
   const t = await getTranslations({ locale, namespace: `seo` })
 
-  const feAppBaseUrl = env.NEXT_PUBLIC_APP_PUBLIC_URL || "http://localhost:3000"
+  const siteUrl = env.NEXT_PUBLIC_APP_PUBLIC_URL
+
+  if (!siteUrl) {
+    console.error(
+      "Please provide NEXT_PUBLIC_APP_PUBLIC_URL (public URL of site) for SEO metadata generation."
+    )
+    return
+  }
 
   const defaultMeta: Metadata = {
     title: t("metaTitle"),
@@ -38,19 +45,17 @@ export async function getMetadataFromStrapi({
     },
 
     alternates: {
-      canonical: feAppBaseUrl,
+      canonical: siteUrl,
       languages: routing.locales.reduce(
         (acc, locale) => ({
           ...acc,
-          [locale]: `${feAppBaseUrl}/${locale}`,
+          [locale]: `${siteUrl}/${locale}`,
         }),
         {}
       ),
     },
 
-    metadataBase: new URL(
-      env.NEXT_PUBLIC_APP_PUBLIC_URL || "http://localhost:3000"
-    ),
+    metadataBase: new URL(siteUrl),
 
     ...customMetadata,
   }
