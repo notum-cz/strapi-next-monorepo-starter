@@ -356,14 +356,17 @@ Following components are already implemented and can be used:
 
 #### Components
 
+- "sections.animated-logo-row" -> AnimatedLogoRow,
+- "sections.carousel" -> CarouselGrid,
+- "sections.contact-form" -> ContactFormSection,
+- "sections.faq" -> Faq,
+- "sections.feature-grid" -> FeatureGrid,
+- "sections.heading-with-cta-button" -> HeadingWithCTAButton,
+- "sections.hero" -> Hero,
+- "sections.horizontal-images" -> HorizontalImages,
+- "sections.image-with-cta-button" -> ImageWithCTAButton,
+- "sections.newsletter" -> Newsletter,
 - "shared.basic-image" -> BasicImage
-- "sections.carousel" -> CarouselGrid
-- "sections.faq" -> Faq
-- "sections.feature-grid" -> FeatureGrid
-- "sections.heading-with-cta-button" -> HeadingWithCTAButton
-- "sections.hero" -> Hero
-- "sections.horizontal-images" -> HorizontalImagesSlider
-- "sections.image-with-cta-button" -> ImageWithCTAButton
 - "shared.image-with-link" -> ImageWithLink
 - "shared.link" -> LinkStrapi
 - "layout.navbar" -> available to override global "api::navbar.navbar" for specific page
