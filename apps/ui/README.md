@@ -286,6 +286,9 @@ const fetchedUser: Result<"plugin::users-permissions.user"> =
 
 - `fetchOne`, `fetchMany`, `fetchAll` or `fetchOneBySlug` - these functions are linked directly to Strapi content types. This means that during the call it is necessary to specify the UUID (`"api::", "admin::"` etc.) of `ContentType` you want to fetch. Based on this, the response is automatically typed. **To make this working** you have to maintain a mapping between `ContentType` UUID and endpoint URL path - see `API_ENDPOINTS` object in [lib/strapi.ts](src/lib/strapi.ts) file.
 
+> [!WARNING]
+> All attributes (and relations) are currently typed as optional (`... | null | undefined`) even if they are required in Strapi. This is current limitation of automatic typing inference and needs to be improved in future versions of this template.
+
 In client React components/hooks use `useQuery` (or `useMutation`) hook from `@tanstack/react-query` to query/mutate data in reactive way. In server components call endpoint directly and fetch data (`/GET` endpoints) on NextJS server side - e.g. in `getData()` function or in component's body.
 
 Next's [server actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations) are not used in this project.
@@ -348,9 +351,6 @@ To add new Strapi component/single type to the frontend, follow these steps:
    - "shared" components (small pieces of UI which are used in multiple bigger components) are not usually included in this map (they don't have any "section" level styling)
    - single types are handled separately (fetched and rendered at specific position in the page), so they are not part of this map too
 4. That's it! Now, add new component to some Page (`api::page:page`) in Strapi and it should be automatically rendered on frontend.
-
-> [!WARNING]
-> Strapi doesn't support nested components :(. Data is fetched and it works somehow but typing for nested levels is usually any. You should type it manually (using as MyStrapiComponent).
 
 Following components are already implemented and can be used:
 
