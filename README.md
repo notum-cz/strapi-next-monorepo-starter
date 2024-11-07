@@ -5,7 +5,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 ## 🥞 Tech stack
 
 - [Strapi v5](https://strapi.io/) - Headless CMS to manage content
-- [NextJS App Router v14](https://nextjs.org/) - React framework for building web apps
+- [NextJS App Router v14](https://nextjs.org/docs/14) - React framework for building web apps
 - [Shadcn/ui](https://ui.shadcn.com/) - TailwindCSS based UI components
 - [Turborepo](https://turbo.build/) - Monorepo management tool to keep things tidy
 
@@ -37,7 +37,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 #### Apps
 
-- `apps/ui` - UI web app based on [NextJS 14](https://nextjs.org/) and [shadcn/ui](https://ui.shadcn.com/) ([Tailwind](https://tailwindcss.com/)) - [README.md](./apps/ui/README.md)
+- `apps/ui` - UI web app based on [NextJS 14](https://nextjs.org/docs/14/) and [shadcn/ui](https://ui.shadcn.com/) ([Tailwind](https://tailwindcss.com/)) - [README.md](./apps/ui/README.md)
 - `apps/strapi` - [Strapi v5](https://strapi.io/) API with prepared page-builder components - [README.md](./apps/strapi/README.md)
 
 #### Packages
