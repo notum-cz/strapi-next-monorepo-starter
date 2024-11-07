@@ -19,16 +19,16 @@ const printableComps: {
   // eslint-disable-next-line no-unused-vars
   [K in UID.Component]?: React.ComponentType<any>
 } = {
-  "sections.faq": Faq,
-  "sections.hero": Hero,
-  "sections.feature-grid": FeatureGrid,
-  "sections.carousel": CarouselGrid,
-  "sections.heading-with-cta-button": HeadingWithCTAButton,
-  "sections.image-with-cta-button": ImageWithCTAButton,
   "sections.animated-logo-row": AnimatedLogoRow,
-  "sections.horizontal-images": HorizontalImages,
-  "sections.newsletter": Newsletter,
+  "sections.carousel": CarouselGrid,
   "sections.contact-form": ContactFormSection,
+  "sections.faq": Faq,
+  "sections.feature-grid": FeatureGrid,
+  "sections.hero": Hero,
+  "sections.heading-with-cta-button": HeadingWithCTAButton,
+  "sections.horizontal-images": HorizontalImages,
+  "sections.image-with-cta-button": ImageWithCTAButton,
+  "sections.newsletter": Newsletter,
   // Add more components here
 }
 

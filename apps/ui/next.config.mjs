@@ -28,7 +28,7 @@ const nextConfig = {
     minimumCacheTTL: 60 * 15, // 15 minutes - after this time, the image will be revalidated
 
     // You can configure deviceSizes or imageSizes to reduce the total number of possible generated images.
-    // Please check: https://nextjs.org/docs/app/api-reference/components/image#imagesizes
+    // Please check: https://nextjs.org/docs/14/app/api-reference/components/image#imagesizes
     deviceSizes: [420, 768, 1024],
 
     remotePatterns: [

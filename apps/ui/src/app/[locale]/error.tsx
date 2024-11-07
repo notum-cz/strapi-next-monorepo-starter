@@ -1,6 +1,6 @@
 "use client"
 
-// Error boundaries must be Client Components - https://nextjs.org/docs/app/building-your-application/routing/error-handling#using-error-boundaries
+// Error boundaries must be Client Components - https://nextjs.org/docs/14/app/building-your-application/routing/error-handling
 import { useEffect } from "react"
 import * as Sentry from "@sentry/nextjs"
 import { useTranslations } from "next-intl"

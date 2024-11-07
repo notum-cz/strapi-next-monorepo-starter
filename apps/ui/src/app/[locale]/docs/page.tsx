@@ -89,7 +89,7 @@ export default async function DocsPage() {
 
       <Section
         title="SEO"
-        subTitle="https://nextjs.org/docs/app/building-your-application/optimizing/metadata"
+        subTitle="https://nextjs.org/docs/14/app/building-your-application/optimizing/metadata"
       >
         <p>
           An example of how metadata for a page that is available at the address{" "}

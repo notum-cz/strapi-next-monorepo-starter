@@ -9,6 +9,7 @@ import { AppError } from "@/types/general"
 import { AppSession } from "@/types/next-auth"
 
 import { getAuth } from "./auth"
+import { isDevelopment } from "./general-helpers"
 
 type CustomFetchOptions = {
   // force JWT token for the request
@@ -49,7 +50,9 @@ export default class Strapi {
       options?.omitAuthorization
     )
     const response = await fetch(url, {
-      next: { revalidate: env.NEXT_PUBLIC_REVALIDATE }, // cache: "no-cache" // for dynamic apps
+      // turn off caching in development
+      // if revalidate is set to a number since 0 implies cache: 'no-store' and a positive value implies cache: 'force-cache'.
+      next: { revalidate: isDevelopment() ? 0 : env.NEXT_PUBLIC_REVALIDATE },
       ...requestInit,
       headers: { ...requestInit?.headers, ...headers },
     })
