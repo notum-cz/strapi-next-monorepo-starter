@@ -55,10 +55,17 @@ export const env = createEnv({
     NEXT_PUBLIC_STRAPI_URL: process.env.NEXT_PUBLIC_STRAPI_URL,
     NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS:
       process.env.NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS,
-    NEXT_PUBLIC_REVALIDATE:
-      isNaN(Number(process.env.NEXT_PUBLIC_REVALIDATE)) === false
-        ? Number(process.env.NEXT_PUBLIC_REVALIDATE)
-        : false,
+    NEXT_PUBLIC_REVALIDATE: (() => {
+      const revalidate = process.env.NEXT_PUBLIC_REVALIDATE
+      const coercedRevalidate =
+        revalidate != null
+          ? isNaN(Number(revalidate))
+            ? false
+            : Number(revalidate)
+          : undefined
+
+      return coercedRevalidate
+    })(),
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
     SENTRY_ORG: process.env.SENTRY_ORG,
