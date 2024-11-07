@@ -1,6 +1,6 @@
 # 🔥 UI Starter Template
 
-This is a [Next.js v14](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Next.js v14](https://nextjs.org/docs/14) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## 🥞 Tech stack
 
@@ -74,15 +74,23 @@ docker run -it --rm --name ui -p 3000:3000 --env-file apps/ui/.env ui:latest
 
 To change port, set `PORT` env variable in `.env` file and in `docker run` command (`-p` flag means port mapping between host:container).
 
-Dockerfile assumes that NextJS app is ["outputed"](https://nextjs.org/docs/pages/api-reference/next-config-js/output) in `standalone` mode (see [next.config.mjs's output option](next.config.mjs) for details), which is useful for self-hosting in a Docker container (includes only necessary files and dependencies). It is controlled using `NEXT_OUTPUT` env variable. Any other value than `standalone` will require changes in Dockerfile (eg. `runner` stage).
+Dockerfile assumes that NextJS app is ["outputed"](https://nextjs.org/docs/14/app/api-reference/next-config-js/output) in `standalone` mode (see [next.config.mjs's output option](next.config.mjs) for details), which is useful for self-hosting in a Docker container (includes only necessary files and dependencies). It is controlled using `NEXT_OUTPUT` env variable. Any other value than `standalone` will require changes in Dockerfile (eg. `runner` stage).
 
 ### Output modes
 
 NextJS has three `output` modes:
 
-- `export` - static HTML/CSS/JS files [are generated at build time](https://nextjs.org/docs/app/building-your-application/deploying/static-exports) and served by any static hosting/CDN. No Node.js server is needed. [Dynamic logic is not supported](https://nextjs.org/docs/app/building-your-application/deploying/static-exports#unsupported-features). This mode is **not supported** in this starter repo because of the dynamic nature (NextAuth and [POST endpoint](src/app/api/auth/[...nextauth]/route.ts))
+- `export` - static HTML/CSS/JS files [are generated at build time](https://nextjs.org/docs/14/app/building-your-application/deploying/static-exports) and served by any static hosting/CDN. No Node.js server is needed. [Dynamic logic is not supported](https://nextjs.org/docs/14/app/building-your-application/deploying/static-exports#unsupported-features). This mode is **not supported** in this starter repo because of the dynamic nature (NextAuth and [POST endpoint](src/app/api/auth/[...nextauth]/route.ts))
 - `standalone` - useful for self-hosting in a Docker container (see above) because it includes only necessary files and dependencies
-- `undefined` - default build output, `.next` directory, that works with production mode `next start` or a hosting provider like Vercel
+- `undefined` - default build output, `.next` directory, that works with production mode `next start` or a hosting provider like Vercel and requires Node.js server
+
+### Data revalidation (ISR)
+
+This allows to update static content without rebuilding the entire site. Data revalidation doesn't work in plain static `export` output mode as the app is static and doesn't have a server to revalidate data. ISR speed up the app and reduces the load on the server.
+
+In this starter template, we use ISR with time-based revalidation by default. Revalidation is added globally to all fetch requests, but can be controlled individually through parameters of fetch functions (see [Strapi client](src/lib/strapi.ts)). Interval can be controlled using `NEXT_PUBLIC_REVALIDATE` env variable and is set to 0 (no cache) during development.
+
+[More information about ISR](https://nextjs.org/docs/app/building-your-application/data-fetching/incremental-static-regeneration)
 
 ## 🚢 Deploy to Heroku
 
@@ -241,7 +249,7 @@ console.log(process.env.NEXT_PUBLIC_STRAPI_URL)
 
 ### Error handling
 
-General unexpected **rendering** and **lifecycle** errors (not event handlers, not async code) are automatically caught by boundary defined in root [error.tsx](src/app/[locale]/error.tsx). This file [can be defined](https://nextjs.org/docs/app/building-your-application/routing/error-handling) at different levels/segments in route hierarchy.
+General unexpected **rendering** and **lifecycle** errors (not event handlers, not async code) are automatically caught by boundary defined in root [error.tsx](src/app/[locale]/error.tsx). This file [can be defined](https://nextjs.org/docs/14/app/building-your-application/routing/error-handling) at different levels/segments in route hierarchy.
 
 For even more granular error handling use custom [ErrorBoundary](src/components/elementary/ErrorBoundary.tsx) component. ErrorBoundary is easily configurable client-side component that utilizes [react-error-boundary](https://github.com/bvaughn/react-error-boundary) package and catches errors in smaller parts of the UI or individual components. By default it wraps Strapi components as their content is fetched from CMS and don't guarantee correctness.
 
@@ -291,7 +299,7 @@ const fetchedUser: Result<"plugin::users-permissions.user"> =
 
 In client React components/hooks use `useQuery` (or `useMutation`) hook from `@tanstack/react-query` to query/mutate data in reactive way. In server components call endpoint directly and fetch data (`/GET` endpoints) on NextJS server side - e.g. in `getData()` function or in component's body.
 
-Next's [server actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations) are not used in this project.
+Next's [server actions](https://nextjs.org/docs/14/app/building-your-application/data-fetching/server-actions-and-mutations) are not used in this project.
 
 An example of how to fetch data from API and render it in component is shown in [Configuration component](src/app/[locale]/_components/Configuration.tsx).
 
@@ -388,7 +396,7 @@ Following components are already implemented and can be used:
 
 ### Next Image
 
-Next Image is a very demanding component, so it needs to be approached with caution, keeping in mind that you must also consider SEO. For studying how next image works see [https://nextjs.org/docs/app/api-reference/components/image](https://nextjs.org/docs/app/api-reference/components/image). It's important to also look into the [next.config](next.config.mjs) file for current settings.
+Next Image is a very demanding component, so it needs to be approached with caution, keeping in mind that you must also consider SEO. For studying how next image works see [https://nextjs.org/docs/14/app/api-reference/components/image](https://nextjs.org/docs/14/app/api-reference/components/image). It's important to also look into the [next.config](next.config.mjs) file for current settings.
 
 Following image components are prepared. They all are wrapper around the Next Image component.
 
