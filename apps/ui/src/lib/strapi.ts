@@ -50,6 +50,7 @@ export default class Strapi {
       options?.omitAuthorization
     )
     const response = await fetch(url, {
+      // turn off caching in development
       // if revalidate is set to a number since 0 implies cache: 'no-store' and a positive value implies cache: 'force-cache'.
       next: { revalidate: isDevelopment() ? 0 : env.NEXT_PUBLIC_REVALIDATE },
       ...requestInit,
