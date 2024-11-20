@@ -39,6 +39,7 @@ export function ChangePasswordForm() {
         {
           body: JSON.stringify(values),
           method: "POST",
+          next: { revalidate: 0 },
         },
         {
           translateKeyPrefixForErrors: "auth.changePassword.errors",

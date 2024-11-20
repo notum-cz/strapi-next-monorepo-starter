@@ -41,6 +41,7 @@ export function RegisterForm() {
         {
           body: JSON.stringify(values),
           method: "POST",
+          next: { revalidate: 0 },
         },
         { omitAuthorization: true }
       ),

@@ -41,6 +41,7 @@ export function SetPasswordForm({ accountActivation = false }) {
         {
           body: JSON.stringify(values),
           method: "POST",
+          next: { revalidate: 0 },
         },
         {
           translateKeyPrefixForErrors: "auth.accountActivation.errors",
