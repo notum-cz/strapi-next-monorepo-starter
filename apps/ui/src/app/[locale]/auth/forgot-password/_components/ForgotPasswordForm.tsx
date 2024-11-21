@@ -34,6 +34,7 @@ export function ForgotPasswordForm() {
         {
           body: JSON.stringify(values),
           method: "POST",
+          next: { revalidate: 0 },
         },
         { omitAuthorization: true }
       )
