@@ -25,9 +25,10 @@ async function getData(locale: AppLocale) {
 export default async function RootBuilderPage({ params }: PageProps) {
   removeThisWhenYouNeedMe("RootBuilderPage")
 
-  setRequestLocale(params.locale)
+  const { locale } = await params
+  setRequestLocale(locale)
 
-  const pages = await getData(params.locale)
+  const pages = await getData(locale)
 
   return (
     <div>

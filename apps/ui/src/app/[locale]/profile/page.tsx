@@ -8,9 +8,9 @@ import { Link } from "@/lib/navigation"
 import { Button } from "@/components/ui/button"
 
 export default async function ProfilePage({ params }: PageProps) {
-  const { locale } = await params
-
   removeThisWhenYouNeedMe("ProfilePage")
+
+  const { locale } = await params
   setRequestLocale(locale)
 
   const session = await getAuth()
