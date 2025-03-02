@@ -5,11 +5,11 @@ import { AppLocale } from "./general"
 
 export interface LayoutProps<TParams = {}> {
   children: React.ReactNode
-  params: { locale: AppLocale } & TParams
+  params: Promise<{ locale: AppLocale } & TParams>
 }
 
 export interface PageProps<TParams = {}> {
-  params: { locale: AppLocale } & TParams
+  params: Promise<{ locale: AppLocale } & TParams>
   searchParams: { [key: string]: string | string[] | undefined }
 }
 

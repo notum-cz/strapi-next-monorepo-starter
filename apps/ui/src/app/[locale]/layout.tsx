@@ -22,16 +22,18 @@ export function generateStaticParams() {
 }
 
 export default async function RootLayout({ children, params }: LayoutProps) {
-  if (!routing.locales.includes(params.locale)) {
+  const { locale } = await params
+
+  if (!routing.locales.includes(locale)) {
     notFound()
   }
 
   // Enable static rendering
   // https://next-intl-docs.vercel.app/docs/getting-started/app-router/with-i18n-routing#static-rendering
-  setRequestLocale(params.locale)
+  setRequestLocale(locale)
 
   return (
-    <html lang={params.locale} suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head />
       <body
         className={cn(
@@ -42,7 +44,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
         <ServerProviders params={params}>
           <ClientProviders>
             <div className="relative flex min-h-screen flex-col">
-              <Navbar locale={params.locale} />
+              <Navbar locale={locale} />
               <div className="flex-1">
                 <div className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
                   {children}

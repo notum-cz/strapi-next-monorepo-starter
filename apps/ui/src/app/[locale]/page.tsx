@@ -23,9 +23,10 @@ import { ConfigurationExample } from "./_components/Configuration"
 
 export default async function RootPage({ params }: PageProps) {
   const session = await getAuth()
+  const { locale } = await params
 
   // Enable static rendering
-  setRequestLocale(params.locale)
+  setRequestLocale(locale)
 
   return (
     <div className="space-y-10">
