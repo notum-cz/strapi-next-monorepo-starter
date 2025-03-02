@@ -35,7 +35,8 @@ const Section = ({ children, title, subTitle }: SectionProps) => {
 const seoCodeString = `export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const pageUrl = params.rest.join("/")
+  const { locale, rest } = await params
+  const pageUrl = rest.join("/")
 
   const meta = await getMetadataFromStrapi({pageUrl, locale})
   return meta
