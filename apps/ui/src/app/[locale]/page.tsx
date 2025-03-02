@@ -23,9 +23,9 @@ import { ConfigurationExample } from "./_components/Configuration"
 
 export default async function RootPage({ params }: PageProps) {
   const session = await getAuth()
-  const { locale } = await params
 
   // Enable static rendering
+  const { locale } = await params
   setRequestLocale(locale)
 
   return (
