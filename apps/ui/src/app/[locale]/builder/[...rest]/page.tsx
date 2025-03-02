@@ -56,15 +56,18 @@ type Props = PageProps<{
 }>
 
 export async function generateMetadata({ params }: Props) {
-  const pageUrl = params.rest.filter((part) => part != "builder").join("/")
-  return getMetadataFromStrapi({ pageUrl, locale: params.locale })
+  const { locale, rest } = await params
+  const pageUrl = rest.filter((part) => part != "builder").join("/")
+  return getMetadataFromStrapi({ pageUrl, locale: locale })
 }
 
 export default async function StrapiPage({ params }: Props) {
-  setRequestLocale(params.locale)
+  const { locale, rest } = await params
 
-  const pageUrl = params.rest.filter((part) => part != "builder").join("/")
-  const response = await fetchData(pageUrl, params.locale)
+  setRequestLocale(locale)
+
+  const pageUrl = rest.filter((part) => part != "builder").join("/")
+  const response = await fetchData(pageUrl, locale)
 
   const page = response?.data
 
@@ -87,7 +90,7 @@ export default async function StrapiPage({ params }: Props) {
     <main className="w-full overflow-x-hidden">
       <ErrorBoundary hideFallback>
         <PageBuilderNavbar
-          locale={params.locale}
+          locale={locale}
           pageSpecificNavbar={pageSpecificNavbar}
         />
       </ErrorBoundary>
@@ -95,7 +98,7 @@ export default async function StrapiPage({ params }: Props) {
       <ComponentsRenderer pageComponents={pageComponents} />
 
       <ErrorBoundary hideFallback>
-        <PageBuilderFooter locale={params.locale} />
+        <PageBuilderFooter locale={locale} />
       </ErrorBoundary>
     </main>
   )
