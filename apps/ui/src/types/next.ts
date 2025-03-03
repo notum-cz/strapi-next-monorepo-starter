@@ -10,7 +10,7 @@ export interface LayoutProps<TParams = {}> {
 
 export interface PageProps<TParams = {}> {
   params: Promise<{ locale: AppLocale } & TParams>
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export type ImageExtendedProps = Omit<ImageProps, "src"> & {
