@@ -36,7 +36,7 @@ yarn-error.log*
 # turbo
 .turbo
 
-#jetbrains
+#jetbrains IDEs
 .idea
 
 .cache
