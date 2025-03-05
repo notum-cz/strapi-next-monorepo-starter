@@ -36,6 +36,9 @@ yarn-error.log*
 # turbo
 .turbo
 
+#jetbrains
+.idea
+
 .cache
 
 .strapi-updater.json
