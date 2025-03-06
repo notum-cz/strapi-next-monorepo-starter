@@ -51,7 +51,7 @@
   },
   "packageManager": "yarn@1.22.22",
   "engines": {
-    "node": "20.x.x",
+    "node": "22.x.x",
     "yarn": "1.22.x"
   },
   "comments": {
