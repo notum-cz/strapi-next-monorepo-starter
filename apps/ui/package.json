@@ -63,7 +63,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^14.2.16",
+    "@next/eslint-plugin-next": "15.2.1",
     "@repo/eslint-config": "*",
     "@repo/prettier-config": "*",
     "@repo/strapi": "*",
@@ -71,8 +71,8 @@
     "@types/lodash": "^4",
     "@types/node": "^20",
     "@types/qs": "^6",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4",
     "autoprefixer": "^10.4.20",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-tailwindcss": "^3.17.5",
@@ -84,5 +84,9 @@
   "engines": {
     "node": "20.x.x",
     "yarn": "1.22.x"
+  },
+  "resolutions": {
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4"
   }
 }
