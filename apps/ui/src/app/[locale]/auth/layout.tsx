@@ -1,10 +1,9 @@
-import { use } from "react"
 import { setRequestLocale } from "next-intl/server"
 
 import { LayoutProps } from "@/types/next"
 
-export default function AuthLayout({ children, params }: LayoutProps) {
-  const { locale } = use(params)
+export default async function AuthLayout({ children, params }: LayoutProps) {
+  const { locale } = await params
 
   setRequestLocale(locale)
 
