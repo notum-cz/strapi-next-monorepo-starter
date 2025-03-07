@@ -19,7 +19,7 @@ export const HeadingWithCTAButton = ({
   return (
     <section className="px-4 py-8 sm:py-16 lg:px-6">
       <Container>
-        <div className="mx-auto max-w-screen-sm text-center">
+        <div className="mx-auto max-w-(--breakpoint-sm) text-center">
           <h2 className="mb-4 text-4xl font-extrabold leading-tight tracking-tight text-gray-900">
             {component.title}
           </h2>

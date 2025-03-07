@@ -1,13 +1,9 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   root: true,
-  extends: [
-    "@repo/eslint-config/next.js",
-    "plugin:tailwindcss/recommended",
-    "plugin:jsx-a11y/recommended",
-  ],
+  extends: ["@repo/eslint-config/next.js", "plugin:jsx-a11y/recommended"],
   parser: "@typescript-eslint/parser",
-  plugins: ["tailwindcss", "jsx-a11y"],
+  plugins: ["jsx-a11y"],
   settings: {
     tailwindcss: {
       callees: ["cn"],

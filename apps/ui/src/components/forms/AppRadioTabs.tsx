@@ -70,7 +70,7 @@ export function AppRadioTabs({
                       key={tabTrigger.value}
                       value={tabTrigger.value}
                       tabIndex={tabTrigger.tabIndex}
-                      className="text-sm text-white text-opacity-80"
+                      className="text-sm text-white/80"
                     >
                       {tabTrigger.title}
                     </TabsTrigger>
