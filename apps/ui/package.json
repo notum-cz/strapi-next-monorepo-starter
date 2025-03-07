@@ -82,7 +82,7 @@
     "typescript": "^5"
   },
   "engines": {
-    "node": "20.x.x",
+    "node": "22.x.x",
     "yarn": "1.22.x"
   },
   "resolutions": {

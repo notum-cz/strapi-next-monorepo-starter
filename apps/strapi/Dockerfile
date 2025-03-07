@@ -1,4 +1,4 @@
-# This is PRODUCTION Dockerfile for Strapi in Turborepo. 
+# This is PRODUCTION Dockerfile for Strapi in Turborepo.
 # It's assumed that this Dockerfile is run from the root of the monorepo.
 
 # Created according to following examples:
@@ -10,7 +10,7 @@
 ARG APP=strapi
 ARG WORKSPACE=@repo/strapi
 
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk update && apk add --no-cache libc6-compat
 
@@ -49,10 +49,10 @@ RUN \
     --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
     yarn --prefer-offline --frozen-lockfile --ignore-scripts --production
 
-# Because of yarn v1 install sharp explicitly with "--ignore-engines". See https://github.com/lovell/sharp/issues/3871    
+# Because of yarn v1 install sharp explicitly with "--ignore-engines". See https://github.com/lovell/sharp/issues/3871
 RUN \
     --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
-    yarn workspace ${WORKSPACE} add sharp --ignore-engines --prefer-offline --frozen-lockfile 
+    yarn workspace ${WORKSPACE} add sharp --ignore-engines --prefer-offline --frozen-lockfile
 
 ENV PATH /app/apps/${APP}/node_modules/.bin:$PATH
 
