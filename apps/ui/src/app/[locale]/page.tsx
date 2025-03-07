@@ -25,7 +25,8 @@ export default async function RootPage({ params }: PageProps) {
   const session = await getAuth()
 
   // Enable static rendering
-  setRequestLocale(params.locale)
+  const { locale } = await params
+  setRequestLocale(locale)
 
   return (
     <div className="space-y-10">
