@@ -4,7 +4,7 @@ This is a [Stapi v5](https://strapi.io/) project bootstrapped with TypeScript us
 
 ## 🥞 Tech stack
 
-- node 20
+- node 22
 - yarn 1.22
 - Strapi 5
 - TypeScript

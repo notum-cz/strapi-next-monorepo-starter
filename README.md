@@ -64,7 +64,7 @@ Install extensions listed in the [.vscode/extensions.json](.vscode/extensions.js
 
 ### Prerequisites
 
-- node 20
+- node 22
 - yarn 1.22
 - [nvm](https://github.com/nvm-sh/nvm) (optional, recommended)
 
@@ -72,7 +72,7 @@ Install extensions listed in the [.vscode/extensions.json](.vscode/extensions.js
 
 ```bash
 # in root
-(nvm use) # switch to correct nodejs version (v20)
+(nvm use) # switch to correct nodejs version (v22)
 
 # install deps for apps and packages that are part of this monorepo
 yarn
