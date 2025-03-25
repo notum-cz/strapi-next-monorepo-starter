@@ -135,7 +135,7 @@ export default class Strapi {
           path,
           {
             ...params,
-            pagination: { page: i + 2 },
+            pagination: { ...firstPage.meta.pagination, page: i + 2 },
           },
           requestInit,
           options
