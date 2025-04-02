@@ -48,7 +48,7 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.454.0",
     "markdown-to-jsx": "^7.5.0",
-    "next": "^15.2.3",
+    "next": "^15.2.4",
     "next-auth": "^4.24.10",
     "next-intl": "^3.23.5",
     "next-themes": "^0.3.0",
