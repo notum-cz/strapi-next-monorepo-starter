@@ -122,6 +122,12 @@ Husky is installed by default and configured to run following tasks:
 - `bash ./scripts/utils/rm-modules.sh` - Remove all `node_modules` folders in the monorepo. Useful for scratch dependencies installation.
 - `bash ./scripts/utils/rm-all.sh` - Remove all `node_modules`, `.next`, `.turbo`, `.strapi`, `dist` folders.
 
+## ♾️ CI/CD
+
+### GitHub Actions
+
+We are using `GitHub Actions` for continuous integration. The `CI` expects some secrets (e.g. `NEXTAUTH_SECRET`) and variables (e.g. `NEXTAUTH_URL`, `NEXT_PUBLIC_APP_PUBLIC_URL`, `NEXT_PUBLIC_STRAPI_URL`) to be available on the runner, so make sure to add them in the repository's settings. Have a look at the [workflow](.github/workflows/ci.yml) definition for more details.
+
 ### Heroku
 
 - `./scripts/heroku/heroku-postbuild.sh` - Script for Heroku deployment to decide which app to build. It can be removed if not deploying to Heroku.
