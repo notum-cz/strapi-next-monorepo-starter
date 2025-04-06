@@ -44,7 +44,7 @@ jobs:
       - name: Prepare Environment Variables
         run: |
           cp apps/strapi/.env.example apps/strapi/.env
-          cp apps/ui/.env.local.example apps/strapi/.env.local
+          cp apps/ui/.env.local.example apps/ui/.env.local
 
       - name: yarn format:check
         run: yarn format:check
