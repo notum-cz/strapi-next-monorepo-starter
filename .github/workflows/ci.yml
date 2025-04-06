@@ -2,11 +2,56 @@ name: Verify build
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
+  lint:
+    name: Lint
+    timeout-minutes: 15
+    runs-on: ubuntu-latest 
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Cache turbo build setup
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: '${{ runner.os }}-turbo-${{ github.sha }}'
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Prepare Environment Variables
+        run: |
+          cp apps/strapi/.env.example apps/strapi/.env
+          cp apps/ui/.env.local.example apps/ui/.env.local
+
+      - name: yarn format:check
+        run: yarn format:check
+
+      - name: yarn lint
+        run: yarn lint
+
   build:
     name: Build all apps
     timeout-minutes: 15
@@ -44,7 +89,3 @@ jobs:
 
       - name: Build Strapi
         run: yarn build:strapi
-
-
-
-

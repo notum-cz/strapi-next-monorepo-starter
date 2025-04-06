@@ -6,8 +6,8 @@ This is a [Next.js v14](https://nextjs.org/docs/14) project bootstrapped with [`
 
 - node 22
 - yarn 1.22
-- NextJS 14 App router
-- React 18
+- NextJS 15 App router
+- React 19
 - TypeScript
 - [shadcn/ui](https://ui.shadcn.com/)
 - [Lucide icons](https://lucide.dev)

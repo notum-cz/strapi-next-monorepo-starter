@@ -20,7 +20,7 @@ export const HeadingWithCTAButton = ({
     <section className="px-4 py-8 sm:py-16 lg:px-6">
       <Container>
         <div className="mx-auto max-w-(--breakpoint-sm) text-center">
-          <h2 className="mb-4 text-4xl font-extrabold leading-tight tracking-tight text-gray-900">
+          <h2 className="mb-4 text-4xl leading-tight font-extrabold tracking-tight text-gray-900">
             {component.title}
           </h2>
           {component.subText && (
@@ -31,7 +31,7 @@ export const HeadingWithCTAButton = ({
 
           <LinkStrapi
             component={component.cta}
-            className="focus:ring-primary-300 inline-flex items-center justify-center rounded-lg bg-primary px-5 py-3 text-center text-base font-medium text-white focus:ring-4"
+            className="focus:ring-primary-300 bg-primary inline-flex items-center justify-center rounded-lg px-5 py-3 text-center text-base font-medium text-white focus:ring-4"
           />
         </div>
       </Container>

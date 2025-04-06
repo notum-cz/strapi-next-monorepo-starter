@@ -54,7 +54,7 @@ export async function PageBuilderFooter({
 
   return (
     <div className="bg-gray-100">
-      <Container className="pb-8 pt-12">
+      <Container className="pt-12 pb-8">
         <div className="grid grid-cols-1 gap-10 pb-8 sm:grid-cols-[30%_1fr]">
           <div className="flex flex-col space-y-4">
             <ImageWithLink component={component.logoImage} />
@@ -76,7 +76,7 @@ export async function PageBuilderFooter({
                   <LinkStrapi
                     key={String(link.id) + i}
                     component={link}
-                    className="w-fit text-sm text-primary hover:underline"
+                    className="text-primary w-fit text-sm hover:underline"
                   />
                 ))}
               </div>
@@ -99,7 +99,7 @@ export async function PageBuilderFooter({
               <Fragment key={String(link.id) + i}>
                 <LinkStrapi
                   component={link}
-                  className="relative w-fit text-sm text-primary hover:underline"
+                  className="text-primary relative w-fit text-sm hover:underline"
                 />
 
                 {i < component.links!.length - 1 && (

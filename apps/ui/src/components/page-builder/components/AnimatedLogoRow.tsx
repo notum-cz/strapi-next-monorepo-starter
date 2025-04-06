@@ -44,7 +44,7 @@ export function AnimatedLogoRow({
               ))}
             </div>
           </div>
-          <div className="bg-gradient-slider absolute left-0 top-0 size-full opacity-80" />
+          <div className="bg-gradient-slider absolute top-0 left-0 size-full opacity-80" />
         </div>
       </div>
     </section>
