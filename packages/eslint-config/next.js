@@ -1,5 +1,4 @@
 const { resolve } = require("node:path")
-
 const project = resolve(process.cwd(), "tsconfig.json")
 
 /** @type {import("eslint").Linter.Config} */
@@ -9,7 +8,7 @@ module.exports = {
     "prettier",
     require.resolve("@vercel/style-guide/eslint/next"),
     require.resolve("@vercel/style-guide/eslint/react"),
-    "eslint-config-turbo",
+    "plugin:turbo/recommended",
   ],
   globals: {
     React: true,
