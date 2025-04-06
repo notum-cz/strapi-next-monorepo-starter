@@ -110,7 +110,7 @@ export default async function DocsPage() {
           For working with images, we have created 3 components, folder{" "}
           <b>components/elementary</b>
         </p>
-        <div className="pl-2 pt-2">
+        <div className="pt-2 pl-2">
           <li>
             <b>ImageWithPlaiceholder</b>: A component for next 14+ ssr, which
             processes the image on the server and creates a smaller placeholder

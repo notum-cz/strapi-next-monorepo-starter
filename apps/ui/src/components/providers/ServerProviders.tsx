@@ -1,7 +1,8 @@
-import { AppLocale } from '@/types/general';
 import React from "react"
 import { notFound } from "next/navigation"
 import { NextIntlClientProvider } from "next-intl"
+
+import { AppLocale } from "@/types/general"
 
 interface Props {
   readonly children: React.ReactNode

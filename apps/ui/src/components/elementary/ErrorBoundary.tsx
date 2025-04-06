@@ -67,7 +67,7 @@ function ErrorBoundaryFallback({
         )}
       </AlertDescription>
 
-      <span className="absolute right-2 top-2 block">
+      <span className="absolute top-2 right-2 block">
         <XIcon
           className="size-4 cursor-pointer"
           onClick={() => setHidden(true)}

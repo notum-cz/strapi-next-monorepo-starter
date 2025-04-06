@@ -8,7 +8,7 @@ export default async function AuthLayout({ children, params }: LayoutProps) {
   setRequestLocale(locale)
 
   return (
-    <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
+    <section className="container grid items-center gap-6 pt-6 pb-8 md:py-10">
       {children}
     </section>
   )
