@@ -19,5 +19,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
         : import(`../../locales/${locale}.json`))
     ).default,
     timeZone: "Europe/Prague",
+    locale,
   }
 })

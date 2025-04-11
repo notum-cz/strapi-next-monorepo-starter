@@ -2,17 +2,21 @@
 
 import { useState } from "react"
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  HeaderGroup,
-  SortingState,
   useReactTable,
 } from "@tanstack/react-table"
 import { useTranslations } from "next-intl"
+
+import type {
+  ColumnDef,
+  HeaderGroup,
+  SortingState,
+} from "@tanstack/react-table"
+import type { ReactNode } from "react"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Input } from "@/components/ui/input"
@@ -34,7 +38,7 @@ interface Props<TData, TValue> {
   readonly isLoading?: boolean
   readonly pagination?: "simple" | "extended" | false
   readonly allowSearching?: boolean
-  readonly searchAdornment?: React.ReactNode
+  readonly searchAdornment?: ReactNode
 }
 
 export function DataTable<TData, TValue>({

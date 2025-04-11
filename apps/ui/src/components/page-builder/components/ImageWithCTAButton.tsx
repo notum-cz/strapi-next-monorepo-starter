@@ -32,14 +32,14 @@ export const ImageWithCTAButton = ({
             {component.title}
           </h2>
           {component.subText && (
-            <p className="mb-6 font-light text-gray-500 dark:text-gray-400 md:text-lg">
+            <p className="mb-6 font-light text-gray-500 md:text-lg dark:text-gray-400">
               {component.subText}
             </p>
           )}
 
           <LinkStrapi
             component={component.link}
-            className="focus:ring-primary-300 inline-flex items-center justify-center rounded-lg bg-primary px-5 py-3 text-center text-base font-medium text-white focus:ring-4"
+            className="focus:ring-primary-300 bg-primary inline-flex items-center justify-center rounded-lg px-5 py-3 text-center text-base font-medium text-white focus:ring-4"
           />
         </div>
       </Container>

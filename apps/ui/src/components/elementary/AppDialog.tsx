@@ -3,6 +3,8 @@
 import { createContext, useContext, useMemo, useState } from "react"
 import { useTranslations } from "next-intl"
 
+import type { ReactNode } from "react"
+
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
 import {
@@ -16,13 +18,13 @@ import {
 } from "@/components/ui/dialog"
 
 interface Props {
-  readonly Props: React.ReactNode
+  readonly Props: ReactNode
   readonly header: {
     title: string
     description?: string
   }
-  readonly children: React.ReactNode
-  readonly footerChildren?: React.ReactNode
+  readonly children: ReactNode
+  readonly footerChildren?: ReactNode
   readonly dialogContentClassName?: string
   readonly confirmDialogClose?: boolean
   readonly dialogCloseCallback?: () => void
