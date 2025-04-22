@@ -9,6 +9,59 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 - [Shadcn/ui](https://ui.shadcn.com/) - TailwindCSS based UI components
 - [Turborepo](https://turbo.build/) - Monorepo management tool to keep things tidy
 
+## 🚀 Getting started
+
+### Prerequisites
+
+- node 22
+- yarn 1.22
+- [nvm](https://github.com/nvm-sh/nvm) (optional, recommended)
+
+### Run dev
+
+- Clone this repository
+
+  ```sh
+  git clone https://github.com/notum-cz/strapi-next-monorepo-starter
+  ```
+
+- Install dependencies
+
+  ```sh
+  # in root (nvm use) # switch to correct nodejs version (v22)
+  nvm use
+  # install deps for apps and packages that are part of this monorepo
+  yarn
+  ```
+
+  > Don't worry about warning "Workspaces can only be enabled in private projects <https://github.com/yarnpkg/yarn/issues/8580>
+
+- Set up apps
+
+  ```sh
+  # minimal setup of preparing the environment files (.env) for each app
+  yarn setup:apps
+  ```
+
+  - See [What's inside?](#-whats-inside) for more details about apps and packages.
+
+- Run apps
+
+  ```sh
+  # run all apps in dev mode (this triggers `yarn dev` script in each app from `/apps` directory)
+  yarn dev
+  ```
+
+- 🎉 Enjoy!
+
+  - Open your browser and go to [http://localhost:3000](http://localhost:3000) to see the UI app in action.
+  - Open your browser and go to [http://localhost:1337](http://localhost:1337) to see the Strapi app in action.
+
+> [!TIP]
+>
+> - To prevent the 403 error on the home page, you need to allow the public users to access the Configuration API. To do that, go to the Strapi admin panel and navigate to Settings > Roles > Public. Then check the `find` permission for the Configuration API.
+> - Then to prevent 404 error for example part of the configuration - go to Content Manager add one example entry for the Configuration entry. This will allow the UI app to fetch the configuration data from the Strapi API.
+
 ## ✨ Features
 
 - **Strapi**: Fully typed (TypeScript) and up-to-date Strapi v5 controllers and services
@@ -35,56 +88,27 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 ## 📦 What's inside?
 
-#### Apps
+### Apps
 
 - `apps/ui` - UI web app based on [NextJS 14](https://nextjs.org/docs/14/) and [shadcn/ui](https://ui.shadcn.com/) ([Tailwind](https://tailwindcss.com/)) - [README.md](./apps/ui/README.md)
 - `apps/strapi` - [Strapi v5](https://strapi.io/) API with prepared page-builder components - [README.md](./apps/strapi/README.md)
 
-#### Packages
+### Packages
 
 - `packages/eslint-config`: [ESLint](https://eslint.org/) configurations for client side applications
 - `packages/prettier-config`: [Prettier](https://prettier.io/) configuration with import sort plugin and tailwind plugin included
 - `packages/typescript-config`: tsconfig JSONs used throughout the monorepo (not used in "strapi" app for now)
 
-## 🚀 Setup and usage
+## Transform this template to a project
 
-#### Transform this template to a project
-
-- Based on this repository create/init new repository with project name. If the new repo is on Github, it is possible to use the GH function to "init new project from template". It keeps the commit history. Otherwise, it is necessary to clone main branch of this repo locally, copy all files to the new repository and commit them as an initial commit.
 - In root `package.json` change `name` and `description` according to new project name. Optionally change names in apps and packages too. Keep `@repo` prefix if you don't prefer different scope/company.
 - Modify `README.md` files of apps to be less general (eg. update projects names, customize tech stack). Project-specific READMEs should not contain general leftovers from the template.
 - Follow "How to use this project template?" section in `apps/` READMEs to set up each app.
+  - [UI](./apps/ui/README.md)
+  - [Strapi](./apps/strapi/README.md)
 - If not deploying to Heroku, remove `Procfile`(s) from repository.
 
 _[After this preparation is done, delete this section from README]_
-
-### VSCode Extensions
-
-Install extensions listed in the [.vscode/extensions.json](.vscode/extensions.json) file and have a better development experience.
-
-### Prerequisites
-
-- node 22
-- yarn 1.22
-- [nvm](https://github.com/nvm-sh/nvm) (optional, recommended)
-
-### Installation
-
-```bash
-# in root
-(nvm use) # switch to correct nodejs version (v22)
-
-# install deps for apps and packages that are part of this monorepo
-yarn
-
-# Ignore warning "Workspaces can only be enabled in private projects."
-# https://github.com/yarnpkg/yarn/issues/8580
-```
-
-It will install dependencies for all `packages/` and `apps/`:
-
-- `packages/` don't require any additional setup
-- `apps/` probably do and the instructions are described in their READMEs ([UI](./apps/ui/README.md), [Strapi](./apps/strapi/README.md)). **Please, follow them first** (e.g. set env vars)
 
 ### Run - turborepo scripts
 
@@ -101,6 +125,10 @@ yarn build
 yarn dev:ui
 yarn dev:strapi
 ```
+
+## VSCode Extensions
+
+Install extensions listed in the [.vscode/extensions.json](.vscode/extensions.json) file and have a better development experience.
 
 ## 🔱 Husky tasks
 
