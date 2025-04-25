@@ -1,0 +1,18 @@
+{
+  "name": "@repo/shared-styles",
+  "version": "1.0.0",
+  "description": "Shared styles for use across apps",
+  "exports": {
+    "./global.css": "./dist/global.css"
+  },
+  "main": "./dist/global.css",
+  "style": "./dist/global.css",
+  "scripts": {
+    "build": "postcss src/styles.css -o dist/global.css"
+  },
+  "dependencies": {
+    "@_sh/strapi-plugin-ckeditor": "^5.0.1",
+    "cssnano": "^7.0.6",
+    "postcss-cli": "^11.0.0"
+  }
+}

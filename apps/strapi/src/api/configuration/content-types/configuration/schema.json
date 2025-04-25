@@ -21,6 +21,13 @@
       "type": "component",
       "repeatable": false,
       "component": "example.example"
+    },
+    "ckTest": {
+      "type": "customField",
+      "options": {
+        "preset": "CustomCkEditor"
+      },
+      "customField": "plugin::ckeditor5.CKEditor"
     }
   }
 }

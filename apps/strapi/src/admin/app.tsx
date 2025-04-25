@@ -1,5 +1,7 @@
 import { StrapiApp } from "@strapi/strapi/admin"
+import { setPluginConfig } from "@_sh/strapi-plugin-ckeditor"
 
+import { ckEditorConfig } from "./ckeditor"
 import { cs } from "./cs"
 
 export default {
@@ -11,5 +13,8 @@ export default {
   },
   bootstrap(app: StrapiApp) {
     console.log(app)
+  },
+  register() {
+    setPluginConfig(ckEditorConfig)
   },
 }
