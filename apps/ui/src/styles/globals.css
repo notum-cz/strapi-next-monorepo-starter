@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @plugin "tailwindcss-animate";
 
@@ -31,19 +31,18 @@
 
   --font-sans: Roboto;
 
-
   @keyframes accordion-down {
     0% {
       height: 0;
     }
     100% {
-      height: var(--radix-accordion-content-height)
+      height: var(--radix-accordion-content-height);
     }
   }
 
   @keyframes accordion-up {
     0% {
-      height: var(--radix-accordion-content-height)
+      height: var(--radix-accordion-content-height);
     }
     100% {
       height: 0;
