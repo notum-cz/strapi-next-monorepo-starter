@@ -48,6 +48,21 @@
           "sortable": false
         }
       },
+      "stageRequiredToPublish": {
+        "edit": {
+          "label": "stageRequiredToPublish",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "name"
+        },
+        "list": {
+          "label": "stageRequiredToPublish",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "contentTypes": {
         "edit": {
           "label": "contentTypes",
@@ -143,6 +158,12 @@
           {
             "name": "contentTypes",
             "size": 12
+          }
+        ],
+        [
+          {
+            "name": "stageRequiredToPublish",
+            "size": 6
           }
         ]
       ]

@@ -4,7 +4,6 @@ import { PageProps } from "@/types/next"
 
 import { getAuth } from "@/lib/auth"
 import { Link } from "@/lib/navigation"
-import { ErrorBoundary } from "@/components/elementary/ErrorBoundary"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -14,8 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-
-import { ConfigurationExample } from "./_components/Configuration"
 
 // export async function generateMetadata({ params }: PageProps) {
 //   return getMetadataFromStrapi({ pageUrl, locale: params.locale })
@@ -30,13 +27,6 @@ export default async function RootPage({ params }: PageProps) {
 
   return (
     <div className="space-y-10">
-      <ErrorBoundary
-        customErrorTitle="Configuration wasn't fetched from Strapi."
-        showErrorMessage
-      >
-        <ConfigurationExample />
-      </ErrorBoundary>
-
       {session && (
         <Card className="m-auto w-[800px]">
           <CardHeader>

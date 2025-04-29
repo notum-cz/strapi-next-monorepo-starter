@@ -1,21 +1,6 @@
 {
   "key": "plugin_seo_settings",
   "value": {
-    "api::configuration.configuration": {
-      "collectionName": "configuration",
-      "seoChecks": {
-        "metaTitle": true,
-        "metaDescription": true,
-        "metaRobots": true,
-        "metaSocial": true,
-        "wordCount": true,
-        "canonicalUrl": true,
-        "keywordDensity": true,
-        "structuredData": true,
-        "alternativeText": true,
-        "lastUpdatedAt": true
-      }
-    },
     "api::footer.footer": {
       "collectionName": "footer",
       "seoChecks": {
