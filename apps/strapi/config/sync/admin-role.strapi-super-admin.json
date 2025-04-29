@@ -8,66 +8,6 @@
     {
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
-      "subject": "api::configuration.configuration",
-      "properties": {
-        "fields": [
-          "darkMode",
-          "example.author"
-        ]
-      },
-      "conditions": [],
-      "documentId": "z3zwg0h9fy17ibt245uh9jap",
-      "locale": null
-    },
-    {
-      "action": "plugin::content-manager.explorer.delete",
-      "actionParameters": {},
-      "subject": "api::configuration.configuration",
-      "properties": {},
-      "conditions": [],
-      "documentId": "fui1i75zf3e5t203dyaox18o",
-      "locale": null
-    },
-    {
-      "action": "plugin::content-manager.explorer.publish",
-      "actionParameters": {},
-      "subject": "api::configuration.configuration",
-      "properties": {},
-      "conditions": [],
-      "documentId": "xi0w9ob6yhg9bgmpsnsjl4e5",
-      "locale": null
-    },
-    {
-      "action": "plugin::content-manager.explorer.read",
-      "actionParameters": {},
-      "subject": "api::configuration.configuration",
-      "properties": {
-        "fields": [
-          "darkMode",
-          "example.author"
-        ]
-      },
-      "conditions": [],
-      "documentId": "mnib9pflo3hs4vatcgr1v04p",
-      "locale": null
-    },
-    {
-      "action": "plugin::content-manager.explorer.update",
-      "actionParameters": {},
-      "subject": "api::configuration.configuration",
-      "properties": {
-        "fields": [
-          "darkMode",
-          "example.author"
-        ]
-      },
-      "conditions": [],
-      "documentId": "uyyncy9iymwyk1nr01mkwagl",
-      "locale": null
-    },
-    {
-      "action": "plugin::content-manager.explorer.create",
-      "actionParameters": {},
       "subject": "api::footer.footer",
       "properties": {
         "fields": [

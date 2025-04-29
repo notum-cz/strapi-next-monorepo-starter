@@ -6,8 +6,8 @@ This is a [Next.js v14](https://nextjs.org/docs/14) project bootstrapped with [`
 
 - node 22
 - yarn 1.22
-- NextJS 14 App router
-- React 18
+- NextJS 15 App router
+- React 19
 - TypeScript
 - [shadcn/ui](https://ui.shadcn.com/)
 - [Lucide icons](https://lucide.dev)
@@ -300,8 +300,6 @@ const fetchedUser: Result<"plugin::users-permissions.user"> =
 In client React components/hooks use `useQuery` (or `useMutation`) hook from `@tanstack/react-query` to query/mutate data in reactive way. In server components call endpoint directly and fetch data (`/GET` endpoints) on NextJS server side - e.g. in `getData()` function or in component's body.
 
 Next's [server actions](https://nextjs.org/docs/14/app/building-your-application/data-fetching/server-actions-and-mutations) are not used in this project.
-
-An example of how to fetch data from API and render it in component is shown in [Configuration component](src/app/[locale]/_components/Configuration.tsx).
 
 #### Authorization in API
 

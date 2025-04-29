@@ -4,6 +4,11 @@ import { NextIntlClientProvider } from "next-intl"
 
 import { AppLocale } from "@/types/general"
 
+import { setupLibraries } from "@/lib/general-helpers"
+
+// Setup libraries in server environment
+setupLibraries()
+
 interface Props {
   readonly children: React.ReactNode
   readonly params: Promise<{ locale: AppLocale }>
