@@ -16,7 +16,7 @@ const nextConfig = {
     // Be aware that Strapi has optimization on by default
     // Do not optimize all images by default.
     // This is because the optimization process can be slow and resource-intensive. Instead, only optimize images that are requested by the browser.
-    unoptimized: env.NEXT_IMAGES_UNOPTIMIZED,
+    unoptimized: false,
 
     // AVIF generally takes 20% longer to encode but it compresses 20% smaller compared to WebP.
     // This means that the first time an image is requested, it will typically be slower and then subsequent requests that are cached will be faster.

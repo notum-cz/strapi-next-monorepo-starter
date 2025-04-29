@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { withAuth } from "next-auth/middleware"
 import createMiddleware from "next-intl/middleware"
 
-import { env } from "./env.mjs"
+import { isDevelopment } from "./lib/general-helpers"
 import { routing } from "./lib/navigation"
 
 // https://next-intl-docs.vercel.app/docs/getting-started/app-router
@@ -40,7 +40,7 @@ export default function middleware(req: NextRequest) {
   // Comment this block when running locally (using `next start`)
   const xForwardedProtoHeader = req.headers.get("x-forwarded-proto")
   if (
-    env.NODE_ENV === "production" &&
+    !isDevelopment() &&
     (xForwardedProtoHeader === null ||
       xForwardedProtoHeader.includes("https") === false)
   ) {

@@ -8,10 +8,14 @@ import { z } from "zod"
 
 import { AppError } from "@/types/general"
 
+import { setupLibraries } from "@/lib/general-helpers"
 import { useErrorMessage } from "@/hooks/useErrorMessage"
 import { useTranslatedZod } from "@/hooks/useTranslatedZod"
 
 import { useToast } from "../ui/use-toast"
+
+// Setup libraries in client environment
+setupLibraries()
 
 export function ClientProviders({
   children,

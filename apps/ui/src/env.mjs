@@ -10,8 +10,6 @@ const optionalZodBoolean = z
 
 export const env = createEnv({
   emptyStringAsUndefined: true,
-  // TODO: Temporary skip validation because of unknown error with detecting NextAuth env vars in Github Actions:
-  // ❌ Invalid environment variables: { NEXTAUTH_SECRET: [ 'Required' ], NEXTAUTH_URL: [ 'Required' ] }
 
   /*
    * Serverside Environment variables, not available on the client.
@@ -21,8 +19,6 @@ export const env = createEnv({
     NEXTAUTH_SECRET: z.string().optional(),
     NEXTAUTH_URL: z.string().url().optional(),
     NEXT_OUTPUT: z.string().optional(),
-    NEXT_IMAGES_UNOPTIMIZED: optionalZodBoolean,
-    NODE_ENV: z.string().optional(),
     SENTRY_AUTH_TOKEN: z.string().optional(),
     SENTRY_ORG: z.string().optional(),
     SENTRY_PROJECT: z.string().optional(),
@@ -35,9 +31,14 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_PUBLIC_URL: z.string().url(),
     NEXT_PUBLIC_STRAPI_URL: z.string().url(),
     NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS: optionalZodBoolean,
-    NEXT_PUBLIC_NODE_ENV: z.string().optional(),
     NEXT_PUBLIC_REVALIDATE: z.number().or(z.literal(false)).optional(),
     NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
+  },
+  shared: {
+    // NODE_ENV makes app to behave as it's in production mode (optimized builds, no dev-only behavior, etc.)
+    NODE_ENV: z.enum(["development", "production"]).optional(),
+    // APP_ENV is used to determine the environment the app is running in. Used to divide deployments.
+    APP_ENV: z.enum(["testing", "production"]).optional(),
   },
   /*
    * Due to how Next.js bundles environment variables on Edge and Client,
@@ -48,9 +49,8 @@ export const env = createEnv({
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     NEXT_OUTPUT: process.env.NEXT_OUTPUT,
-    NEXT_IMAGES_UNOPTIMIZED: process.env.NEXT_IMAGES_UNOPTIMIZED,
     NODE_ENV: process.env.NODE_ENV,
-    NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
+    APP_ENV: process.env.APP_ENV,
     NEXT_PUBLIC_APP_PUBLIC_URL: process.env.NEXT_PUBLIC_APP_PUBLIC_URL,
     NEXT_PUBLIC_STRAPI_URL: process.env.NEXT_PUBLIC_STRAPI_URL,
     NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS:

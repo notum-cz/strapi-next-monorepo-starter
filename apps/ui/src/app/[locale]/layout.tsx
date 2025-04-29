@@ -6,7 +6,6 @@ import { setRequestLocale } from "next-intl/server"
 import { LayoutProps } from "@/types/next"
 
 import { fontRoboto } from "@/lib/fonts"
-import { setupLibraries } from "@/lib/general-helpers"
 import { routing } from "@/lib/navigation"
 import { cn } from "@/lib/styles"
 import { Navbar } from "@/components/elementary/navbar/Navbar"
@@ -14,8 +13,6 @@ import { TailwindIndicator } from "@/components/elementary/TailwindIndicator"
 import { ClientProviders } from "@/components/providers/ClientProviders"
 import { ServerProviders } from "@/components/providers/ServerProviders"
 import { Toaster } from "@/components/ui/toaster"
-
-setupLibraries()
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
