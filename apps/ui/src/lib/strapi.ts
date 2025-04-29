@@ -28,7 +28,6 @@ type CustomFetchOptions = {
  */
 // eslint-disable-next-line no-unused-vars
 export const API_ENDPOINTS: { [key in UID.ContentType]?: string } = {
-  "api::configuration.configuration": "/configuration",
   "plugin::users-permissions.user": "/users",
   "api::page.page": "/pages",
   "api::footer.footer": "/footer",

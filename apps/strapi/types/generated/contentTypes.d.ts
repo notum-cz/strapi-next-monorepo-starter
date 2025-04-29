@@ -369,36 +369,6 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   }
 }
 
-export interface ApiConfigurationConfiguration extends Struct.SingleTypeSchema {
-  collectionName: "configurations"
-  info: {
-    description: ""
-    displayName: "Configuration"
-    pluralName: "configurations"
-    singularName: "configuration"
-  }
-  options: {
-    draftAndPublish: false
-  }
-  attributes: {
-    createdAt: Schema.Attribute.DateTime
-    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
-      Schema.Attribute.Private
-    darkMode: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>
-    example: Schema.Attribute.Component<"example.example", false>
-    locale: Schema.Attribute.String & Schema.Attribute.Private
-    localizations: Schema.Attribute.Relation<
-      "oneToMany",
-      "api::configuration.configuration"
-    > &
-      Schema.Attribute.Private
-    publishedAt: Schema.Attribute.DateTime
-    updatedAt: Schema.Attribute.DateTime
-    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
-      Schema.Attribute.Private
-  }
-}
-
 export interface ApiFooterFooter extends Struct.SingleTypeSchema {
   collectionName: "footers"
   info: {
@@ -1071,7 +1041,6 @@ declare module "@strapi/strapi" {
       "admin::transfer-token": AdminTransferToken
       "admin::transfer-token-permission": AdminTransferTokenPermission
       "admin::user": AdminUser
-      "api::configuration.configuration": ApiConfigurationConfiguration
       "api::footer.footer": ApiFooterFooter
       "api::navbar.navbar": ApiNavbarNavbar
       "api::page.page": ApiPagePage

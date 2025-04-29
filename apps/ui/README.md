@@ -301,8 +301,6 @@ In client React components/hooks use `useQuery` (or `useMutation`) hook from `@t
 
 Next's [server actions](https://nextjs.org/docs/14/app/building-your-application/data-fetching/server-actions-and-mutations) are not used in this project.
 
-An example of how to fetch data from API and render it in component is shown in [Configuration component](src/app/[locale]/_components/Configuration.tsx).
-
 #### Authorization in API
 
 Strapi API endpoints are usually protected by JWT token. To fetch data from protected API, you have to pass the token in the `Authorization` header of the request. The token is stored in the NextAuth session object, which is returned by `getAuth()` function (RSC) or `useSession()`/`await getSession()` in client components.
