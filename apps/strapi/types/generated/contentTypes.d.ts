@@ -486,9 +486,15 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     }
   }
   attributes: {
+    breadcrumbTitle: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    children: Schema.Attribute.Relation<"oneToMany", "api::page.page">
     content: Schema.Attribute.DynamicZone<
       [
-        "layout.navbar",
         "sections.faq",
         "sections.horizontal-images",
         "sections.hero",
@@ -509,8 +515,16 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
+    fullPath: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
     locale: Schema.Attribute.String
     localizations: Schema.Attribute.Relation<"oneToMany", "api::page.page">
+    parent: Schema.Attribute.Relation<"manyToOne", "api::page.page">
     publishedAt: Schema.Attribute.DateTime
     seo: Schema.Attribute.Component<"shared.seo", false> &
       Schema.Attribute.SetPluginOptions<{
@@ -520,7 +534,13 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
       }>
     slug: Schema.Attribute.String &
       Schema.Attribute.Required &
-      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true

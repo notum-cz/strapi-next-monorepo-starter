@@ -16,16 +16,42 @@
     }
   },
   "attributes": {
+    "title": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "required": true
+    },
+    "breadcrumbTitle": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string"
+    },
     "slug": {
       "type": "string",
       "required": true,
-      "unique": true,
       "regex": "^[a-z0-9/-]+$",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       }
+    },
+    "fullPath": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "required": false,
+      "unique": true
     },
     "seo": {
       "type": "component",
@@ -40,7 +66,6 @@
     "content": {
       "type": "dynamiczone",
       "components": [
-        "layout.navbar",
         "sections.faq",
         "sections.horizontal-images",
         "sections.hero",
@@ -57,6 +82,18 @@
           "localized": true
         }
       }
+    },
+    "children": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::page.page",
+      "mappedBy": "parent"
+    },
+    "parent": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::page.page",
+      "inversedBy": "children"
     }
   }
 }
