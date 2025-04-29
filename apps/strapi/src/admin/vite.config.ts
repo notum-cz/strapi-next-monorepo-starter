@@ -1,3 +1,5 @@
+import path from "path"
+
 import { mergeConfig } from "vite"
 
 import type { UserConfig } from "vite"
@@ -10,5 +12,5 @@ export default (config: UserConfig) => {
         "@": "/src",
       },
     },
-  })
+  } as UserConfig)
 }

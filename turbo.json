@@ -4,6 +4,7 @@
   "globalEnv": ["NEXT_OUTPUT"],
   "tasks": {
     "build": {
+      "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**", "public/**"]
     },
     "lint": {
