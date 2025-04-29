@@ -1,5 +1,5 @@
 {
-  "collectionName": "components_shared_footer_items",
+  "collectionName": "components_sections_footer_items",
   "info": {
     "displayName": "FooterItem",
     "description": ""
@@ -13,7 +13,7 @@
     "links": {
       "type": "component",
       "repeatable": true,
-      "component": "shared.link"
+      "component": "utilities.link"
     }
   }
 }

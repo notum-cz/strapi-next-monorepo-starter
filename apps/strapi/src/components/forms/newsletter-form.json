@@ -1,7 +1,7 @@
 {
-  "collectionName": "components_sections_contact_forms",
+  "collectionName": "components_forms_newsletter_forms",
   "info": {
-    "displayName": "ContactForm"
+    "displayName": "Newsletter"
   },
   "options": {},
   "attributes": {
@@ -14,7 +14,7 @@
     "gdpr": {
       "type": "component",
       "repeatable": false,
-      "component": "shared.link"
+      "component": "utilities.link"
     }
   }
 }

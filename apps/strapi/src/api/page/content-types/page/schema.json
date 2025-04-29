@@ -56,7 +56,7 @@
     "seo": {
       "type": "component",
       "repeatable": false,
-      "component": "shared.seo",
+      "component": "seo-utilities.seo",
       "pluginOptions": {
         "i18n": {
           "localized": true

@@ -1,33 +1,29 @@
 {
-  "collectionName": "components_shared_seo_twitters",
+  "collectionName": "components_seo_utilities_seo_ogs",
   "info": {
-    "displayName": "SeoTwitter",
+    "displayName": "SeoOg",
     "icon": "oneToMany"
   },
   "options": {},
   "attributes": {
-    "card": {
-      "type": "string"
-    },
     "title": {
       "type": "string"
     },
     "description": {
       "type": "string"
     },
-    "siteId": {
+    "url": {
       "type": "string"
     },
-    "creator": {
-      "type": "string"
+    "type": {
+      "type": "enumeration",
+      "enum": ["website", "article"],
+      "default": "website"
     },
-    "creatorId": {
-      "type": "string"
-    },
-    "images": {
+    "image": {
       "allowedTypes": ["images"],
       "type": "media",
-      "multiple": true
+      "multiple": false
     }
   }
 }

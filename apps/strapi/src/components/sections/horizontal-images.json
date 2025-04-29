@@ -10,15 +10,10 @@
       "type": "string",
       "required": true
     },
-    "isVisible": {
-      "type": "boolean",
-      "default": true,
-      "required": false
-    },
     "images": {
       "type": "component",
       "repeatable": true,
-      "component": "shared.image-with-link"
+      "component": "utilities.image-with-link"
     },
     "spacing": {
       "type": "integer",
@@ -30,12 +25,10 @@
       "enum": ["sm", "md", "lg", "xl", "full"]
     },
     "fixedImageHeight": {
-      "type": "integer",
-      "required": false
+      "type": "integer"
     },
     "fixedImageWidth": {
-      "type": "integer",
-      "required": false
+      "type": "integer"
     }
   }
 }

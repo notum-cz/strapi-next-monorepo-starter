@@ -1,8 +1,9 @@
 {
-  "collectionName": "components_shared_seos",
+  "collectionName": "components_seo_utilities_seos",
   "info": {
     "displayName": "seo",
-    "icon": "search"
+    "icon": "search",
+    "description": ""
   },
   "options": {},
   "attributes": {
@@ -26,13 +27,15 @@
       "type": "text",
       "regex": "[^,]+"
     },
-    "metaRobots": {
-      "type": "string"
-    },
     "twitter": {
       "type": "component",
       "repeatable": false,
-      "component": "shared.seo-twitter"
+      "component": "seo-utilities.seo-twitter"
+    },
+    "og": {
+      "type": "component",
+      "repeatable": false,
+      "component": "seo-utilities.seo-og"
     },
     "applicationName": {
       "type": "string"
@@ -42,6 +45,28 @@
     },
     "email": {
       "type": "string"
+    },
+    "canonicalUrl": {
+      "type": "string"
+    },
+    "metaRobots": {
+      "type": "enumeration",
+      "enum": [
+        "all",
+        "index",
+        "index,follow",
+        "noindex",
+        "noindex,follow",
+        "noindex,nofollow",
+        "none",
+        "noarchive",
+        "nosnippet",
+        "max-snippet"
+      ],
+      "default": "all"
+    },
+    "structuredData": {
+      "type": "json"
     }
   }
 }

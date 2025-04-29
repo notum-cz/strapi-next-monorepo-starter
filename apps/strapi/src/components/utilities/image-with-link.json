@@ -1,5 +1,5 @@
 {
-  "collectionName": "components_shared_image_with_links",
+  "collectionName": "components_utilities_image_with_links",
   "info": {
     "displayName": "ImageWithLink",
     "description": ""
@@ -9,12 +9,12 @@
     "image": {
       "type": "component",
       "repeatable": false,
-      "component": "shared.basic-image"
+      "component": "utilities.basic-image"
     },
     "link": {
       "type": "component",
       "repeatable": false,
-      "component": "shared.link"
+      "component": "utilities.link"
     }
   }
 }

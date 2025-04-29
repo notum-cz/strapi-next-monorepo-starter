@@ -1,8 +1,7 @@
 {
-  "collectionName": "components_shared_basic_images",
+  "collectionName": "components_utilities_basic_images",
   "info": {
-    "displayName": "BasicImage",
-    "description": ""
+    "displayName": "BasicImage"
   },
   "options": {},
   "attributes": {
@@ -17,12 +16,10 @@
       "required": true
     },
     "width": {
-      "type": "integer",
-      "required": false
+      "type": "integer"
     },
     "height": {
-      "type": "integer",
-      "required": false
+      "type": "integer"
     },
     "fallbackSrc": {
       "type": "string"

@@ -1,5 +1,5 @@
 {
-  "collectionName": "components_shared_meta_socials",
+  "collectionName": "components_seo_utilities_meta_socials",
   "info": {
     "displayName": "metaSocial",
     "icon": "project-diagram"
@@ -8,10 +8,7 @@
   "attributes": {
     "socialNetwork": {
       "type": "enumeration",
-      "enum": [
-        "Facebook",
-        "Twitter"
-      ],
+      "enum": ["Facebook", "Twitter"],
       "required": true
     },
     "title": {
@@ -25,11 +22,7 @@
       "required": true
     },
     "image": {
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos"
-      ],
+      "allowedTypes": ["images", "files", "videos"],
       "type": "media",
       "multiple": false
     }
