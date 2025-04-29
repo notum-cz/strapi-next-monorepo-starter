@@ -27,10 +27,10 @@ const colorConfig =
         { color: "var(--color-peach-900)", label: "Peach 900" },
       ] // default config if anything fails during the package build process
 
-const lokaliseCkEditorConfig: Preset = {
+const defaultCkEditorConfig: Preset = {
   ...defaultHtmlPreset,
-  name: "LokaliseCkEditor",
-  description: "Lokalise CkEditor Config",
+  name: "defaultCkEditor",
+  description: "Default CkEditor Config",
   editorConfig: {
     ...defaultHtmlPreset.editorConfig,
     fontColor: {
@@ -117,6 +117,6 @@ export default {
   },
   bootstrap(_app: StrapiApp) {},
   register() {
-    setPluginConfig({ presets: [lokaliseCkEditorConfig] })
+    setPluginConfig({ presets: [defaultCkEditorConfig] })
   },
 }
