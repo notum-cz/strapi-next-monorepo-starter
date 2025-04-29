@@ -33,7 +33,7 @@ Adding new tokens should also be propagated to CkEditor after building the packa
 
 Next includes Tailwind, therefore it does not need any additional configuration beyond the default import.
 
-Theme from this package should be included in `styles/globals.css` file using the `@import` diretive.
+Theme from this package should be included in `styles/globals.css` file using the `@import` directive.
 
 ### Strapi
 
