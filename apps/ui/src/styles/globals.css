@@ -20,6 +20,16 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
+
+  ul {
+    list-style-type: disc;
+    list-style-position: inside;
+  }
+
+  ol {
+    list-style-type: decimal;
+    list-style-position: inside;
+  }
 }
 
 @utility no-scrollbar {
