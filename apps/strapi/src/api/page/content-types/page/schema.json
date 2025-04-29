@@ -27,6 +27,15 @@
         }
       }
     },
+    "fullPath": {
+      "type": "string",
+      "unique": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
     "seo": {
       "type": "component",
       "repeatable": false,

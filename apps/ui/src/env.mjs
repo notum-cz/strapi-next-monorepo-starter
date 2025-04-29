@@ -23,6 +23,7 @@ export const env = createEnv({
     SENTRY_AUTH_TOKEN: z.string().optional(),
     SENTRY_ORG: z.string().optional(),
     SENTRY_PROJECT: z.string().optional(),
+    STRAPI_PREVIEW_SECRET: z.string().optional(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -72,5 +73,6 @@ export const env = createEnv({
     SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
     SENTRY_ORG: process.env.SENTRY_ORG,
     SENTRY_PROJECT: process.env.SENTRY_PROJECT,
+    STRAPI_PREVIEW_SECRET: process.env.STRAPI_PREVIEW_SECRET,
   },
 })

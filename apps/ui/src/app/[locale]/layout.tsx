@@ -9,6 +9,7 @@ import { fontRoboto } from "@/lib/fonts"
 import { routing } from "@/lib/navigation"
 import { cn } from "@/lib/styles"
 import { Navbar } from "@/components/elementary/navbar/Navbar"
+import StrapiPreviewListener from "@/components/elementary/StrapiPreviewListener"
 import { TailwindIndicator } from "@/components/elementary/TailwindIndicator"
 import { ClientProviders } from "@/components/providers/ClientProviders"
 import { ServerProviders } from "@/components/providers/ServerProviders"
@@ -38,6 +39,8 @@ export default async function RootLayout({ children, params }: LayoutProps) {
           fontRoboto.variable
         )}
       >
+        <StrapiPreviewListener />
+
         <ServerProviders params={params}>
           <ClientProviders>
             <div className="relative flex min-h-screen flex-col">

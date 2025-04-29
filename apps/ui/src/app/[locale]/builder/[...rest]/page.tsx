@@ -1,3 +1,4 @@
+import { draftMode } from "next/headers"
 import { notFound } from "next/navigation"
 import { setRequestLocale } from "next-intl/server"
 
@@ -33,6 +34,7 @@ export async function generateStaticParams() {
 }
 
 async function fetchData(pageUrl: string, locale: string) {
+  const dm = await draftMode()
   try {
     return Strapi.fetchOneBySlug(
       "api::page.page",
@@ -41,6 +43,7 @@ async function fetchData(pageUrl: string, locale: string) {
         populate: ["content"],
         pLevel: 10,
         locale,
+        status: dm.isEnabled ? "draft" : "published",
       },
       undefined,
       { omitAuthorization: true }
