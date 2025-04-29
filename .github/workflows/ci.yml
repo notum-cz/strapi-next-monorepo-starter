@@ -78,14 +78,14 @@ jobs:
 
       - name: Install dependencies
         run: yarn
+      
+      - name: Prepare Environment Variables
+        run: |
+          cp apps/strapi/.env.example apps/strapi/.env
+          cp apps/ui/.env.local.example apps/ui/.env.local
 
       - name: Build UI
         run: yarn build:ui
-        env:
-          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-          NEXTAUTH_URL: ${{ vars.NEXTAUTH_URL }}
-          NEXT_PUBLIC_APP_PUBLIC_URL: ${{ vars.NEXT_PUBLIC_APP_PUBLIC_URL }}
-          NEXT_PUBLIC_STRAPI_URL: ${{ vars.NEXT_PUBLIC_STRAPI_URL }}
 
       - name: Build Strapi
         run: yarn build:strapi
