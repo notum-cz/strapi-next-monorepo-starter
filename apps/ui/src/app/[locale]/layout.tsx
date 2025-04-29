@@ -43,7 +43,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
             <div className="relative flex min-h-screen flex-col">
               <Navbar locale={locale} />
               <div className="flex-1">
-                <div className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
+                <div className="container grid items-center gap-6 pt-6 pb-8 md:py-10">
                   {children}
                 </div>
               </div>
