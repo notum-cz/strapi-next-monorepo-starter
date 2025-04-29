@@ -1,0 +1,25 @@
+{
+    "name": "@repo/design-system",
+    "version": "1.0.0",
+    "license": "MIT",
+    "sideEffects": ["**/*.css"],
+    "files": ["dist"],
+    "exports": {
+        "./theme.css": "./src/theme.css",
+        "./styles.css": "./dist/styles.css",
+        "./custom-styles.css": "./src/custom-styles.css",
+        "./ck-color-config.json": "./dist/ckeditor-color-config.json",
+        "./ck-fontSize-config.json": "./dist/ckeditor-fontSize-config.json"
+    },
+    "scripts": {
+        "build": "tailwindcss -i ./src/styles.css -o ./dist/styles.css && node ./src/build-ck-config.js",
+        "dev": "tailwindcss -i ./src/styles.css -o ./dist/styles.css --watch"
+    },
+    "dependencies": {
+        "@tailwindcss/cli": "^4.1.4",
+        "@tailwindcss/postcss": "^4.1.4",
+        "class-variance-authority": "^0.7.1",
+        "postcss": "^8.5.3",
+        "tailwindcss": "^4.1.4"
+    }
+}

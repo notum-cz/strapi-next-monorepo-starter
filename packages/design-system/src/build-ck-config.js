@@ -1,0 +1,53 @@
+/**
+ * This script reads the theme.css, finds all the color variables and extracts them into a JSON array
+ *
+ * This array is the imported in Strapi
+ */
+const path = require("path")
+const fs = require("fs")
+
+const inputPath = path.resolve(__dirname, "./theme.css")
+let css = fs.readFileSync(inputPath, "utf8")
+
+const colorOutputJsonPath = path.resolve(
+  __dirname,
+  "../dist/ckeditor-color-config.json"
+)
+const colorVars = []
+const colorVarRegex = /(--color-[\w-]+)\s*:\s*([^;]+);/g
+
+let colorMatch
+while ((colorMatch = colorVarRegex.exec(css)) !== null) {
+  const [, varName] = colorMatch
+  colorVars.push({
+    color: `var(${varName})`,
+    label: varName.replaceAll(/--/g, ""),
+  })
+}
+
+const fontSizeOutputJsonPath = path.resolve(
+  __dirname,
+  "../dist/ckeditor-fontSize-config.json"
+)
+const fontSizeVars = []
+const fontSizeVarRegex = /(--text-[\w-]+)\s*:\s*([^;]+);/g
+
+let fontSizeMatch
+while ((fontSizeMatch = fontSizeVarRegex.exec(css)) !== null) {
+  const [, varName, varValue] = fontSizeMatch
+  fontSizeVars.push({
+    model: `${varValue}px`,
+    title: varName.replaceAll(/--/g, ""),
+  })
+}
+
+fs.writeFileSync(
+  colorOutputJsonPath,
+  JSON.stringify(colorVars, null, 2),
+  "utf8"
+)
+fs.writeFileSync(
+  fontSizeOutputJsonPath,
+  JSON.stringify(fontSizeVars, null, 2),
+  "utf8"
+)

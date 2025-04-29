@@ -26,5 +26,7 @@
   // },
   "prettier.requireConfig": true,
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": ["plaiceholder", "Strapi", "unoptimized"]
+  "cSpell.words": ["plaiceholder", "Strapi", "unoptimized"],
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "javascript.preferences.importModuleSpecifier": "non-relative"
 }

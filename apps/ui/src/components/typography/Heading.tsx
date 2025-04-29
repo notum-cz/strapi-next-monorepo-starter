@@ -44,7 +44,14 @@ const Heading = ({
   }
 
   return (
-    <Tag className={cn(selectedVariant, selectedTextColor, className)}>
+    <Tag
+      className={cn(
+        `typo-${tag}`,
+        selectedVariant,
+        selectedTextColor,
+        className
+      )}
+    >
       {children}
     </Tag>
   )
