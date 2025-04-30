@@ -24,7 +24,7 @@
           "localized": true
         }
       },
-      "component": "sections.footer-item"
+      "component": "elements.footer-item"
     },
     "links": {
       "type": "component",

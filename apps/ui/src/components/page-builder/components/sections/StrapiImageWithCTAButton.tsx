@@ -1,20 +1,17 @@
-import { Schema } from "@repo/strapi"
+import { Data } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
 
-import { BasicImage } from "./BasicImage"
-import { LinkStrapi } from "./LinkStrapi"
+import { BasicImage } from "../utilities/BasicImage"
+import StrapiLink from "../utilities/StrapiLink"
 
-export const ImageWithCTAButton = ({
+export const StrapiImageWithCTAButton = ({
   component,
 }: {
-  readonly component: Schema.Attribute.ComponentValue<
-    "sections.image-with-cta-button",
-    false
-  >
+  readonly component: Data.Component<"sections.image-with-cta-button">
 }) => {
-  removeThisWhenYouNeedMe("ImageWithCTAButton")
+  removeThisWhenYouNeedMe("StrapiImageWithCTAButton")
 
   return (
     <section className="">
@@ -37,7 +34,7 @@ export const ImageWithCTAButton = ({
             </p>
           )}
 
-          <LinkStrapi
+          <StrapiLink
             component={component.link}
             className="focus:ring-primary-300 bg-primary inline-flex items-center justify-center rounded-lg px-5 py-3 text-center text-base font-medium text-white focus:ring-4"
           />
@@ -46,3 +43,5 @@ export const ImageWithCTAButton = ({
     </section>
   )
 }
+
+export default StrapiImageWithCTAButton

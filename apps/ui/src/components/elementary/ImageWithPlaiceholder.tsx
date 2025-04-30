@@ -6,7 +6,7 @@ import { getPlaiceholder } from "plaiceholder"
 import { ImageExtendedProps } from "@/types/next"
 
 import { FALLBACK_IMAGE_PATH } from "@/lib/constants"
-import { formatImageUrl } from "@/lib/strapi-helpers"
+import { formatStrapiMediaUrl } from "@/lib/strapi-helpers"
 
 const generatePlaceholder = async (src: string) => {
   try {
@@ -35,8 +35,8 @@ const generatePlaceholder = async (src: string) => {
 }
 
 export const ImageWithPlaiceholder = async (props: ImageExtendedProps) => {
-  const src = formatImageUrl(props.src)
-  const fallbackSrc = formatImageUrl(props.fallbackSrc)
+  const src = formatStrapiMediaUrl(props.src)
+  const fallbackSrc = formatStrapiMediaUrl(props.fallbackSrc)
 
   const srcPlaceholder =
     src != null ? await generatePlaceholder(src) : undefined

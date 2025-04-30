@@ -1,4 +1,4 @@
-import { Schema } from "@repo/strapi"
+import { Data } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
@@ -11,19 +11,16 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 
-import { ImageWithLink } from "./ImageWithLink"
+import { StrapiImageWithLink } from "../utilities/StrapiImageWithLink"
 
 const DEFAULT_IMG_SIZE = 110
 
-export function CarouselGrid({
+export function StrapiCarousel({
   component,
 }: {
-  readonly component: Schema.Attribute.ComponentValue<
-    "sections.carousel",
-    false
-  >
+  readonly component: Data.Component<"sections.carousel">
 }) {
-  removeThisWhenYouNeedMe("CarouselGrid")
+  removeThisWhenYouNeedMe("StrapiCarousel")
 
   return (
     <section>
@@ -35,7 +32,7 @@ export function CarouselGrid({
                 key={String(item.id) + index}
                 className="pl-1 md:basis-1/2 lg:basis-1/3"
               >
-                <ImageWithLink
+                <StrapiImageWithLink
                   component={item}
                   imageProps={{
                     className: cn(
@@ -58,3 +55,5 @@ export function CarouselGrid({
     </section>
   )
 }
+
+export default StrapiCarousel

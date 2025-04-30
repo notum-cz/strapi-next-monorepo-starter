@@ -1,18 +1,12 @@
-import { Schema } from "@repo/strapi"
+import type { StrapiImageMedia } from "@/types/api"
+import type { ImageExtendedProps } from "@/types/next"
+import type { Data } from "@repo/strapi"
 
-import { StrapiImageMedia } from "@/types/api"
-import { ImageExtendedProps } from "@/types/next"
-
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { ImageWithFallback } from "@/components/elementary/ImageWithFallback"
-import { ImageWithPlaiceholder } from "@/components/elementary/ImageWithPlaiceholder"
 
 export interface BasicImageProps
   extends Omit<ImageExtendedProps, "src" | "alt"> {
-  readonly component:
-    | Schema.Attribute.ComponentValue<"shared.basic-image", false>
-    | undefined
-    | null
+  readonly component: Data.Component<"utilities.basic-image"> | undefined | null
   readonly useClient?: boolean
   readonly className?: ImageExtendedProps["className"]
   readonly hideWhenMissing?: boolean
@@ -29,15 +23,15 @@ export function BasicImage({
   forcedSizes,
   ...imgProps
 }: BasicImageProps) {
-  removeThisWhenYouNeedMe("BasicImage")
-
   const media: StrapiImageMedia = component?.media
 
   if (media?.url == null && hideWhenMissing) {
     return null
   }
 
-  const ImageComp = useClient ? ImageWithFallback : ImageWithPlaiceholder
+  // TODO: fix basic image to in client components
+  // const ImageComp = useClient ? ImageWithFallback : ImageWithPlaiceholder
+  const ImageComp = ImageWithFallback
 
   const sizes = {
     width:

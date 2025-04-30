@@ -1,5 +1,17 @@
 import type { Schema, Struct } from "@strapi/strapi"
 
+export interface ElementsFooterItem extends Struct.ComponentSchema {
+  collectionName: "components_elements_footer_items"
+  info: {
+    description: ""
+    displayName: "FooterItem"
+  }
+  attributes: {
+    links: Schema.Attribute.Component<"utilities.link", true>
+    title: Schema.Attribute.String & Schema.Attribute.Required
+  }
+}
+
 export interface FormsContactForm extends Struct.ComponentSchema {
   collectionName: "components_forms_contact_forms"
   info: {
@@ -57,18 +69,6 @@ export interface SectionsFaq extends Struct.ComponentSchema {
   attributes: {
     accordions: Schema.Attribute.Component<"utilities.accordions", true>
     subTitle: Schema.Attribute.String
-    title: Schema.Attribute.String & Schema.Attribute.Required
-  }
-}
-
-export interface SectionsFooterItem extends Struct.ComponentSchema {
-  collectionName: "components_sections_footer_items"
-  info: {
-    description: ""
-    displayName: "FooterItem"
-  }
-  attributes: {
-    links: Schema.Attribute.Component<"utilities.link", true>
     title: Schema.Attribute.String & Schema.Attribute.Required
   }
 }
@@ -244,7 +244,7 @@ export interface SeoUtilitiesSocialIcons extends Struct.ComponentSchema {
     displayName: "SocialIcons"
   }
   attributes: {
-    socials: Schema.Attribute.Component<"utilities.icon-with-link", true>
+    socials: Schema.Attribute.Component<"utilities.image-with-link", true>
     title: Schema.Attribute.String
   }
 }
@@ -273,17 +273,6 @@ export interface UtilitiesBasicImage extends Struct.ComponentSchema {
     media: Schema.Attribute.Media<"images" | "videos"> &
       Schema.Attribute.Required
     width: Schema.Attribute.Integer
-  }
-}
-
-export interface UtilitiesIconWithLink extends Struct.ComponentSchema {
-  collectionName: "components_utilities_icon_with_links"
-  info: {
-    displayName: "IconWithLink"
-  }
-  attributes: {
-    icon: Schema.Attribute.Component<"utilities.basic-image", false>
-    link: Schema.Attribute.Component<"utilities.link", false>
   }
 }
 
@@ -325,12 +314,12 @@ export interface UtilitiesLinksWithTitle extends Struct.ComponentSchema {
 declare module "@strapi/strapi" {
   export module Public {
     export interface ComponentSchemas {
+      "elements.footer-item": ElementsFooterItem
       "forms.contact-form": FormsContactForm
       "forms.newsletter-form": FormsNewsletterForm
       "sections.animated-logo-row": SectionsAnimatedLogoRow
       "sections.carousel": SectionsCarousel
       "sections.faq": SectionsFaq
-      "sections.footer-item": SectionsFooterItem
       "sections.heading-with-cta-button": SectionsHeadingWithCtaButton
       "sections.hero": SectionsHero
       "sections.horizontal-images": SectionsHorizontalImages
@@ -342,7 +331,6 @@ declare module "@strapi/strapi" {
       "seo-utilities.social-icons": SeoUtilitiesSocialIcons
       "utilities.accordions": UtilitiesAccordions
       "utilities.basic-image": UtilitiesBasicImage
-      "utilities.icon-with-link": UtilitiesIconWithLink
       "utilities.image-with-link": UtilitiesImageWithLink
       "utilities.link": UtilitiesLink
       "utilities.links-with-title": UtilitiesLinksWithTitle

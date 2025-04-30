@@ -1,19 +1,16 @@
-import { Schema } from "@repo/strapi"
+import { Data } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
 
-import { BasicImage } from "./BasicImage"
+import { BasicImage } from "../utilities/BasicImage"
 
-export function AnimatedLogoRow({
+export function StrapiAnimatedLogoRow({
   component,
 }: {
-  readonly component: Schema.Attribute.ComponentValue<
-    "sections.animated-logo-row",
-    false
-  >
+  readonly component: Data.Component<"sections.animated-logo-row">
 }) {
-  removeThisWhenYouNeedMe("AnimatedLogoRow")
+  removeThisWhenYouNeedMe("StrapiAnimatedLogoRow")
 
   if (!component.logos) return null
 
@@ -50,3 +47,5 @@ export function AnimatedLogoRow({
     </section>
   )
 }
+
+export default StrapiAnimatedLogoRow

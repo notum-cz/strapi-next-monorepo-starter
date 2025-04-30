@@ -1,17 +1,17 @@
-import { Schema } from "@repo/strapi"
+import { Data } from "@repo/strapi"
 
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import AppLink from "@/components/elementary/AppLink"
 import { Container } from "@/components/elementary/Container"
 import { NewsletterForm } from "@/components/elementary/forms/NewsletterForm"
 
-export function Newsletter({
+export function StrapiNewsletterForm({
   component,
 }: {
-  readonly component: Schema.Attribute.ComponentValue<
-    "sections.newsletter",
-    false
-  >
+  readonly component: Data.Component<"forms.newsletter-form">
 }) {
+  removeThisWhenYouNeedMe("StrapiNewsletterForm")
+
   return (
     <div className="bg-blue-light pb-10">
       <Container className="flex flex-col justify-between gap-y-10 lg:flex-row">
@@ -23,7 +23,7 @@ export function Newsletter({
           <div className="w-fll mt-1 flex w-full flex-col gap-1">
             <NewsletterForm />
             <div className="mt-2 flex items-center">
-              {component.gdpr && component.gdpr.href && (
+              {component.gdpr?.href && (
                 <AppLink
                   openExternalInNewTab={Boolean(component.gdpr.newTab)}
                   className="text-blue-700 underline"
@@ -39,3 +39,5 @@ export function Newsletter({
     </div>
   )
 }
+
+export default StrapiNewsletterForm

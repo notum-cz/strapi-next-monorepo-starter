@@ -9,7 +9,7 @@ export interface AppLinkProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement>,
     VariantProps<typeof buttonVariants> {
   href: string
-  label?: string
+  label?: string | null
   children?: React.ReactNode
   openExternalInNewTab?: boolean
   icon?: React.ReactNode

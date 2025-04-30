@@ -1,4 +1,4 @@
-import { Schema } from "@repo/strapi"
+import { Data } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
@@ -9,12 +9,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 
-export function Faq({
+export function StrapiFaq({
   component,
 }: {
-  readonly component: Schema.Attribute.ComponentValue<"sections.faq", false>
+  readonly component: Data.Component<"sections.faq">
 }) {
-  removeThisWhenYouNeedMe("Faq")
+  removeThisWhenYouNeedMe("StrapiFaq")
 
   return (
     <section>
@@ -45,3 +45,5 @@ export function Faq({
     </section>
   )
 }
+
+export default StrapiFaq

@@ -1,16 +1,16 @@
-import { Schema } from "@repo/strapi"
+import { Data } from "@repo/strapi"
 
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
 import { ContactForm } from "@/components/elementary/forms/ContactForm"
 
-export function ContactFormSection({
+export function StrapiContactForm({
   component,
 }: {
-  readonly component: Schema.Attribute.ComponentValue<
-    "sections.contact-form",
-    false
-  >
+  readonly component: Data.Component<"forms.contact-form">
 }) {
+  removeThisWhenYouNeedMe("StrapiContactForm")
+
   return (
     <div className="bg-white" id="form-section">
       <Container className="flex flex-col gap-10 lg:flex-row lg:gap-40">
@@ -33,3 +33,5 @@ export function ContactFormSection({
     </div>
   )
 }
+
+export default StrapiContactForm

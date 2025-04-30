@@ -1,27 +1,23 @@
 import React from "react"
-import { Schema } from "@repo/strapi"
+import { Data } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { Link } from "@/lib/navigation"
+import AppLink from "@/components/elementary/AppLink"
 
-export interface LinkStrapiProps {
-  readonly component:
-    | Schema.Attribute.ComponentValue<"shared.link", false>
-    | undefined
-    | null
-
+export interface StrapiLinkProps {
+  readonly component: Data.Component<"utilities.link"> | undefined | null
   readonly children?: React.ReactNode
   readonly className?: string
   readonly hideWhenMissing?: boolean
 }
 
-export function LinkStrapi({
+export function StrapiLink({
   component,
   children,
   className,
   hideWhenMissing,
-}: LinkStrapiProps) {
-  removeThisWhenYouNeedMe("LinkStrapi")
+}: StrapiLinkProps) {
+  removeThisWhenYouNeedMe("StrapiLink")
 
   if (component == null && hideWhenMissing) {
     return null
@@ -32,12 +28,15 @@ export function LinkStrapi({
   }
 
   return (
-    <Link
+    <AppLink
       href={component.href}
-      target={component.newTab ? "_blank" : undefined}
+      label={component.label}
+      openExternalInNewTab={component.newTab ?? false}
       className={className}
     >
       {children ?? component.label}
-    </Link>
+    </AppLink>
   )
 }
+
+export default StrapiLink

@@ -1,20 +1,17 @@
 import React from "react"
-import { Schema } from "@repo/strapi"
+import { Data } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
 
-import { LinkStrapi } from "./LinkStrapi"
+import StrapiLink from "../utilities/StrapiLink"
 
-export const HeadingWithCTAButton = ({
+export const StrapiHeadingWithCTAButton = ({
   component,
 }: {
-  readonly component: Schema.Attribute.ComponentValue<
-    "sections.heading-with-cta-button",
-    false
-  >
+  readonly component: Data.Component<"sections.heading-with-cta-button">
 }) => {
-  removeThisWhenYouNeedMe("HeadingWithCTAButton")
+  removeThisWhenYouNeedMe("StrapiHeadingWithCTAButton")
 
   return (
     <section className="px-4 py-8 sm:py-16 lg:px-6">
@@ -29,7 +26,7 @@ export const HeadingWithCTAButton = ({
             </p>
           )}
 
-          <LinkStrapi
+          <StrapiLink
             component={component.cta}
             className="focus:ring-primary-300 bg-primary inline-flex items-center justify-center rounded-lg px-5 py-3 text-center text-base font-medium text-white focus:ring-4"
           />
@@ -38,3 +35,5 @@ export const HeadingWithCTAButton = ({
     </section>
   )
 }
+
+export default StrapiHeadingWithCTAButton

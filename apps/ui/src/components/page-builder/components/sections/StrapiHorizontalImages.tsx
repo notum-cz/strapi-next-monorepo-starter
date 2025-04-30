@@ -1,20 +1,17 @@
-import { Schema } from "@repo/strapi"
+import { Data } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
 import { Container } from "@/components/elementary/Container"
 
-import { ImageWithLink } from "./ImageWithLink"
+import StrapiImageWithLink from "../utilities/StrapiImageWithLink"
 
-export function HorizontalImages({
+export function StrapiHorizontalImages({
   component,
 }: {
-  readonly component: Schema.Attribute.ComponentValue<
-    "sections.horizontal-images",
-    false
-  >
+  readonly component: Data.Component<"sections.horizontal-images">
 }) {
-  removeThisWhenYouNeedMe("HorizontalImages")
+  removeThisWhenYouNeedMe("StrapiHorizontalImages")
 
   return (
     <section>
@@ -31,7 +28,7 @@ export function HorizontalImages({
             )}
           >
             {component.images?.map((x, i) => (
-              <ImageWithLink
+              <StrapiImageWithLink
                 component={x}
                 key={String(x.id) + i}
                 imageProps={{
@@ -56,3 +53,5 @@ export function HorizontalImages({
     </section>
   )
 }
+
+export default StrapiHorizontalImages

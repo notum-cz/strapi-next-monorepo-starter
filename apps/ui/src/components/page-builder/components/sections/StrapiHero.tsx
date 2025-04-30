@@ -1,19 +1,19 @@
-import { Schema } from "@repo/strapi"
+import { Data } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
 import Heading from "@/components/typography/Heading"
 import { Paragraph } from "@/components/typography/Paragraph"
 
-import { BasicImage } from "./BasicImage"
-import { LinkStrapi } from "./LinkStrapi"
+import { BasicImage } from "../utilities/BasicImage"
+import StrapiLink from "../utilities/StrapiLink"
 
-export function Hero({
+export function StrapiHero({
   component,
 }: {
-  readonly component: Schema.Attribute.ComponentValue<"sections.hero", false>
+  readonly component: Data.Component<"sections.hero">
 }) {
-  removeThisWhenYouNeedMe("Hero")
+  removeThisWhenYouNeedMe("StrapiHero")
 
   return (
     <section style={{ backgroundColor: component.bgColor ?? "transparent" }}>
@@ -35,7 +35,7 @@ export function Hero({
           {component.links && (
             <div className="space-x flex">
               {component.links.map((link, i) => (
-                <LinkStrapi
+                <StrapiLink
                   key={i}
                   component={link}
                   className="focus:ring-primary-300 bg-primary mr-3 inline-flex items-center justify-center rounded-lg px-5 py-3 text-center text-base font-medium text-white focus:ring-4"
@@ -54,3 +54,5 @@ export function Hero({
     </section>
   )
 }
+
+export default StrapiHero
