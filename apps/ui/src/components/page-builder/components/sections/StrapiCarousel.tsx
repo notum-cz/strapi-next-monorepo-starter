@@ -56,4 +56,6 @@ export function StrapiCarousel({
   )
 }
 
+StrapiCarousel.displayName = "StrapiCarousel"
+
 export default StrapiCarousel

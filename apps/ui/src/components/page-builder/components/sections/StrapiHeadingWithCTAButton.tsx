@@ -36,4 +36,6 @@ export const StrapiHeadingWithCTAButton = ({
   )
 }
 
+StrapiHeadingWithCTAButton.displayName = "StrapiHeadingWithCTAButton"
+
 export default StrapiHeadingWithCTAButton

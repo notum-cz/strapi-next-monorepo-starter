@@ -5,7 +5,7 @@ import { Container } from "@/components/elementary/Container"
 import Heading from "@/components/typography/Heading"
 import { Paragraph } from "@/components/typography/Paragraph"
 
-import { BasicImage } from "../utilities/BasicImage"
+import { StrapiBasicImage } from "../utilities/StrapiBasicImage"
 import StrapiLink from "../utilities/StrapiLink"
 
 export function StrapiHero({
@@ -47,12 +47,17 @@ export function StrapiHero({
 
         {component.image?.media && (
           <div className="hidden md:col-span-5 md:mt-0 md:flex">
-            <BasicImage component={component.image} className="object-cover" />
+            <StrapiBasicImage
+              component={component.image}
+              className="object-cover"
+            />
           </div>
         )}
       </Container>
     </section>
   )
 }
+
+StrapiHero.displayName = "StrapiHero"
 
 export default StrapiHero

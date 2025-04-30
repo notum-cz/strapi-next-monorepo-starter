@@ -36,3 +36,7 @@ export const Paragraph = ({
     </p>
   )
 }
+
+Paragraph.displayName = "Paragraph"
+
+export default Paragraph

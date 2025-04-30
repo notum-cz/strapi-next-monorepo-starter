@@ -3,7 +3,7 @@ import { Data } from "@repo/strapi"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
 
-import { BasicImage } from "../utilities/BasicImage"
+import { StrapiBasicImage } from "../utilities/StrapiBasicImage"
 
 export function StrapiAnimatedLogoRow({
   component,
@@ -31,7 +31,7 @@ export function StrapiAnimatedLogoRow({
             >
               {sliderImages.map((logo, index) => (
                 <div key={String(logo.id) + index} className="grayscale">
-                  <BasicImage
+                  <StrapiBasicImage
                     component={logo}
                     priority={index < 10}
                     loading="eager"
@@ -47,5 +47,7 @@ export function StrapiAnimatedLogoRow({
     </section>
   )
 }
+
+StrapiAnimatedLogoRow.displayName = "StrapiAnimatedLogoRow"
 
 export default StrapiAnimatedLogoRow

@@ -2,7 +2,7 @@ import Script from "next/script"
 
 import type { Data } from "@repo/strapi"
 
-const StructuredData = ({
+export const StrapiStructuredData = ({
   structuredData,
 }: {
   structuredData: Data.Component<"seo-utilities.seo">["structuredData"]
@@ -24,4 +24,6 @@ const StructuredData = ({
   return null
 }
 
-export default StructuredData
+StrapiStructuredData.displayName = "StructuredData"
+
+export default StrapiStructuredData

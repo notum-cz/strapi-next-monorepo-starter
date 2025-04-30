@@ -54,4 +54,6 @@ export function StrapiHorizontalImages({
   )
 }
 
+StrapiHorizontalImages.displayName = "StrapiHorizontalImages"
+
 export default StrapiHorizontalImages

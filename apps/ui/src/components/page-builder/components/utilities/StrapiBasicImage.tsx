@@ -14,7 +14,7 @@ export interface BasicImageProps
   readonly forcedSizes?: { width?: number | null; height?: number | null }
 }
 
-export function BasicImage({
+export function StrapiBasicImage({
   component,
   useClient,
   className,
@@ -62,3 +62,5 @@ export function BasicImage({
     />
   )
 }
+
+StrapiBasicImage.displayName = "StrapiBasicImage"

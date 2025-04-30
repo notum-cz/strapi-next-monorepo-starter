@@ -39,4 +39,6 @@ export function StrapiLink({
   )
 }
 
+StrapiLink.displayName = "StrapiLink"
+
 export default StrapiLink

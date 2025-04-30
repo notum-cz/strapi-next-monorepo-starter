@@ -40,4 +40,6 @@ export function StrapiNewsletterForm({
   )
 }
 
+StrapiNewsletterForm.displayName = "StrapiNewsletterForm"
+
 export default StrapiNewsletterForm

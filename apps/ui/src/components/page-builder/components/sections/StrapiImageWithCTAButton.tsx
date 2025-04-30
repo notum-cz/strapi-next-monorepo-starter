@@ -3,7 +3,7 @@ import { Data } from "@repo/strapi"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
 
-import { BasicImage } from "../utilities/BasicImage"
+import { StrapiBasicImage } from "../utilities/StrapiBasicImage"
 import StrapiLink from "../utilities/StrapiLink"
 
 export const StrapiImageWithCTAButton = ({
@@ -17,7 +17,7 @@ export const StrapiImageWithCTAButton = ({
     <section className="">
       <Container className="items-center gap-8 px-4 py-8 sm:py-16 md:grid md:grid-cols-2 lg:px-6 xl:gap-16">
         <div className="flex justify-center">
-          <BasicImage
+          <StrapiBasicImage
             component={component.image}
             className="w-full object-contain object-center"
             hideWhenMissing
@@ -43,5 +43,7 @@ export const StrapiImageWithCTAButton = ({
     </section>
   )
 }
+
+StrapiImageWithCTAButton.displayName = "StrapiImageWithCTAButton"
 
 export default StrapiImageWithCTAButton

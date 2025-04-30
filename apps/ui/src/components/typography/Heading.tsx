@@ -27,7 +27,7 @@ interface HeadingProps {
   tag?: HeadingTag
 }
 
-const Heading = ({
+export const Heading = ({
   children,
   className,
   variant = "heading3",
@@ -49,5 +49,7 @@ const Heading = ({
     </Tag>
   )
 }
+
+Heading.displayName = "Heading"
 
 export default Heading

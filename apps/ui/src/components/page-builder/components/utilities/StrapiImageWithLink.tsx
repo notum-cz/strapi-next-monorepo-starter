@@ -2,7 +2,7 @@ import { Data } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
-import { BasicImage, BasicImageProps } from "./BasicImage"
+import { BasicImageProps, StrapiBasicImage } from "./StrapiBasicImage"
 import { StrapiLink, StrapiLinkProps } from "./StrapiLink"
 
 interface Props {
@@ -23,9 +23,11 @@ export function StrapiImageWithLink({
 
   return (
     <StrapiLink component={component?.link} {...linkProps}>
-      <BasicImage component={component?.image} {...imageProps} />
+      <StrapiBasicImage component={component?.image} {...imageProps} />
     </StrapiLink>
   )
 }
+
+StrapiImageWithLink.displayName = "StrapiImageWithLink"
 
 export default StrapiImageWithLink

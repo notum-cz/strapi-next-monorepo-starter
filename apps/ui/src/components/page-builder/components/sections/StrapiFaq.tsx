@@ -46,4 +46,6 @@ export function StrapiFaq({
   )
 }
 
+StrapiFaq.displayName = "StrapiFaq"
+
 export default StrapiFaq

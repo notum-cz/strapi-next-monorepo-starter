@@ -34,4 +34,6 @@ export function StrapiContactForm({
   )
 }
 
+StrapiContactForm.displayName = "StrapiContactForm"
+
 export default StrapiContactForm
