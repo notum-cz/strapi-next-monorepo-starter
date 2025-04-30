@@ -74,7 +74,8 @@
         "sections.carousel",
         "sections.animated-logo-row",
         "forms.newsletter-form",
-        "forms.contact-form"
+        "forms.contact-form",
+        "shared.ck-editor-content"
       ],
       "pluginOptions": {
         "i18n": {

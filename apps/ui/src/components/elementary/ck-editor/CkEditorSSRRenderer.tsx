@@ -2,8 +2,7 @@ import { getLocale } from "next-intl/server"
 import parse from "node-html-parser"
 
 import { cn } from "@/lib/styles"
-
-import { processLinkHrefAttribute } from "./utils"
+import { processLinkHrefAttribute } from "@/components/elementary/ck-editor/utils"
 
 const CkEditorSSRRenderer = async ({
   htmlContent,
@@ -16,7 +15,6 @@ const CkEditorSSRRenderer = async ({
 }) => {
   const locale = await getLocale()
 
-  // see the processHtmlContent NOTE above
   const processHtmlContent = (html: string, locale: string) => {
     // Create a DOM parser to work with the HTML content
 
@@ -31,6 +29,14 @@ const CkEditorSSRRenderer = async ({
       const href = link.getAttribute("href")
       if (href?.startsWith("/")) {
         link.setAttribute("href", processLinkHrefAttribute(href, locale))
+      }
+    }
+
+    const tagNames = ["h1", "h2", "h3", "h4", "h5", "h6", "p"]
+    for (const tagName of tagNames) {
+      const elements = doc.getElementsByTagName(tagName)
+      for (const element of elements) {
+        element.classList.add(`typo-${tagName}`)
       }
     }
 

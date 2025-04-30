@@ -276,6 +276,22 @@ export interface UtilitiesBasicImage extends Struct.ComponentSchema {
   }
 }
 
+export interface UtilitiesCkEditorContent extends Struct.ComponentSchema {
+  collectionName: "components_utilities_ck_editor_contents"
+  info: {
+    displayName: "CkEditorContent"
+  }
+  attributes: {
+    content: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
+  }
+}
+
 export interface UtilitiesImageWithLink extends Struct.ComponentSchema {
   collectionName: "components_utilities_image_with_links"
   info: {
@@ -331,6 +347,7 @@ declare module "@strapi/strapi" {
       "seo-utilities.social-icons": SeoUtilitiesSocialIcons
       "utilities.accordions": UtilitiesAccordions
       "utilities.basic-image": UtilitiesBasicImage
+      "utilities.ck-editor-content": UtilitiesCkEditorContent
       "utilities.image-with-link": UtilitiesImageWithLink
       "utilities.link": UtilitiesLink
       "utilities.links-with-title": UtilitiesLinksWithTitle

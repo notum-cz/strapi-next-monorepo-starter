@@ -10,5 +10,5 @@ export default (config: UserConfig) => {
         "@": "/src",
       },
     },
-  })
+  } as UserConfig)
 }

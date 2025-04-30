@@ -11,6 +11,7 @@ const nextConfig = {
   output: env.NEXT_OUTPUT,
   reactStrictMode: true,
   experimental: {},
+  transpilePackages: ["@repo/design-system"],
   // Good to know:
   images: {
     // Be aware that Strapi has optimization on by default

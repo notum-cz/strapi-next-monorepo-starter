@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_utilities_ck_editor_contents",
+  "info": {
+    "displayName": "CkEditorContent"
+  },
+  "options": {},
+  "attributes": {
+    "content": {
+      "type": "customField",
+      "options": {
+        "preset": "defaultCkEditor"
+      },
+      "customField": "plugin::ckeditor5.CKEditor"
+    }
+  }
+}

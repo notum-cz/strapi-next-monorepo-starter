@@ -1,5 +1,6 @@
 import { UID } from "@repo/strapi"
 
+import CkEditorRenderer from "@/components/elementary/ck-editor"
 import StrapiContactForm from "@/components/page-builder/components/forms/StrapiContactForm"
 import StrapiNewsletterForm from "@/components/page-builder/components/forms/StrapiNewsletterForm"
 import StrapiAnimatedLogoRow from "@/components/page-builder/components/sections/StrapiAnimatedLogoRow"
@@ -22,7 +23,9 @@ export const PageContentComponents: {
   [K in UID.Component]?: React.ComponentType<any>
 } = {
   // elements, seo-utilities, utilities
-  // They are rendered or used deep inside other components or handlers
+  // They are usually rendered or used deep inside other components or handlers
+  // Add them here if they can be used on Page content level
+  "utilities.ck-editor-content": CkEditorRenderer,
 
   // Sections
   "sections.animated-logo-row": StrapiAnimatedLogoRow,
