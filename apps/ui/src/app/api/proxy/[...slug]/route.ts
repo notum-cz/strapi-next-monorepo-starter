@@ -29,18 +29,26 @@ async function handler(
       ? await clonedRequest.text()
       : undefined
 
-  const token =
+  // We have 2 different types of tokens:
+  // 1. User-permission token provided by https://docs.strapi.io/cms/features/users-permissions for every user
+  // 2. API token provided by https://docs.strapi.io/cms/features/api-tokens and used globally for all requests
+  // First one is sent in the header from browser, second one is stored in the env variable in server
+  // If the request already contains Authorization header, we assume that it is a user-permission token
+  // and don't want to override it. Otherwise we inject correct global API token from the env variable.
+  const existingAuthHeader = request.headers.get("Authorization")
+  const injectedAuthHeader = `Bearer ${
     request.method === "GET"
       ? env.STRAPI_REST_READONLY_API_KEY
       : env.STRAPI_REST_CUSTOM_API_KEY
+  }`
 
   const response = await fetch(url, {
     headers: {
       ...Object.fromEntries(clonedRequest.headers), // Convert headers to object
-      Authorization: `Bearer ${token}`,
+      Authorization: existingAuthHeader ?? injectedAuthHeader,
     },
     body,
-    // this needs to be explicitly stated, because it defaulted to GET
+    // this needs to be explicitly stated, because it is defaulted to GET
     method: request.method,
   })
 
