@@ -21,6 +21,8 @@ export const env = createEnv({
     NEXT_OUTPUT: z.string().optional(),
     APP_PUBLIC_URL: z.string().url(),
     STRAPI_URL: z.string().url(),
+    STRAPI_REST_READONLY_API_KEY: z.string().optional(),
+    STRAPI_REST_CUSTOM_API_KEY: z.string().optional(),
     WEBPACK_CACHE_TYPE: z.enum(["filesystem", "memory"]).optional(),
     SENTRY_AUTH_TOKEN: z.string().optional(),
     SENTRY_ORG: z.string().optional(),
@@ -55,6 +57,8 @@ export const env = createEnv({
     APP_ENV: process.env.APP_ENV,
     APP_PUBLIC_URL: process.env.APP_PUBLIC_URL,
     STRAPI_URL: process.env.STRAPI_URL,
+    STRAPI_REST_READONLY_API_KEY: process.env.STRAPI_REST_READONLY_API_KEY,
+    STRAPI_REST_CUSTOM_API_KEY: process.env.STRAPI_REST_CUSTOM_API_KEY,
     NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS:
       process.env.NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS,
     NEXT_PUBLIC_REVALIDATE: (() => {
