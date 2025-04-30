@@ -35,18 +35,11 @@ export function SetPasswordForm({ accountActivation = false }) {
       passwordConfirmation: string
       code: string
     }) => {
-      return Strapi.fetchAPI(
-        `/auth/reset-password`,
-        undefined,
-        {
-          body: JSON.stringify(values),
-          method: "POST",
-          next: { revalidate: 0 },
-        },
-        {
-          translateKeyPrefixForErrors: "auth.accountActivation.errors",
-        }
-      )
+      return Strapi.fetchAPI(`/auth/reset-password`, undefined, {
+        body: JSON.stringify(values),
+        method: "POST",
+        next: { revalidate: 0 },
+      })
     },
   })
 

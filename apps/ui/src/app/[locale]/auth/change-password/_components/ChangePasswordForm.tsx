@@ -33,18 +33,11 @@ export function ChangePasswordForm() {
       password: string
       passwordConfirmation: string
     }) => {
-      return Strapi.fetchAPI(
-        `/auth/change-password`,
-        undefined,
-        {
-          body: JSON.stringify(values),
-          method: "POST",
-          next: { revalidate: 0 },
-        },
-        {
-          translateKeyPrefixForErrors: "auth.changePassword.errors",
-        }
-      )
+      return Strapi.fetchAPI(`/auth/change-password`, undefined, {
+        body: JSON.stringify(values),
+        method: "POST",
+        next: { revalidate: 0 },
+      })
     },
   })
 

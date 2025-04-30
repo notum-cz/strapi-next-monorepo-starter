@@ -17,7 +17,6 @@ export interface AppError {
   status: number
   name?: string
   details?: Record<string, any>
-  translateKeyPrefixForErrors?: Parameters<typeof useTranslations>[0]
 }
 
 export interface AppLink {
