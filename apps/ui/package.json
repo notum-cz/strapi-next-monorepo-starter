@@ -16,8 +16,7 @@
     "not op_mini all"
   ],
   "resolutions": {
-    "@types/react": "19.0.10",
-    "@types/react-dom": "19.0.4"
+    "**/sharp": "0.33.5"
   },
   "dependencies": {
     "@hookform/error-message": "^2.0.1",
@@ -49,7 +48,7 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.487.0",
     "markdown-to-jsx": "^7.5.0",
-    "next": "^15.3.0",
+    "next": "^15.3.1",
     "next-auth": "^4.24.10",
     "next-intl": "^3.23.5",
     "next-themes": "^0.3.0",
@@ -62,6 +61,7 @@
     "react-error-boundary": "^4.1.2",
     "react-hook-form": "^7.53.1",
     "react-use": "^17.5.1",
+    "sharp": "0.33.5",
     "tailwind-merge": "^3.2.0",
     "tailwindcss-animate": "^1.0.7",
     "ts-pattern": "^5.5.0",
@@ -89,5 +89,8 @@
   "engines": {
     "node": "22.x.x",
     "yarn": "1.22.x"
-  }
+  },
+  "trustedDependencies": [
+    "sharp"
+  ]
 }
