@@ -1,5 +1,3 @@
-import path from "path"
-
 import { mergeConfig } from "vite"
 
 import type { UserConfig } from "vite"
