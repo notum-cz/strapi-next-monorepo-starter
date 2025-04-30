@@ -8,7 +8,7 @@ export const DATE_FORMAT = "DD/MM/YY"
 export const TIME_FORMAT = "H:mm"
 export const DATE_TIME_FORMAT = "DD/MM/YY HH:mm"
 
-export const setupDaysJs = () => {
+export const setupDayJs = () => {
   dayjs.extend(utc)
   dayjs.extend(timezone)
   dayjs.extend(localizedFormat)
