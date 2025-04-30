@@ -2,39 +2,42 @@
 
 import { useEffect } from "react"
 
+import { hashStringSHA256 } from "@/lib/crypto"
 import { useRouter } from "@/lib/navigation"
 
 /**
  * This component reloads the application when an update from Strapi is reported. This is useful for the sidebar preview
  * in case of Growth or EE plans.
- *
- * I did not have access to either of these at the time of writing, so I am unable to validate if this works correctly.
- *
- * It does not impact the static preview in Community version of Strapi, as user has to leave the preview in order to change content.
  */
-function StrapiPreviewListener() {
+function StrapiPreviewWindowChangeListener({
+  hashedAllowedReloadOrigin, // to avoid bundling strapi URL, we pass this as a hash from SSR parent
+}: {
+  hashedAllowedReloadOrigin: string
+}) {
   const router = useRouter()
+
   useEffect(() => {
     const handleMessage = async (message: MessageEvent<any>) => {
       if (
         /**
          * Filters events emitted through the postMessage() API
          *
-         * We should also check that the origin is from Strapi, but we do not want the URL in the client-side bundle.
-         * We do not support embedding of other sites at the moment, so I think we should be good with the message type
-         * for the time being.
+         * The origin is checked based on a hashed value to avoid sharing the strapi URL to client-side bundle.
          *  */
-        // message.origin === env.STRAPI_URL &&
-        message.data.type === "strapiUpdate"
+        message.data.type === "strapiUpdate" && // The order is important -> keep the cheap operations at the beginning of this statement
+        (await hashStringSHA256(message.origin)) === hashedAllowedReloadOrigin
       ) {
         router.refresh()
       }
     }
+
     window.addEventListener("message", handleMessage)
     return () => {
       window.removeEventListener("message", handleMessage)
     }
   }, [])
+
   return null
 }
-export default StrapiPreviewListener
+
+export default StrapiPreviewWindowChangeListener
