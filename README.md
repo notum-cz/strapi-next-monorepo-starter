@@ -45,6 +45,8 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 - `packages/eslint-config`: [ESLint](https://eslint.org/) configurations for client side applications
 - `packages/prettier-config`: [Prettier](https://prettier.io/) configuration with import sort plugin and tailwind plugin included
 - `packages/typescript-config`: tsconfig JSONs used throughout the monorepo (not used in "strapi" app for now)
+- `packages/design-system`: shared styles, primarily for sharing CkEditor color configurations
+- `packages/shared-data`: package that stores common values across frontend and backend
 
 ## 🚀 Setup and usage
 

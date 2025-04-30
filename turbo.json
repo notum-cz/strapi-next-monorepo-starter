@@ -4,12 +4,14 @@
   "globalEnv": ["NEXT_OUTPUT"],
   "tasks": {
     "build": {
+      "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**", "public/**"]
     },
     "lint": {
       "dependsOn": ["^lint"]
     },
     "dev": {
+      "dependsOn": ["@repo/shared-data#build", "@repo/design-system#build"],
       "cache": false,
       "persistent": true
     },

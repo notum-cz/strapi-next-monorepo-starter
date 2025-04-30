@@ -207,6 +207,22 @@ export interface SharedBasicImage extends Struct.ComponentSchema {
   }
 }
 
+export interface SharedCkEditorContent extends Struct.ComponentSchema {
+  collectionName: "components_shared_ck_editor_contents"
+  info: {
+    displayName: "CkEditorContent"
+  }
+  attributes: {
+    content: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
+  }
+}
+
 export interface SharedFeatureGridItem extends Struct.ComponentSchema {
   collectionName: "components_shared_feature_grid_items"
   info: {
@@ -351,6 +367,7 @@ declare module "@strapi/strapi" {
       "sections.newsletter": SectionsNewsletter
       "shared.accordions": SharedAccordions
       "shared.basic-image": SharedBasicImage
+      "shared.ck-editor-content": SharedCkEditorContent
       "shared.feature-grid-item": SharedFeatureGridItem
       "shared.footer-item": SharedFooterItem
       "shared.grid-column": SharedGridColumn

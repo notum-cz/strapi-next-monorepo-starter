@@ -50,7 +50,8 @@
         "sections.image-with-cta-button",
         "sections.animated-logo-row",
         "sections.newsletter",
-        "sections.contact-form"
+        "sections.contact-form",
+        "shared.ck-editor-content"
       ],
       "pluginOptions": {
         "i18n": {

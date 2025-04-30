@@ -1,6 +1,7 @@
 import { Schema, UID } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import CkEditorContent from "@/components/page-builder/components/CkEditorContent"
 
 import { ErrorBoundary } from "../elementary/ErrorBoundary"
 import { AnimatedLogoRow } from "./components/AnimatedLogoRow"
@@ -29,6 +30,7 @@ const printableComps: {
   "sections.horizontal-images": HorizontalImages,
   "sections.image-with-cta-button": ImageWithCTAButton,
   "sections.newsletter": Newsletter,
+  "shared.ck-editor-content": CkEditorContent,
   // Add more components here
 }
 

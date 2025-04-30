@@ -18,7 +18,7 @@ export type {
   DiscardDraft,
 } from "@strapi/types/dist/modules/documents/params/document-engine"
 
-export type { Utils, UID, Schema } from "@strapi/strapi"
+export type { Utils, UID, Schema, Data } from "@strapi/strapi"
 
 export * from "./generated/components"
 export * from "./generated/contentTypes"
