@@ -28,41 +28,38 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        return (
-          Strapi.fetchAPI(
-            `/auth/local`,
-            undefined,
-            {
-              body: JSON.stringify({
-                identifier: credentials.email,
-                password: credentials.password,
-              }),
-              method: "POST",
-              next: { revalidate: 0 },
-            },
-            { omitAuthorization: true }
-          )
-            .then((data) => {
-              const { jwt, user } = data
-              if (jwt == null || user == null) {
-                return null
-              }
-
-              return {
-                name: user.username,
-                email: user.email,
-                // strapi user id is a number, but next-auth expects a string
-                id: user.id.toString(),
-                userId: user.id,
-                blocked: user.blocked,
-                strapiJWT: jwt,
-              }
-            })
-            // eslint-disable-next-line no-unused-vars
-            .catch((_error) => {
-              return null
-            })
+        return Strapi.fetchAPI(
+          `/auth/local`,
+          undefined,
+          {
+            body: JSON.stringify({
+              identifier: credentials.email,
+              password: credentials.password,
+            }),
+            method: "POST",
+            next: { revalidate: 0 },
+          },
+          { omitAuthorization: true }
         )
+          .then((data) => {
+            const { jwt, user } = data
+            if (jwt == null || user == null) {
+              return null
+            }
+
+            return {
+              name: user.username,
+              email: user.email,
+              // strapi user id is a number, but next-auth expects a string
+              id: user.id.toString(),
+              userId: user.id,
+              blocked: user.blocked,
+              strapiJWT: jwt,
+            }
+          })
+          .catch((error) => {
+            throw new Error(error.message)
+          })
       },
     }),
   ],
