@@ -1,16 +1,19 @@
-import { Schema } from "@repo/strapi"
+import { getTranslations } from "next-intl/server"
 
 import { AppLocale } from "@/types/general"
 
 import { getAuth } from "@/lib/auth"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import Strapi from "@/lib/strapi"
-import { LoggedUserMenu } from "@/components/elementary/navbar/LoggedUserMenu"
-import { NavbarItem } from "@/components/elementary/navbar/NavbarItem"
+import { cn } from "@/lib/styles"
+import AppLink from "@/components/elementary/AppLink"
+import LocaleSwitcher from "@/components/elementary/LocaleSwitcher"
+import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
+import { LoggedUserMenu } from "@/components/page-builder/single-types/navbar/LoggedUserMenu"
 
-import { ImageWithLink } from "../components/ImageWithLink"
+import StrapiLink from "../../components/utilities/StrapiLink"
 
-async function fetchData(locale: string) {
+async function fetchData(locale: AppLocale) {
   try {
     return await Strapi.fetchOne(
       "api::navbar.navbar",
@@ -20,8 +23,7 @@ async function fetchData(locale: string) {
         populate: ["logoImage", "links"],
         pLevel: 5,
       },
-      undefined,
-      { omitAuthorization: true }
+      undefined
     )
   } catch (e: any) {
     console.error(
@@ -32,26 +34,17 @@ async function fetchData(locale: string) {
   }
 }
 
-export async function PageBuilderNavbar({
-  locale,
-  pageSpecificNavbar,
-}: {
-  readonly locale: AppLocale
-  readonly pageSpecificNavbar?: Schema.Attribute.ComponentValue<
-    "layout.navbar",
-    false
-  > | null
-}) {
-  removeThisWhenYouNeedMe("PageBuilderNavbar")
+export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
+  removeThisWhenYouNeedMe("StrapiNavbar")
 
   const response = await fetchData(locale)
-  const component = response?.data
-
-  const navbar = pageSpecificNavbar ?? component
+  const navbar = response?.data
 
   if (navbar == null) {
     return null
   }
+
+  const t = await getTranslations("navbar")
 
   const links = (navbar.links ?? []).filter((link) => link.href)
 
@@ -61,7 +54,7 @@ export async function PageBuilderNavbar({
     <header className="sticky top-0 z-40 w-full border-b bg-gray-400">
       <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
         <div className="flex gap-6 md:gap-10">
-          <ImageWithLink
+          <StrapiImageWithLink
             component={navbar.logoImage}
             linkProps={{ className: "flex items-center space-x-2" }}
             imageProps={{
@@ -71,13 +64,13 @@ export async function PageBuilderNavbar({
 
           {links.length > 0 ? (
             <nav className="flex gap-6">
-              {links.map((link, index) => (
-                <NavbarItem
-                  link={{
-                    href: link.href!,
-                    label: link.label ?? undefined,
-                  }}
-                  key={String(index) + index}
+              {links.map((link) => (
+                <StrapiLink
+                  component={link}
+                  key={link.href}
+                  className={cn(
+                    "text-md flex items-center font-medium hover:text-red-600"
+                  )}
                 />
               ))}
             </nav>
@@ -85,20 +78,21 @@ export async function PageBuilderNavbar({
         </div>
 
         <div className="flex flex-1 items-center justify-end space-x-4">
+          <LocaleSwitcher locale={locale} />
+
           {session?.user ? (
             <nav className="flex items-center space-x-1">
               <LoggedUserMenu user={session.user} />
             </nav>
           ) : (
-            <NavbarItem
-              link={{
-                translateKey: "navbar.actions.signIn",
-                href: "/auth/signin",
-              }}
-            />
+            <AppLink href="/auth/signin" label={t("actions.signOut")} />
           )}
         </div>
       </div>
     </header>
   )
 }
+
+StrapiNavbar.displayName = "StrapiNavbar"
+
+export default StrapiNavbar

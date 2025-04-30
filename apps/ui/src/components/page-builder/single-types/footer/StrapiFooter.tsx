@@ -6,22 +6,20 @@ import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import Strapi from "@/lib/strapi"
 import { cn } from "@/lib/styles"
 import { Container } from "@/components/elementary/Container"
+import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
+import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 
-import { ImageWithLink } from "../components/ImageWithLink"
-import { LinkStrapi } from "../components/LinkStrapi"
-
-async function fetchData(locale: string) {
+async function fetchData(locale: AppLocale) {
   try {
     return await Strapi.fetchOne(
       "api::footer.footer",
       undefined,
       {
         locale,
-        populate: ["sections", "gridCols", "logoImage", "links"],
+        populate: ["sections", "logoImage", "links"],
         pLevel: 5,
       },
-      undefined,
-      { omitAuthorization: true }
+      undefined
     )
   } catch (e: any) {
     console.error(
@@ -32,12 +30,8 @@ async function fetchData(locale: string) {
   }
 }
 
-export async function PageBuilderFooter({
-  locale,
-}: {
-  readonly locale: AppLocale
-}) {
-  removeThisWhenYouNeedMe("PageBuilderFooter")
+export async function StrapiFooter({ locale }: { readonly locale: AppLocale }) {
+  removeThisWhenYouNeedMe("StrapiFooter")
 
   const response = await fetchData(locale)
   const component = response?.data
@@ -46,34 +40,21 @@ export async function PageBuilderFooter({
     return null
   }
 
-  const [desktop, tablet, mobile] = [
-    component.gridCols?.desktop ?? 4,
-    component.gridCols?.tablet ?? 3,
-    component.gridCols?.mobile ?? 1,
-  ]
-
   return (
     <div className="bg-gray-100">
       <Container className="pt-12 pb-8">
         <div className="grid grid-cols-1 gap-10 pb-8 sm:grid-cols-[30%_1fr]">
           <div className="flex flex-col space-y-4">
-            <ImageWithLink component={component.logoImage} />
+            <StrapiImageWithLink component={component.logoImage} />
           </div>
-          <div
-            className={cn(
-              "grid gap-8",
-              `grid-cols-${mobile}`,
-              `sm:grid-cols-${mobile}`,
-              `md:grid-cols-${tablet}`,
-              `lg:grid-cols-${desktop}`
-            )}
-          >
+
+          <div className={cn("grid gap-8")}>
             {component.sections?.map((section) => (
               <div className="flex flex-col" key={section.id}>
                 <h3 className="pb-2 text-lg font-bold">{section.title}</h3>
 
                 {section.links?.map((link, i) => (
-                  <LinkStrapi
+                  <StrapiLink
                     key={String(link.id) + i}
                     component={link}
                     className="text-primary w-fit text-sm hover:underline"
@@ -83,6 +64,7 @@ export async function PageBuilderFooter({
             ))}
           </div>
         </div>
+
         <div className="flex items-center justify-between">
           <div>
             {component.copyRight && (
@@ -97,7 +79,7 @@ export async function PageBuilderFooter({
           <div className="flex flex-col items-end sm:flex-row sm:items-center sm:space-x-4">
             {component.links?.map((link, i) => (
               <Fragment key={String(link.id) + i}>
-                <LinkStrapi
+                <StrapiLink
                   component={link}
                   className="text-primary relative w-fit text-sm hover:underline"
                 />
@@ -118,3 +100,7 @@ export async function PageBuilderFooter({
     </div>
   )
 }
+
+StrapiFooter.displayName = "StrapiFooter"
+
+export default StrapiFooter

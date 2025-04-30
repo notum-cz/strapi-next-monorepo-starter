@@ -13,27 +13,16 @@ export function Breadcrumbs({ breadcrumbs, className }: Props) {
     return null
   }
 
-  const allBreadcrumbs = [
-    {
-      title: "Home",
-      fullPath: "/",
-    },
-    ...breadcrumbs,
-  ].map((breadcrumb) => ({
-    ...breadcrumb,
-    fullPath: breadcrumb.fullPath,
-  }))
-
   return (
     <div className={cn("max-w-screen-default mx-auto w-full", className)}>
       <div>
-        {allBreadcrumbs.map((breadcrumb, index) => (
+        {breadcrumbs.map((breadcrumb, index) => (
           <span key={breadcrumb.fullPath}>
             {index !== 0 && (
               <span className={cn("mx-2 inline-block text-black")}>/</span>
             )}
 
-            {index !== allBreadcrumbs.length - 1 ? (
+            {index !== breadcrumbs.length - 1 ? (
               <AppLink href={breadcrumb.fullPath} className="p-0">
                 <span
                   className={cn(
