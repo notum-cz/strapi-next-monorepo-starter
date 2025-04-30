@@ -498,7 +498,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         "sections.animated-logo-row",
         "forms.newsletter-form",
         "forms.contact-form",
-        "shared.ck-editor-content",
+        "utilities.ck-editor-content",
       ]
     > &
       Schema.Attribute.SetPluginOptions<{

@@ -9,7 +9,7 @@ import "@/styles/CkEditorDefaultStyles.css"
  * @param className - override for custom styling of the content
  * @returns React.ReactNode | null
  */
-const CkEditorRenderer = (props: {
+export const CkEditorRenderer = (props: {
   htmlContent?: string | null
   className?: string
   variant?: "page"
