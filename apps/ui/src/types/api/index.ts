@@ -1,3 +1,5 @@
+import type { AppLocale } from "@/types/general"
+
 export interface APIResponseCollectionPagination {
   page: number
   pageSize: number
@@ -62,3 +64,31 @@ export type StrapiImageMedia = {
   provider?: string
   provider_metadata?: string
 }
+
+export interface APIResponseWithBreadcrumbs<T> {
+  data: T | null
+  meta: APIResponseCollectionMetadata & { breadcrumbs?: BreadCrumb[] }
+}
+
+export type AppLocalizedParams<T> = T & {
+  // In fetch functions we can pass the AppLocale to get the correct data
+  // AppLocale is meant to be frontend locale, that is mapped to the Strapi locale
+  // before firing the request
+  locale?: AppLocale
+  deepLevel?: number
+  deepLevelIgnore?: string[]
+}
+
+export type BreadCrumb = {
+  title: string
+  fullPath: string
+}
+
+export type PageLocalization = {
+  localizations: Array<{
+    id: number
+    documentId: string
+    fullPath: string
+    locale: string
+  }>
+} | null
