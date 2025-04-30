@@ -6,8 +6,8 @@ export const Container = ({
   children,
   className,
 }: {
-  children: React.ReactNode
-  className?: string
+  readonly children: React.ReactNode
+  readonly className?: string
 }) => {
   return (
     <div

@@ -8,11 +8,11 @@ import { buttonVariants } from "@/components/ui/button"
 export interface AppLinkProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement>,
     VariantProps<typeof buttonVariants> {
-  href: string
-  label?: string | null
-  children?: React.ReactNode
-  openExternalInNewTab?: boolean
-  icon?: React.ReactNode
+  readonly href: string
+  readonly label?: string | null
+  readonly children?: React.ReactNode
+  readonly openExternalInNewTab?: boolean
+  readonly icon?: React.ReactNode
 }
 
 const AppLink = React.forwardRef<HTMLAnchorElement, AppLinkProps>(
