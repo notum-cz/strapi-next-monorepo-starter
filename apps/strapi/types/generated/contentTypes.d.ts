@@ -489,16 +489,15 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     children: Schema.Attribute.Relation<"oneToMany", "api::page.page">
     content: Schema.Attribute.DynamicZone<
       [
-        "sections.faq",
+        "sections.image-with-cta-button",
         "sections.horizontal-images",
         "sections.hero",
-        "sections.feature-grid",
-        "sections.carousel",
         "sections.heading-with-cta-button",
-        "sections.image-with-cta-button",
+        "sections.faq",
+        "sections.carousel",
         "sections.animated-logo-row",
-        "sections.newsletter",
-        "sections.contact-form",
+        "forms.newsletter-form",
+        "forms.contact-form",
       ]
     > &
       Schema.Attribute.SetPluginOptions<{

@@ -66,16 +66,15 @@
     "content": {
       "type": "dynamiczone",
       "components": [
-        "sections.faq",
+        "sections.image-with-cta-button",
         "sections.horizontal-images",
         "sections.hero",
-        "sections.feature-grid",
-        "sections.carousel",
         "sections.heading-with-cta-button",
-        "sections.image-with-cta-button",
+        "sections.faq",
+        "sections.carousel",
         "sections.animated-logo-row",
-        "sections.newsletter",
-        "sections.contact-form"
+        "forms.newsletter-form",
+        "forms.contact-form"
       ],
       "pluginOptions": {
         "i18n": {
