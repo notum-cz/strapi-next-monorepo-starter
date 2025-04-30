@@ -19,6 +19,8 @@ export const env = createEnv({
     NEXTAUTH_SECRET: z.string().optional(),
     NEXTAUTH_URL: z.string().url().optional(),
     NEXT_OUTPUT: z.string().optional(),
+    APP_PUBLIC_URL: z.string().url(),
+    STRAPI_URL: z.string().url(),
     SENTRY_AUTH_TOKEN: z.string().optional(),
     SENTRY_ORG: z.string().optional(),
     SENTRY_PROJECT: z.string().optional(),
@@ -28,8 +30,6 @@ export const env = createEnv({
    * You'll get type errors if these are not prefixed with NEXT_PUBLIC_.
    */
   client: {
-    NEXT_PUBLIC_APP_PUBLIC_URL: z.string().url(),
-    NEXT_PUBLIC_STRAPI_URL: z.string().url(),
     NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS: optionalZodBoolean,
     NEXT_PUBLIC_REVALIDATE: z.number().or(z.literal(false)).optional(),
     NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
@@ -51,8 +51,8 @@ export const env = createEnv({
     NEXT_OUTPUT: process.env.NEXT_OUTPUT,
     NODE_ENV: process.env.NODE_ENV,
     APP_ENV: process.env.APP_ENV,
-    NEXT_PUBLIC_APP_PUBLIC_URL: process.env.NEXT_PUBLIC_APP_PUBLIC_URL,
-    NEXT_PUBLIC_STRAPI_URL: process.env.NEXT_PUBLIC_STRAPI_URL,
+    APP_PUBLIC_URL: process.env.APP_PUBLIC_URL,
+    STRAPI_URL: process.env.STRAPI_URL,
     NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS:
       process.env.NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS,
     NEXT_PUBLIC_REVALIDATE: (() => {

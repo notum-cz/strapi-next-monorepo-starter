@@ -126,7 +126,7 @@ Husky is installed by default and configured to run following tasks:
 
 ### GitHub Actions
 
-We are using `GitHub Actions` for continuous integration. The `CI` expects some secrets (e.g. `NEXTAUTH_SECRET`) and variables (e.g. `NEXTAUTH_URL`, `NEXT_PUBLIC_APP_PUBLIC_URL`, `NEXT_PUBLIC_STRAPI_URL`) to be available on the runner, so make sure to add them in the repository's settings. Have a look at the [workflow](.github/workflows/ci.yml) definition for more details.
+We are using `GitHub Actions` for continuous integration. The `CI` expects some secrets (e.g. `NEXTAUTH_SECRET`) and variables (e.g. `NEXTAUTH_URL`, `APP_PUBLIC_URL`, `STRAPI_URL`) to be available on the runner, so make sure to add them in the repository's settings. Have a look at the [workflow](.github/workflows/ci.yml) definition for more details.
 
 ### Heroku
 
