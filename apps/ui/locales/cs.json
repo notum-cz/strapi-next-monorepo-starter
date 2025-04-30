@@ -130,19 +130,6 @@
         "passwordWithNumber": "Řetězec musí obsahovat alespoň 1 číslo",
         "phoneNumber": "Toto pole musí obsahovat 9 čísel"
       }
-    },
-
-    "http": {
-      "400": "Něco se pokazilo. Zkuste to prosím znovu nebo kontaktujte podporu.",
-      "401": "Platnost přihlášení vypršela. Přihlaste se prosím znovu.",
-      "403": "K těmto datům nemáte přístup",
-      "404": "Požadovaná data nebyla nalezena.",
-      "408": "Platnost požadavku vypršela. Zkuste to prosím znovu.",
-      "413": "Nahráváte příliš velký soubor.",
-      "415": "Soubor, který nahráváte není podporovaného typu.",
-      "429": "Poslal/a jste příliš mnoho požadavků.",
-      "500": "Server není dostupný nebo se něco pokazilo. Zkuste to prosím znovu nebo kontaktujte podporu.",
-      "503": "Server není dostupný. Zkuste to prosím znovu nebo kontaktujte podporu"
     }
   },
 
