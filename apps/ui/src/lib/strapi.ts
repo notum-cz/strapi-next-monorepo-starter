@@ -1,24 +1,30 @@
 import { env } from "@/env.mjs"
 import { getSession } from "next-auth/react"
-import { useTranslations } from "next-intl"
 import qs from "qs"
 
+import type {
+  APIResponse,
+  APIResponseCollection,
+  APIResponseWithBreadcrumbs,
+  AppLocalizedParams,
+  PageLocalization,
+} from "@/types/api"
+import type { AppError } from "@/types/general"
 import type { FindFirst, FindMany, ID, Result, UID } from "@repo/strapi"
-import { APIResponse, APIResponseCollection } from "@/types/api"
-import { AppError } from "@/types/general"
 import { AppSession } from "@/types/next-auth"
 
-import { getAuth } from "./auth"
+import { getAuth } from "@/lib/auth"
+
 import { isDevelopment } from "./general-helpers"
 
 type CustomFetchOptions = {
+  // do not add locale query params to the request
+  doNotAddLocaleQueryParams?: boolean
   // force JWT token for the request
   // if omitted, the token will be retrieved from the session
   strapiJWT?: AppSession["strapiJWT"]
   // omit "Authorization" header from the request
   omitAuthorization?: boolean
-  // map error messages to translation keys
-  translateKeyPrefixForErrors?: Parameters<typeof useTranslations>[0]
 }
 
 /**
@@ -28,7 +34,6 @@ type CustomFetchOptions = {
  */
 // eslint-disable-next-line no-unused-vars
 export const API_ENDPOINTS: { [key in UID.ContentType]?: string } = {
-  "plugin::users-permissions.user": "/users",
   "api::page.page": "/pages",
   "api::footer.footer": "/footer",
   "api::navbar.navbar": "/navbar",
@@ -38,38 +43,59 @@ export const API_ENDPOINTS: { [key in UID.ContentType]?: string } = {
 export default class Strapi {
   public static async fetchAPI(
     path: string,
-    params = {},
+    params: AppLocalizedParams<Record<string, any>> = {},
     requestInit?: RequestInit,
     options?: CustomFetchOptions
   ) {
-    const { url, headers } = await this.prepareRequest(
+    const { url, headers } = await Strapi.prepareRequest(
       path,
-      params,
+      {
+        ...params,
+        ...(options?.doNotAddLocaleQueryParams
+          ? {}
+          : { locale: params.locale }),
+      },
       options?.strapiJWT,
       options?.omitAuthorization
     )
+
     const response = await fetch(url, {
-      // turn off caching in development
-      // if revalidate is set to a number since 0 implies cache: 'no-store' and a positive value implies cache: 'force-cache'.
-      next: { revalidate: isDevelopment() ? 0 : env.NEXT_PUBLIC_REVALIDATE },
       ...requestInit,
-      headers: { ...requestInit?.headers, ...headers },
+      next: {
+        ...requestInit?.next,
+        // if revalidate is set to a number since 0 implies cache: 'no-store' and a positive value implies cache: 'force-cache'.
+        revalidate: isDevelopment() ? 0 : requestInit?.next?.revalidate ?? 60,
+      },
+      headers: {
+        ...requestInit?.headers,
+        ...headers,
+      },
     })
-    const data = await response.json()
+
+    const { json, text } = await Strapi.parseResponse(response)
+
+    if (text) {
+      const appError: AppError = {
+        name: "Invalid response content type",
+        message: "Received text response rather than JSON.",
+        details: { text },
+        status: response.status,
+      }
+      throw new Error(JSON.stringify(appError))
+    }
 
     if (!response.ok) {
-      const { error } = data
+      const { error } = json
       const appError: AppError = {
         message: error?.message,
         name: error?.name,
         details: error?.details,
         status: response.status ?? error?.status,
-        translateKeyPrefixForErrors: options?.translateKeyPrefixForErrors,
       }
       throw new Error(JSON.stringify(appError))
     }
 
-    return data
+    return json
   }
 
   /**
@@ -77,7 +103,7 @@ export default class Strapi {
    */
   public static async fetchOne<
     TContentTypeUID extends UID.ContentType,
-    TParams extends FindFirst<TContentTypeUID>,
+    TParams extends AppLocalizedParams<FindFirst<TContentTypeUID>>,
   >(
     uid: TContentTypeUID,
     documentId?: ID | undefined,
@@ -85,9 +111,9 @@ export default class Strapi {
     requestInit?: RequestInit,
     options?: CustomFetchOptions
   ): Promise<APIResponse<Result<TContentTypeUID, TParams>>> {
-    const path = this.getStrapiApiPathByUId(uid)
-    const url = `${path}${documentId ? "/" + documentId : ""}`
-    return this.fetchAPI(url, params, requestInit, options)
+    const path = Strapi.getStrapiApiPathByUId(uid)
+    const url = `${path}${documentId ? `/${documentId}` : ""}`
+    return await Strapi.fetchAPI(url, params, requestInit, options)
   }
 
   /**
@@ -95,15 +121,15 @@ export default class Strapi {
    */
   public static async fetchMany<
     TContentTypeUID extends UID.ContentType,
-    TParams extends FindMany<TContentTypeUID>,
+    TParams extends AppLocalizedParams<FindMany<TContentTypeUID>>,
   >(
     uid: TContentTypeUID,
     params?: TParams,
     requestInit?: RequestInit,
     options?: CustomFetchOptions
   ): Promise<APIResponseCollection<Result<TContentTypeUID, TParams>>> {
-    const path = this.getStrapiApiPathByUId(uid)
-    return this.fetchAPI(path, params, requestInit, options)
+    const path = Strapi.getStrapiApiPathByUId(uid)
+    return await Strapi.fetchAPI(path, params, requestInit, options)
   }
 
   /**
@@ -111,17 +137,25 @@ export default class Strapi {
    */
   public static async fetchAll<
     TContentTypeUID extends UID.ContentType,
-    TParams extends FindMany<TContentTypeUID>,
+    TParams extends AppLocalizedParams<FindMany<TContentTypeUID>>,
   >(
     uid: TContentTypeUID,
     params?: TParams,
     requestInit?: RequestInit,
     options?: CustomFetchOptions
   ): Promise<APIResponseCollection<Result<TContentTypeUID, TParams>>> {
-    const path = this.getStrapiApiPathByUId(uid)
+    const path = Strapi.getStrapiApiPathByUId(uid)
+
+    // Strapi can be configured in https://docs.strapi.io/dev-docs/configurations/api
+    const maxPageSize = 100
 
     const firstPage: APIResponseCollection<Result<TContentTypeUID, TParams>> =
-      await this.fetchAPI(path, { ...params }, requestInit, options)
+      await Strapi.fetchAPI(
+        path,
+        { ...params, pagination: { page: 1, pageSize: maxPageSize } },
+        requestInit,
+        options
+      )
 
     if (firstPage.meta.pagination.pageCount === 1) {
       return firstPage
@@ -130,11 +164,15 @@ export default class Strapi {
     const otherPages = Array.from(
       { length: firstPage.meta.pagination.pageCount - 1 },
       (_, i) =>
-        this.fetchAPI(
+        Strapi.fetchAPI(
           path,
           {
             ...params,
-            pagination: { ...firstPage.meta.pagination, page: i + 2 },
+            pagination: {
+              ...firstPage.meta.pagination,
+              page: i + 2,
+              pageSize: maxPageSize,
+            },
           },
           requestInit,
           options
@@ -159,7 +197,7 @@ export default class Strapi {
    */
   public static async fetchOneBySlug<
     TContentTypeUID extends UID.ContentType,
-    TParams extends FindMany<TContentTypeUID>,
+    TParams extends AppLocalizedParams<FindMany<TContentTypeUID>>,
   >(
     uid: TContentTypeUID,
     slug: string | null,
@@ -173,9 +211,9 @@ export default class Strapi {
       sort: { publishedAt: "desc" },
       filters: { ...params?.filters, slug: slugFilter },
     }
-    const path = this.getStrapiApiPathByUId(uid)
+    const path = Strapi.getStrapiApiPathByUId(uid)
     const response: APIResponseCollection<Result<TContentTypeUID, TParams>> =
-      await this.fetchAPI(path, mergedParams, requestInit, options)
+      await Strapi.fetchAPI(path, mergedParams, requestInit, options)
 
     // return last published entry
     return {
@@ -184,9 +222,46 @@ export default class Strapi {
     }
   }
 
+  /**
+   * Fetches a single entity by full path
+   */
+  public static async fetchOneByFullPath<
+    TContentTypeUID extends UID.ContentType,
+    TParams extends AppLocalizedParams<FindMany<TContentTypeUID>>,
+  >(
+    uid: TContentTypeUID,
+    fullPath: string | null,
+    params?: TParams,
+    requestInit?: RequestInit,
+    options?: CustomFetchOptions
+  ): Promise<
+    APIResponseWithBreadcrumbs<
+      Result<TContentTypeUID, TParams> & PageLocalization
+    >
+  > {
+    const slugFilter =
+      fullPath && fullPath.length > 0 ? { $eq: fullPath } : { $null: true }
+    const mergedParams = {
+      ...params,
+      sort: { publishedAt: "desc" },
+      filters: { ...params?.filters, fullPath: slugFilter },
+    }
+    const path = Strapi.getStrapiApiPathByUId(uid)
+
+    const response: APIResponseCollection<Result<TContentTypeUID, TParams>> =
+      await Strapi.fetchAPI(path, mergedParams, requestInit, options)
+
+    // return last published entry
+    return {
+      // @ts-expect-error localizations TODO @dominik-juriga
+      data: response.data.pop() ?? null,
+      meta: response.meta,
+    }
+  }
+
   public static async prepareRequest(
     path: string,
-    params: Object,
+    params: object,
     jwt?: string,
     omitAuthorization?: boolean
   ) {
@@ -198,28 +273,19 @@ export default class Strapi {
       url += `?${queryString}`
     }
 
-    let strapiToken = omitAuthorization ? undefined : jwt
-
-    if (!omitAuthorization && !strapiToken) {
-      // try to get token from session and use it for the request
-
-      const isRSC = typeof window === "undefined"
-      if (isRSC) {
-        // server side
-        const session = await getAuth()
-        strapiToken = session?.strapiJWT
-      } else {
-        // client side - this makes HTTP request to /api/auth/session to get the session
-        // this is not the best solution, but useSession() can't be used here
-        const session = await getSession()
-        strapiToken = session?.strapiJWT
-      }
+    let completeUrl = `/api/proxy${url}`
+    if (typeof window === "undefined") {
+      // SSR components do not support relative URLs, so we have to prefix it with local app URL
+      completeUrl = `${env.APP_PUBLIC_URL}${completeUrl}`
     }
 
-    const strapiAPIUrl = `${env.NEXT_PUBLIC_STRAPI_URL}/api`
+    let strapiToken = omitAuthorization ? undefined : jwt
+    if (!omitAuthorization && !strapiToken) {
+      strapiToken = await Strapi.getStrapiUserTokenFromNextAuth()
+    }
 
     return {
-      url: new URL(url, strapiAPIUrl),
+      url: completeUrl,
       headers: {
         Accept: "application/json",
         "Content-type": "application/json",
@@ -243,5 +309,40 @@ export default class Strapi {
     throw new Error(
       `Endpoint for UID "${uid}" not found. Extend API_ENDPOINTS in lib/api/client.ts.`
     )
+  }
+
+  /**
+   * Get user-permission token from the NextAuth session
+   * @returns strapiToken
+   */
+  private static async getStrapiUserTokenFromNextAuth() {
+    const isRSC = typeof window === "undefined"
+    if (isRSC) {
+      // server side
+      const session = await getAuth()
+      return session?.strapiJWT
+    }
+
+    // client side
+    // this makes HTTP request to /api/auth/session to get the session
+    // this is not the best solution because it makes HTTP request to the server
+    // but useSession() can't be used here
+    const session = await getSession()
+    return session?.strapiJWT
+  }
+
+  private static async parseResponse(response: Response) {
+    const contentType = response.headers.get("content-type")
+    if (contentType?.includes("application/json")) {
+      return {
+        contentType,
+        json: await response.json(),
+      }
+    }
+
+    return {
+      contentType,
+      text: await response.text(),
+    }
   }
 }
