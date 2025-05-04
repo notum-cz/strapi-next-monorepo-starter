@@ -12,6 +12,7 @@ import { Navbar } from "@/components/elementary/navbar/Navbar"
 import { TailwindIndicator } from "@/components/elementary/TailwindIndicator"
 import { ClientProviders } from "@/components/providers/ClientProviders"
 import { ServerProviders } from "@/components/providers/ServerProviders"
+import TrackingScripts from "@/components/providers/TrackingScripts"
 import { Toaster } from "@/components/ui/toaster"
 
 export function generateStaticParams() {
@@ -38,6 +39,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
           fontRoboto.variable
         )}
       >
+        <TrackingScripts />
         <ServerProviders params={params}>
           <ClientProviders>
             <div className="relative flex min-h-screen flex-col">
