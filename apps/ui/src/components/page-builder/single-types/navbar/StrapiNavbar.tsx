@@ -9,9 +9,8 @@ import { cn } from "@/lib/styles"
 import AppLink from "@/components/elementary/AppLink"
 import LocaleSwitcher from "@/components/elementary/LocaleSwitcher"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
+import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 import { LoggedUserMenu } from "@/components/page-builder/single-types/navbar/LoggedUserMenu"
-
-import StrapiLink from "../../components/utilities/StrapiLink"
 
 async function fetchData(locale: AppLocale) {
   try {

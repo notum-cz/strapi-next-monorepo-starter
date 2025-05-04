@@ -7,11 +7,10 @@ import { useTranslations } from "next-intl"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
-
-import { Tooltip } from "../elementary/Tooltip"
-import { FormItem } from "../ui/form"
-import { useToast } from "../ui/use-toast"
-import { AppFormLabel } from "./AppFormLabel"
+import { Tooltip } from "@/components/elementary/Tooltip"
+import { AppFormLabel } from "@/components/forms/AppFormLabel"
+import { FormItem } from "@/components/ui/form"
+import { useToast } from "@/components/ui/use-toast"
 
 interface Props {
   readonly selectedFile: File | null

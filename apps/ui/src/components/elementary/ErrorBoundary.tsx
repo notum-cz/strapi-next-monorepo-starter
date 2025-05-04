@@ -8,9 +8,8 @@ import { useTranslations } from "next-intl"
 import { ErrorBoundary as ErrorBoundaryComp } from "react-error-boundary"
 
 import { isDevelopment } from "@/lib/general-helpers"
-
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
-import { Button } from "../ui/button"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
 
 function ErrorBoundaryFallback({
   error,

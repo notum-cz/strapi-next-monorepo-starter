@@ -2,8 +2,7 @@ import { Data } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
-
-import { StrapiBasicImage } from "../utilities/StrapiBasicImage"
+import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
 
 export function StrapiAnimatedLogoRow({
   component,

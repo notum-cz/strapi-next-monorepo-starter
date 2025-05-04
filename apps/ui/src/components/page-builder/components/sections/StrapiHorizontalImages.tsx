@@ -3,8 +3,7 @@ import { Data } from "@repo/strapi"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
 import { Container } from "@/components/elementary/Container"
-
-import StrapiImageWithLink from "../utilities/StrapiImageWithLink"
+import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
 
 export function StrapiHorizontalImages({
   component,

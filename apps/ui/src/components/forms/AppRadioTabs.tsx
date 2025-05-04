@@ -5,16 +5,15 @@ import { useFormContext } from "react-hook-form"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
+import { AppFormDescription } from "@/components/forms/AppFormDescription"
+import { AppFormLabel } from "@/components/forms/AppFormLabel"
 import {
   FormControl,
   FormField,
   FormItem,
   FormMessage,
 } from "@/components/ui/form"
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
-import { AppFormDescription } from "./AppFormDescription"
-import { AppFormLabel } from "./AppFormLabel"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 type Props = {
   readonly name: string

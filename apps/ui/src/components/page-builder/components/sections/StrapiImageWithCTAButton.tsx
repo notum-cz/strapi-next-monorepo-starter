@@ -2,9 +2,8 @@ import { Data } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
-
-import { StrapiBasicImage } from "../utilities/StrapiBasicImage"
-import StrapiLink from "../utilities/StrapiLink"
+import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
+import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 
 export const StrapiImageWithCTAButton = ({
   component,

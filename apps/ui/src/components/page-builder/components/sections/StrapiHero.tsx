@@ -2,11 +2,10 @@ import { Data } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
+import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
+import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 import Heading from "@/components/typography/Heading"
 import { Paragraph } from "@/components/typography/Paragraph"
-
-import { StrapiBasicImage } from "../utilities/StrapiBasicImage"
-import StrapiLink from "../utilities/StrapiLink"
 
 export function StrapiHero({
   component,

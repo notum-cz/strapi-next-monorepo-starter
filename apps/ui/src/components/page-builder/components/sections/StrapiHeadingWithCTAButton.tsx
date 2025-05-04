@@ -3,8 +3,7 @@ import { Data } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
-
-import StrapiLink from "../utilities/StrapiLink"
+import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 
 export const StrapiHeadingWithCTAButton = ({
   component,
