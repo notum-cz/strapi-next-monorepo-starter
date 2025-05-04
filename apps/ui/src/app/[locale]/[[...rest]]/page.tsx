@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation"
+import { ROOT_PAGE_PATH } from "@repo/shared-data"
 import { setRequestLocale } from "next-intl/server"
 
 import type { PageProps } from "@/types/next"
 
-import { ROOT_PAGE_PATH } from "@/lib/constants"
 import { fetchPageData } from "@/lib/content"
 import { isDevelopment } from "@/lib/general-helpers"
 import { getMetadataFromStrapi } from "@/lib/metadata"

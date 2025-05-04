@@ -1,6 +1,5 @@
 import { Data } from "@strapi/strapi"
-
-import { ROOT_PAGE_PATH } from "./constants"
+import { ROOT_PAGE_PATH } from "@repo/shared-data"
 
 type Document = Data.ContentType<"api::page.page">
 

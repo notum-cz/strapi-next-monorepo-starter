@@ -1,8 +1,8 @@
 {
-    "compilerOptions": {
-        "declaration": true,
-        "outDir": "dist",
-        "skipLibCheck": true,
-        "strict": true
-    }
+  "compilerOptions": {
+    "declaration": true,
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "strict": true
+  }
 }
