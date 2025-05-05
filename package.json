@@ -33,7 +33,8 @@
     "lint": "turbo lint",
     "prepare": "husky",
     "start:strapi": "turbo run start --filter=@repo/strapi",
-    "start:ui": "turbo run start --filter=@repo/ui"
+    "start:ui": "turbo run start --filter=@repo/ui",
+    "setup:apps": "find . -name '*.example' -exec sh -c 'cp \"$1\" \"${1%.example}\"' _ {} \\;"
   },
   "prettier": "@repo/prettier-config",
   "devDependencies": {
