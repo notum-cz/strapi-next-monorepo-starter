@@ -1,6 +1,7 @@
 import type { Core } from "@strapi/strapi"
 
 import { registerAdminUserSubscriber } from "./lifeCycles/adminUser"
+import { registerPopulateDeepSubscriber } from "./lifeCycles/populateDeep"
 import { registerUserSubscriber } from "./lifeCycles/user"
 
 export default {
@@ -22,5 +23,6 @@ export default {
   bootstrap({ strapi }: { strapi: Core.Strapi }) {
     registerAdminUserSubscriber({ strapi })
     registerUserSubscriber({ strapi })
+    registerPopulateDeepSubscriber({ strapi })
   },
 }
