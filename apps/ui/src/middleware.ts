@@ -8,17 +8,8 @@ import { routing } from "./lib/navigation"
 // https://next-intl-docs.vercel.app/docs/getting-started/app-router
 const intlMiddleware = createMiddleware(routing)
 
-const publicPages = [
-  "/",
-  "/auth/activate",
-  "/auth/forgot-password",
-  "/auth/reset-password",
-  "/auth/register",
-  "/auth/signin",
-  "/builder",
-  "/builder/.*", // use regex to match all builder pages
-  "/docs",
-]
+// List all pages that require authentication (non-public)
+const authPages = ["/auth/change-password", "/auth/signout"]
 
 const authMiddleware = withAuth(
   // Note that this callback is only invoked if
@@ -50,19 +41,20 @@ export default function middleware(req: NextRequest) {
     )
   }
 
-  const publicPathnameRegex = RegExp(
-    `^(/(${routing.locales.join("|")}))?(${publicPages
-      .flatMap((p) => (p === "/" ? ["", "/"] : p))
-      .join("|")})/?$`,
+  // Build regex for auth (non-public) pages
+  const authPathnameRegex = RegExp(
+    `^(/(${routing.locales.join("|")}))?(${authPages.join("|")})/?$`,
     "i"
   )
-  const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname)
+  const isAuthPage = authPathnameRegex.test(req.nextUrl.pathname)
 
-  if (isPublicPage) {
-    return intlMiddleware(req)
+  // If the request is for a non-public (auth) page, require authentication
+  if (isAuthPage) {
+    return (authMiddleware as any)(req)
   }
 
-  return (authMiddleware as any)(req)
+  // All other pages are public
+  return intlMiddleware(req)
 }
 
 export const config = {
