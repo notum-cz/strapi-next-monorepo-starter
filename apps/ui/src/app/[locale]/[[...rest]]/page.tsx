@@ -45,9 +45,9 @@ type Props = PageProps<{
 
 export async function generateMetadata(props: Props) {
   const params = await props.params
-  const pageUrl = [ROOT_PAGE_PATH, ...(params.rest ?? [])].join("/")
+  const fullPath = ROOT_PAGE_PATH + (params.rest ?? []).join("/")
 
-  return getMetadataFromStrapi({ pageUrl, locale: params.locale })
+  return getMetadataFromStrapi({ fullPath, locale: params.locale })
 }
 
 export default async function StrapiPage(props: Props) {
@@ -55,7 +55,7 @@ export default async function StrapiPage(props: Props) {
 
   setRequestLocale(params.locale)
 
-  const fullPath = [ROOT_PAGE_PATH, ...(params.rest ?? [])].join("/")
+  const fullPath = ROOT_PAGE_PATH + (params.rest ?? []).join("/")
   const response = await fetchPageData(fullPath, params.locale)
 
   const data = response?.data
@@ -74,7 +74,7 @@ export default async function StrapiPage(props: Props) {
         <Container>
           <Breadcrumbs
             breadcrumbs={response?.meta?.breadcrumbs}
-            className="mt-6 mb-[70px] md:mb-[105px] lg:mb-35"
+            className="mt-6 mb-6"
           />
         </Container>
 

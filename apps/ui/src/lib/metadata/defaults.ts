@@ -42,7 +42,7 @@ export function getDefaultMetadata(
 
 export function getDefaultOgMeta(
   locale: AppLocale | undefined,
-  pageUrl: string | undefined,
+  fullPath: string | undefined,
   t: TranslateFn
 ): Metadata["openGraph"] {
   return {
@@ -53,7 +53,7 @@ export function getDefaultOgMeta(
     description: t("metaDescription"),
     emails: [t("email")],
     images: [t("metaImageUrl")],
-    url: `/${locale}/${pageUrl ?? ""}`,
+    url: `/${locale}${fullPath ?? ""}`,
   }
 }
 

@@ -2,16 +2,6 @@ import type { AppLocale } from "@/types/general"
 
 import Strapi from "@/lib/strapi"
 
-const seoPopulateObj = {
-  seo: {
-    populate: {
-      twitter: { populate: { images: true } },
-      og: true,
-      metaImage: true,
-    },
-  },
-} as const
-
 export async function fetchPageData(fullPath: string, locale: AppLocale) {
   console.log({ message: `Fetching page: ${locale} - ${fullPath}` })
 
@@ -21,7 +11,7 @@ export async function fetchPageData(fullPath: string, locale: AppLocale) {
       status: "published",
       populate: {
         content: true,
-        ...seoPopulateObj,
+        seo: true,
       },
       // Use with BIG caution, this can lead to a lot of data being fetched
       deepLevel: 6,

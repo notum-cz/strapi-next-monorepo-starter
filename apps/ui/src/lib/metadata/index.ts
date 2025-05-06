@@ -15,12 +15,12 @@ import {
 import Strapi from "@/lib/strapi"
 
 export async function getMetadataFromStrapi({
-  pageUrl,
+  fullPath,
   locale,
   customMetadata,
   uid = "api::page.page",
 }: {
-  pageUrl?: string
+  fullPath?: string
   locale: AppLocale
   customMetadata?: Metadata
   // Add more content types here if we want to fetch SEO components for them
@@ -42,13 +42,13 @@ export async function getMetadataFromStrapi({
   const defaultMeta: Metadata = getDefaultMetadata(customMetadata, siteUrl, t)
   const defaultOgMeta: Metadata["openGraph"] = getDefaultOgMeta(
     locale,
-    pageUrl,
+    fullPath,
     t
   )
   const defaultTwitterMeta: Metadata["twitter"] = getDefaultTwitterMeta(t)
 
   // skip strapi fetching and return SEO from translations
-  if (!pageUrl) {
+  if (!fullPath) {
     return {
       ...defaultMeta,
       openGraph: defaultOgMeta,
@@ -59,7 +59,7 @@ export async function getMetadataFromStrapi({
   try {
     return await fetchAndMapStrapiMetadata(
       locale,
-      pageUrl,
+      fullPath,
       defaultMeta,
       defaultOgMeta,
       defaultTwitterMeta,
@@ -67,7 +67,7 @@ export async function getMetadataFromStrapi({
     )
   } catch (e: unknown) {
     console.warn(
-      `SEO for ${uid} content type ("${pageUrl}") wasn't fetched: `,
+      `SEO for ${uid} content type ("${fullPath}") wasn't fetched: `,
       (e as Error)?.message
     )
     return {
@@ -80,13 +80,13 @@ export async function getMetadataFromStrapi({
 
 async function fetchAndMapStrapiMetadata(
   locale: AppLocale,
-  pageUrl: string | null,
+  fullPath: string | null,
   defaultMeta: Metadata,
   defaultOgMeta: Metadata["openGraph"],
   defaultTwitterMeta: Metadata["twitter"],
   uid: Extract<UID.ContentType, "api::page.page"> = "api::page.page"
 ) {
-  const res = await Strapi.fetchOneBySlug(uid, pageUrl, {
+  const res = await Strapi.fetchOneByFullPath(uid, fullPath, {
     locale,
     populate: {
       seo: {
@@ -96,6 +96,7 @@ async function fetchAndMapStrapiMetadata(
         },
       },
     },
+    fields: [],
   })
 
   const seo = res.data?.seo
