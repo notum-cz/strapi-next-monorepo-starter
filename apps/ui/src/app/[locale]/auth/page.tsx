@@ -14,14 +14,9 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-// export async function generateMetadata({ params }: PageProps) {
-//   return getMetadataFromStrapi({ pageUrl, locale: params.locale })
-// }
-
-export default async function RootPage({ params }: PageProps) {
+export default async function AuthPage({ params }: PageProps) {
   const session = await getAuth()
 
-  // Enable static rendering
   const { locale } = await params
   setRequestLocale(locale)
 
