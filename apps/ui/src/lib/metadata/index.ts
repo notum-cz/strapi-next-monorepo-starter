@@ -6,7 +6,6 @@ import type { AppLocale, NextMetadataTwitterCard } from "@/types/general"
 import type { Data, UID } from "@repo/strapi"
 import type { Metadata } from "next"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import {
   getDefaultMetadata,
   getDefaultOgMeta,
@@ -26,8 +25,6 @@ export async function getMetadataFromStrapi({
   // Add more content types here if we want to fetch SEO components for them
   uid?: Extract<UID.ContentType, "api::page.page">
 }): Promise<Metadata | null> {
-  removeThisWhenYouNeedMe("getMetadataFromStrapi")
-
   const t = await getTranslations({ locale, namespace: "seo" })
 
   const siteUrl = env.APP_PUBLIC_URL

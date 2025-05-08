@@ -2,7 +2,6 @@ import { Fragment } from "react"
 
 import { AppLocale } from "@/types/general"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import Strapi from "@/lib/strapi"
 import { cn } from "@/lib/styles"
 import { Container } from "@/components/elementary/Container"
@@ -29,8 +28,6 @@ async function fetchData(locale: AppLocale) {
 }
 
 export async function StrapiFooter({ locale }: { readonly locale: AppLocale }) {
-  removeThisWhenYouNeedMe("StrapiFooter")
-
   const response = await fetchData(locale)
   const component = response?.data
 

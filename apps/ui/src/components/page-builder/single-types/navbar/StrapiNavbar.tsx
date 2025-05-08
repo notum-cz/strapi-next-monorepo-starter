@@ -3,7 +3,6 @@ import { getTranslations } from "next-intl/server"
 import { AppLocale } from "@/types/general"
 
 import { getAuth } from "@/lib/auth"
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import Strapi from "@/lib/strapi"
 import { cn } from "@/lib/styles"
 import AppLink from "@/components/elementary/AppLink"
@@ -31,8 +30,6 @@ async function fetchData(locale: AppLocale) {
 }
 
 export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
-  removeThisWhenYouNeedMe("StrapiNavbar")
-
   const response = await fetchData(locale)
   const navbar = response?.data
 
