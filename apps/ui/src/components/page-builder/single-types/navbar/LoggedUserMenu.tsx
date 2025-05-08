@@ -1,8 +1,7 @@
-import { LogOut, User } from "lucide-react"
+import { LogOutIcon, User, UserRoundCogIcon } from "lucide-react"
 import { Session } from "next-auth"
 import { useTranslations } from "next-intl"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Link } from "@/lib/navigation"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,8 +14,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export function LoggedUserMenu({ user }: { readonly user: Session["user"] }) {
-  removeThisWhenYouNeedMe("LoggedUserMenu")
-
   const t = useTranslations("navbar")
 
   return (
@@ -32,8 +29,18 @@ export function LoggedUserMenu({ user }: { readonly user: Session["user"] }) {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem>
+          <Link
+            href="/auth/change-password"
+            className="flex w-full items-center gap-1"
+          >
+            <UserRoundCogIcon className="mr-2 size-4" />
+            <span>{t("actions.changePassword")}</span>
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem>
           <Link href="/auth/signout" className="flex w-full items-center gap-1">
-            <LogOut className="mr-2 size-4" />
+            <LogOutIcon className="mr-2 size-4" />
             <span>{t("actions.signOut")}</span>
           </Link>
         </DropdownMenuItem>
