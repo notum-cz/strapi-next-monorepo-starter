@@ -1,5 +1,5 @@
 {
-  "key": "plugin_content_manager_configuration_components::shared.image-with-link",
+  "key": "plugin_content_manager_configuration_components::utilities.ck-editor-content",
   "value": {
     "settings": {
       "bulkable": true,
@@ -19,30 +19,16 @@
           "sortable": false
         }
       },
-      "image": {
+      "content": {
         "edit": {
-          "label": "image",
+          "label": "content",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "image",
-          "searchable": false,
-          "sortable": false
-        }
-      },
-      "link": {
-        "edit": {
-          "label": "link",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "link",
+          "label": "content",
           "searchable": false,
           "sortable": false
         }
@@ -50,26 +36,18 @@
     },
     "layouts": {
       "list": [
-        "id",
-        "image",
-        "link"
+        "id"
       ],
       "edit": [
         [
           {
-            "name": "image",
-            "size": 12
-          }
-        ],
-        [
-          {
-            "name": "link",
+            "name": "content",
             "size": 12
           }
         ]
       ]
     },
-    "uid": "shared.image-with-link",
+    "uid": "utilities.ck-editor-content",
     "isComponent": true
   },
   "type": "object",

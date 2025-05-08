@@ -1,73 +1,18 @@
 {
+  "documentId": "caoelvgjtry6axw56g38kyuf",
   "name": "Authenticated",
   "description": "Default role given to authenticated user.",
   "type": "authenticated",
-  "documentId": "e9yxyd25atehcwzfk9xywzoi",
   "locale": null,
   "permissions": [
     {
-      "action": "api::footer.footer.find",
-      "documentId": "e6pnwu5erim3ass1hd0nwo37",
-      "locale": null
-    },
-    {
-      "action": "api::navbar.navbar.find",
-      "documentId": "yami5zx7d5f18cts8kzv1x8f",
-      "locale": null
-    },
-    {
-      "action": "api::page.page.find",
-      "documentId": "iptpk1lzyv6m6vtaztx93eqg",
-      "locale": null
-    },
-    {
-      "action": "api::page.page.findOne",
-      "documentId": "yvkhrt1ntnqfq9l0gejo5ble",
-      "locale": null
-    },
-    {
-      "action": "plugin::upload.content-api.upload",
-      "documentId": "tuve7gz5cl4myckd9p473fjk",
-      "locale": null
-    },
-    {
+      "documentId": "rn5bub8qkam36wp2me9dni05",
       "action": "plugin::users-permissions.auth.changePassword",
-      "documentId": "cloi0j4k1qnnmm762tzc3yss",
       "locale": null
     },
     {
-      "action": "plugin::users-permissions.auth.forgotPassword",
-      "documentId": "kgxypb8bh6q2prf3iuq7myhx",
-      "locale": null
-    },
-    {
-      "action": "plugin::users-permissions.auth.resetPassword",
-      "documentId": "gz3kc7vxnoxjhzsk5mcadb5l",
-      "locale": null
-    },
-    {
-      "action": "plugin::users-permissions.role.find",
-      "documentId": "o6pl22rqfjs3v7ixwdwrt00r",
-      "locale": null
-    },
-    {
-      "action": "plugin::users-permissions.role.findOne",
-      "documentId": "ezakm5ipe64c8sa8g4tx99kq",
-      "locale": null
-    },
-    {
-      "action": "plugin::users-permissions.user.find",
-      "documentId": "pg1uy8zn44i1gx7vlci24usl",
-      "locale": null
-    },
-    {
-      "action": "plugin::users-permissions.user.findOne",
-      "documentId": "ky47jh6yk0ksjmizdtmcyvxr",
-      "locale": null
-    },
-    {
+      "documentId": "c942ti5w98l1vws4q0236o8s",
       "action": "plugin::users-permissions.user.me",
-      "documentId": "hyop3l6l85ok6ar1na7mp2xd",
       "locale": null
     }
   ]

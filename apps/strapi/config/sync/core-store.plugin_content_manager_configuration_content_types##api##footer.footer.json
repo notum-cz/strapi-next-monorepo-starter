@@ -19,20 +19,6 @@
           "sortable": true
         }
       },
-      "gridCols": {
-        "edit": {
-          "label": "gridCols",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "gridCols",
-          "searchable": false,
-          "sortable": false
-        }
-      },
       "sections": {
         "edit": {
           "label": "sections",
@@ -151,13 +137,14 @@
     "layouts": {
       "list": [
         "id",
-        "gridCols",
-        "logoImage"
+        "sections",
+        "links",
+        "copyRight"
       ],
       "edit": [
         [
           {
-            "name": "gridCols",
+            "name": "logoImage",
             "size": 12
           }
         ],
@@ -176,12 +163,6 @@
         [
           {
             "name": "copyRight",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "logoImage",
             "size": 12
           }
         ]

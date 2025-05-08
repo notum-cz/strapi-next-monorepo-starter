@@ -1,5 +1,5 @@
 {
-  "key": "plugin_content_manager_configuration_components::shared.seo",
+  "key": "plugin_content_manager_configuration_components::seo-utilities.seo",
   "value": {
     "settings": {
       "bulkable": true,
@@ -75,20 +75,6 @@
           "sortable": true
         }
       },
-      "metaRobots": {
-        "edit": {
-          "label": "metaRobots",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "metaRobots",
-          "searchable": true,
-          "sortable": true
-        }
-      },
       "twitter": {
         "edit": {
           "label": "twitter",
@@ -99,6 +85,20 @@
         },
         "list": {
           "label": "twitter",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "og": {
+        "edit": {
+          "label": "og",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "og",
           "searchable": false,
           "sortable": false
         }
@@ -144,6 +144,48 @@
           "searchable": true,
           "sortable": true
         }
+      },
+      "canonicalUrl": {
+        "edit": {
+          "label": "canonicalUrl",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "canonicalUrl",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "metaRobots": {
+        "edit": {
+          "label": "metaRobots",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "metaRobots",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "structuredData": {
+        "edit": {
+          "label": "structuredData",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "structuredData",
+          "searchable": false,
+          "sortable": false
+        }
       }
     },
     "layouts": {
@@ -168,21 +210,21 @@
           {
             "name": "metaImage",
             "size": 6
-          }
-        ],
-        [
-          {
-            "name": "keywords",
-            "size": 6
           },
           {
-            "name": "metaRobots",
+            "name": "keywords",
             "size": 6
           }
         ],
         [
           {
             "name": "twitter",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "og",
             "size": 12
           }
         ],
@@ -200,11 +242,27 @@
           {
             "name": "email",
             "size": 6
+          },
+          {
+            "name": "canonicalUrl",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "metaRobots",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "structuredData",
+            "size": 12
           }
         ]
       ]
     },
-    "uid": "shared.seo",
+    "uid": "seo-utilities.seo",
     "isComponent": true
   },
   "type": "object",

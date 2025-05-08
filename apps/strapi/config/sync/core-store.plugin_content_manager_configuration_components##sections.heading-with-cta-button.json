@@ -60,20 +60,6 @@
           "searchable": false,
           "sortable": false
         }
-      },
-      "isVisible": {
-        "edit": {
-          "label": "isVisible",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "isVisible",
-          "searchable": true,
-          "sortable": true
-        }
       }
     },
     "layouts": {
@@ -92,12 +78,6 @@
           {
             "name": "subText",
             "size": 6
-          }
-        ],
-        [
-          {
-            "name": "isVisible",
-            "size": 4
           }
         ],
         [

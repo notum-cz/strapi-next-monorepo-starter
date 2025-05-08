@@ -1,7 +1,6 @@
 {
   "key": "plugin_content_manager_configuration_content_types::plugin::upload.file",
   "value": {
-    "uid": "plugin::upload.file",
     "settings": {
       "bulkable": true,
       "filterable": true,
@@ -397,7 +396,8 @@
           }
         ]
       ]
-    }
+    },
+    "uid": "plugin::upload.file"
   },
   "type": "object",
   "environment": null,

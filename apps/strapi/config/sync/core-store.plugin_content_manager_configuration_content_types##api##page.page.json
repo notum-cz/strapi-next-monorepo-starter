@@ -6,8 +6,8 @@
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "slug",
-      "defaultSortBy": "slug",
+      "mainField": "title",
+      "defaultSortBy": "title",
       "defaultSortOrder": "ASC"
     },
     "metadatas": {
@@ -15,6 +15,34 @@
         "edit": {},
         "list": {
           "label": "id",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "title": {
+        "edit": {
+          "label": "title",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "title",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "breadcrumbTitle": {
+        "edit": {
+          "label": "breadcrumbTitle",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "breadcrumbTitle",
           "searchable": true,
           "sortable": true
         }
@@ -33,18 +61,18 @@
           "sortable": true
         }
       },
-      "seo": {
+      "fullPath": {
         "edit": {
-          "label": "seo",
+          "label": "fullPath",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "seo",
-          "searchable": false,
-          "sortable": false
+          "label": "fullPath",
+          "searchable": true,
+          "sortable": true
         }
       },
       "content": {
@@ -57,6 +85,50 @@
         },
         "list": {
           "label": "content",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "children": {
+        "edit": {
+          "label": "children",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "title"
+        },
+        "list": {
+          "label": "children",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "parent": {
+        "edit": {
+          "label": "parent",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "title"
+        },
+        "list": {
+          "label": "parent",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "seo": {
+        "edit": {
+          "label": "seo",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "seo",
           "searchable": false,
           "sortable": false
         }
@@ -121,16 +193,24 @@
       }
     },
     "layouts": {
-      "list": [
-        "id",
-        "slug",
-        "createdAt",
-        "updatedAt"
-      ],
       "edit": [
         [
           {
+            "name": "title",
+            "size": 6
+          },
+          {
+            "name": "breadcrumbTitle",
+            "size": 6
+          }
+        ],
+        [
+          {
             "name": "slug",
+            "size": 6
+          },
+          {
+            "name": "fullPath",
             "size": 6
           }
         ],
@@ -142,10 +222,26 @@
         ],
         [
           {
+            "name": "children",
+            "size": 6
+          },
+          {
+            "name": "parent",
+            "size": 6
+          }
+        ],
+        [
+          {
             "name": "seo",
             "size": 12
           }
         ]
+      ],
+      "list": [
+        "id",
+        "title",
+        "slug",
+        "fullPath"
       ]
     },
     "uid": "api::page.page"

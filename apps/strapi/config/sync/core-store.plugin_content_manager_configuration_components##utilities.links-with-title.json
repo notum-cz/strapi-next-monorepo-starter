@@ -1,13 +1,13 @@
 {
-  "key": "plugin_content_manager_configuration_components::shared.link",
+  "key": "plugin_content_manager_configuration_components::utilities.links-with-title",
   "value": {
     "settings": {
       "bulkable": true,
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "href",
-      "defaultSortBy": "href",
+      "mainField": "title",
+      "defaultSortBy": "title",
       "defaultSortOrder": "ASC"
     },
     "metadatas": {
@@ -19,76 +19,57 @@
           "sortable": false
         }
       },
-      "href": {
+      "title": {
         "edit": {
-          "label": "href",
+          "label": "title",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "href",
+          "label": "title",
           "searchable": true,
           "sortable": true
         }
       },
-      "newTab": {
+      "links": {
         "edit": {
-          "label": "newTab",
+          "label": "links",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "newTab",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "label": {
-        "edit": {
-          "label": "label",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "label",
-          "searchable": true,
-          "sortable": true
+          "label": "links",
+          "searchable": false,
+          "sortable": false
         }
       }
     },
     "layouts": {
       "list": [
         "id",
-        "href",
-        "newTab",
-        "label"
+        "title",
+        "links"
       ],
       "edit": [
         [
           {
-            "name": "href",
+            "name": "title",
             "size": 6
-          },
-          {
-            "name": "newTab",
-            "size": 4
           }
         ],
         [
           {
-            "name": "label",
-            "size": 6
+            "name": "links",
+            "size": 12
           }
         ]
       ]
     },
-    "uid": "shared.link",
+    "uid": "utilities.links-with-title",
     "isComponent": true
   },
   "type": "object",

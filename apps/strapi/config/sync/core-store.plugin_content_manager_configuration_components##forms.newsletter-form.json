@@ -1,13 +1,13 @@
 {
-  "key": "plugin_content_manager_configuration_components::shared.accordions",
+  "key": "plugin_content_manager_configuration_components::forms.newsletter-form",
   "value": {
     "settings": {
       "bulkable": true,
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "question",
-      "defaultSortBy": "question",
+      "mainField": "title",
+      "defaultSortBy": "title",
       "defaultSortOrder": "ASC"
     },
     "metadatas": {
@@ -19,55 +19,76 @@
           "sortable": false
         }
       },
-      "question": {
+      "title": {
         "edit": {
-          "label": "question",
+          "label": "title",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "question",
+          "label": "title",
           "searchable": true,
           "sortable": true
         }
       },
-      "answer": {
+      "description": {
         "edit": {
-          "label": "answer",
+          "label": "description",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "answer",
+          "label": "description",
           "searchable": true,
           "sortable": true
+        }
+      },
+      "gdpr": {
+        "edit": {
+          "label": "gdpr",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "gdpr",
+          "searchable": false,
+          "sortable": false
         }
       }
     },
     "layouts": {
       "list": [
         "id",
-        "question",
-        "answer"
+        "title",
+        "description",
+        "gdpr"
       ],
       "edit": [
         [
           {
-            "name": "question",
+            "name": "title",
             "size": 6
           },
           {
-            "name": "answer",
+            "name": "description",
             "size": 6
+          }
+        ],
+        [
+          {
+            "name": "gdpr",
+            "size": 12
           }
         ]
       ]
     },
-    "uid": "shared.accordions",
+    "uid": "forms.newsletter-form",
     "isComponent": true
   },
   "type": "object",

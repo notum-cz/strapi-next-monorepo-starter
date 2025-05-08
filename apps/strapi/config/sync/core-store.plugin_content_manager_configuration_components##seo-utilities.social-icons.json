@@ -1,5 +1,5 @@
 {
-  "key": "plugin_content_manager_configuration_components::sections.contact-form",
+  "key": "plugin_content_manager_configuration_components::seo-utilities.social-icons",
   "value": {
     "settings": {
       "bulkable": true,
@@ -33,30 +33,16 @@
           "sortable": true
         }
       },
-      "description": {
+      "socials": {
         "edit": {
-          "label": "description",
+          "label": "socials",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "description",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "gdpr": {
-        "edit": {
-          "label": "gdpr",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "gdpr",
+          "label": "socials",
           "searchable": false,
           "sortable": false
         }
@@ -66,29 +52,24 @@
       "list": [
         "id",
         "title",
-        "description",
-        "gdpr"
+        "socials"
       ],
       "edit": [
         [
           {
             "name": "title",
             "size": 6
-          },
-          {
-            "name": "description",
-            "size": 6
           }
         ],
         [
           {
-            "name": "gdpr",
+            "name": "socials",
             "size": 12
           }
         ]
       ]
     },
-    "uid": "sections.contact-form",
+    "uid": "seo-utilities.social-icons",
     "isComponent": true
   },
   "type": "object",

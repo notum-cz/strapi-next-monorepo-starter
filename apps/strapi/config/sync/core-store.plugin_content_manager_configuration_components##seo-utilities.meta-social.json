@@ -1,5 +1,5 @@
 {
-  "key": "plugin_content_manager_configuration_components::shared.meta-social",
+  "key": "plugin_content_manager_configuration_components::seo-utilities.meta-social",
   "value": {
     "settings": {
       "bulkable": true,
@@ -106,7 +106,7 @@
         ]
       ]
     },
-    "uid": "shared.meta-social",
+    "uid": "seo-utilities.meta-social",
     "isComponent": true
   },
   "type": "object",

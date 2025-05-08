@@ -1,5 +1,5 @@
 {
-  "key": "plugin_content_manager_configuration_components::shared.grid-column",
+  "key": "plugin_content_manager_configuration_components::utilities.image-with-link",
   "value": {
     "settings": {
       "bulkable": true,
@@ -19,74 +19,57 @@
           "sortable": false
         }
       },
-      "desktop": {
+      "image": {
         "edit": {
-          "label": "desktop",
+          "label": "image",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "desktop",
-          "searchable": true,
-          "sortable": true
+          "label": "image",
+          "searchable": false,
+          "sortable": false
         }
       },
-      "tablet": {
+      "link": {
         "edit": {
-          "label": "tablet",
+          "label": "link",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "tablet",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "mobile": {
-        "edit": {
-          "label": "mobile",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "mobile",
-          "searchable": true,
-          "sortable": true
+          "label": "link",
+          "searchable": false,
+          "sortable": false
         }
       }
     },
     "layouts": {
       "list": [
         "id",
-        "desktop",
-        "tablet",
-        "mobile"
+        "image",
+        "link"
       ],
       "edit": [
         [
           {
-            "name": "desktop",
-            "size": 4
-          },
+            "name": "image",
+            "size": 12
+          }
+        ],
+        [
           {
-            "name": "tablet",
-            "size": 4
-          },
-          {
-            "name": "mobile",
-            "size": 4
+            "name": "link",
+            "size": 12
           }
         ]
       ]
     },
-    "uid": "shared.grid-column",
+    "uid": "utilities.image-with-link",
     "isComponent": true
   },
   "type": "object",

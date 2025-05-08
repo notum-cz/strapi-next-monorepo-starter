@@ -1,7 +1,6 @@
 {
   "key": "plugin_content_manager_configuration_content_types::plugin::i18n.locale",
   "value": {
-    "uid": "plugin::i18n.locale",
     "settings": {
       "bulkable": true,
       "filterable": true,
@@ -126,7 +125,8 @@
           }
         ]
       ]
-    }
+    },
+    "uid": "plugin::i18n.locale"
   },
   "type": "object",
   "environment": null,

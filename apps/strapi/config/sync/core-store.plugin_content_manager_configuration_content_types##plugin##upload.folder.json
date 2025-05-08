@@ -1,7 +1,6 @@
 {
   "key": "plugin_content_manager_configuration_content_types::plugin::upload.folder",
   "value": {
-    "uid": "plugin::upload.folder",
     "settings": {
       "bulkable": true,
       "filterable": true,
@@ -205,7 +204,8 @@
           }
         ]
       ]
-    }
+    },
+    "uid": "plugin::upload.folder"
   },
   "type": "object",
   "environment": null,

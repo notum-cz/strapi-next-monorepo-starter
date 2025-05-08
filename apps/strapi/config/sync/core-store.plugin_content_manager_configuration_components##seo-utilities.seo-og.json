@@ -1,5 +1,5 @@
 {
-  "key": "plugin_content_manager_configuration_components::shared.feature-grid-item",
+  "key": "plugin_content_manager_configuration_components::seo-utilities.seo-og",
   "value": {
     "settings": {
       "bulkable": true,
@@ -33,16 +33,44 @@
           "sortable": true
         }
       },
-      "subTitle": {
+      "description": {
         "edit": {
-          "label": "subTitle",
+          "label": "description",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "subTitle",
+          "label": "description",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "url": {
+        "edit": {
+          "label": "url",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "url",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "type": {
+        "edit": {
+          "label": "type",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "type",
           "searchable": true,
           "sortable": true
         }
@@ -66,8 +94,8 @@
       "list": [
         "id",
         "title",
-        "subTitle",
-        "image"
+        "description",
+        "url"
       ],
       "edit": [
         [
@@ -76,19 +104,29 @@
             "size": 6
           },
           {
-            "name": "subTitle",
+            "name": "description",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "url",
+            "size": 6
+          },
+          {
+            "name": "type",
             "size": 6
           }
         ],
         [
           {
             "name": "image",
-            "size": 12
+            "size": 6
           }
         ]
       ]
     },
-    "uid": "shared.feature-grid-item",
+    "uid": "seo-utilities.seo-og",
     "isComponent": true
   },
   "type": "object",

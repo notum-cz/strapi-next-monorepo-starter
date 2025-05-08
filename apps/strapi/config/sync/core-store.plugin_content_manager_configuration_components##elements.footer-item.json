@@ -1,5 +1,5 @@
 {
-  "key": "plugin_content_manager_configuration_components::shared.footer-item",
+  "key": "plugin_content_manager_configuration_components::elements.footer-item",
   "value": {
     "settings": {
       "bulkable": true,
@@ -69,7 +69,7 @@
         ]
       ]
     },
-    "uid": "shared.footer-item",
+    "uid": "elements.footer-item",
     "isComponent": true
   },
   "type": "object",

@@ -1,13 +1,13 @@
 {
-  "key": "plugin_content_manager_configuration_components::sections.animated-logo-row",
+  "key": "plugin_content_manager_configuration_components::forms.contact-form",
   "value": {
     "settings": {
       "bulkable": true,
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "text",
-      "defaultSortBy": "text",
+      "mainField": "title",
+      "defaultSortBy": "title",
       "defaultSortOrder": "ASC"
     },
     "metadatas": {
@@ -19,30 +19,44 @@
           "sortable": false
         }
       },
-      "text": {
+      "title": {
         "edit": {
-          "label": "text",
+          "label": "title",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "text",
+          "label": "title",
           "searchable": true,
           "sortable": true
         }
       },
-      "logos": {
+      "description": {
         "edit": {
-          "label": "logos",
+          "label": "description",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "logos",
+          "label": "description",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "gdpr": {
+        "edit": {
+          "label": "gdpr",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "gdpr",
           "searchable": false,
           "sortable": false
         }
@@ -51,25 +65,30 @@
     "layouts": {
       "list": [
         "id",
-        "text",
-        "logos"
+        "title",
+        "description",
+        "gdpr"
       ],
       "edit": [
         [
           {
-            "name": "text",
+            "name": "title",
+            "size": 6
+          },
+          {
+            "name": "description",
             "size": 6
           }
         ],
         [
           {
-            "name": "logos",
+            "name": "gdpr",
             "size": 12
           }
         ]
       ]
     },
-    "uid": "sections.animated-logo-row",
+    "uid": "forms.contact-form",
     "isComponent": true
   },
   "type": "object",

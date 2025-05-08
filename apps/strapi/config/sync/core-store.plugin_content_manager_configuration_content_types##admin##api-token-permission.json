@@ -1,7 +1,6 @@
 {
   "key": "plugin_content_manager_configuration_content_types::admin::api-token-permission",
   "value": {
-    "uid": "admin::api-token-permission",
     "settings": {
       "bulkable": true,
       "filterable": true,
@@ -127,7 +126,8 @@
           }
         ]
       ]
-    }
+    },
+    "uid": "admin::api-token-permission"
   },
   "type": "object",
   "environment": null,

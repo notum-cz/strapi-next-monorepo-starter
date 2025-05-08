@@ -1,13 +1,13 @@
 {
-  "key": "plugin_content_manager_configuration_components::sections.feature-grid",
+  "key": "plugin_content_manager_configuration_content_types::api::subscriber.subscriber",
   "value": {
     "settings": {
       "bulkable": true,
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "title",
-      "defaultSortBy": "title",
+      "mainField": "email",
+      "defaultSortBy": "name",
       "defaultSortOrder": "ASC"
     },
     "metadatas": {
@@ -15,141 +15,138 @@
         "edit": {},
         "list": {
           "label": "id",
-          "searchable": false,
-          "sortable": false
-        }
-      },
-      "title": {
-        "edit": {
-          "label": "title",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "title",
           "searchable": true,
           "sortable": true
         }
       },
-      "items": {
+      "name": {
         "edit": {
-          "label": "items",
+          "label": "name",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "items",
-          "searchable": false,
-          "sortable": false
-        }
-      },
-      "imageSize": {
-        "edit": {
-          "label": "imageSize",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "imageSize",
+          "label": "name",
           "searchable": true,
           "sortable": true
         }
       },
-      "gridCol": {
+      "email": {
         "edit": {
-          "label": "gridCol",
+          "label": "email",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "gridCol",
-          "searchable": false,
-          "sortable": false
-        }
-      },
-      "isVisible": {
-        "edit": {
-          "label": "isVisible",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "isVisible",
+          "label": "email",
           "searchable": true,
           "sortable": true
         }
       },
-      "imageRadius": {
+      "message": {
         "edit": {
-          "label": "imageRadius",
+          "label": "message",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "imageRadius",
+          "label": "message",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "createdAt": {
+        "edit": {
+          "label": "createdAt",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "createdAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "updatedAt": {
+        "edit": {
+          "label": "updatedAt",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "updatedAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "createdBy": {
+        "edit": {
+          "label": "createdBy",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true,
+          "mainField": "firstname"
+        },
+        "list": {
+          "label": "createdBy",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "updatedBy": {
+        "edit": {
+          "label": "updatedBy",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true,
+          "mainField": "firstname"
+        },
+        "list": {
+          "label": "updatedBy",
           "searchable": true,
           "sortable": true
         }
       }
     },
     "layouts": {
-      "list": [
-        "id",
-        "title",
-        "items",
-        "imageSize"
-      ],
       "edit": [
         [
           {
-            "name": "title",
+            "name": "email",
             "size": 6
-          }
-        ],
-        [
-          {
-            "name": "items",
-            "size": 12
-          }
-        ],
-        [
-          {
-            "name": "imageSize",
-            "size": 4
-          }
-        ],
-        [
-          {
-            "name": "gridCol",
-            "size": 12
-          }
-        ],
-        [
-          {
-            "name": "isVisible",
-            "size": 4
           },
           {
-            "name": "imageRadius",
+            "name": "name",
             "size": 6
           }
+        ],
+        [
+          {
+            "name": "message",
+            "size": 12
+          }
         ]
+      ],
+      "list": [
+        "id",
+        "email",
+        "message",
+        "name"
       ]
     },
-    "uid": "sections.feature-grid",
-    "isComponent": true
+    "uid": "api::subscriber.subscriber"
   },
   "type": "object",
   "environment": null,
