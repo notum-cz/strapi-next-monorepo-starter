@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl"
+import { AppSession } from "@/types/next-auth"
 
 import { routing } from "@/lib/navigation"
 
@@ -11,6 +11,18 @@ type Messages = typeof import("../../locales/en.json")
 export interface IntlMessages extends Messages {}
 
 export type AppLocale = (typeof routing.locales)[number]
+
+export interface CustomFetchOptions {
+  // do not add locale query params to the request
+  doNotAddLocaleQueryParams?: boolean
+  // force JWT token for the request
+  // if omitted, the token will be retrieved from the session
+  // used by PrivateStrapiClient
+  userJWT?: AppSession["strapiJWT"]
+  // omit "Authorization" header from the request (don't retrieve JWT token from session)
+  // used by PrivateStrapiClient
+  omitUserAuthorization?: boolean
+}
 
 export interface AppError {
   message: string | number
