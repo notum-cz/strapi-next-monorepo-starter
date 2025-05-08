@@ -12,7 +12,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 
-const DEFAULT_IMG_SIZE = 110
+const DEFAULT_IMG_SIZE = 610
 
 export function StrapiCarousel({
   component,
@@ -24,7 +24,7 @@ export function StrapiCarousel({
   return (
     <section>
       <Container className="flex justify-center px-4 py-8">
-        <Carousel className="w-full max-w-sm">
+        <Carousel className="w-full">
           <CarouselContent className="-ml-1">
             {component.images?.map((item, index) => (
               <CarouselItem
@@ -35,12 +35,12 @@ export function StrapiCarousel({
                   component={item}
                   imageProps={{
                     className: cn(
-                      "mb-2 object-cover",
+                      "mb-2 object-contain",
                       component?.radius && `rounded-${component.radius}`
                     ),
-                    fallbackSizes: {
-                      width: DEFAULT_IMG_SIZE,
+                    forcedSizes: {
                       height: DEFAULT_IMG_SIZE,
+                      width: DEFAULT_IMG_SIZE,
                     },
                   }}
                 />

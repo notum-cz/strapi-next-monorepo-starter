@@ -30,7 +30,6 @@ export function StrapiLink({
   return (
     <AppLink
       href={component.href}
-      label={component.label}
       openExternalInNewTab={component.newTab ?? false}
       className={className}
     >

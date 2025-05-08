@@ -9,66 +9,56 @@ export interface AppLinkProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement>,
     VariantProps<typeof buttonVariants> {
   readonly href: string
-  readonly label?: string | null
   readonly children?: React.ReactNode
   readonly openExternalInNewTab?: boolean
-  readonly icon?: React.ReactNode
+  readonly endAdornment?: React.ReactNode
 }
 
-const AppLink = React.forwardRef<HTMLAnchorElement, AppLinkProps>(
-  ({
-    href,
-    label,
-    className,
-    children,
-    icon,
-    openExternalInNewTab = false,
-    variant = "link",
-    size = "default",
-    ...props
-  }) => {
-    const combinedClassName = cn(buttonVariants({ variant, size }), className)
+export const AppLink = ({
+  href,
+  className,
+  children,
+  endAdornment,
+  openExternalInNewTab = false,
+  variant = "link",
+  size = "default",
+  ...props
+}: AppLinkProps) => {
+  const combinedClassName = cn(
+    "group flex flex-row items-center gap-2",
+    buttonVariants({ variant, size }),
+    className
+  )
 
-    if (isAppLink(href)) {
-      return (
-        <Link href={href} className={combinedClassName} {...props}>
-          <div className="group flex flex-row items-center">
-            {children}
-            <div className="flex cursor-pointer items-center gap-2">
-              <div className={cn("flex justify-between", {})}>{label}</div>
-              {icon && (
-                <span className="transition-transform duration-200 ease-in group-hover:translate-x-2">
-                  {icon}
-                </span>
-              )}
-            </div>
-          </div>
-        </Link>
-      )
-    }
-
+  if (isAppLink(href)) {
     return (
-      <a
-        href={href}
-        target={openExternalInNewTab ? "_blank" : ""}
-        rel={openExternalInNewTab ? "noopener noreferrer" : ""}
-        className={combinedClassName}
-      >
-        <div className="group flex flex-row items-center">
-          {children}
-          <div className="flex cursor-pointer items-center gap-2">
-            <div className="flex justify-between">{label}</div>
-            {icon && (
-              <span className="transition-transform duration-200 ease-in group-hover:translate-x-2">
-                {icon}
-              </span>
-            )}
-          </div>
-        </div>
-      </a>
+      <Link href={href} {...props} className={combinedClassName}>
+        {children}
+        {endAdornment && (
+          <span className="transition-transform duration-200 ease-in group-hover:translate-x-2">
+            {endAdornment}
+          </span>
+        )}
+      </Link>
     )
   }
-)
+
+  return (
+    <a
+      href={href}
+      target={openExternalInNewTab ? "_blank" : ""}
+      rel={openExternalInNewTab ? "noopener noreferrer" : ""}
+      className={combinedClassName}
+    >
+      {children}
+      {endAdornment && (
+        <span className="transition-transform duration-200 ease-in group-hover:translate-x-2">
+          {endAdornment}
+        </span>
+      )}
+    </a>
+  )
+}
 
 AppLink.displayName = "AppLink"
 

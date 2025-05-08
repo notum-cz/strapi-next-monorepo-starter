@@ -16,8 +16,8 @@ export function StrapiHero({
 
   return (
     <section style={{ backgroundColor: component.bgColor ?? "transparent" }}>
-      <Container className="grid gap-8 px-4 py-8 md:grid-cols-12 lg:py-16 xl:gap-0">
-        <div className="mr-auto flex w-full flex-col items-center justify-center md:col-span-7">
+      <Container className="grid gap-6 px-4 py-8 md:grid-cols-12 lg:py-12 xl:gap-0">
+        <div className="mr-auto flex w-full flex-col items-center justify-center md:col-span-6">
           <Heading
             tag="h1"
             variant="heading1"
@@ -26,7 +26,7 @@ export function StrapiHero({
             {component.title}
           </Heading>
           {component.subTitle && (
-            <Paragraph className="mb-6 max-w-2xl font-light text-gray-500">
+            <Paragraph className="mb-6 max-w-2xl">
               {component.subTitle}
             </Paragraph>
           )}
@@ -45,10 +45,11 @@ export function StrapiHero({
         </div>
 
         {component.image?.media && (
-          <div className="hidden md:col-span-5 md:mt-0 md:flex">
+          <div className="hidden md:col-span-6 md:mt-0 md:flex">
             <StrapiBasicImage
               component={component.image}
-              className="object-cover"
+              className="rounded-3xl object-contain"
+              forcedSizes={{ height: 500 }}
             />
           </div>
         )}

@@ -11,16 +11,14 @@ import StrapiLink from "@/components/page-builder/components/utilities/StrapiLin
 
 async function fetchData(locale: AppLocale) {
   try {
-    return await Strapi.fetchOne(
-      "api::footer.footer",
-      undefined,
-      {
-        locale,
-        populate: ["sections", "logoImage", "links"],
-        pLevel: 5,
+    return await Strapi.fetchOne("api::footer.footer", undefined, {
+      locale,
+      populate: {
+        sections: { populate: { links: true } },
+        logoImage: { populate: { image: true, link: true } },
+        links: true,
       },
-      undefined
-    )
+    })
   } catch (e: any) {
     console.error(
       `Data for "api::footer.footer" content type wasn't fetched: `,
@@ -41,11 +39,14 @@ export async function StrapiFooter({ locale }: { readonly locale: AppLocale }) {
   }
 
   return (
-    <div className="bg-gray-100">
-      <Container className="pt-12 pb-8">
-        <div className="grid grid-cols-1 gap-10 pb-8 sm:grid-cols-[30%_1fr]">
+    <div className="w-full border-t bg-white/10 shadow-sm backdrop-blur transition-colors duration-300">
+      <Container className="pt-8 pb-4">
+        <div className="grid grid-cols-1 gap-6 pb-4 sm:grid-cols-[30%_1fr]">
           <div className="flex flex-col space-y-4">
-            <StrapiImageWithLink component={component.logoImage} />
+            <StrapiImageWithLink
+              component={component.logoImage}
+              imageProps={{ hideWhenMissing: true }}
+            />
           </div>
 
           <div className={cn("grid gap-8")}>
@@ -76,6 +77,7 @@ export async function StrapiFooter({ locale }: { readonly locale: AppLocale }) {
               </p>
             )}
           </div>
+
           <div className="flex flex-col items-end sm:flex-row sm:items-center sm:space-x-4">
             {component.links?.map((link, i) => (
               <Fragment key={String(link.id) + i}>

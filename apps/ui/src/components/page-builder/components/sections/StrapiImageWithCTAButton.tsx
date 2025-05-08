@@ -13,13 +13,14 @@ export const StrapiImageWithCTAButton = ({
   removeThisWhenYouNeedMe("StrapiImageWithCTAButton")
 
   return (
-    <section className="">
-      <Container className="items-center gap-8 px-4 py-8 sm:py-16 md:grid md:grid-cols-2 lg:px-6 xl:gap-16">
+    <section>
+      <Container className="items-center gap-4 md:grid md:grid-cols-2 xl:gap-8">
         <div className="flex justify-center">
           <StrapiBasicImage
             component={component.image}
             className="w-full object-contain object-center"
             hideWhenMissing
+            forcedSizes={{ height: 300 }}
           />
         </div>
 

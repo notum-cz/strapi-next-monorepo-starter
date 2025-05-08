@@ -1,5 +1,4 @@
 .ck-editor__main h1,
-h1.typo-h1,
 h1.typo-h1 {
   @apply lg:text-9xl/20! text-5xl/16! font-bold!;
 }

@@ -50,19 +50,18 @@ export function ContactForm({
           label={t("name")}
           placeholder={t("namePlaceholder")}
         />
-        <div className="mb-5 flex flex-col gap-5 md:mb-16 md:flex-row md:gap-10">
-          <AppField
-            name="email"
-            type="text"
-            autoComplete="email"
-            required
-            label={t("email")}
-            placeholder={t("emailPlaceholder")}
-          />
-        </div>
+        <AppField
+          name="email"
+          type="text"
+          autoComplete="email"
+          required
+          label={t("email")}
+          placeholder={t("emailPlaceholder")}
+        />
         <AppTextArea
           name="message"
           type="text"
+          required
           label={t("message")}
           aria-label="contact-message"
         />
@@ -83,7 +82,7 @@ export function ContactForm({
 
         <Button
           type="submit"
-          className="md:w-fit"
+          className="mt-4 w-full"
           size="lg"
           form={contactFormName}
         >
@@ -103,7 +102,7 @@ export function ContactForm({
 const ContactFormSchema = z.object({
   name: z.string().min(1),
   email: z.string().email().min(1),
-  message: z.string().optional(),
+  message: z.string().min(10),
 })
 
 type FormSchemaType = typeof ContactFormSchema

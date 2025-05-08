@@ -3,6 +3,7 @@ import { Data } from "@repo/strapi"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
+import Heading from "@/components/typography/Heading"
 
 export function StrapiAnimatedLogoRow({
   component,
@@ -16,11 +17,13 @@ export function StrapiAnimatedLogoRow({
   const sliderImages = [...component.logos, ...component.logos]
 
   return (
-    <section className="w-full py-10 lg:py-[100px]">
+    <section className="w-full py-10">
       <div className="flex flex-col items-center gap-[30px]">
-        <h3 className="text-xl font-bold">{component.text}</h3>
+        <Heading tag="h3" variant="heading4" fontWeight="normal">
+          {component.text}
+        </Heading>
 
-        <div className="relative w-full">
+        <div className="relative mt-4 w-full">
           <div className="infinite-scroll-container-horizontal w-full">
             <div
               className={cn(
@@ -32,6 +35,7 @@ export function StrapiAnimatedLogoRow({
                 <div key={String(logo.id) + index} className="grayscale">
                   <StrapiBasicImage
                     component={logo}
+                    forcedSizes={{ width: 200 }}
                     priority={index < 10}
                     loading="eager"
                     className="z-10 max-h-10 w-full object-contain"
