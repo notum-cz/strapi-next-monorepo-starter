@@ -1,16 +1,18 @@
 "use client"
 
-import React, { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
+import Strapi from "@/lib/strapi"
 import AppLink from "@/components/elementary/AppLink"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { AppTextArea } from "@/components/forms/AppTextArea"
 import { Button } from "@/components/ui/button"
+import { useToast } from "@/components/ui/use-toast"
 
 export function ContactForm({
   gdpr,
@@ -18,8 +20,7 @@ export function ContactForm({
   gdpr?: { href?: string; label?: string; newTab?: boolean }
 }>) {
   const t = useTranslations("contactForm")
-
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const { toast } = useToast()
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(ContactFormSchema),
@@ -28,11 +29,25 @@ export function ContactForm({
     defaultValues: { name: "", email: "", message: "" },
   })
 
+  const mutation = useMutation({
+    mutationFn: (values: z.infer<FormSchemaType>) => {
+      const path = Strapi.getStrapiApiPathByUId("api::subscriber.subscriber")
+      return Strapi.fetchAPI(path, undefined, {
+        method: "POST",
+        body: JSON.stringify({ data: values }),
+      })
+    },
+    onSuccess: () => {
+      toast({
+        variant: "default",
+        description: t("success"),
+      })
+      form.reset()
+    },
+  })
+
   const onSubmit = (values: z.infer<FormSchemaType>) => {
-    // TODO: Add submit logic
-    // eslint-disable-next-line no-console
-    console.log("values", values)
-    setErrorMessage(null)
+    mutation.mutate(values)
   }
 
   return (
@@ -90,9 +105,9 @@ export function ContactForm({
         </Button>
       </div>
 
-      {errorMessage && (
+      {mutation.error && (
         <div className="text-center text-red-500">
-          <p>{errorMessage}</p>
+          <p>{mutation.error.message || t("error")}</p>
         </div>
       )}
     </div>
