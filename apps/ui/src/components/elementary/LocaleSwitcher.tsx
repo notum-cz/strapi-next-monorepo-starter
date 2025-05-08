@@ -5,7 +5,6 @@ import { useSearchParams } from "next/navigation"
 
 import { AppLocale } from "@/types/general"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { routing, usePathname, useRouter } from "@/lib/navigation"
 import {
   Select,
@@ -21,8 +20,6 @@ const localeTranslation = {
 }
 
 const LocaleSwitcher = ({ locale }: { locale: AppLocale }) => {
-  removeThisWhenYouNeedMe("LocaleSwitcher")
-
   // prevent the locale switch from blocking the UI thread
   const [, startTransition] = useTransition()
 
@@ -44,13 +41,13 @@ const LocaleSwitcher = ({ locale }: { locale: AppLocale }) => {
 
   return (
     <Select value={locale} onValueChange={handleLocaleChange}>
-      <SelectTrigger className="w-32 font-bold uppercase">
+      <SelectTrigger className="w-18 font-bold uppercase">
         {locale}
       </SelectTrigger>
       <SelectContent>
         {routing.locales.map((locale, index) => (
           <React.Fragment key={locale}>
-            <SelectItem key={locale} value={locale}>
+            <SelectItem key={locale} value={locale} disabled={locale === "cs"}>
               {localeTranslation[locale]}
             </SelectItem>
             {index < routing.locales.length - 1 && (
