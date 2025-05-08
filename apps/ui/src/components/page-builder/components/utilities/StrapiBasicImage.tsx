@@ -10,7 +10,6 @@ import { ImageWithFallback } from "@/components/elementary/ImageWithFallback"
 export interface BasicImageProps
   extends Omit<ImageExtendedProps, "src" | "alt"> {
   readonly component: Data.Component<"utilities.basic-image"> | undefined | null
-  readonly useClient?: boolean
   readonly useNativeNextImageOnly?: boolean
   readonly className?: ImageExtendedProps["className"]
   readonly hideWhenMissing?: boolean
@@ -21,7 +20,6 @@ export interface BasicImageProps
 
 export function StrapiBasicImage({
   component,
-  useClient,
   className,
   hideWhenMissing,
   fallbackSizes,
