@@ -53,16 +53,6 @@
       "required": false,
       "unique": true
     },
-    "seo": {
-      "type": "component",
-      "repeatable": false,
-      "component": "seo-utilities.seo",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
     "content": {
       "type": "dynamiczone",
       "components": [
@@ -94,6 +84,16 @@
       "relation": "manyToOne",
       "target": "api::page.page",
       "inversedBy": "children"
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "seo-utilities.seo",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     }
   }
 }
