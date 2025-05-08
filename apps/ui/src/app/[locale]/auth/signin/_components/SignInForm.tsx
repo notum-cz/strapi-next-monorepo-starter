@@ -27,7 +27,7 @@ export function SignInForm() {
   const { toast } = useToast()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/profile"
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/"
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(SignInFormSchema),
@@ -74,7 +74,6 @@ export function SignInForm() {
             autoComplete="email"
             required
             label={t("email")}
-            placeholder="dev@notum.cz"
           />
           <AppField
             name="password"
@@ -83,7 +82,6 @@ export function SignInForm() {
             autoComplete="current-password"
             required
             label={t("password")}
-            placeholder="Password1"
           />
         </AppForm>
       </CardContent>
