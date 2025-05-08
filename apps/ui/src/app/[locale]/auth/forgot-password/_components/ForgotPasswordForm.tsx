@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 import { useRouter } from "@/lib/navigation"
-import Strapi from "@/lib/strapi"
+import { PrivateStrapiClient } from "@/lib/strapi-api"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button } from "@/components/ui/button"
@@ -28,7 +28,7 @@ export function ForgotPasswordForm() {
 
   const { mutate } = useMutation({
     mutationFn: (values: { email: string }) => {
-      return Strapi.fetchAPI(
+      return PrivateStrapiClient.fetchAPI(
         `/auth/forgot-password`,
         undefined,
         {
@@ -36,7 +36,7 @@ export function ForgotPasswordForm() {
           method: "POST",
           next: { revalidate: 0 },
         },
-        { omitAuthorization: true }
+        { omitUserAuthorization: true }
       )
     },
   })

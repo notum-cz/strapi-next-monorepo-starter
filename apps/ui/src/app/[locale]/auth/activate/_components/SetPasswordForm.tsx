@@ -9,7 +9,7 @@ import * as z from "zod"
 
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
 import { useRouter } from "@/lib/navigation"
-import Strapi from "@/lib/strapi"
+import { PublicStrapiClient } from "@/lib/strapi-api"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button } from "@/components/ui/button"
@@ -35,7 +35,7 @@ export function SetPasswordForm({ accountActivation = false }) {
       passwordConfirmation: string
       code: string
     }) => {
-      return Strapi.fetchAPI(`/auth/reset-password`, undefined, {
+      return PublicStrapiClient.fetchAPI(`/auth/reset-password`, undefined, {
         body: JSON.stringify(values),
         method: "POST",
         next: { revalidate: 0 },

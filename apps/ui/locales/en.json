@@ -46,6 +46,7 @@
     "actions": {
       "profile": "Profile",
       "signOut": "Sign out",
+      "changePassword": "Change password",
       "signIn": "Sign in"
     }
   },
@@ -178,8 +179,6 @@
       },
       "header": "Registration",
       "description": "Create an account to access the system.",
-      "firstName": "First name",
-      "lastName": "Last name",
       "email": "E-mail address",
       "password": "Create password",
       "checkPassword": "Confirm password",
@@ -192,7 +191,9 @@
 
     "changePassword": {
       "errors": {
-        "The provided current password is invalid": "Current password does not match"
+        "invalidCurrentPassword": "Current password does not match",
+        "unexpectedError": "An unexpected error occurred. Please try again later.",
+        "newPasswordSameAsCurrent": "New password must be different from the current password"
       },
       "successfullyChanged": "Password successfully changed",
       "header": "Change password",

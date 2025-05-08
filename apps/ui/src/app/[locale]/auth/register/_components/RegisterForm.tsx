@@ -8,7 +8,7 @@ import * as z from "zod"
 
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
 import { Link } from "@/lib/navigation"
-import Strapi from "@/lib/strapi"
+import { PrivateStrapiClient } from "@/lib/strapi-api"
 import { cn } from "@/lib/styles"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
@@ -23,6 +23,10 @@ import {
 } from "@/components/ui/card"
 import { useToast } from "@/components/ui/use-toast"
 
+// To enable email confirmation, Strapi Users-Permissions plugin must be configured (e.g. email provider, redirect URL)
+// http://localhost:1337/admin/settings/users-permissions/advanced-settings
+const ENABLE_EMAIL_CONFIRMATION = false
+
 export function RegisterForm() {
   const t = useTranslations("auth.register")
   const { toast } = useToast()
@@ -32,10 +36,8 @@ export function RegisterForm() {
       username: string
       email: string
       password: string
-      firstName: string
-      lastName: string
     }) =>
-      Strapi.fetchAPI(
+      PrivateStrapiClient.fetchAPI(
         `/auth/local/register`,
         undefined,
         {
@@ -43,7 +45,7 @@ export function RegisterForm() {
           method: "POST",
           next: { revalidate: 0 },
         },
-        { omitAuthorization: true }
+        { omitUserAuthorization: true }
       ),
   })
 
@@ -55,8 +57,6 @@ export function RegisterForm() {
       email: "",
       password: "",
       passwordConfirmation: "",
-      firstName: "",
-      lastName: "",
     },
   })
 
@@ -66,8 +66,6 @@ export function RegisterForm() {
         username: values.email,
         email: values.email,
         password: values.password,
-        firstName: values.firstName,
-        lastName: values.lastName,
       },
       {
         onError: (error) => {
@@ -102,7 +100,9 @@ export function RegisterForm() {
     return (
       <Card className="m-auto w-[400px]">
         <CardHeader>
-          <h2 className="mx-auto">{t("checkEmail")}</h2>
+          <h2 className="mx-auto">
+            {ENABLE_EMAIL_CONFIRMATION ? t("checkEmail") : t("status.success")}
+          </h2>
         </CardHeader>
         <CardContent>
           <Link
@@ -128,18 +128,6 @@ export function RegisterForm() {
         </CardHeader>
         <CardContent>
           <AppForm form={form} onSubmit={onSubmit} id={registerFormName}>
-            <AppField
-              name="firstName"
-              type="text"
-              required
-              label={t("firstName")}
-            />
-            <AppField
-              name="lastName"
-              type="text"
-              required
-              label={t("lastName")}
-            />
             <AppField name="email" type="text" required label={t("email")} />
             <AppField
               name="password"
@@ -185,8 +173,6 @@ const RegisterFormSchema = z
     email: z.string().email(),
     password: z.string().min(PASSWORD_MIN_LENGTH),
     passwordConfirmation: z.string().min(PASSWORD_MIN_LENGTH),
-    firstName: z.string().min(1),
-    lastName: z.string().min(1),
   })
   .superRefine((data, ctx) => {
     if (data.password !== data.passwordConfirmation) {

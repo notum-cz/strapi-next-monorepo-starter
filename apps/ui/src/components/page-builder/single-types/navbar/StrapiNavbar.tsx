@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server"
 import { AppLocale } from "@/types/general"
 
 import { getAuth } from "@/lib/auth"
-import Strapi from "@/lib/strapi"
+import { PublicStrapiClient } from "@/lib/strapi-api"
 import { cn } from "@/lib/styles"
 import AppLink from "@/components/elementary/AppLink"
 import LocaleSwitcher from "@/components/elementary/LocaleSwitcher"
@@ -13,7 +13,7 @@ import { LoggedUserMenu } from "@/components/page-builder/single-types/navbar/Lo
 
 async function fetchData(locale: AppLocale) {
   try {
-    return await Strapi.fetchOne("api::navbar.navbar", undefined, {
+    return await PublicStrapiClient.fetchOne("api::navbar.navbar", undefined, {
       locale,
       populate: {
         links: true,
@@ -45,7 +45,7 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-white/90 shadow-sm backdrop-blur transition-colors duration-300">
-      <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
+      <div className="flex h-16 items-center space-x-6 px-6 sm:space-x-0">
         <div className="flex gap-6 md:gap-10">
           {navbar.logoImage ? (
             <StrapiImageWithLink
@@ -78,8 +78,6 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
         </div>
 
         <div className="flex flex-1 items-center justify-end space-x-4">
-          <LocaleSwitcher locale={locale} />
-
           {session?.user ? (
             <nav className="flex items-center space-x-1">
               <LoggedUserMenu user={session.user} />
@@ -87,6 +85,7 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
           ) : (
             <AppLink href="/auth/signin">{t("actions.signIn")}</AppLink>
           )}
+          <LocaleSwitcher locale={locale} />
         </div>
       </div>
     </header>

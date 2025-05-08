@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
-import Strapi from "@/lib/strapi"
+import { PublicStrapiClient } from "@/lib/strapi-api"
 import AppLink from "@/components/elementary/AppLink"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
@@ -31,8 +31,10 @@ export function ContactForm({
 
   const mutation = useMutation({
     mutationFn: (values: z.infer<FormSchemaType>) => {
-      const path = Strapi.getStrapiApiPathByUId("api::subscriber.subscriber")
-      return Strapi.fetchAPI(path, undefined, {
+      const path = PublicStrapiClient.getStrapiApiPathByUId(
+        "api::subscriber.subscriber"
+      )
+      return PublicStrapiClient.fetchAPI(path, undefined, {
         method: "POST",
         body: JSON.stringify({ data: values }),
       })

@@ -46,6 +46,7 @@
     "actions": {
       "profile": "Profil",
       "signOut": "Odhlásit se",
+      "changePassword": "Změnit heslo",
       "signIn": "Přihlásit se"
     }
   },
@@ -178,8 +179,6 @@
       },
       "header": "Registrace",
       "description": "Vytvořte si účet pro přístup do systému.",
-      "firstName": "Jméno",
-      "lastName": "Příjmení",
       "email": "Zadejte svou e-mailovou adresu",
       "password": "Vytvořte heslo",
       "checkPassword": "Potvrďte heslo",
@@ -192,7 +191,9 @@
 
     "changePassword": {
       "errors": {
-        "The provided current password is invalid": "Současné heslo se neshoduje"
+        "invalidCurrentPassword": "Současné heslo se neshoduje",
+        "unexpectedError": "An unexpected error occurred. Please try again later.",
+        "newPasswordSameAsCurrent": "Nové heslo se shoduje s aktuálním heslem"
       },
       "successfullyChanged": "Heslo bylo úspěšně změněno",
       "header": "Změna hesla",

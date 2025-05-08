@@ -2,7 +2,7 @@ import { Fragment } from "react"
 
 import { AppLocale } from "@/types/general"
 
-import Strapi from "@/lib/strapi"
+import { PublicStrapiClient } from "@/lib/strapi-api"
 import { cn } from "@/lib/styles"
 import { Container } from "@/components/elementary/Container"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
@@ -10,7 +10,7 @@ import StrapiLink from "@/components/page-builder/components/utilities/StrapiLin
 
 async function fetchData(locale: AppLocale) {
   try {
-    return await Strapi.fetchOne("api::footer.footer", undefined, {
+    return await PublicStrapiClient.fetchOne("api::footer.footer", undefined, {
       locale,
       populate: {
         sections: { populate: { links: true } },
