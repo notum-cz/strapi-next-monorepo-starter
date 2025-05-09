@@ -1,7 +1,13 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env", "**/.env.*local"],
-  "globalEnv": ["NEXT_OUTPUT"],
+  "globalEnv": [
+    "NEXT_OUTPUT",
+    "STRAPI_URL",
+    "APP_PUBLIC_URL",
+    "NEXTAUTH_SECRET",
+    "NEXTAUTH_URL"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
