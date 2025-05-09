@@ -1,4 +1,4 @@
-# This is PRODUCTION Dockerfile for NextJS in Turborepo.
+# This is PRODUCTION Dockerfile for Next.js in Turborepo.
 # It's assumed that this Dockerfile is run from the root of the monorepo.
 
 # Created according to following examples:
