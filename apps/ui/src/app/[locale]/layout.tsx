@@ -59,17 +59,17 @@ export default async function RootLayout({ children, params }: LayoutProps) {
                 <StrapiNavbar locale={locale} />
               </ErrorBoundary>
 
-              <div className="flex-1">
+              {/* <div className="flex-1">
                 <div>{children}</div>
-              </div>
+              </div> */}
 
               <TailwindIndicator />
 
               <Toaster />
 
-              <ErrorBoundary hideFallback>
+              {/* <ErrorBoundary hideFallback>
                 <StrapiFooter locale={locale} />
-              </ErrorBoundary>
+              </ErrorBoundary> */}
             </div>
           </ClientProviders>
         </ServerProviders>
