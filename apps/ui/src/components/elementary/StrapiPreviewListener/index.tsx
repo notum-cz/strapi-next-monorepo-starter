@@ -9,8 +9,8 @@ const STRAPI_PREVIEW_ENABLED = Boolean(env.STRAPI_PREVIEW_SECRET)
 
 const StrapiPreviewListener = async () => {
   const strapiPreviewHashedOrigin = STRAPI_PREVIEW_ENABLED
-    ? await hashStringSHA256(env.NEXT_PUBLIC_STRAPI_URL)
-    : undefined // TODO change this to STRAPI_URL @tocosastalo
+    ? await hashStringSHA256(env.STRAPI_URL)
+    : undefined
 
   if (!STRAPI_PREVIEW_ENABLED || !strapiPreviewHashedOrigin) {
     return null
