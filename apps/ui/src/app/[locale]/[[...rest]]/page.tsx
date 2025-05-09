@@ -52,14 +52,17 @@ export async function generateMetadata(props: Props) {
 
 export default async function StrapiPage(props: Props) {
   const params = await props.params
+  console.log("StrapiPage", params)
 
   setRequestLocale(params.locale)
 
   const fullPath = ROOT_PAGE_PATH + (params.rest ?? []).join("/")
+  console.log("fullPath", fullPath)
   const response = await fetchPage(fullPath, params.locale)
 
   const data = response?.data
 
+  console.log("StrapiPage data", data)
   if (data?.content == null) {
     notFound()
   }
