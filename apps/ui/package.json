@@ -53,6 +53,7 @@
     "next": "^15.3.1",
     "next-auth": "^4.24.10",
     "next-intl": "^3.23.5",
+    "next-recaptcha-v3": "^1.5.2",
     "next-themes": "^0.3.0",
     "node-html-parser": "^7.0.1",
     "plaiceholder": "^3.0.0",
