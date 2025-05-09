@@ -44,3 +44,27 @@ export const isAppLink = (link: string): boolean => {
     return false
   }
 }
+
+export const formatHref = (href: string | undefined | null): string => {
+  if (!href || href === "#") {
+    // Empty path -> return hash to prevent unwanted issues
+    return "#"
+  }
+
+  if (href.startsWith("http")) {
+    // External or internal link that starts with http(s) -> return as is
+    return href
+  }
+
+  if (!isAppLink(href)) {
+    // External link -> return as is
+    return href
+  }
+
+  if (!href.startsWith("/")) {
+    // Ensure path starts with a slash
+    href = `/${href}`
+  }
+
+  return href
+}

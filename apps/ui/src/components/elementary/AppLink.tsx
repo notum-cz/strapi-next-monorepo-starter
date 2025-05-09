@@ -1,7 +1,7 @@
 import React from "react"
 import { VariantProps } from "class-variance-authority"
 
-import { isAppLink, Link } from "@/lib/navigation"
+import { formatHref, isAppLink, Link } from "@/lib/navigation"
 import { cn } from "@/lib/styles"
 import { buttonVariants } from "@/components/ui/button"
 
@@ -30,9 +30,11 @@ export const AppLink = ({
     className
   )
 
-  if (isAppLink(href)) {
+  const formattedHref = formatHref(href)
+
+  if (isAppLink(formattedHref)) {
     return (
-      <Link href={href} {...props} className={combinedClassName}>
+      <Link href={formattedHref} {...props} className={combinedClassName}>
         {children}
         {endAdornment && (
           <span className="transition-transform duration-200 ease-in group-hover:translate-x-2">
@@ -45,7 +47,7 @@ export const AppLink = ({
 
   return (
     <a
-      href={href}
+      href={formattedHref}
       target={openExternalInNewTab ? "_blank" : ""}
       rel={openExternalInNewTab ? "noopener noreferrer" : ""}
       className={combinedClassName}
