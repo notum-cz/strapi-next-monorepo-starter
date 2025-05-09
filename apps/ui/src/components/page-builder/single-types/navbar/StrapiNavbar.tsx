@@ -33,20 +33,16 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
   const response = await fetchData(locale)
   const navbar = response?.data
 
-  console.log("navbar", navbar)
   if (navbar == null) {
     return null
   }
 
   const t = await getTranslations("navbar")
 
-  console.log("t", t)
-
   const links = (navbar.links ?? []).filter((link) => link.href)
 
   const session = await getAuth()
 
-  console.log("session", session)
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-white/90 shadow-sm backdrop-blur transition-colors duration-300">
       <div className="flex h-16 items-center space-x-6 px-6 sm:space-x-0">

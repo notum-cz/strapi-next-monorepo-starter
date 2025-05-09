@@ -67,9 +67,9 @@ export default async function RootLayout({ children, params }: LayoutProps) {
 
               <Toaster />
 
-              {/* <ErrorBoundary hideFallback>
+              <ErrorBoundary hideFallback>
                 <StrapiFooter locale={locale} />
-              </ErrorBoundary> */}
+              </ErrorBoundary>
             </div>
           </ClientProviders>
         </ServerProviders>

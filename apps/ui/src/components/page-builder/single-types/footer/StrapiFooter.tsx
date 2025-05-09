@@ -35,6 +35,8 @@ export async function StrapiFooter({ locale }: { readonly locale: AppLocale }) {
     return null
   }
 
+  console.log("StrapiFooter", component)
+
   return (
     <div className="w-full border-t bg-white/10 shadow-sm backdrop-blur transition-colors duration-300">
       <Container className="pt-8 pb-4">
