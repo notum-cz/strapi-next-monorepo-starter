@@ -12,13 +12,12 @@ import StrapiImageWithCTAButton from "@/components/page-builder/components/secti
 import StrapiCkEditorContent from "@/components/page-builder/components/utilities/StrapiCkEditorContent"
 
 /**
- * Mapping of Strapi Component UID to component file path (relative to apps/ui/src/components/page-builder)
- *
+ * Mapping of Strapi Component UID to React Component
  * TODO: This should map Strapi component uid -> component path to reduce bundle size, however this became an issue with nextjs 15 update
  */
 
 export const PageContentComponents: {
-  // [K in UID.Component]?: string // TODO: NextJS 15 has issues with dynamic imports inside pages
+  // [K in UID.Component]?: string // TODO: Next.js 15 has issues with dynamic imports inside pages
   // eslint-disable-next-line no-unused-vars
   [K in UID.Component]?: React.ComponentType<any>
 } = {
@@ -39,5 +38,6 @@ export const PageContentComponents: {
   // Forms
   "forms.contact-form": StrapiContactForm,
   "forms.newsletter-form": StrapiNewsletterForm,
+
   // Add more components here
 }
