@@ -18,7 +18,7 @@ const getModelPopulationAttributes = (model: any) => {
 
 export const getFullPopulateObject = (
   modelUid: UID.Schema,
-  maxDepth = 20,
+  maxDepth = 10,
   ignore?: string[]
 ) => {
   if (maxDepth <= 1) {
