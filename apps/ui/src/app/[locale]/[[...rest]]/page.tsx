@@ -4,11 +4,11 @@ import { setRequestLocale } from "next-intl/server"
 
 import type { PageProps } from "@/types/next"
 
-import { fetchPageData } from "@/lib/content"
 import { isDevelopment } from "@/lib/general-helpers"
 import { getMetadataFromStrapi } from "@/lib/metadata"
 import { routing } from "@/lib/navigation"
 import { PublicStrapiClient } from "@/lib/strapi-api"
+import { fetchPage } from "@/lib/strapi-api/content/page"
 import { cn } from "@/lib/styles"
 import { Breadcrumbs } from "@/components/elementary/Breadcrumbs"
 import { Container } from "@/components/elementary/Container"
@@ -56,7 +56,7 @@ export default async function StrapiPage(props: Props) {
   setRequestLocale(params.locale)
 
   const fullPath = ROOT_PAGE_PATH + (params.rest ?? []).join("/")
-  const response = await fetchPageData(fullPath, params.locale)
+  const response = await fetchPage(fullPath, params.locale)
 
   const data = response?.data
 

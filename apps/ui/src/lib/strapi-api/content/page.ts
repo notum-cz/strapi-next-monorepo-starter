@@ -2,7 +2,7 @@ import type { AppLocale } from "@/types/general"
 
 import { PublicStrapiClient } from "@/lib/strapi-api"
 
-export async function fetchPageData(fullPath: string, locale: AppLocale) {
+export async function fetchPage(fullPath: string, locale: AppLocale) {
   // eslint-disable-next-line no-console
   console.log({ message: `Fetching page: ${locale} - ${fullPath}` })
 
