@@ -16,10 +16,26 @@
     }
   },
   "attributes": {
+    "title": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "required": true
+    },
+    "breadcrumbTitle": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string"
+    },
     "slug": {
       "type": "string",
       "required": true,
-      "unique": true,
       "regex": "^[a-z0-9/-]+$",
       "pluginOptions": {
         "i18n": {
@@ -28,39 +44,51 @@
       }
     },
     "fullPath": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "type": "string",
-      "unique": true,
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "seo": {
-      "type": "component",
-      "repeatable": false,
-      "component": "shared.seo",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+      "required": false,
+      "unique": true
     },
     "content": {
       "type": "dynamiczone",
       "components": [
-        "layout.navbar",
-        "sections.faq",
+        "sections.image-with-cta-button",
         "sections.horizontal-images",
         "sections.hero",
-        "sections.feature-grid",
-        "sections.carousel",
         "sections.heading-with-cta-button",
-        "sections.image-with-cta-button",
+        "sections.faq",
+        "sections.carousel",
         "sections.animated-logo-row",
-        "sections.newsletter",
-        "sections.contact-form"
+        "forms.newsletter-form",
+        "forms.contact-form",
+        "utilities.ck-editor-content"
       ],
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "children": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::page.page",
+      "mappedBy": "parent"
+    },
+    "parent": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::page.page",
+      "inversedBy": "children"
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "seo-utilities.seo",
       "pluginOptions": {
         "i18n": {
           "localized": true

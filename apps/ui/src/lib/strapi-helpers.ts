@@ -1,39 +1,24 @@
-import { StaticImport } from "next/dist/shared/lib/get-img-props"
-import { env } from "@/env.mjs"
+import type { StaticImport } from "next/dist/shared/lib/get-img-props"
 
-import { removeThisWhenYouNeedMe } from "./general-helpers"
-
-// TODO: make this generic - return same type as argument has
-export const formatImageUrl = (
+/**
+ * Function to format Strapi media URLs. There are 2 types of upload:
+ * - S3 bucket - in this case, the URL is already correct and starts with https
+ * - local upload - in this case, the URL starts with /uploads and we need to add API url prefix
+ * (this happens in route handler for Strapi assets)
+ *
+ * TODO: make this generic - return same type as argument has
+ */
+export const formatStrapiMediaUrl = (
   imageUrl: string | StaticImport | undefined | null
 ): any => {
-  removeThisWhenYouNeedMe("formatImageUrl")
-
   if (!imageUrl) {
     return undefined
   }
 
   if (typeof imageUrl === "string") {
     if (!imageUrl.startsWith("http")) {
-      return `${env.NEXT_PUBLIC_STRAPI_URL}${imageUrl}`
-    }
-  }
-
-  if (typeof imageUrl === "object") {
-    if ("default" in imageUrl && !imageUrl.default.src.startsWith("http")) {
-      return {
-        ...imageUrl,
-        default: {
-          ...imageUrl.default,
-          src: `${env.NEXT_PUBLIC_STRAPI_URL}${imageUrl.default.src}`,
-        },
-      }
-    }
-
-    if ("src" in imageUrl && !imageUrl.src.startsWith("http")) {
-      return {
-        ...imageUrl,
-        src: `${env.NEXT_PUBLIC_STRAPI_URL}${imageUrl.src}`,
+      if (imageUrl.startsWith("/uploads")) {
+        return `/api/asset${imageUrl}`
       }
     }
   }

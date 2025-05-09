@@ -154,7 +154,7 @@
         "id",
         "type",
         "contentType",
-        "release"
+        "entryDocumentId"
       ],
       "edit": [
         [
@@ -169,6 +169,10 @@
         ],
         [
           {
+            "name": "entryDocumentId",
+            "size": 6
+          },
+          {
             "name": "release",
             "size": 6
           }
@@ -177,10 +181,6 @@
           {
             "name": "isEntryValid",
             "size": 4
-          },
-          {
-            "name": "entryDocumentId",
-            "size": 6
           }
         ]
       ]

@@ -46,46 +46,25 @@
           "searchable": true,
           "sortable": true
         }
-      },
-      "isVisible": {
-        "edit": {
-          "label": "isVisible",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "isVisible",
-          "searchable": true,
-          "sortable": true
-        }
       }
     },
     "layouts": {
       "list": [
         "id",
         "images",
-        "radius",
-        "isVisible"
+        "radius"
       ],
       "edit": [
         [
           {
-            "name": "radius",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "isVisible",
-            "size": 4
-          }
-        ],
-        [
-          {
             "name": "images",
             "size": 12
+          }
+        ],
+        [
+          {
+            "name": "radius",
+            "size": 6
           }
         ]
       ]

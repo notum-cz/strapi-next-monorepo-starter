@@ -75,20 +75,6 @@
           "sortable": false
         }
       },
-      "isVisible": {
-        "edit": {
-          "label": "isVisible",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "isVisible",
-          "searchable": true,
-          "sortable": true
-        }
-      },
       "bgColor": {
         "edit": {
           "label": "bgColor",
@@ -124,24 +110,20 @@
         ],
         [
           {
+            "name": "links",
+            "size": 12
+          }
+        ],
+        [
+          {
             "name": "image",
             "size": 12
           }
         ],
         [
           {
-            "name": "isVisible",
-            "size": 4
-          },
-          {
             "name": "bgColor",
             "size": 6
-          }
-        ],
-        [
-          {
-            "name": "links",
-            "size": 12
           }
         ]
       ]

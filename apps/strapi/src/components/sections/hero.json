@@ -11,23 +11,17 @@
       "required": true
     },
     "subTitle": {
-      "type": "string",
-      "required": false
+      "type": "string"
     },
     "links": {
       "type": "component",
       "repeatable": true,
-      "component": "shared.link"
+      "component": "utilities.link"
     },
     "image": {
       "type": "component",
       "repeatable": false,
-      "component": "shared.basic-image"
-    },
-    "isVisible": {
-      "type": "boolean",
-      "default": true,
-      "required": false
+      "component": "utilities.basic-image"
     },
     "bgColor": {
       "type": "customField",

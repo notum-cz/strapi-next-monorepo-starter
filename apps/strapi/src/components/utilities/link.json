@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_utilities_links",
+  "info": {
+    "displayName": "Link"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "href": {
+      "type": "string",
+      "required": true
+    },
+    "newTab": {
+      "type": "boolean"
+    }
+  }
+}

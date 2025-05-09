@@ -141,7 +141,7 @@
         "id",
         "name",
         "stages",
-        "createdAt"
+        "stageRequiredToPublish"
       ],
       "edit": [
         [
@@ -156,14 +156,14 @@
         ],
         [
           {
-            "name": "contentTypes",
-            "size": 12
+            "name": "stageRequiredToPublish",
+            "size": 6
           }
         ],
         [
           {
-            "name": "stageRequiredToPublish",
-            "size": 6
+            "name": "contentTypes",
+            "size": 12
           }
         ]
       ]

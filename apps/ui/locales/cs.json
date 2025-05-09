@@ -46,6 +46,7 @@
     "actions": {
       "profile": "Profil",
       "signOut": "Odhlásit se",
+      "changePassword": "Změnit heslo",
       "signIn": "Přihlásit se"
     }
   },
@@ -130,19 +131,6 @@
         "passwordWithNumber": "Řetězec musí obsahovat alespoň 1 číslo",
         "phoneNumber": "Toto pole musí obsahovat 9 čísel"
       }
-    },
-
-    "http": {
-      "400": "Něco se pokazilo. Zkuste to prosím znovu nebo kontaktujte podporu.",
-      "401": "Platnost přihlášení vypršela. Přihlaste se prosím znovu.",
-      "403": "K těmto datům nemáte přístup",
-      "404": "Požadovaná data nebyla nalezena.",
-      "408": "Platnost požadavku vypršela. Zkuste to prosím znovu.",
-      "413": "Nahráváte příliš velký soubor.",
-      "415": "Soubor, který nahráváte není podporovaného typu.",
-      "429": "Poslal/a jste příliš mnoho požadavků.",
-      "500": "Server není dostupný nebo se něco pokazilo. Zkuste to prosím znovu nebo kontaktujte podporu.",
-      "503": "Server není dostupný. Zkuste to prosím znovu nebo kontaktujte podporu"
     }
   },
 
@@ -191,8 +179,6 @@
       },
       "header": "Registrace",
       "description": "Vytvořte si účet pro přístup do systému.",
-      "firstName": "Jméno",
-      "lastName": "Příjmení",
       "email": "Zadejte svou e-mailovou adresu",
       "password": "Vytvořte heslo",
       "checkPassword": "Potvrďte heslo",
@@ -205,7 +191,9 @@
 
     "changePassword": {
       "errors": {
-        "The provided current password is invalid": "Současné heslo se neshoduje"
+        "invalidCurrentPassword": "Současné heslo se neshoduje",
+        "unexpectedError": "An unexpected error occurred. Please try again later.",
+        "newPasswordSameAsCurrent": "Nové heslo se shoduje s aktuálním heslem"
       },
       "successfullyChanged": "Heslo bylo úspěšně změněno",
       "header": "Změna hesla",

@@ -5,22 +5,21 @@ import { useFormContext } from "react-hook-form"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
+import { AppFormDescription } from "@/components/forms/AppFormDescription"
+import { AppFormLabel } from "@/components/forms/AppFormLabel"
 import {
   FormControl,
   FormField,
   FormItem,
   FormMessage,
 } from "@/components/ui/form"
-
 import {
   Select as SelectComponent,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select"
-import { AppFormDescription } from "./AppFormDescription"
-import { AppFormLabel } from "./AppFormLabel"
+} from "@/components/ui/select"
 
 type Props = {
   readonly name: string

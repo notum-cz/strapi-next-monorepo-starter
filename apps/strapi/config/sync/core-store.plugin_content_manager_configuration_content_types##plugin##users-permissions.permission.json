@@ -1,7 +1,6 @@
 {
   "key": "plugin_content_manager_configuration_content_types::plugin::users-permissions.permission",
   "value": {
-    "uid": "plugin::users-permissions.permission",
     "settings": {
       "bulkable": true,
       "filterable": true,
@@ -127,7 +126,8 @@
           }
         ]
       ]
-    }
+    },
+    "uid": "plugin::users-permissions.permission"
   },
   "type": "object",
   "environment": null,

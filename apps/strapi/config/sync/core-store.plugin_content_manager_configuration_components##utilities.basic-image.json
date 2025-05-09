@@ -1,0 +1,135 @@
+{
+  "key": "plugin_content_manager_configuration_components::utilities.basic-image",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "mainField": "alt",
+      "defaultSortBy": "alt",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "media": {
+        "edit": {
+          "label": "media",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "media",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "alt": {
+        "edit": {
+          "label": "alt",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "alt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "width": {
+        "edit": {
+          "label": "width",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "width",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "height": {
+        "edit": {
+          "label": "height",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "height",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "fallbackSrc": {
+        "edit": {
+          "label": "fallbackSrc",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "fallbackSrc",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "media",
+        "alt",
+        "width"
+      ],
+      "edit": [
+        [
+          {
+            "name": "media",
+            "size": 6
+          },
+          {
+            "name": "alt",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "width",
+            "size": 4
+          },
+          {
+            "name": "height",
+            "size": 4
+          }
+        ],
+        [
+          {
+            "name": "fallbackSrc",
+            "size": 6
+          }
+        ]
+      ]
+    },
+    "uid": "utilities.basic-image",
+    "isComponent": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

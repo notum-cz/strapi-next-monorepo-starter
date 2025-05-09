@@ -1,0 +1,271 @@
+{
+  "key": "plugin_content_manager_configuration_components::seo-utilities.seo",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "mainField": "metaTitle",
+      "defaultSortBy": "metaTitle",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "metaTitle": {
+        "edit": {
+          "label": "metaTitle",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "metaTitle",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "metaDescription": {
+        "edit": {
+          "label": "metaDescription",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "metaDescription",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "metaImage": {
+        "edit": {
+          "label": "metaImage",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "metaImage",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "keywords": {
+        "edit": {
+          "label": "keywords",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "keywords",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "twitter": {
+        "edit": {
+          "label": "twitter",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "twitter",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "og": {
+        "edit": {
+          "label": "og",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "og",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "applicationName": {
+        "edit": {
+          "label": "applicationName",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "applicationName",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "siteName": {
+        "edit": {
+          "label": "siteName",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "siteName",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "email": {
+        "edit": {
+          "label": "email",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "email",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "canonicalUrl": {
+        "edit": {
+          "label": "canonicalUrl",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "canonicalUrl",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "metaRobots": {
+        "edit": {
+          "label": "metaRobots",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "metaRobots",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "structuredData": {
+        "edit": {
+          "label": "structuredData",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "structuredData",
+          "searchable": false,
+          "sortable": false
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "metaTitle",
+        "metaDescription",
+        "metaImage"
+      ],
+      "edit": [
+        [
+          {
+            "name": "metaTitle",
+            "size": 6
+          },
+          {
+            "name": "metaDescription",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "metaImage",
+            "size": 6
+          },
+          {
+            "name": "keywords",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "twitter",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "og",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "applicationName",
+            "size": 6
+          },
+          {
+            "name": "siteName",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "email",
+            "size": 6
+          },
+          {
+            "name": "canonicalUrl",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "metaRobots",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "structuredData",
+            "size": 12
+          }
+        ]
+      ]
+    },
+    "uid": "seo-utilities.seo",
+    "isComponent": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_seo_utilities_seo_twitters",
+  "info": {
+    "displayName": "SeoTwitter",
+    "icon": "oneToMany"
+  },
+  "options": {},
+  "attributes": {
+    "card": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "siteId": {
+      "type": "string"
+    },
+    "creator": {
+      "type": "string"
+    },
+    "creatorId": {
+      "type": "string"
+    },
+    "images": {
+      "allowedTypes": ["images"],
+      "type": "media",
+      "multiple": true
+    }
+  }
+}

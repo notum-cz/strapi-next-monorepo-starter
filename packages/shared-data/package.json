@@ -1,0 +1,20 @@
+{
+  "name": "@repo/shared-data",
+  "version": "1.0.0",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  }
+}

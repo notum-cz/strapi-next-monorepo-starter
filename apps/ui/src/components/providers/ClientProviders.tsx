@@ -1,48 +1,25 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { SessionProvider, signOut, useSession } from "next-auth/react"
 import { ThemeProvider } from "next-themes"
 import { z } from "zod"
 
-import { AppError } from "@/types/general"
-
 import { setupLibraries } from "@/lib/general-helpers"
-import { useErrorMessage } from "@/hooks/useErrorMessage"
 import { useTranslatedZod } from "@/hooks/useTranslatedZod"
-
-import { useToast } from "../ui/use-toast"
 
 // Setup libraries in client environment
 setupLibraries()
+
+const queryClient = new QueryClient()
 
 export function ClientProviders({
   children,
 }: {
   readonly children: React.ReactNode
 }) {
-  const { parseAppError } = useErrorMessage()
-  const { toast } = useToast()
-
   useTranslatedZod(z)
-
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          mutations: {
-            onError: (error: Error) => {
-              const appError: AppError = JSON.parse(error.message)
-              toast({
-                variant: "destructive",
-                description: parseAppError(appError),
-              })
-            },
-          },
-        },
-      })
-  )
 
   return (
     <SessionProvider>

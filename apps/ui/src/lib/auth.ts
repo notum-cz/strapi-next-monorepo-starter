@@ -9,7 +9,7 @@ import type {
 } from "next"
 import type { NextAuthOptions } from "next-auth"
 
-import Strapi from "./strapi"
+import { PrivateStrapiClient } from "@/lib/strapi-api"
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -28,41 +28,38 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        return (
-          Strapi.fetchAPI(
-            `/auth/local`,
-            undefined,
-            {
-              body: JSON.stringify({
-                identifier: credentials.email,
-                password: credentials.password,
-              }),
-              method: "POST",
-              next: { revalidate: 0 },
-            },
-            { omitAuthorization: true }
-          )
-            .then((data) => {
-              const { jwt, user } = data
-              if (jwt == null || user == null) {
-                return null
-              }
-
-              return {
-                name: user.username,
-                email: user.email,
-                // strapi user id is a number, but next-auth expects a string
-                id: user.id.toString(),
-                userId: user.id,
-                blocked: user.blocked,
-                strapiJWT: jwt,
-              }
-            })
-            // eslint-disable-next-line no-unused-vars
-            .catch((_error) => {
-              return null
-            })
+        return PrivateStrapiClient.fetchAPI(
+          `/auth/local`,
+          undefined,
+          {
+            body: JSON.stringify({
+              identifier: credentials.email,
+              password: credentials.password,
+            }),
+            method: "POST",
+            next: { revalidate: 0 },
+          },
+          { omitUserAuthorization: true }
         )
+          .then((data) => {
+            const { jwt, user } = data
+            if (jwt == null || user == null) {
+              return null
+            }
+
+            return {
+              name: user.username,
+              email: user.email,
+              // strapi user id is a number, but next-auth expects a string
+              id: user.id.toString(),
+              userId: user.id,
+              blocked: user.blocked,
+              strapiJWT: jwt,
+            }
+          })
+          .catch((error) => {
+            throw new Error(error.message)
+          })
       },
     }),
   ],
@@ -84,7 +81,7 @@ export const authOptions: NextAuthOptions = {
         if (account.access_token != null) {
           // OAuth login - connect the account
           try {
-            const data = await Strapi.fetchAPI(
+            const data = await PrivateStrapiClient.fetchAPI(
               `/auth/${account.provider}/callback?access_token=${account.access_token}`,
               undefined,
               { next: { revalidate: 0 } }
@@ -133,11 +130,11 @@ export const authOptions: NextAuthOptions = {
         // (user is logged in within NextAuth and UI but not in Strapi API)
         try {
           const fetchedUser: Result<"plugin::users-permissions.user"> =
-            await Strapi.fetchAPI(
+            await PrivateStrapiClient.fetchAPI(
               "/users/me",
               undefined,
               { next: { revalidate: 0 } },
-              { strapiJWT: token.strapiJWT }
+              { userJWT: token.strapiJWT }
             )
 
           // API token is valid - update/reload user data or add more data

@@ -7,8 +7,8 @@ import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
+import { safeJSONParse } from "@/lib/general-helpers"
 import { Link, useRouter } from "@/lib/navigation"
-import { useErrorMessage } from "@/hooks/useErrorMessage"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button } from "@/components/ui/button"
@@ -25,10 +25,9 @@ import { useToast } from "@/components/ui/use-toast"
 export function SignInForm() {
   const t = useTranslations("auth.signIn")
   const { toast } = useToast()
-  const { getErrorMessage } = useErrorMessage()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/profile"
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/"
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(SignInFormSchema),
@@ -48,9 +47,15 @@ export function SignInForm() {
       router.refresh()
       setTimeout(() => router.push(callbackUrl), 300)
     } else {
+      const parsedError = safeJSONParse<any>(res.error)
+      const message =
+        "message" in parsedError
+          ? parsedError.message
+          : t("errors.CredentialsSignin")
+
       toast({
         variant: "destructive",
-        description: getErrorMessage("auth.signIn.errors", res.error),
+        description: message,
       })
     }
   }
@@ -69,7 +74,6 @@ export function SignInForm() {
             autoComplete="email"
             required
             label={t("email")}
-            placeholder="dev@notum.cz"
           />
           <AppField
             name="password"
@@ -78,7 +82,6 @@ export function SignInForm() {
             autoComplete="current-password"
             required
             label={t("password")}
-            placeholder="Password1"
           />
         </AppForm>
       </CardContent>

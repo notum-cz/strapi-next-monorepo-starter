@@ -46,6 +46,7 @@
     "actions": {
       "profile": "Profile",
       "signOut": "Sign out",
+      "changePassword": "Change password",
       "signIn": "Sign in"
     }
   },
@@ -130,19 +131,6 @@
         "passwordWithNumber": "String must contain at least 1 number",
         "phoneNumber": "This field must contain 9 numbers"
       }
-    },
-
-    "http": {
-      "400": "Something went wrong. Please try again or contact support.",
-      "401": "Session expired. Please sign in again.",
-      "403": "You do not have access to this data",
-      "404": "Requested data not found.",
-      "408": "Request timed out. Please try again.",
-      "413": "You are uploading a file that is too large.",
-      "415": "The file you are uploading is of an unsupported type.",
-      "429": "You have sent too many requests.",
-      "500": "Server is unavailable or something went wrong. Please try again or contact support.",
-      "503": "Server is unavailable. Please try again or contact support"
     }
   },
 
@@ -191,8 +179,6 @@
       },
       "header": "Registration",
       "description": "Create an account to access the system.",
-      "firstName": "First name",
-      "lastName": "Last name",
       "email": "E-mail address",
       "password": "Create password",
       "checkPassword": "Confirm password",
@@ -205,7 +191,9 @@
 
     "changePassword": {
       "errors": {
-        "The provided current password is invalid": "Current password does not match"
+        "invalidCurrentPassword": "Current password does not match",
+        "unexpectedError": "An unexpected error occurred. Please try again later.",
+        "newPasswordSameAsCurrent": "New password must be different from the current password"
       },
       "successfullyChanged": "Password successfully changed",
       "header": "Change password",

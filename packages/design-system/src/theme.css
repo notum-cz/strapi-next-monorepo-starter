@@ -1,0 +1,50 @@
+@theme static {
+  --color-background: #ffffff;
+  --color-foreground: #0a0a0f;
+  --color-card: #ffffff;
+  --card-foreground: #0a0a0f;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #0a0a0f;
+  --color-primary: #1a1a1f;
+  --color-primary-foreground: #fafafa;
+  --color-secondary: #f1f1f9;
+  --color-secondary-foreground: #1a1a1f;
+  --color-muted: #f1f1f9;
+  --color-muted-foreground: #77778b;
+  --color-accent: #f1f1f9;
+  --color-accent-foreground: #1a1a1f;
+  --color-destructive: #ff5b5b;
+  --color-destructive-foreground: #fafafa;
+  --color-border: #e5e5f0;
+  --color-input: #e5e5f0;
+  --color-ring: #1a1a1f;
+  --color-warning: #ffa500;
+  --color-warning-foreground: #f0f9ff;
+
+  --radius: 1rem;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+
+  --font-sans: Roboto;
+
+  @keyframes accordion-down {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    0% {
+      height: var(--radix-accordion-content-height);
+    }
+    100% {
+      height: 0;
+    }
+  }
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+}

@@ -38,7 +38,11 @@ export function AppTextArea({
       name={name}
       render={({ field, fieldState }) => (
         <FormItem className={cn(containerClassName)}>
-          <AppFormLabel label={label} required={nativeProps.required} />
+          <AppFormLabel
+            fieldState={fieldState}
+            label={label}
+            required={nativeProps.required}
+          />
 
           <FormControl>
             <div className="relative flex items-stretch overflow-hidden">
@@ -47,10 +51,9 @@ export function AppTextArea({
                 value={field.value ?? ""}
                 onChange={field.onChange}
                 className={cn(
-                  "w-full border ease-in-out",
+                  "border-input w-full ease-in-out",
                   {
                     "border-red-600": fieldState.invalid,
-                    "border-primary": fieldState.invalid,
                   },
                   fieldClassName
                 )}

@@ -16,16 +16,6 @@
     }
   },
   "attributes": {
-    "gridCols": {
-      "type": "component",
-      "repeatable": false,
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "component": "shared.grid-column"
-    },
     "sections": {
       "type": "component",
       "repeatable": true,
@@ -34,7 +24,7 @@
           "localized": true
         }
       },
-      "component": "shared.footer-item"
+      "component": "elements.footer-item"
     },
     "links": {
       "type": "component",
@@ -44,7 +34,7 @@
           "localized": true
         }
       },
-      "component": "shared.link"
+      "component": "utilities.link"
     },
     "copyRight": {
       "pluginOptions": {
@@ -62,7 +52,7 @@
           "localized": true
         }
       },
-      "component": "shared.image-with-link"
+      "component": "utilities.image-with-link"
     }
   }
 }
