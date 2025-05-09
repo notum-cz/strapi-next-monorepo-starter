@@ -1,3 +1,5 @@
+import { draftMode } from "next/headers"
+
 import type { AppLocale } from "@/types/general"
 
 import { PublicStrapiClient } from "@/lib/strapi-api"
@@ -5,6 +7,7 @@ import { PublicStrapiClient } from "@/lib/strapi-api"
 export async function fetchPage(fullPath: string, locale: AppLocale) {
   // eslint-disable-next-line no-console
   console.log({ message: `Fetching page: ${locale} - ${fullPath}` })
+  const dm = await draftMode()
 
   try {
     return await PublicStrapiClient.fetchOneByFullPath(
@@ -12,7 +15,7 @@ export async function fetchPage(fullPath: string, locale: AppLocale) {
       fullPath,
       {
         locale,
-        status: "published",
+        status: dm.isEnabled ? "draft" : "published",
         populate: {
           content: true,
           seo: true,

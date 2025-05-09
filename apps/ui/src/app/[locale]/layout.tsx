@@ -10,6 +10,7 @@ import { fontRoboto } from "@/lib/fonts"
 import { routing } from "@/lib/navigation"
 import { cn } from "@/lib/styles"
 import { ErrorBoundary } from "@/components/elementary/ErrorBoundary"
+import StrapiPreviewListener from "@/components/elementary/StrapiPreviewListener"
 import { TailwindIndicator } from "@/components/elementary/TailwindIndicator"
 import StrapiFooter from "@/components/page-builder/single-types/footer/StrapiFooter"
 import StrapiNavbar from "@/components/page-builder/single-types/navbar/StrapiNavbar"
@@ -49,6 +50,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
           fontRoboto.variable
         )}
       >
+        <StrapiPreviewListener />
         <TrackingScripts />
         <ServerProviders params={params}>
           <ClientProviders>
