@@ -1,11 +1,9 @@
 /* eslint-disable no-console */
 import { cookies, draftMode } from "next/headers"
 import { env } from "@/env.mjs"
+import { ROOT_PAGE_PATH } from "@repo/shared-data"
 
-// import { ROOT_BLOG_PAGE_PATH, ROOT_PAGE_PATH } from "@/lib/constants" // TODO replace once @tocosastalo adds the page builder logic
 import { redirect, routing } from "@/lib/navigation"
-
-const ROOT_PAGE_PATH = "builder" // TODO: this is going after new page builder is merged by @tocosastalo
 
 export async function GET(request: Request) {
   if (!env.STRAPI_PREVIEW_SECRET) {
@@ -25,9 +23,7 @@ export async function GET(request: Request) {
   }
   // Validate the URL begins with ROOT_PAGE_PATH (e.g. index, with optional / for nested pages)
   const urlParam = String(searchParams.get("url"))
-  const url = urlParam.match(validPageUrlRegex)
-    ? urlParam // urlParam.replace(validPageUrlReplaceWithEmptyRegex, "") TODO: this should be uncommented after the new page builder is merged by @tocosastalo
-    : undefined
+  const url = urlParam.match(validPageUrlRegex) ? urlParam : undefined
   if (!url) {
     return new Response("Invalid URL", { status: 404 })
   }
@@ -74,44 +70,19 @@ export async function GET(request: Request) {
       locale,
       url: {
         urlParam,
-        processedUrl: `/${url}`,
+        processedUrl: `${url}`,
       },
       status,
     })}`
   )
 
-  // cookieStore.set({
-  //   name: "Content-Security-Policy",
-  //   value: `
-  //   frame-ancestors 'self' ${env.NEXT_PUBLIC_STRAPI_URL ? env.NEXT_PUBLIC_STRAPI_URL.replace(/127.0.0.1/, "localhost") : ""};
-  //   upgrade-insecure-requests;
-  //   `,
-  //   expires: undefined, // undefined => does not expire, 0 => expires at timestamp 0
-  //   httpOnly: true,
-  //   path: "/",
-  //   secure: true,
-  //   sameSite: "none", // Allow cookie in cross-origin iframes
-  // })
-
   // Redirect to the path from the fetched post
-  redirect({ href: `/${url}`, locale })
+  redirect({ href: `${url}`, locale })
 }
-/**
- * This is an interpolated regex that will match if the route begins with ROOT_PAGE_PATH
- * and optionally contains a forward slash "/"
- *
- * The following will match:    |   The following will NOT match
- * [index]                      |   testing
- * [index/]markets              |   testing/markets
- * [index/]trade/cfds           |   randomPath/trade/cfds
- */
-const validPageUrlRegex = new RegExp(String.raw`(?:${ROOT_PAGE_PATH})\/?`, "g")
-/**
- * Only in case of pages <api::page.page> we would like to remove the `index` prefix
- */
-const validPageUrlReplaceWithEmptyRegex = new RegExp(
-  String.raw`${ROOT_PAGE_PATH}\/?`,
-  "g"
-)
 const validPageStatusKeys = ["draft", "published"]
 const draftModePrerenderCookieKey = "__prerender_bypass"
+
+const validPageUrlRegex = new RegExp(
+  String.raw`^(${ROOT_PAGE_PATH}[a-zA-Z0-9-%]*)+$`,
+  "g"
+)
