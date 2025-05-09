@@ -136,4 +136,4 @@ We are using `GitHub Actions` for continuous integration. The `CI` expects some 
 
 ## 💙 Feedback
 
-This repo was created based on [@dev-templates-public](https://github.com/notum-cz/dev-templates-public). If you encounter a problem with the template code during development, or something has changed/is being done differently in the meantime, or you have implemented a useful feature that should be part of that template, please create an issue with a description or PR in that repository. So we can keep those templates updated and great features. Thanks.
+This repo was created based on [@https://github.com/notum-cz/strapi-next-monorepo-starter](https://github.com/notum-cz/strapi-next-monorepo-starter). If you encounter a problem with the template code during development, or something has changed/is being done differently in the meantime, or you have implemented a useful feature that should be part of that template, please create an issue with a description or PR in that repository. So we can keep those templates updated and great features. Thanks.
