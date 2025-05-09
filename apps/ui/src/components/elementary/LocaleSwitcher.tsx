@@ -47,7 +47,7 @@ const LocaleSwitcher = ({ locale }: { locale: AppLocale }) => {
       <SelectContent>
         {routing.locales.map((locale, index) => (
           <React.Fragment key={locale}>
-            <SelectItem key={locale} value={locale} disabled={locale === "cs"}>
+            <SelectItem key={locale} value={locale}>
               {localeTranslation[locale]}
             </SelectItem>
             {index < routing.locales.length - 1 && (
