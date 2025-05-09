@@ -24,14 +24,16 @@ export const {
 // https://next-intl-docs.vercel.app/docs/routing/navigation#redirect
 export const redirect: typeof _redirect = _redirect
 
+export const getAppPublicUrl = () => {
+  // Determine the base URL: use APP_PUBLIC_URL on the server or window.location.origin on the client
+  const baseUrl =
+    typeof window === "undefined" ? env.APP_PUBLIC_URL : window.location.origin
+  return baseUrl
+}
+
 export const isAppLink = (link: string): boolean => {
   try {
-    // Determine the base URL: use APP_PUBLIC_URL on the server or window.location.origin on the client
-    const baseUrl =
-      typeof window === "undefined"
-        ? env.APP_PUBLIC_URL
-        : window.location.origin
-
+    const baseUrl = getAppPublicUrl()
     if (!baseUrl) {
       throw new Error("Base URL is not defined.")
     }
