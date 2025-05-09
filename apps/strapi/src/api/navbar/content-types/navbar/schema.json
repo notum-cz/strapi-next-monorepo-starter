@@ -24,7 +24,7 @@
           "localized": true
         }
       },
-      "component": "shared.link"
+      "component": "utilities.link"
     },
     "logoImage": {
       "type": "component",
@@ -34,7 +34,7 @@
           "localized": true
         }
       },
-      "component": "shared.image-with-link"
+      "component": "utilities.image-with-link"
     }
   }
 }

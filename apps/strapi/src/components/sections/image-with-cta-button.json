@@ -11,23 +11,17 @@
       "required": true
     },
     "subText": {
-      "type": "string",
-      "required": false
+      "type": "string"
     },
     "image": {
       "type": "component",
       "repeatable": false,
-      "component": "shared.basic-image"
+      "component": "utilities.basic-image"
     },
     "link": {
       "type": "component",
       "repeatable": false,
-      "component": "shared.link"
-    },
-    "isVisible": {
-      "type": "boolean",
-      "default": true,
-      "required": false
+      "component": "utilities.link"
     }
   }
 }

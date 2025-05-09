@@ -1,16 +1,18 @@
 "use client"
 
-import React, { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
+import { PublicStrapiClient } from "@/lib/strapi-api"
 import AppLink from "@/components/elementary/AppLink"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { AppTextArea } from "@/components/forms/AppTextArea"
 import { Button } from "@/components/ui/button"
+import { useToast } from "@/components/ui/use-toast"
 
 export function ContactForm({
   gdpr,
@@ -18,8 +20,7 @@ export function ContactForm({
   gdpr?: { href?: string; label?: string; newTab?: boolean }
 }>) {
   const t = useTranslations("contactForm")
-
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const { toast } = useToast()
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(ContactFormSchema),
@@ -28,11 +29,27 @@ export function ContactForm({
     defaultValues: { name: "", email: "", message: "" },
   })
 
+  const mutation = useMutation({
+    mutationFn: (values: z.infer<FormSchemaType>) => {
+      const path = PublicStrapiClient.getStrapiApiPathByUId(
+        "api::subscriber.subscriber"
+      )
+      return PublicStrapiClient.fetchAPI(path, undefined, {
+        method: "POST",
+        body: JSON.stringify({ data: values }),
+      })
+    },
+    onSuccess: () => {
+      toast({
+        variant: "default",
+        description: t("success"),
+      })
+      form.reset()
+    },
+  })
+
   const onSubmit = (values: z.infer<FormSchemaType>) => {
-    // TODO: Add submit logic
-    // eslint-disable-next-line no-console
-    console.log("values", values)
-    setErrorMessage(null)
+    mutation.mutate(values)
   }
 
   return (
@@ -50,19 +67,18 @@ export function ContactForm({
           label={t("name")}
           placeholder={t("namePlaceholder")}
         />
-        <div className="mb-5 flex flex-col gap-5 md:mb-16 md:flex-row md:gap-10">
-          <AppField
-            name="email"
-            type="text"
-            autoComplete="email"
-            required
-            label={t("email")}
-            placeholder={t("emailPlaceholder")}
-          />
-        </div>
+        <AppField
+          name="email"
+          type="text"
+          autoComplete="email"
+          required
+          label={t("email")}
+          placeholder={t("emailPlaceholder")}
+        />
         <AppTextArea
           name="message"
           type="text"
+          required
           label={t("message")}
           aria-label="contact-message"
         />
@@ -83,7 +99,7 @@ export function ContactForm({
 
         <Button
           type="submit"
-          className="md:w-fit"
+          className="mt-4 w-full"
           size="lg"
           form={contactFormName}
         >
@@ -91,9 +107,9 @@ export function ContactForm({
         </Button>
       </div>
 
-      {errorMessage && (
+      {mutation.error && (
         <div className="text-center text-red-500">
-          <p>{errorMessage}</p>
+          <p>{mutation.error.message || t("error")}</p>
         </div>
       )}
     </div>
@@ -103,7 +119,7 @@ export function ContactForm({
 const ContactFormSchema = z.object({
   name: z.string().min(1),
   email: z.string().email().min(1),
-  message: z.string().optional(),
+  message: z.string().min(10),
 })
 
 type FormSchemaType = typeof ContactFormSchema

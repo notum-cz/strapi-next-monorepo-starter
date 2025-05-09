@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_utilities_links_with_titles",
+  "info": {
+    "displayName": "LinksWithTitle"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "utilities.link"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_forms_newsletter_forms",
+  "info": {
+    "displayName": "Newsletter"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "gdpr": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utilities.link"
+    }
+  }
+}

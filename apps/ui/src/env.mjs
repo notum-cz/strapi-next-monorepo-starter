@@ -19,21 +19,25 @@ export const env = createEnv({
     NEXTAUTH_SECRET: z.string().optional(),
     NEXTAUTH_URL: z.string().url().optional(),
     NEXT_OUTPUT: z.string().optional(),
+    APP_PUBLIC_URL: z.string().url(),
+    STRAPI_URL: z.string().url(),
+    STRAPI_REST_READONLY_API_KEY: z.string().optional(),
+    STRAPI_REST_CUSTOM_API_KEY: z.string().optional(),
     WEBPACK_CACHE_TYPE: z.enum(["filesystem", "memory"]).optional(),
     SENTRY_AUTH_TOKEN: z.string().optional(),
     SENTRY_ORG: z.string().optional(),
     SENTRY_PROJECT: z.string().optional(),
+    RECAPTCHA_SECRET_KEY: z.string().optional(),
   },
   /*
    * Environment variables available on the client (and server).
    * You'll get type errors if these are not prefixed with NEXT_PUBLIC_.
    */
   client: {
-    NEXT_PUBLIC_APP_PUBLIC_URL: z.string().url(),
-    NEXT_PUBLIC_STRAPI_URL: z.string().url(),
     NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS: optionalZodBoolean,
     NEXT_PUBLIC_REVALIDATE: z.number().or(z.literal(false)).optional(),
     NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
+    NEXT_PUBLIC_RECAPTCHA_SITE_KEY: z.string().optional(),
   },
   shared: {
     // NODE_ENV makes app to behave as it's in production mode (optimized builds, no dev-only behavior, etc.)
@@ -53,8 +57,10 @@ export const env = createEnv({
     WEBPACK_CACHE_TYPE: process.env.WEBPACK_CACHE_TYPE,
     NODE_ENV: process.env.NODE_ENV,
     APP_ENV: process.env.APP_ENV,
-    NEXT_PUBLIC_APP_PUBLIC_URL: process.env.NEXT_PUBLIC_APP_PUBLIC_URL,
-    NEXT_PUBLIC_STRAPI_URL: process.env.NEXT_PUBLIC_STRAPI_URL,
+    APP_PUBLIC_URL: process.env.APP_PUBLIC_URL,
+    STRAPI_URL: process.env.STRAPI_URL,
+    STRAPI_REST_READONLY_API_KEY: process.env.STRAPI_REST_READONLY_API_KEY,
+    STRAPI_REST_CUSTOM_API_KEY: process.env.STRAPI_REST_CUSTOM_API_KEY,
     NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS:
       process.env.NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS,
     NEXT_PUBLIC_REVALIDATE: (() => {
@@ -72,5 +78,7 @@ export const env = createEnv({
     SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
     SENTRY_ORG: process.env.SENTRY_ORG,
     SENTRY_PROJECT: process.env.SENTRY_PROJECT,
+    RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY,
+    NEXT_PUBLIC_RECAPTCHA_SITE_KEY: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
   },
 })

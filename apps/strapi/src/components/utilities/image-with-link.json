@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_utilities_image_with_links",
+  "info": {
+    "displayName": "ImageWithLink",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utilities.basic-image"
+    },
+    "link": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utilities.link"
+    }
+  }
+}

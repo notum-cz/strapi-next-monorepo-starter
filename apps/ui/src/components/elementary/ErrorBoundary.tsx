@@ -8,9 +8,8 @@ import { useTranslations } from "next-intl"
 import { ErrorBoundary as ErrorBoundaryComp } from "react-error-boundary"
 
 import { isDevelopment } from "@/lib/general-helpers"
-
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
-import { Button } from "../ui/button"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
 
 function ErrorBoundaryFallback({
   error,
@@ -19,11 +18,11 @@ function ErrorBoundaryFallback({
   hideReset,
   showErrorMessage,
 }: {
-  error: any
-  resetErrorBoundary: () => void
-  customErrorTitle?: string
-  hideReset?: boolean
-  showErrorMessage?: boolean
+  readonly error: any
+  readonly resetErrorBoundary: () => void
+  readonly customErrorTitle?: string
+  readonly hideReset?: boolean
+  readonly showErrorMessage?: boolean
 }) {
   const [hidden, setHidden] = useState(false)
   const t = useTranslations("errors.global")
@@ -86,14 +85,18 @@ export function ErrorBoundary({
   onReset,
   onError,
 }: {
-  children: React.ReactNode
-  hideReset?: boolean
-  hideFallback?: boolean
-  customErrorTitle?: string
-  showErrorMessage?: boolean
-  onReset?: () => void
-  // eslint-disable-next-line no-unused-vars
-  onError?: (error: Error, info: { componentStack?: string | null }) => void
+  readonly children: React.ReactNode
+  readonly hideReset?: boolean
+  readonly hideFallback?: boolean
+  readonly customErrorTitle?: string
+  readonly showErrorMessage?: boolean
+  readonly onReset?: () => void
+  readonly onError?: (
+    // eslint-disable-next-line no-unused-vars
+    error: Error,
+    // eslint-disable-next-line no-unused-vars
+    info: { componentStack?: string | null }
+  ) => void
 }) {
   const handleError = (
     error: Error,

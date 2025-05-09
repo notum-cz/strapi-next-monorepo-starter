@@ -1,0 +1,173 @@
+{
+  "key": "plugin_content_manager_configuration_components::seo-utilities.seo-twitter",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "mainField": "card",
+      "defaultSortBy": "card",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "card": {
+        "edit": {
+          "label": "card",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "card",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "title": {
+        "edit": {
+          "label": "title",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "title",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "description": {
+        "edit": {
+          "label": "description",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "description",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "siteId": {
+        "edit": {
+          "label": "siteId",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "siteId",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "creator": {
+        "edit": {
+          "label": "creator",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "creator",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "creatorId": {
+        "edit": {
+          "label": "creatorId",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "creatorId",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "images": {
+        "edit": {
+          "label": "images",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "images",
+          "searchable": false,
+          "sortable": false
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "card",
+        "title",
+        "description"
+      ],
+      "edit": [
+        [
+          {
+            "name": "card",
+            "size": 6
+          },
+          {
+            "name": "title",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "description",
+            "size": 6
+          },
+          {
+            "name": "siteId",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "creator",
+            "size": 6
+          },
+          {
+            "name": "creatorId",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "images",
+            "size": 6
+          }
+        ]
+      ]
+    },
+    "uid": "seo-utilities.seo-twitter",
+    "isComponent": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

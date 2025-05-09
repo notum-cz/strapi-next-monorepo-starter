@@ -10,19 +10,13 @@
       "type": "string",
       "required": true
     },
+    "subTitle": {
+      "type": "string"
+    },
     "accordions": {
       "type": "component",
       "repeatable": true,
-      "component": "shared.accordions"
-    },
-    "subTitle": {
-      "type": "string",
-      "required": false
-    },
-    "isVisible": {
-      "type": "boolean",
-      "default": true,
-      "required": false
+      "component": "utilities.accordions"
     }
   }
 }

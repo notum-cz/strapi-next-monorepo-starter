@@ -10,14 +10,10 @@
       "type": "string",
       "required": true
     },
-    "isVisible": {
-      "type": "boolean",
-      "default": true
-    },
     "logos": {
       "type": "component",
       "repeatable": true,
-      "component": "shared.basic-image"
+      "component": "utilities.basic-image"
     }
   }
 }

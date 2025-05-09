@@ -21,3 +21,12 @@ export const removeThisWhenYouNeedMe = (functionName: string) => {
     `TODO: Delete 'removeThisWhenYouNeedMe' call from '${functionName}' and confirm the usage.`
   )
 }
+
+export const safeJSONParse = <T>(json: string): T => {
+  try {
+    return JSON.parse(json) as T
+  } catch (e) {
+    console.error("Error parsing JSON", e)
+    return {} as T
+  }
+}

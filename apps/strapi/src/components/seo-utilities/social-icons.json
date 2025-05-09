@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_seo_utilities_social_icons",
+  "info": {
+    "displayName": "SocialIcons"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "socials": {
+      "type": "component",
+      "repeatable": true,
+      "component": "utilities.image-with-link"
+    }
+  }
+}

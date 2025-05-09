@@ -1,0 +1,72 @@
+{
+  "collectionName": "components_seo_utilities_seos",
+  "info": {
+    "displayName": "seo",
+    "icon": "search",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "metaTitle": {
+      "required": false,
+      "type": "string",
+      "maxLength": 60
+    },
+    "metaDescription": {
+      "type": "string",
+      "required": false,
+      "maxLength": 160
+    },
+    "metaImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "keywords": {
+      "type": "text",
+      "regex": "[^,]+"
+    },
+    "twitter": {
+      "type": "component",
+      "repeatable": false,
+      "component": "seo-utilities.seo-twitter"
+    },
+    "og": {
+      "type": "component",
+      "repeatable": false,
+      "component": "seo-utilities.seo-og"
+    },
+    "applicationName": {
+      "type": "string"
+    },
+    "siteName": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "canonicalUrl": {
+      "type": "string"
+    },
+    "metaRobots": {
+      "type": "enumeration",
+      "enum": [
+        "all",
+        "index",
+        "index,follow",
+        "noindex",
+        "noindex,follow",
+        "noindex,nofollow",
+        "none",
+        "noarchive",
+        "nosnippet",
+        "max-snippet"
+      ],
+      "default": "all"
+    },
+    "structuredData": {
+      "type": "json"
+    }
+  }
+}

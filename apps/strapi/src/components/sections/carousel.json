@@ -9,16 +9,11 @@
     "images": {
       "type": "component",
       "repeatable": true,
-      "component": "shared.image-with-link"
+      "component": "utilities.image-with-link"
     },
     "radius": {
       "type": "enumeration",
       "enum": ["sm", "md", "lg", "xl", "full"]
-    },
-    "isVisible": {
-      "type": "boolean",
-      "default": false,
-      "required": true
     }
   }
 }

@@ -50,7 +50,7 @@ let fontSizeMatch
 while ((fontSizeMatch = fontSizeVarRegex.exec(css)) !== null) {
   const [, varName, varValue] = fontSizeMatch
   fontSizeVars.push({
-    model: `${varValue}px`,
+    model: `${varValue}`,
     title: varName.replaceAll(/--/g, ""),
   })
 }

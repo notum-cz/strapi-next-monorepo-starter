@@ -1,0 +1,97 @@
+{
+  "key": "plugin_content_manager_configuration_components::utilities.link",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "mainField": "label",
+      "defaultSortBy": "label",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "label": {
+        "edit": {
+          "label": "label",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "label",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "href": {
+        "edit": {
+          "label": "href",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "href",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "newTab": {
+        "edit": {
+          "label": "newTab",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "newTab",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "label",
+        "href",
+        "newTab"
+      ],
+      "edit": [
+        [
+          {
+            "name": "label",
+            "size": 6
+          },
+          {
+            "name": "href",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "newTab",
+            "size": 4
+          }
+        ]
+      ]
+    },
+    "uid": "utilities.link",
+    "isComponent": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

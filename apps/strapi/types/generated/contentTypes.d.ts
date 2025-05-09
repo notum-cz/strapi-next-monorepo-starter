@@ -395,13 +395,7 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
-    gridCols: Schema.Attribute.Component<"shared.grid-column", false> &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true
-        }
-      }>
-    links: Schema.Attribute.Component<"shared.link", true> &
+    links: Schema.Attribute.Component<"utilities.link", true> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true
@@ -409,14 +403,14 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
       }>
     locale: Schema.Attribute.String
     localizations: Schema.Attribute.Relation<"oneToMany", "api::footer.footer">
-    logoImage: Schema.Attribute.Component<"shared.image-with-link", false> &
+    logoImage: Schema.Attribute.Component<"utilities.image-with-link", false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true
         }
       }>
     publishedAt: Schema.Attribute.DateTime
-    sections: Schema.Attribute.Component<"shared.footer-item", true> &
+    sections: Schema.Attribute.Component<"elements.footer-item", true> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true
@@ -448,7 +442,7 @@ export interface ApiNavbarNavbar extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
-    links: Schema.Attribute.Component<"shared.link", true> &
+    links: Schema.Attribute.Component<"utilities.link", true> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true
@@ -456,7 +450,7 @@ export interface ApiNavbarNavbar extends Struct.SingleTypeSchema {
       }>
     locale: Schema.Attribute.String
     localizations: Schema.Attribute.Relation<"oneToMany", "api::navbar.navbar">
-    logoImage: Schema.Attribute.Component<"shared.image-with-link", false> &
+    logoImage: Schema.Attribute.Component<"utilities.image-with-link", false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true
@@ -486,20 +480,25 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     }
   }
   attributes: {
+    breadcrumbTitle: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    children: Schema.Attribute.Relation<"oneToMany", "api::page.page">
     content: Schema.Attribute.DynamicZone<
       [
-        "layout.navbar",
-        "sections.faq",
+        "sections.image-with-cta-button",
         "sections.horizontal-images",
         "sections.hero",
-        "sections.feature-grid",
-        "sections.carousel",
         "sections.heading-with-cta-button",
-        "sections.image-with-cta-button",
+        "sections.faq",
+        "sections.carousel",
         "sections.animated-logo-row",
-        "sections.newsletter",
-        "sections.contact-form",
-        "shared.ck-editor-content",
+        "forms.newsletter-form",
+        "forms.contact-form",
+        "utilities.ck-editor-content",
       ]
     > &
       Schema.Attribute.SetPluginOptions<{
@@ -510,10 +509,18 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
+    fullPath: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
     locale: Schema.Attribute.String
     localizations: Schema.Attribute.Relation<"oneToMany", "api::page.page">
+    parent: Schema.Attribute.Relation<"manyToOne", "api::page.page">
     publishedAt: Schema.Attribute.DateTime
-    seo: Schema.Attribute.Component<"shared.seo", false> &
+    seo: Schema.Attribute.Component<"seo-utilities.seo", false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true
@@ -521,12 +528,48 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
       }>
     slug: Schema.Attribute.String &
       Schema.Attribute.Required &
-      Schema.Attribute.Unique &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true
         }
       }>
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+  }
+}
+
+export interface ApiSubscriberSubscriber extends Struct.CollectionTypeSchema {
+  collectionName: "subscribers"
+  info: {
+    displayName: "Subscriber"
+    pluralName: "subscribers"
+    singularName: "subscriber"
+  }
+  options: {
+    draftAndPublish: false
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    email: Schema.Attribute.Email
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::subscriber.subscriber"
+    > &
+      Schema.Attribute.Private
+    message: Schema.Attribute.Text
+    name: Schema.Attribute.String
+    publishedAt: Schema.Attribute.DateTime
     updatedAt: Schema.Attribute.DateTime
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
@@ -1045,6 +1088,7 @@ declare module "@strapi/strapi" {
       "api::footer.footer": ApiFooterFooter
       "api::navbar.navbar": ApiNavbarNavbar
       "api::page.page": ApiPagePage
+      "api::subscriber.subscriber": ApiSubscriberSubscriber
       "plugin::content-releases.release": PluginContentReleasesRelease
       "plugin::content-releases.release-action": PluginContentReleasesReleaseAction
       "plugin::i18n.locale": PluginI18NLocale

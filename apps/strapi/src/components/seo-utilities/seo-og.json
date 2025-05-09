@@ -1,0 +1,29 @@
+{
+  "collectionName": "components_seo_utilities_seo_ogs",
+  "info": {
+    "displayName": "SeoOg",
+    "icon": "oneToMany"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": ["website", "article"],
+      "default": "website"
+    },
+    "image": {
+      "allowedTypes": ["images"],
+      "type": "media",
+      "multiple": false
+    }
+  }
+}

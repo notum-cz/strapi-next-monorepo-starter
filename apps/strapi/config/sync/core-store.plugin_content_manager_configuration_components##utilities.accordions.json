@@ -1,0 +1,76 @@
+{
+  "key": "plugin_content_manager_configuration_components::utilities.accordions",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "mainField": "question",
+      "defaultSortBy": "question",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "question": {
+        "edit": {
+          "label": "question",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "question",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "answer": {
+        "edit": {
+          "label": "answer",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "answer",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "question",
+        "answer"
+      ],
+      "edit": [
+        [
+          {
+            "name": "question",
+            "size": 6
+          },
+          {
+            "name": "answer",
+            "size": 6
+          }
+        ]
+      ]
+    },
+    "uid": "utilities.accordions",
+    "isComponent": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

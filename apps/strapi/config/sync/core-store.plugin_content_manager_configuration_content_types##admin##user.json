@@ -1,7 +1,6 @@
 {
   "key": "plugin_content_manager_configuration_content_types::admin::user",
   "value": {
-    "uid": "admin::user",
     "settings": {
       "bulkable": true,
       "filterable": true,
@@ -289,7 +288,8 @@
           }
         ]
       ]
-    }
+    },
+    "uid": "admin::user"
   },
   "type": "object",
   "environment": null,

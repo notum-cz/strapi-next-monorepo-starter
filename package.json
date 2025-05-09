@@ -1,6 +1,6 @@
 {
-  "name": "dev-templates",
-  "version": "1.0.0",
+  "name": "strapi-next-monorepo-starter",
+  "version": "2.0.0",
   "private": true,
   "author": {
     "name": "Notum Technologies",

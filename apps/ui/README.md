@@ -241,10 +241,10 @@ Usage:
 import { env } from "@/env.mjs"
 
 // ✅ OK
-console.log(env.NEXT_PUBLIC_STRAPI_URL)
+console.log(env.STRAPI_URL)
 
 // ❌ NOT OK
-console.log(process.env.NEXT_PUBLIC_STRAPI_URL)
+console.log(process.env.STRAPI_URL)
 ```
 
 ### Error handling

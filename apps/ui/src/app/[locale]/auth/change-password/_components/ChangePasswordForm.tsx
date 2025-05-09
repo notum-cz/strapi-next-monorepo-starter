@@ -8,7 +8,7 @@ import * as z from "zod"
 
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
 import { useRouter } from "@/lib/navigation"
-import Strapi from "@/lib/strapi"
+import { PrivateStrapiClient } from "@/lib/strapi-api"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button } from "@/components/ui/button"
@@ -33,18 +33,11 @@ export function ChangePasswordForm() {
       password: string
       passwordConfirmation: string
     }) => {
-      return Strapi.fetchAPI(
-        `/auth/change-password`,
-        undefined,
-        {
-          body: JSON.stringify(values),
-          method: "POST",
-          next: { revalidate: 0 },
-        },
-        {
-          translateKeyPrefixForErrors: "auth.changePassword.errors",
-        }
-      )
+      return PrivateStrapiClient.fetchAPI(`/auth/change-password`, undefined, {
+        body: JSON.stringify(values),
+        method: "POST",
+        next: { revalidate: 0 },
+      })
     },
   })
 
@@ -68,6 +61,27 @@ export function ChangePasswordForm() {
         })
         form.reset()
         router.push("/")
+      },
+      onError: (error: any) => {
+        const errorMap = {
+          "is invalid": t("errors.invalidCurrentPassword"),
+          "be different": t("errors.newPasswordSameAsCurrent"),
+        } as const
+
+        let errorMessage = t("errors.unexpectedError")
+
+        if (error instanceof Error) {
+          const errorKey = Object.keys(errorMap).find(
+            (key): key is keyof typeof errorMap => error.message?.includes(key)
+          )
+
+          errorMessage = errorKey ? errorMap[errorKey] : errorMessage
+        }
+
+        toast({
+          variant: "destructive",
+          description: errorMessage,
+        })
       },
     })
 

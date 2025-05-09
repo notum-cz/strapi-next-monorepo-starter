@@ -156,7 +156,7 @@ Husky is installed by default and configured to run following tasks:
 
 ### GitHub Actions
 
-We are using `GitHub Actions` for continuous integration. The `CI` expects some secrets (e.g. `NEXTAUTH_SECRET`) and variables (e.g. `NEXTAUTH_URL`, `NEXT_PUBLIC_APP_PUBLIC_URL`, `NEXT_PUBLIC_STRAPI_URL`) to be available on the runner, so make sure to add them in the repository's settings. Have a look at the [workflow](.github/workflows/ci.yml) definition for more details.
+We are using `GitHub Actions` for continuous integration. The `CI` expects some secrets (e.g. `NEXTAUTH_SECRET`) and variables (e.g. `NEXTAUTH_URL`, `APP_PUBLIC_URL`, `STRAPI_URL`) to be available on the runner, so make sure to add them in the repository's settings. Have a look at the [workflow](.github/workflows/ci.yml) definition for more details.
 
 ### Heroku
 
@@ -164,4 +164,4 @@ We are using `GitHub Actions` for continuous integration. The `CI` expects some 
 
 ## 💙 Feedback
 
-This repo was created based on [@dev-templates-public](https://github.com/notum-cz/dev-templates-public). If you encounter a problem with the template code during development, or something has changed/is being done differently in the meantime, or you have implemented a useful feature that should be part of that template, please create an issue with a description or PR in that repository. So we can keep those templates updated and great features. Thanks.
+This repo was created based on [@https://github.com/notum-cz/strapi-next-monorepo-starter](https://github.com/notum-cz/strapi-next-monorepo-starter). If you encounter a problem with the template code during development, or something has changed/is being done differently in the meantime, or you have implemented a useful feature that should be part of that template, please create an issue with a description or PR in that repository. So we can keep those templates updated and great features. Thanks.

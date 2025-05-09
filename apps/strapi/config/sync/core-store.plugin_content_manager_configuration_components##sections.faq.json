@@ -33,20 +33,6 @@
           "sortable": true
         }
       },
-      "accordions": {
-        "edit": {
-          "label": "accordions",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "accordions",
-          "searchable": false,
-          "sortable": false
-        }
-      },
       "subTitle": {
         "edit": {
           "label": "subTitle",
@@ -61,18 +47,18 @@
           "sortable": true
         }
       },
-      "isVisible": {
+      "accordions": {
         "edit": {
-          "label": "isVisible",
+          "label": "accordions",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "isVisible",
-          "searchable": true,
-          "sortable": true
+          "label": "accordions",
+          "searchable": false,
+          "sortable": false
         }
       }
     },
@@ -80,13 +66,17 @@
       "list": [
         "id",
         "title",
-        "accordions",
-        "subTitle"
+        "subTitle",
+        "accordions"
       ],
       "edit": [
         [
           {
             "name": "title",
+            "size": 6
+          },
+          {
+            "name": "subTitle",
             "size": 6
           }
         ],
@@ -94,16 +84,6 @@
           {
             "name": "accordions",
             "size": 12
-          }
-        ],
-        [
-          {
-            "name": "subTitle",
-            "size": 6
-          },
-          {
-            "name": "isVisible",
-            "size": 4
           }
         ]
       ]

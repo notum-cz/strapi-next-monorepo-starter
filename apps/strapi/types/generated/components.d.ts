@@ -1,25 +1,38 @@
 import type { Schema, Struct } from "@strapi/strapi"
 
-export interface ExampleExample extends Struct.ComponentSchema {
-  collectionName: "components_example_examples"
+export interface ElementsFooterItem extends Struct.ComponentSchema {
+  collectionName: "components_elements_footer_items"
   info: {
-    displayName: "example"
-    icon: "emotionUnhappy"
+    description: ""
+    displayName: "FooterItem"
   }
   attributes: {
-    author: Schema.Attribute.String
+    links: Schema.Attribute.Component<"utilities.link", true>
+    title: Schema.Attribute.String & Schema.Attribute.Required
   }
 }
 
-export interface LayoutNavbar extends Struct.ComponentSchema {
-  collectionName: "components_layout_navbars"
+export interface FormsContactForm extends Struct.ComponentSchema {
+  collectionName: "components_forms_contact_forms"
   info: {
-    description: ""
-    displayName: "Navbar"
+    displayName: "ContactForm"
   }
   attributes: {
-    links: Schema.Attribute.Component<"shared.link", true>
-    logoImage: Schema.Attribute.Component<"shared.image-with-link", false>
+    description: Schema.Attribute.Text
+    gdpr: Schema.Attribute.Component<"utilities.link", false>
+    title: Schema.Attribute.String
+  }
+}
+
+export interface FormsNewsletterForm extends Struct.ComponentSchema {
+  collectionName: "components_forms_newsletter_forms"
+  info: {
+    displayName: "Newsletter"
+  }
+  attributes: {
+    description: Schema.Attribute.Text
+    gdpr: Schema.Attribute.Component<"utilities.link", false>
+    title: Schema.Attribute.String
   }
 }
 
@@ -30,8 +43,7 @@ export interface SectionsAnimatedLogoRow extends Struct.ComponentSchema {
     displayName: "AnimatedLogoRow"
   }
   attributes: {
-    isVisible: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>
-    logos: Schema.Attribute.Component<"shared.basic-image", true>
+    logos: Schema.Attribute.Component<"utilities.basic-image", true>
     text: Schema.Attribute.String & Schema.Attribute.Required
   }
 }
@@ -43,23 +55,8 @@ export interface SectionsCarousel extends Struct.ComponentSchema {
     displayName: "Carousel"
   }
   attributes: {
-    images: Schema.Attribute.Component<"shared.image-with-link", true>
-    isVisible: Schema.Attribute.Boolean &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<false>
+    images: Schema.Attribute.Component<"utilities.image-with-link", true>
     radius: Schema.Attribute.Enumeration<["sm", "md", "lg", "xl", "full"]>
-  }
-}
-
-export interface SectionsContactForm extends Struct.ComponentSchema {
-  collectionName: "components_sections_contact_forms"
-  info: {
-    displayName: "ContactForm"
-  }
-  attributes: {
-    description: Schema.Attribute.Text
-    gdpr: Schema.Attribute.Component<"shared.link", false>
-    title: Schema.Attribute.String
   }
 }
 
@@ -70,27 +67,8 @@ export interface SectionsFaq extends Struct.ComponentSchema {
     displayName: "Faq"
   }
   attributes: {
-    accordions: Schema.Attribute.Component<"shared.accordions", true>
-    isVisible: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>
+    accordions: Schema.Attribute.Component<"utilities.accordions", true>
     subTitle: Schema.Attribute.String
-    title: Schema.Attribute.String & Schema.Attribute.Required
-  }
-}
-
-export interface SectionsFeatureGrid extends Struct.ComponentSchema {
-  collectionName: "components_sections_feature_grids"
-  info: {
-    description: ""
-    displayName: "FeatureGrid"
-  }
-  attributes: {
-    gridCol: Schema.Attribute.Component<"shared.grid-column", false>
-    imageRadius: Schema.Attribute.Enumeration<["sm", "md", "lg", "xl", "full"]>
-    imageSize: Schema.Attribute.Integer & Schema.Attribute.Required
-    isVisible: Schema.Attribute.Boolean &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<true>
-    items: Schema.Attribute.Component<"shared.feature-grid-item", true>
     title: Schema.Attribute.String & Schema.Attribute.Required
   }
 }
@@ -102,10 +80,7 @@ export interface SectionsHeadingWithCtaButton extends Struct.ComponentSchema {
     displayName: "HeadingWithCTAButton"
   }
   attributes: {
-    cta: Schema.Attribute.Component<"shared.link", false>
-    isVisible: Schema.Attribute.Boolean &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<true>
+    cta: Schema.Attribute.Component<"utilities.link", false>
     subText: Schema.Attribute.String
     title: Schema.Attribute.String & Schema.Attribute.Required
   }
@@ -120,9 +95,8 @@ export interface SectionsHero extends Struct.ComponentSchema {
   attributes: {
     bgColor: Schema.Attribute.String &
       Schema.Attribute.CustomField<"plugin::color-picker.color">
-    image: Schema.Attribute.Component<"shared.basic-image", false>
-    isVisible: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>
-    links: Schema.Attribute.Component<"shared.link", true>
+    image: Schema.Attribute.Component<"utilities.basic-image", false>
+    links: Schema.Attribute.Component<"utilities.link", true>
     subTitle: Schema.Attribute.String
     title: Schema.Attribute.String & Schema.Attribute.Required
   }
@@ -138,8 +112,7 @@ export interface SectionsHorizontalImages extends Struct.ComponentSchema {
     fixedImageHeight: Schema.Attribute.Integer
     fixedImageWidth: Schema.Attribute.Integer
     imageRadius: Schema.Attribute.Enumeration<["sm", "md", "lg", "xl", "full"]>
-    images: Schema.Attribute.Component<"shared.image-with-link", true>
-    isVisible: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>
+    images: Schema.Attribute.Component<"utilities.image-with-link", true>
     spacing: Schema.Attribute.Integer &
       Schema.Attribute.SetMinMax<
         {
@@ -159,134 +132,15 @@ export interface SectionsImageWithCtaButton extends Struct.ComponentSchema {
     displayName: "ImageWithCTAButton"
   }
   attributes: {
-    image: Schema.Attribute.Component<"shared.basic-image", false>
-    isVisible: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>
-    link: Schema.Attribute.Component<"shared.link", false>
+    image: Schema.Attribute.Component<"utilities.basic-image", false>
+    link: Schema.Attribute.Component<"utilities.link", false>
     subText: Schema.Attribute.String
     title: Schema.Attribute.String & Schema.Attribute.Required
   }
 }
 
-export interface SectionsNewsletter extends Struct.ComponentSchema {
-  collectionName: "components_sections_newsletters"
-  info: {
-    displayName: "Newsletter"
-  }
-  attributes: {
-    description: Schema.Attribute.String
-    gdpr: Schema.Attribute.Component<"shared.link", false>
-    title: Schema.Attribute.String
-  }
-}
-
-export interface SharedAccordions extends Struct.ComponentSchema {
-  collectionName: "components_shared_accordions"
-  info: {
-    description: ""
-    displayName: "Accordions"
-  }
-  attributes: {
-    answer: Schema.Attribute.Text & Schema.Attribute.Required
-    question: Schema.Attribute.String & Schema.Attribute.Required
-  }
-}
-
-export interface SharedBasicImage extends Struct.ComponentSchema {
-  collectionName: "components_shared_basic_images"
-  info: {
-    description: ""
-    displayName: "BasicImage"
-  }
-  attributes: {
-    alt: Schema.Attribute.String & Schema.Attribute.Required
-    fallbackSrc: Schema.Attribute.String
-    height: Schema.Attribute.Integer
-    media: Schema.Attribute.Media<"images" | "videos"> &
-      Schema.Attribute.Required
-    width: Schema.Attribute.Integer
-  }
-}
-
-export interface SharedCkEditorContent extends Struct.ComponentSchema {
-  collectionName: "components_shared_ck_editor_contents"
-  info: {
-    displayName: "CkEditorContent"
-  }
-  attributes: {
-    content: Schema.Attribute.RichText &
-      Schema.Attribute.CustomField<
-        "plugin::ckeditor5.CKEditor",
-        {
-          preset: "defaultCkEditor"
-        }
-      >
-  }
-}
-
-export interface SharedFeatureGridItem extends Struct.ComponentSchema {
-  collectionName: "components_shared_feature_grid_items"
-  info: {
-    description: ""
-    displayName: "FeatureGridItem"
-  }
-  attributes: {
-    image: Schema.Attribute.Component<"shared.basic-image", false>
-    subTitle: Schema.Attribute.String
-    title: Schema.Attribute.String & Schema.Attribute.Required
-  }
-}
-
-export interface SharedFooterItem extends Struct.ComponentSchema {
-  collectionName: "components_shared_footer_items"
-  info: {
-    description: ""
-    displayName: "FooterItem"
-  }
-  attributes: {
-    links: Schema.Attribute.Component<"shared.link", true>
-    title: Schema.Attribute.String & Schema.Attribute.Required
-  }
-}
-
-export interface SharedGridColumn extends Struct.ComponentSchema {
-  collectionName: "components_shared_grid_columns"
-  info: {
-    displayName: "GridColumn"
-  }
-  attributes: {
-    desktop: Schema.Attribute.Integer & Schema.Attribute.Required
-    mobile: Schema.Attribute.Integer & Schema.Attribute.Required
-    tablet: Schema.Attribute.Integer & Schema.Attribute.Required
-  }
-}
-
-export interface SharedImageWithLink extends Struct.ComponentSchema {
-  collectionName: "components_shared_image_with_links"
-  info: {
-    description: ""
-    displayName: "ImageWithLink"
-  }
-  attributes: {
-    image: Schema.Attribute.Component<"shared.basic-image", false>
-    link: Schema.Attribute.Component<"shared.link", false>
-  }
-}
-
-export interface SharedLink extends Struct.ComponentSchema {
-  collectionName: "components_shared_links"
-  info: {
-    description: ""
-    displayName: "Link"
-  }
-  attributes: {
-    href: Schema.Attribute.String & Schema.Attribute.Required
-    label: Schema.Attribute.String
-    newTab: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>
-  }
-}
-
-export interface SharedMetaSocial extends Struct.ComponentSchema {
-  collectionName: "components_shared_meta_socials"
+export interface SeoUtilitiesMetaSocial extends Struct.ComponentSchema {
+  collectionName: "components_seo_utilities_meta_socials"
   info: {
     displayName: "metaSocial"
     icon: "project-diagram"
@@ -308,14 +162,16 @@ export interface SharedMetaSocial extends Struct.ComponentSchema {
   }
 }
 
-export interface SharedSeo extends Struct.ComponentSchema {
-  collectionName: "components_shared_seos"
+export interface SeoUtilitiesSeo extends Struct.ComponentSchema {
+  collectionName: "components_seo_utilities_seos"
   info: {
+    description: ""
     displayName: "seo"
     icon: "search"
   }
   attributes: {
     applicationName: Schema.Attribute.String
+    canonicalUrl: Schema.Attribute.String
     email: Schema.Attribute.String
     keywords: Schema.Attribute.Text
     metaDescription: Schema.Attribute.String &
@@ -323,18 +179,50 @@ export interface SharedSeo extends Struct.ComponentSchema {
         maxLength: 160
       }>
     metaImage: Schema.Attribute.Media<"images">
-    metaRobots: Schema.Attribute.String
+    metaRobots: Schema.Attribute.Enumeration<
+      [
+        "all",
+        "index",
+        "index,follow",
+        "noindex",
+        "noindex,follow",
+        "noindex,nofollow",
+        "none",
+        "noarchive",
+        "nosnippet",
+        "max-snippet",
+      ]
+    > &
+      Schema.Attribute.DefaultTo<"all">
     metaTitle: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 60
       }>
+    og: Schema.Attribute.Component<"seo-utilities.seo-og", false>
     siteName: Schema.Attribute.String
-    twitter: Schema.Attribute.Component<"shared.seo-twitter", false>
+    structuredData: Schema.Attribute.JSON
+    twitter: Schema.Attribute.Component<"seo-utilities.seo-twitter", false>
   }
 }
 
-export interface SharedSeoTwitter extends Struct.ComponentSchema {
-  collectionName: "components_shared_seo_twitters"
+export interface SeoUtilitiesSeoOg extends Struct.ComponentSchema {
+  collectionName: "components_seo_utilities_seo_ogs"
+  info: {
+    displayName: "SeoOg"
+    icon: "oneToMany"
+  }
+  attributes: {
+    description: Schema.Attribute.String
+    image: Schema.Attribute.Media<"images">
+    title: Schema.Attribute.String
+    type: Schema.Attribute.Enumeration<["website", "article"]> &
+      Schema.Attribute.DefaultTo<"website">
+    url: Schema.Attribute.String
+  }
+}
+
+export interface SeoUtilitiesSeoTwitter extends Struct.ComponentSchema {
+  collectionName: "components_seo_utilities_seo_twitters"
   info: {
     displayName: "SeoTwitter"
     icon: "oneToMany"
@@ -350,32 +238,119 @@ export interface SharedSeoTwitter extends Struct.ComponentSchema {
   }
 }
 
+export interface SeoUtilitiesSocialIcons extends Struct.ComponentSchema {
+  collectionName: "components_seo_utilities_social_icons"
+  info: {
+    displayName: "SocialIcons"
+  }
+  attributes: {
+    socials: Schema.Attribute.Component<"utilities.image-with-link", true>
+    title: Schema.Attribute.String
+  }
+}
+
+export interface UtilitiesAccordions extends Struct.ComponentSchema {
+  collectionName: "components_utilities_accordions"
+  info: {
+    description: ""
+    displayName: "Accordions"
+  }
+  attributes: {
+    answer: Schema.Attribute.Text & Schema.Attribute.Required
+    question: Schema.Attribute.String & Schema.Attribute.Required
+  }
+}
+
+export interface UtilitiesBasicImage extends Struct.ComponentSchema {
+  collectionName: "components_utilities_basic_images"
+  info: {
+    displayName: "BasicImage"
+  }
+  attributes: {
+    alt: Schema.Attribute.String & Schema.Attribute.Required
+    fallbackSrc: Schema.Attribute.String
+    height: Schema.Attribute.Integer
+    media: Schema.Attribute.Media<"images" | "videos"> &
+      Schema.Attribute.Required
+    width: Schema.Attribute.Integer
+  }
+}
+
+export interface UtilitiesCkEditorContent extends Struct.ComponentSchema {
+  collectionName: "components_utilities_ck_editor_contents"
+  info: {
+    displayName: "CkEditorContent"
+  }
+  attributes: {
+    content: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
+  }
+}
+
+export interface UtilitiesImageWithLink extends Struct.ComponentSchema {
+  collectionName: "components_utilities_image_with_links"
+  info: {
+    description: ""
+    displayName: "ImageWithLink"
+  }
+  attributes: {
+    image: Schema.Attribute.Component<"utilities.basic-image", false>
+    link: Schema.Attribute.Component<"utilities.link", false>
+  }
+}
+
+export interface UtilitiesLink extends Struct.ComponentSchema {
+  collectionName: "components_utilities_links"
+  info: {
+    displayName: "Link"
+  }
+  attributes: {
+    href: Schema.Attribute.String & Schema.Attribute.Required
+    label: Schema.Attribute.String & Schema.Attribute.Required
+    newTab: Schema.Attribute.Boolean
+  }
+}
+
+export interface UtilitiesLinksWithTitle extends Struct.ComponentSchema {
+  collectionName: "components_utilities_links_with_titles"
+  info: {
+    displayName: "LinksWithTitle"
+  }
+  attributes: {
+    links: Schema.Attribute.Component<"utilities.link", true>
+    title: Schema.Attribute.String
+  }
+}
+
 declare module "@strapi/strapi" {
   export module Public {
     export interface ComponentSchemas {
-      "example.example": ExampleExample
-      "layout.navbar": LayoutNavbar
+      "elements.footer-item": ElementsFooterItem
+      "forms.contact-form": FormsContactForm
+      "forms.newsletter-form": FormsNewsletterForm
       "sections.animated-logo-row": SectionsAnimatedLogoRow
       "sections.carousel": SectionsCarousel
-      "sections.contact-form": SectionsContactForm
       "sections.faq": SectionsFaq
-      "sections.feature-grid": SectionsFeatureGrid
       "sections.heading-with-cta-button": SectionsHeadingWithCtaButton
       "sections.hero": SectionsHero
       "sections.horizontal-images": SectionsHorizontalImages
       "sections.image-with-cta-button": SectionsImageWithCtaButton
-      "sections.newsletter": SectionsNewsletter
-      "shared.accordions": SharedAccordions
-      "shared.basic-image": SharedBasicImage
-      "shared.ck-editor-content": SharedCkEditorContent
-      "shared.feature-grid-item": SharedFeatureGridItem
-      "shared.footer-item": SharedFooterItem
-      "shared.grid-column": SharedGridColumn
-      "shared.image-with-link": SharedImageWithLink
-      "shared.link": SharedLink
-      "shared.meta-social": SharedMetaSocial
-      "shared.seo": SharedSeo
-      "shared.seo-twitter": SharedSeoTwitter
+      "seo-utilities.meta-social": SeoUtilitiesMetaSocial
+      "seo-utilities.seo": SeoUtilitiesSeo
+      "seo-utilities.seo-og": SeoUtilitiesSeoOg
+      "seo-utilities.seo-twitter": SeoUtilitiesSeoTwitter
+      "seo-utilities.social-icons": SeoUtilitiesSocialIcons
+      "utilities.accordions": UtilitiesAccordions
+      "utilities.basic-image": UtilitiesBasicImage
+      "utilities.ck-editor-content": UtilitiesCkEditorContent
+      "utilities.image-with-link": UtilitiesImageWithLink
+      "utilities.link": UtilitiesLink
+      "utilities.links-with-title": UtilitiesLinksWithTitle
     }
   }
 }

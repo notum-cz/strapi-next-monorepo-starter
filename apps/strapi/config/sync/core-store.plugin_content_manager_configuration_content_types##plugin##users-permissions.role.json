@@ -1,7 +1,6 @@
 {
   "key": "plugin_content_manager_configuration_content_types::plugin::users-permissions.role",
   "value": {
-    "uid": "plugin::users-permissions.role",
     "settings": {
       "bulkable": true,
       "filterable": true,
@@ -186,7 +185,8 @@
           }
         ]
       ]
-    }
+    },
+    "uid": "plugin::users-permissions.role"
   },
   "type": "object",
   "environment": null,

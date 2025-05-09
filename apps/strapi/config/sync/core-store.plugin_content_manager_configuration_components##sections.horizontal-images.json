@@ -33,20 +33,6 @@
           "sortable": true
         }
       },
-      "isVisible": {
-        "edit": {
-          "label": "isVisible",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "isVisible",
-          "searchable": true,
-          "sortable": true
-        }
-      },
       "images": {
         "edit": {
           "label": "images",
@@ -123,7 +109,7 @@
         "id",
         "title",
         "images",
-        "isVisible"
+        "spacing"
       ],
       "edit": [
         [
@@ -140,25 +126,19 @@
         ],
         [
           {
-            "name": "isVisible",
-            "size": 4
-          },
-          {
             "name": "spacing",
             "size": 4
-          }
-        ],
-        [
+          },
           {
             "name": "imageRadius",
             "size": 6
-          },
-          {
-            "name": "fixedImageHeight",
-            "size": 4
           }
         ],
         [
+          {
+            "name": "fixedImageHeight",
+            "size": 4
+          },
           {
             "name": "fixedImageWidth",
             "size": 4

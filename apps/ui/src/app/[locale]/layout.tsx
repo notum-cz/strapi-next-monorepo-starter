@@ -1,5 +1,6 @@
 import "@/styles/globals.css"
 
+import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { setRequestLocale } from "next-intl/server"
 
@@ -8,14 +9,24 @@ import { LayoutProps } from "@/types/next"
 import { fontRoboto } from "@/lib/fonts"
 import { routing } from "@/lib/navigation"
 import { cn } from "@/lib/styles"
-import { Navbar } from "@/components/elementary/navbar/Navbar"
+import { ErrorBoundary } from "@/components/elementary/ErrorBoundary"
 import { TailwindIndicator } from "@/components/elementary/TailwindIndicator"
+import StrapiFooter from "@/components/page-builder/single-types/footer/StrapiFooter"
+import StrapiNavbar from "@/components/page-builder/single-types/navbar/StrapiNavbar"
 import { ClientProviders } from "@/components/providers/ClientProviders"
 import { ServerProviders } from "@/components/providers/ServerProviders"
+import TrackingScripts from "@/components/providers/TrackingScripts"
 import { Toaster } from "@/components/ui/toaster"
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
+}
+
+export const metadata: Metadata = {
+  title: {
+    template: "%s / Notum Technologies",
+    default: "",
+  },
 }
 
 export default async function RootLayout({ children, params }: LayoutProps) {
@@ -38,18 +49,26 @@ export default async function RootLayout({ children, params }: LayoutProps) {
           fontRoboto.variable
         )}
       >
+        <TrackingScripts />
         <ServerProviders params={params}>
           <ClientProviders>
             <div className="relative flex min-h-screen flex-col">
-              <Navbar locale={locale} />
+              <ErrorBoundary hideFallback>
+                <StrapiNavbar locale={locale} />
+              </ErrorBoundary>
+
               <div className="flex-1">
-                <div className="container grid items-center gap-6 pt-6 pb-8 md:py-10">
-                  {children}
-                </div>
+                <div>{children}</div>
               </div>
+
+              <TailwindIndicator />
+
+              <Toaster />
+
+              <ErrorBoundary hideFallback>
+                <StrapiFooter locale={locale} />
+              </ErrorBoundary>
             </div>
-            <TailwindIndicator />
-            <Toaster />
           </ClientProviders>
         </ServerProviders>
       </body>

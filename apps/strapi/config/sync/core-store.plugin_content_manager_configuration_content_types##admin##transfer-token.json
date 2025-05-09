@@ -1,7 +1,6 @@
 {
   "key": "plugin_content_manager_configuration_content_types::admin::transfer-token",
   "value": {
-    "uid": "admin::transfer-token",
     "settings": {
       "bulkable": true,
       "filterable": true,
@@ -223,7 +222,8 @@
           }
         ]
       ]
-    }
+    },
+    "uid": "admin::transfer-token"
   },
   "type": "object",
   "environment": null,
