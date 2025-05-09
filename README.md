@@ -1,12 +1,13 @@
-# 🔥 Strapi v5 & NextJS Monorepo Starter
+# 🔥 Strapi v5 & Next.js v15 Monorepo Starter
 
-This is a ready-to-go starter template for Strapi projects. It combines the power of Strapi, NextJS, Shadcn/ui libraries with Turborepo setup and kickstarts your project development.
+This is a ready-to-go starter template for Strapi projects. It combines the power of Strapi, Next.js, Shadcn/ui libraries with Turborepo setup and kickstarts your project development. We call it a **page-builder**.
 
 ## 🥞 Tech stack
 
 - [Strapi v5](https://strapi.io/) - Headless CMS to manage content
-- [NextJS App Router v14](https://nextjs.org/docs/14) - React framework for building web apps
+- [Next.js App Router v15](https://nextjs.org/docs) - React framework for building web apps
 - [Shadcn/ui](https://ui.shadcn.com/) - TailwindCSS based UI components
+- [TailwindCSS v4](https://tailwindcss.com/) - Utility-first CSS framework
 - [Turborepo](https://turbo.build/) - Monorepo management tool to keep things tidy
 
 ## 🚀 Getting started
@@ -28,8 +29,10 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 - Install dependencies
 
   ```sh
-  # in root (nvm use) # switch to correct nodejs version (v22)
+  # in root
+  # switch to correct nodejs version (v22)
   nvm use
+
   # install deps for apps and packages that are part of this monorepo
   yarn
   ```
@@ -43,6 +46,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
   yarn setup:apps
   ```
 
+  - More setup is needed for communication with Strapi using API tokens
   - See [What's inside?](#-whats-inside) for more details about apps and packages.
 
 - Run apps
@@ -66,15 +70,17 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 - **Strapi**: Fully typed (TypeScript) and up-to-date Strapi v5 controllers and services
 - **Strapi config**: Pre-configured and pre-installed with the most common plugins, packages and configurations
-- **Page builder**: Multiple content types and components prepared for page builder. Ready to plug-and-play
+- **Page builder**: Page rendering mechanism and prepared useful components. Ready to plug-and-play
 - **DB Seed**: Seed script to populate DB with initial data
-- **NextJS**: Fully typed and modern NextJS App router project
+- **Next.js**: Fully typed and modern Next.js v15 App router project
+- **Proxies**: Proxy API calls to Strapi from Next.js app to avoid CORS issues, hide API keys and backend address
 - **API**: Typed API calls to Strapi via API service
 - **UI library**: 20+ pre-installed components, beautifully designed by [Shadcn/ui](https://ui.shadcn.com/)
 - **UI components**: Ready to use components for common use cases (forms, images, tables, navbar and much more)
-- **TailwindCSS**: [TailwindCSS](https://tailwindcss.com/) setup with configuration and theme, [CVA](https://cva.style/docs), [tailwind-merge](https://www.npmjs.com/package/tailwind-merge) and [tailwindcss-animate](https://www.npmjs.com/package/tailwindcss-animate)
+- **TailwindCSS**: [TailwindCSS v4](https://tailwindcss.com/) setup with configuration and theme, [CVA](https://cva.style/docs), [tailwind-merge](https://www.npmjs.com/package/tailwind-merge) and [tailwindcss-animate](https://www.npmjs.com/package/tailwindcss-animate)
+- **CkEditor**: Pre-configured [CkEditor v5](https://ckeditor.com/) with shared styles and colors
 - **Utils**: Useful utils, hooks and helper functions included
-- **Auth**: JWT authentication with Strapi and [NextAuth.js](https://next-auth.js.org/), auth middleware and protected routes
+- **Auth**: JWT authentication with [Strapi Users & Permissions feature](https://docs.strapi.io/cms/features/users-permissions) and [NextAuth.js](https://next-auth.js.org/), auth middleware and protected routes
 - **Auth providers**: Ready to plug-in providers like Google, Facebook etc.
 - **Localization**: Multi-language support with [next-intl](https://next-intl-docs.vercel.app/) and [@strapi/plugin-i18n](https://www.npmjs.com/package/@strapi/plugin-i18n) packages
 - **SEO**: Pre-configured usage of [@strapi/plugin-seo](https://www.npmjs.com/package/@strapi/plugin-seo) and integrated with frontend SEO best practices
@@ -90,14 +96,14 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 ### Apps
 
-- `apps/ui` - UI web app based on [NextJS 14](https://nextjs.org/docs/14/) and [shadcn/ui](https://ui.shadcn.com/) ([Tailwind](https://tailwindcss.com/)) - [README.md](./apps/ui/README.md)
+- `apps/ui` - UI web app based on [Next.js v15](https://nextjs.org/docs/) and [shadcn/ui](https://ui.shadcn.com/) ([Tailwind](https://tailwindcss.com/)) - [README.md](./apps/ui/README.md)
 - `apps/strapi` - [Strapi v5](https://strapi.io/) API with prepared page-builder components - [README.md](./apps/strapi/README.md)
 
 ### Packages
 
 - `packages/eslint-config`: [ESLint](https://eslint.org/) configurations for client side applications
 - `packages/prettier-config`: [Prettier](https://prettier.io/) configuration with import sort plugin and tailwind plugin included
-- `packages/typescript-config`: tsconfig JSONs used throughout the monorepo (not used in "strapi" app for now)
+- `packages/typescript-config`: tsconfig JSONs used throughout the monorepo (not compatible with Strapi app now)
 - `packages/design-system`: shared styles, primarily for sharing CkEditor color configurations
 - `packages/shared-data`: package that stores common values across frontend and backend
 
@@ -164,4 +170,4 @@ We are using `GitHub Actions` for continuous integration. The `CI` expects some 
 
 ## 💙 Feedback
 
-This repo was created based on [@https://github.com/notum-cz/strapi-next-monorepo-starter](https://github.com/notum-cz/strapi-next-monorepo-starter). If you encounter a problem with the template code during development, or something has changed/is being done differently in the meantime, or you have implemented a useful feature that should be part of that template, please create an issue with a description or PR in that repository. So we can keep those templates updated and great features. Thanks.
+This repository was created based on [strapi-next-monorepo-starter](https://github.com/notum-cz/strapi-next-monorepo-starter). If you encounter a problem with the template code during development, or you have implemented a useful feature that should be part of that template, please create an issue with a description or PR in that repository. So we can keep it updated with great features.

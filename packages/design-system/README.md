@@ -13,7 +13,7 @@ Tailwind's v4 introduced changes that affect how it's config is built. It's no l
 
 ## I want to modify the config, what should I do?
 
-Firstly, make sure you are modifying within the `src` folder! Changes to this config within NextJS should propagate immediately.
+Firstly, make sure you are modifying within the `src` folder! Changes to this config within Next.js should propagate immediately.
 
 On the other hand, Strapi will not respect these changes, and it will require a reload of the dev server, which should trigger build of this package.
 
