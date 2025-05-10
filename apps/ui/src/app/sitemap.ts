@@ -13,13 +13,17 @@ const baseUrl = env.APP_PUBLIC_URL
  */
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const sitemap = []
-  for (const locale of routing.locales) {
-    const localizedSitemap = await generateLocalizedSitemap(locale)
-    sitemap.push(localizedSitemap)
-  }
+  const promises = routing.locales.map((locale) =>
+    generateLocalizedSitemap(locale)
+  )
+  const results = await Promise.allSettled(promises)
 
-  return sitemap.flat()
+  return results
+    .filter((result) => result.status === "fulfilled")
+    .reduce((acc, curr) => {
+      acc.push(...curr.value)
+      return acc
+    }, [] as MetadataRoute.Sitemap)
 }
 
 /**
