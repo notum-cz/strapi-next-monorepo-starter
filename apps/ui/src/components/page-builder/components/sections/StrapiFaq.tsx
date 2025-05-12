@@ -29,7 +29,7 @@ export function StrapiFaq({
           </p>
 
           {component.accordions && (
-            <div className="w-full max-w-2xl">
+            <div className="w-full">
               <Accordion type="single" collapsible className="w-full">
                 {component.accordions.map((x) => (
                   <AccordionItem key={x.id} value={x.id.toString()}>

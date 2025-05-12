@@ -1,9 +1,8 @@
 import { Data } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { cn } from "@/lib/styles"
 import { Container } from "@/components/elementary/Container"
-import { StrapiImageWithLink } from "@/components/page-builder/components/utilities/StrapiImageWithLink"
+import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
 import {
   Carousel,
   CarouselContent,
@@ -11,8 +10,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-
-const DEFAULT_IMG_SIZE = 610
 
 export function StrapiCarousel({
   component,
@@ -29,21 +26,15 @@ export function StrapiCarousel({
             {component.images?.map((item, index) => (
               <CarouselItem
                 key={String(item.id) + index}
-                className="pl-1 md:basis-1/2 lg:basis-1/3"
+                className="px-2 pl-1 md:basis-1/2 lg:basis-1/3"
               >
-                <StrapiImageWithLink
-                  component={item}
-                  imageProps={{
-                    className: cn(
-                      "mb-2 object-contain",
-                      component?.radius && `rounded-${component.radius}`
-                    ),
-                    forcedSizes: {
-                      height: DEFAULT_IMG_SIZE,
-                      width: DEFAULT_IMG_SIZE,
-                    },
-                  }}
-                />
+                <div className="relative h-96 w-full lg:w-96">
+                  <StrapiBasicImage
+                    component={item.image}
+                    className="object-contain"
+                    fill
+                  />
+                </div>
               </CarouselItem>
             ))}
           </CarouselContent>

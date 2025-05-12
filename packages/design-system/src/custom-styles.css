@@ -1,34 +1,34 @@
 .ck-editor__main h1,
 h1.typo-h1 {
-  @apply lg:text-9xl/20! text-5xl/16! font-bold!;
+  @apply lg:text-6xl/20! text-4xl/10! font-bold!;
 }
 
 .ck-editor__main h2,
 h2.typo-h2 {
-  @apply lg:text-7xl/20! text-4xl/16! font-bold!;
+  @apply lg:text-5xl/13! text-3xl/12! font-bold!;
 }
 
 .ck-editor__main h3,
 h3.typo-h3 {
-  @apply lg:text-6xl/18! text-4xl/14! font-bold!;
+  @apply lg:text-4xl/11! text-2xl/8! font-bold!;
 }
 
 .ck-editor__main h4,
 h4.typo-h4 {
-  @apply lg:text-5xl/17! text-3xl/11! font-bold!;
+  @apply lg:text-3xl/8! text-2xl/7! font-bold!;
 }
 
 .ck-editor__main h5,
 h5.typo-h5 {
-  @apply lg:text-4xl/15! text-2xl/8! font-bold!;
+  @apply lg:text-xl/7! text-lg/6! font-bold!;
 }
 
 .ck-editor__main h6,
 h6.typo-h6 {
-  @apply lg:text-3xl/12! text-xl/5! font-bold!;
+  @apply lg:text-lg/6! text-sm/5! font-bold!;
 }
 
 .ck-editor__main p,
 p.typo-p {
-  @apply lg:text-xl/9! text-base/5!;
+  @apply lg:text-lg/7! text-base/5!;
 }
