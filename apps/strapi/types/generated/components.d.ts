@@ -97,6 +97,7 @@ export interface SectionsHero extends Struct.ComponentSchema {
       Schema.Attribute.CustomField<"plugin::color-picker.color">
     image: Schema.Attribute.Component<"utilities.basic-image", false>
     links: Schema.Attribute.Component<"utilities.link", true>
+    steps: Schema.Attribute.Component<"utilities.text", true>
     subTitle: Schema.Attribute.String
     title: Schema.Attribute.String & Schema.Attribute.Required
   }
@@ -327,6 +328,16 @@ export interface UtilitiesLinksWithTitle extends Struct.ComponentSchema {
   }
 }
 
+export interface UtilitiesText extends Struct.ComponentSchema {
+  collectionName: "components_utilities_texts"
+  info: {
+    displayName: "Text"
+  }
+  attributes: {
+    text: Schema.Attribute.String
+  }
+}
+
 declare module "@strapi/strapi" {
   export module Public {
     export interface ComponentSchemas {
@@ -351,6 +362,7 @@ declare module "@strapi/strapi" {
       "utilities.image-with-link": UtilitiesImageWithLink
       "utilities.link": UtilitiesLink
       "utilities.links-with-title": UtilitiesLinksWithTitle
+      "utilities.text": UtilitiesText
     }
   }
 }

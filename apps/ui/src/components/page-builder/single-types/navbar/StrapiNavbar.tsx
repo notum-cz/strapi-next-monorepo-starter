@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { getTranslations } from "next-intl/server"
 
 import { AppLocale } from "@/types/general"
@@ -58,7 +59,7 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
             />
           ) : (
             <AppLink href="/" className="text-xl font-bold">
-              Strapi+Next.js
+              <Image src="images/logo.svg" alt="logo" height={23} width={82} />
             </AppLink>
           )}
 
@@ -77,7 +78,7 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
           ) : null}
         </div>
 
-        <div className="flex flex-1 items-center justify-end space-x-4">
+        <div className="hidden flex-1 items-center justify-end space-x-4 lg:flex">
           {session?.user ? (
             <nav className="flex items-center space-x-1">
               <LoggedUserMenu user={session.user} />
