@@ -12,7 +12,6 @@ const nextConfig = {
   reactStrictMode: true,
   experimental: {},
   transpilePackages: ["@repo/design-system"],
-  // Good to know:
   images: {
     // Be aware that Strapi has optimization on by default
     // Do not optimize all images by default.

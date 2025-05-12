@@ -2,20 +2,12 @@
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env", "**/.env.*local"],
   "globalEnv": [
-    "NEXTAUTH_SECRET",
-    "NEXTAUTH_URL",
     "NEXT_OUTPUT",
     "APP_PUBLIC_URL",
     "STRAPI_URL",
     "STRAPI_REST_READONLY_API_KEY",
-    "STRAPI_REST_CUSTOM_API_URL",
-    "WEBPACK_CACHE_TYPE",
-    "SENTRY_AUTH_TOKEN",
-    "SENTRY_ORG",
-    "SENTRY_PROJECT",
-    "STRAPI_PREVIEW_SECRET",
-    "RECAPTCHA_SECRET_KEY",
-    "APP_ENV"
+    "SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING",
+    "WEBPACK_CACHE_TYPE"
   ],
   "tasks": {
     "build": {

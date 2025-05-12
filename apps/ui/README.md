@@ -1,15 +1,16 @@
 # 🔥 UI Starter Template
 
-This is a [Next.js v14](https://nextjs.org/docs/14) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Next.js v15](https://nextjs.org/docs) project.
 
 ## 🥞 Tech stack
 
 - node 22
 - yarn 1.22
-- NextJS 15 App router
-- React 19
+- Next.js 15 App router
+- React 18
 - TypeScript
 - [shadcn/ui](https://ui.shadcn.com/)
+- [TailwindCSS 4](https://tailwindcss.com/)
 - [Lucide icons](https://lucide.dev)
 
 ## 📦 Included packages
@@ -17,6 +18,7 @@ This is a [Next.js v14](https://nextjs.org/docs/14) project bootstrapped with [`
 - next-auth
 - next-intl
 - next-themes (for dark mode)
+- next-recaptcha-v3
 - react-hook-form
 - zod
 - @tanstack/react-query
@@ -31,19 +33,34 @@ This is a [Next.js v14](https://nextjs.org/docs/14) project bootstrapped with [`
 
 ## 🚀 Get up and develop
 
-#### Transform this template to a project
-
-To turn this project template into a project:
-
-- Remove packages you don't need from `package.json` and reinstall dependencies.
-- Remove `src/app/[locale]/docs` as it isn't needed in final app.
-- Remove `src/app/[locale]/builder` and `src/components/page-builder` directories if builder isn't developed.
-
-_[After this preparation is done, delete this section]_
-
 ### Environment variables
 
-Copy & rename `.env.local.example` to `.env.local` and fill or update in the values.
+Copy & rename `.env.local.example` to `.env.local` and fill or update in the values. `APP_PUBLIC_URL`, `STRAPI_URL` and `STRAPI_REST_READONLY_API_KEY` are required.
+
+#### Read-only API token
+
+To fetch public content from Strapi, you need to set `STRAPI_REST_READONLY_API_KEY` env variable. Based on [Strapi docs](https://docs.strapi.io/cms/features/api-tokens) you have to go to [Settings > API Tokens](http://localhost:1337/admin/settings/api-tokens) and "Create new API token". Token configuration:
+
+```
+Name: any name
+Description: optional
+Token duration: Unlimited
+Token type: Read-only
+```
+
+Token will only be displayed once.
+
+#### Custom API token
+
+For other requests methods (POST, PUT, DELETE), we use custom API token, that has **manually** allowed permissions for specific operations and content types. Create it when you need to modify data in Strapi from the UI app. This token is also set as an environmental variable `STRAPI_REST_CUSTOM_API_KEY` and has following configuration:
+
+```
+Name: any name
+Description: optional
+Token duration: Unlimited
+Token type: Custom
+Permissions: "Create subscriber"
+```
 
 ### Run locally in dev mode (with hot-reloading)
 
@@ -60,7 +77,7 @@ App runs on [http://localhost:3000](http://localhost:3000) by default.
 
 ## 🛠️ Production build (Docker)
 
-To build and run NextJS in Docker container use [Dockerfile](Dockerfile) prepared for **production** environment. It follows recommended way of running app in Turborepo monorepo structure. Note, that Turborepo requires access to root `package.json`, `yarn.lock` and `turbo.json` files so you have to build it within whole monorepo context - run `docker build` from monorepo root. [More info here](https://turbo.build/repo/docs/handbook/deploying-with-docker).
+To build and run Next.js in Docker container use [Dockerfile](Dockerfile) prepared for **production** environment. It follows recommended way of running app in Turborepo monorepo structure. Note, that Turborepo requires access to root `package.json`, `yarn.lock` and `turbo.json` files so you have to build it within whole monorepo context - run `docker build` from monorepo root. [More info here](https://turbo.build/repo/docs/handbook/deploying-with-docker).
 
 ```bash
 # from monorepo root
@@ -74,86 +91,109 @@ docker run -it --rm --name ui -p 3000:3000 --env-file apps/ui/.env ui:latest
 
 To change port, set `PORT` env variable in `.env` file and in `docker run` command (`-p` flag means port mapping between host:container).
 
-Dockerfile assumes that NextJS app is ["outputed"](https://nextjs.org/docs/14/app/api-reference/next-config-js/output) in `standalone` mode (see [next.config.mjs's output option](next.config.mjs) for details), which is useful for self-hosting in a Docker container (includes only necessary files and dependencies). It is controlled using `NEXT_OUTPUT` env variable. Any other value than `standalone` will require changes in Dockerfile (eg. `runner` stage).
+Dockerfile assumes that Next.js app is ["outputed"](https://nextjs.org/docs/14/app/api-reference/next-config-js/output) in `standalone` mode (see [next.config.mjs's output option](next.config.mjs) for details), which is useful for self-hosting in a Docker container (includes only necessary files and dependencies). It is controlled using `NEXT_OUTPUT` env variable. Any other value than `standalone` will require changes in Dockerfile (eg. `runner` stage).
 
 ### Output modes
 
-NextJS has three `output` modes:
+Next.js has three `output` modes:
 
-- `export` - static HTML/CSS/JS files [are generated at build time](https://nextjs.org/docs/14/app/building-your-application/deploying/static-exports) and served by any static hosting/CDN. No Node.js server is needed. [Dynamic logic is not supported](https://nextjs.org/docs/14/app/building-your-application/deploying/static-exports#unsupported-features). This mode is **not supported** in this starter repo because of the dynamic nature (NextAuth and [POST endpoint](src/app/api/auth/[...nextauth]/route.ts))
-- `standalone` - useful for self-hosting in a Docker container (see above) because it includes only necessary files and dependencies
-- `undefined` - default build output, `.next` directory, that works with production mode `next start` or a hosting provider like Vercel and requires Node.js server
+- `export` – Static HTML/CSS/JS files [are generated at build time](https://nextjs.org/docs/14/app/building-your-application/deploying/static-exports) and can be served by any static hosting or CDN. No Node.js server is required. [Dynamic features are not supported](https://nextjs.org/docs/14/app/building-your-application/deploying/static-exports#unsupported-features). This mode is **not supported** in this starter repo due to its dynamic features (e.g. NextAuth and the [POST endpoint](src/app/api/auth/[...nextauth]/route.ts)).
+- `standalone` – Optimized output for self-hosting in a Docker container. It includes only the necessary files and dependencies (see above for more info).
+- `undefined` – Default build output in the `.next` directory. This mode is used with `next start` in production or by hosting providers like Vercel. It requires a Node.js server.
 
 ### Data revalidation (ISR)
 
-This allows to update static content without rebuilding the entire site. Data revalidation doesn't work in plain static `export` output mode as the app is static and doesn't have a server to revalidate data. ISR speed up the app and reduces the load on the server.
+This approach allows static content to be updated without rebuilding the entire site. Data revalidation does not work in plain static `export` output mode, as the app is fully static and lacks a server to handle revalidation. Incremental Static Regeneration (ISR) improves performance and reduces server load.
 
-In this starter template, we use ISR with time-based revalidation by default. Revalidation is added globally to all fetch requests, but can be controlled individually through parameters of fetch functions (see [Strapi client](src/lib/strapi.ts)). Interval can be controlled using `NEXT_PUBLIC_REVALIDATE` env variable and is set to 0 (no cache) during development.
+In this starter, ISR with time-based revalidation is used by default. Revalidation is applied globally to all fetch requests, but it can also be controlled individually via parameters in the fetch functions (see [BaseStrapiClient](src/lib/strapi-api/base.ts)). The revalidation interval is configurable using the `NEXT_PUBLIC_REVALIDATE` environment variable, and is set to `0` (no caching) during development.
 
 [More information about ISR](https://nextjs.org/docs/app/building-your-application/data-fetching/incremental-static-regeneration)
-
-## 🚢 Deploy to Heroku
-
-Use buildpacks and setup scripts from [this @notum-cz repository](https://github.com/notum-cz/heroku-scripts). Working `output` mode for app built and served from Heroku is default - `undefined`. App contains all files/dependencies and is started using `next start`.
 
 ## ⛺ Included code
 
 There is a lot of code prepared in this template:
 
-- `src/app/[locale]` - pages for authorization, builder, docs, profile page
-- `src/components` - the most common components
+- `src/app/[locale]` - page-builder pages fetched from Strapi and frontend pages for authorization
+- `src/components` - folder with components
 
 For more details see [project structure](#project-structure) section below.
 
-Not all of them are needed in the final app, so you should remove unnecessary parts. There is a function `removeThisWhenYouNeedMe` which is called at the top of each route or component and logs a warning message to the console. It serves to identify unused parts of the code. If the function, components or page is needed, you should remove the function call. Code with remaining `removeThisWhenYouNeedMe` calls should be removed as development progresses.
+Not all predefined components or routes are needed in the final app, so unnecessary parts should be removed. A function called `removeThisWhenYouNeedMe` is placed at the top of each route or component and logs a warning message to the console. It helps identify unused or placeholder code. If the function, component, or page is required, simply remove the call to `removeThisWhenYouNeedMe`. Any code that still includes this call should be removed as development progresses.
 
 ## 🧬 Project structure
 
-- `src/app` - NextJS App router main application. Components related to specific `page` (e.g. usage is only that page or its nested pages) should be placed in `src/pageName/_components` folder. eg. don't place `SignInForm` component in shared folder (e.g. `src/components/forms`) as it is used only in one page.
-- `src/components` - shared components, which are used in multiple pages or globally (like providers). Divide them into folders based on their purpose, e.g:
-  - `src/components/forms` - stuff related to forms (form wrappers, different type of fields etc.)
-  - `src/components/elementary` - very basic or more complex standalone components, which can be used everywhere
-  - `src/components/ui` - Tailwind wrappers around RadixUI components created by shadcn/ui library. This directory is **controlled** by shadcn. You can change the content of individual files (eg. to adjust design or fix problems), but do not rename the entire folder or component files. [More info here](#shadcn)
-  - `src/components/page-builder` - components related to Strapi page builder. [More info here](#strapi-page-builder)
-- `src/hooks` - custom hooks
-- `src/lib` - shared functions, utils and helpers for auth, theme, i18n, dates, navigation, etc.
-- `src/lib/strapi.ts` - static class for fetching data from Strapi API
-- `src/locales` - localization files
-- `src/styles` - global styles
-- `src/types` - types (global, api, etc.)
+- `/src/app` – Next.js App Router main application. Components related to a specific page (i.e. used only on that page or its nested routes) should be placed in `/src/pageName/_components`. For example, do not place the `SignInForm` component in a shared folder like `/src/components/forms` if it is only used on one page.
+- `/src/components` – Shared components used across multiple pages or globally (e.g. providers). Organize them into subfolders based on purpose:
+  - `/src/components/elementary` – Basic or standalone components that can be reused anywhere
+  - `/src/components/forms` – Components related to forms, such as wrappers and field types
+  - `/src/components/page-builder` – Components for the Strapi page builder, [more info here](#page-builder)
+  - `/src/components/providers` – Global wrapper components (e.g. context providers)
+  - `/src/components/typography` – Components like Heading, Paragraph, etc.
+  - `/src/components/ui` – Tailwind wrappers around Radix UI components from the `shadcn/ui` library. This directory is **controlled** by shadcn. You can edit individual files (e.g. to adjust design or fix issues), but do not rename the folder or component files. [More info here](#shadcn)
+- `/src/hooks` – Custom React hooks
+- `/src/lib` – Shared utilities, helpers, and functions for auth, theme, i18n, dates, navigation, reCAPTCHA, styles, etc.
+  - `/src/lib/metadata` – Helpers for building page metadata from Strapi content
+  - `/src/lib/strapi-api` – Public and private API clients for fetching data from Strapi (see [Data fetching](#data-fetching))
+- `/src/locales` – Localization files
+- `/src/styles` – Global styles
+- `/src/types` – Type definitions (global types, API types, helper types, etc.)
 
 ### shadcn
 
-Shadcn/ui is a simple ui library that uses the functionality of RadixUI components and Tailwindcss for styling. You can find the list of components in the [docs](https://ui.shadcn.com/docs/components). Many of them are pre-installed by default in this project. If you need to add something, you can do it by manual copy and paste from the docs or by calling the CLI command (preferred option).
+Shadcn/ui is a lightweight UI library that combines Radix UI components with Tailwind CSS for styling. A list of available components can be found in the [docs](https://ui.shadcn.com/docs/components). Many components are pre-installed in this project by default. If you need additional components, you can either manually copy them from the docs or, preferably, use the CLI.
 
-For example, to add an [accordion component](https://ui.shadcn.com/docs/components/accordion) to the project call `npx shadcn-ui@latest add accordion` in this directory. The component will be added to the `components/ui` folder (as declared in [shadcn config file](https://ui.shadcn.com/docs/components-json) called [components.json](components.json)). From there it can be imported or its source code can be directly edited.
+For example, to add an [accordion component](https://ui.shadcn.com/docs/components/accordion), run `npx shadcn-ui@latest add accordion` in this directory. The component will be added to the `/src/components/ui` folder, as defined in the [Shadcn config file](https://ui.shadcn.com/docs/components-json) located at [components.json](components.json). Once added, the component can be imported normally or its source code modified as needed.
 
 #### Themes
 
-It is possible to build your own theme at [https://ui.shadcn.com/themes](https://ui.shadcn.com/themes). There you can set the global style of components, color, radius, export and insert the whole thing into project. More details are in the [docs](https://ui.shadcn.com/docs/theming). Related files:
+It is possible to build your own theme at [https://ui.shadcn.com/themes](https://ui.shadcn.com/themes), where you can configure global component styles, colors, border radius, export the theme, and integrate it into your project. More details are available in the [docs](https://ui.shadcn.com/docs/theming).
 
-- `styles/globals.css` - project theme
-- `tailwind.config.js` - tailwind configuration. [Tailwindcss-animate](https://github.com/jamiebuilds/tailwindcss-animate) plugin is included by default.
+- `/src/styles/globals.css` – Contains the project theme, Tailwind CSS configuration, and imports shared styles from the [@repo/design-system](../../packages/design-system/README.md) package.
 
-To merge several Tailwind classes and to work more conveniently with dynamic classes, **strictly use** the `cn` function declared in [lib/styles.ts](src/lib/styles.ts).
+To merge multiple Tailwind classes and handle dynamic class names more effectively, **strictly use** the `cn` function defined in `/src/lib/styles.ts`.
 
 ```tsx
 import { cn } from "@/lib/styles"
 
-;<div className={cn("flex items-center justify-center", className)}>...</div>
+export function MyComponent() {
+  return (
+    <div className={cn("flex items-center justify-center", className)}>...</div>
+  )
+}
 ```
 
 ## ✨ Features
 
-### Authorization
+### Data fetching
 
-App uses `next-auth` package, which is configured in [src/lib/auth.ts](src/lib/auth.ts) and [src/app/api/auth/[...nextauth]/route.ts](src/app/api/auth/[...nextauth]/route.ts).
+There are 2 ways to fetch data from Strapi. Both of them use [BaseStrapiClient](src/lib/strapi-api/base.ts) class as a base class. This class isn't used directly, but extended by other classes.
 
-In [middleware.ts](src/middleware.ts) file, there is `authMiddleware` which is used to determine if user is authenticated or not. There is `publicPages` variable which contains array of routes that are public and don't require authentication. If user is not authenticated and tries to access private route, he is redirected to login page.
+#### Public API
 
-To get session (logged user) in server components use `getAuth()` helper:
+To fetch data from the public Strapi API, it is assumed that you have generated the necessary [API tokens](#environment-variables). The [PublicStrapiClient](src/lib/strapi-api/public.ts) class is used for making public API requests — no user JWT token is included in these requests.
 
-```ts
+The client does not call Strapi directly. Instead, it uses Next.js's [route handler](src/app/api/public-proxy/[...slug]/route.ts) as a public proxy. This proxy serves two main purposes:
+
+- To hide the authenticated API token from the client (both for server-side rendering and client-side components).
+- To obscure the Strapi backend URL, preventing users from accessing it directly.
+
+The proxy automatically injects either the `STRAPI_REST_READONLY_API_KEY` or `STRAPI_REST_CUSTOM_API_KEY` into the `Authorization` header. These keys are stored securely on the server. The choice of token depends on the HTTP method: `GET` requests use the read-only token, while other methods use the custom token.
+
+With the read-only token, it's possible to fetch data from any Strapi content type (assuming the endpoint name can be guessed). To improve security and prevent unrestricted data access, an additional layer — `ALLOWED_STRAPI_ENDPOINTS` — is used. This list defines the specific Strapi endpoints that are allowed to be accessed. Keep it **up to date** with the content types you want to expose.
+
+#### Private API
+
+Applications with authentication pages (e.g. `/auth/signin`, `/auth/register`) require the [Strapi Users & Permissions plugin](https://docs.strapi.io/cms/features/users-permissions) to be enabled. This is enabled by default. The [PrivateStrapiClient](src/lib/strapi-api/private.ts) class is used for making private API requests — user JWT tokens are automatically injected on both the server and client sides, and it returns data related to the logged-in user.
+
+Again, Strapi is not called directly, instead, it uses Next.js's [route handler](src/app/api/private-proxy/[...slug]/route.ts) as a private proxy. This proxy hides the Strapi backend URL, preventing users from accessing it directly.
+
+The frontend app uses the `next-auth` package, which is configured in [src/lib/auth.ts](src/lib/auth.ts) and [src/app/api/auth/[...nextauth]/route.ts](src/app/api/auth/[...nextauth]/route.ts) to manage user sessions.
+
+In the [middleware.ts](src/middleware.ts) file, the `authMiddleware` is used to check whether the user is authenticated. A list called `authPages` contains the routes that require authentication. If a user is not authenticated and tries to access a private route, they are redirected to the login page.
+
+To retrieve the session (logged-in user) in server components, use the `getAuth()` helper.
+
+```tsx
 import { getAuth } from "@/lib/auth"
 
 export default async function ProfilePage() {
@@ -164,7 +204,7 @@ export default async function ProfilePage() {
 }
 ```
 
-To get session (logged user) in client components use `useSession()` from `next-auth`:
+To get session in client components use `useSession()` from `next-auth/react`:
 
 ```tsx
 "use client"
@@ -179,12 +219,95 @@ export default function ProfilePage() {
 }
 ```
 
+To omit the `Authorization` header and skip token detection, you can pass `omitUserAuthorization: true` in the `options` object of the `fetchAPI` function. Token detection is a dynamic operation, which prevents static rendering of the page.
+
+#### Fetch functions
+
+The [BaseStrapiClient](src/lib/strapi-api/base.ts) class contains functions that wrap the native `fetch()` method, with pre-configured base path, token management, headers, and query parameter handling. It provides the following functions: `fetchAPI`, `fetchOne`, `fetchMany`, `fetchAll`, `fetchOneBySlug`, and `fetchOneByFullPath`.
+
+- `fetchAPI` – the most general-purpose function for making API requests (`GET`, `POST`, `PUT`, `DELETE`). It can be used in any scenario, but the return type must be manually specified. This function is especially useful when:
+
+  - Fetching data from or sending data to a custom Strapi endpoint (e.g. `GET /users/my-logic-endpoint`)
+  - The data is not associated with any Strapi content type
+  - The endpoint is already used by another handler (e.g. the content type `"plugin::users-permissions.user"` is reserved for `GET /users`, so `GET /users/me` must use `fetchAPI` instead — see below):
+
+```ts
+import { Result } from "@repo/strapi"
+
+const fetchedUser: Result<"plugin::users-permissions.user"> =
+  await Strapi.PrivateStrapiClient("/users/me", undefined, undefined, {
+    userJWT: token.strapiJWT,
+  })
+```
+
+- other fetch functions – these are directly tied to Strapi content types. When calling them, you must specify the UUID (e.g. `"api::"`, `"admin::"`) of the `ContentType` you want to fetch. Based on this UUID, the response type is automatically inferred.
+  **To make this work**, you need to maintain a mapping between the `ContentType` UUID and the corresponding endpoint URL path—refer to the `API_ENDPOINTS` object in the [BaseStrapiClient](src/lib/strapi-api/base.ts) file. Also, Strapi **must have** [types generation](https://docs.strapi.io/cms/configurations/typescript#strapi-specific-configuration-for-typescript) enabled (true by default).
+
+> [!WARNING]
+> All attributes (and relations) are currently typed as optional (`... | null | undefined`) even if they are required in Strapi. This is current limitation of automatic typing inference and needs to be improved in future versions of this starter.
+
+In client React components/hooks use `useQuery` (or `useMutation`) hook from `@tanstack/react-query` to query/mutate data in reactive way. In server components call endpoint directly and fetch data (`/GET` endpoints) on server side - e.g. in `getData()` function or in component's body. You can also use Next.js' [server actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations).
+
+```tsx
+async function fetchData(locale: AppLocale) {
+  try {
+    return await PublicStrapiClient.fetchOne("api::navbar.navbar", undefined, {
+      locale,
+      populate: {
+        links: true,
+        logoImage: { populate: { image: true, link: true } },
+      },
+    })
+  } catch (e: any) {
+    console.error(
+      `Data for "api::navbar.navbar" content type wasn't fetched: `,
+      e?.message
+    )
+    return undefined
+  }
+}
+
+export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
+  const response = await fetchData(locale)
+}
+```
+
+### Page builder
+
+Page builder landing page is rendered inside the main [dynamic route](src/app/[locale]/[[...rest]]/page.tsx). It is an optional catch-all segment that captures every segment — in our case, the `fullPath` attribute of pages (e.g. `/page-1-full-path`) from Strapi. All published pages are rendered as nested URLs.
+
+Special case is the Index/Root page. By default, its `fullPath` is set to shared value `/` in the [@repo/shared-data](../../packages/shared-data/index.ts) package.
+
+Another important aspect is the mapping between Strapi components and frontend components. This is handled in the [src/components/page-builder/index.ts](src/components/page-builder/index.tsx) file. `PageContentComponents` contains a mapping between Strapi component names and their corresponding React components.
+
+> [!WARNING]
+> The mapping is not automatically generated, and it is your responsibility to keep it up to date. If you add a new page-level component in Strapi, you need to add it here as well.
+> Currently, there is a performance issue with dynamic lazy-loading and all components are preloaded in the page builder. This is a known issue and will be fixed in the future. See [#65](https://github.com/notum-cz/strapi-next-monorepo-starter/issues/65)
+
+> [!INFO]
+> Not all Strapi components should be rendered at the page level. Some components are intended to be used as subcomponents within other components (e.g. elements, utilities).
+> Single types (e.g. Navbar, Footer) are not rendered in the page builder, but are fetched and rendered separately. They are not included in the `PageContentComponents` mapping.
+
+### Metadata, sitemap.xml and robots.txt
+
+To generate **metadata** for each Page Builder page, the `generateMetadata()` function is used. It is called in the main [page builder page](./src/app/[locale]/[[...rest]]/page.tsx) and generates metadata based on the Strapi page's `seo` attribute. It creates standard page metadata, as well as Open Graph and Twitter tags, with fallbacks from locale files. See [getMetadataFromStrapi function](./src/lib/metadata/index.ts) for more details. To add structured data (LD-JSON), use the [StrapiStructuredData](./src/components/page-builder/components/seo-utilities/StrapiStructuredData.tsx) component, which is included by default.
+
+To generate **sitemap.xml**, we use the [built-in](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap) Next.js [sitemap.ts file](./src/app/sitemap.ts). It generates a sitemap based on Strapi data. You can specify which collections are pageable and should appear in the XML (defaults to `"api::page.page"`). The sitemap is created at runtime and revalidated according to the `NEXT_PUBLIC_REVALIDATE` environment variable. This behavior can be easily customized in the `fetchAll` function. The sitemap is not generated in environments other than production (env.APP_ENV === "production"). The sitemap is available at [localhost:3000/sitemap.xml](localhost:3000/sitemap.xml).
+
+To generate **robots.txt**, we also use the [built-in](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots) Next.js [robots.ts file](./src/app/robots.ts). It generates a robots.txt file with a basic configuration. Like `sitemap.xml`, this file is created only in the `production` environment. The robots.txt file is available at [localhost:3000/robots.txt](localhost:3000/robots.txt).
+
+### Strapi Live Previews
+
+This starter supports Strapi's new feature [Previews](https://docs.strapi.io/cms/features/preview). It works by embedding an iframe of the frontend application directly inside the editor. In order to enable the feature, you need to configure the following `STRAPI_PREVIEW_SECRET` env variable. It must be same for frontend and backend.
+
+We use Next.js's built-in [draft mode](https://nextjs.org/docs/app/guides/draft-mode) to enable draft mode in the app. Configuration is done in the [route handler](src/app/api/preview/route.ts) and the [StrapiPreviewListener component](src/components/elementary/StrapiPreviewListener/index.tsx).
+
 ### Localization
 
 App is ready for localization. It uses `next-intl` package with basic configuration. For more in-depth configuration, see the [docs](https://next-intl-docs.vercel.app/docs/getting-started/app-router). Relevant files:
 
 - Next-intl plugin is defined in [src/lib/i18n.ts](src/lib/i18n.ts) and used by [src/middleware.ts](src/middleware.ts) and registered in [next.config.mjs](next.config.mjs)
-- locales (messages) in `locales/*`
+- locales (messages) in [src/locales](locales/) directory
 - augmented types configured in `src/types/global.d.ts`, so messages keys in `useTranslation()` or `getTranslations()` are auto-completeable during development
 - Navigation utils are wrapped using `createSharedPathnamesNavigation()` in [src/lib/navigation.ts](src/lib/navigation.ts) to provide `usePathname`, `Link`, `redirect` and `useRouter` with correct locale prefix
 
@@ -233,9 +356,7 @@ import { Link, useRouter, redirect } from "next/navigation"
 
 ### Environment variables
 
-Define them in `.env.local.example`, `.env.local` and `src/env.mjs` file where [@t3-oss/env-nextjs](https://github.com/t3-oss/t3-env) validation package is used. This package is used to validate and type-check environment variables.
-
-Usage:
+Define them in [.env.local.example](./.env.local.example), [.env.local](./.env.local) and [src/env.mjs](./src/env.mjs) file where [@t3-oss/env-nextjs](https://github.com/t3-oss/t3-env) validation package is used. This package is used to validate and type-check environment variables. Usage:
 
 ```tsx
 import { env } from "@/env.mjs"
@@ -247,9 +368,13 @@ console.log(env.STRAPI_URL)
 console.log(process.env.STRAPI_URL)
 ```
 
+Environment variables that need to be available in the build-time context of Turborepo tasks must be defined in the [turbo.json](../../turbo.json) file under the `globalEnv` section. The build step (`turbo run build`) runs in a sandboxed environment where only explicitly specified environment variables are accessible. Mandatory variables (e.g. `STRAPI_URL` or `APP_PUBLIC_URL`), as defined in `env.mjs`, must be included in `globalEnv`. **This is essential** for the build process to function correctly with Turborepo and t3 package.
+
+Environment variables starting with `NEXT_PUBLIC_` are [automatically available](https://nextjs.org/docs/app/guides/environment-variables#runtime-environment-variables) in the client-side code. Don't store any sensitive information in these variables, as they are exposed.
+
 ### Error handling
 
-General unexpected **rendering** and **lifecycle** errors (not event handlers, not async code) are automatically caught by boundary defined in root [error.tsx](src/app/[locale]/error.tsx). This file [can be defined](https://nextjs.org/docs/14/app/building-your-application/routing/error-handling) at different levels/segments in route hierarchy.
+General unexpected **rendering** and **lifecycle** errors (not event handlers, not async code) are automatically caught by boundary defined in root [error.tsx](src/app/[locale]/error.tsx). This file [can be defined](https://nextjs.org/docs/app/building-your-application/routing/error-handling) at different levels/segments in route hierarchy.
 
 For even more granular error handling use custom [ErrorBoundary](src/components/elementary/ErrorBoundary.tsx) component. ErrorBoundary is easily configurable client-side component that utilizes [react-error-boundary](https://github.com/bvaughn/react-error-boundary) package and catches errors in smaller parts of the UI or individual components. By default it wraps Strapi components as their content is fetched from CMS and don't guarantee correctness.
 
@@ -262,142 +387,82 @@ export default function Page() {
       customErrorTitle="Uh-oh, we broke something! Again..."
       showErrorMessage
     >
-      <PageBuilderNavbar />
+      <StrapiNavbar />
     </ErrorBoundary>
   )
 }
 ```
 
-#### Sentry logging
+### Sentry logging
 
 Errors passed through `<ErrorBoundary />` or `error.tsx` are automatically logged to Sentry. To turn Sentry on, set `NEXT_PUBLIC_SENTRY_DSN` to environment variables. `SENTRY_AUTH_TOKEN`, `SENTRY_ORG` and `SENTRY_PROJECT` are optional and serve for uploading source maps to Sentry during deployment. Uncaught errors are logged automatically.
 
 Configuration is done in [sentry.client.config.ts](sentry.client.config.ts), [sentry.server.config.ts](sentry.server.config.ts), [sentry.edge.config.ts](sentry.edge.config.ts), [instrumentation.ts](src/instrumentation.ts) and [next.config.mjs](next.config.mjs) files. More information can be found in [Sentry documentation](https://docs.sentry.io/platforms/javascript/guides/nextjs/).
 
-### Data fetching
+### Next Image
 
-To fetch data from API use `Strapi` class defined in [lib/strapi.ts](src/lib/strapi.ts). Basically, it is wrapper around native `fetch()` with pre-configured base path, token management, headers manipulation and exposed fetch functions to `fetchAPI`, `fetchOne`, `fetchMany`, `fetchAll` or `fetchOneBySlug`:
+The Next.js `Image` component is performance-optimized but also demanding, so it must be used carefully, especially with SEO considerations. For a full understanding of how it works, refer to the [official documentation](https://nextjs.org/docs/app/api-reference/components/image). Review the current configuration in the [next.config.mjs](next.config.mjs) file.
 
-- `fetchAPI` - the most general function to get (or post, put...) data from the API. It can be used at any time, but the return type must be typed manually. This function is useful when:
-  - data is fetched from/to a custom Strapi endpoint (e.g. `GET /users/my-logic-endpoint`)
-  - data is not related to any Strapi content type
-  - it's already in use by different handler (e.g. content type `"plugin::users-permissions.user"` is reserved for `GET /users` so `GET /users/me` has to use `fetchAPI` - see bellow):
+The following image components are provided as wrappers around the native `Image` component:
 
-```ts
-import { Result } from "@repo/strapi"
+1. `/src/components/elementary/ImageWithBlur.tsx` – Displays images with a synchronous blur effect. Ideal for improving UX and performance. Has no side effects.
+2. `/src/components/elementary/ImageWithFallback.tsx` – A **client-only** enhancement of `ImageWithBlur`. It checks if the image is loaded and displays a fallback image if not. If both primary and secondary sources fail, it falls back to a local placeholder.
+3. `/src/components/elementary/ImageWithPlaiceholder.tsx` – Uses [plaiceholder](https://plaiceholder.co/docs) to generate visually appealing placeholders asynchronously. Supports server-side rendering and fallback logic. If both primary and secondary images fail, it falls back to a local placeholder.
 
-const fetchedUser: Result<"plugin::users-permissions.user"> =
-  await Strapi.fetchAPI("/users/me", undefined, undefined, {
-    strapiJWT: token.strapiJWT,
-  })
-```
+> [!INFO]
+> ImageWithPlaiceholder is currently put on hold due to performance issues.
 
-- `fetchOne`, `fetchMany`, `fetchAll` or `fetchOneBySlug` - these functions are linked directly to Strapi content types. This means that during the call it is necessary to specify the UUID (`"api::", "admin::"` etc.) of `ContentType` you want to fetch. Based on this, the response is automatically typed. **To make this working** you have to maintain a mapping between `ContentType` UUID and endpoint URL path - see `API_ENDPOINTS` object in [lib/strapi.ts](src/lib/strapi.ts) file.
+### reCAPTCHA v3
 
-> [!WARNING]
-> All attributes (and relations) are currently typed as optional (`... | null | undefined`) even if they are required in Strapi. This is current limitation of automatic typing inference and needs to be improved in future versions of this template.
+[reCAPTCHA v3](https://developers.google.com/recaptcha/docs/v3) is [preconfigured](./src/lib/recaptcha.ts) in the app. To enable it, set the `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` and `RECAPTCHA_SECRET_KEY` environment variables. Wrap your form with the `ReCaptchaProvider` component and use the `useReCaptcha` hook to execute reCAPTCHA. The resulting reCAPTCHA token should then be validated on the server side using the `validateRecaptcha` function.
 
-In client React components/hooks use `useQuery` (or `useMutation`) hook from `@tanstack/react-query` to query/mutate data in reactive way. In server components call endpoint directly and fetch data (`/GET` endpoints) on NextJS server side - e.g. in `getData()` function or in component's body.
+```tsx
+// server action
 
-Next's [server actions](https://nextjs.org/docs/14/app/building-your-application/data-fetching/server-actions-and-mutations) are not used in this project.
+import { validateRecaptcha } from "@/lib/recaptcha"
 
-#### Authorization in API
+export const submitContactUsForm = (payload: FormData) => {
+  const recaptchaToken = payload.get("recaptchaToken")
+  const isValid = await validateRecaptcha(recaptchaToken)
 
-Strapi API endpoints are usually protected by JWT token. To fetch data from protected API, you have to pass the token in the `Authorization` header of the request. The token is stored in the NextAuth session object, which is returned by `getAuth()` function (RSC) or `useSession()`/`await getSession()` in client components.
-
-To avoid passing the token manually in each request (into `fetch` functions above), you can leverage the `Strapi.prepareHeader()` function, which tries to get the token from the session according to the request context (server or client) and adds it to the headers automatically.
-
-In client components `Strapi` uses `getSession()` which first makes HTTP request to NextAuth's `/api/auth/session` endpoint to get the session object and then makes the actual request to Strapi API. This isn't optimal but `useSession()` hook doesn't work outside of React components and currently you haven't implemented a better way to get the session on the client side. As a workaround (in most cases this additional request is not problematic), you can pass the `strapiJWT` directly to the `fetch` functions as shown in the example below.
-
-To omit `Authorization` header and token detection, you can pass `omitAuthorization: true` in the `options` object of `fetchAPI` function. Token detection is dynamic operation so it blocks static rendering of the page.
-
-```ts
-"use client"
-
-import { useSession } from "next-auth/react"
-import API from "@/lib/api"
-
-export function UserProfile(){
-  const session = useSession()
-
-  const updateUser = async () => {
-    await API.fetchAPI(
-      `/users/${id}`,
-      undefined,
-      { body: JSON.stringify(data), method: "PUT" },
-      // pass token from `useSession` directly to prevent additional request from browser to get session
-      { strapiJWT: session.data?.strapiJWT }
-    )
+  if (!isValid) {
+    throw new Error("Invalid reCAPTCHA token")
   }
-
-  return <button onClick={updateUser}>Update</button>
 }
 ```
 
-### Strapi page builder
+```tsx
+// Wrap form with reCAPTCHA provider
 
-#### Handler
+export default function Page() {
+  import { ReCaptchaProvider } from "next-recaptcha-v3"
+  import { ContactUsForm } from "@/components/forms/ContactUsForm"
+  import { env } from "@/env.mjs"
 
-By default, page builder landing page is rendered inside [/builder route](src/app/[locale]/builder/page.tsx). Pages created in Strapi DB are then rendered as nested URLs based on their slug (e.g. `/builder/page-slug-from-strapi`). If you need to remove "/builder" from URL and run page builder on the root page, you have to:
+  return (
+    <ReCaptchaProvider reCaptchaKey={env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}>
+      <ContactUsForm />
+    </ReCaptchaProvider>
+  )
+}
+```
 
-- move [[...rest]](src/app/[locale]/builder/[...rest]) directory to the root [src/app/[locale]](src/app/[locale]) or change the name of "builder" directory to `(builder)` and fix multiple `page.tsx` files
-- in [StrapiPage](src/app/[locale]/builder//[...rest]//page.tsx) change code that filters out "builder" word from URL (2 places).
+```tsx
+// Form component
 
-#### Flow
+import { useReCaptcha } from "next-recaptcha-v3"
 
-To add new Strapi component/single type to the frontend, follow these steps:
+import { submitContactUsForm } from "@/lib/actions"
 
-1. define new entity and its attributes in Strapi
-2. implement new entity into UI component, add required styling and save it into custom file in one of [src/components/page-builder](src/components/page-builder) folders.
-   - component should always except `component` as prop with type based on Strapi typing
-   - do NOT create typing for Strapi entities manually, use directly Strapi typing which is available by default as feature of monorepo setup
-   - keep name of frontend component in sync with Strapi component name
-3. add new component to `printableComps` mapping in [src/components/page-builder/ComponentsRenderer](src/components/page-builder/ComponentsRenderer.tsx)
-   - add only "section" (=page level) components to this map
-   - "shared" components (small pieces of UI which are used in multiple bigger components) are not usually included in this map (they don't have any "section" level styling)
-   - single types are handled separately (fetched and rendered at specific position in the page), so they are not part of this map too
-4. That's it! Now, add new component to some Page (`api::page:page`) in Strapi and it should be automatically rendered on frontend.
+export function ContactUsForm() {
+  const { executeRecaptcha } = useRecaptcha()
 
-Following components are already implemented and can be used:
+  const onSubmit = async (data: FormData) => {
+    const recaptchaToken = await executeRecaptcha("submit_form")
+    data.append("recaptchaToken", recaptchaToken)
+    submitContactUsForm(data)
+  }
 
-#### Components
-
-- "sections.animated-logo-row" -> AnimatedLogoRow,
-- "sections.carousel" -> CarouselGrid,
-- "sections.contact-form" -> ContactFormSection,
-- "sections.faq" -> Faq,
-- "sections.feature-grid" -> FeatureGrid,
-- "sections.heading-with-cta-button" -> HeadingWithCTAButton,
-- "sections.hero" -> Hero,
-- "sections.horizontal-images" -> HorizontalImages,
-- "sections.image-with-cta-button" -> ImageWithCTAButton,
-- "sections.newsletter" -> Newsletter,
-- "shared.basic-image" -> BasicImage
-- "shared.image-with-link" -> ImageWithLink
-- "shared.link" -> LinkStrapi
-- "layout.navbar" -> available to override global "api::navbar.navbar" for specific page
-
-[src/components/page-builder/components](src/components/page-builder/components)
-
-#### Single types
-
-- "api::footer.footer" -> PageBuilderFooter
-- "api::navbar.navbar" -> PageBuilderNavbar
-
-[src/components/page-builder/singleTypes](src/components/page-builder/singleTypes)
-
-#### Collection Types
-
-- "api::page.page" -> StrapiPage (main page builder page)
-
-[src/app/[locale]/builder/[...rest]](src/app/[locale]/builder/[...rest])
-
-### Next Image
-
-Next Image is a very demanding component, so it needs to be approached with caution, keeping in mind that you must also consider SEO. For studying how next image works see [https://nextjs.org/docs/14/app/api-reference/components/image](https://nextjs.org/docs/14/app/api-reference/components/image). It's important to also look into the [next.config](next.config.mjs) file for current settings.
-
-Following image components are prepared. They all are wrapper around the Next Image component.
-
-1. [ImageWithBlur](src/components/elementary/ImageWithBlur.tsx) - this component is used to display images with blur effect in synchronous way. Good for UX and optimalization. No side effects.
-2. [ImageWithFallback](src/components/elementary/ImageWithFallback.tsx) - this component is used to display images with fallback to placeholder. It's **client-only** upgrade of `ImageWithBlur`. Firstly, it checks if image is loaded and if not, it displays fallback image. If primary and secondary images fail to load, it displays local placeholder as last resort.
-3. [ImageWithPlaiceholder](src/components/elementary/ImageWithPlaiceholder.tsx) - this component uses [https://plaiceholder.co/docs](https://plaiceholder.co/docs) to generate beautiful image placeholders in asynchronous way. It supports server-side rendering and handles fallback/secondary images too. If primary and secondary images fail to load, it displays local placeholder as last resort.
+  return <form onSubmit={onSubmit}>{/* ... */}</form>
+}
+```
