@@ -1,6 +1,6 @@
 # 🔥 STRAPI Starter Template
 
-This is a [Stapi v5](https://strapi.io/) project bootstrapped with TypeScript using [Strapi CLI](https://docs.strapi.io/dev-docs/cli).
+This is a [Stapi v5](https://strapi.io/) project.
 
 ## 🥞 Tech stack
 
@@ -8,6 +8,7 @@ This is a [Stapi v5](https://strapi.io/) project bootstrapped with TypeScript us
 - yarn 1.22
 - Strapi 5
 - TypeScript
+- Docker
 - Postgres 16 alpine (in local docker container)
 
 ## 📦 Included plugins and packages
@@ -21,19 +22,11 @@ This is a [Stapi v5](https://strapi.io/) project bootstrapped with TypeScript us
 - @strapi/provider-upload-aws-s3
 - strapi-plugin-config-sync
 - strapi-v5-plugin-populate-deep
-- qs, slugify
+- qs
 - lodash
 - pg
 
 ## 🚀 Get up and develop
-
-#### Transform this template to a project
-
-- Remove packages you don't need from `package.json` and reinstall dependencies.
-- In `docker-compose.yml` change top-level name "dev-templates" (optionally network name too) according to project name to overcome name clashes in dev's computers.
-- For Heroku deployment you have to create S3 bucket and set up ENV variables (Heroku removes uploaded files after dyno restart).
-
-_[After this preparation is done, delete this section]_
 
 ### Environment variables
 
@@ -64,7 +57,7 @@ docker compose up -d db
 yarn develop
 ```
 
-Another way is to run **Strapi in docker** container too. Currently, an available Strapi [Dockerfile](Dockerfile) is prepared only for **production** run (see below). Development `Dockerfile.dev` is **not** ready yet.
+Another way is to run **Strapi in docker** container too. Currently, an available Strapi [Dockerfile](Dockerfile) is prepared only for **production** run (see below).
 
 #### Default dev addresses
 
@@ -81,6 +74,10 @@ There is `strapi-export.tar.gz` file in root directory with some init data. You 
 
 yarn strapi import -f strapi-export.tar.gz
 ```
+
+### Sync configuration
+
+Go to Strapi admin panel and navigate to Settings > Config Sync > Tools. Click on "Import" button to import the configuration from files. More info about config sync is [below](#config-sync).
 
 ## 🛠️ Production build (Docker)
 
@@ -113,10 +110,6 @@ docker run -it --rm --name strapi -p 1337:1337 --env-file apps/strapi/.env --net
 DATABASE_HOST=db
 ```
 
-## 🚢 Deploy to Heroku
-
-Use buildpacks and setup scripts from [this @notum-cz repository](https://github.com/notum-cz/heroku-scripts). `DATABASE_URL` connection string is provided by Heroku Postgres addon automatically.
-
 ## ✨ Features
 
 ### Plugins
@@ -143,7 +136,7 @@ Tu enable Sentry plugin, set `SENTRY_DSN` to environment variables. By default, 
 
 Sentry service can be used in Strapi controllers and services as any other service. Uncaught errors are logged automatically. More information can be found in [Sentry](https://docs.sentry.io/platforms/javascript/) and [Strapi](https://docs.strapi.io/dev-docs/plugins/sentry) docs.
 
-```tsx
+```ts
 // example of how to use Sentry in controller
 
 async find(ctx) {
@@ -201,7 +194,8 @@ Edit `config/cron-tasks.ts` to add cron jobs. Enable them by setting `CRON_ENABL
 
 ### Strapi Live Previews
 
-This template supports Strapi's new feature: [Previews](https://docs.strapi.io/cms/features/preview). It works by embedding an iframe of the frontend application directly inside the editor.
+This starter supports Strapi's new feature: [Previews](https://docs.strapi.io/cms/features/preview). It works by embedding an iframe of the frontend application directly inside the editor.
+
 In order to enable the feature, you need to configure the following environmental variables:
 
 - `STRAPI_PREVIEW_ENABLED`: `true` to enable, otherwise disabled

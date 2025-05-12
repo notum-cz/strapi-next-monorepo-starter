@@ -10,7 +10,7 @@ This is a [Next.js v15](https://nextjs.org/docs) project.
 - React 18
 - TypeScript
 - [shadcn/ui](https://ui.shadcn.com/)
-- [TailwindCSS v4](https://tailwindcss.com/)
+- [TailwindCSS 4](https://tailwindcss.com/)
 - [Lucide icons](https://lucide.dev)
 
 ## 📦 Included packages
@@ -33,17 +33,9 @@ This is a [Next.js v15](https://nextjs.org/docs) project.
 
 ## 🚀 Get up and develop
 
-#### Transform this template to a project
-
-To turn this project template into a project:
-
-- Remove packages you don't need from `package.json` and reinstall dependencies.
-
-_[After this preparation is done, delete this section]_
-
 ### Environment variables
 
-Copy & rename `.env.local.example` to `.env.local` and fill or update in the values.
+Copy & rename `.env.local.example` to `.env.local` and fill or update in the values. `APP_PUBLIC_URL`, `STRAPI_URL` and `STRAPI_REST_READONLY_API_KEY` are required.
 
 #### Read-only API token
 
@@ -60,7 +52,7 @@ Token will only be displayed once.
 
 #### Custom API token
 
-For other requests methods (POST, PUT, DELETE), we use custom API token, that has **manually** allowed permissions for specific operations and content types. This token is also set as an environmental variable `STRAPI_REST_CUSTOM_API_KEY` and has following configuration:
+For other requests methods (POST, PUT, DELETE), we use custom API token, that has **manually** allowed permissions for specific operations and content types. Create it when you need to modify data in Strapi from the UI app. This token is also set as an environmental variable `STRAPI_REST_CUSTOM_API_KEY` and has following configuration:
 
 ```
 Name: any name
@@ -163,7 +155,11 @@ To merge multiple Tailwind classes and handle dynamic class names more effective
 ```tsx
 import { cn } from "@/lib/styles"
 
-;<div className={cn("flex items-center justify-center", className)}>...</div>
+export function MyComponent() {
+  return (
+    <div className={cn("flex items-center justify-center", className)}>...</div>
+  )
+}
 ```
 
 ## ✨ Features
@@ -183,11 +179,11 @@ The client does not call Strapi directly. Instead, it uses Next.js's [route hand
 
 The proxy automatically injects either the `STRAPI_REST_READONLY_API_KEY` or `STRAPI_REST_CUSTOM_API_KEY` into the `Authorization` header. These keys are stored securely on the server. The choice of token depends on the HTTP method: `GET` requests use the read-only token, while other methods use the custom token.
 
-With the read-only token, it's possible to fetch data from any Strapi content type (assuming the endpoint name can be guessed). To improve security and prevent unrestricted data access, an additional layer—`ALLOWED_STRAPI_ENDPOINTS`—is used. This list defines the specific Strapi endpoints that are allowed to be accessed.
+With the read-only token, it's possible to fetch data from any Strapi content type (assuming the endpoint name can be guessed). To improve security and prevent unrestricted data access, an additional layer — `ALLOWED_STRAPI_ENDPOINTS` — is used. This list defines the specific Strapi endpoints that are allowed to be accessed. Keep it **up to date** with the content types you want to expose.
 
 #### Private API
 
-Applications with authentication pages (e.g. `/auth/signin`, `/auth/register`) require the [Strapi Users & Permissions plugin](https://docs.strapi.io/cms/features/users-permissions) to be enabled. This is enabled by default. The [PrivateStrapiClient](src/lib/strapi-api/private.ts) class is used for making private API requests—user JWT tokens are automatically injected on both the server and client sides, and it returns data related to the logged-in user.
+Applications with authentication pages (e.g. `/auth/signin`, `/auth/register`) require the [Strapi Users & Permissions plugin](https://docs.strapi.io/cms/features/users-permissions) to be enabled. This is enabled by default. The [PrivateStrapiClient](src/lib/strapi-api/private.ts) class is used for making private API requests — user JWT tokens are automatically injected on both the server and client sides, and it returns data related to the logged-in user.
 
 Again, Strapi is not called directly, instead, it uses Next.js's [route handler](src/app/api/private-proxy/[...slug]/route.ts) as a private proxy. This proxy hides the Strapi backend URL, preventing users from accessing it directly.
 
@@ -286,11 +282,25 @@ Another important aspect is the mapping between Strapi components and frontend c
 
 > [!WARNING]
 > The mapping is not automatically generated, and it is your responsibility to keep it up to date. If you add a new page-level component in Strapi, you need to add it here as well.
-> Currently, there is a performance issue with loading all components in the page builder. This is a known issue and will be fixed in the future.
+> Currently, there is a performance issue with dynamic lazy-loading and all components are preloaded in the page builder. This is a known issue and will be fixed in the future. See [#65](https://github.com/notum-cz/strapi-next-monorepo-starter/issues/65)
 
 > [!INFO]
 > Not all Strapi components should be rendered at the page level. Some components are intended to be used as subcomponents within other components (e.g. elements, utilities).
 > Single types (e.g. Navbar, Footer) are not rendered in the page builder, but are fetched and rendered separately. They are not included in the `PageContentComponents` mapping.
+
+### Metadata, sitemap.xml and robots.txt
+
+To generate **metadata** for each Page Builder page, the `generateMetadata()` function is used. It is called in the main [page builder page](./src/app/[locale]/[[...rest]]/page.tsx) and generates metadata based on the Strapi page's `seo` attribute. It creates standard page metadata, as well as Open Graph and Twitter tags, with fallbacks from locale files. See [getMetadataFromStrapi function](./src/lib/metadata/index.ts) for more details. To add structured data (LD-JSON), use the [StrapiStructuredData](./src/components/page-builder/components/seo-utilities/StrapiStructuredData.tsx) component, which is included by default.
+
+To generate **sitemap.xml**, we use the [built-in](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap) Next.js [sitemap.ts file](./src/app/sitemap.ts). It generates a sitemap based on Strapi data. You can specify which collections are pageable and should appear in the XML (defaults to `"api::page.page"`). The sitemap is created at runtime and revalidated according to the `NEXT_PUBLIC_REVALIDATE` environment variable. This behavior can be easily customized in the `fetchAll` function. The sitemap is not generated in environments other than production (env.APP_ENV === "production"). The sitemap is available at [localhost:3000/sitemap.xml](localhost:3000/sitemap.xml).
+
+To generate **robots.txt**, we also use the [built-in](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots) Next.js [robots.ts file](./src/app/robots.ts). It generates a robots.txt file with a basic configuration. Like `sitemap.xml`, this file is created only in the `production` environment. The robots.txt file is available at [localhost:3000/robots.txt](localhost:3000/robots.txt).
+
+### Strapi Live Previews
+
+This starter supports Strapi's new feature [Previews](https://docs.strapi.io/cms/features/preview). It works by embedding an iframe of the frontend application directly inside the editor. In order to enable the feature, you need to configure the following `STRAPI_PREVIEW_SECRET` env variable. It must be same for frontend and backend.
+
+We use Next.js's built-in [draft mode](https://nextjs.org/docs/app/guides/draft-mode) to enable draft mode in the app. Configuration is done in the [route handler](src/app/api/preview/route.ts) and the [StrapiPreviewListener component](src/components/elementary/StrapiPreviewListener/index.tsx).
 
 ### Localization
 
@@ -346,9 +356,7 @@ import { Link, useRouter, redirect } from "next/navigation"
 
 ### Environment variables
 
-Define them in `.env.local.example`, `.env.local` and `src/env.mjs` file where [@t3-oss/env-nextjs](https://github.com/t3-oss/t3-env) validation package is used. This package is used to validate and type-check environment variables.
-
-Usage:
+Define them in [.env.local.example](./.env.local.example), [.env.local](./.env.local) and [src/env.mjs](./src/env.mjs) file where [@t3-oss/env-nextjs](https://github.com/t3-oss/t3-env) validation package is used. This package is used to validate and type-check environment variables. Usage:
 
 ```tsx
 import { env } from "@/env.mjs"
@@ -359,6 +367,10 @@ console.log(env.STRAPI_URL)
 // ❌ NOT OK
 console.log(process.env.STRAPI_URL)
 ```
+
+Environment variables that need to be available in the build-time context of Turborepo tasks must be defined in the [turbo.json](../../turbo.json) file under the `globalEnv` section. The build step (`turbo run build`) runs in a sandboxed environment where only explicitly specified environment variables are accessible. Mandatory variables (e.g. `STRAPI_URL` or `APP_PUBLIC_URL`), as defined in `env.mjs`, must be included in `globalEnv`. **This is essential** for the build process to function correctly with Turborepo and t3 package.
+
+Environment variables starting with `NEXT_PUBLIC_` are [automatically available](https://nextjs.org/docs/app/guides/environment-variables#runtime-environment-variables) in the client-side code. Don't store any sensitive information in these variables, as they are exposed.
 
 ### Error handling
 
@@ -381,7 +393,7 @@ export default function Page() {
 }
 ```
 
-#### Sentry logging
+### Sentry logging
 
 Errors passed through `<ErrorBoundary />` or `error.tsx` are automatically logged to Sentry. To turn Sentry on, set `NEXT_PUBLIC_SENTRY_DSN` to environment variables. `SENTRY_AUTH_TOKEN`, `SENTRY_ORG` and `SENTRY_PROJECT` are optional and serve for uploading source maps to Sentry during deployment. Uncaught errors are logged automatically.
 
@@ -389,10 +401,68 @@ Configuration is done in [sentry.client.config.ts](sentry.client.config.ts), [se
 
 ### Next Image
 
-The Next.js `Image` component is performance-optimized but also demanding, so it must be used carefully, especially with SEO considerations. For a full understanding of how it works, refer to the [official documentation](https://nextjs.org/docs/14/app/api-reference/components/image). Review the current configuration in the [next.config.mjs](next.config.mjs) file.
+The Next.js `Image` component is performance-optimized but also demanding, so it must be used carefully, especially with SEO considerations. For a full understanding of how it works, refer to the [official documentation](https://nextjs.org/docs/app/api-reference/components/image). Review the current configuration in the [next.config.mjs](next.config.mjs) file.
 
 The following image components are provided as wrappers around the native `Image` component:
 
 1. `/src/components/elementary/ImageWithBlur.tsx` – Displays images with a synchronous blur effect. Ideal for improving UX and performance. Has no side effects.
 2. `/src/components/elementary/ImageWithFallback.tsx` – A **client-only** enhancement of `ImageWithBlur`. It checks if the image is loaded and displays a fallback image if not. If both primary and secondary sources fail, it falls back to a local placeholder.
 3. `/src/components/elementary/ImageWithPlaiceholder.tsx` – Uses [plaiceholder](https://plaiceholder.co/docs) to generate visually appealing placeholders asynchronously. Supports server-side rendering and fallback logic. If both primary and secondary images fail, it falls back to a local placeholder.
+
+> [!INFO]
+> ImageWithPlaiceholder is currently put on hold due to performance issues.
+
+### reCAPTCHA v3
+
+[reCAPTCHA v3](https://developers.google.com/recaptcha/docs/v3) is [preconfigured](./src/lib/recaptcha.ts) in the app. To enable it, set the `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` and `RECAPTCHA_SECRET_KEY` environment variables. Wrap your form with the `ReCaptchaProvider` component and use the `useReCaptcha` hook to execute reCAPTCHA. The resulting reCAPTCHA token should then be validated on the server side using the `validateRecaptcha` function.
+
+```tsx
+// server action
+
+import { validateRecaptcha } from "@/lib/recaptcha"
+
+export const submitContactUsForm = (payload: FormData) => {
+  const recaptchaToken = payload.get("recaptchaToken")
+  const isValid = await validateRecaptcha(recaptchaToken)
+
+  if (!isValid) {
+    throw new Error("Invalid reCAPTCHA token")
+  }
+}
+```
+
+```tsx
+// Wrap form with reCAPTCHA provider
+
+export default function Page() {
+  import { ReCaptchaProvider } from "next-recaptcha-v3"
+  import { ContactUsForm } from "@/components/forms/ContactUsForm"
+  import { env } from "@/env.mjs"
+
+  return (
+    <ReCaptchaProvider reCaptchaKey={env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}>
+      <ContactUsForm />
+    </ReCaptchaProvider>
+  )
+}
+```
+
+```tsx
+// Form component
+
+import { useReCaptcha } from "next-recaptcha-v3"
+
+import { submitContactUsForm } from "@/lib/actions"
+
+export function ContactUsForm() {
+  const { executeRecaptcha } = useRecaptcha()
+
+  const onSubmit = async (data: FormData) => {
+    const recaptchaToken = await executeRecaptcha("submit_form")
+    data.append("recaptchaToken", recaptchaToken)
+    submitContactUsForm(data)
+  }
+
+  return <form onSubmit={onSubmit}>{/* ... */}</form>
+}
+```

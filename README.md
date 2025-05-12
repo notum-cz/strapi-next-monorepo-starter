@@ -1,6 +1,14 @@
 # 🔥 Strapi v5 & Next.js v15 Monorepo Starter
 
-This is a ready-to-go starter template for Strapi projects. It combines the power of Strapi, Next.js, Shadcn/ui libraries with Turborepo setup and kickstarts your project development. We call it a **page-builder**.
+This is a ready-to-go starter template for Strapi projects. It combines the power of Strapi, Next.js, Shadcn/ui libraries with Turborepo setup and kickstarts your project development. We call it a **Page builder** for enterprise applications.
+
+## 👀 Live demo
+
+- UI - [https://www.notum-dev.cz/](https://www.notum-dev.cz/)
+- Strapi - [https://api.notum-dev.cz/admin](https://api.notum-dev.cz/admin)
+- **Readonly user:**
+  - Email: user@notum.cz
+  - Password: Secret-pass-55
 
 ## 🥞 Tech stack
 
@@ -12,75 +20,75 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 ## 🚀 Getting started
 
-[![Launch Strapi + Next.js Monorepo — Live in 5 Minutes](https://img.youtube.com/vi/vlnDWwt4YR0/maxresdefault.jpg)](https://www.youtube.com/watch?v=vlnDWwt4YR0 "Watch on YouTube")
-
 ### Prerequisites
 
+- Docker
 - node 22
 - yarn 1.22
 - [nvm](https://github.com/nvm-sh/nvm) (optional, recommended)
 
-### Run dev
+### Run dev (in 4 steps)
 
-- Clone this repository
+1. Clone this repository
 
-  ```sh
-  git clone https://github.com/notum-cz/strapi-next-monorepo-starter
-  ```
+```sh
+git clone https://github.com/notum-cz/strapi-next-monorepo-starter
+```
 
-- Install dependencies
+2. Install dependencies
 
-  ```sh
-  # in root
-  # switch to correct nodejs version (v22)
-  nvm use
+```sh
+# in root
+# switch to correct nodejs version (v22)
+nvm use
 
-  # install deps for apps and packages that are part of this monorepo
-  yarn
-  ```
+# install deps for apps and packages that are part of this monorepo
+yarn
+```
 
-  > Don't worry about warning "Workspaces can only be enabled in private projects <https://github.com/yarnpkg/yarn/issues/8580>
+> Don't worry about warning "Workspaces can only be enabled in private projects <https://github.com/yarnpkg/yarn/issues/8580>
 
-- Set up apps
+3. Set up apps
 
-  ```sh
-  # minimal setup of preparing the environment files (.env) for each app
-  yarn setup:apps
-  ```
+```sh
+# prepare environment files (.env) for each app
+yarn setup:apps
+```
 
-  - More setup is needed for communication with Strapi using API tokens
-  - See [What's inside?](#-whats-inside) for more details about apps and packages.
+> [!WARNING]
+> More **manual setup is needed** for communication with Strapi using API tokens. Please refer to the [UI README](apps/ui/README.md#environment-variables) before running the UI app. Otherwise, you will get **401 Unauthorized error** - missing or invalid credentials.
 
-- Run apps
+4. Run apps
 
-  ```sh
-  # run all apps in dev mode (this triggers `yarn dev` script in each app from `/apps` directory)
-  yarn dev
-  ```
+```sh
+# run all apps in dev mode (this triggers `yarn dev` script in each app from `/apps` directory)
+yarn dev
+```
 
-- 🎉 Enjoy!
+5. 🎉 Enjoy!
 
-  - Open your browser and go to [http://localhost:3000](http://localhost:3000) to see the UI app in action.
-  - Open your browser and go to [http://localhost:1337](http://localhost:1337) to see the Strapi app in action.
+- Open your browser and go to [http://localhost:3000](http://localhost:3000) to see the UI app in action.
+- Open your browser and go to [http://localhost:1337/admin](http://localhost:1337/admin) to see the Strapi app in action.
 
-> [!TIP]
->
-> - To prevent the 403 error on the home page, you need to allow the public users to access the Configuration API. To do that, go to the Strapi admin panel and navigate to Settings > Roles > Public. Then check the `find` permission for the Configuration API.
-> - Then to prevent 404 error for example part of the configuration - go to Content Manager add one example entry for the Configuration entry. This will allow the UI app to fetch the configuration data from the Strapi API.
+6. Next steps?
+
+- See [What's inside?](#-whats-inside) for more details about apps and packages.
+- You also probably want to customize naming in the project. See [Transform this template to a project](#-transform-this-template-to-a-project).
 
 ## ✨ Features
 
 - **Strapi**: Fully typed (TypeScript) and up-to-date Strapi v5 controllers and services
 - **Strapi config**: Pre-configured and pre-installed with the most common plugins, packages and configurations
 - **Page builder**: Page rendering mechanism and prepared useful components. Ready to plug-and-play
-- **DB Seed**: Seed script to populate DB with initial data
+- **Strapi live preview**: Preview/draft mode for Next.js app to see changes in Strapi in real-time
+- **DB seed**: Seed script to populate DB with initial data
 - **Next.js**: Fully typed and modern Next.js v15 App router project
 - **Proxies**: Proxy API calls to Strapi from Next.js app to avoid CORS issues, hide API keys and backend address
-- **API**: Typed API calls to Strapi via API service
+- **API**: Typed API calls to Strapi via API clients
 - **UI library**: 20+ pre-installed components, beautifully designed by [Shadcn/ui](https://ui.shadcn.com/)
 - **UI components**: Ready to use components for common use cases (forms, images, tables, navbar and much more)
 - **TailwindCSS**: [TailwindCSS v4](https://tailwindcss.com/) setup with configuration and theme, [CVA](https://cva.style/docs), [tailwind-merge](https://www.npmjs.com/package/tailwind-merge) and [tailwindcss-animate](https://www.npmjs.com/package/tailwindcss-animate)
-- **CkEditor**: Pre-configured [CkEditor v5](https://ckeditor.com/) with shared styles and colors
+- **CkEditor**: Pre-configured [CkEditor v5](https://ckeditor.com/) WYSIWYG editor with shared styles and colors
 - **Utils**: Useful utils, hooks and helper functions included
 - **Auth**: JWT authentication with [Strapi Users & Permissions feature](https://docs.strapi.io/cms/features/users-permissions) and [NextAuth.js](https://next-auth.js.org/), auth middleware and protected routes
 - **Auth providers**: Ready to plug-in providers like Google, Facebook etc.
@@ -92,7 +100,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 - **Husky**: Pre-commit hooks for linting, formatting and commit message validation
 - **Commitizen**: Commitizen for conventional commits and their generation
 - **Heroku ready**: Ready to deploy to Heroku in a few steps
-- ... and much more is waiting for you to discover! Check [UI README.md](apps/ui/README.md) and [Strapi README.md](apps/strapi/README.md) for more details.
+- ... and much more is waiting for you to discover!
 
 ## 📦 What's inside?
 
@@ -109,20 +117,18 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 - `packages/design-system`: shared styles, primarily for sharing CkEditor color configurations
 - `packages/shared-data`: package that stores common values across frontend and backend
 
-## Transform this template to a project
+## 💡 Transform this template to a project
 
-- In root `package.json` change `name` and `description` according to new project name. Optionally change names in apps and packages too. Keep `@repo` prefix if you don't prefer different scope/company.
-- Modify `README.md` files of apps to be less general (eg. update projects names, customize tech stack). Project-specific READMEs should not contain general leftovers from the template.
-- Follow "How to use this project template?" section in `apps/` READMEs to set up each app.
-  - [UI](./apps/ui/README.md)
-  - [Strapi](./apps/strapi/README.md)
-- If not deploying to Heroku, remove `Procfile`(s) from repository.
+- In the root `package.json`, update the `name` and `description` fields to match the new project name. Optionally, update the names in `/apps` and `/packages` as well. Keep the `@repo` prefix unless you prefer a different scope or company name—changing it will require updates throughout the entire monorepo.
+- In [docker-compose.yml](./apps/strapi/docker-compose.yml), update the top-level name "dev-templates" (and optionally the network name) to reflect the new project name. This helps prevent name conflicts on developers' machines.
+- If you're not deploying to Heroku, remove all `Procfile`s from the repository.
+- For Heroku deployment, create an S3 bucket and configure the necessary environment variables, as Heroku deletes uploaded files after dyno restarts.
 
 _[After this preparation is done, delete this section from README]_
 
-### Run - turborepo scripts
+## ☕ Turborepo scripts
 
-After installing dependencies and setting up projects (previous step), you can control all apps using Turbo CLI. Some common commands are wrapped into `yarn` scripts. You can find them in root `package.json` file. For example:
+After installing dependencies and setting env vars up, you can control all apps using Turbo CLI. Some common commands are wrapped into `yarn` scripts. You can find them in root [package.json](./package.json) file. For example:
 
 ```bash
 # run all apps in dev mode (this triggers `yarn dev` script in each app from `/apps` directory)
@@ -136,7 +142,7 @@ yarn dev:ui
 yarn dev:strapi
 ```
 
-## VSCode Extensions
+## 🔌 VSCode Extensions
 
 Install extensions listed in the [.vscode/extensions.json](.vscode/extensions.json) file and have a better development experience.
 
@@ -164,7 +170,7 @@ Husky is installed by default and configured to run following tasks:
 
 ### GitHub Actions
 
-We are using `GitHub Actions` for continuous integration. The `CI` expects some secrets (e.g. `NEXTAUTH_SECRET`) and variables (e.g. `NEXTAUTH_URL`, `APP_PUBLIC_URL`, `STRAPI_URL`) to be available on the runner, so make sure to add them in the repository's settings. Have a look at the [workflow](.github/workflows/ci.yml) definition for more details.
+We are using `GitHub Actions` for continuous integration. The `CI` expects some variables (`APP_PUBLIC_URL`, `STRAPI_URL` and `STRAPI_REST_READONLY_API_KEY`) to be available on the runner, so make sure to add them in the repository's settings. Have a look at the [workflow](.github/workflows/ci.yml) definition for more details.
 
 ### Heroku
 
