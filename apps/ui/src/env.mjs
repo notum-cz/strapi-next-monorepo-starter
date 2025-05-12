@@ -27,6 +27,7 @@ export const env = createEnv({
     SENTRY_AUTH_TOKEN: z.string().optional(),
     SENTRY_ORG: z.string().optional(),
     SENTRY_PROJECT: z.string().optional(),
+    STRAPI_PREVIEW_SECRET: z.string().optional(),
     RECAPTCHA_SECRET_KEY: z.string().optional(),
   },
   /*
@@ -78,6 +79,7 @@ export const env = createEnv({
     SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
     SENTRY_ORG: process.env.SENTRY_ORG,
     SENTRY_PROJECT: process.env.SENTRY_PROJECT,
+    STRAPI_PREVIEW_SECRET: process.env.STRAPI_PREVIEW_SECRET,
     RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY,
     NEXT_PUBLIC_RECAPTCHA_SITE_KEY: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
   },

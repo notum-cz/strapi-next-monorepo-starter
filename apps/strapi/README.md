@@ -198,3 +198,13 @@ Data can be easily transferred between environments in multiple ways. Check out 
 ### Cron jobs
 
 Edit `config/cron-tasks.ts` to add cron jobs. Enable them by setting `CRON_ENABLED=true` in `.env` file.
+
+### Strapi Live Previews
+
+This template supports Strapi's new feature: [Previews](https://docs.strapi.io/cms/features/preview). It works by embedding an iframe of the frontend application directly inside the editor.
+In order to enable the feature, you need to configure the following environmental variables:
+
+- `STRAPI_PREVIEW_ENABLED`: `true` to enable, otherwise disabled
+- `CLIENT_URL`: Absolute URL of the frontend application (http://127.0.0.1:3000 for local development in most cases)
+- `STRAPI_PREVIEW_SECRET`: shared secret between frontend and backend, which is used to authenticate if the preview can be viewed.
+  If configured correctly, you should be able to visit previews for content types that have been implemented in the `preview.config` configuration object in `config/admin.ts`.
