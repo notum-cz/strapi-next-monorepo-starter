@@ -2,17 +2,24 @@ import { env } from "@/env.mjs"
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
 
 import type { MetadataRoute } from "next"
+import { AppLocale } from "@/types/general"
 
+import { isProduction } from "@/lib/general-helpers"
 import { routing } from "@/lib/navigation"
 import { PublicStrapiClient } from "@/lib/strapi-api"
 
 // The URL should be absolute, including the baseUrl (e.g. http://localhost:3000/some/nested-page)
 const baseUrl = env.APP_PUBLIC_URL
+
 /**
- * We could use generateSitemaps to separate the sitemaps, however that does not create the root sitemap.
+ * Note: We could use generateSitemaps to separate the sitemaps, however that does not create the root sitemap.
  */
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  if (!isProduction()) {
+    return []
+  }
+
   const promises = routing.locales.map((locale) =>
     generateLocalizedSitemap(locale)
   )
@@ -33,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
  * @returns Sitemap entries for a single locale
  */
 async function generateLocalizedSitemap(
-  locale: AvailableLocales
+  locale: AppLocale
 ): Promise<MetadataRoute.Sitemap> {
   let pageEntities: Partial<
     Record<
@@ -60,10 +67,9 @@ async function generateLocalizedSitemap(
       if (page.fullPath) {
         acc.push({
           url: generateSitemapEntryUrl(page.fullPath, String(page.locale)),
-          lastModified: page.updatedAt ?? new Date(),
+          lastModified: page.updatedAt ?? page.createdAt ?? undefined,
           changeFrequency:
             entityChangeFrequency[uid as PageEntityUID] ?? "monthly",
-          priority: 1,
         })
       }
     })
@@ -96,15 +102,11 @@ const generateSitemapEntryUrl = (fullPath: string, locale: string) => {
 const pageEntityUids = ["api::page.page"] as const
 
 type PageEntityUID = (typeof pageEntityUids)[number]
-type AvailableLocales = (typeof routing.locales)[number]
 
-const fetchAllEntityRecords = (
-  entityUid: PageEntityUID,
-  locale: AvailableLocales
-) =>
+const fetchAllEntityRecords = (entityUid: PageEntityUID, locale: AppLocale) =>
   PublicStrapiClient.fetchAll(entityUid, {
     locale,
-    fields: ["fullPath", "locale", "updatedAt"],
+    fields: ["fullPath", "locale", "updatedAt", "createdAt"],
     populate: {},
     status: "published",
   })
