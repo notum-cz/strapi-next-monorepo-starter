@@ -13,6 +13,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
+env:
+  STRAPI_REST_READONLY_API_KEY: random-value-just-for-build
+
 jobs:
   lint:
     name: Lint
@@ -42,8 +45,6 @@ jobs:
         run: yarn
 
       - name: Prepare Environment Variables
-        env:
-          STRAPI_REST_READONLY_API_KEY: random-value-just-for-build
         run: |
           cp apps/strapi/.env.example apps/strapi/.env
           cp apps/ui/.env.local.example apps/ui/.env.local
@@ -82,8 +83,6 @@ jobs:
         run: yarn
       
       - name: Prepare Environment Variables
-        env:
-          STRAPI_REST_READONLY_API_KEY: random-value-just-for-build
         run: |
           cp apps/strapi/.env.example apps/strapi/.env
           cp apps/ui/.env.local.example apps/ui/.env.local
