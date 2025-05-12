@@ -59,7 +59,7 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
             />
           ) : (
             <AppLink href="/" className="text-xl font-bold">
-              <Image src="images/logo.svg" alt="logo" height={23} width={82} />
+              <Image src="/images/logo.svg" alt="logo" height={23} width={82} />
             </AppLink>
           )}
 
