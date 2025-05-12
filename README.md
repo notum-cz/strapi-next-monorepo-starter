@@ -11,6 +11,8 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 ## 🚀 Getting started
 
+[![Launch Strapi + Next.js Monorepo — Live in 5 Minutes](https://img.youtube.com/vi/vlnDWwt4YR0/maxresdefault.jpg)](https://www.youtube.com/watch?v=vlnDWwt4YR0 "Watch on YouTube")
+
 ### Prerequisites
 
 - node 22
