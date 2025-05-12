@@ -165,11 +165,12 @@ async find(ctx) {
 
 #### Relation population
 
-[strapi-v5-plugin-populate-deep](https://www.npmjs.com/package/strapi-v5-plugin-populate-deep) plugin is installed by default to automatically populate relations in Strapi queries. This plugin is v5 compatible fork of original [strapi-plugin-populate-deep](https://www.npmjs.com/package/strapi-plugin-populate-deep).
+The deep population logic is adapted from [strapi-v5-plugin-populate-deep](https://www.npmjs.com/package/strapi-v5-plugin-populate-deep) for use in this project. Its purpose is to populate the `content` dynamic zone of a page. This zone contains many nested components, all of which are fetched at once.
 
-Default depth level is set in [config/plugins.ts](config/plugins.ts) file. To apply default depth level add **empty** `pLevel` query parameter (without value or "=") to requests (`GET /articles?pLevel`) - this is not programmatically-friendly, so it's better to define depth level in the each fetch as parameter.
+> [!CRITICAL]
+> Deep population is not recommended for performance reasons. It’s always better to populate only the data you need. In future versions of this template, this logic will be removed and replaced with dynamic data population on the frontend.
 
-The limitation of using this plugin is that inferred type of response is not affected by `pLevel` value. To have native Strapi typing based on reality, it's better to use `populate` query parameter if possible.
+The plugin is registered in the [populateDeep.ts](src/lifeCycles/populateDeep.ts) file, and its implementation can be found in [utils/populate-deep.ts](src/utils/populate-deep.ts). It is used in the `find` and `findOne` methods and is controlled via the `deepLevel` and `deepLevelIgnore` query parameters.
 
 ### Typescript
 
