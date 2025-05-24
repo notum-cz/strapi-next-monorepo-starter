@@ -9,9 +9,10 @@
 ARG APP=ui
 ARG WORKSPACE=@repo/ui
 
-FROM node:22-alpine AS base
+FROM node:22.0-alpine AS base
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk update && apk add --no-cache libc6-compat
+RUN yarn global add turbo@^2.0.9
 
 # -------------------------- stage pruned ---------------------------------
 FROM base AS pruned
@@ -21,7 +22,6 @@ ARG WORKSPACE
 WORKDIR /app
 COPY . .
 
-RUN yarn global add turbo@^2.0.9
 # see https://turbo.build/repo/docs/reference/command-line-reference#turbo-prune---scopetarget
 RUN turbo prune ${WORKSPACE} --docker
 
@@ -36,8 +36,6 @@ WORKDIR /app
 COPY .gitignore .gitignore
 COPY --from=pruned /app/out/json/ .
 COPY --from=pruned /app/out/yarn.lock ./yarn.lock
-
-RUN yarn global add turbo@^2.0.9
 
 RUN \
     --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \

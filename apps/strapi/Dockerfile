@@ -10,9 +10,10 @@
 ARG APP=strapi
 ARG WORKSPACE=@repo/strapi
 
-FROM node:22-alpine AS base
+FROM node:22.0-alpine AS base
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk update && apk add --no-cache libc6-compat
+RUN yarn global add turbo@^2.0.9
 
 # -------------------------- stage pruned ---------------------------------
 FROM base AS pruned
@@ -23,7 +24,6 @@ WORKDIR /app
 COPY . .
 
 # see https://turbo.build/repo/docs/reference/command-line-reference#turbo-prune---scopetarget
-RUN yarn global add turbo@^2.0.9
 RUN turbo prune ${WORKSPACE} --docker
 
 # -------------------------- stage installer ---------------------------------
@@ -43,7 +43,6 @@ COPY --from=pruned /app/out/json/ .
 COPY --from=pruned /app/out/yarn.lock ./yarn.lock
 
 RUN yarn global add node-gyp
-RUN yarn global add turbo@^2.0.9
 # see https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/reference.md#run---mounttypecache
 RUN \
     --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
@@ -54,7 +53,7 @@ RUN \
     --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
     yarn workspace ${WORKSPACE} add sharp --ignore-engines --prefer-offline --frozen-lockfile
 
-ENV PATH /app/apps/${APP}/node_modules/.bin:$PATH
+ENV PATH=/app/apps/${APP}/node_modules/.bin:$PATH
 
 # Build the project and its dependencies
 COPY --from=pruned /app/out/full/ .
@@ -78,7 +77,7 @@ USER strapi
 WORKDIR /app
 COPY --from=installer /app .
 
-ENV PATH /app/apps/${APP}/node_modules/.bin:$PATH
+ENV PATH=/app/apps/${APP}/node_modules/.bin:$PATH
 
 WORKDIR /app/apps/${APP}
 EXPOSE ${PORT:-1337}
