@@ -21,7 +21,7 @@ ARG WORKSPACE
 WORKDIR /app
 COPY . .
 
-RUN yarn global add turbo@^1.13.4
+RUN yarn global add turbo@^2.0.9
 # see https://turbo.build/repo/docs/reference/command-line-reference#turbo-prune---scopetarget
 RUN turbo prune ${WORKSPACE} --docker
 
@@ -37,7 +37,7 @@ COPY .gitignore .gitignore
 COPY --from=pruned /app/out/json/ .
 COPY --from=pruned /app/out/yarn.lock ./yarn.lock
 
-RUN yarn global add turbo@^1.13.4
+RUN yarn global add turbo@^2.0.9
 
 RUN \
     --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
