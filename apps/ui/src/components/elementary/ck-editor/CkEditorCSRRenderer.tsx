@@ -6,6 +6,8 @@ import { useLocale } from "next-intl"
 import { cn } from "@/lib/styles"
 import { processLinkHrefAttribute } from "@/components/elementary/ck-editor/utils"
 
+import "@/styles/CkEditorDefaultStyles.css"
+
 const CkEditorCSRRenderer = ({
   htmlContent,
   className,

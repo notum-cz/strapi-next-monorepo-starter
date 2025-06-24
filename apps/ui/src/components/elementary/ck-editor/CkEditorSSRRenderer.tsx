@@ -4,6 +4,9 @@ import parse from "node-html-parser"
 import { cn } from "@/lib/styles"
 import { processLinkHrefAttribute } from "@/components/elementary/ck-editor/utils"
 
+import "@/styles/CkEditorDefaultStyles.css"
+import "server-only"
+
 const CkEditorSSRRenderer = async ({
   htmlContent,
   className,
