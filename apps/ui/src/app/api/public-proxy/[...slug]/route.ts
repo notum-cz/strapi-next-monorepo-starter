@@ -48,7 +48,7 @@ async function handler(
       : env.STRAPI_REST_CUSTOM_API_KEY
   }`
 
-  return fetch(url, {
+  const response = await fetch(url, {
     headers: {
       // Convert headers to object
       ...Object.fromEntries(clonedRequest.headers),
@@ -58,6 +58,18 @@ async function handler(
     body,
     // this needs to be explicitly stated, because it is defaulted to GET
     method: request.method,
+  })
+
+  // Remove encoding headers, because the body is no longer compressed and the browser/client will choke on it.
+  // (Built-in fetch in Node.js decompresses the body if the response has Content-Encoding: gzip
+  // and gives the decompressed stream.)
+  const headers = new Headers(response.headers)
+  headers.delete("content-encoding")
+  headers.delete("content-length")
+
+  return new NextResponse(response.body, {
+    status: response.status,
+    headers,
   })
 }
 
