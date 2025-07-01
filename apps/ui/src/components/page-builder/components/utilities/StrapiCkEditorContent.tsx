@@ -2,7 +2,7 @@ import React from "react"
 import { Data } from "@repo/strapi"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import CkEditorRenderer from "@/components/elementary/ck-editor"
+import CkEditorSSRRenderer from "@/components/elementary/ck-editor/CkEditorSSRRenderer"
 
 export const StrapiCkEditorContent = ({
   component,
@@ -11,7 +11,7 @@ export const StrapiCkEditorContent = ({
 }) => {
   removeThisWhenYouNeedMe("StrapiCkEditorContent")
 
-  return <CkEditorRenderer htmlContent={component.content} />
+  return <CkEditorSSRRenderer htmlContent={component.content} />
 }
 
 StrapiCkEditorContent.displayName = "CkEditorContent"
