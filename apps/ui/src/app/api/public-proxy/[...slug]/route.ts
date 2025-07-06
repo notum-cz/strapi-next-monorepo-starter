@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server"
 import { env } from "@/env.mjs"
 
+import {
+  createStrapiAuthHeader,
+  isAllowedToReadStrapiEndpoint,
+} from "@/lib/strapi-api/request-auth"
+
 /**
  * This route handler acts as a public proxy for frontend requests with two primary goals:
  * - Hide the authenticated API token from the client (for both SSR and client-side components).
@@ -20,10 +25,11 @@ async function handler(
   const path = Array.isArray(slug) ? slug.join("/") : slug
   const isReadOnly = request.method === "GET" || request.method === "HEAD"
 
-  if (
-    isReadOnly &&
-    !ALLOWED_STRAPI_ENDPOINTS.some((endpoint) => path.includes(endpoint))
-  ) {
+  const isAllowedToRead = isReadOnly
+    ? isAllowedToReadStrapiEndpoint(path)
+    : true
+
+  if (!isAllowedToRead) {
     return NextResponse.json(
       {
         error: {
@@ -42,18 +48,17 @@ async function handler(
   // Extract the body explicitly from the cloned request
   const body = isReadOnly ? undefined : await clonedRequest.text()
 
-  const injectedAuthHeader = `Bearer ${
-    isReadOnly
-      ? env.STRAPI_REST_READONLY_API_KEY
-      : env.STRAPI_REST_CUSTOM_API_KEY
-  }`
+  const authHeader = await createStrapiAuthHeader({
+    isReadOnly,
+    isPrivate: false,
+  })
 
   const response = await fetch(url, {
     headers: {
       // Convert headers to object
       ...Object.fromEntries(clonedRequest.headers),
       // Override the Authorization header with the injected token
-      Authorization: injectedAuthHeader,
+      ...authHeader,
     },
     body,
     // this needs to be explicitly stated, because it is defaulted to GET
@@ -80,6 +85,3 @@ export {
   handler as PUT,
   handler as DELETE,
 }
-
-// List of allowed endpoints for GET requests
-const ALLOWED_STRAPI_ENDPOINTS = ["/pages", "/footer", "/navbar"]

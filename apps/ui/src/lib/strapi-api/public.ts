@@ -1,12 +1,17 @@
 import { env } from "@/env.mjs"
 import qs from "qs"
 
+import { CustomFetchOptions } from "@/types/general"
+
 import BaseStrapiClient from "@/lib/strapi-api/base"
+import { createStrapiAuthHeader } from "@/lib/strapi-api/request-auth"
 
 export class PublicClient extends BaseStrapiClient {
   protected async prepareRequest(
     path: string,
-    params: object
+    params: object,
+    requestInit?: RequestInit,
+    options?: CustomFetchOptions
   ): Promise<{ url: string; headers: Record<string, string> }> {
     let url = `/api${path.startsWith("/") ? path : `/${path}`}`
 
@@ -16,10 +21,34 @@ export class PublicClient extends BaseStrapiClient {
       url += `?${queryString}`
     }
 
-    let completeUrl = `/api/public-proxy${url}`
-    if (typeof window === "undefined") {
-      // SSR components do not support relative URLs, so we have to prefix it with local app URL
-      completeUrl = `${env.APP_PUBLIC_URL}${completeUrl}`
+    let completeUrl = ""
+    let headers: Record<string, string> = {}
+
+    if (options?.useProxy) {
+      // If useProxy is set, we need to use the public-proxy endpoint here in Next.js
+      // (for client-side requests)
+      completeUrl = `/api/public-proxy${url}`
+
+      if (typeof window === "undefined") {
+        // SSR components do not support relative URLs, so we have to prefix it with local app URL
+        // @deprecated: SSR components should not use proxy, they should use the Strapi URL directly
+        completeUrl = `${env.APP_PUBLIC_URL}${completeUrl}`
+      }
+    } else {
+      // Directly use the Strapi URL. Same logic as in proxy route handler must be applied
+      // (for SSR components and server actions/context)
+      completeUrl = `${env.STRAPI_URL}${url}`
+
+      // If there is no method specified in requestInit, default is GET
+      const isReadOnly = ["GET", "HEAD"].includes(requestInit?.method ?? "GET")
+      const authHeader = await createStrapiAuthHeader({
+        isReadOnly,
+        isPrivate: false,
+      })
+
+      headers = {
+        ...authHeader,
+      }
     }
 
     return {
@@ -27,6 +56,7 @@ export class PublicClient extends BaseStrapiClient {
       headers: {
         Accept: "application/json",
         "Content-type": "application/json",
+        ...headers,
       },
     }
   }

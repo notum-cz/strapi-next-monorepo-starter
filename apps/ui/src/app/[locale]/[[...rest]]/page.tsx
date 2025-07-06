@@ -7,8 +7,7 @@ import type { PageProps } from "@/types/next"
 import { isDevelopment } from "@/lib/general-helpers"
 import { getMetadataFromStrapi } from "@/lib/metadata"
 import { routing } from "@/lib/navigation"
-import { PublicStrapiClient } from "@/lib/strapi-api"
-import { fetchPage } from "@/lib/strapi-api/content/page"
+import { fetchAllPages, fetchPage } from "@/lib/strapi-api/content/server"
 import { cn } from "@/lib/styles"
 import { Breadcrumbs } from "@/components/elementary/Breadcrumbs"
 import { Container } from "@/components/elementary/Container"
@@ -23,7 +22,7 @@ export async function generateStaticParams() {
   }
 
   const promises = routing.locales.map((locale) =>
-    PublicStrapiClient.fetchAll("api::page.page", { locale })
+    fetchAllPages("api::page.page", locale)
   )
 
   const results = await Promise.allSettled(promises)

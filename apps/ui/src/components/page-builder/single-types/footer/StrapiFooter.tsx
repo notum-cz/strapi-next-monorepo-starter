@@ -2,33 +2,14 @@ import { Fragment } from "react"
 
 import { AppLocale } from "@/types/general"
 
-import { PublicStrapiClient } from "@/lib/strapi-api"
+import { fetchFooter } from "@/lib/strapi-api/content/server"
 import { cn } from "@/lib/styles"
 import { Container } from "@/components/elementary/Container"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 
-async function fetchData(locale: AppLocale) {
-  try {
-    return await PublicStrapiClient.fetchOne("api::footer.footer", undefined, {
-      locale,
-      populate: {
-        sections: { populate: { links: true } },
-        logoImage: { populate: { image: true, link: true } },
-        links: true,
-      },
-    })
-  } catch (e: any) {
-    console.error(
-      `Data for "api::footer.footer" content type wasn't fetched: `,
-      e?.message
-    )
-    return undefined
-  }
-}
-
 export async function StrapiFooter({ locale }: { readonly locale: AppLocale }) {
-  const response = await fetchData(locale)
+  const response = await fetchFooter(locale)
   const component = response?.data
 
   if (component == null) {

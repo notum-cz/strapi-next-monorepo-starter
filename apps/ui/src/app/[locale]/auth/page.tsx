@@ -35,9 +35,6 @@ export default async function AuthPage({ params }: PageProps) {
           </CardContent>
           <CardFooter className="flex w-full items-center justify-end gap-3">
             <Button asChild>
-              <Link href="/profile">Profile page</Link>
-            </Button>
-            <Button asChild>
               <Link href="/auth/change-password">Change password</Link>
             </Button>
             <Button asChild>

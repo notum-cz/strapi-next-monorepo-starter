@@ -1,10 +1,11 @@
 import Image from "next/image"
+import { Data } from "@repo/strapi"
 import { getTranslations } from "next-intl/server"
 
 import { AppLocale } from "@/types/general"
 
 import { getAuth } from "@/lib/auth"
-import { PublicStrapiClient } from "@/lib/strapi-api"
+import { fetchNavbar } from "@/lib/strapi-api/content/server"
 import { cn } from "@/lib/styles"
 import AppLink from "@/components/elementary/AppLink"
 import LocaleSwitcher from "@/components/elementary/LocaleSwitcher"
@@ -12,26 +13,12 @@ import StrapiImageWithLink from "@/components/page-builder/components/utilities/
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 import { LoggedUserMenu } from "@/components/page-builder/single-types/navbar/LoggedUserMenu"
 
-async function fetchData(locale: AppLocale) {
-  try {
-    return await PublicStrapiClient.fetchOne("api::navbar.navbar", undefined, {
-      locale,
-      populate: {
-        links: true,
-        logoImage: { populate: { image: true, link: true } },
-      },
-    })
-  } catch (e: any) {
-    console.error(
-      `Data for "api::navbar.navbar" content type wasn't fetched: `,
-      e?.message
-    )
-    return undefined
-  }
-}
+const hardcodedLinks: NonNullable<
+  Data.ContentType<"api::navbar.navbar">["links"]
+> = [{ id: "client-page", href: "/client-page", label: "Client Page" }]
 
 export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
-  const response = await fetchData(locale)
+  const response = await fetchNavbar(locale)
   const navbar = response?.data
 
   if (navbar == null) {
@@ -40,7 +27,9 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
 
   const t = await getTranslations("navbar")
 
-  const links = (navbar.links ?? []).filter((link) => link.href)
+  const links = (navbar.links ?? [])
+    .filter((link) => link.href)
+    .concat(...hardcodedLinks)
 
   const session = await getAuth()
 

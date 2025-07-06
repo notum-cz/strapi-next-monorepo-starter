@@ -1,15 +1,14 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
 import { Link } from "@/lib/navigation"
-import { PrivateStrapiClient } from "@/lib/strapi-api"
 import { cn } from "@/lib/styles"
+import { useUserMutations } from "@/hooks/useUser"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -30,24 +29,7 @@ const ENABLE_EMAIL_CONFIRMATION = false
 export function RegisterForm() {
   const t = useTranslations("auth.register")
   const { toast } = useToast()
-
-  const { mutate, isSuccess } = useMutation({
-    mutationFn: (values: {
-      username: string
-      email: string
-      password: string
-    }) =>
-      PrivateStrapiClient.fetchAPI(
-        `/auth/local/register`,
-        undefined,
-        {
-          body: JSON.stringify(values),
-          method: "POST",
-          next: { revalidate: 0 },
-        },
-        { omitUserAuthorization: true }
-      ),
-  })
+  const { registerMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(RegisterFormSchema),
@@ -61,7 +43,7 @@ export function RegisterForm() {
   })
 
   async function onSubmit(values: z.infer<FormSchemaType>) {
-    mutate(
+    registerMutation.mutate(
       {
         username: values.email,
         email: values.email,
@@ -93,7 +75,7 @@ export function RegisterForm() {
     )
   }
 
-  if (isSuccess) {
+  if (registerMutation.isSuccess) {
     // This message is relevant if system requires email verification
     // If user is `confirmed` immediately, this message is not needed
     // and user should be redirected to sign in page

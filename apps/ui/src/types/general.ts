@@ -22,6 +22,8 @@ export interface CustomFetchOptions {
   // omit "Authorization" header from the request (don't retrieve JWT token from session)
   // used by PrivateStrapiClient
   omitUserAuthorization?: boolean
+  // use proxy for the request (useful for client-side requests)
+  useProxy?: boolean
 }
 
 export interface AppError {
