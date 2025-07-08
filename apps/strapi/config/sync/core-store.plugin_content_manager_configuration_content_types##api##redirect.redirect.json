@@ -1,14 +1,14 @@
 {
-  "key": "plugin_content_manager_configuration_content_types::plugin::content-releases.release",
+  "key": "plugin_content_manager_configuration_content_types::api::redirect.redirect",
   "value": {
     "settings": {
       "bulkable": true,
       "filterable": true,
       "searchable": true,
-      "pageSize": 10,
-      "mainField": "name",
-      "defaultSortBy": "name",
-      "defaultSortOrder": "ASC"
+      "pageSize": 20,
+      "mainField": "source",
+      "defaultSortBy": "id",
+      "defaultSortOrder": "DESC"
     },
     "metadatas": {
       "id": {
@@ -19,89 +19,61 @@
           "sortable": true
         }
       },
-      "name": {
+      "source": {
         "edit": {
-          "label": "name",
+          "label": "source",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "name",
+          "label": "source",
           "searchable": true,
           "sortable": true
         }
       },
-      "releasedAt": {
+      "destination": {
         "edit": {
-          "label": "releasedAt",
+          "label": "destination",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "releasedAt",
+          "label": "destination",
           "searchable": true,
           "sortable": true
         }
       },
-      "scheduledAt": {
+      "permanent": {
         "edit": {
-          "label": "scheduledAt",
+          "label": "permanent",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "scheduledAt",
+          "label": "permanent",
           "searchable": true,
           "sortable": true
         }
       },
-      "timezone": {
+      "page": {
         "edit": {
-          "label": "timezone",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "timezone",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "status": {
-        "edit": {
-          "label": "status",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "status",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "actions": {
-        "edit": {
-          "label": "actions",
+          "label": "page",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true,
-          "mainField": "contentType"
+          "mainField": "title"
         },
         "list": {
-          "label": "actions",
-          "searchable": false,
-          "sortable": false
+          "label": "page",
+          "searchable": true,
+          "sortable": true
         }
       },
       "createdAt": {
@@ -164,46 +136,37 @@
       }
     },
     "layouts": {
-      "list": [
-        "id",
-        "name",
-        "releasedAt",
-        "actions"
-      ],
       "edit": [
         [
           {
-            "name": "name",
+            "name": "source",
             "size": 6
           },
           {
-            "name": "releasedAt",
+            "name": "destination",
             "size": 6
           }
         ],
         [
           {
-            "name": "actions",
-            "size": 6
+            "name": "permanent",
+            "size": 4
           },
           {
-            "name": "scheduledAt",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "timezone",
-            "size": 6
-          },
-          {
-            "name": "status",
+            "name": "page",
             "size": 6
           }
         ]
+      ],
+      "list": [
+        "id",
+        "source",
+        "destination",
+        "permanent",
+        "createdAt"
       ]
     },
-    "uid": "plugin::content-releases.release"
+    "uid": "api::redirect.redirect"
   },
   "type": "object",
   "environment": null,

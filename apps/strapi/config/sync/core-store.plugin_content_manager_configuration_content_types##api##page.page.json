@@ -6,8 +6,8 @@
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "title",
-      "defaultSortBy": "title",
+      "mainField": "slug",
+      "defaultSortBy": "fullPath",
       "defaultSortOrder": "ASC"
     },
     "metadatas": {
@@ -133,6 +133,21 @@
           "sortable": false
         }
       },
+      "redirects": {
+        "edit": {
+          "label": "redirects",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "source"
+        },
+        "list": {
+          "label": "redirects",
+          "searchable": false,
+          "sortable": false
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -196,21 +211,7 @@
       "edit": [
         [
           {
-            "name": "title",
-            "size": 6
-          },
-          {
-            "name": "breadcrumbTitle",
-            "size": 6
-          }
-        ],
-        [
-          {
             "name": "slug",
-            "size": 6
-          },
-          {
-            "name": "fullPath",
             "size": 6
           }
         ],
@@ -222,18 +223,38 @@
         ],
         [
           {
-            "name": "children",
+            "name": "seo",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "title",
             "size": 6
           },
           {
-            "name": "parent",
+            "name": "breadcrumbTitle",
             "size": 6
           }
         ],
         [
           {
-            "name": "seo",
-            "size": 12
+            "name": "fullPath",
+            "size": 6
+          },
+          {
+            "name": "children",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "parent",
+            "size": 6
+          },
+          {
+            "name": "redirects",
+            "size": 6
           }
         ]
       ],

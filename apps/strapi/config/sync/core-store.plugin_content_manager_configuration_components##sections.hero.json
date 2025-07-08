@@ -88,6 +88,20 @@
           "searchable": true,
           "sortable": true
         }
+      },
+      "steps": {
+        "edit": {
+          "label": "steps",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "steps",
+          "searchable": false,
+          "sortable": false
+        }
       }
     },
     "layouts": {
@@ -110,12 +124,6 @@
         ],
         [
           {
-            "name": "links",
-            "size": 12
-          }
-        ],
-        [
-          {
             "name": "image",
             "size": 12
           }
@@ -124,6 +132,18 @@
           {
             "name": "bgColor",
             "size": 6
+          }
+        ],
+        [
+          {
+            "name": "links",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "steps",
+            "size": 12
           }
         ]
       ]
