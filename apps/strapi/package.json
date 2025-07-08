@@ -48,7 +48,6 @@
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
     "strapi-plugin-config-sync": "2",
-    "strapi-v5-plugin-populate-deep": "^4.0.5",
     "styled-components": "^6.0.0"
   },
   "devDependencies": {

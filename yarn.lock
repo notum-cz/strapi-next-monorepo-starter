@@ -16834,11 +16834,6 @@ strapi-plugin-config-sync@2:
     redux-immutable "^4.0.0"
     redux-thunk "^2.3.0"
 
-strapi-v5-plugin-populate-deep@^4.0.5:
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/strapi-v5-plugin-populate-deep/-/strapi-v5-plugin-populate-deep-4.0.5.tgz#3c909a9dfdcbc81fe4d7a747b1f8e5e5279b3c54"
-  integrity sha512-se5WE8rWxVx+BX904tESoZsRJYJg7VtGWZNeNGhirJGhuUJV5UgAP38Jiq5kPdyT3rASiwfCJxvXgMAfTh3Y5A==
-
 stream-browserify@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/stream-browserify/-/stream-browserify-3.0.0.tgz#22b0a2850cdf6503e73085da1fc7b7d0c2122f2f"
