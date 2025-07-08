@@ -174,7 +174,7 @@ To fetch data from the public Strapi API, it is assumed that you have generated 
 
 To fetch data from **server context** (SSR components, server actions, etc.) use this client instance without setting `useProxy` option in `CustomFetchOptions` parameter. This is **default** behavior. In this case the client calls Strapi directly.
 
-To fetch data from **client context** (client components, client hooks, etc.), you must set `useProxy: true` in the `CustomFetchOptions`. In this case the client uses [route handler](src/app/api/public-proxy/[...slug]/route.ts) as a public proxy. See [PagesCatalogue](./src/components//elementary/PagesCatalog.tsx) component for an example of how to use it. This proxy serves two main purposes:
+To fetch data from **client context** (client components, client hooks, etc.), you must set `useProxy: true` in the `CustomFetchOptions`. In this case the client uses [route handler](src/app/api/public-proxy/[...slug]/route.ts) as a public proxy. See [PagesCatalogue](./src/components/elementary/PagesCatalog.tsx) component for an example of how to use it. This proxy serves two main purposes:
 
 - To hide the authenticated API token from the client request.
 - To obscure the Strapi backend URL, preventing users from accessing it directly.
