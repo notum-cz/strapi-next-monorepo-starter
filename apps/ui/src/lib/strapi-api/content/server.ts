@@ -25,13 +25,10 @@ export async function fetchPage(
         locale,
         status: dm.isEnabled ? "draft" : "published",
         populate: {
-          content: true,
+          content: true, // ensures typing is valid on the resulting object
           seo: true,
         },
-        // Use with BIG caution, this can lead to a lot of data being fetched
-        deepLevel: 6,
-        // Ignore these fields when deep populating
-        deepLevelIgnore: ["children", "parent", "localizations", "seo"],
+        middlewarePopulate: ["content", "seo"], // ensures the middleware is triggered and the populate object is replaced
       },
       requestInit,
       options
