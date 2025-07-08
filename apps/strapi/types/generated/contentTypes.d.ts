@@ -422,6 +422,43 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
   }
 }
 
+export interface ApiInternalJobInternalJob extends Struct.CollectionTypeSchema {
+  collectionName: "internal_jobs"
+  info: {
+    displayName: "InternalJob"
+    pluralName: "internal-jobs"
+    singularName: "internal-job"
+  }
+  options: {
+    draftAndPublish: false
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    error: Schema.Attribute.String
+    jobType: Schema.Attribute.Enumeration<
+      ["RECALCULATE_FULLPATH", "CREATE_REDIRECT"]
+    > &
+      Schema.Attribute.Required
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::internal-job.internal-job"
+    > &
+      Schema.Attribute.Private
+    payload: Schema.Attribute.JSON & Schema.Attribute.Required
+    publishedAt: Schema.Attribute.DateTime
+    relatedDocumentId: Schema.Attribute.String
+    state: Schema.Attribute.Enumeration<["pending", "completed", "failed"]> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<"pending">
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+  }
+}
+
 export interface ApiNavbarNavbar extends Struct.SingleTypeSchema {
   collectionName: "navbars"
   info: {
@@ -520,6 +557,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     localizations: Schema.Attribute.Relation<"oneToMany", "api::page.page">
     parent: Schema.Attribute.Relation<"manyToOne", "api::page.page">
     publishedAt: Schema.Attribute.DateTime
+    redirects: Schema.Attribute.Relation<"oneToMany", "api::redirect.redirect">
     seo: Schema.Attribute.Component<"seo-utilities.seo", false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -540,6 +578,37 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
           localized: true
         }
       }>
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+  }
+}
+
+export interface ApiRedirectRedirect extends Struct.CollectionTypeSchema {
+  collectionName: "redirects"
+  info: {
+    displayName: "Redirect"
+    pluralName: "redirects"
+    singularName: "redirect"
+  }
+  options: {
+    draftAndPublish: true
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    destination: Schema.Attribute.String & Schema.Attribute.Required
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::redirect.redirect"
+    > &
+      Schema.Attribute.Private
+    page: Schema.Attribute.Relation<"manyToOne", "api::page.page">
+    permanent: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>
+    publishedAt: Schema.Attribute.DateTime
+    source: Schema.Attribute.String & Schema.Attribute.Required
     updatedAt: Schema.Attribute.DateTime
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
@@ -1086,8 +1155,10 @@ declare module "@strapi/strapi" {
       "admin::transfer-token-permission": AdminTransferTokenPermission
       "admin::user": AdminUser
       "api::footer.footer": ApiFooterFooter
+      "api::internal-job.internal-job": ApiInternalJobInternalJob
       "api::navbar.navbar": ApiNavbarNavbar
       "api::page.page": ApiPagePage
+      "api::redirect.redirect": ApiRedirectRedirect
       "api::subscriber.subscriber": ApiSubscriberSubscriber
       "plugin::content-releases.release": PluginContentReleasesRelease
       "plugin::content-releases.release-action": PluginContentReleasesReleaseAction
