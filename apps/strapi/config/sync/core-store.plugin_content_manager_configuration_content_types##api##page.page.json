@@ -64,10 +64,10 @@
       "fullPath": {
         "edit": {
           "label": "fullPath",
-          "description": "",
+          "description": "Full path will be calculated by system",
           "placeholder": "",
           "visible": true,
-          "editable": true
+          "editable": false
         },
         "list": {
           "label": "fullPath",
@@ -125,7 +125,8 @@
           "description": "",
           "placeholder": "",
           "visible": true,
-          "editable": true
+          "editable": true,
+          "mainField": "metaTitle"
         },
         "list": {
           "label": "seo",
@@ -217,13 +218,7 @@
         ],
         [
           {
-            "name": "content",
-            "size": 12
-          }
-        ],
-        [
-          {
-            "name": "seo",
+            "name": "fullPath",
             "size": 12
           }
         ],
@@ -239,7 +234,13 @@
         ],
         [
           {
-            "name": "fullPath",
+            "name": "content",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "parent",
             "size": 6
           },
           {
@@ -249,9 +250,11 @@
         ],
         [
           {
-            "name": "parent",
-            "size": 6
-          },
+            "name": "seo",
+            "size": 12
+          }
+        ],
+        [
           {
             "name": "redirects",
             "size": 6
