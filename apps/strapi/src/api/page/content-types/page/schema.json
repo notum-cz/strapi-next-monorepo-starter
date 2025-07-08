@@ -94,6 +94,12 @@
           "localized": true
         }
       }
+    },
+    "redirects": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::redirect.redirect",
+      "mappedBy": "page"
     }
   }
 }
