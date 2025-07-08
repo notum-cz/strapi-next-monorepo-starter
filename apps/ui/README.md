@@ -172,12 +172,14 @@ There are 2 ways to fetch data from Strapi. Both of them use [BaseStrapiClient](
 
 To fetch data from the public Strapi API, it is assumed that you have generated the necessary [API tokens](#environment-variables). The [PublicStrapiClient](src/lib/strapi-api/public.ts) class is used for making public API requests — no user JWT token is included in these requests.
 
-The client does not call Strapi directly. Instead, it uses Next.js's [route handler](src/app/api/public-proxy/[...slug]/route.ts) as a public proxy. This proxy serves two main purposes:
+To fetch data from **server context** (SSR components, server actions, etc.) use this client instance without setting `useProxy` option in `CustomFetchOptions` parameter. This is **default** behavior. In this case the client calls Strapi directly.
 
-- To hide the authenticated API token from the client (both for server-side rendering and client-side components).
+To fetch data from **client context** (client components, client hooks, etc.), you must set `useProxy: true` in the `CustomFetchOptions`. In this case the client uses [route handler](src/app/api/public-proxy/[...slug]/route.ts) as a public proxy. See [PagesCatalogue](./src/components/elementary/PagesCatalog.tsx) component for an example of how to use it. This proxy serves two main purposes:
+
+- To hide the authenticated API token from the client request.
 - To obscure the Strapi backend URL, preventing users from accessing it directly.
 
-The proxy automatically injects either the `STRAPI_REST_READONLY_API_KEY` or `STRAPI_REST_CUSTOM_API_KEY` into the `Authorization` header. These keys are stored securely on the server. The choice of token depends on the HTTP method: `GET` requests use the read-only token, while other methods use the custom token.
+The API client (called directly or through proxy) automatically injects either the `STRAPI_REST_READONLY_API_KEY` or `STRAPI_REST_CUSTOM_API_KEY` into the `Authorization` header. These keys are stored securely on the server. The choice of token depends on the HTTP method: `GET` requests use the read-only token, while other methods use the custom token.
 
 With the read-only token, it's possible to fetch data from any Strapi content type (assuming the endpoint name can be guessed). To improve security and prevent unrestricted data access, an additional layer — `ALLOWED_STRAPI_ENDPOINTS` — is used. This list defines the specific Strapi endpoints that are allowed to be accessed. Keep it **up to date** with the content types you want to expose.
 
@@ -185,7 +187,7 @@ With the read-only token, it's possible to fetch data from any Strapi content ty
 
 Applications with authentication pages (e.g. `/auth/signin`, `/auth/register`) require the [Strapi Users & Permissions plugin](https://docs.strapi.io/cms/features/users-permissions) to be enabled. This is enabled by default. The [PrivateStrapiClient](src/lib/strapi-api/private.ts) class is used for making private API requests — user JWT tokens are automatically injected on both the server and client sides, and it returns data related to the logged-in user.
 
-Again, Strapi is not called directly, instead, it uses Next.js's [route handler](src/app/api/private-proxy/[...slug]/route.ts) as a private proxy. This proxy hides the Strapi backend URL, preventing users from accessing it directly.
+It works similarly to the public API client - for requests coming from the **server context**, you should use the client instance without setting `useProxy` option in `CustomFetchOptions` (by default). In this case the Strapi is called directly. For requests coming from the **client context**, you must set `useProxy: true` in the `CustomFetchOptions`. In this case the client uses [route handler](src/app/api/private-proxy/[...slug]/route.ts) as a private proxy. This proxy hides the Strapi backend URL, preventing users from accessing it directly.
 
 The frontend app uses the `next-auth` package, which is configured in [src/lib/auth.ts](src/lib/auth.ts) and [src/app/api/auth/[...nextauth]/route.ts](src/app/api/auth/[...nextauth]/route.ts) to manage user sessions.
 
@@ -246,10 +248,11 @@ const fetchedUser: Result<"plugin::users-permissions.user"> =
 > [!WARNING]
 > All attributes (and relations) are currently typed as optional (`... | null | undefined`) even if they are required in Strapi. This is current limitation of automatic typing inference and needs to be improved in future versions of this starter.
 
-In client React components/hooks use `useQuery` (or `useMutation`) hook from `@tanstack/react-query` to query/mutate data in reactive way. In server components call endpoint directly and fetch data (`/GET` endpoints) on server side - e.g. in `getData()` function or in component's body. You can also use Next.js' [server actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations).
+In client React components/hooks use `useQuery` (or `useMutation`) hook from `@tanstack/react-query` to query/mutate data in reactive way (see example in [usePages](./src/hooks/usePages.ts)). In server components call endpoint directly and fetch data (`/GET` endpoints) on server side. Fetch functions are stored in [strapi-api/content/server file](./src/lib/strapi-api/content/server.ts). You can also use Next.js' [server actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations).
 
 ```tsx
-async function fetchData(locale: AppLocale) {
+// src/lib/strapi-api/content/server.ts
+export async function fetchNavbar(locale: AppLocale) {
   try {
     return await PublicStrapiClient.fetchOne("api::navbar.navbar", undefined, {
       locale,
@@ -259,16 +262,15 @@ async function fetchData(locale: AppLocale) {
       },
     })
   } catch (e: any) {
-    console.error(
-      `Data for "api::navbar.navbar" content type wasn't fetched: `,
-      e?.message
-    )
-    return undefined
+    ...
   }
 }
 
+// src/components/page-builder/single-types/navbar/StrapiNavbar.tsx
+import { fetchNavbar } from "@/lib/strapi-api/content/server"
+
 export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
-  const response = await fetchData(locale)
+  const response = await fetchNavbar(locale)
 }
 ```
 

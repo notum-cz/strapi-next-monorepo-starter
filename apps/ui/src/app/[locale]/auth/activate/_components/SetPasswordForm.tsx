@@ -2,14 +2,13 @@
 
 import { useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
 import { useRouter } from "@/lib/navigation"
-import { PublicStrapiClient } from "@/lib/strapi-api"
+import { useUserMutations } from "@/hooks/useUser"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button } from "@/components/ui/button"
@@ -28,20 +27,7 @@ export function SetPasswordForm({ accountActivation = false }) {
     accountActivation ? "auth.accountActivation" : "auth.resetPassword"
   )
   const { toast } = useToast()
-
-  const { mutate } = useMutation({
-    mutationFn: (values: {
-      password: string
-      passwordConfirmation: string
-      code: string
-    }) => {
-      return PublicStrapiClient.fetchAPI(`/auth/reset-password`, undefined, {
-        body: JSON.stringify(values),
-        method: "POST",
-        next: { revalidate: 0 },
-      })
-    },
-  })
+  const { resetPasswordMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(SetPasswordFormSchema),
@@ -55,7 +41,7 @@ export function SetPasswordForm({ accountActivation = false }) {
   const code = params.get("code") as string
 
   const onSubmit = (data: z.infer<FormSchemaType>) =>
-    mutate(
+    resetPasswordMutation.mutate(
       { code, ...data },
       {
         onSuccess: () => {

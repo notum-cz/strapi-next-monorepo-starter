@@ -1,12 +1,11 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
-import { PublicStrapiClient } from "@/lib/strapi-api"
+import { useContactForm } from "@/hooks/useAppForm"
 import AppLink from "@/components/elementary/AppLink"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
@@ -21,6 +20,7 @@ export function ContactForm({
 }>) {
   const t = useTranslations("contactForm")
   const { toast } = useToast()
+  const contactFormMutation = useContactForm()
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(ContactFormSchema),
@@ -29,27 +29,16 @@ export function ContactForm({
     defaultValues: { name: "", email: "", message: "" },
   })
 
-  const mutation = useMutation({
-    mutationFn: (values: z.infer<FormSchemaType>) => {
-      const path = PublicStrapiClient.getStrapiApiPathByUId(
-        "api::subscriber.subscriber"
-      )
-      return PublicStrapiClient.fetchAPI(path, undefined, {
-        method: "POST",
-        body: JSON.stringify({ data: values }),
-      })
-    },
-    onSuccess: () => {
-      toast({
-        variant: "default",
-        description: t("success"),
-      })
-      form.reset()
-    },
-  })
-
   const onSubmit = (values: z.infer<FormSchemaType>) => {
-    mutation.mutate(values)
+    contactFormMutation.mutate(values, {
+      onSuccess: () => {
+        toast({
+          variant: "default",
+          description: t("success"),
+        })
+        form.reset()
+      },
+    })
   }
 
   return (
@@ -107,9 +96,9 @@ export function ContactForm({
         </Button>
       </div>
 
-      {mutation.error && (
+      {contactFormMutation.error && (
         <div className="text-center text-red-500">
-          <p>{mutation.error.message || t("error")}</p>
+          <p>{contactFormMutation.error.message || t("error")}</p>
         </div>
       )}
     </div>

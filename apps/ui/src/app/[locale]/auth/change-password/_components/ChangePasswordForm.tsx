@@ -1,14 +1,13 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
 import { useRouter } from "@/lib/navigation"
-import { PrivateStrapiClient } from "@/lib/strapi-api"
+import { useUserMutations } from "@/hooks/useUser"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button } from "@/components/ui/button"
@@ -26,20 +25,7 @@ export function ChangePasswordForm() {
   const t = useTranslations("auth.changePassword")
   const router = useRouter()
   const { toast } = useToast()
-
-  const { mutate } = useMutation({
-    mutationFn: (values: {
-      currentPassword: string
-      password: string
-      passwordConfirmation: string
-    }) => {
-      return PrivateStrapiClient.fetchAPI(`/auth/change-password`, undefined, {
-        body: JSON.stringify(values),
-        method: "POST",
-        next: { revalidate: 0 },
-      })
-    },
-  })
+  const { changePasswordMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(ChangePasswordFormSchema),
@@ -53,7 +39,7 @@ export function ChangePasswordForm() {
   })
 
   const onSubmit = (data: z.infer<FormSchemaType>) =>
-    mutate(data, {
+    changePasswordMutation.mutate(data, {
       onSuccess: () => {
         toast({
           variant: "default",

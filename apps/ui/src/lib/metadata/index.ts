@@ -11,7 +11,7 @@ import {
   getDefaultOgMeta,
   getDefaultTwitterMeta,
 } from "@/lib/metadata/defaults"
-import { PublicStrapiClient } from "@/lib/strapi-api"
+import { fetchSeo } from "@/lib/strapi-api/content/server"
 
 export async function getMetadataFromStrapi({
   fullPath,
@@ -83,20 +83,8 @@ async function fetchAndMapStrapiMetadata(
   defaultTwitterMeta: Metadata["twitter"],
   uid: Extract<UID.ContentType, "api::page.page"> = "api::page.page"
 ) {
-  const res = await PublicStrapiClient.fetchOneByFullPath(uid, fullPath, {
-    locale,
-    populate: {
-      seo: {
-        populate: {
-          metaImage: true,
-          twitter: { populate: { images: true } },
-        },
-      },
-    },
-    fields: [],
-  })
-
-  const seo = res.data?.seo
+  const res = await fetchSeo(uid, fullPath, locale)
+  const seo = res?.data?.seo
 
   const strapiMeta: Metadata = {
     title: seo?.metaTitle,
