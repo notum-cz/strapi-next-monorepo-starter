@@ -7,6 +7,7 @@
     "exports": {
         "./theme.css": "./src/theme.css",
         "./styles.css": "./dist/styles.css",
+        "./styles-strapi.json": "./dist/styles-strapi.json",
         "./custom-styles.css": "./src/custom-styles.css",
         "./ck-color-config.json": "./dist/ckeditor-color-config.json",
         "./ck-fontSize-config.json": "./dist/ckeditor-fontSize-config.json"
@@ -21,5 +22,8 @@
         "class-variance-authority": "^0.7.1",
         "postcss": "^8.5.3",
         "tailwindcss": "^4.1.4"
+    },
+    "devDependencies": {
+        "postcss-modules-values": "^4.0.0"
     }
 }
