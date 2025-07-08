@@ -75,8 +75,7 @@ export type AppLocalizedParams<T> = T & {
   // AppLocale is meant to be frontend locale, that is mapped to the Strapi locale
   // before firing the request
   locale?: AppLocale
-  deepLevel?: number
-  deepLevelIgnore?: string[]
+  middlewarePopulate?: string[]
 }
 
 export type BreadCrumb = {

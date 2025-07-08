@@ -225,6 +225,10 @@ export default abstract class BaseStrapiClient {
       ...params,
       sort: { publishedAt: "desc" },
       filters: { ...params?.filters, fullPath: slugFilter },
+      pagination: {
+        page: 1,
+        pageSize: 1,
+      },
     }
     const path = this.getStrapiApiPathByUId(uid)
 
