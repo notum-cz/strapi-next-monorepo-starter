@@ -21,7 +21,6 @@ This is a [Stapi v5](https://strapi.io/) project.
 - @strapi/provider-email-mailgun
 - @strapi/provider-upload-aws-s3
 - strapi-plugin-config-sync
-- strapi-v5-plugin-populate-deep
 - qs
 - lodash
 - pg
@@ -165,12 +164,42 @@ async find(ctx) {
 
 #### Relation population
 
-The deep population logic is adapted from [strapi-v5-plugin-populate-deep](https://www.npmjs.com/package/strapi-v5-plugin-populate-deep) for use in this project. Its purpose is to populate the `content` dynamic zone of a page. This zone contains many nested components, all of which are fetched at once.
+Strapi offers fine-grained control over population of data coming from the API. Our Strapi Client is fully typed and offers suggestions, but there are instances where you may want to avoid this. For example, the dynamic zone in `api::page.page` collection includes many components. Serializing the full population object for this DZ would yield an URL that's too long and may cause issues.
 
-> [!CRITICAL]
-> Deep population is not recommended for performance reasons. It’s always better to populate only the data you need. In future versions of this template, this logic will be removed and replaced with dynamic data population on the frontend.
+To overcome this issue, this project uses a document middleware. This allows you to control which relations are deeply populated on a per-request basis, optimizing data fetching for complex page structures.
 
-The plugin is registered in the [populateDeep.ts](src/lifeCycles/populateDeep.ts) file, and its implementation can be found in [utils/populate-deep.ts](src/utils/populate-deep.ts). It is used in the `find` and `findOne` methods and is controlled via the `deepLevel` and `deepLevelIgnore` query parameters.
+**How it works:**
+
+- The middleware is registered in `apps/strapi/src/index.ts`.
+- The middleware interceptor is implemented in `apps/strapi/src/documentMiddlewares/page.ts`.
+- It intercepts document queries for the `api::page.page` content type, specifically for the `findMany` action.
+- To trigger custom population, your request must include the following in the query parameters:
+  - Pagination: `{ page: 1, pageSize: 1 }`, which gets updated to `{start: 0, limit: 1}` during the request resolution (before reaching document middleware)
+  - `middlewarePopulate`: an array of string keys, each corresponding to a relation or field you want to populate (as defined in the middleware's `pagePopulateObject`).
+
+**Example request:**
+
+```js
+await PublicStrapiClient.fetchOneByFullPath("api::page.page", fullPath, {
+  locale,
+  populate: {
+    content: true, // ensures typing is valid on the resulting object
+    seo: true, // ensures typing is valid on the resulting object
+  },
+  middlewarePopulate: ["content", "seo"], // ensures the middleware is triggered and the populate object is replaced
+})
+```
+
+- The middleware will map each key in `middlewarePopulate` to the corresponding population rules in `pagePopulateObject`, and apply them to the query.
+- This enables fine-grained, dynamic control over which relations and nested fields are included in the response.
+
+**Other collections**
+Feel free to create your own middlewares for collections where you may need deep-population without specifying it in the request itself. This may be useful for large collections.
+
+**Pitfalls**
+This requires active maintenance, as any changes to collections (i.e. the DZ in Page collection) will need to be reflected in the populate middleware. There is an alternative of using a deep-populate middleware, however this is STRONGLY discouraged. That's also why we removed it, despite using it in this project initially.
+
+'middlewarePopulate' does not alter the types, so using it by itself will result in a type that does not include relations or dynamic zones. This is why we also include it in the populate object.
 
 ### Typescript
 
