@@ -17,7 +17,7 @@ const log = (...args: any[]) => {
 // Currently only "api::page.page" is used.
 type DocumentType = "api::page.page"
 
-export async function handleDocumentBeforeCreate(
+export async function handleHierarchyBeforeCreate(
   event: LifecycleEventType<"beforeCreate">,
   documentType: DocumentType
 ) {

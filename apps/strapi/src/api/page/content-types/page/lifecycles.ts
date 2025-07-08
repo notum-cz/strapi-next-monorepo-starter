@@ -1,8 +1,11 @@
 import { LifecycleEventType } from "../../../../../types/internals"
-import { handleDocumentBeforeCreate } from "../../../../utils/hierarchy"
+import { PAGES_HIERARCHY_ENABLED } from "../../../../utils/constants"
+import { handleHierarchyBeforeCreate } from "../../../../utils/hierarchy"
 
 export default {
   async beforeCreate(event: LifecycleEventType<"beforeCreate">) {
-    await handleDocumentBeforeCreate(event, "api::page.page")
+    if (PAGES_HIERARCHY_ENABLED) {
+      await handleHierarchyBeforeCreate(event, "api::page.page")
+    }
   },
 }
