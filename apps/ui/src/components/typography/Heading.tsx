@@ -3,15 +3,12 @@ import React from "react"
 import { cn } from "@/lib/styles"
 
 const variantStyles = {
-  heading1:
-    "xl:text-[64px] xl:leading-[77px] md:text-5xl md:leading-[57px] text-[36px] leading-[43px]",
-  blogHeading1: "md:text-[40px] md:leading-[52px] text-[26px] leading-[34px]",
-  heading2:
-    "xl:text-[40px] xl:leading-[52px] md:text-[34px] md:leading-[44px] text-[28px] leading-[36px]",
-  heading3:
-    "xl:text-[32px] xl:leading-[45px] md:text-[28px] md:leading-10 text-xl tracking-xs",
-  heading4:
-    "xl:text-2xl xl:leading-[34px] md:text-[22px] md:leading-[30px] text-lg leading-[25px] tracking-xs",
+  heading1: "typo-h1",
+  heading2: "typo-h2",
+  heading3: "typo-h3",
+  heading4: "typo-h4",
+  heading5: "typo-h5",
+  heading6: "typo-h6",
 }
 
 const textColorVariants = {

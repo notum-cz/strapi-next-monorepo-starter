@@ -1,44 +1,86 @@
-# Shared Design Package
+# Shared Design System
 
-This package exists to share design tokens between two separate applications:
+This package provides shared design tokens and styles for both applications in this monorepo:
 
-- Frontend: Next.js app
-- Backend: Strapi CMS (with CKEditor integration)
+- **Frontend:** Next.js app
+- **Backend:** Strapi CMS (with CKEditor integration)
 
-By sharing design tokens across both apps, we ensure that WYSIWYG editing (especially inside CKEditor) accurately matches the frontend design.
+By sharing design tokens and styles, we ensure WYSIWYG editing (especially inside CKEditor) closely matches the frontend design.
+
+---
 
 ## Why This Package?
 
-Tailwind's v4 introduced changes that affect how it's config is built. It's no longer a JS/TS file, but it's built directly from CSS. This poses a slight issue, as Strapi CSS injection is quite limited, and it does not recognize Tailwind's directives. Therefore we do the certain modifications in this package.
+Tailwind v4 builds its config directly from CSS, not JS/TS. Strapi's CSS injection is limited and does not recognize Tailwind directives. This package bridges that gap by providing pre-built CSS and JSON config files for both apps.
 
-## I want to modify the config, what should I do?
+---
 
-Firstly, make sure you are modifying within the `src` folder! Changes to this config within Next.js should propagate immediately.
+## Usage
 
-On the other hand, Strapi will not respect these changes, and it will require a reload of the dev server, which should trigger build of this package.
+### Next.js
 
-Adding new tokens should also be propagated to CkEditor after building the package and restarting the server, thanks to the `build-ck-config.js` script.
-
-## Exports from this package
-
-- `styles.css` - can contain custom styles, but for the time being it only includes default tailwind styles (can be included in non-TW apps, such as Strapi)
-- `theme.css` - raw Tailwind theme (with directives)
-- `ck-color-config.json` - contains a JSON object that includes vars of all the colors required for CkEditor config
-- `ck-fontSize-config.json` - contains a JSON object that includes CkEditor configuration for font sizes
-  - Warning: This does not work with variables (as CkEditor ignores them), which is why we need to use pixel values. Any changes to the font sizes will not work, and it will not be responsive in Strapi.
-
-## Process
-
-### Next
-
-Next includes Tailwind, therefore it does not need any additional configuration beyond the default import.
-
-Theme from this package should be included in `styles/globals.css` file using the `@import` directive.
+- **Theme Import:**  
+  Import the theme in your global CSS (e.g., `styles/globals.css`):
+  ```css
+  @import "@repo/design-system/theme.css";
+  ```
+- **Styles Import:**  
+  Optionally, import the base styles:
+  ```css
+  @import "@repo/design-system/styles.css";
+  ```
 
 ### Strapi
 
-In order to use the theme inside Strapi, we inject the `styles.css` file within the `apps/strapi/src/admin/app.tsx` file.
+- **Styles Injection:**  
+  Inject the compiled styles in `apps/strapi/src/admin/app.tsx`:
+  ```js
+  import s from "@repo/design-system/styles-strapi.json"
+  ```
+  This is a serialized string, because you cannot simply inject CSS into Strapi Admin. (at the time of writing)
+- **CKEditor Config:**  
+  Use the generated JSON configs for CKEditor color and font size:
+  - `@repo/design-system/ck-color-config.json`
+  - `@repo/design-system/ck-fontSize-config.json`
 
-#### build-ck-color-config
+---
 
-This script simply loads the theme file, identifies all color and font size variables (they must be prefixed with `--color` or `--text` strings respectively), and builds CkEditor Color and Font Size Config.
+## Exports
+
+| Export Path                                   | Description                                  |
+| --------------------------------------------- | -------------------------------------------- |
+| `@repo/design-system/theme.css`               | Raw Tailwind theme (with directives)         |
+| `@repo/design-system/styles.css`              | Compiled CSS (for both Next.js and Strapi)   |
+| `@repo/design-system/styles-strapi.json`      | JSON with all CSS variables for Strapi       |
+| `@repo/design-system/custom-styles.css`       | Custom styles for CKEditor                   |
+| `@repo/design-system/ck-color-config.json`    | CKEditor color config (JSON, for Strapi)     |
+| `@repo/design-system/ck-fontSize-config.json` | CKEditor font size config (JSON, for Strapi) |
+
+---
+
+## Development
+
+- **Modify tokens or styles:**  
+  Edit files in `src/`.
+
+  - Changes in Next.js are picked up immediately.
+  - For Strapi, rebuild the package and restart the dev server.
+
+- **Build:**
+  ```bash
+  yarn build
+  ```
+  This runs Tailwind to generate `dist/styles.css` and builds CKEditor configs.
+
+---
+
+## How CKEditor Configs Are Built
+
+The script `src/build-ck-config.js`:
+
+- Loads the theme file.
+- Extracts all color and font size variables (must be prefixed with `--color` or `--text`).
+- Generates JSON configs for CKEditor.
+
+**Note:**  
+CKEditor font sizes must use pixel values (not CSS variables), so changes to font sizes may not be responsive in Strapi.
