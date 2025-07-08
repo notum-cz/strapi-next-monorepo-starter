@@ -4,9 +4,9 @@ import { ROOT_PAGE_PATH } from "@repo/shared-data"
 import type { MetadataRoute } from "next"
 import { AppLocale } from "@/types/general"
 
-import { isProduction } from "@/lib/general-helpers"
+import { isDevelopment, isProduction } from "@/lib/general-helpers"
 import { routing } from "@/lib/navigation"
-import { PublicStrapiClient } from "@/lib/strapi-api"
+import { fetchAllPages } from "@/lib/strapi-api/content/server"
 
 // The URL should be absolute, including the baseUrl (e.g. http://localhost:3000/some/nested-page)
 const baseUrl = env.APP_PUBLIC_URL
@@ -16,7 +16,7 @@ const baseUrl = env.APP_PUBLIC_URL
  */
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  if (!isProduction()) {
+  if (!isProduction() && !isDevelopment()) {
     return []
   }
 
@@ -43,15 +43,12 @@ async function generateLocalizedSitemap(
   locale: AppLocale
 ): Promise<MetadataRoute.Sitemap> {
   let pageEntities: Partial<
-    Record<
-      PageEntityUID,
-      Awaited<ReturnType<typeof fetchAllEntityRecords>>["data"]
-    >
+    Record<PageEntityUID, Awaited<ReturnType<typeof fetchAllPages>>["data"]>
   > = {}
 
   // Fetch all records for each entity individually
   for (const entityUid of pageEntityUids) {
-    const entityResponse = await fetchAllEntityRecords(entityUid, locale)
+    const entityResponse = await fetchAllPages(entityUid, locale)
 
     if (entityResponse.data.length > 0) {
       pageEntities[entityUid] = entityResponse.data
@@ -102,14 +99,6 @@ const generateSitemapEntryUrl = (fullPath: string, locale: string) => {
 const pageEntityUids = ["api::page.page"] as const
 
 type PageEntityUID = (typeof pageEntityUids)[number]
-
-const fetchAllEntityRecords = (entityUid: PageEntityUID, locale: AppLocale) =>
-  PublicStrapiClient.fetchAll(entityUid, {
-    locale,
-    fields: ["fullPath", "locale", "updatedAt", "createdAt"],
-    populate: {},
-    status: "published",
-  })
 
 /**
  * Object that determines default changeFrequency attribute for crawlers.

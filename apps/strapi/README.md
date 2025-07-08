@@ -21,7 +21,6 @@ This is a [Stapi v5](https://strapi.io/) project.
 - @strapi/provider-email-mailgun
 - @strapi/provider-upload-aws-s3
 - strapi-plugin-config-sync
-- strapi-v5-plugin-populate-deep
 - qs
 - lodash
 - pg
@@ -112,6 +111,26 @@ DATABASE_HOST=db
 
 ## ✨ Features
 
+### Pages hierarchy
+
+The pages (`api::page.page` content type) are organized in a hierarchy using the `parent` and `children` relation fields. Each page can have a parent page, and it can also have multiple child pages. There must be one root/index page that has no parent. All other pages are children of this root page. This page has the `slug` set to `/` and this value is synchronized with the [ROOT_PAGE_PATH constant](../../packages/shared-data/index.ts).
+
+#### Page slug
+
+Every page has required `slug` field, which is used to identify the page in the URL. Slug doesn't need to be unique, but it must follow `[a-z0-9/-]+$` pattern.
+
+#### Fullpath generation and redirects
+
+The `fullpath` field is automatically generated and contains the full path of the page, including all parent slugs. It is used to identify the page in the URL (frontend finds pages using `fullpath` filter). The `fullpath` is generated from the `slug` and the `parent` relation field. To disable automatic generation of `fullpath`, set `PAGES_HIERARCHY_ENABLED` to `false` in [utils/constants](./src/utils/constants.ts).
+
+How it works:
+
+1. Every time the page (`api::page.page`) is published and the `slug` or `parent` relation field was changed, new internal job (`api::internal-job.internal-job`) is created to regenerate the `fullpath` field. This is configured in [page `beforeCreate` lifecycle](src/api/page/content-types/page/lifecycles.ts) and related code is in [src/utils/hierarchy.ts](src/utils/hierarchy.ts). So the `fullpath` is not updated immediately, but after the job is processed. This is done to avoid performance issues and cascading updates of the `fullpath` field for all child pages within lifecycle hooks.
+
+2. New `RECALCULATE_FULLPATH` job is displayed in the Strapi admin panel under "Internal Jobs" content type. To trigger the recalculation of the `fullpath` of all pending jobs, click the "Recalculate all fullpaths" button in the admin panel. This will update the `fullpath` field for all pending pages and their children. All pages will be **published** during update. The recalculation is done in the background, so it may take some time depending on the number of pages and their hierarchy.
+
+3. During the recalculation, the script create `CREATE_REDIRECT` jobs for all pages that have changed `fullpath` and save them in the "Internal Jobs" content type. To trigger them, click the "Create all redirects" button in the admin panel. This will create redirects (`api::redirect.redirect`) for all included jobs and save them in the "Redirect" content type.
+
 ### Plugins
 
 Some preinstalled plugins (mailgun) are disabled by default. To turn them on go to [config/plugins.ts](config/plugins.ts) file and uncomment the lines. Some of them may require additional setting of API keys or different ENV variables.
@@ -165,12 +184,42 @@ async find(ctx) {
 
 #### Relation population
 
-The deep population logic is adapted from [strapi-v5-plugin-populate-deep](https://www.npmjs.com/package/strapi-v5-plugin-populate-deep) for use in this project. Its purpose is to populate the `content` dynamic zone of a page. This zone contains many nested components, all of which are fetched at once.
+Strapi offers fine-grained control over population of data coming from the API. Our Strapi Client is fully typed and offers suggestions, but there are instances where you may want to avoid this. For example, the dynamic zone in `api::page.page` collection includes many components. Serializing the full population object for this DZ would yield an URL that's too long and may cause issues.
 
-> [!CRITICAL]
-> Deep population is not recommended for performance reasons. It’s always better to populate only the data you need. In future versions of this template, this logic will be removed and replaced with dynamic data population on the frontend.
+To overcome this issue, this project uses a document middleware. This allows you to control which relations are deeply populated on a per-request basis, optimizing data fetching for complex page structures.
 
-The plugin is registered in the [populateDeep.ts](src/lifeCycles/populateDeep.ts) file, and its implementation can be found in [utils/populate-deep.ts](src/utils/populate-deep.ts). It is used in the `find` and `findOne` methods and is controlled via the `deepLevel` and `deepLevelIgnore` query parameters.
+**How it works:**
+
+- The middleware is registered in `apps/strapi/src/index.ts`.
+- The middleware interceptor is implemented in `apps/strapi/src/documentMiddlewares/page.ts`.
+- It intercepts document queries for the `api::page.page` content type, specifically for the `findMany` action.
+- To trigger custom population, your request must include the following in the query parameters:
+  - Pagination: `{ page: 1, pageSize: 1 }`, which gets updated to `{start: 0, limit: 1}` during the request resolution (before reaching document middleware)
+  - `middlewarePopulate`: an array of string keys, each corresponding to a relation or field you want to populate (as defined in the middleware's `pagePopulateObject`).
+
+**Example request:**
+
+```js
+await PublicStrapiClient.fetchOneByFullPath("api::page.page", fullPath, {
+  locale,
+  populate: {
+    content: true, // ensures typing is valid on the resulting object
+    seo: true, // ensures typing is valid on the resulting object
+  },
+  middlewarePopulate: ["content", "seo"], // ensures the middleware is triggered and the populate object is replaced
+})
+```
+
+- The middleware will map each key in `middlewarePopulate` to the corresponding population rules in `pagePopulateObject`, and apply them to the query.
+- This enables fine-grained, dynamic control over which relations and nested fields are included in the response.
+
+**Other collections**
+Feel free to create your own middlewares for collections where you may need deep-population without specifying it in the request itself. This may be useful for large collections.
+
+**Pitfalls**
+This requires active maintenance, as any changes to collections (i.e. the DZ in Page collection) will need to be reflected in the populate middleware. There is an alternative of using a deep-populate middleware, however this is STRONGLY discouraged. That's also why we removed it, despite using it in this project initially.
+
+'middlewarePopulate' does not alter the types, so using it by itself will result in a type that does not include relations or dynamic zones. This is why we also include it in the populate object.
 
 ### Typescript
 

@@ -137,17 +137,9 @@
     "layouts": {
       "list": [
         "id",
-        "sections",
-        "links",
-        "copyRight"
+        "logoImage"
       ],
       "edit": [
-        [
-          {
-            "name": "logoImage",
-            "size": 12
-          }
-        ],
         [
           {
             "name": "sections",
@@ -163,6 +155,12 @@
         [
           {
             "name": "copyRight",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "logoImage",
             "size": 12
           }
         ]

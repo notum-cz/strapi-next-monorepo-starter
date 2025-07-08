@@ -168,7 +168,7 @@
         "id",
         "name",
         "releasedAt",
-        "scheduledAt"
+        "actions"
       ],
       "edit": [
         [
@@ -183,21 +183,21 @@
         ],
         [
           {
-            "name": "scheduledAt",
+            "name": "actions",
             "size": 6
           },
           {
-            "name": "timezone",
+            "name": "scheduledAt",
             "size": 6
           }
         ],
         [
           {
-            "name": "status",
+            "name": "timezone",
             "size": 6
           },
           {
-            "name": "actions",
+            "name": "status",
             "size": 6
           }
         ]

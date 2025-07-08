@@ -37,7 +37,6 @@ export const authOptions: NextAuthOptions = {
               password: credentials.password,
             }),
             method: "POST",
-            next: { revalidate: 0 },
           },
           { omitUserAuthorization: true }
         )
@@ -83,8 +82,7 @@ export const authOptions: NextAuthOptions = {
           try {
             const data = await PrivateStrapiClient.fetchAPI(
               `/auth/${account.provider}/callback?access_token=${account.access_token}`,
-              undefined,
-              { next: { revalidate: 0 } }
+              undefined
             )
             const { jwt, user } = data
 
@@ -133,7 +131,7 @@ export const authOptions: NextAuthOptions = {
             await PrivateStrapiClient.fetchAPI(
               "/users/me",
               undefined,
-              { next: { revalidate: 0 } },
+              undefined,
               { userJWT: token.strapiJWT }
             )
 

@@ -1,0 +1,193 @@
+{
+  "key": "plugin_content_manager_configuration_content_types::api::internal-job.internal-job",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "mainField": "error",
+      "defaultSortBy": "createdAt",
+      "defaultSortOrder": "DESC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "jobType": {
+        "edit": {
+          "label": "jobType",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "jobType",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "relatedDocumentId": {
+        "edit": {
+          "label": "relatedDocumentId",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "relatedDocumentId",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "payload": {
+        "edit": {
+          "label": "payload",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "payload",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "state": {
+        "edit": {
+          "label": "state",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "state",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "error": {
+        "edit": {
+          "label": "error",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "error",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "createdAt": {
+        "edit": {
+          "label": "createdAt",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "createdAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "updatedAt": {
+        "edit": {
+          "label": "updatedAt",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "updatedAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "createdBy": {
+        "edit": {
+          "label": "createdBy",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true,
+          "mainField": "firstname"
+        },
+        "list": {
+          "label": "createdBy",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "updatedBy": {
+        "edit": {
+          "label": "updatedBy",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true,
+          "mainField": "firstname"
+        },
+        "list": {
+          "label": "updatedBy",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "edit": [
+        [
+          {
+            "name": "payload",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "state",
+            "size": 6
+          },
+          {
+            "name": "error",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "jobType",
+            "size": 6
+          },
+          {
+            "name": "relatedDocumentId",
+            "size": 6
+          }
+        ]
+      ],
+      "list": [
+        "id",
+        "jobType",
+        "state",
+        "relatedDocumentId",
+        "createdAt"
+      ]
+    },
+    "uid": "api::internal-job.internal-job"
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

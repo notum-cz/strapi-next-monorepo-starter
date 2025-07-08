@@ -1,0 +1,174 @@
+{
+  "key": "plugin_content_manager_configuration_content_types::api::redirect.redirect",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 20,
+      "mainField": "source",
+      "defaultSortBy": "id",
+      "defaultSortOrder": "DESC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "source": {
+        "edit": {
+          "label": "source",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "source",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "destination": {
+        "edit": {
+          "label": "destination",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "destination",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "permanent": {
+        "edit": {
+          "label": "permanent",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "permanent",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "page": {
+        "edit": {
+          "label": "page",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "title"
+        },
+        "list": {
+          "label": "page",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "createdAt": {
+        "edit": {
+          "label": "createdAt",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "createdAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "updatedAt": {
+        "edit": {
+          "label": "updatedAt",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "updatedAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "createdBy": {
+        "edit": {
+          "label": "createdBy",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true,
+          "mainField": "firstname"
+        },
+        "list": {
+          "label": "createdBy",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "updatedBy": {
+        "edit": {
+          "label": "updatedBy",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true,
+          "mainField": "firstname"
+        },
+        "list": {
+          "label": "updatedBy",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "edit": [
+        [
+          {
+            "name": "source",
+            "size": 6
+          },
+          {
+            "name": "destination",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "permanent",
+            "size": 4
+          },
+          {
+            "name": "page",
+            "size": 6
+          }
+        ]
+      ],
+      "list": [
+        "id",
+        "source",
+        "destination",
+        "permanent",
+        "createdAt"
+      ]
+    },
+    "uid": "api::redirect.redirect"
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

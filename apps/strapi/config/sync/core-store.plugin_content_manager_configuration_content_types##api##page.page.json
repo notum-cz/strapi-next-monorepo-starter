@@ -6,8 +6,8 @@
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "title",
-      "defaultSortBy": "title",
+      "mainField": "slug",
+      "defaultSortBy": "fullPath",
       "defaultSortOrder": "ASC"
     },
     "metadatas": {
@@ -64,10 +64,10 @@
       "fullPath": {
         "edit": {
           "label": "fullPath",
-          "description": "",
+          "description": "Full path will be calculated by system",
           "placeholder": "",
           "visible": true,
-          "editable": true
+          "editable": false
         },
         "list": {
           "label": "fullPath",
@@ -95,7 +95,7 @@
           "description": "",
           "placeholder": "",
           "visible": true,
-          "editable": true,
+          "editable": false,
           "mainField": "title"
         },
         "list": {
@@ -125,10 +125,26 @@
           "description": "",
           "placeholder": "",
           "visible": true,
-          "editable": true
+          "editable": true,
+          "mainField": "metaTitle"
         },
         "list": {
           "label": "seo",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "redirects": {
+        "edit": {
+          "label": "redirects",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "source"
+        },
+        "list": {
+          "label": "redirects",
           "searchable": false,
           "sortable": false
         }
@@ -196,21 +212,23 @@
       "edit": [
         [
           {
-            "name": "title",
-            "size": 6
-          },
-          {
-            "name": "breadcrumbTitle",
+            "name": "slug",
             "size": 6
           }
         ],
         [
           {
-            "name": "slug",
+            "name": "fullPath",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "title",
             "size": 6
           },
           {
-            "name": "fullPath",
+            "name": "breadcrumbTitle",
             "size": 6
           }
         ],
@@ -222,11 +240,11 @@
         ],
         [
           {
-            "name": "children",
+            "name": "parent",
             "size": 6
           },
           {
-            "name": "parent",
+            "name": "children",
             "size": 6
           }
         ],
@@ -234,6 +252,12 @@
           {
             "name": "seo",
             "size": 12
+          }
+        ],
+        [
+          {
+            "name": "redirects",
+            "size": 6
           }
         ]
       ],

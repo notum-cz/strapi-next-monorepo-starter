@@ -1,13 +1,12 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 import { useRouter } from "@/lib/navigation"
-import { PrivateStrapiClient } from "@/lib/strapi-api"
+import { useUserMutations } from "@/hooks/useUser"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button } from "@/components/ui/button"
@@ -25,21 +24,7 @@ export function ForgotPasswordForm() {
   const t = useTranslations("auth.forgotPassword")
   const router = useRouter()
   const { toast } = useToast()
-
-  const { mutate } = useMutation({
-    mutationFn: (values: { email: string }) => {
-      return PrivateStrapiClient.fetchAPI(
-        `/auth/forgot-password`,
-        undefined,
-        {
-          body: JSON.stringify(values),
-          method: "POST",
-          next: { revalidate: 0 },
-        },
-        { omitUserAuthorization: true }
-      )
-    },
-  })
+  const { forgotPasswordMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(ForgotPasswordFormSchema),
@@ -49,7 +34,7 @@ export function ForgotPasswordForm() {
   })
 
   const onSubmit = (data: z.infer<FormSchemaType>) =>
-    mutate(data, {
+    forgotPasswordMutation.mutate(data, {
       onSuccess: () => {
         toast({
           variant: "default",

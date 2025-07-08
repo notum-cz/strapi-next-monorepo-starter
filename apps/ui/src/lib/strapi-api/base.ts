@@ -35,6 +35,7 @@ export default abstract class BaseStrapiClient {
           ? {}
           : { locale: params.locale }),
       },
+      requestInit,
       options
     )
 
@@ -225,6 +226,10 @@ export default abstract class BaseStrapiClient {
       ...params,
       sort: { publishedAt: "desc" },
       filters: { ...params?.filters, fullPath: slugFilter },
+      pagination: {
+        page: 1,
+        pageSize: 1,
+      },
     }
     const path = this.getStrapiApiPathByUId(uid)
 
@@ -244,6 +249,8 @@ export default abstract class BaseStrapiClient {
     path: string,
     // eslint-disable-next-line no-unused-vars
     params: object,
+    // eslint-disable-next-line no-unused-vars
+    requestInit?: RequestInit,
     // eslint-disable-next-line no-unused-vars
     options?: CustomFetchOptions
   ): Promise<{ url: string; headers: Record<string, string> }>
