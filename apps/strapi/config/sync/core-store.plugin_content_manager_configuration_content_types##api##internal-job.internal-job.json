@@ -1,14 +1,14 @@
 {
-  "key": "plugin_content_manager_configuration_content_types::plugin::content-releases.release",
+  "key": "plugin_content_manager_configuration_content_types::api::internal-job.internal-job",
   "value": {
     "settings": {
       "bulkable": true,
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "name",
-      "defaultSortBy": "name",
-      "defaultSortOrder": "ASC"
+      "mainField": "error",
+      "defaultSortBy": "createdAt",
+      "defaultSortOrder": "DESC"
     },
     "metadatas": {
       "id": {
@@ -19,89 +19,74 @@
           "sortable": true
         }
       },
-      "name": {
+      "jobType": {
         "edit": {
-          "label": "name",
+          "label": "jobType",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "name",
+          "label": "jobType",
           "searchable": true,
           "sortable": true
         }
       },
-      "releasedAt": {
+      "relatedDocumentId": {
         "edit": {
-          "label": "releasedAt",
+          "label": "relatedDocumentId",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "releasedAt",
+          "label": "relatedDocumentId",
           "searchable": true,
           "sortable": true
         }
       },
-      "scheduledAt": {
+      "payload": {
         "edit": {
-          "label": "scheduledAt",
+          "label": "payload",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "scheduledAt",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "timezone": {
-        "edit": {
-          "label": "timezone",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "timezone",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "status": {
-        "edit": {
-          "label": "status",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "status",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "actions": {
-        "edit": {
-          "label": "actions",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true,
-          "mainField": "contentType"
-        },
-        "list": {
-          "label": "actions",
+          "label": "payload",
           "searchable": false,
           "sortable": false
+        }
+      },
+      "state": {
+        "edit": {
+          "label": "state",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "state",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "error": {
+        "edit": {
+          "label": "error",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "error",
+          "searchable": true,
+          "sortable": true
         }
       },
       "createdAt": {
@@ -164,46 +149,43 @@
       }
     },
     "layouts": {
-      "list": [
-        "id",
-        "name",
-        "releasedAt",
-        "actions"
-      ],
       "edit": [
         [
           {
-            "name": "name",
+            "name": "payload",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "state",
             "size": 6
           },
           {
-            "name": "releasedAt",
+            "name": "error",
             "size": 6
           }
         ],
         [
           {
-            "name": "actions",
+            "name": "jobType",
             "size": 6
           },
           {
-            "name": "scheduledAt",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "timezone",
-            "size": 6
-          },
-          {
-            "name": "status",
+            "name": "relatedDocumentId",
             "size": 6
           }
         ]
+      ],
+      "list": [
+        "id",
+        "jobType",
+        "state",
+        "relatedDocumentId",
+        "createdAt"
       ]
     },
-    "uid": "plugin::content-releases.release"
+    "uid": "api::internal-job.internal-job"
   },
   "type": "object",
   "environment": null,

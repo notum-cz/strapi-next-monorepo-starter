@@ -66,17 +66,13 @@
       "list": [
         "id",
         "title",
-        "subTitle",
-        "accordions"
+        "accordions",
+        "subTitle"
       ],
       "edit": [
         [
           {
             "name": "title",
-            "size": 6
-          },
-          {
-            "name": "subTitle",
             "size": 6
           }
         ],
@@ -84,6 +80,12 @@
           {
             "name": "accordions",
             "size": 12
+          }
+        ],
+        [
+          {
+            "name": "subTitle",
+            "size": 6
           }
         ]
       ]

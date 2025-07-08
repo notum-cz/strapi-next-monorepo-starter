@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "internal_jobs",
+  "info": {
+    "singularName": "internal-job",
+    "pluralName": "internal-jobs",
+    "displayName": "InternalJob"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "jobType": {
+      "type": "enumeration",
+      "enum": ["RECALCULATE_FULLPATH", "CREATE_REDIRECT"],
+      "required": true
+    },
+    "relatedDocumentId": {
+      "type": "string",
+      "required": false
+    },
+    "payload": {
+      "type": "json",
+      "required": true
+    },
+    "state": {
+      "type": "enumeration",
+      "enum": ["pending", "completed", "failed"],
+      "required": true,
+      "default": "pending"
+    },
+    "error": {
+      "type": "string"
+    }
+  }
+}

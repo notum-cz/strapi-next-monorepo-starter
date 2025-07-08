@@ -6,7 +6,7 @@
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "email",
+      "mainField": "name",
       "defaultSortBy": "name",
       "defaultSortOrder": "ASC"
     },
@@ -121,29 +121,29 @@
       }
     },
     "layouts": {
+      "list": [
+        "id",
+        "name",
+        "email",
+        "message"
+      ],
       "edit": [
         [
           {
-            "name": "email",
+            "name": "name",
             "size": 6
           },
           {
-            "name": "name",
+            "name": "email",
             "size": 6
           }
         ],
         [
           {
             "name": "message",
-            "size": 12
+            "size": 6
           }
         ]
-      ],
-      "list": [
-        "id",
-        "email",
-        "message",
-        "name"
       ]
     },
     "uid": "api::subscriber.subscriber"

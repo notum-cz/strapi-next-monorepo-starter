@@ -108,8 +108,7 @@
       "list": [
         "id",
         "title",
-        "images",
-        "spacing"
+        "images"
       ],
       "edit": [
         [
@@ -128,17 +127,19 @@
           {
             "name": "spacing",
             "size": 4
-          },
-          {
-            "name": "imageRadius",
-            "size": 6
           }
         ],
         [
           {
+            "name": "imageRadius",
+            "size": 6
+          },
+          {
             "name": "fixedImageHeight",
             "size": 4
-          },
+          }
+        ],
+        [
           {
             "name": "fixedImageWidth",
             "size": 4

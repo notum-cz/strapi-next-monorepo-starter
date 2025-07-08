@@ -110,19 +110,18 @@
       "list": [
         "id",
         "links",
-        "logoImage",
-        "createdAt"
+        "logoImage"
       ],
       "edit": [
         [
           {
-            "name": "logoImage",
+            "name": "links",
             "size": 12
           }
         ],
         [
           {
-            "name": "links",
+            "name": "logoImage",
             "size": 12
           }
         ]

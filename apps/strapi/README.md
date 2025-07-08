@@ -111,6 +111,26 @@ DATABASE_HOST=db
 
 ## ✨ Features
 
+### Pages hierarchy
+
+The pages (`api::page.page` content type) are organized in a hierarchy using the `parent` and `children` relation fields. Each page can have a parent page, and it can also have multiple child pages. There must be one root/index page that has no parent. All other pages are children of this root page. This page has the `slug` set to `/` and this value is synchronized with the [ROOT_PAGE_PATH constant](../../packages/shared-data/index.ts).
+
+#### Page slug
+
+Every page has required `slug` field, which is used to identify the page in the URL. Slug doesn't need to be unique, but it must follow `[a-z0-9/-]+$` pattern.
+
+#### Fullpath generation and redirects
+
+The `fullpath` field is automatically generated and contains the full path of the page, including all parent slugs. It is used to identify the page in the URL (frontend finds pages using `fullpath` filter). The `fullpath` is generated from the `slug` and the `parent` relation field. To disable automatic generation of `fullpath`, set `PAGES_HIERARCHY_ENABLED` to `false` in [utils/constants](./src/utils/constants.ts).
+
+How it works:
+
+1. Every time the page (`api::page.page`) is published and the `slug` or `parent` relation field was changed, new internal job (`api::internal-job.internal-job`) is created to regenerate the `fullpath` field. This is configured in [page `beforeCreate` lifecycle](src/api/page/content-types/page/lifecycles.ts) and related code is in [src/utils/hierarchy.ts](src/utils/hierarchy.ts). So the `fullpath` is not updated immediately, but after the job is processed. This is done to avoid performance issues and cascading updates of the `fullpath` field for all child pages within lifecycle hooks.
+
+2. New `RECALCULATE_FULLPATH` job is displayed in the Strapi admin panel under "Internal Jobs" content type. To trigger the recalculation of the `fullpath` of all pending jobs, click the "Recalculate all fullpaths" button in the admin panel. This will update the `fullpath` field for all pending pages and their children. All pages will be **published** during update. The recalculation is done in the background, so it may take some time depending on the number of pages and their hierarchy.
+
+3. During the recalculation, the script create `CREATE_REDIRECT` jobs for all pages that have changed `fullpath` and save them in the "Internal Jobs" content type. To trigger them, click the "Create all redirects" button in the admin panel. This will create redirects (`api::redirect.redirect`) for all included jobs and save them in the "Redirect" content type.
+
 ### Plugins
 
 Some preinstalled plugins (mailgun) are disabled by default. To turn them on go to [config/plugins.ts](config/plugins.ts) file and uncomment the lines. Some of them may require additional setting of API keys or different ENV variables.
