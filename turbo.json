@@ -26,6 +26,10 @@
       "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
+    },
+    "axe-test": {
+      "cache": false,
+      "persistent": true
     }
   },
   "ui": "tui"

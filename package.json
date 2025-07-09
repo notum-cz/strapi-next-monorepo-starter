@@ -16,7 +16,8 @@
   ],
   "workspaces": [
     "packages/*",
-    "apps/*"
+    "apps/*",
+    "qa/*"
   ],
   "scripts": {
     "build": "turbo build --cache-dir=.turbo",
@@ -33,9 +34,10 @@
     "lint": "turbo lint",
     "postinstall": "yarn setup:apps",
     "prepare": "husky",
+    "setup:apps": "find . -name '*.example' -exec sh -c 'cp \"$1\" \"${1%.example}\"' _ {} \\;",
     "start:strapi": "turbo run start --filter=@repo/strapi",
     "start:ui": "turbo run start --filter=@repo/ui",
-    "setup:apps": "find . -name '*.example' -exec sh -c 'cp -n \"$1\" \"${1%.example}\"' _ {} \\;"
+    "tests:run": "turbo run axe-test --filter=@repo/tests"
   },
   "prettier": "@repo/prettier-config",
   "devDependencies": {

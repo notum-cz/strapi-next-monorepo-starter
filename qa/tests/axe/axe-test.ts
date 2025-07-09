@@ -4,9 +4,7 @@ import path from "path"
 import AxeBuilder from "@axe-core/playwright"
 import { chromium } from "playwright"
 
-const sites: string[] = JSON.parse(
-  fs.readFileSync("tests/axe/sites.json", "utf-8")
-)
+const sites: string[] = JSON.parse(fs.readFileSync("axe/sites.json", "utf-8"))
 if (!Array.isArray(sites) || sites.length === 0) {
   console.error("No sites found in sites.json")
   process.exit(1)
@@ -20,10 +18,7 @@ const runTimestamp = new Date()
   .toISOString()
   .replace(/[-:]/g, "")
   .replace(/\..+/, "")
-const reportDir = path.resolve(
-  "tests/axe/reports",
-  `axe_test_run_${runTimestamp}`
-)
+const reportDir = path.resolve("axe/reports", `axe_test_run_${runTimestamp}`)
 fs.mkdirSync(reportDir, { recursive: true })
 
 const violatingSites: { url: string; reportPath: string }[] = []
