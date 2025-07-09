@@ -1,0 +1,24 @@
+{
+  "name": "@repo/tests",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "main": "index.js",
+  "scripts": {
+    "axe-test": "tsx axe/axe-test.ts",
+    "open-playwright-interactive-mode": "playwright test --ui",
+    "run-all-e2e-tests": "playwright test"
+  },
+  "dependencies": {
+    "@axe-core/playwright": "^4.10.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.53.2",
+    "@types/node": "^22",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  }
+}
