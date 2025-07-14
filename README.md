@@ -79,6 +79,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 - **Auth providers**: Ready to plug-in providers like Google, Facebook etc.
 - **Localization**: Multi-language support with [next-intl](https://next-intl-docs.vercel.app/) and [@strapi/plugin-i18n](https://www.npmjs.com/package/@strapi/plugin-i18n) packages
 - **SEO**: Pre-configured usage of [@strapi/plugin-seo](https://www.npmjs.com/package/@strapi/plugin-seo) and integrated with frontend SEO best practices like metadata, sitemap.xml or robots.txt
+- Testing TBD
 - **Turborepo**: Pre-configured, apps and packages connected and controlled by Turbo CLI
 - **Dockerized**: Ready to build in Docker containers for production
 - **Code quality**: Out-of-the-box ESLint, Prettier, and TypeScript configurations in shareable packages
@@ -126,6 +127,8 @@ yarn build
 yarn dev:ui
 yarn dev:strapi
 ```
+
+## Testing info TBD
 
 ## 🔌 VSCode Extensions
 
