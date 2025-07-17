@@ -1,5 +1,3 @@
-import Script from "next/script"
-
 import type { Data } from "@repo/strapi"
 
 export const StrapiStructuredData = ({
@@ -8,16 +6,15 @@ export const StrapiStructuredData = ({
   structuredData: Data.Component<"seo-utilities.seo">["structuredData"]
 }) => {
   if (structuredData) {
+    // we need to use a plain `script` tag instead of the `Script` component
+    // `Script` component is optimized by Next, which works against us in this case
+    // - if id is specified, the content will not be updated on client navigation
+    // - if no id is specified, a new script tag will be added with the new content, which schema validators are not able to parse.
+    // `script` tag is properly re-rendered and replaced with the new content
     return (
-      <Script
-        id="articleStructuredData"
-        strategy="afterInteractive"
-        type="application/ld+json"
-        // this content is limited to Strapi and cannot be sourced from users
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(structuredData),
-        }}
-      />
+      <script id="articleStructuredData" type="application/ld+json">
+        {JSON.stringify(structuredData)}
+      </script>
     )
   }
 
