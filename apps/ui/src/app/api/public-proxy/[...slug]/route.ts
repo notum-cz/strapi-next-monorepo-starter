@@ -46,7 +46,17 @@ async function handler(
 
   const clonedRequest = request.clone()
   // Extract the body explicitly from the cloned request
-  const body = isReadOnly ? undefined : await clonedRequest.text()
+  let body: string | Blob | undefined
+  if (!isReadOnly) {
+    const contentType = clonedRequest.headers.get("content-type")
+    if (contentType?.includes("multipart/form-data")) {
+      // File upload - preserve FormData as blob
+      body = await clonedRequest.blob()
+    } else {
+      // Regular API call - use text for JSON
+      body = await clonedRequest.text()
+    }
+  }
 
   const authHeader = await createStrapiAuthHeader({
     isReadOnly,

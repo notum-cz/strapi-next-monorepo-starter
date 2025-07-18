@@ -55,11 +55,13 @@ export class PrivateClient extends BaseStrapiClient {
       }
     }
 
+    const isFormData = requestInit?.body instanceof FormData
+
     return {
       url: completeUrl,
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json",
+        ...(isFormData ? {} : { "Content-type": "application/json" }),
         ...headers,
       },
     }
