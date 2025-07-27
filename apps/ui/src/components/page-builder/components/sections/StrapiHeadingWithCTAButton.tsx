@@ -1,7 +1,6 @@
 import React from "react"
 import { Data } from "@repo/strapi"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 
@@ -10,8 +9,6 @@ export const StrapiHeadingWithCTAButton = ({
 }: {
   readonly component: Data.Component<"sections.heading-with-cta-button">
 }) => {
-  removeThisWhenYouNeedMe("StrapiHeadingWithCTAButton")
-
   return (
     <section className="px-4 py-8 sm:py-16 lg:px-6">
       <Container>

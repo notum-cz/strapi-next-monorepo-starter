@@ -1,17 +1,17 @@
 {
-  "name": "strapi-next-monorepo-starter",
-  "version": "2.0.0",
+  "name": "mascarpone-strapi",
+  "version": "1.0.0",
   "private": true,
   "author": {
-    "name": "Notum Technologies",
-    "email": "info@notum.cz",
-    "url": "https://notum.cz"
+    "name": "Tomas Skarpa",
+    "email": "tskarpa@seznam.cz",
+    "url": ""
   },
   "maintainers": [
     {
-      "name": "Notum Technologies",
-      "email": "info@notum.cz",
-      "url": "https://notum.cz"
+      "name": "Tomas Skarpa",
+      "email": "tskarpa@seznam.cz",
+      "url": ""
     }
   ],
   "workspaces": [

@@ -15,7 +15,9 @@ import { LoggedUserMenu } from "@/components/page-builder/single-types/navbar/Lo
 
 const hardcodedLinks: NonNullable<
   Data.ContentType<"api::navbar.navbar">["links"]
-> = [{ id: "client-page", href: "/client-page", label: "Client Page" }]
+> = [
+  //{ id: "client-page", href: "/client-page", label: "Client Page" }
+]
 
 export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
   const response = await fetchNavbar(locale)
@@ -36,7 +38,7 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-white/90 shadow-sm backdrop-blur transition-colors duration-300">
       <div className="flex h-16 items-center space-x-6 px-6 sm:space-x-0">
-        <div className="flex gap-6 md:gap-10">
+        <div className="flex items-center">
           {navbar.logoImage ? (
             <StrapiImageWithLink
               component={navbar.logoImage}
@@ -48,7 +50,7 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
             />
           ) : (
             <AppLink href="/" className="text-xl font-bold">
-              <Image src="/images/logo.svg" alt="logo" height={23} width={82} />
+              <Image src="/images/logo.svg" alt="logo" height={45} width={45} />
             </AppLink>
           )}
 

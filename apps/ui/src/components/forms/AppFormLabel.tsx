@@ -1,7 +1,6 @@
 import React from "react"
 import { ControllerFieldState } from "react-hook-form"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
 import { FormLabel } from "@/components/ui/form"
 
@@ -18,8 +17,6 @@ export function AppFormLabel({
   required,
   className,
 }: Props) {
-  removeThisWhenYouNeedMe("AppFormLabel")
-
   if (label == null) {
     return null
   }

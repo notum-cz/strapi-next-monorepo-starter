@@ -19,7 +19,7 @@ export function StrapiImageWithLink({
   imageProps,
   linkProps,
 }: Props) {
-  removeThisWhenYouNeedMe("StrapiImageWithLink")
+  console.log(component)
 
   return (
     <StrapiLink component={component?.link} {...linkProps}>

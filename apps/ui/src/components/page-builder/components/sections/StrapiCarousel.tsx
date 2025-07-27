@@ -1,6 +1,5 @@
 import { Data } from "@repo/strapi"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
 import {
@@ -16,8 +15,6 @@ export function StrapiCarousel({
 }: {
   readonly component: Data.Component<"sections.carousel">
 }) {
-  removeThisWhenYouNeedMe("StrapiCarousel")
-
   return (
     <section>
       <Container className="flex justify-center px-4 py-8">

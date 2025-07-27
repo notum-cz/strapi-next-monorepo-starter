@@ -3,7 +3,6 @@
 import React from "react"
 import { useFormContext } from "react-hook-form"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
 import { AppFormDescription } from "@/components/forms/AppFormDescription"
 import { AppFormLabel } from "@/components/forms/AppFormLabel"
@@ -41,8 +40,6 @@ export function AppSelect({
   description,
   ...nativeProps
 }: Props) {
-  removeThisWhenYouNeedMe("AppSelect")
-
   const { control } = useFormContext()
 
   return (

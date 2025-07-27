@@ -1,6 +1,5 @@
 import { Data } from "@repo/strapi"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
 import { ContactForm } from "@/components/elementary/forms/ContactForm"
 import Heading from "@/components/typography/Heading"
@@ -11,8 +10,6 @@ export function StrapiContactForm({
 }: {
   readonly component: Data.Component<"forms.contact-form">
 }) {
-  removeThisWhenYouNeedMe("StrapiContactForm")
-
   return (
     <div className="bg-white" id="form-section">
       <Container className="flex flex-col gap-10 lg:flex-row lg:gap-40">

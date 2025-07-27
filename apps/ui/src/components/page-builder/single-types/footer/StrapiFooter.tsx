@@ -5,12 +5,15 @@ import { AppLocale } from "@/types/general"
 import { fetchFooter } from "@/lib/strapi-api/content/server"
 import { cn } from "@/lib/styles"
 import { Container } from "@/components/elementary/Container"
+import StrapiCopyright from "@/components/page-builder/components/utilities/StrapiCopyright"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 
 export async function StrapiFooter({ locale }: { readonly locale: AppLocale }) {
   const response = await fetchFooter(locale)
   const component = response?.data
+
+  console.log("📦 StrapiCopyright received:", component)
 
   if (component == null) {
     return null
@@ -46,14 +49,11 @@ export async function StrapiFooter({ locale }: { readonly locale: AppLocale }) {
 
         <div className="flex items-center justify-between">
           <div>
-            {component.copyRight && (
-              <p className="">
-                {component.copyRight.replace(
-                  "{YEAR}",
-                  new Date().getFullYear().toString()
-                )}
-              </p>
-            )}
+            <StrapiCopyright
+              component={component.copyRight}
+              className="text-sm text-gray-500"
+              tag="small"
+            />
           </div>
 
           <div className="flex flex-col items-end sm:flex-row sm:items-center sm:space-x-4">

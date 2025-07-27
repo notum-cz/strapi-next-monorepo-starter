@@ -1,6 +1,5 @@
 import React from "react"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { FormDescription } from "@/components/ui/form"
 
 type Props = {
@@ -8,8 +7,6 @@ type Props = {
 }
 
 export function AppFormDescription({ description }: Props) {
-  removeThisWhenYouNeedMe("AppFormDescription")
-
   if (description == null) {
     return null
   }

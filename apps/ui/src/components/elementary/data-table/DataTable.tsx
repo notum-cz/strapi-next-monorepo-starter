@@ -18,7 +18,6 @@ import type {
 } from "@tanstack/react-table"
 import type { ReactNode } from "react"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
@@ -49,8 +48,6 @@ export function DataTable<TData, TValue>({
   pagination,
   searchAdornment,
 }: Props<TData, TValue>) {
-  removeThisWhenYouNeedMe("DataTable")
-
   const t = useTranslations()
 
   const [sorting, setSorting] = useState<SortingState>([])

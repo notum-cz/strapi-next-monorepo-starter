@@ -53,6 +53,10 @@
         }
       },
       "component": "utilities.image-with-link"
+    },
+    "includeYear": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

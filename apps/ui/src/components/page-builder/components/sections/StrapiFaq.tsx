@@ -1,6 +1,5 @@
 import { Data } from "@repo/strapi"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
 import {
   Accordion,
@@ -14,8 +13,6 @@ export function StrapiFaq({
 }: {
   readonly component: Data.Component<"sections.faq">
 }) {
-  removeThisWhenYouNeedMe("StrapiFaq")
-
   return (
     <section>
       <Container className="py-8">

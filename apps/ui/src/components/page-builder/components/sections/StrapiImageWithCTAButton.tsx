@@ -1,6 +1,5 @@
 import { Data } from "@repo/strapi"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
@@ -10,8 +9,6 @@ export const StrapiImageWithCTAButton = ({
 }: {
   readonly component: Data.Component<"sections.image-with-cta-button">
 }) => {
-  removeThisWhenYouNeedMe("StrapiImageWithCTAButton")
-
   return (
     <section>
       <Container className="items-center gap-4 md:grid md:grid-cols-2 xl:gap-8">

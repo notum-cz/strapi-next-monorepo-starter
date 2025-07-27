@@ -1,7 +1,6 @@
 import { Data } from "@repo/strapi"
 import { Check } from "lucide-react"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
@@ -13,8 +12,6 @@ export function StrapiHero({
 }: {
   readonly component: Data.Component<"sections.hero">
 }) {
-  removeThisWhenYouNeedMe("StrapiHero")
-
   return (
     <section style={{ backgroundColor: component.bgColor ?? "transparent" }}>
       <Container className="grid gap-6 px-4 py-8 md:grid-cols-12 lg:py-12 xl:gap-0">

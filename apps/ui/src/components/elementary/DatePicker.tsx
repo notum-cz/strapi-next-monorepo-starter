@@ -5,7 +5,6 @@ import dayjs from "dayjs"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -20,8 +19,6 @@ export function DatePicker({
 }: {
   readonly defaultDate?: Date
 }) {
-  removeThisWhenYouNeedMe("DatePicker")
-
   const [date, setDate] = useState<Date | undefined>(defaultDate)
   const t = useTranslations("comps.datePicker")
 

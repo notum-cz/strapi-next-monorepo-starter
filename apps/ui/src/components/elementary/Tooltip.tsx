@@ -1,4 +1,3 @@
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import {
   Tooltip as RadixTooltip,
   TooltipContent,
@@ -15,8 +14,6 @@ interface Props {
 }
 
 export function Tooltip({ children, content, contentProps }: Props) {
-  removeThisWhenYouNeedMe("Tooltip")
-
   return (
     <TooltipProvider>
       <RadixTooltip>
