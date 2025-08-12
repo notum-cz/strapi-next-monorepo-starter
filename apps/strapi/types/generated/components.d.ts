@@ -359,10 +359,13 @@ export interface UtilitiesImageWithLink extends Struct.ComponentSchema {
 export interface UtilitiesLink extends Struct.ComponentSchema {
   collectionName: "components_utilities_links"
   info: {
+    description: ""
     displayName: "Link"
   }
   attributes: {
     href: Schema.Attribute.String & Schema.Attribute.Required
+    icon: Schema.Attribute.Media<"images" | "files">
+    iconEmoji: Schema.Attribute.String
     label: Schema.Attribute.String & Schema.Attribute.Required
     newTab: Schema.Attribute.Boolean
   }
@@ -376,6 +379,39 @@ export interface UtilitiesLinksWithTitle extends Struct.ComponentSchema {
   attributes: {
     links: Schema.Attribute.Component<"utilities.link", true>
     title: Schema.Attribute.String
+  }
+}
+
+export interface UtilitiesSocialIcon extends Struct.ComponentSchema {
+  collectionName: "components_utilities_social_icons"
+  info: {
+    description: ""
+    displayName: "socialIcon"
+  }
+  attributes: {
+    customIcon: Schema.Attribute.String
+    name: Schema.Attribute.String & Schema.Attribute.Required
+    platform: Schema.Attribute.Enumeration<
+      [
+        "github",
+        "linkedin",
+        "twitter",
+        "facebook",
+        "instagram",
+        "youtube",
+        "tiktok",
+        "pinterest",
+        "reddit",
+        "tumblr",
+        "snapchat",
+        "threads",
+        "discord",
+        "twitch",
+        "telegram",
+        "whatsapp",
+      ]
+    >
+    url: Schema.Attribute.String
   }
 }
 
@@ -415,6 +451,7 @@ declare module "@strapi/strapi" {
       "utilities.image-with-link": UtilitiesImageWithLink
       "utilities.link": UtilitiesLink
       "utilities.links-with-title": UtilitiesLinksWithTitle
+      "utilities.social-icon": UtilitiesSocialIcon
       "utilities.text": UtilitiesText
     }
   }

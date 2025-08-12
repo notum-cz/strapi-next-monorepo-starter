@@ -1,0 +1,42 @@
+{
+  "collectionName": "components_utilities_social_icons",
+  "info": {
+    "displayName": "socialIcon",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "required": false
+    },
+    "platform": {
+      "type": "enumeration",
+      "enum": [
+        "github",
+        "linkedin",
+        "twitter",
+        "facebook",
+        "instagram",
+        "youtube",
+        "tiktok",
+        "pinterest",
+        "reddit",
+        "tumblr",
+        "snapchat",
+        "threads",
+        "discord",
+        "twitch",
+        "telegram",
+        "whatsapp"
+      ]
+    },
+    "customIcon": {
+      "type": "string"
+    }
+  }
+}

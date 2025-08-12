@@ -1,7 +1,8 @@
 {
   "collectionName": "components_utilities_links",
   "info": {
-    "displayName": "Link"
+    "displayName": "Link",
+    "description": ""
   },
   "options": {},
   "attributes": {
@@ -15,6 +16,18 @@
     },
     "newTab": {
       "type": "boolean"
+    },
+    "icon": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    },
+    "iconEmoji": {
+      "type": "string"
     }
   }
 }

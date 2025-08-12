@@ -10,8 +10,10 @@ import { cn } from "@/lib/styles"
 import AppLink from "@/components/elementary/AppLink"
 import LocaleSwitcher from "@/components/elementary/LocaleSwitcher"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
-import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
-import { LoggedUserMenu } from "@/components/page-builder/single-types/navbar/LoggedUserMenu"
+import StrapiNavLink from "@/components/page-builder/components/utilities/StrapiNavLink"
+import StrapiSocialIcon from "@/components/page-builder/components/utilities/StrapiSocialIcon"
+
+// import { LoggedUserMenu } from "@/components/page-builder/single-types/navbar/LoggedUserMenu"
 
 const hardcodedLinks: NonNullable<
   Data.ContentType<"api::navbar.navbar">["links"]
@@ -37,47 +39,38 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-white/90 shadow-sm backdrop-blur transition-colors duration-300">
-      <div className="flex h-16 items-center space-x-6 px-6 sm:space-x-0">
+      <div className="flex h-20 items-center justify-between px-8">
         <div className="flex items-center">
           {navbar.logoImage ? (
             <StrapiImageWithLink
               component={navbar.logoImage}
               linkProps={{ className: "flex items-center space-x-2" }}
               imageProps={{
-                forcedSizes: { width: 90, height: 60 },
+                forcedSizes: { width: 100, height: 66 },
                 hideWhenMissing: true,
               }}
             />
           ) : (
-            <AppLink href="/" className="text-xl font-bold">
-              <Image src="/images/logo.svg" alt="logo" height={45} width={45} />
+            <AppLink href="/" className="text-2xl font-bold">
+              <Image src="/images/logo.svg" alt="logo" height={50} width={50} />
             </AppLink>
           )}
-
-          {links.length > 0 ? (
-            <nav className="flex">
-              {links.map((link) => (
-                <StrapiLink
-                  component={link}
-                  key={link.href}
-                  className={cn(
-                    "flex items-center text-sm font-medium hover:text-red-600"
-                  )}
-                />
-              ))}
-            </nav>
-          ) : null}
         </div>
 
-        <div className="hidden flex-1 items-center justify-end space-x-4 lg:flex">
-          {/* {session?.user ? (
-            <nav className="flex items-center space-x-1">
-              <LoggedUserMenu user={session.user} />
+        <div className="flex items-center space-x-6">
+          {links.length > 0 && (
+            <nav className="flex">
+              {links.map((link) => (
+                <StrapiNavLink component={link} key={link.href} />
+              ))}
             </nav>
-          ) : (
-            <AppLink href="/auth/signin">{t("actions.signIn")}</AppLink>
-          )} */}
-          <LocaleSwitcher locale={locale} />
+          )}
+          <div className="flex items-center space-x-3">
+            {navbar.socialIcons?.map((socialIcon) => (
+              <StrapiSocialIcon key={socialIcon.id} component={socialIcon} />
+            ))}
+            <LocaleSwitcher locale={locale} />
+          </div>
         </div>
       </div>
     </header>
