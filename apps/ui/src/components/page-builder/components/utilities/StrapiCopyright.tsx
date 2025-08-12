@@ -1,43 +1,27 @@
 import React from "react"
-import { Data } from "@repo/strapi"
 
 export interface StrapiCopyrightProps {
-  readonly component: Data.Component<"utilities.copyright"> | undefined | null
+  readonly text: string
+  readonly includeYear?: boolean
   readonly className?: string
-  readonly tag?: keyof JSX.IntrinsicElements // e.g. "p", "small", "span"
-  readonly hideWhenMissing?: boolean
+  readonly tag?: keyof JSX.IntrinsicElements
 }
 
 export function StrapiCopyright({
-  component,
+  text,
+  includeYear = false,
   className,
   tag = "p",
-  hideWhenMissing,
 }: StrapiCopyrightProps) {
-  if (component == null && hideWhenMissing) {
-    return null
-  }
+  if (!text) return null
 
-  if (!component?.text) {
-    return null
-  }
-
-  const currentYear = new Date().getFullYear().toString()
-  const yearPattern = new RegExp(`^@\\s*${currentYear}`)
-  const originalText = component.text
-  const includeYear = component.includeYear ?? false
-
+  const currentYear = new Date().getFullYear()
   const renderedText = includeYear
-    ? yearPattern.test(originalText)
-      ? originalText
-      : `@ ${currentYear} ${originalText}`
-    : originalText.replace("{YEAR}", currentYear)
+    ? `© ${currentYear} ${text}`
+    : text.replace("{YEAR}", currentYear.toString())
 
   const Tag = tag as any
-
   return <Tag className={className}>{renderedText}</Tag>
 }
-
-StrapiCopyright.displayName = "StrapiCopyright"
 
 export default StrapiCopyright

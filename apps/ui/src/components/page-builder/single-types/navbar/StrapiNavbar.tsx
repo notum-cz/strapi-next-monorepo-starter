@@ -70,13 +70,13 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
         </div>
 
         <div className="hidden flex-1 items-center justify-end space-x-4 lg:flex">
-          {session?.user ? (
+          {/* {session?.user ? (
             <nav className="flex items-center space-x-1">
               <LoggedUserMenu user={session.user} />
             </nav>
           ) : (
             <AppLink href="/auth/signin">{t("actions.signIn")}</AppLink>
-          )}
+          )} */}
           <LocaleSwitcher locale={locale} />
         </div>
       </div>

@@ -25,7 +25,7 @@ export function generateStaticParams() {
 
 export const metadata: Metadata = {
   title: {
-    template: "%s / Placeholder",
+    template: "%s | Tomáš Škarpa",
     default: "",
   },
 }

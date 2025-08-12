@@ -14,11 +14,13 @@ export function StrapiAnimatedLogoRow({
   const sliderImages = [...component.logos, ...component.logos]
 
   return (
-    <section className="w-full py-10">
+    <section className="w-full py-5">
       <div className="flex flex-col items-center gap-[30px]">
-        <Heading tag="h3" variant="heading4" fontWeight="normal">
-          {component.text}
-        </Heading>
+        {component.text && (
+          <Heading tag="h3" variant="heading4" fontWeight="normal">
+            {component.text}
+          </Heading>
+        )}
 
         <div className="relative mt-4 w-full">
           <div className="infinite-scroll-container-horizontal w-full">
@@ -41,7 +43,7 @@ export function StrapiAnimatedLogoRow({
               ))}
             </div>
           </div>
-          <div className="bg-gradient-slider absolute top-0 left-0 size-full opacity-80" />
+          <div className="absolute top-0 left-0 size-full opacity-80" />
         </div>
       </div>
     </section>

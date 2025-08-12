@@ -8,7 +8,7 @@
   "attributes": {
     "text": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "logos": {
       "type": "component",

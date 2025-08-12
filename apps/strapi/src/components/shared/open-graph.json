@@ -1,0 +1,35 @@
+{
+  "collectionName": "components_shared_open_graphs",
+  "info": {
+    "displayName": "openGraph",
+    "icon": "project-diagram"
+  },
+  "options": {},
+  "attributes": {
+    "ogTitle": {
+      "type": "string",
+      "required": true,
+      "maxLength": 70
+    },
+    "ogDescription": {
+      "type": "string",
+      "maxLength": 200,
+      "required": true
+    },
+    "ogImage": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "ogUrl": {
+      "type": "string",
+      "required": false
+    },
+    "ogType": {
+      "type": "string",
+      "required": false
+    }
+  }
+}

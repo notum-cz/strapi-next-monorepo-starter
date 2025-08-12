@@ -13,6 +13,14 @@ export function Breadcrumbs({ breadcrumbs, className }: Props) {
     return null
   }
 
+  const isHomepage =
+    breadcrumbs.length === 1 &&
+    (breadcrumbs[0].fullPath === "/" || breadcrumbs[0].fullPath === "")
+
+  if (isHomepage) {
+    return null
+  }
+
   return (
     <div className={cn("max-w-screen-default mx-auto w-full", className)}>
       <div>

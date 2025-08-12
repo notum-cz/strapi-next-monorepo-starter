@@ -5,7 +5,6 @@ import { AppLocale } from "@/types/general"
 import { fetchFooter } from "@/lib/strapi-api/content/server"
 import { cn } from "@/lib/styles"
 import { Container } from "@/components/elementary/Container"
-import StrapiCopyright from "@/components/page-builder/components/utilities/StrapiCopyright"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 
@@ -13,7 +12,7 @@ export async function StrapiFooter({ locale }: { readonly locale: AppLocale }) {
   const response = await fetchFooter(locale)
   const component = response?.data
 
-  console.log("📦 StrapiCopyright received:", component)
+  console.log("📦 Footer logoImage:", component?.logoImage)
 
   if (component == null) {
     return null
@@ -21,39 +20,43 @@ export async function StrapiFooter({ locale }: { readonly locale: AppLocale }) {
 
   return (
     <div className="w-full border-t bg-white/10 shadow-sm backdrop-blur transition-colors duration-300">
-      <Container className="pt-8 pb-4">
-        <div className="grid grid-cols-1 gap-6 pb-4 sm:grid-cols-[30%_1fr]">
-          <div className="flex flex-col space-y-4">
-            <StrapiImageWithLink
-              component={component.logoImage}
-              imageProps={{ hideWhenMissing: true }}
-            />
-          </div>
+      <Container className="p-4">
+        {(component.logoImage || Boolean(component.sections?.length)) && (
+          <div className="grid grid-cols-1 gap-6 pb-4 sm:grid-cols-[30%_1fr]">
+            <div className="flex flex-col space-y-4">
+              <StrapiImageWithLink
+                component={component.logoImage}
+                imageProps={{ hideWhenMissing: true }}
+              />
+            </div>
 
-          <div className={cn("grid gap-8")}>
-            {component.sections?.map((section) => (
-              <div className="flex flex-col" key={section.id}>
-                <h3 className="pb-2 text-lg font-bold">{section.title}</h3>
+            <div className={cn("grid gap-8")}>
+              {component.sections?.map((section) => (
+                <div className="flex flex-col" key={section.id}>
+                  <h3 className="pb-2 text-lg font-bold">{section.title}</h3>
 
-                {section.links?.map((link, i) => (
-                  <StrapiLink
-                    key={String(link.id) + i}
-                    component={link}
-                    className="text-primary w-fit text-sm hover:underline"
-                  />
-                ))}
-              </div>
-            ))}
+                  {section.links?.map((link, i) => (
+                    <StrapiLink
+                      key={String(link.id) + i}
+                      component={link}
+                      className="text-primary w-fit text-sm hover:underline"
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="flex items-center justify-between">
           <div>
-            <StrapiCopyright
-              component={component.copyRight}
-              className="text-sm text-gray-500"
-              tag="small"
-            />
+            {component.copyRight && (
+              <small className="text-sm text-gray-500">
+                {component.includeYear
+                  ? `© ${new Date().getFullYear()} ${component.copyRight}`
+                  : component.copyRight}
+              </small>
+            )}
           </div>
 
           <div className="flex flex-col items-end sm:flex-row sm:items-center sm:space-x-4">
