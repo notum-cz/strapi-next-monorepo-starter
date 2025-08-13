@@ -12,21 +12,32 @@ export function ScrollProgressBar() {
   }, [pathname])
 
   useEffect(() => {
+    let ticking = false
+    
     const updateScrollProgress = () => {
       const scrollTop = window.scrollY
-      const docHeight =
-        document.documentElement.scrollHeight - window.innerHeight
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight
       const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
       setScrollProgress(Math.min(100, Math.max(0, scrollPercent)))
+      ticking = false
     }
 
-    window.addEventListener("scroll", updateScrollProgress)
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(updateScrollProgress)
+        ticking = true
+      }
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    
+    // Initial calculation with multiple attempts for better accuracy
     updateScrollProgress()
+    setTimeout(updateScrollProgress, 0)
+    setTimeout(updateScrollProgress, 50)
+    setTimeout(updateScrollProgress, 200)
 
-    // Recalculate after page fully loads
-    setTimeout(updateScrollProgress, 100)
-
-    return () => window.removeEventListener("scroll", updateScrollProgress)
+    return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
   return (
