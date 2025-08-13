@@ -86,8 +86,6 @@ const pagePopulateObject: FindOne<"api::page.page">["populate"] = {
   seo: {
     populate: {
       metaImage: true,
-      twitter: { populate: { images: true } },
-      og: { populate: { image: true } },
     },
   },
 }

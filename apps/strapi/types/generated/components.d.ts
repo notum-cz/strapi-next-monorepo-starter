@@ -199,10 +199,8 @@ export interface SeoUtilitiesSeo extends Struct.ComponentSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 60
       }>
-    og: Schema.Attribute.Component<"seo-utilities.seo-og", false>
     siteName: Schema.Attribute.String
     structuredData: Schema.Attribute.JSON
-    twitter: Schema.Attribute.Component<"seo-utilities.seo-twitter", false>
   }
 }
 

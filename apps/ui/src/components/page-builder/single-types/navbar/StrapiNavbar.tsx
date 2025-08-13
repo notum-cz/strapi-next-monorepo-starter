@@ -9,6 +9,7 @@ import { fetchNavbar } from "@/lib/strapi-api/content/server"
 import { cn } from "@/lib/styles"
 import AppLink from "@/components/elementary/AppLink"
 import LocaleSwitcher from "@/components/elementary/LocaleSwitcher"
+import { ScrollProgressBar } from "@/components/elementary/ScrollProgressBar"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
 import StrapiNavLink from "@/components/page-builder/components/utilities/StrapiNavLink"
 import StrapiSocialIcon from "@/components/page-builder/components/utilities/StrapiSocialIcon"
@@ -39,7 +40,7 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-white/90 shadow-sm backdrop-blur transition-colors duration-300">
-      <div className="flex h-20 items-center justify-between px-8">
+      <div className="flex h-14 items-center justify-between px-8">
         <div className="flex items-center">
           {navbar.logoImage ? (
             <StrapiImageWithLink
@@ -73,6 +74,7 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
           </div>
         </div>
       </div>
+      <ScrollProgressBar />
     </header>
   )
 }

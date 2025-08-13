@@ -81,7 +81,6 @@ export async function fetchSeo(
         seo: {
           populate: {
             metaImage: true,
-            twitter: { populate: { images: true } },
           },
         },
       },

@@ -48,8 +48,6 @@ export async function getMetadataFromStrapi({
   if (!fullPath) {
     return {
       ...defaultMeta,
-      openGraph: defaultOgMeta,
-      twitter: defaultTwitterMeta,
     }
   }
 
@@ -69,8 +67,6 @@ export async function getMetadataFromStrapi({
     )
     return {
       ...defaultMeta,
-      openGraph: defaultOgMeta,
-      twitter: defaultTwitterMeta,
     }
   }
 }
@@ -111,20 +107,9 @@ async function fetchAndMapStrapiMetadata(
       : undefined,
   }
 
-  const twitterSeo = seo?.twitter
-
-  const strapiTwitterMeta: Metadata["twitter"] = twitterSeo
-    ? preprocessTwitterMetadata(twitterSeo)
-    : undefined
-
   return {
     ...mergeWith(defaultMeta, strapiMeta, seoMergeCustomizer),
     openGraph: mergeWith(defaultOgMeta, strapiOgMeta, seoMergeCustomizer),
-    twitter: mergeWith(
-      defaultTwitterMeta,
-      strapiTwitterMeta,
-      seoMergeCustomizer
-    ),
   }
 }
 

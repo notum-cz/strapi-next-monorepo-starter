@@ -21,21 +21,13 @@
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "keywords": {
       "type": "text",
       "regex": "[^,]+"
-    },
-    "twitter": {
-      "type": "component",
-      "repeatable": false,
-      "component": "seo-utilities.seo-twitter"
-    },
-    "og": {
-      "type": "component",
-      "repeatable": false,
-      "component": "seo-utilities.seo-og"
     },
     "applicationName": {
       "type": "string"
