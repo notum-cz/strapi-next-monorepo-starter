@@ -18,10 +18,9 @@ export function StrapiNavLink({ component, className }: StrapiNavLinkProps) {
       href={component.href}
       variant="ghost"
       className={cn(
-        "mx-2 rounded-md px-4 py-3 text-base font-medium transition-all duration-200",
-        "border border-[var(--color-brand-red-20)] bg-transparent text-[var(--color-brand-red)]",
-        "hover:border-[var(--color-brand-red-30)] hover:bg-[var(--color-brand-red)] hover:text-white",
-        "focus:ring-2 focus:ring-[var(--color-brand-red-10)] focus:outline-none",
+        "mx-2 rounded-md px-3 py-2 text-base font-normal transition-colors duration-200",
+        "text-gray-700 hover:bg-gray-100 hover:text-[var(--color-brand-red)]",
+        "focus:bg-gray-100 focus:text-[var(--color-brand-red)] focus:outline-none",
         className
       )}
     >
