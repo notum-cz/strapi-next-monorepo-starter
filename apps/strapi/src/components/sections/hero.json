@@ -8,7 +8,7 @@
   "attributes": {
     "title": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "subTitle": {
       "type": "string"

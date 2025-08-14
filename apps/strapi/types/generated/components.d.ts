@@ -101,7 +101,7 @@ export interface SectionsHero extends Struct.ComponentSchema {
     links: Schema.Attribute.Component<"utilities.link", true>
     steps: Schema.Attribute.Component<"utilities.text", true>
     subTitle: Schema.Attribute.String
-    title: Schema.Attribute.String & Schema.Attribute.Required
+    title: Schema.Attribute.String
   }
 }
 
