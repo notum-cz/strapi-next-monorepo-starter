@@ -13,10 +13,11 @@ export function ScrollProgressBar() {
 
   useEffect(() => {
     let ticking = false
-    
+
     const updateScrollProgress = () => {
       const scrollTop = window.scrollY
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight
+      const docHeight =
+        document.documentElement.scrollHeight - window.innerHeight
       const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
       setScrollProgress(Math.min(100, Math.max(0, scrollPercent)))
       ticking = false
@@ -30,7 +31,7 @@ export function ScrollProgressBar() {
     }
 
     window.addEventListener("scroll", handleScroll, { passive: true })
-    
+
     // Initial calculation with multiple attempts for better accuracy
     updateScrollProgress()
     setTimeout(updateScrollProgress, 0)

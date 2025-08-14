@@ -41,21 +41,24 @@ const LocaleSwitcher = ({ locale }: { locale: AppLocale }) => {
 
   return (
     <Select value={locale} onValueChange={handleLocaleChange}>
-      <SelectTrigger className="w-18 font-bold uppercase cursor-pointer">
+      <SelectTrigger className="w-18 cursor-pointer font-bold uppercase">
         {locale}
       </SelectTrigger>
-      <SelectContent className="bg-white/90 backdrop-blur border-gray-300 shadow-lg">
+      <SelectContent className="border-gray-300 bg-white/90 shadow-lg backdrop-blur">
         {routing.locales.map((locale, index) => (
           <React.Fragment key={locale}>
-            <SelectItem 
-              key={locale} 
+            <SelectItem
+              key={locale}
               value={locale}
-              className="hover:bg-[var(--color-brand-red)]/10 focus:bg-[var(--color-brand-red)]/10 cursor-pointer transition-colors duration-150"
+              className="cursor-pointer transition-colors duration-150 hover:bg-[var(--color-brand-red)]/10 focus:bg-[var(--color-brand-red)]/10"
             >
               {localeTranslation[locale]}
             </SelectItem>
             {index < routing.locales.length - 1 && (
-              <SelectSeparator key={`${locale}-separator`} className="bg-gray-300" />
+              <SelectSeparator
+                key={`${locale}-separator`}
+                className="bg-gray-300"
+              />
             )}
           </React.Fragment>
         ))}
