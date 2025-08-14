@@ -19,12 +19,12 @@ export function StrapiHero({
           <Heading
             tag="h1"
             variant="heading1"
-            className="mb-4 max-w-2xl text-center lg:text-start"
+            className="max-w-2xl text-center text-2xl lg:text-start lg:text-4xl"
           >
             {component.title}
           </Heading>
           {component.subTitle && (
-            <Paragraph className="mb-6 max-w-2xl text-center lg:text-start">
+            <Paragraph className="mb-6 max-w-2xl text-center text-base text-gray-600 lg:text-start lg:text-lg">
               {component.subTitle}
             </Paragraph>
           )}
@@ -51,7 +51,15 @@ export function StrapiHero({
         </div>
 
         {component.image?.media && (
-          <div className="hidden md:col-span-6 md:mt-0 md:flex">
+          <div
+            className={`hidden md:col-span-6 md:mt-0 md:flex ${
+              component.imageAlignment === "right"
+                ? "justify-end"
+                : component.imageAlignment === "left"
+                  ? "justify-start"
+                  : "justify-center"
+            }`}
+          >
             <StrapiBasicImage
               component={component.image}
               className="rounded-3xl object-contain"

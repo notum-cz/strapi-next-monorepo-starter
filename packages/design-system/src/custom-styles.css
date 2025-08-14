@@ -40,32 +40,32 @@
 
 .ck-editor__main h1,
 .typo-h1 {
-  @apply text-10xl mb-2;
+  @apply text-10xl mb-1.5;
 }
 
 .ck-editor__main h2,
 .typo-h2 {
-  @apply text-8xl mb-1.5;
+  @apply text-8xl mb-1;
 }
 
 .ck-editor__main h3,
 .typo-h3 {
-  @apply text-7xl mb-1;
+  @apply text-7xl mb-0.5;
 }
 
 .ck-editor__main h4,
 .typo-h4 {
-  @apply text-6xl mb-1;
+  @apply text-6xl mb-0.5;
 }
 
 .ck-editor__main h5,
 .typo-h5 {
-  @apply text-5xl mb-1;
+  @apply text-5xl mb-0.5;
 }
 
 .ck-editor__main h6,
 .typo-h6 {
-  @apply text-4xl mb-1;
+  @apply text-4xl mb-0.5;
 }
 
 .ck-editor__main p,

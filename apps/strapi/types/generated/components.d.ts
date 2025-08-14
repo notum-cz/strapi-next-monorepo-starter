@@ -96,6 +96,8 @@ export interface SectionsHero extends Struct.ComponentSchema {
     bgColor: Schema.Attribute.String &
       Schema.Attribute.CustomField<"plugin::color-picker.color">
     image: Schema.Attribute.Component<"utilities.basic-image", false>
+    imageAlignment: Schema.Attribute.Enumeration<["left", "center", "right"]> &
+      Schema.Attribute.DefaultTo<"center">
     links: Schema.Attribute.Component<"utilities.link", true>
     steps: Schema.Attribute.Component<"utilities.text", true>
     subTitle: Schema.Attribute.String
@@ -388,7 +390,6 @@ export interface UtilitiesSocialIcon extends Struct.ComponentSchema {
   }
   attributes: {
     customIcon: Schema.Attribute.String
-    name: Schema.Attribute.String & Schema.Attribute.Required
     platform: Schema.Attribute.Enumeration<
       [
         "github",
@@ -408,8 +409,9 @@ export interface UtilitiesSocialIcon extends Struct.ComponentSchema {
         "telegram",
         "whatsapp",
       ]
-    >
-    url: Schema.Attribute.String
+    > &
+      Schema.Attribute.Required
+    url: Schema.Attribute.String & Schema.Attribute.Required
   }
 }
 

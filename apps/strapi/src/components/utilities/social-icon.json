@@ -6,14 +6,6 @@
   },
   "options": {},
   "attributes": {
-    "name": {
-      "type": "string",
-      "required": true
-    },
-    "url": {
-      "type": "string",
-      "required": false
-    },
     "platform": {
       "type": "enumeration",
       "enum": [
@@ -33,7 +25,12 @@
         "twitch",
         "telegram",
         "whatsapp"
-      ]
+      ],
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "required": true
     },
     "customIcon": {
       "type": "string"

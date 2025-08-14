@@ -32,6 +32,11 @@
       "type": "component",
       "repeatable": true,
       "component": "utilities.text"
+    },
+    "imageAlignment": {
+      "type": "enumeration",
+      "enum": ["left", "center", "right"],
+      "default": "center"
     }
   }
 }
