@@ -64,17 +64,21 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
 
         <div className="flex items-center space-x-6">
           {links.length > 0 && (
-            <nav className="flex">
+            <nav className="flex items-center h-6">
               {links.map((link) => (
                 <StrapiNavLink component={link} key={link.href} />
               ))}
             </nav>
           )}
           <div className="flex items-center space-x-3">
-            {navbar.socialIcons?.map((socialIcon) => (
-              <StrapiSocialIcon key={socialIcon.id} component={socialIcon} />
-            ))}
-            <LocaleSwitcher locale={locale} />
+            <div className="flex items-center space-x-3 h-6">
+              {navbar.socialIcons?.map((socialIcon) => (
+                <StrapiSocialIcon key={socialIcon.id} component={socialIcon} />
+              ))}
+            </div>
+            <div className="h-6 flex items-center">
+              <LocaleSwitcher locale={locale} />
+            </div>
           </div>
         </div>
       </div>
