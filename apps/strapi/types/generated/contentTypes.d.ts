@@ -426,7 +426,8 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
 export interface ApiInternalJobInternalJob extends Struct.CollectionTypeSchema {
   collectionName: "internal_jobs"
   info: {
-    displayName: "InternalJob"
+    description: ""
+    displayName: "Jobs"
     pluralName: "internal-jobs"
     singularName: "internal-job"
   }

@@ -4,7 +4,8 @@
   "info": {
     "singularName": "internal-job",
     "pluralName": "internal-jobs",
-    "displayName": "InternalJob"
+    "displayName": "Jobs",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -12,7 +13,10 @@
   "attributes": {
     "jobType": {
       "type": "enumeration",
-      "enum": ["RECALCULATE_FULLPATH", "CREATE_REDIRECT"],
+      "enum": [
+        "RECALCULATE_FULLPATH",
+        "CREATE_REDIRECT"
+      ],
       "required": true
     },
     "relatedDocumentId": {
@@ -25,7 +29,11 @@
     },
     "state": {
       "type": "enumeration",
-      "enum": ["pending", "completed", "failed"],
+      "enum": [
+        "pending",
+        "completed",
+        "failed"
+      ],
       "required": true,
       "default": "pending"
     },

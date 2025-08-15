@@ -365,7 +365,6 @@ export interface UtilitiesLink extends Struct.ComponentSchema {
   attributes: {
     href: Schema.Attribute.String & Schema.Attribute.Required
     icon: Schema.Attribute.Media<"images" | "files">
-    iconEmoji: Schema.Attribute.String
     label: Schema.Attribute.String & Schema.Attribute.Required
     newTab: Schema.Attribute.Boolean
   }

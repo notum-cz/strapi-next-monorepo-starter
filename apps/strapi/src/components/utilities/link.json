@@ -25,9 +25,6 @@
         "images",
         "files"
       ]
-    },
-    "iconEmoji": {
-      "type": "string"
     }
   }
 }
