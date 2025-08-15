@@ -81,8 +81,12 @@ export const authOptions: NextAuthOptions = {
           // OAuth login - connect the account
           try {
             const data = await PrivateStrapiClient.fetchAPI(
-              `/auth/${account.provider}/callback?access_token=${account.access_token}`,
-              undefined
+              `/auth/${account.provider}/callback`,
+              undefined,
+              {
+                body: JSON.stringify({ access_token: account.access_token }),
+                method: "POST",
+              }
             )
             const { jwt, user } = data
 

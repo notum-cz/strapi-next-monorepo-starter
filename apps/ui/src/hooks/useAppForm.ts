@@ -6,7 +6,11 @@ import { PublicStrapiClient } from "@/lib/strapi-api"
 
 export function useContactForm() {
   return useMutation({
-    mutationFn: async (values: { name: string; email: string; message: string }) => {
+    mutationFn: async (values: {
+      name: string
+      email: string
+      message: string
+    }) => {
       const path = PublicStrapiClient.getStrapiApiPathByUId(
         "api::subscriber.subscriber"
       )
@@ -22,7 +26,9 @@ export function useContactForm() {
           { useProxy: true }
         )
       } catch (error: any) {
-        throw new Error("Sorry, there was a problem sending your message. Please try again later.")
+        throw new Error(
+          "Sorry, there was a problem sending your message. Please try again later."
+        )
       }
     },
   })

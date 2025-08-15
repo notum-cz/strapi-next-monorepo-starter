@@ -24,7 +24,7 @@ export function AppFormLabel({
   return (
     <FormLabel
       className={cn(
-        "text-sm font-medium text-gray-700 mb-1",
+        "mb-1 text-sm font-medium text-gray-700",
         {
           "text-red-600": fieldState?.invalid && fieldState?.isTouched,
           "text-green-600": !fieldState?.invalid && fieldState?.isTouched,

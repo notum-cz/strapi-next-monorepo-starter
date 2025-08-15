@@ -6,19 +6,19 @@ import type { AppLocale, NextMetadataTwitterCard } from "@/types/general"
 import type { Data, UID } from "@repo/strapi"
 import type { Metadata } from "next"
 
+import { debugSeoGeneration } from "@/lib/metadata/debug"
 import {
   getDefaultMetadata,
   getDefaultOgMeta,
   getDefaultTwitterMeta,
 } from "@/lib/metadata/defaults"
 import {
+  generateDescriptionFromContent,
   generateDescriptionFromTitle,
   generateKeywordsFromPage,
   generateMetaTitle,
-  generateDescriptionFromContent,
 } from "@/lib/metadata/fallbacks"
-import { debugSeoGeneration } from "@/lib/metadata/debug"
-import { fetchSeo, fetchPage } from "@/lib/strapi-api/content/server"
+import { fetchPage, fetchSeo } from "@/lib/strapi-api/content/server"
 
 export async function getMetadataFromStrapi({
   fullPath,
@@ -90,14 +90,14 @@ async function fetchAndMapStrapiMetadata(
     fetchSeo(uid, fullPath, locale),
     fullPath ? fetchPage(fullPath, locale) : null,
   ])
-  
+
   const seo = seoRes?.data?.seo
   const pageData = pageRes?.data || seoRes?.data
 
   // Generate comprehensive fallbacks from page data
   const fallbackTitle = pageData?.title || pageData?.breadcrumbTitle
   const fallbackMetaTitle = generateMetaTitle(fallbackTitle, seo?.siteName)
-  const fallbackDescription = 
+  const fallbackDescription =
     generateDescriptionFromContent(pageData?.content) ||
     generateDescriptionFromTitle(fallbackTitle)
   const fallbackKeywords = generateKeywordsFromPage(
@@ -113,7 +113,9 @@ async function fetchAndMapStrapiMetadata(
     robots: seo?.metaRobots,
     applicationName: seo?.applicationName,
     alternates: {
-      canonical: seo?.canonicalUrl || (fullPath ? `${env.APP_PUBLIC_URL}/${locale}${fullPath}` : undefined),
+      canonical:
+        seo?.canonicalUrl ||
+        (fullPath ? `${env.APP_PUBLIC_URL}/${locale}${fullPath}` : undefined),
     },
   }
 
@@ -140,7 +142,7 @@ async function fetchAndMapStrapiMetadata(
   }
 
   // Debug in development
-  debugSeoGeneration(finalMetadata, pageData, seo, fullPath || 'Unknown page')
+  debugSeoGeneration(finalMetadata, pageData, seo, fullPath || "Unknown page")
 
   return finalMetadata
 }

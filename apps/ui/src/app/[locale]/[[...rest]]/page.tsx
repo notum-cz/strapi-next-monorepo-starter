@@ -67,11 +67,11 @@ export default async function StrapiPage(props: Props) {
 
   return (
     <>
-      <StrapiStructuredData 
+      <StrapiStructuredData
         structuredData={data?.seo?.structuredData}
         pageTitle={data?.title}
         pageDescription={data?.seo?.metaDescription}
-        pageUrl={`${process.env.APP_PUBLIC_URL || ''}/${params.locale}${fullPath}`}
+        pageUrl={`${process.env.APP_PUBLIC_URL || ""}/${params.locale}${fullPath}`}
         siteName={data?.seo?.siteName}
       />
 

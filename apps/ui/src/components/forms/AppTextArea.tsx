@@ -53,8 +53,12 @@ export function AppTextArea({
                 className={cn(
                   "border-input w-full ease-in-out",
                   {
-                    "border-red-500 focus:border-red-500 focus:ring-red-500/20": fieldState.invalid && fieldState.isTouched,
-                    "border-green-500 focus:border-green-500 focus:ring-green-500/20": !fieldState.invalid && fieldState.isTouched && field.value,
+                    "border-red-500 focus:border-red-500 focus:ring-red-500/20":
+                      fieldState.invalid && fieldState.isTouched,
+                    "border-green-500 focus:border-green-500 focus:ring-green-500/20":
+                      !fieldState.invalid &&
+                      fieldState.isTouched &&
+                      field.value,
                   },
                   fieldClassName
                 )}

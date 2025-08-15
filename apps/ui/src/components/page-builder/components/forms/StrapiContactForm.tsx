@@ -21,7 +21,9 @@ export function StrapiContactForm({
               </Heading>
             )}
             {component.description && (
-              <Paragraph className="text-gray-600 leading-relaxed">{component.description}</Paragraph>
+              <Paragraph className="leading-relaxed text-gray-600">
+                {component.description}
+              </Paragraph>
             )}
           </div>
         </div>

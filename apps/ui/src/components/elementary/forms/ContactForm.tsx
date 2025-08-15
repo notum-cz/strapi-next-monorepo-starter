@@ -42,7 +42,7 @@ export function ContactForm({
   }
 
   return (
-    <div className="w-full rounded-xl bg-white p-8 shadow-lg border border-gray-200">
+    <div className="w-full rounded-xl border border-gray-200 bg-white p-8 shadow-lg">
       <AppForm
         form={form}
         onSubmit={onSubmit}
@@ -78,14 +78,14 @@ export function ContactForm({
           fieldClassName="min-h-32 p-4 bg-white border-gray-300 rounded-lg transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 hover:border-gray-400 resize-none"
         />
       </AppForm>
-      
+
       <div className="mt-8 space-y-4">
         {gdpr?.href && (
           <div className="flex flex-col items-start gap-1 text-sm text-gray-600 sm:flex-row sm:items-center">
             <span>{t("gdpr")}</span>
             <AppLink
               openExternalInNewTab={gdpr.newTab}
-              className="font-medium text-blue-600 hover:text-blue-700 transition-colors duration-200 underline-offset-2 hover:underline"
+              className="font-medium text-blue-600 underline-offset-2 transition-colors duration-200 hover:text-blue-700 hover:underline"
               href={gdpr?.href}
             >
               {gdpr.label || t("gdprLink")}
@@ -95,20 +95,23 @@ export function ContactForm({
 
         <Button
           type="submit"
-          className="h-12 w-full bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="h-12 w-full rounded-lg bg-blue-600 font-semibold text-white shadow-md transition-all duration-200 hover:bg-blue-700 hover:shadow-lg focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           form={contactFormName}
           isLoading={contactFormMutation.isPending}
         >
-          {contactFormMutation.isPending ? t("sending") || "Sending..." : t("submit")}
+          {contactFormMutation.isPending
+            ? t("sending") || "Sending..."
+            : t("submit")}
         </Button>
       </div>
 
       {contactFormMutation.error && (
-        <div className="mt-4 rounded-lg bg-red-50 border border-red-200 p-4">
-          <p className="text-sm text-red-700 font-medium">
-            {contactFormMutation.error.message === "Internal Server Error" 
+        <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4">
+          <p className="text-sm font-medium text-red-700">
+            {contactFormMutation.error.message === "Internal Server Error"
               ? "Sorry, there was a problem sending your message. Please try again later."
-              : contactFormMutation.error.message || "Something went wrong. Please try again."}
+              : contactFormMutation.error.message ||
+                "Something went wrong. Please try again."}
           </p>
         </div>
       )}
@@ -117,9 +120,18 @@ export function ContactForm({
 }
 
 const ContactFormSchema = z.object({
-  name: z.string().min(1, "Name is required").min(2, "Name must be at least 2 characters"),
-  email: z.string().min(1, "Email is required").email("Please enter a valid email address"),
-  message: z.string().min(1, "Message is required").min(10, "Message must be at least 10 characters"),
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .min(2, "Name must be at least 2 characters"),
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .email("Please enter a valid email address"),
+  message: z
+    .string()
+    .min(1, "Message is required")
+    .min(10, "Message must be at least 10 characters"),
 })
 
 type FormSchemaType = typeof ContactFormSchema

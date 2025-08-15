@@ -1,4 +1,5 @@
 import type { Data } from "@repo/strapi"
+
 import { generateBasicStructuredData } from "@/lib/metadata/fallbacks"
 
 export const StrapiStructuredData = ({
@@ -15,7 +16,8 @@ export const StrapiStructuredData = ({
   siteName?: string
 }) => {
   // Use provided structured data or generate fallback
-  const finalStructuredData = structuredData || 
+  const finalStructuredData =
+    structuredData ||
     generateBasicStructuredData(pageTitle, pageDescription, pageUrl, siteName)
 
   if (finalStructuredData) {
