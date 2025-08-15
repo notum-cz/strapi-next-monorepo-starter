@@ -45,6 +45,16 @@
         }
       },
       "component": "utilities.social-icon"
+    },
+    "designerTitle": {
+      "type": "component",
+      "repeatable": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "utilities.designer-title"
     }
   }
 }

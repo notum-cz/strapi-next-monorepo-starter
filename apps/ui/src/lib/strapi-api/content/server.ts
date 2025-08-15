@@ -107,6 +107,7 @@ export async function fetchNavbar(locale: AppLocale) {
         links: true,
         logoImage: {},
         socialIcons: true,
+        designerTitle: true,
       },
     })
   } catch (e: any) {

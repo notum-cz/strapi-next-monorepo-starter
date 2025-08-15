@@ -344,6 +344,18 @@ export interface UtilitiesCkEditorContent extends Struct.ComponentSchema {
   }
 }
 
+export interface UtilitiesDesignerTitle extends Struct.ComponentSchema {
+  collectionName: "components_utilities_designer_titles"
+  info: {
+    description: "Animated title that transforms text to show nickname origin"
+    displayName: "Designer Title"
+    icon: "magic"
+  }
+  attributes: {
+    config: Schema.Attribute.JSON & Schema.Attribute.Required
+  }
+}
+
 export interface UtilitiesImageWithLink extends Struct.ComponentSchema {
   collectionName: "components_utilities_image_with_links"
   info: {
@@ -447,6 +459,7 @@ declare module "@strapi/strapi" {
       "utilities.accordions": UtilitiesAccordions
       "utilities.basic-image": UtilitiesBasicImage
       "utilities.ck-editor-content": UtilitiesCkEditorContent
+      "utilities.designer-title": UtilitiesDesignerTitle
       "utilities.image-with-link": UtilitiesImageWithLink
       "utilities.link": UtilitiesLink
       "utilities.links-with-title": UtilitiesLinksWithTitle

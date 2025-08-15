@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_utilities_designer_titles",
+  "info": {
+    "displayName": "Designer Title",
+    "icon": "magic",
+    "description": "Animated title that transforms text to show nickname origin"
+  },
+  "options": {},
+  "attributes": {
+    "config": {
+      "type": "json",
+      "required": true
+    }
+  }
+}

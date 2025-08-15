@@ -10,6 +10,7 @@ import { cn } from "@/lib/styles"
 import AppLink from "@/components/elementary/AppLink"
 import LocaleSwitcher from "@/components/elementary/LocaleSwitcher"
 import { ScrollProgressBar } from "@/components/elementary/ScrollProgressBar"
+import StrapiDesignerTitle from "@/components/page-builder/components/utilities/StrapiDesignerTitle"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
 import StrapiNavLink from "@/components/page-builder/components/utilities/StrapiNavLink"
 import StrapiSocialIcon from "@/components/page-builder/components/utilities/StrapiSocialIcon"
@@ -55,6 +56,9 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
             <AppLink href="/" className="text-2xl font-bold">
               <Image src="/images/logo.svg" alt="logo" height={50} width={50} />
             </AppLink>
+          )}
+          {navbar.designerTitle && (
+            <StrapiDesignerTitle component={navbar.designerTitle} />
           )}
         </div>
 

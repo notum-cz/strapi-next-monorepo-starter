@@ -481,6 +481,15 @@ export interface ApiNavbarNavbar extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
+    designerTitle: Schema.Attribute.Component<
+      "utilities.designer-title",
+      false
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
     links: Schema.Attribute.Component<"utilities.link", true> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
