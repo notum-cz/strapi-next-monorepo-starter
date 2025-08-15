@@ -11,28 +11,30 @@ export function StrapiContactForm({
   readonly component: Data.Component<"forms.contact-form">
 }) {
   return (
-    <div className="bg-white" id="form-section">
-      <Container className="flex flex-col gap-10 lg:flex-row lg:gap-40">
+    <div className="bg-gray-100" id="form-section">
+      <Container className="flex flex-col gap-12 py-16 lg:flex-row lg:gap-20 lg:py-24">
         <div className="flex flex-1">
-          <div className="flex max-w-[400px] flex-col gap-10">
+          <div className="flex max-w-[480px] flex-col gap-8">
             {component.title && (
-              <Heading variant="heading3" tag="h3">
+              <Heading variant="heading3" tag="h3" className="text-gray-900">
                 {component.title}
               </Heading>
             )}
             {component.description && (
-              <Paragraph>{component.description}</Paragraph>
+              <Paragraph className="text-gray-600 leading-relaxed">{component.description}</Paragraph>
             )}
           </div>
         </div>
         <div className="flex flex-1">
-          <ContactForm
-            gdpr={{
-              href: component.gdpr?.href ?? undefined,
-              label: component.gdpr?.label ?? undefined,
-              newTab: component.gdpr?.newTab ?? false,
-            }}
-          />
+          <div className="w-full max-w-lg">
+            <ContactForm
+              gdpr={{
+                href: component.gdpr?.href ?? undefined,
+                label: component.gdpr?.label ?? undefined,
+                newTab: component.gdpr?.newTab ?? false,
+              }}
+            />
+          </div>
         </div>
       </Container>
     </div>

@@ -24,15 +24,16 @@ export function AppFormLabel({
   return (
     <FormLabel
       className={cn(
+        "text-sm font-medium text-gray-700 mb-1",
         {
-          "font-normal": !fieldState?.invalid,
-          "font-medium": fieldState?.invalid,
+          "text-red-600": fieldState?.invalid && fieldState?.isTouched,
+          "text-green-600": !fieldState?.invalid && fieldState?.isTouched,
         },
         className
       )}
     >
       {label}
-      {required && <span className="text-red-500">*</span>}
+      {required && <span className="ml-1 text-red-500">*</span>}
     </FormLabel>
   )
 }
