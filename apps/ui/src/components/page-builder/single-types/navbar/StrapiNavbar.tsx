@@ -14,6 +14,7 @@ import StrapiDesignerTitle from "@/components/page-builder/components/utilities/
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
 import StrapiNavLink from "@/components/page-builder/components/utilities/StrapiNavLink"
 import StrapiSocialIcon from "@/components/page-builder/components/utilities/StrapiSocialIcon"
+import { StrapiMobileNavbar } from "./StrapiMobileNavbar"
 
 // import { LoggedUserMenu } from "@/components/page-builder/single-types/navbar/LoggedUserMenu"
 
@@ -41,47 +42,58 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-white/90 shadow-sm backdrop-blur transition-colors duration-300">
-      <div className="flex h-16 items-center justify-between px-8">
-        <div className="flex items-center">
-          {navbar.logoImage ? (
-            <StrapiImageWithLink
-              component={navbar.logoImage}
-              linkProps={{ className: "flex items-center space-x-2" }}
-              imageProps={{
-                forcedSizes: { width: 100, height: 66 },
-                hideWhenMissing: true,
-              }}
-            />
-          ) : (
-            <AppLink href="/" className="text-2xl font-bold">
-              <Image src="/images/logo.svg" alt="logo" height={50} width={50} />
-            </AppLink>
-          )}
-          {navbar.designerTitle && (
-            <StrapiDesignerTitle component={navbar.designerTitle} />
-          )}
-        </div>
+      {/* Desktop Navigation */}
+      <div className="hidden md:block">
+        <div className="flex h-16 items-center justify-between px-8">
+          <div className="flex items-center">
+            {navbar.logoImage ? (
+              <StrapiImageWithLink
+                component={navbar.logoImage}
+                linkProps={{ className: "flex items-center space-x-2" }}
+                imageProps={{
+                  forcedSizes: { width: 100, height: 66 },
+                  hideWhenMissing: true,
+                }}
+              />
+            ) : (
+              <AppLink href="/" className="text-2xl font-bold">
+                <Image src="/images/logo.svg" alt="logo" height={50} width={50} />
+              </AppLink>
+            )}
+            {navbar.designerTitle && (
+              <div className="hidden lg:block">
+                <StrapiDesignerTitle component={navbar.designerTitle} />
+              </div>
+            )}
+          </div>
 
-        <div className="flex items-center space-x-6">
-          {links.length > 0 && (
-            <nav className="flex items-center h-6">
-              {links.map((link) => (
-                <StrapiNavLink component={link} key={link.href} />
-              ))}
-            </nav>
-          )}
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-3 h-6">
-              {navbar.socialIcons?.map((socialIcon) => (
-                <StrapiSocialIcon key={socialIcon.id} component={socialIcon} />
-              ))}
-            </div>
-            <div className="h-6 flex items-center">
-              <LocaleSwitcher locale={locale} />
+          <div className="flex items-center space-x-6">
+            {links.length > 0 && (
+              <nav className="flex items-center h-7">
+                {links.map((link) => (
+                  <StrapiNavLink component={link} key={link.href} />
+                ))}
+              </nav>
+            )}
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-3 h-7">
+                {navbar.socialIcons?.map((socialIcon) => (
+                  <StrapiSocialIcon key={socialIcon.id} component={socialIcon} />
+                ))}
+              </div>
+              <div className="h-7 flex items-center">
+                <LocaleSwitcher locale={locale} />
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Mobile Navigation */}
+      <div className="md:hidden">
+        <StrapiMobileNavbar navbar={navbar} links={links} locale={locale} />
+      </div>
+
       <ScrollProgressBar />
     </header>
   )
