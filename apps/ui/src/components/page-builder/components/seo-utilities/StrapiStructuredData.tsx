@@ -1,11 +1,24 @@
 import type { Data } from "@repo/strapi"
+import { generateBasicStructuredData } from "@/lib/metadata/fallbacks"
 
 export const StrapiStructuredData = ({
   structuredData,
+  pageTitle,
+  pageDescription,
+  pageUrl,
+  siteName,
 }: {
-  structuredData: Data.Component<"seo-utilities.seo">["structuredData"]
+  structuredData?: Data.Component<"seo-utilities.seo">["structuredData"]
+  pageTitle?: string
+  pageDescription?: string
+  pageUrl?: string
+  siteName?: string
 }) => {
-  if (structuredData) {
+  // Use provided structured data or generate fallback
+  const finalStructuredData = structuredData || 
+    generateBasicStructuredData(pageTitle, pageDescription, pageUrl, siteName)
+
+  if (finalStructuredData) {
     // we need to use a plain `script` tag instead of the `Script` component
     // `Script` component is optimized by Next, which works against us in this case
     // - if id is specified, the content will not be updated on client navigation
@@ -13,7 +26,7 @@ export const StrapiStructuredData = ({
     // `script` tag is properly re-rendered and replaced with the new content
     return (
       <script id="articleStructuredData" type="application/ld+json">
-        {JSON.stringify(structuredData)}
+        {JSON.stringify(finalStructuredData)}
       </script>
     )
   }

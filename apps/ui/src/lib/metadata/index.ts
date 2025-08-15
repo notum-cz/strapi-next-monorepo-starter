@@ -11,7 +11,14 @@ import {
   getDefaultOgMeta,
   getDefaultTwitterMeta,
 } from "@/lib/metadata/defaults"
-import { fetchSeo } from "@/lib/strapi-api/content/server"
+import {
+  generateDescriptionFromTitle,
+  generateKeywordsFromPage,
+  generateMetaTitle,
+  generateDescriptionFromContent,
+} from "@/lib/metadata/fallbacks"
+import { debugSeoGeneration } from "@/lib/metadata/debug"
+import { fetchSeo, fetchPage } from "@/lib/strapi-api/content/server"
 
 export async function getMetadataFromStrapi({
   fullPath,
@@ -79,21 +86,41 @@ async function fetchAndMapStrapiMetadata(
   defaultTwitterMeta: Metadata["twitter"],
   uid: Extract<UID.ContentType, "api::page.page"> = "api::page.page"
 ) {
-  const res = await fetchSeo(uid, fullPath, locale)
-  const seo = res?.data?.seo
+  const [seoRes, pageRes] = await Promise.all([
+    fetchSeo(uid, fullPath, locale),
+    fullPath ? fetchPage(fullPath, locale) : null,
+  ])
+  
+  const seo = seoRes?.data?.seo
+  const pageData = pageRes?.data || seoRes?.data
+
+  // Generate comprehensive fallbacks from page data
+  const fallbackTitle = pageData?.title || pageData?.breadcrumbTitle
+  const fallbackMetaTitle = generateMetaTitle(fallbackTitle, seo?.siteName)
+  const fallbackDescription = 
+    generateDescriptionFromContent(pageData?.content) ||
+    generateDescriptionFromTitle(fallbackTitle)
+  const fallbackKeywords = generateKeywordsFromPage(
+    pageData?.title,
+    pageData?.breadcrumbTitle,
+    pageData?.slug
+  )
 
   const strapiMeta: Metadata = {
-    title: seo?.metaTitle,
-    description: seo?.metaDescription,
-    keywords: seo?.keywords,
+    title: seo?.metaTitle || fallbackMetaTitle || fallbackTitle,
+    description: seo?.metaDescription || fallbackDescription,
+    keywords: seo?.keywords || fallbackKeywords,
     robots: seo?.metaRobots,
     applicationName: seo?.applicationName,
+    alternates: {
+      canonical: seo?.canonicalUrl || (fullPath ? `${env.APP_PUBLIC_URL}/${locale}${fullPath}` : undefined),
+    },
   }
 
   const strapiOgMeta: Metadata["openGraph"] = {
     siteName: seo?.siteName ?? undefined,
-    title: seo?.metaTitle ?? undefined,
-    description: seo?.metaDescription ?? undefined,
+    title: seo?.metaTitle || fallbackTitle,
+    description: seo?.metaDescription || fallbackDescription,
     emails: seo?.email ?? undefined,
     images: seo?.metaImage
       ? [
@@ -107,10 +134,15 @@ async function fetchAndMapStrapiMetadata(
       : undefined,
   }
 
-  return {
+  const finalMetadata = {
     ...mergeWith(defaultMeta, strapiMeta, seoMergeCustomizer),
     openGraph: mergeWith(defaultOgMeta, strapiOgMeta, seoMergeCustomizer),
   }
+
+  // Debug in development
+  debugSeoGeneration(finalMetadata, pageData, seo, fullPath || 'Unknown page')
+
+  return finalMetadata
 }
 
 const preprocessTwitterMetadata = (

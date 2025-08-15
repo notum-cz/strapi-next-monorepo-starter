@@ -84,7 +84,7 @@ export async function fetchSeo(
           },
         },
       },
-      fields: [],
+      fields: ["title", "breadcrumbTitle", "slug"],
     })
   } catch (e: any) {
     console.error({

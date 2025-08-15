@@ -67,7 +67,13 @@ export default async function StrapiPage(props: Props) {
 
   return (
     <>
-      <StrapiStructuredData structuredData={data?.seo?.structuredData} />
+      <StrapiStructuredData 
+        structuredData={data?.seo?.structuredData}
+        pageTitle={data?.title}
+        pageDescription={data?.seo?.metaDescription}
+        pageUrl={`${process.env.APP_PUBLIC_URL || ''}/${params.locale}${fullPath}`}
+        siteName={data?.seo?.siteName}
+      />
 
       <main className={cn("flex w-full flex-col overflow-hidden")}>
         <Container>

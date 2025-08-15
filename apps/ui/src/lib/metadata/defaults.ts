@@ -12,7 +12,10 @@ export function getDefaultMetadata(
   t: TranslateFn
 ) {
   return {
-    title: t("metaTitle"),
+    title: {
+      template: `%s | ${t("siteName")}`,
+      default: t("metaTitle"),
+    },
     description: t("metaDescription"),
     keywords: t("keywords"),
     robots: t("metaRobots"),
