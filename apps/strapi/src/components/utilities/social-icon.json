@@ -6,6 +6,10 @@
   },
   "options": {},
   "attributes": {
+    "url": {
+      "type": "string",
+      "required": true
+    },
     "platform": {
       "type": "enumeration",
       "enum": [
@@ -26,10 +30,6 @@
         "telegram",
         "whatsapp"
       ],
-      "required": true
-    },
-    "url": {
-      "type": "string",
       "required": true
     },
     "customIcon": {
