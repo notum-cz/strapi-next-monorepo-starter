@@ -1,5 +1,18 @@
 import type { Schema, Struct } from "@strapi/strapi"
 
+export interface ElementsAttachment extends Struct.ComponentSchema {
+  collectionName: "components_elements_attachments"
+  info: {
+    description: "File attachment component for downloads"
+    displayName: "Attachment"
+  }
+  attributes: {
+    description: Schema.Attribute.Text
+    file: Schema.Attribute.Media<"files"> & Schema.Attribute.Required
+    label: Schema.Attribute.String & Schema.Attribute.Required
+  }
+}
+
 export interface ElementsFooterItem extends Struct.ComponentSchema {
   collectionName: "components_elements_footer_items"
   info: {
@@ -439,6 +452,7 @@ export interface UtilitiesText extends Struct.ComponentSchema {
 declare module "@strapi/strapi" {
   export module Public {
     export interface ComponentSchemas {
+      "elements.attachment": ElementsAttachment
       "elements.footer-item": ElementsFooterItem
       "forms.contact-form": FormsContactForm
       "forms.newsletter-form": FormsNewsletterForm

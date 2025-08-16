@@ -17,11 +17,11 @@ export function StrapiFaq({
     <section>
       <Container className="py-16 lg:py-24">
         <div className="mx-auto max-w-4xl">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4 lg:text-5xl">
+          <div className="mb-12 text-center">
+            <h2 className="mb-4 text-4xl font-bold text-gray-900 lg:text-5xl">
               {component.title}
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-lg text-gray-600">
               {component.subTitle}
             </p>
           </div>
@@ -29,18 +29,16 @@ export function StrapiFaq({
           {component.accordions && (
             <Accordion type="single" collapsible className="space-y-4">
               {component.accordions.map((x) => (
-                <AccordionItem 
-                  key={x.id} 
+                <AccordionItem
+                  key={x.id}
                   value={x.id.toString()}
-                  className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 ease-in-out overflow-hidden"
+                  className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-300 ease-in-out hover:shadow-md"
                 >
-                  <AccordionTrigger className="px-6 py-4 text-left font-semibold text-gray-900 hover:text-gray-700 cursor-pointer transition-colors duration-200">
+                  <AccordionTrigger className="cursor-pointer px-6 py-4 text-left font-semibold text-gray-900 transition-colors duration-200 hover:text-gray-700">
                     {x.question}
                   </AccordionTrigger>
-                  <AccordionContent className="text-gray-600 leading-relaxed data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
-                    <div className="px-6 pb-4">
-                      {x.answer}
-                    </div>
+                  <AccordionContent className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down leading-relaxed text-gray-600">
+                    <div className="px-6 pb-4">{x.answer}</div>
                   </AccordionContent>
                 </AccordionItem>
               ))}

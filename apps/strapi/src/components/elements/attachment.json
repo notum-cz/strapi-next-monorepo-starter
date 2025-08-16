@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_elements_attachments",
+  "info": {
+    "displayName": "Attachment",
+    "description": "File attachment component for downloads"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "file": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["files"]
+    }
+  }
+}
