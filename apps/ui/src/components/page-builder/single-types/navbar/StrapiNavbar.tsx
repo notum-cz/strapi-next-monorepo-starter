@@ -14,6 +14,7 @@ import StrapiDesignerTitle from "@/components/page-builder/components/utilities/
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
 import StrapiNavLink from "@/components/page-builder/components/utilities/StrapiNavLink"
 import StrapiSocialIcon from "@/components/page-builder/components/utilities/StrapiSocialIcon"
+
 import { StrapiMobileNavbar } from "./StrapiMobileNavbar"
 
 // import { LoggedUserMenu } from "@/components/page-builder/single-types/navbar/LoggedUserMenu"
@@ -57,7 +58,12 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
               />
             ) : (
               <AppLink href="/" className="text-2xl font-bold">
-                <Image src="/images/logo.svg" alt="logo" height={50} width={50} />
+                <Image
+                  src="/images/logo.svg"
+                  alt="logo"
+                  height={50}
+                  width={50}
+                />
               </AppLink>
             )}
             {navbar.designerTitle && (
@@ -69,19 +75,22 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
 
           <div className="flex items-center space-x-6">
             {links.length > 0 && (
-              <nav className="flex items-center h-7">
+              <nav className="flex h-7 items-center">
                 {links.map((link) => (
                   <StrapiNavLink component={link} key={link.href} />
                 ))}
               </nav>
             )}
             <div className="flex items-center space-x-3">
-              <div className="flex items-center space-x-3 h-7">
+              <div className="flex h-7 items-center space-x-3">
                 {navbar.socialIcons?.map((socialIcon) => (
-                  <StrapiSocialIcon key={socialIcon.id} component={socialIcon} />
+                  <StrapiSocialIcon
+                    key={socialIcon.id}
+                    component={socialIcon}
+                  />
                 ))}
               </div>
-              <div className="h-7 flex items-center">
+              <div className="flex h-7 items-center">
                 <LocaleSwitcher locale={locale} />
               </div>
             </div>

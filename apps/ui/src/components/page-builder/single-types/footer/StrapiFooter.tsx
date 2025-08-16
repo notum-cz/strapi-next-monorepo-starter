@@ -1,4 +1,5 @@
 import { AppLocale } from "@/types/general"
+
 import { fetchFooter } from "@/lib/strapi-api/content/server"
 import { Container } from "@/components/elementary/Container"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
@@ -16,7 +17,7 @@ export async function StrapiFooter({ locale }: { readonly locale: AppLocale }) {
         <div className="space-y-6 md:space-y-8">
           {/* Logo & Sections */}
           {(component.logoImage || Boolean(component.sections?.length)) && (
-            <div className="space-y-6 md:grid md:gap-8 md:grid-cols-[auto_1fr] md:space-y-0">
+            <div className="space-y-6 md:grid md:grid-cols-[auto_1fr] md:gap-8 md:space-y-0">
               {component.logoImage && (
                 <div className="text-center md:text-left">
                   <StrapiImageWithLink
@@ -25,12 +26,14 @@ export async function StrapiFooter({ locale }: { readonly locale: AppLocale }) {
                   />
                 </div>
               )}
-              
+
               {Boolean(component.sections?.length) && (
-                <div className="space-y-6 sm:grid sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 sm:space-y-0">
+                <div className="space-y-6 sm:grid sm:grid-cols-2 sm:gap-6 sm:space-y-0 lg:grid-cols-3">
                   {component.sections.map((section) => (
                     <div key={section.id} className="text-center md:text-left">
-                      <h3 className="mb-3 text-sm font-semibold md:text-base">{section.title}</h3>
+                      <h3 className="mb-3 text-sm font-semibold md:text-base">
+                        {section.title}
+                      </h3>
                       <div className="space-y-2">
                         {section.links?.map((link, i) => (
                           <StrapiLink
@@ -46,7 +49,7 @@ export async function StrapiFooter({ locale }: { readonly locale: AppLocale }) {
               )}
             </div>
           )}
-          
+
           {/* Bottom Bar */}
           <div className="flex flex-col gap-4 pt-6 text-xs text-gray-500 md:flex-row md:justify-between md:text-sm">
             {component.copyRight && (
@@ -56,7 +59,7 @@ export async function StrapiFooter({ locale }: { readonly locale: AppLocale }) {
                   : component.copyRight}
               </div>
             )}
-            
+
             {Boolean(component.links?.length) && (
               <div className="flex flex-wrap justify-center gap-4 md:justify-end">
                 {component.links.map((link, i) => (
