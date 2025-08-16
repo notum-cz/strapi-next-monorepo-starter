@@ -65,8 +65,7 @@
         "sections.animated-logo-row",
         "forms.newsletter-form",
         "forms.contact-form",
-        "utilities.ck-editor-content",
-        "elements.attachment"
+        "utilities.ck-editor-content"
       ],
       "pluginOptions": {
         "i18n": {

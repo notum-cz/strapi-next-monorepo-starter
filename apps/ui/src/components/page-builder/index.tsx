@@ -9,7 +9,6 @@ import StrapiHeadingWithCTAButton from "@/components/page-builder/components/sec
 import StrapiHero from "@/components/page-builder/components/sections/StrapiHero"
 import StrapiHorizontalImages from "@/components/page-builder/components/sections/StrapiHorizontalImages"
 import StrapiImageWithCTAButton from "@/components/page-builder/components/sections/StrapiImageWithCTAButton"
-import StrapiAttachment from "@/components/page-builder/components/StrapiAttachment"
 import StrapiCkEditorContent from "@/components/page-builder/components/utilities/StrapiCkEditorContent"
 
 /**
@@ -25,7 +24,7 @@ export const PageContentComponents: {
   // elements, seo-utilities, utilities
   // They are usually rendered or used deep inside other components or handlers
   // Add them here if they can be used on Page content level
-  "elements.attachment": StrapiAttachment,
+
   "utilities.ck-editor-content": StrapiCkEditorContent,
 
   // Sections

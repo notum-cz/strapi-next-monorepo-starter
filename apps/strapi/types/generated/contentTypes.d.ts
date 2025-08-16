@@ -553,7 +553,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         "forms.newsletter-form",
         "forms.contact-form",
         "utilities.ck-editor-content",
-        "elements.attachment",
       ]
     > &
       Schema.Attribute.SetPluginOptions<{
