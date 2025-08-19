@@ -42,7 +42,7 @@ const LocaleSwitcher = ({ locale }: { locale: AppLocale }) => {
 
   return (
     <Select value={locale} onValueChange={handleLocaleChange}>
-      <SelectTrigger className="flex h-9 w-auto items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 hover:shadow-md focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none">
+      <SelectTrigger className="flex h-9 w-auto items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 hover:shadow-md focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none">
         <Globe className="h-4 w-4 text-gray-500" />
         <span className="font-medium">{localeTranslation[locale]}</span>
         <ChevronDown className="h-3 w-3 text-gray-400 transition-transform duration-200" />

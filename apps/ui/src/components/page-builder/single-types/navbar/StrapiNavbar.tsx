@@ -34,51 +34,58 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
   const session = await getAuth()
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/90 transition-colors duration-300">
-      <div className="flex h-16 items-center justify-between px-6">
-        <div className="flex gap-6 md:gap-10">
+    <header className="sticky top-0 z-40 w-full border-b bg-white/95 transition-colors duration-300">
+      <div className="container mx-auto flex h-16 items-center justify-between px-6">
+        <div className="flex items-center gap-6">
           {navbar.logoImage?.image?.media ? (
             <StrapiImageWithLink
               component={navbar.logoImage}
-              linkProps={{ className: "flex items-center space-x-2" }}
+              linkProps={{ className: "flex items-center gap-2" }}
               imageProps={{
-                forcedSizes: { height: 30 },
+                forcedSizes: { height: 30, width: 100 },
                 hideWhenMissing: false,
+                style: {
+                  objectFit: "contain",
+                  objectPosition: "left",
+                  maxWidth: 100,
+                  width: "fit-content",
+                  maxHeight: 30,
+                },
               }}
             />
           ) : (
-            <AppLink href="/" className="text-xl font-bold">
-              <Image src="/images/logo.svg" alt="logo" height={23} width={82} />
+            <AppLink href="/" className="flex items-center gap-2">
+              <Image src="/images/logo.svg" alt="logo" height={60} width={60} />
             </AppLink>
+          )}
+
+          {links.length > 0 && (
+            <nav className="hidden items-center md:flex">
+              {links.map((link) => (
+                <StrapiLink
+                  component={link}
+                  key={link.href}
+                  className={cn(
+                    "group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                  )}
+                />
+              ))}
+            </nav>
           )}
         </div>
 
-        {links.length > 0 ? (
-          <nav className="flex items-center space-x-6">
-            {links.map((link) => (
-              <StrapiLink
-                component={link}
-                key={link.href}
-                className={cn(
-                  "flex items-center text-base font-medium text-gray-700 transition-colors duration-200 hover:text-blue-600 hover:no-underline"
-                )}
-              />
-            ))}
-          </nav>
-        ) : null}
-
-        <div className="hidden items-center space-x-4 lg:flex">
+        <div className="flex items-center gap-3">
           {session?.user ? (
-            <nav className="flex items-center space-x-1">
-              <LoggedUserMenu user={session.user} />
-            </nav>
+            <LoggedUserMenu user={session.user} />
           ) : (
-            <AppLink
-              href="/auth/signin"
-              className="text-base font-medium text-gray-700 transition-colors duration-200 hover:text-blue-600 hover:no-underline"
-            >
-              {t("actions.signIn")}
-            </AppLink>
+            <div className="flex items-center gap-2">
+              <AppLink
+                href="/auth/signin"
+                className="inline-flex h-9 items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+              >
+                {t("actions.signIn")}
+              </AppLink>
+            </div>
           )}
           <LocaleSwitcher locale={locale} />
         </div>
