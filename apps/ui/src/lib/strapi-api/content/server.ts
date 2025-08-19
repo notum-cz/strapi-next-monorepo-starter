@@ -106,7 +106,7 @@ export async function fetchNavbar(locale: AppLocale) {
       locale,
       populate: {
         links: true,
-        logoImage: { populate: { image: true, link: true } },
+        logoImage: { populate: { image: { populate: { media: true } }, link: true } },
       },
     })
   } catch (e: any) {
