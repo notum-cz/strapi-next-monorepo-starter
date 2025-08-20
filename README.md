@@ -50,6 +50,30 @@ yarn setup:apps
 > [!WARNING]
 > More **manual setup is needed** for communication with Strapi using API tokens. Please refer to the [UI README](apps/ui/README.md#environment-variables) before running the UI app. Otherwise, you will get **401 Unauthorized error** - missing or invalid credentials.
 
+> [!WARNING]
+> **PostgreSQL Port Conflict**
+> 
+> If PostgreSQL is running locally on port 5432, you may accidentally connect to your local database instead of the Docker container.
+> 
+> **Solutions:**
+> 1. **Stop local PostgreSQL** (recommended for development):
+>    ```bash
+>    # macOS
+>    brew services stop postgresql
+>    
+>    # Linux
+>    sudo systemctl stop postgresql
+>    ```
+> 
+> 2. **Use a different port for Docker** by modifying `docker-compose.yml`:
+>    ```yaml
+>    services:
+>      db:
+>        ports:
+>          - "5433:5432"  # Use port 5433 instead
+>    ```
+>    Set `DATABASE_PORT=5433` in `apps/strapi/.env`
+
 4. Run apps
 
 ```sh
