@@ -20,12 +20,7 @@
       "required": true,
       "allowedTypes": ["files"]
     },
-    "buttonPosition": {
-      "type": "enumeration",
-      "enum": ["left", "right"],
-      "default": "left",
-      "required": true
-    },
+
     "statusText": {
       "type": "string",
       "default": "Ready to download"
