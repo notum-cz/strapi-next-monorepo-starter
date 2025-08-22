@@ -78,6 +78,9 @@ const pagePopulateObject: FindOne<"api::page.page">["populate"] = {
       "sections.animated-logo-row": {
         populate: { logos: { populate: { media: true } } },
       },
+      "sections.attachment-download": {
+        populate: { file: true },
+      },
       "forms.newsletter-form": { populate: { gdpr: true } },
       "forms.contact-form": { populate: { gdpr: true } },
       "utilities.ck-editor-content": true,

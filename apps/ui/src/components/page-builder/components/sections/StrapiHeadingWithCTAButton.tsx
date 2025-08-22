@@ -10,14 +10,14 @@ export const StrapiHeadingWithCTAButton = ({
   readonly component: Data.Component<"sections.heading-with-cta-button">
 }) => {
   return (
-    <section className="px-4 py-8 sm:py-16 lg:px-6">
-      <Container>
-        <div className="mx-auto max-w-(--breakpoint-sm) text-center">
-          <h2 className="mb-4 text-4xl leading-tight font-extrabold tracking-tight text-gray-900">
+    <section>
+      <Container className="py-8 lg:py-12">
+        <div className="mx-auto max-w-4xl text-left md:text-center">
+          <h2 className="mb-4 text-2xl font-bold text-gray-900 md:text-4xl lg:text-5xl">
             {component.title}
           </h2>
           {component.subText && (
-            <p className="mb-6 font-light text-gray-500 md:text-lg">
+            <p className="mb-6 text-base text-gray-600 md:text-lg">
               {component.subText}
             </p>
           )}

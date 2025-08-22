@@ -48,6 +48,26 @@ export interface SectionsAnimatedLogoRow extends Struct.ComponentSchema {
   }
 }
 
+export interface SectionsAttachmentDownload extends Struct.ComponentSchema {
+  collectionName: "components_sections_attachment_downloads"
+  info: {
+    description: ""
+    displayName: "Attachment Download"
+  }
+  attributes: {
+    buttonLabel: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<"Download Now">
+    buttonPosition: Schema.Attribute.Enumeration<["left", "right"]> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<"left">
+    description: Schema.Attribute.Text & Schema.Attribute.Required
+    file: Schema.Attribute.Media<"files"> & Schema.Attribute.Required
+    statusText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<"Ready to download">
+    title: Schema.Attribute.String & Schema.Attribute.Required
+  }
+}
+
 export interface SectionsCarousel extends Struct.ComponentSchema {
   collectionName: "components_sections_carousels"
   info: {
@@ -443,6 +463,7 @@ declare module "@strapi/strapi" {
       "forms.contact-form": FormsContactForm
       "forms.newsletter-form": FormsNewsletterForm
       "sections.animated-logo-row": SectionsAnimatedLogoRow
+      "sections.attachment-download": SectionsAttachmentDownload
       "sections.carousel": SectionsCarousel
       "sections.faq": SectionsFaq
       "sections.heading-with-cta-button": SectionsHeadingWithCtaButton

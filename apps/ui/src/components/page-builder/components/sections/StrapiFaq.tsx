@@ -15,15 +15,17 @@ export function StrapiFaq({
 }) {
   return (
     <section>
-      <Container className="py-16 lg:py-24">
+      <Container className="py-8 lg:py-12">
         <div className="mx-auto max-w-4xl">
-          <div className="mb-12 text-center">
-            <h2 className="mb-4 text-4xl font-bold text-gray-900 lg:text-5xl">
+          <div className="mb-8 text-left md:mb-12 md:text-center">
+            <h2 className="mb-4 text-2xl font-bold text-gray-900 md:text-4xl lg:text-5xl">
               {component.title}
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-gray-600">
-              {component.subTitle}
-            </p>
+            {component.subTitle && (
+              <p className="mx-auto max-w-2xl text-base text-gray-600 md:text-lg">
+                {component.subTitle}
+              </p>
+            )}
           </div>
 
           {component.accordions && (

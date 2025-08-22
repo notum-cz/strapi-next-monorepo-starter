@@ -111,7 +111,7 @@ export default async function StrapiPage(props: Props) {
 
             return (
               <ErrorBoundary key={key}>
-                <div className={cn("mb-4 md:mb-12 lg:mb-16")}>
+                <div className={cn("mb-3 md:mb-8 lg:mb-10")}>
                   <Component
                     component={comp}
                     pageParams={params}

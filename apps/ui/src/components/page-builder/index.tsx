@@ -3,6 +3,7 @@ import { UID } from "@repo/strapi"
 import StrapiContactForm from "@/components/page-builder/components/forms/StrapiContactForm"
 import StrapiNewsletterForm from "@/components/page-builder/components/forms/StrapiNewsletterForm"
 import StrapiAnimatedLogoRow from "@/components/page-builder/components/sections/StrapiAnimatedLogoRow"
+import StrapiAttachmentDownload from "@/components/page-builder/components/sections/StrapiAttachmentDownload"
 import StrapiCarousel from "@/components/page-builder/components/sections/StrapiCarousel"
 import StrapiFaq from "@/components/page-builder/components/sections/StrapiFaq"
 import StrapiHeadingWithCTAButton from "@/components/page-builder/components/sections/StrapiHeadingWithCTAButton"
@@ -29,6 +30,7 @@ export const PageContentComponents: {
 
   // Sections
   "sections.animated-logo-row": StrapiAnimatedLogoRow,
+  "sections.attachment-download": StrapiAttachmentDownload,
   "sections.faq": StrapiFaq,
   "sections.carousel": StrapiCarousel,
   "sections.heading-with-cta-button": StrapiHeadingWithCTAButton,

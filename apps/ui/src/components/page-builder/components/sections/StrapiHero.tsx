@@ -19,12 +19,12 @@ export function StrapiHero({
           <Heading
             tag="h1"
             variant="heading1"
-            className="max-w-2xl text-center text-2xl lg:text-start lg:text-4xl"
+            className="max-w-2xl text-left text-2xl font-bold text-gray-900 md:text-center md:text-4xl lg:text-5xl"
           >
             {component.title}
           </Heading>
           {component.subTitle && (
-            <Paragraph className="mb-6 max-w-2xl text-center text-base text-gray-600 lg:text-start lg:text-lg">
+            <Paragraph className="mb-6 max-w-2xl text-left text-base text-gray-600 md:text-center md:text-lg">
               {component.subTitle}
             </Paragraph>
           )}

@@ -1,0 +1,38 @@
+{
+  "collectionName": "components_sections_attachment_downloads",
+  "info": {
+    "displayName": "Attachment Download",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "file": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["files"]
+    },
+    "buttonPosition": {
+      "type": "enumeration",
+      "enum": ["left", "right"],
+      "default": "left",
+      "required": true
+    },
+    "statusText": {
+      "type": "string",
+      "default": "Ready to download"
+    },
+    "buttonLabel": {
+      "type": "string",
+      "default": "Download Now"
+    }
+  }
+}
