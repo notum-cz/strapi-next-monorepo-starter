@@ -554,6 +554,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         "forms.contact-form",
         "utilities.ck-editor-content",
         "sections.attachment-download",
+        "sections.timeline",
       ]
     > &
       Schema.Attribute.SetPluginOptions<{

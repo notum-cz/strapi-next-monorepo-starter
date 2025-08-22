@@ -57,9 +57,6 @@ export interface SectionsAttachmentDownload extends Struct.ComponentSchema {
   attributes: {
     buttonLabel: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<"Download Now">
-    buttonPosition: Schema.Attribute.Enumeration<["left", "right"]> &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<"left">
     description: Schema.Attribute.Text & Schema.Attribute.Required
     file: Schema.Attribute.Media<"files"> & Schema.Attribute.Required
     statusText: Schema.Attribute.String &
@@ -158,6 +155,19 @@ export interface SectionsImageWithCtaButton extends Struct.ComponentSchema {
     image: Schema.Attribute.Component<"utilities.basic-image", false>
     link: Schema.Attribute.Component<"utilities.link", false>
     subText: Schema.Attribute.String
+    title: Schema.Attribute.String & Schema.Attribute.Required
+  }
+}
+
+export interface SectionsTimeline extends Struct.ComponentSchema {
+  collectionName: "components_sections_timelines"
+  info: {
+    description: ""
+    displayName: "Timeline"
+  }
+  attributes: {
+    milestones: Schema.Attribute.Component<"utilities.timeline-item", true>
+    subTitle: Schema.Attribute.String
     title: Schema.Attribute.String & Schema.Attribute.Required
   }
 }
@@ -456,6 +466,20 @@ export interface UtilitiesText extends Struct.ComponentSchema {
   }
 }
 
+export interface UtilitiesTimelineItem extends Struct.ComponentSchema {
+  collectionName: "components_utilities_timeline_items"
+  info: {
+    description: ""
+    displayName: "Timeline Item"
+  }
+  attributes: {
+    company: Schema.Attribute.String
+    date: Schema.Attribute.String & Schema.Attribute.Required
+    description: Schema.Attribute.Text & Schema.Attribute.Required
+    title: Schema.Attribute.String & Schema.Attribute.Required
+  }
+}
+
 declare module "@strapi/strapi" {
   export module Public {
     export interface ComponentSchemas {
@@ -470,6 +494,7 @@ declare module "@strapi/strapi" {
       "sections.hero": SectionsHero
       "sections.horizontal-images": SectionsHorizontalImages
       "sections.image-with-cta-button": SectionsImageWithCtaButton
+      "sections.timeline": SectionsTimeline
       "seo-utilities.meta-social": SeoUtilitiesMetaSocial
       "seo-utilities.seo": SeoUtilitiesSeo
       "seo-utilities.seo-og": SeoUtilitiesSeoOg
@@ -486,6 +511,7 @@ declare module "@strapi/strapi" {
       "utilities.links-with-title": UtilitiesLinksWithTitle
       "utilities.social-icon": UtilitiesSocialIcon
       "utilities.text": UtilitiesText
+      "utilities.timeline-item": UtilitiesTimelineItem
     }
   }
 }

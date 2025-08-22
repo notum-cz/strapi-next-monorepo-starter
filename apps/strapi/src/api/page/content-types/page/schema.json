@@ -66,7 +66,8 @@
         "forms.newsletter-form",
         "forms.contact-form",
         "utilities.ck-editor-content",
-        "sections.attachment-download"
+        "sections.attachment-download",
+        "sections.timeline"
       ],
       "pluginOptions": {
         "i18n": {

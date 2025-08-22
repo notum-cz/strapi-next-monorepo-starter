@@ -81,6 +81,9 @@ const pagePopulateObject: FindOne<"api::page.page">["populate"] = {
       "sections.attachment-download": {
         populate: { file: true },
       },
+      "sections.timeline": {
+        populate: { milestones: true },
+      },
       "forms.newsletter-form": { populate: { gdpr: true } },
       "forms.contact-form": { populate: { gdpr: true } },
       "utilities.ck-editor-content": true,

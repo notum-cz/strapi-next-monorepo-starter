@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_utilities_timeline_items",
+  "info": {
+    "displayName": "Timeline Item",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "date": {
+      "type": "string",
+      "required": true
+    },
+    "company": {
+      "type": "string"
+    }
+  }
+}

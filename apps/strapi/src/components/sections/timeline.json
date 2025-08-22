@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_sections_timelines",
+  "info": {
+    "displayName": "Timeline",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "subTitle": {
+      "type": "string"
+    },
+    "milestones": {
+      "type": "component",
+      "repeatable": true,
+      "component": "utilities.timeline-item"
+    }
+  }
+}
