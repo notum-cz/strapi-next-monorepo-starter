@@ -11,7 +11,7 @@ export function StrapiAttachmentDownload({
 }: {
   readonly component: Data.Component<"sections.attachment-download">
 }) {
-  const isButtonLeft = component.buttonPosition === "left"
+
 
   return (
     <section>
@@ -31,9 +31,7 @@ export function StrapiAttachmentDownload({
             <div className="absolute -bottom-6 -left-6 h-32 w-32 rounded-full bg-gray-100/40 blur-2xl" />
 
             {/* Mobile: Stack vertically, Desktop: Horizontal with position control */}
-            <div
-              className={`relative flex flex-col items-center gap-6 md:flex-row md:gap-8 ${isButtonLeft ? "" : "md:flex-row-reverse"}`}
-            >
+            <div className="relative flex flex-col items-center gap-6 md:flex-row-reverse md:gap-8">
               <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 to-red-600 shadow-lg md:h-20 md:w-20">
                 <Download className="h-6 w-6 text-white md:h-8 md:w-8" />
               </div>
