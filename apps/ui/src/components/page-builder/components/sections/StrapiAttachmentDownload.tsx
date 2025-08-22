@@ -11,8 +11,6 @@ export function StrapiAttachmentDownload({
 }: {
   readonly component: Data.Component<"sections.attachment-download">
 }) {
-
-
   return (
     <section>
       <Container className="py-8 lg:py-12">
