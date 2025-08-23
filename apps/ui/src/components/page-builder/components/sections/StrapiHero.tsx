@@ -62,7 +62,7 @@ export function StrapiHero({
           >
             <StrapiBasicImage
               component={component.image}
-              className="rounded-3xl object-contain"
+              className="rounded-lg object-contain"
               forcedSizes={{ height: 500 }}
             />
           </div>

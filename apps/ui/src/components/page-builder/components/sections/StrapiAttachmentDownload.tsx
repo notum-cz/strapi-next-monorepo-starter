@@ -22,7 +22,7 @@ export function StrapiAttachmentDownload({
           </div>
 
           <div
-            className={`group relative overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-br from-white via-gray-50/30 to-red-50/20 p-6 shadow-sm transition-all duration-300 ease-in-out hover:border-red-200 hover:shadow-lg md:p-12`}
+            className={`group relative overflow-hidden rounded-lg border border-gray-200 bg-gradient-to-br from-white via-gray-50/30 to-red-50/20 p-6 shadow-sm transition-all duration-300 ease-in-out hover:border-red-200 hover:shadow-lg md:p-12`}
           >
             {/* Decorative background elements */}
             <div className="absolute -top-4 -right-4 h-24 w-24 rounded-full bg-red-100/30 blur-xl transition-all duration-500 group-hover:bg-red-200/40" />
@@ -30,7 +30,7 @@ export function StrapiAttachmentDownload({
 
             {/* Mobile: Stack vertically, Desktop: Horizontal with position control */}
             <div className="relative flex flex-col items-center gap-6 md:flex-row-reverse md:gap-8">
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 to-red-600 shadow-lg md:h-20 md:w-20">
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-red-500 to-red-600 shadow-lg md:h-20 md:w-20">
                 <Download className="h-6 w-6 text-white md:h-8 md:w-8" />
               </div>
 

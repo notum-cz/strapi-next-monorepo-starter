@@ -2,6 +2,7 @@ import React from "react"
 import { Data } from "@repo/strapi"
 
 import { Container } from "@/components/elementary/Container"
+import { Button } from "@/components/ui/button"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 
 export const StrapiHeadingWithCTAButton = ({
@@ -10,22 +11,34 @@ export const StrapiHeadingWithCTAButton = ({
   readonly component: Data.Component<"sections.heading-with-cta-button">
 }) => {
   return (
-    <section>
-      <Container className="py-8 lg:py-12">
-        <div className="mx-auto max-w-4xl text-left md:text-center">
-          <h2 className="mb-4 text-2xl font-bold text-gray-900 md:text-4xl lg:text-5xl">
-            {component.title}
-          </h2>
-          {component.subText && (
-            <p className="mb-6 text-base text-gray-600 md:text-lg">
-              {component.subText}
-            </p>
-          )}
+    <section className="relative overflow-hidden from-slate-50 via-white to-red-50/30">
+      <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25" />
+      
+      <Container className="relative py-16 lg:py-24">
+        <div className="mx-auto max-w-3xl text-center">
+          <div className="space-y-3">
+            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+              <span className="bg-gradient-to-r from-red-600 to-rose-600 bg-clip-text text-transparent">
+                {component.title}
+              </span>
+            </h2>
+            
+            {component.subText && (
+              <p className="mx-auto max-w-2xl text-lg leading-8 text-slate-600">
+                {component.subText}
+              </p>
+            )}
+          </div>
 
-          <StrapiLink
-            component={component.cta}
-            className="focus:ring-primary-300 bg-primary inline-flex items-center justify-center rounded-lg px-5 py-3 text-center text-base font-medium text-white focus:ring-4"
-          />
+          {component.cta && (
+            <div className="mt-10">
+              <StrapiLink component={component.cta} className="no-underline hover:no-underline">
+                <Button size="lg">
+                  {component.cta.label}
+                </Button>
+              </StrapiLink>
+            </div>
+          )}
         </div>
       </Container>
     </section>

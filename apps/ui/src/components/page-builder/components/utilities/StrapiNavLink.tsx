@@ -18,7 +18,7 @@ export function StrapiNavLink({ component, className }: StrapiNavLinkProps) {
       href={component.href}
       variant="ghost"
       className={cn(
-        "mx-2 rounded-md px-3 py-2 text-base font-normal transition-colors duration-200",
+        "mx-2 rounded-lg px-3 py-2 text-base font-normal transition-colors duration-200",
         "text-gray-700 hover:bg-gray-100 hover:text-[var(--color-brand-red)]",
         "focus:bg-gray-100 focus:text-[var(--color-brand-red)] focus:outline-none",
         className
