@@ -61,11 +61,19 @@ export function ImageGallery({
         case "ArrowRight":
         case " ":
           e.preventDefault()
-          nextImage()
+          if (selectedImage !== null && selectedImage < images.length - 1) {
+            onSelectImage(selectedImage + 1)
+            setIsZoomed(false)
+            setZoomOrigin({ x: 50, y: 50 })
+          }
           break
         case "ArrowLeft":
           e.preventDefault()
-          prevImage()
+          if (selectedImage !== null && selectedImage > 0) {
+            onSelectImage(selectedImage - 1)
+            setIsZoomed(false)
+            setZoomOrigin({ x: 50, y: 50 })
+          }
           break
         case "Home":
           e.preventDefault()
@@ -80,14 +88,7 @@ export function ImageGallery({
 
     document.addEventListener("keydown", handleKeyDown)
     return () => document.removeEventListener("keydown", handleKeyDown)
-  }, [
-    selectedImage,
-    images.length,
-    onClose,
-    onSelectImage,
-    nextImage,
-    prevImage,
-  ])
+  }, [selectedImage, images.length, onClose, onSelectImage])
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-2 sm:p-4">

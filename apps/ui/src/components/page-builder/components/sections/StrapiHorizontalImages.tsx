@@ -37,12 +37,18 @@ export function StrapiHorizontalImages({
       auto: "",
     }[component.imageAspectRatio || "auto"]
 
+    if (isAutoAspect) {
+      return "overflow-hidden"
+    }
+
     return `relative overflow-hidden ${aspectRatio} flex items-center justify-center`.trim()
   }
 
   const getImageProps = () => ({
-    className: "w-full h-full rounded-lg object-cover object-center",
-    fill: isAutoAspect,
+    className: isAutoAspect
+      ? "w-full rounded-lg object-contain"
+      : "w-full h-full rounded-lg object-cover object-center",
+    fill: false,
   })
 
   const getGapClass = () => {
@@ -292,12 +298,14 @@ export function StrapiHorizontalImages({
         </div>
       </Container>
 
-      <ImageGallery
-        images={allImages}
-        selectedImage={selectedImage}
-        onClose={() => setSelectedImage(null)}
-        onSelectImage={setSelectedImage}
-      />
+      {allImages.length > 0 && (
+        <ImageGallery
+          images={allImages}
+          selectedImage={selectedImage}
+          onClose={() => setSelectedImage(null)}
+          onSelectImage={setSelectedImage}
+        />
+      )}
     </section>
   )
 }

@@ -129,21 +129,48 @@ export interface SectionsHorizontalImages extends Struct.ComponentSchema {
   }
   attributes: {
     desktopColumns: Schema.Attribute.Enumeration<
-      ["1", "2", "3", "4", "5", "6"]
+      [
+        "1 (single column)",
+        "2 (two columns)",
+        "3 (three columns)",
+        "4 (four columns)",
+        "5 (five columns)",
+        "6 (six columns)",
+      ]
     > &
       Schema.Attribute.DefaultTo<"3">
-    desktopLayout: Schema.Attribute.Enumeration<["slider", "grid"]> &
+    desktopLayout: Schema.Attribute.Enumeration<
+      ["slider (one image at a time)", "grid (multiple images in columns)"]
+    > &
       Schema.Attribute.DefaultTo<"grid">
-    gap: Schema.Attribute.Enumeration<["1", "2", "3", "4", "6", "8"]> &
+    gap: Schema.Attribute.Enumeration<
+      [
+        "1 (4px spacing)",
+        "2 (8px spacing)",
+        "3 (12px spacing)",
+        "4 (16px spacing)",
+        "6 (24px spacing)",
+        "8 (32px spacing)",
+      ]
+    > &
       Schema.Attribute.DefaultTo<"4">
     imageAspectRatio: Schema.Attribute.Enumeration<
-      ["square", "landscape", "portrait", "auto"]
+      [
+        "square (1:1 ratio)",
+        "landscape (4:3 ratio)",
+        "portrait (3:4 ratio)",
+        "auto (natural proportions)",
+      ]
     > &
       Schema.Attribute.DefaultTo<"landscape">
     images: Schema.Attribute.Component<"utilities.image-with-link", true>
-    mobileColumns: Schema.Attribute.Enumeration<["1", "2", "3"]> &
+    mobileColumns: Schema.Attribute.Enumeration<
+      ["1 (single column)", "2 (two columns)", "3 (three columns)"]
+    > &
       Schema.Attribute.DefaultTo<"2">
-    mobileLayout: Schema.Attribute.Enumeration<["slider", "grid"]> &
+    mobileLayout: Schema.Attribute.Enumeration<
+      ["slider (one image at a time)", "grid (multiple images in columns)"]
+    > &
       Schema.Attribute.DefaultTo<"slider">
     subTitle: Schema.Attribute.Text
     title: Schema.Attribute.Text

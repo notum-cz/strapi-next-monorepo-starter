@@ -24,37 +24,37 @@
     },
     "desktopColumns": {
       "type": "enumeration",
-      "enum": ["1", "2", "3", "4", "5", "6"],
+      "enum": ["1 (single column)", "2 (two columns)", "3 (three columns)", "4 (four columns)", "5 (five columns)", "6 (six columns)"],
       "default": "3",
       "description": "Number of columns to display on desktop screens (768px and above)"
     },
     "mobileColumns": {
       "type": "enumeration",
-      "enum": ["1", "2", "3"],
+      "enum": ["1 (single column)", "2 (two columns)", "3 (three columns)"],
       "default": "2",
       "description": "Number of columns to display on mobile screens when using grid layout"
     },
     "mobileLayout": {
       "type": "enumeration",
-      "enum": ["slider", "grid"],
+      "enum": ["slider (one image at a time)", "grid (multiple images in columns)"],
       "default": "slider",
       "description": "Layout type for mobile screens: slider shows one image at a time with navigation, grid shows multiple images in columns"
     },
     "desktopLayout": {
       "type": "enumeration",
-      "enum": ["slider", "grid"],
+      "enum": ["slider (one image at a time)", "grid (multiple images in columns)"],
       "default": "grid",
       "description": "Layout type for desktop screens: slider shows one image at a time with navigation, grid shows multiple images in columns"
     },
     "imageAspectRatio": {
       "type": "enumeration",
-      "enum": ["square", "landscape", "portrait", "auto"],
+      "enum": ["square (1:1 ratio)", "landscape (4:3 ratio)", "portrait (3:4 ratio)", "auto (natural proportions)"],
       "default": "landscape",
       "description": "Aspect ratio constraint for images: square (1:1), landscape (4:3), portrait (3:4), or auto (natural proportions)"
     },
     "gap": {
       "type": "enumeration",
-      "enum": ["1", "2", "3", "4", "6", "8"],
+      "enum": ["1 (4px spacing)", "2 (8px spacing)", "3 (12px spacing)", "4 (16px spacing)", "6 (24px spacing)", "8 (32px spacing)"],
       "default": "4",
       "description": "Spacing between images in the grid (in Tailwind spacing units)"
     }
