@@ -17,6 +17,8 @@ export function StrapiHorizontalImages({
   const [selectedImage, setSelectedImage] = useState<number | null>(null)
   const [currentSlide, setCurrentSlide] = useState(0)
   const [showAll, setShowAll] = useState(false)
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
 
   const desktopCols = parseInt((component.desktopColumns || "3").split(" ")[0] || "3")
   const mobileCols = parseInt((component.mobileColumns || "2").split(" ")[0] || "2")
@@ -99,6 +101,28 @@ export function StrapiHorizontalImages({
     }
   }
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null)
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > 50
+    const isRightSwipe = distance < -50
+
+    if (isLeftSwipe) {
+      nextSlide()
+    } else if (isRightSwipe) {
+      prevSlide()
+    }
+  }
+
   const renderImageItem = (x: any, i: number, className: string = "") =>
     x.link ? (
       <StrapiLink component={x.link} className="block">
@@ -146,6 +170,9 @@ export function StrapiHorizontalImages({
                 <div
                   className="flex transition-transform duration-300 ease-in-out"
                   style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
                 >
                   {displayedImages.map((x, i) => (
                     <div
@@ -211,6 +238,9 @@ export function StrapiHorizontalImages({
                 <div
                   className="flex transition-transform duration-300 ease-in-out"
                   style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
                 >
                   {displayedImages.map((x, i) => (
                     <div
