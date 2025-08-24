@@ -24,7 +24,7 @@ export function StrapiHorizontalImages({
 
           <div className="flex gap-4 overflow-x-auto pb-4">
             {component.images?.map((x, i) => (
-              <div key={String(x.id) + i} className="flex-shrink-0">
+              <div key={String(x.id) + i} className="flex-shrink-0 p-1">
                 {x.link ? (
                   <StrapiLink component={x.link} className="block h-auto p-0">
                     <StrapiBasicImage
@@ -39,7 +39,7 @@ export function StrapiHorizontalImages({
                 ) : (
                   <button
                     type="button"
-                    className="cursor-pointer border-0 bg-transparent p-0"
+                    className="cursor-pointer border-0 bg-transparent p-0 outline-none focus:ring-2 focus:ring-red-500/50 rounded-lg"
                     onClick={() => setSelectedImage(i)}
                   >
                     <StrapiBasicImage
