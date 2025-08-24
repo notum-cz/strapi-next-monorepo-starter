@@ -63,6 +63,7 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
                   alt="logo"
                   height={50}
                   width={50}
+                  priority
                 />
               </AppLink>
             )}

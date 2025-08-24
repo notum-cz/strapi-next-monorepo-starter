@@ -70,7 +70,7 @@ export function StrapiMobileNavbar({
             />
           ) : (
             <AppLink href="/" className="text-xl font-bold">
-              <Image src="/images/logo.svg" alt="logo" height={40} width={40} />
+              <Image src="/images/logo.svg" alt="logo" height={40} width={40} priority />
             </AppLink>
           )}
         </div>
@@ -134,6 +134,7 @@ export function StrapiMobileNavbar({
                       alt="logo"
                       height={40}
                       width={40}
+                      priority
                     />
                   </AppLink>
                 )}
