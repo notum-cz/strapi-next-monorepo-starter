@@ -90,21 +90,21 @@ export function ImageGallery({
   ])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-2 sm:p-4">
       <div
         className="absolute inset-0 cursor-pointer transition-colors hover:bg-black/5"
         onClick={onClose}
         aria-label="Close gallery"
       />
 
-      <div className="relative flex h-full max-h-[90vh] w-full max-w-6xl items-center justify-center">
+      <div className="relative flex h-full max-h-[95vh] w-full max-w-6xl items-center justify-center sm:max-h-[90vh]">
         {/* Close button */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 cursor-pointer rounded-full bg-black/50 p-2 text-white transition-all duration-200 hover:scale-110 hover:bg-red-600/80 hover:shadow-lg"
+          className="absolute top-2 right-2 z-10 cursor-pointer rounded-full bg-black/50 p-2 text-white transition-all duration-200 hover:scale-110 hover:bg-red-600/80 hover:shadow-lg sm:top-4 sm:right-4 sm:p-2"
         >
-          <X size={20} />
+          <X size={18} className="sm:h-5 sm:w-5" />
         </button>
 
         {/* Navigation arrows */}
@@ -112,9 +112,9 @@ export function ImageGallery({
           <button
             type="button"
             onClick={prevImage}
-            className="absolute top-1/2 left-4 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-black/50 p-3 text-white transition-all duration-200 hover:-translate-x-1 hover:scale-110 hover:bg-white/20 hover:shadow-xl"
+            className="absolute top-1/2 left-2 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-black/50 p-2 text-white transition-all duration-200 hover:-translate-x-1 hover:scale-110 hover:bg-white/20 hover:shadow-xl sm:left-4 sm:p-3"
           >
-            <ChevronLeft size={24} />
+            <ChevronLeft size={20} className="sm:h-6 sm:w-6" />
           </button>
         )}
 
@@ -122,9 +122,9 @@ export function ImageGallery({
           <button
             type="button"
             onClick={nextImage}
-            className="absolute top-1/2 right-4 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-black/50 p-3 text-white transition-all duration-200 hover:translate-x-1 hover:scale-110 hover:bg-white/20 hover:shadow-xl"
+            className="absolute top-1/2 right-2 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-black/50 p-2 text-white transition-all duration-200 hover:translate-x-1 hover:scale-110 hover:bg-white/20 hover:shadow-xl sm:right-4 sm:p-3"
           >
-            <ChevronRight size={24} />
+            <ChevronRight size={20} className="sm:h-6 sm:w-6" />
           </button>
         )}
 
@@ -149,7 +149,7 @@ export function ImageGallery({
 
         {/* Dots navigation */}
         {images.length > 1 && (
-          <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 gap-3 rounded-full bg-black/50 px-4 py-2 transition-colors hover:bg-black/60">
+          <div className="absolute bottom-4 left-1/2 flex max-w-[90vw] -translate-x-1/2 gap-2 overflow-x-auto rounded-full bg-black/50 px-3 py-2 transition-colors hover:bg-black/60 sm:bottom-6 sm:gap-3 sm:px-4">
             {images.map((_, index) => (
               <button
                 key={index}
@@ -158,7 +158,7 @@ export function ImageGallery({
                   e.stopPropagation()
                   onSelectImage(index)
                 }}
-                className={`h-3 w-3 cursor-pointer rounded-full transition-all duration-200 hover:scale-125 hover:shadow-lg ${
+                className={`h-2 w-2 flex-shrink-0 cursor-pointer rounded-full transition-all duration-200 hover:scale-125 hover:shadow-lg sm:h-3 sm:w-3 ${
                   index === selectedImage
                     ? "scale-110 bg-white shadow-lg"
                     : "bg-white/40 hover:bg-white/80"
@@ -170,7 +170,7 @@ export function ImageGallery({
         )}
 
         {/* Image counter */}
-        <div className="absolute top-4 left-4 cursor-default rounded-full bg-black/50 px-3 py-1 text-sm text-white transition-colors select-none hover:bg-black/60">
+        <div className="absolute top-2 left-2 cursor-default rounded-full bg-black/50 px-2 py-1 text-xs text-white transition-colors select-none hover:bg-black/60 sm:top-4 sm:left-4 sm:px-3 sm:text-sm">
           {selectedImage + 1} / {images.length}
         </div>
       </div>
