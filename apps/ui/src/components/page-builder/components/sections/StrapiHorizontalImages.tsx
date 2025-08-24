@@ -191,6 +191,7 @@ export function StrapiHorizontalImages({
                     onClick={prevSlide}
                     disabled={currentSlide === 0}
                     className="absolute top-1/2 left-2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white disabled:opacity-50"
+                    aria-label="Previous slide"
                   >
                     <ChevronLeft size={20} />
                   </button>
@@ -198,6 +199,7 @@ export function StrapiHorizontalImages({
                     onClick={nextSlide}
                     disabled={currentSlide === displayedImages.length - 1}
                     className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white disabled:opacity-50"
+                    aria-label="Next slide"
                   >
                     <ChevronRight size={20} />
                   </button>
@@ -210,6 +212,7 @@ export function StrapiHorizontalImages({
                         className={`h-2 w-2 rounded-full transition-colors ${
                           index === currentSlide ? "bg-red-500" : "bg-gray-300"
                         }`}
+                        aria-label={`Go to slide ${index + 1}`}
                       />
                     ))}
                   </div>
@@ -259,6 +262,7 @@ export function StrapiHorizontalImages({
                     onClick={prevSlide}
                     disabled={currentSlide === 0}
                     className="absolute top-1/2 left-2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white disabled:opacity-50"
+                    aria-label="Previous slide"
                   >
                     <ChevronLeft size={20} />
                   </button>
@@ -266,6 +270,7 @@ export function StrapiHorizontalImages({
                     onClick={nextSlide}
                     disabled={currentSlide === displayedImages.length - 1}
                     className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white disabled:opacity-50"
+                    aria-label="Next slide"
                   >
                     <ChevronRight size={20} />
                   </button>
@@ -278,6 +283,7 @@ export function StrapiHorizontalImages({
                         className={`h-2 w-2 rounded-full transition-colors ${
                           index === currentSlide ? "bg-red-500" : "bg-gray-300"
                         }`}
+                        aria-label={`Go to slide ${index + 1}`}
                       />
                     ))}
                   </div>

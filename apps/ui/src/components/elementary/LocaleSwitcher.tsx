@@ -41,7 +41,7 @@ const LocaleSwitcher = ({ locale }: { locale: AppLocale }) => {
 
   return (
     <Select value={locale} onValueChange={handleLocaleChange}>
-      <SelectTrigger className="w-18 cursor-pointer font-bold uppercase">
+      <SelectTrigger className="w-18 cursor-pointer font-bold uppercase" aria-label="Select language">
         {locale}
       </SelectTrigger>
       <SelectContent className="border-gray-300 bg-white/90 shadow-lg backdrop-blur">

@@ -120,6 +120,7 @@ export function ImageGallery({
           type="button"
           onClick={onClose}
           className="absolute top-2 right-2 z-10 cursor-pointer rounded-full bg-black/50 p-2 text-white transition-all duration-200 hover:scale-110 hover:bg-red-600/80 hover:shadow-lg sm:top-4 sm:right-4 sm:p-2"
+          aria-label="Close gallery"
         >
           <X size={18} className="sm:h-5 sm:w-5" />
         </button>
@@ -130,6 +131,7 @@ export function ImageGallery({
             type="button"
             onClick={prevImage}
             className="absolute top-1/2 left-2 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-black/50 p-2 text-white transition-all duration-200 hover:-translate-x-1 hover:scale-110 hover:bg-white/20 hover:shadow-xl sm:left-4 sm:p-3"
+            aria-label="Previous image"
           >
             <ChevronLeft size={20} className="sm:h-6 sm:w-6" />
           </button>
@@ -140,6 +142,7 @@ export function ImageGallery({
             type="button"
             onClick={nextImage}
             className="absolute top-1/2 right-2 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-black/50 p-2 text-white transition-all duration-200 hover:translate-x-1 hover:scale-110 hover:bg-white/20 hover:shadow-xl sm:right-4 sm:p-3"
+            aria-label="Next image"
           >
             <ChevronRight size={20} className="sm:h-6 sm:w-6" />
           </button>

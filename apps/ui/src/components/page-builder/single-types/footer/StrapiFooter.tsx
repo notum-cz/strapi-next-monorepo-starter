@@ -12,7 +12,7 @@ export async function StrapiFooter({ locale }: { readonly locale: AppLocale }) {
   if (!component) return null
 
   return (
-    <footer className="border-t bg-white/10 backdrop-blur">
+    <footer className="border-t bg-white/80 backdrop-blur">
       <Container className="p-4 md:p-6">
         <div className="space-y-6 md:space-y-8">
           {/* Logo & Sections */}
