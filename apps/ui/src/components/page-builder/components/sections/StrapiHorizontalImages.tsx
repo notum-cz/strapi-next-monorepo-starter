@@ -1,8 +1,8 @@
 import { Data } from "@repo/strapi"
 
-import { cn } from "@/lib/styles"
 import { Container } from "@/components/elementary/Container"
-import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
+import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
+import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 
 export function StrapiHorizontalImages({
   component,
@@ -17,31 +17,31 @@ export function StrapiHorizontalImages({
             {component.title}
           </p>
 
-          <div
-            className={cn(
-              "no-scrollbar flex max-w-full overflow-x-auto",
-              `space-x-${component.spacing ?? 4}`
-            )}
-          >
+          <div className="flex gap-4 overflow-x-auto pb-4">
             {component.images?.map((x, i) => (
-              <StrapiImageWithLink
-                component={x}
-                key={String(x.id) + i}
-                imageProps={{
-                  className: cn({
-                    [`rounded-${component.imageRadius}`]: Boolean(
-                      component.imageRadius
-                    ),
-                    "object-cover": Boolean(
-                      component.fixedImageHeight ?? component.fixedImageWidth
-                    ),
-                  }),
-                  forcedSizes: {
-                    width: component.fixedImageWidth,
-                    height: component.fixedImageHeight,
-                  },
-                }}
-              />
+              <div key={String(x.id) + i} className="flex-shrink-0">
+                {x.link ? (
+                  <StrapiLink component={x.link} className="block h-auto p-0">
+                    <StrapiBasicImage
+                      component={x.image}
+                      className="rounded-lg object-cover"
+                      forcedSizes={{
+                        width: component.fixedImageWidth || 300,
+                        height: component.fixedImageHeight || 200,
+                      }}
+                    />
+                  </StrapiLink>
+                ) : (
+                  <StrapiBasicImage
+                    component={x.image}
+                    className="rounded-lg object-cover"
+                    forcedSizes={{
+                      width: component.fixedImageWidth || 300,
+                      height: component.fixedImageHeight || 200,
+                    }}
+                  />
+                )}
+              </div>
             ))}
           </div>
         </div>
