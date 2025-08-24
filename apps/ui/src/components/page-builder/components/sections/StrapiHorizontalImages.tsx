@@ -18,11 +18,11 @@ export function StrapiHorizontalImages({
   const [currentSlide, setCurrentSlide] = useState(0)
   const [showAll, setShowAll] = useState(false)
 
-  const desktopCols = parseInt(component.desktopColumns || "3")
-  const mobileCols = parseInt(component.mobileColumns || "2")
-  const isMobileSlider = component.mobileLayout === "slider"
-  const isDesktopSlider = component.desktopLayout === "slider"
-  const isAutoAspect = component.imageAspectRatio === "auto"
+  const desktopCols = parseInt((component.desktopColumns || "3").split(" ")[0] || "3")
+  const mobileCols = parseInt((component.mobileColumns || "2").split(" ")[0] || "2")
+  const isMobileSlider = (component.mobileLayout || "").startsWith("slider")
+  const isDesktopSlider = (component.desktopLayout || "").startsWith("slider")
+  const isAutoAspect = (component.imageAspectRatio || "").startsWith("auto")
 
   const IMAGES_LIMIT = 12
   const allImages = component.images || []
@@ -30,12 +30,14 @@ export function StrapiHorizontalImages({
   const hasMore = allImages.length > IMAGES_LIMIT
 
   const getContainerClass = () => {
-    const aspectRatio = {
+    const aspectRatioValue = (component.imageAspectRatio || "").split(" ")[0] || "auto"
+    const aspectRatioMap = {
       square: "md:aspect-square",
       portrait: "md:aspect-[3/4]",
       landscape: "md:aspect-[4/3]",
       auto: "",
-    }[component.imageAspectRatio || "auto"]
+    } as const
+    const aspectRatio = aspectRatioMap[aspectRatioValue as keyof typeof aspectRatioMap] || ""
 
     if (isAutoAspect) {
       return "overflow-hidden"
@@ -60,7 +62,7 @@ export function StrapiHorizontalImages({
       6: "gap-6",
       8: "gap-8",
     }
-    const gap = parseInt(component.gap || "4")
+    const gap = parseInt((component.gap || "4").split(" ")[0] || "4")
     return gapMap[gap as keyof typeof gapMap] || "gap-4"
   }
 
