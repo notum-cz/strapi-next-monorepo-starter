@@ -16,6 +16,7 @@ export interface BasicImageProps
   readonly fallbackSizes?: { width?: number | null; height?: number | null }
   readonly forcedSizes?: { width?: number | null; height?: number | null }
   readonly format?: "large" | "small" | "medium" | "thumbnail"
+  readonly priority?: boolean
 }
 
 export function StrapiBasicImage({
@@ -66,6 +67,7 @@ export function StrapiBasicImage({
     return (
       <ImageComp
         fill
+        priority={imgProps.priority}
         style={imgProps.style}
         className={className}
         src={src}
@@ -80,6 +82,7 @@ export function StrapiBasicImage({
     <ImageComp
       width={sizes.width}
       height={sizes.height}
+      priority={imgProps.priority}
       style={imgProps.style}
       className={className}
       src={src}
