@@ -22,41 +22,29 @@ export function Breadcrumbs({ breadcrumbs, className }: Props) {
   }
 
   return (
-    <div className={cn("max-w-screen-default mx-auto w-full", className)}>
-      <div>
+    <nav className={cn("mx-auto w-full py-4", className)}>
+      <ol className="flex items-center space-x-2 text-sm text-slate-600 md:text-base">
         {breadcrumbs.map((breadcrumb, index) => (
-          <span key={breadcrumb.fullPath}>
+          <li key={breadcrumb.fullPath} className="flex items-center">
             {index !== 0 && (
-              <span className={cn("mx-2 inline-block text-black")}>/</span>
+              <span className="mx-2 text-slate-400 cursor-default">/</span>
             )}
 
             {index !== breadcrumbs.length - 1 ? (
-              <AppLink href={breadcrumb.fullPath} className="p-0">
-                <span
-                  className={cn(
-                    "tracking-sm inline-block text-xs leading-[18px] text-black md:text-sm md:leading-[21px]"
-                  )}
-                >
-                  {breadcrumb.title}
-                </span>
+              <AppLink 
+                href={breadcrumb.fullPath} 
+                className="rounded-lg px-2 py-1 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 no-underline hover:no-underline"
+              >
+                {breadcrumb.title}
               </AppLink>
             ) : (
-              <span
-                className={cn(
-                  "tracking-sm inline-block text-xs leading-[18px] break-words text-black md:text-sm md:leading-[21px]"
-                )}
-                style={{
-                  wordBreak: "break-word",
-                  overflowWrap: "break-word",
-                  display: "inline",
-                }}
-              >
+              <span className="rounded-lg px-2 py-1 font-medium text-slate-900 bg-slate-100 cursor-default">
                 {breadcrumb.title}
               </span>
             )}
-          </span>
+          </li>
         ))}
-      </div>
-    </div>
+      </ol>
+    </nav>
   )
 }
