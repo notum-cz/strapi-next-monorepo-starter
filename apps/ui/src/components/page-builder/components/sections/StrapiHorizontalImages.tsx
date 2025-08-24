@@ -44,7 +44,7 @@ export function StrapiHorizontalImages({
                   >
                     <StrapiBasicImage
                       component={x.image}
-                      className="rounded-lg object-cover hover:opacity-80 transition-opacity"
+                      className="rounded-lg object-cover transition-opacity hover:opacity-80"
                       forcedSizes={{
                         width: component.fixedImageWidth || 300,
                         height: component.fixedImageHeight || 200,

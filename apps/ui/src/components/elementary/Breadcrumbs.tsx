@@ -27,18 +27,18 @@ export function Breadcrumbs({ breadcrumbs, className }: Props) {
         {breadcrumbs.map((breadcrumb, index) => (
           <li key={breadcrumb.fullPath} className="flex items-center">
             {index !== 0 && (
-              <span className="mx-2 text-slate-400 cursor-default">/</span>
+              <span className="mx-2 cursor-default text-slate-400">/</span>
             )}
 
             {index !== breadcrumbs.length - 1 ? (
-              <AppLink 
-                href={breadcrumb.fullPath} 
-                className="rounded-lg px-2 py-1 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 no-underline hover:no-underline"
+              <AppLink
+                href={breadcrumb.fullPath}
+                className="rounded-lg px-2 py-1 text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-900 hover:no-underline"
               >
                 {breadcrumb.title}
               </AppLink>
             ) : (
-              <span className="rounded-lg px-2 py-1 font-medium text-slate-900 bg-slate-100 cursor-default">
+              <span className="cursor-default rounded-lg bg-slate-100 px-2 py-1 font-medium text-slate-900">
                 {breadcrumb.title}
               </span>
             )}
