@@ -53,6 +53,9 @@ export function ImageGallery({
   }
 
   useEffect(() => {
+    // Prevent body scroll when gallery is open
+    document.body.style.overflow = 'hidden'
+    
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
         case "Escape":
@@ -78,16 +81,25 @@ export function ImageGallery({
         case "Home":
           e.preventDefault()
           onSelectImage(0)
+          setIsZoomed(false)
+          setZoomOrigin({ x: 50, y: 50 })
           break
         case "End":
           e.preventDefault()
           onSelectImage(images.length - 1)
+          setIsZoomed(false)
+          setZoomOrigin({ x: 50, y: 50 })
           break
       }
     }
 
     document.addEventListener("keydown", handleKeyDown)
-    return () => document.removeEventListener("keydown", handleKeyDown)
+    
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown)
+      // Restore body scroll when gallery closes
+      document.body.style.overflow = 'unset'
+    }
   }, [selectedImage, images.length, onClose, onSelectImage])
 
   return (
