@@ -18,10 +18,10 @@ export function ImageGallery({
   onClose,
   onSelectImage,
 }: ImageGalleryProps) {
-  if (selectedImage === null || !images[selectedImage]) return null
-
   const [isZoomed, setIsZoomed] = useState(false)
   const [zoomOrigin, setZoomOrigin] = useState({ x: 50, y: 50 })
+  
+  const isOpen = selectedImage !== null && images[selectedImage]
 
   const nextImage = () => {
     if (selectedImage < images.length - 1) {
@@ -53,6 +53,8 @@ export function ImageGallery({
   }
 
   useEffect(() => {
+    if (!isOpen) return
+    
     // Prevent body scroll when gallery is open
     document.body.style.overflow = 'hidden'
     
@@ -100,8 +102,10 @@ export function ImageGallery({
       // Restore body scroll when gallery closes
       document.body.style.overflow = 'unset'
     }
-  }, [selectedImage, images.length, onClose, onSelectImage])
+  }, [isOpen, selectedImage, images.length, onClose, onSelectImage])
 
+  if (!isOpen) return null
+  
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-2 sm:p-4">
       <div
