@@ -2,38 +2,61 @@
   "collectionName": "components_sections_horizontal_images",
   "info": {
     "displayName": "HorizontalImages",
-    "description": ""
+    "description": "A responsive image gallery component with customizable layouts, aspect ratios, and load more functionality"
   },
   "options": {},
   "attributes": {
     "title": {
       "type": "text",
-      "required": true
+      "description": "Section title displayed above the image gallery",
+      "placeholder": "Our Gallery"
+    },
+    "subTitle": {
+      "type": "text",
+      "description": "Optional subtitle displayed below the main title",
+      "placeholder": "Explore our collection of beautiful images"
     },
     "images": {
       "type": "component",
       "repeatable": true,
-      "component": "utilities.image-with-link"
+      "component": "utilities.image-with-link",
+      "description": "Collection of images to display. Images without links open in gallery modal, images with links navigate directly"
     },
     "desktopColumns": {
       "type": "enumeration",
       "enum": ["1", "2", "3", "4", "5", "6"],
-      "default": "3"
+      "default": "3",
+      "description": "Number of columns to display on desktop screens (768px and above)"
     },
     "mobileColumns": {
       "type": "enumeration",
       "enum": ["1", "2", "3"],
-      "default": "2"
+      "default": "2",
+      "description": "Number of columns to display on mobile screens when using grid layout"
     },
     "mobileLayout": {
       "type": "enumeration",
       "enum": ["slider", "grid"],
-      "default": "slider"
+      "default": "slider",
+      "description": "Layout type for mobile screens: slider shows one image at a time with navigation, grid shows multiple images in columns"
+    },
+    "desktopLayout": {
+      "type": "enumeration",
+      "enum": ["slider", "grid"],
+      "default": "grid",
+      "description": "Layout type for desktop screens: slider shows one image at a time with navigation, grid shows multiple images in columns"
     },
     "imageAspectRatio": {
       "type": "enumeration",
       "enum": ["square", "landscape", "portrait", "auto"],
-      "default": "landscape"
+      "default": "landscape",
+      "description": "Aspect ratio constraint for images: square (1:1), landscape (4:3), portrait (3:4), or auto (natural proportions)"
+    },
+    "gap": {
+      "type": "enumeration",
+      "enum": ["1", "2", "3", "4", "6", "8"],
+      "default": "4",
+      "description": "Spacing between images in the grid (in Tailwind spacing units)"
     }
   }
 }

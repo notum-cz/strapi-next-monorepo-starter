@@ -46,47 +46,45 @@ export function StrapiBasicImage({
   const sizes = {
     width:
       forcedSizes?.width ??
-      component?.width ??
       selectedFormat?.width ??
       media?.width ??
       fallbackSizes?.width ??
-      undefined,
+      1200,
 
     height:
       forcedSizes?.height ??
-      component?.height ??
       selectedFormat?.height ??
       media?.height ??
       fallbackSizes?.height ??
-      undefined,
+      800,
   }
 
   const src = formatStrapiMediaUrl(url)
   const fallbackSrc = formatStrapiMediaUrl(component?.fallbackSrc)
 
   if (imgProps.fill) {
-    // Fill has priority over sizes
-    sizes.width = undefined
-    sizes.height = undefined
-  }
-
-  if (!imgProps.fill && (!sizes.width || !sizes.height)) {
-    // If width or height is missing, fill the image
-    // This happens mostly if there is no media in Strapi and
-    // we are using a fallback image
-    imgProps.fill = true
-    sizes.width = undefined
-    sizes.height = undefined
+    return (
+      <ImageComp
+        fill
+        style={imgProps.style}
+        className={className}
+        src={src}
+        fallbackSrc={fallbackSrc}
+        alt={component?.alt ?? media?.caption ?? media?.alternativeText ?? ""}
+        {...imgProps}
+      />
+    )
   }
 
   return (
     <ImageComp
-      style={{ ...sizes, ...imgProps.style }}
+      width={sizes.width}
+      height={sizes.height}
+      style={imgProps.style}
       className={className}
       src={src}
       fallbackSrc={fallbackSrc}
       alt={component?.alt ?? media?.caption ?? media?.alternativeText ?? ""}
-      {...sizes}
       {...imgProps}
     />
   )

@@ -124,7 +124,7 @@ export interface SectionsHero extends Struct.ComponentSchema {
 export interface SectionsHorizontalImages extends Struct.ComponentSchema {
   collectionName: "components_sections_horizontal_images"
   info: {
-    description: ""
+    description: "A responsive image gallery component with customizable layouts, aspect ratios, and load more functionality"
     displayName: "HorizontalImages"
   }
   attributes: {
@@ -132,6 +132,10 @@ export interface SectionsHorizontalImages extends Struct.ComponentSchema {
       ["1", "2", "3", "4", "5", "6"]
     > &
       Schema.Attribute.DefaultTo<"3">
+    desktopLayout: Schema.Attribute.Enumeration<["slider", "grid"]> &
+      Schema.Attribute.DefaultTo<"grid">
+    gap: Schema.Attribute.Enumeration<["1", "2", "3", "4", "6", "8"]> &
+      Schema.Attribute.DefaultTo<"4">
     imageAspectRatio: Schema.Attribute.Enumeration<
       ["square", "landscape", "portrait", "auto"]
     > &
@@ -141,7 +145,8 @@ export interface SectionsHorizontalImages extends Struct.ComponentSchema {
       Schema.Attribute.DefaultTo<"2">
     mobileLayout: Schema.Attribute.Enumeration<["slider", "grid"]> &
       Schema.Attribute.DefaultTo<"slider">
-    title: Schema.Attribute.Text & Schema.Attribute.Required
+    subTitle: Schema.Attribute.Text
+    title: Schema.Attribute.Text
   }
 }
 
