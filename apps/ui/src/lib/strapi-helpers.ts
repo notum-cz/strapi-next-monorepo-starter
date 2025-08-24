@@ -12,7 +12,7 @@ export const formatStrapiMediaUrl = (
   imageUrl: string | StaticImport | undefined | null
 ): any => {
   if (!imageUrl) {
-    return undefined
+    return "/image-placeholder.svg"
   }
 
   if (typeof imageUrl === "string") {
