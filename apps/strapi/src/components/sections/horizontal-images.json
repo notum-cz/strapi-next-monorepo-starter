@@ -15,16 +15,25 @@
       "repeatable": true,
       "component": "utilities.image-with-link"
     },
-    "spacing": {
-      "type": "integer",
-      "min": 0,
-      "max": 20
+    "desktopColumns": {
+      "type": "enumeration",
+      "enum": ["1", "2", "3", "4", "5", "6"],
+      "default": "3"
     },
-    "fixedImageHeight": {
-      "type": "integer"
+    "mobileColumns": {
+      "type": "enumeration",
+      "enum": ["1", "2", "3"],
+      "default": "2"
     },
-    "fixedImageWidth": {
-      "type": "integer"
+    "mobileLayout": {
+      "type": "enumeration",
+      "enum": ["slider", "grid"],
+      "default": "slider"
+    },
+    "imageAspectRatio": {
+      "type": "enumeration",
+      "enum": ["square", "landscape", "portrait", "auto"],
+      "default": "landscape"
     }
   }
 }

@@ -128,17 +128,19 @@ export interface SectionsHorizontalImages extends Struct.ComponentSchema {
     displayName: "HorizontalImages"
   }
   attributes: {
-    fixedImageHeight: Schema.Attribute.Integer
-    fixedImageWidth: Schema.Attribute.Integer
+    desktopColumns: Schema.Attribute.Enumeration<
+      ["1", "2", "3", "4", "5", "6"]
+    > &
+      Schema.Attribute.DefaultTo<"3">
+    imageAspectRatio: Schema.Attribute.Enumeration<
+      ["square", "landscape", "portrait", "auto"]
+    > &
+      Schema.Attribute.DefaultTo<"landscape">
     images: Schema.Attribute.Component<"utilities.image-with-link", true>
-    spacing: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          max: 20
-          min: 0
-        },
-        number
-      >
+    mobileColumns: Schema.Attribute.Enumeration<["1", "2", "3"]> &
+      Schema.Attribute.DefaultTo<"2">
+    mobileLayout: Schema.Attribute.Enumeration<["slider", "grid"]> &
+      Schema.Attribute.DefaultTo<"slider">
     title: Schema.Attribute.Text & Schema.Attribute.Required
   }
 }
@@ -348,10 +350,8 @@ export interface UtilitiesBasicImage extends Struct.ComponentSchema {
   }
   attributes: {
     alt: Schema.Attribute.String & Schema.Attribute.Required
-    height: Schema.Attribute.Integer
     media: Schema.Attribute.Media<"images" | "videos"> &
       Schema.Attribute.Required
-    width: Schema.Attribute.Integer
   }
 }
 
@@ -403,7 +403,6 @@ export interface UtilitiesLink extends Struct.ComponentSchema {
   }
   attributes: {
     href: Schema.Attribute.String & Schema.Attribute.Required
-    icon: Schema.Attribute.Media<"images" | "files">
     label: Schema.Attribute.String & Schema.Attribute.Required
     newTab: Schema.Attribute.Boolean
   }
