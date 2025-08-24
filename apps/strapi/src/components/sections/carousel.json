@@ -10,10 +10,6 @@
       "type": "component",
       "repeatable": true,
       "component": "utilities.image-with-link"
-    },
-    "radius": {
-      "type": "enumeration",
-      "enum": ["sm", "md", "lg", "xl", "full"]
     }
   }
 }

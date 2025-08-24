@@ -20,9 +20,6 @@
     },
     "height": {
       "type": "integer"
-    },
-    "fallbackSrc": {
-      "type": "string"
     }
   }
 }

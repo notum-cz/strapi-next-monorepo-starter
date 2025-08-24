@@ -73,7 +73,6 @@ export interface SectionsCarousel extends Struct.ComponentSchema {
   }
   attributes: {
     images: Schema.Attribute.Component<"utilities.image-with-link", true>
-    radius: Schema.Attribute.Enumeration<["sm", "md", "lg", "xl", "full"]>
   }
 }
 
@@ -131,7 +130,6 @@ export interface SectionsHorizontalImages extends Struct.ComponentSchema {
   attributes: {
     fixedImageHeight: Schema.Attribute.Integer
     fixedImageWidth: Schema.Attribute.Integer
-    imageRadius: Schema.Attribute.Enumeration<["sm", "md", "lg", "xl", "full"]>
     images: Schema.Attribute.Component<"utilities.image-with-link", true>
     spacing: Schema.Attribute.Integer &
       Schema.Attribute.SetMinMax<
@@ -141,7 +139,7 @@ export interface SectionsHorizontalImages extends Struct.ComponentSchema {
         },
         number
       >
-    title: Schema.Attribute.String & Schema.Attribute.Required
+    title: Schema.Attribute.Text & Schema.Attribute.Required
   }
 }
 
@@ -350,7 +348,6 @@ export interface UtilitiesBasicImage extends Struct.ComponentSchema {
   }
   attributes: {
     alt: Schema.Attribute.String & Schema.Attribute.Required
-    fallbackSrc: Schema.Attribute.String
     height: Schema.Attribute.Integer
     media: Schema.Attribute.Media<"images" | "videos"> &
       Schema.Attribute.Required
