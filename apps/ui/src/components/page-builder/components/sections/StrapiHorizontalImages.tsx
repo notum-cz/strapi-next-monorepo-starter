@@ -1,14 +1,19 @@
+"use client"
+
+import { useState } from "react"
 import { Data } from "@repo/strapi"
 
 import { Container } from "@/components/elementary/Container"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
+import { ImageGallery } from "@/components/ui/ImageGallery"
 
 export function StrapiHorizontalImages({
   component,
 }: {
   readonly component: Data.Component<"sections.horizontal-images">
 }) {
+  const [selectedImage, setSelectedImage] = useState<number | null>(null)
   return (
     <section>
       <Container className="py-8">
@@ -32,20 +37,33 @@ export function StrapiHorizontalImages({
                     />
                   </StrapiLink>
                 ) : (
-                  <StrapiBasicImage
-                    component={x.image}
-                    className="rounded-lg object-cover"
-                    forcedSizes={{
-                      width: component.fixedImageWidth || 300,
-                      height: component.fixedImageHeight || 200,
-                    }}
-                  />
+                  <button
+                    type="button"
+                    className="cursor-pointer border-0 bg-transparent p-0"
+                    onClick={() => setSelectedImage(i)}
+                  >
+                    <StrapiBasicImage
+                      component={x.image}
+                      className="rounded-lg object-cover hover:opacity-80 transition-opacity"
+                      forcedSizes={{
+                        width: component.fixedImageWidth || 300,
+                        height: component.fixedImageHeight || 200,
+                      }}
+                    />
+                  </button>
                 )}
               </div>
             ))}
           </div>
         </div>
       </Container>
+
+      <ImageGallery
+        images={component.images || []}
+        selectedImage={selectedImage}
+        onClose={() => setSelectedImage(null)}
+        onSelectImage={setSelectedImage}
+      />
     </section>
   )
 }
