@@ -36,6 +36,62 @@ export interface FormsNewsletterForm extends Struct.ComponentSchema {
   }
 }
 
+export interface SectionsAdaptiveGallery extends Struct.ComponentSchema {
+  collectionName: "components_sections_adaptive_gallery"
+  info: {
+    description: "A responsive image gallery component with customizable layouts, aspect ratios, and load more functionality"
+    displayName: "AdaptiveGallery"
+  }
+  attributes: {
+    desktopColumns: Schema.Attribute.Enumeration<
+      [
+        "1 (single column)",
+        "2 (two columns)",
+        "3 (three columns)",
+        "4 (four columns)",
+        "5 (five columns)",
+        "6 (six columns)",
+      ]
+    > &
+      Schema.Attribute.DefaultTo<"3">
+    desktopLayout: Schema.Attribute.Enumeration<
+      ["slider (scrollable columns)", "grid (multiple images in columns)"]
+    > &
+      Schema.Attribute.DefaultTo<"grid">
+    gap: Schema.Attribute.Enumeration<
+      [
+        "1 (4px spacing)",
+        "2 (8px spacing)",
+        "3 (12px spacing)",
+        "4 (16px spacing)",
+        "6 (24px spacing)",
+        "8 (32px spacing)",
+      ]
+    > &
+      Schema.Attribute.DefaultTo<"4">
+    imageAspectRatio: Schema.Attribute.Enumeration<
+      [
+        "square (1:1 ratio)",
+        "landscape (4:3 ratio)",
+        "portrait (3:4 ratio)",
+        "auto (natural proportions)",
+      ]
+    > &
+      Schema.Attribute.DefaultTo<"landscape">
+    images: Schema.Attribute.Component<"utilities.image-with-link", true>
+    mobileColumns: Schema.Attribute.Enumeration<
+      ["1 (single column)", "2 (two columns)", "3 (three columns)"]
+    > &
+      Schema.Attribute.DefaultTo<"2">
+    mobileLayout: Schema.Attribute.Enumeration<
+      ["slider (one image at a time)", "grid (multiple images in columns)"]
+    > &
+      Schema.Attribute.DefaultTo<"slider">
+    subTitle: Schema.Attribute.Text
+    title: Schema.Attribute.Text
+  }
+}
+
 export interface SectionsAnimatedLogoRow extends Struct.ComponentSchema {
   collectionName: "components_sections_animated_logo_rows"
   info: {
@@ -62,17 +118,6 @@ export interface SectionsAttachmentDownload extends Struct.ComponentSchema {
     statusText: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<"Ready to download">
     title: Schema.Attribute.String & Schema.Attribute.Required
-  }
-}
-
-export interface SectionsCarousel extends Struct.ComponentSchema {
-  collectionName: "components_sections_carousels"
-  info: {
-    description: ""
-    displayName: "Carousel"
-  }
-  attributes: {
-    images: Schema.Attribute.Component<"utilities.image-with-link", true>
   }
 }
 
@@ -118,62 +163,6 @@ export interface SectionsHero extends Struct.ComponentSchema {
     steps: Schema.Attribute.Component<"utilities.text", true>
     subTitle: Schema.Attribute.String
     title: Schema.Attribute.String
-  }
-}
-
-export interface SectionsHorizontalImages extends Struct.ComponentSchema {
-  collectionName: "components_sections_horizontal_images"
-  info: {
-    description: "A responsive image gallery component with customizable layouts, aspect ratios, and load more functionality"
-    displayName: "HorizontalImages"
-  }
-  attributes: {
-    desktopColumns: Schema.Attribute.Enumeration<
-      [
-        "1 (single column)",
-        "2 (two columns)",
-        "3 (three columns)",
-        "4 (four columns)",
-        "5 (five columns)",
-        "6 (six columns)",
-      ]
-    > &
-      Schema.Attribute.DefaultTo<"3">
-    desktopLayout: Schema.Attribute.Enumeration<
-      ["slider (one image at a time)", "grid (multiple images in columns)"]
-    > &
-      Schema.Attribute.DefaultTo<"grid">
-    gap: Schema.Attribute.Enumeration<
-      [
-        "1 (4px spacing)",
-        "2 (8px spacing)",
-        "3 (12px spacing)",
-        "4 (16px spacing)",
-        "6 (24px spacing)",
-        "8 (32px spacing)",
-      ]
-    > &
-      Schema.Attribute.DefaultTo<"4">
-    imageAspectRatio: Schema.Attribute.Enumeration<
-      [
-        "square (1:1 ratio)",
-        "landscape (4:3 ratio)",
-        "portrait (3:4 ratio)",
-        "auto (natural proportions)",
-      ]
-    > &
-      Schema.Attribute.DefaultTo<"landscape">
-    images: Schema.Attribute.Component<"utilities.image-with-link", true>
-    mobileColumns: Schema.Attribute.Enumeration<
-      ["1 (single column)", "2 (two columns)", "3 (three columns)"]
-    > &
-      Schema.Attribute.DefaultTo<"2">
-    mobileLayout: Schema.Attribute.Enumeration<
-      ["slider (one image at a time)", "grid (multiple images in columns)"]
-    > &
-      Schema.Attribute.DefaultTo<"slider">
-    subTitle: Schema.Attribute.Text
-    title: Schema.Attribute.Text
   }
 }
 
@@ -514,13 +503,12 @@ declare module "@strapi/strapi" {
       "elements.footer-item": ElementsFooterItem
       "forms.contact-form": FormsContactForm
       "forms.newsletter-form": FormsNewsletterForm
+      "sections.adaptive-gallery": SectionsAdaptiveGallery
       "sections.animated-logo-row": SectionsAnimatedLogoRow
       "sections.attachment-download": SectionsAttachmentDownload
-      "sections.carousel": SectionsCarousel
       "sections.faq": SectionsFaq
       "sections.heading-with-cta-button": SectionsHeadingWithCtaButton
       "sections.hero": SectionsHero
-      "sections.horizontal-images": SectionsHorizontalImages
       "sections.image-with-cta-button": SectionsImageWithCtaButton
       "sections.timeline": SectionsTimeline
       "seo-utilities.meta-social": SeoUtilitiesMetaSocial

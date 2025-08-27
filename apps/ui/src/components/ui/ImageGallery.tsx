@@ -20,7 +20,7 @@ export function ImageGallery({
 }: ImageGalleryProps) {
   const [isZoomed, setIsZoomed] = useState(false)
   const [zoomOrigin, setZoomOrigin] = useState({ x: 50, y: 50 })
-  
+
   const isOpen = selectedImage !== null && images[selectedImage]
 
   const nextImage = () => {
@@ -54,10 +54,10 @@ export function ImageGallery({
 
   useEffect(() => {
     if (!isOpen) return
-    
+
     // Prevent body scroll when gallery is open
-    document.body.style.overflow = 'hidden'
-    
+    document.body.style.overflow = "hidden"
+
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
         case "Escape":
@@ -96,16 +96,16 @@ export function ImageGallery({
     }
 
     document.addEventListener("keydown", handleKeyDown)
-    
+
     return () => {
       document.removeEventListener("keydown", handleKeyDown)
       // Restore body scroll when gallery closes
-      document.body.style.overflow = 'unset'
+      document.body.style.overflow = "unset"
     }
   }, [isOpen, selectedImage, images.length, onClose, onSelectImage])
 
   if (!isOpen) return null
-  
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-2 sm:p-4">
       <div
@@ -130,7 +130,7 @@ export function ImageGallery({
           <button
             type="button"
             onClick={prevImage}
-            className="absolute top-1/2 left-2 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-black/50 p-2 text-white transition-all duration-200 hover:-translate-x-1 hover:scale-110 hover:bg-white/20 hover:shadow-xl sm:left-4 sm:p-3"
+            className="absolute top-1/2 left-2 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-black/50 p-2 text-white transition-all duration-200 hover:scale-110 hover:bg-red-600/80 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 disabled:hover:bg-black/50 sm:left-4 sm:p-3"
             aria-label="Previous image"
           >
             <ChevronLeft size={20} className="sm:h-6 sm:w-6" />
@@ -141,7 +141,7 @@ export function ImageGallery({
           <button
             type="button"
             onClick={nextImage}
-            className="absolute top-1/2 right-2 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-black/50 p-2 text-white transition-all duration-200 hover:translate-x-1 hover:scale-110 hover:bg-white/20 hover:shadow-xl sm:right-4 sm:p-3"
+            className="absolute top-1/2 right-2 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-black/50 p-2 text-white transition-all duration-200 hover:scale-110 hover:bg-red-600/80 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 disabled:hover:bg-black/50 sm:right-4 sm:p-3"
             aria-label="Next image"
           >
             <ChevronRight size={20} className="sm:h-6 sm:w-6" />

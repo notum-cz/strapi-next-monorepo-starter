@@ -9,19 +9,25 @@ import { StrapiBasicImage } from "@/components/page-builder/components/utilities
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 import { ImageGallery } from "@/components/ui/ImageGallery"
 
-export function StrapiHorizontalImages({
+export function StrapiAdaptiveGallery({
   component,
 }: {
-  readonly component: Data.Component<"sections.horizontal-images">
+  readonly component: Data.Component<"sections.adaptive-gallery">
 }) {
   const [selectedImage, setSelectedImage] = useState<number | null>(null)
   const [currentSlide, setCurrentSlide] = useState(0)
   const [showAll, setShowAll] = useState(false)
-  const [touchStart, setTouchStart] = useState<number | null>(null)
-  const [touchEnd, setTouchEnd] = useState<number | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragStart, setDragStart] = useState(0)
+  const [dragOffset, setDragOffset] = useState(0)
+  const [hasDragged, setHasDragged] = useState(false)
 
-  const desktopCols = parseInt((component.desktopColumns || "3").split(" ")[0] || "3")
-  const mobileCols = parseInt((component.mobileColumns || "2").split(" ")[0] || "2")
+  const desktopCols = parseInt(
+    (component.desktopColumns || "3").split(" ")[0] || "3"
+  )
+  const mobileCols = parseInt(
+    (component.mobileColumns || "2").split(" ")[0] || "2"
+  )
   const isMobileSlider = (component.mobileLayout || "").startsWith("slider")
   const isDesktopSlider = (component.desktopLayout || "").startsWith("slider")
   const isAutoAspect = (component.imageAspectRatio || "").startsWith("auto")
@@ -32,14 +38,16 @@ export function StrapiHorizontalImages({
   const hasMore = allImages.length > IMAGES_LIMIT
 
   const getContainerClass = () => {
-    const aspectRatioValue = (component.imageAspectRatio || "").split(" ")[0] || "auto"
+    const aspectRatioValue =
+      (component.imageAspectRatio || "").split(" ")[0] || "auto"
     const aspectRatioMap = {
       square: "md:aspect-square",
       portrait: "md:aspect-[3/4]",
       landscape: "md:aspect-[4/3]",
       auto: "",
     } as const
-    const aspectRatio = aspectRatioMap[aspectRatioValue as keyof typeof aspectRatioMap] || ""
+    const aspectRatio =
+      aspectRatioMap[aspectRatioValue as keyof typeof aspectRatioMap] || ""
 
     if (isAutoAspect) {
       return "overflow-hidden"
@@ -90,8 +98,13 @@ export function StrapiHorizontalImages({
   }
 
   const nextSlide = () => {
-    if (component.images && currentSlide < component.images.length - 1) {
-      setCurrentSlide(currentSlide + 1)
+    if (component.images) {
+      const maxSlide = isMobileSlider
+        ? component.images.length - 1
+        : component.images.length - desktopCols
+      if (currentSlide < maxSlide) {
+        setCurrentSlide(currentSlide + 1)
+      }
     }
   }
 
@@ -101,26 +114,43 @@ export function StrapiHorizontalImages({
     }
   }
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null)
-    setTouchStart(e.targetTouches[0].clientX)
+  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+    setHasDragged(false)
+    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX
+    setDragStart(clientX)
+    setDragOffset(0)
   }
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX)
-  }
-
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return
-    const distance = touchStart - touchEnd
-    const isLeftSwipe = distance > 50
-    const isRightSwipe = distance < -50
-
-    if (isLeftSwipe) {
-      nextSlide()
-    } else if (isRightSwipe) {
-      prevSlide()
+  const handleDragMove = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isDragging) return
+    e.preventDefault()
+    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX
+    const offset = clientX - dragStart
+    setDragOffset(offset)
+    if (Math.abs(offset) > 5) {
+      setHasDragged(true)
     }
+  }
+
+  const handleDragEnd = () => {
+    if (!isDragging) return
+    setIsDragging(false)
+
+    const threshold = 50
+    const maxSlide = isMobileSlider
+      ? displayedImages.length - 1
+      : displayedImages.length - desktopCols
+
+    if (Math.abs(dragOffset) > threshold) {
+      if (dragOffset > 0 && currentSlide > 0) {
+        prevSlide()
+      } else if (dragOffset < 0 && currentSlide < maxSlide) {
+        nextSlide()
+      }
+    }
+    setDragOffset(0)
   }
 
   const renderImageItem = (x: any, i: number, className: string = "") =>
@@ -135,7 +165,7 @@ export function StrapiHorizontalImages({
       <button
         type="button"
         className="w-full cursor-pointer rounded-lg outline-none focus:ring-2 focus:ring-red-500/50"
-        onClick={() => setSelectedImage(i)}
+        onClick={() => !hasDragged && setSelectedImage(i)}
       >
         <StrapiBasicImage
           component={x.image}
@@ -166,13 +196,22 @@ export function StrapiHorizontalImages({
           {/* Mobile Slider */}
           {isMobileSlider && (
             <div className="relative w-full md:hidden">
-              <div className="overflow-hidden rounded-lg">
+              <div className="mx-12 overflow-hidden rounded-lg">
                 <div
-                  className="flex transition-transform duration-300 ease-in-out"
-                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                  onTouchStart={handleTouchStart}
-                  onTouchMove={handleTouchMove}
-                  onTouchEnd={handleTouchEnd}
+                  className={`flex ${isDragging ? "" : "transition-transform duration-300 ease-in-out"}`}
+                  style={{
+                    transform: `translateX(${Math.max(Math.min(-currentSlide * 100 + (isDragging ? dragOffset / 3 : 0), 0), -(displayedImages.length - 1) * 100)}%)`,
+                    cursor: isDragging ? "grabbing" : "grab",
+                    userSelect: "none",
+                  }}
+                  onMouseDown={handleDragStart}
+                  onMouseMove={handleDragMove}
+                  onMouseUp={handleDragEnd}
+                  onMouseLeave={handleDragEnd}
+                  onTouchStart={handleDragStart}
+                  onTouchMove={handleDragMove}
+                  onTouchEnd={handleDragEnd}
+                  onDragStart={(e) => e.preventDefault()}
                 >
                   {displayedImages.map((x, i) => (
                     <div
@@ -190,18 +229,18 @@ export function StrapiHorizontalImages({
                   <button
                     onClick={prevSlide}
                     disabled={currentSlide === 0}
-                    className="absolute top-1/2 left-2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white disabled:opacity-50"
+                    className="absolute top-1/2 left-0 -translate-y-1/2 cursor-pointer rounded-full bg-black/70 p-2 text-white transition-all duration-200 hover:scale-110 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:p-3"
                     aria-label="Previous slide"
                   >
-                    <ChevronLeft size={20} />
+                    <ChevronLeft size={20} className="sm:h-6 sm:w-6" />
                   </button>
                   <button
                     onClick={nextSlide}
                     disabled={currentSlide === displayedImages.length - 1}
-                    className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white disabled:opacity-50"
+                    className="absolute top-1/2 right-0 -translate-y-1/2 cursor-pointer rounded-full bg-black/70 p-2 text-white transition-all duration-200 hover:scale-110 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:p-3"
                     aria-label="Next slide"
                   >
-                    <ChevronRight size={20} />
+                    <ChevronRight size={20} className="sm:h-6 sm:w-6" />
                   </button>
 
                   <div className="mt-4 flex justify-center gap-2">
@@ -237,56 +276,57 @@ export function StrapiHorizontalImages({
           {/* Desktop Slider */}
           {isDesktopSlider && (
             <div className="relative hidden w-full md:block">
-              <div className="overflow-hidden rounded-lg">
+              <div className="mx-16 overflow-hidden rounded-lg">
                 <div
-                  className="flex transition-transform duration-300 ease-in-out"
-                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                  onTouchStart={handleTouchStart}
-                  onTouchMove={handleTouchMove}
-                  onTouchEnd={handleTouchEnd}
+                  className={`flex ${isDragging ? "" : "transition-transform duration-300 ease-in-out"}`}
+                  style={{
+                    transform: `translateX(${Math.max(Math.min(-currentSlide * (100 / desktopCols) + (isDragging ? dragOffset / desktopCols / 3 : 0), 0), -(displayedImages.length - desktopCols) * (100 / desktopCols))}%)`,
+                    cursor: isDragging ? "grabbing" : "grab",
+                    userSelect: "none",
+                  }}
+                  onMouseDown={handleDragStart}
+                  onMouseMove={handleDragMove}
+                  onMouseUp={handleDragEnd}
+                  onMouseLeave={handleDragEnd}
+                  onTouchStart={handleDragStart}
+                  onTouchMove={handleDragMove}
+                  onTouchEnd={handleDragEnd}
+                  onDragStart={(e) => e.preventDefault()}
                 >
                   {displayedImages.map((x, i) => (
                     <div
                       key={String(x.id) + i}
-                      className="w-full flex-shrink-0 px-2"
+                      className={`flex-shrink-0 px-2`}
+                      style={{ width: `${100 / desktopCols}%` }}
                     >
-                      {renderImageItem(x, i, getImageProps().className)}
+                      <div className={getContainerClass()}>
+                        {renderImageItem(x, i, getImageProps().className)}
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {displayedImages.length > 1 && (
+              {displayedImages.length > desktopCols && (
                 <>
                   <button
                     onClick={prevSlide}
                     disabled={currentSlide === 0}
-                    className="absolute top-1/2 left-2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white disabled:opacity-50"
+                    className="absolute top-1/2 left-0 -translate-y-1/2 cursor-pointer rounded-full bg-black/70 p-2 text-white transition-all duration-200 hover:scale-110 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:p-3"
                     aria-label="Previous slide"
                   >
-                    <ChevronLeft size={20} />
+                    <ChevronLeft size={20} className="sm:h-6 sm:w-6" />
                   </button>
                   <button
                     onClick={nextSlide}
-                    disabled={currentSlide === displayedImages.length - 1}
-                    className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white disabled:opacity-50"
+                    disabled={
+                      currentSlide >= displayedImages.length - desktopCols
+                    }
+                    className="absolute top-1/2 right-0 -translate-y-1/2 cursor-pointer rounded-full bg-black/70 p-2 text-white transition-all duration-200 hover:scale-110 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:p-3"
                     aria-label="Next slide"
                   >
-                    <ChevronRight size={20} />
+                    <ChevronRight size={20} className="sm:h-6 sm:w-6" />
                   </button>
-
-                  <div className="mt-4 flex justify-center gap-2">
-                    {displayedImages.map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setCurrentSlide(index)}
-                        className={`h-2 w-2 rounded-full transition-colors ${
-                          index === currentSlide ? "bg-red-500" : "bg-gray-300"
-                        }`}
-                        aria-label={`Go to slide ${index + 1}`}
-                      />
-                    ))}
-                  </div>
                 </>
               )}
             </div>
@@ -309,7 +349,7 @@ export function StrapiHorizontalImages({
                       <button
                         type="button"
                         className="w-full cursor-pointer rounded-lg outline-none focus:ring-2 focus:ring-red-500/50"
-                        onClick={() => setSelectedImage(i)}
+                        onClick={() => !hasDragged && setSelectedImage(i)}
                       >
                         <StrapiBasicImage
                           component={x.image}
@@ -348,6 +388,6 @@ export function StrapiHorizontalImages({
   )
 }
 
-StrapiHorizontalImages.displayName = "StrapiHorizontalImages"
+StrapiAdaptiveGallery.displayName = "StrapiAdaptiveGallery"
 
-export default StrapiHorizontalImages
+export default StrapiAdaptiveGallery

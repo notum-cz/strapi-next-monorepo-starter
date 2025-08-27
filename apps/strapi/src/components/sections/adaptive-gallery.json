@@ -1,7 +1,7 @@
 {
-  "collectionName": "components_sections_horizontal_images",
+  "collectionName": "components_sections_adaptive_gallery",
   "info": {
-    "displayName": "HorizontalImages",
+    "displayName": "AdaptiveGallery",
     "description": "A responsive image gallery component with customizable layouts, aspect ratios, and load more functionality"
   },
   "options": {},
@@ -42,9 +42,9 @@
     },
     "desktopLayout": {
       "type": "enumeration",
-      "enum": ["slider (one image at a time)", "grid (multiple images in columns)"],
+      "enum": ["slider (scrollable columns)", "grid (multiple images in columns)"],
       "default": "grid",
-      "description": "Layout type for desktop screens: slider shows one image at a time with navigation, grid shows multiple images in columns"
+      "description": "Layout type for desktop screens: slider shows configured columns with scrollable navigation, grid shows multiple images in columns"
     },
     "imageAspectRatio": {
       "type": "enumeration",

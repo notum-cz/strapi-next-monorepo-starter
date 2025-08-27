@@ -52,7 +52,7 @@ const pagePopulateObject: FindOne<"api::page.page">["populate"] = {
       "sections.image-with-cta-button": {
         populate: { image: { populate: { media: true } }, link: true },
       },
-      "sections.horizontal-images": {
+      "sections.adaptive-gallery": {
         populate: {
           images: {
             populate: { image: { populate: { media: true } }, link: true },
@@ -68,13 +68,6 @@ const pagePopulateObject: FindOne<"api::page.page">["populate"] = {
       },
       "sections.heading-with-cta-button": { populate: { cta: true } },
       "sections.faq": { populate: { accordions: true } },
-      "sections.carousel": {
-        populate: {
-          images: {
-            populate: { image: { populate: { media: true } }, link: true },
-          },
-        },
-      },
       "sections.animated-logo-row": {
         populate: { logos: { populate: { media: true } } },
       },
