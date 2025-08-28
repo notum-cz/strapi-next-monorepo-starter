@@ -79,6 +79,10 @@ export interface SectionsAdaptiveGallery extends Struct.ComponentSchema {
     > &
       Schema.Attribute.DefaultTo<"landscape">
     images: Schema.Attribute.Component<"utilities.image-with-link", true>
+    lazyLoading: Schema.Attribute.Enumeration<
+      ["enabled (load images on demand)", "disabled (load all images)"]
+    > &
+      Schema.Attribute.DefaultTo<"enabled">
     mobileColumns: Schema.Attribute.Enumeration<
       ["1 (single column)", "2 (two columns)", "3 (three columns)"]
     > &
@@ -87,6 +91,10 @@ export interface SectionsAdaptiveGallery extends Struct.ComponentSchema {
       ["slider (one image at a time)", "grid (multiple images in columns)"]
     > &
       Schema.Attribute.DefaultTo<"slider">
+    sliderLoop: Schema.Attribute.Enumeration<
+      ["enabled (continuous loop)", "disabled (stop at ends)"]
+    > &
+      Schema.Attribute.DefaultTo<"disabled">
     subTitle: Schema.Attribute.Text
     title: Schema.Attribute.Text
   }

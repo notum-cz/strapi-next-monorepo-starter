@@ -57,6 +57,18 @@
       "enum": ["1 (4px spacing)", "2 (8px spacing)", "3 (12px spacing)", "4 (16px spacing)", "6 (24px spacing)", "8 (32px spacing)"],
       "default": "4",
       "description": "Spacing between images in the grid (in Tailwind spacing units)"
+    },
+    "lazyLoading": {
+      "type": "enumeration",
+      "enum": ["enabled (load images on demand)", "disabled (load all images)"],
+      "default": "enabled",
+      "description": "Controls when images are loaded for better performance"
+    },
+    "sliderLoop": {
+      "type": "enumeration",
+      "enum": ["enabled (continuous loop)", "disabled (stop at ends)"],
+      "default": "disabled",
+      "description": "Enable infinite loop for slider layouts only (mobile/desktop slider mode)"
     }
   }
 }

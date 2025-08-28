@@ -28,7 +28,8 @@ export const metadata: Metadata = {
     template: "%s | Tomáš Škarpa",
     default: "Tomáš Škarpa",
   },
-  description: "Professional web development and digital solutions by Tomáš Škarpa. Specializing in modern web technologies and user experience design.",
+  description:
+    "Professional web development and digital solutions by Tomáš Škarpa. Specializing in modern web technologies and user experience design.",
 }
 
 export default async function RootLayout({ children, params }: LayoutProps) {
