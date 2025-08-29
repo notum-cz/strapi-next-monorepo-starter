@@ -147,28 +147,5 @@ async function fetchAndMapStrapiMetadata(
   return finalMetadata
 }
 
-const preprocessTwitterMetadata = (
-  twitterSeo: Data.Component<"seo-utilities.seo-twitter">
-): Metadata["twitter"] => {
-  const card = ["summary", "summary_large_image", "player", "app"].includes(
-    String(twitterSeo?.card)
-  )
-    ? (String(twitterSeo?.card) as NextMetadataTwitterCard)
-    : "summary"
-
-  return {
-    card,
-    title: twitterSeo.title ?? undefined,
-    description: twitterSeo.description ?? undefined,
-    siteId: twitterSeo.siteId ?? undefined,
-    creator: twitterSeo.creator ?? undefined,
-    creatorId: twitterSeo.creatorId ?? undefined,
-    images:
-      twitterSeo.images != null
-        ? twitterSeo.images.map((image) => image.url)
-        : [],
-  }
-}
-
 const seoMergeCustomizer = (defaultValue: unknown, strapiValue: unknown) =>
   strapiValue ?? defaultValue
