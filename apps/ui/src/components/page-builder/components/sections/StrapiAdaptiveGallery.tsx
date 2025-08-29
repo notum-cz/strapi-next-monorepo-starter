@@ -307,7 +307,7 @@ export function StrapiAdaptiveGallery({
                   {displayedImages.map((x, i) => (
                     <div
                       key={String(x.id) + i}
-                      className={`flex-shrink-0 px-2`}
+                      className="flex-shrink-0 px-2"
                       style={{ width: `${100 / desktopCols}%` }}
                     >
                       <div className={getContainerClass()}>
