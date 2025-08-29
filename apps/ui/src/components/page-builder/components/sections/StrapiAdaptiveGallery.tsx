@@ -204,6 +204,8 @@ export function StrapiAdaptiveGallery({
                     cursor: isDragging ? "grabbing" : "grab",
                     userSelect: "none",
                   }}
+                  role="slider"
+                  tabIndex={0}
                   onMouseDown={handleDragStart}
                   onMouseMove={handleDragMove}
                   onMouseUp={handleDragEnd}
@@ -227,6 +229,7 @@ export function StrapiAdaptiveGallery({
               {displayedImages.length > 1 && (
                 <>
                   <button
+                    type="button"
                     onClick={prevSlide}
                     disabled={currentSlide === 0}
                     className="absolute top-1/2 left-0 -translate-y-1/2 cursor-pointer rounded-full bg-black/70 p-2 text-white transition-all duration-200 hover:scale-110 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:p-3"
@@ -235,6 +238,7 @@ export function StrapiAdaptiveGallery({
                     <ChevronLeft size={20} className="sm:h-6 sm:w-6" />
                   </button>
                   <button
+                    type="button"
                     onClick={nextSlide}
                     disabled={currentSlide === displayedImages.length - 1}
                     className="absolute top-1/2 right-0 -translate-y-1/2 cursor-pointer rounded-full bg-black/70 p-2 text-white transition-all duration-200 hover:scale-110 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:p-3"
@@ -246,6 +250,7 @@ export function StrapiAdaptiveGallery({
                   <div className="mt-4 flex justify-center gap-2">
                     {displayedImages.map((_, index) => (
                       <button
+                        type="button"
                         key={index}
                         onClick={() => setCurrentSlide(index)}
                         className={`h-2 w-2 rounded-full transition-colors ${
@@ -284,6 +289,8 @@ export function StrapiAdaptiveGallery({
                     cursor: isDragging ? "grabbing" : "grab",
                     userSelect: "none",
                   }}
+                  role="slider"
+                  tabIndex={0}
                   onMouseDown={handleDragStart}
                   onMouseMove={handleDragMove}
                   onMouseUp={handleDragEnd}
@@ -310,6 +317,7 @@ export function StrapiAdaptiveGallery({
               {displayedImages.length > desktopCols && (
                 <>
                   <button
+                    type="button"
                     onClick={prevSlide}
                     disabled={currentSlide === 0}
                     className="absolute top-1/2 left-0 -translate-y-1/2 cursor-pointer rounded-full bg-black/70 p-2 text-white transition-all duration-200 hover:scale-110 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:scale-100 sm:p-3"
@@ -318,6 +326,7 @@ export function StrapiAdaptiveGallery({
                     <ChevronLeft size={20} className="sm:h-6 sm:w-6" />
                   </button>
                   <button
+                    type="button"
                     onClick={nextSlide}
                     disabled={
                       currentSlide >= displayedImages.length - desktopCols
@@ -367,6 +376,7 @@ export function StrapiAdaptiveGallery({
           {/* Load More Button */}
           {hasMore && !showAll && (
             <button
+              type="button"
               onClick={() => setShowAll(true)}
               className="mt-6 rounded-lg bg-red-500 px-6 py-2 text-white transition-colors hover:bg-red-600"
             >
