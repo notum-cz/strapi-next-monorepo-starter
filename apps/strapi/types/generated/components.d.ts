@@ -60,12 +60,12 @@ export interface SectionsAdaptiveGallery extends Struct.ComponentSchema {
       Schema.Attribute.DefaultTo<"grid">
     gap: Schema.Attribute.Enumeration<
       [
-        "1 (4px spacing)",
-        "2 (8px spacing)",
-        "3 (12px spacing)",
-        "4 (16px spacing)",
-        "6 (24px spacing)",
-        "8 (32px spacing)",
+        "1 (4px - grid only)",
+        "2 (8px - grid only)",
+        "3 (12px - grid only)",
+        "4 (16px - grid only)",
+        "6 (24px - grid only)",
+        "8 (32px - grid only)",
       ]
     > &
       Schema.Attribute.DefaultTo<"4">

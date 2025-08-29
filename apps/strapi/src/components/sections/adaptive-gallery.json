@@ -54,9 +54,9 @@
     },
     "gap": {
       "type": "enumeration",
-      "enum": ["1 (4px spacing)", "2 (8px spacing)", "3 (12px spacing)", "4 (16px spacing)", "6 (24px spacing)", "8 (32px spacing)"],
+      "enum": ["1 (4px - grid only)", "2 (8px - grid only)", "3 (12px - grid only)", "4 (16px - grid only)", "6 (24px - grid only)", "8 (32px - grid only)"],
       "default": "4",
-      "description": "Spacing between images in the grid (in Tailwind spacing units)"
+      "description": "Spacing between images in grid layouts only (not applied to slider layouts)"
     },
     "lazyLoading": {
       "type": "enumeration",
