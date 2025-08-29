@@ -10,7 +10,7 @@ import { AppLocale } from "@/types/general"
 import AppLink from "@/components/elementary/AppLink"
 import LocaleSwitcher from "@/components/elementary/LocaleSwitcher"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
-import StrapiNavLink from "@/components/page-builder/components/utilities/StrapiNavLink"
+
 import StrapiSocialIcon from "@/components/page-builder/components/utilities/StrapiSocialIcon"
 
 interface StrapiMobileNavbarProps {
@@ -82,6 +82,7 @@ export function StrapiMobileNavbar({
         </div>
 
         <button
+          type="button"
           onClick={() => setIsOpen(!isOpen)}
           className="touch-manipulation rounded-lg p-3 transition-all duration-200 hover:bg-gray-100 active:bg-gray-200"
           aria-label="Toggle menu"
@@ -114,12 +115,18 @@ export function StrapiMobileNavbar({
       {isOpen && (
         <div
           className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+          role="button"
+          tabIndex={0}
           onClick={() => setIsOpen(false)}
+          onKeyDown={(e) => e.key === 'Escape' && setIsOpen(false)}
         >
           {/* Menu Panel */}
           <div
             className="absolute top-0 right-0 left-0 bg-white shadow-xl"
+            role="dialog"
+            tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.key === 'Escape' && setIsOpen(false)}
           >
             {/* Header */}
             <div className="relative z-10 flex h-16 items-center justify-between border-b border-gray-200 px-4">
@@ -146,6 +153,7 @@ export function StrapiMobileNavbar({
                 )}
               </div>
               <button
+                type="button"
                 onClick={() => setIsOpen(false)}
                 className="touch-manipulation rounded-lg p-2 transition-colors duration-150 hover:bg-gray-100 active:bg-gray-200"
                 aria-label="Close menu"

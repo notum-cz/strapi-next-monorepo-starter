@@ -206,6 +206,9 @@ export function StrapiAdaptiveGallery({
                   }}
                   role="slider"
                   tabIndex={0}
+                  aria-valuenow={currentSlide}
+                  aria-valuemin={0}
+                  aria-valuemax={displayedImages.length - 1}
                   onMouseDown={handleDragStart}
                   onMouseMove={handleDragMove}
                   onMouseUp={handleDragEnd}
@@ -253,9 +256,7 @@ export function StrapiAdaptiveGallery({
                         type="button"
                         key={index}
                         onClick={() => setCurrentSlide(index)}
-                        className={`h-2 w-2 rounded-full transition-colors ${
-                          index === currentSlide ? "bg-red-500" : "bg-gray-300"
-                        }`}
+                        className={index === currentSlide ? "h-2 w-2 rounded-full transition-colors bg-red-500" : "h-2 w-2 rounded-full transition-colors bg-gray-300"}
                         aria-label={`Go to slide ${index + 1}`}
                       />
                     ))}
@@ -291,6 +292,9 @@ export function StrapiAdaptiveGallery({
                   }}
                   role="slider"
                   tabIndex={0}
+                  aria-valuenow={currentSlide}
+                  aria-valuemin={0}
+                  aria-valuemax={Math.max(0, displayedImages.length - desktopCols)}
                   onMouseDown={handleDragStart}
                   onMouseMove={handleDragMove}
                   onMouseUp={handleDragEnd}

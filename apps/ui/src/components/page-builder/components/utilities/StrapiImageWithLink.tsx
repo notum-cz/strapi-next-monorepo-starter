@@ -16,7 +16,6 @@ export function StrapiImageWithLink({
   imageProps,
   linkProps,
 }: Props) {
-  console.log(component)
 
   return (
     <StrapiLink component={component?.link} {...linkProps}>
