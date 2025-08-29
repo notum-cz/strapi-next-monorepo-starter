@@ -35,7 +35,7 @@ function StrapiPreviewWindowChangeListener({
     return () => {
       window.removeEventListener("message", handleMessage)
     }
-  }, [])
+  }, [hashedAllowedReloadOrigin, router])
 
   return null
 }
