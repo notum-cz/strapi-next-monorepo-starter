@@ -21,9 +21,7 @@ export function StrapiAttachmentDownload({
             </h2>
           </div>
 
-          <div
-            className={`group relative overflow-hidden rounded-lg border border-gray-200 bg-gradient-to-br from-white via-gray-50/30 to-red-50/20 p-6 shadow-sm transition-all duration-300 ease-in-out hover:border-red-200 hover:shadow-lg md:p-12`}
-          >
+          <div className="group relative overflow-hidden rounded-lg border border-gray-200 bg-gradient-to-br from-white via-gray-50/30 to-red-50/20 p-6 shadow-sm transition-all duration-300 ease-in-out hover:border-red-200 hover:shadow-lg md:p-12">
             {/* Decorative background elements */}
             <div className="absolute -top-4 -right-4 h-24 w-24 rounded-full bg-red-100/30 blur-xl transition-all duration-500 group-hover:bg-red-200/40" />
             <div className="absolute -bottom-6 -left-6 h-32 w-32 rounded-full bg-gray-100/40 blur-2xl" />
