@@ -42,7 +42,7 @@ export function generateKeywordsFromPage(
 
   if (slug) {
     const slugWords = slug
-      .split(/[\/-]+/)
+      .split(/[/-]+/)
       .filter((word) => word.length > 2 && !isCommonWord(word))
     keywords.push(...slugWords)
   }

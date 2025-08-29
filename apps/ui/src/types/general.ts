@@ -39,9 +39,3 @@ export interface AppLink {
   label?: string
   translateKey?: IntlKeysPath
 }
-
-export type NextMetadataTwitterCard =
-  | "summary"
-  | "summary_large_image"
-  | "player"
-  | "app"

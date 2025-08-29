@@ -11,14 +11,17 @@ export function debugSeoGeneration(
 ) {
   if (process.env.NODE_ENV !== "development") return
 
+  // eslint-disable-next-line no-console
   console.group(`🔍 SEO Debug: ${context || "Metadata Generation"}`)
 
+  // eslint-disable-next-line no-console
   console.log("📄 Page Data:", {
     title: pageData?.title,
     breadcrumbTitle: pageData?.breadcrumbTitle,
     slug: pageData?.slug,
   })
 
+  // eslint-disable-next-line no-console
   console.log("🎯 SEO Data:", {
     metaTitle: seoData?.metaTitle,
     metaDescription: seoData?.metaDescription,
@@ -26,6 +29,7 @@ export function debugSeoGeneration(
     hasStructuredData: !!seoData?.structuredData,
   })
 
+  // eslint-disable-next-line no-console
   console.log("✅ Final Metadata:", {
     title: metadata.title,
     description: metadata.description,
@@ -48,8 +52,10 @@ export function debugSeoGeneration(
   }
 
   if (warnings.length > 0) {
+    // eslint-disable-next-line no-console
     console.warn("⚠️ SEO Warnings:", warnings)
   }
 
+  // eslint-disable-next-line no-console
   console.groupEnd()
 }

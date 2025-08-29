@@ -1,6 +1,5 @@
 import Image from "next/image"
 import { Data } from "@repo/strapi"
-import { getTranslations } from "next-intl/server"
 import { AppLocale } from "@/types/general"
 import { fetchNavbar } from "@/lib/strapi-api/content/server"
 import AppLink from "@/components/elementary/AppLink"

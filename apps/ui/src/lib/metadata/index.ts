@@ -2,8 +2,8 @@ import { env } from "@/env.mjs"
 import { mergeWith } from "lodash"
 import { getTranslations } from "next-intl/server"
 
-import type { AppLocale, NextMetadataTwitterCard } from "@/types/general"
-import type { Data, UID } from "@repo/strapi"
+import type { AppLocale } from "@/types/general"
+import type { UID } from "@repo/strapi"
 import type { Metadata } from "next"
 
 import { debugSeoGeneration } from "@/lib/metadata/debug"
