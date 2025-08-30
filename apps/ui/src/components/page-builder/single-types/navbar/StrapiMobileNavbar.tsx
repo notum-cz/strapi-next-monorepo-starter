@@ -10,7 +10,6 @@ import { AppLocale } from "@/types/general"
 import AppLink from "@/components/elementary/AppLink"
 import LocaleSwitcher from "@/components/elementary/LocaleSwitcher"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
-
 import StrapiSocialIcon from "@/components/page-builder/components/utilities/StrapiSocialIcon"
 
 interface StrapiMobileNavbarProps {
@@ -118,7 +117,7 @@ export function StrapiMobileNavbar({
           role="button"
           tabIndex={0}
           onClick={() => setIsOpen(false)}
-          onKeyDown={(e) => e.key === 'Escape' && setIsOpen(false)}
+          onKeyDown={(e) => e.key === "Escape" && setIsOpen(false)}
         >
           {/* Menu Panel */}
           {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
@@ -127,7 +126,7 @@ export function StrapiMobileNavbar({
             role="dialog"
             tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.key === 'Escape' && setIsOpen(false)}
+            onKeyDown={(e) => e.key === "Escape" && setIsOpen(false)}
           >
             {/* Header */}
             <div className="relative z-10 flex h-16 items-center justify-between border-b border-gray-200 px-4">

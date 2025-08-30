@@ -256,7 +256,11 @@ export function StrapiAdaptiveGallery({
                         type="button"
                         key={index}
                         onClick={() => setCurrentSlide(index)}
-                        className={index === currentSlide ? "h-2 w-2 rounded-full transition-colors bg-red-500" : "h-2 w-2 rounded-full transition-colors bg-gray-300"}
+                        className={
+                          index === currentSlide
+                            ? "h-2 w-2 rounded-full bg-red-500 transition-colors"
+                            : "h-2 w-2 rounded-full bg-gray-300 transition-colors"
+                        }
                         aria-label={`Go to slide ${index + 1}`}
                       />
                     ))}
@@ -294,7 +298,10 @@ export function StrapiAdaptiveGallery({
                   tabIndex={0}
                   aria-valuenow={currentSlide}
                   aria-valuemin={0}
-                  aria-valuemax={Math.max(0, displayedImages.length - desktopCols)}
+                  aria-valuemax={Math.max(
+                    0,
+                    displayedImages.length - desktopCols
+                  )}
                   onMouseDown={handleDragStart}
                   onMouseMove={handleDragMove}
                   onMouseUp={handleDragEnd}

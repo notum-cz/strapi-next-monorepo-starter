@@ -1,6 +1,8 @@
 import Image from "next/image"
 import { Data } from "@repo/strapi"
+
 import { AppLocale } from "@/types/general"
+
 import { fetchNavbar } from "@/lib/strapi-api/content/server"
 import AppLink from "@/components/elementary/AppLink"
 import LocaleSwitcher from "@/components/elementary/LocaleSwitcher"

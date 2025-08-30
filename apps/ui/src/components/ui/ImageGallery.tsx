@@ -113,7 +113,7 @@ export function ImageGallery({
         role="button"
         tabIndex={0}
         onClick={onClose}
-        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onClose()}
+        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onClose()}
         aria-label="Close gallery"
       />
 
@@ -158,7 +158,9 @@ export function ImageGallery({
             src={formatStrapiMediaUrl(images[selectedImage].image!.media!.url!)}
             alt={images[selectedImage].image!.alt! || ""}
             onClick={toggleZoom}
-            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && toggleZoom(e as any)}
+            onKeyDown={(e) =>
+              (e.key === "Enter" || e.key === " ") && toggleZoom(e as any)
+            }
             style={{
               transformOrigin: `${zoomOrigin.x}% ${zoomOrigin.y}%`,
               transition:

@@ -1,4 +1,5 @@
 import { Data } from "@repo/strapi"
+
 import { BasicImageProps, StrapiBasicImage } from "./StrapiBasicImage"
 import { StrapiLink, StrapiLinkProps } from "./StrapiLink"
 
@@ -16,7 +17,6 @@ export function StrapiImageWithLink({
   imageProps,
   linkProps,
 }: Props) {
-
   return (
     <StrapiLink component={component?.link} {...linkProps}>
       <StrapiBasicImage component={component?.image} {...imageProps} />
