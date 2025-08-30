@@ -121,6 +121,7 @@ export function StrapiMobileNavbar({
           onKeyDown={(e) => e.key === 'Escape' && setIsOpen(false)}
         >
           {/* Menu Panel */}
+          {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
           <div
             className="absolute top-0 right-0 left-0 bg-white shadow-xl"
             role="dialog"

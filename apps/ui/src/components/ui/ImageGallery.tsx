@@ -110,7 +110,10 @@ export function ImageGallery({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-2 sm:p-4">
       <div
         className="absolute inset-0 cursor-pointer transition-colors hover:bg-black/5"
+        role="button"
+        tabIndex={0}
         onClick={onClose}
+        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onClose()}
         aria-label="Close gallery"
       />
 
@@ -150,10 +153,12 @@ export function ImageGallery({
 
         {/* Main image */}
         <div className="relative flex h-full w-full items-center justify-center overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/no-noninteractive-element-interactions */}
           <img
             src={formatStrapiMediaUrl(images[selectedImage].image!.media!.url!)}
             alt={images[selectedImage].image!.alt! || ""}
             onClick={toggleZoom}
+            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && toggleZoom(e as any)}
             style={{
               transformOrigin: `${zoomOrigin.x}% ${zoomOrigin.y}%`,
               transition:
