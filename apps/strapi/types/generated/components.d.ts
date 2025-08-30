@@ -298,17 +298,6 @@ export interface SeoUtilitiesSeoTwitter extends Struct.ComponentSchema {
   }
 }
 
-export interface SeoUtilitiesSocialIcons extends Struct.ComponentSchema {
-  collectionName: "components_seo_utilities_social_icons"
-  info: {
-    displayName: "SocialIcons"
-  }
-  attributes: {
-    socials: Schema.Attribute.Component<"utilities.image-with-link", true>
-    title: Schema.Attribute.String
-  }
-}
-
 export interface SharedOpenGraph extends Struct.ComponentSchema {
   collectionName: "components_shared_open_graphs"
   info: {
@@ -523,7 +512,6 @@ declare module "@strapi/strapi" {
       "seo-utilities.seo": SeoUtilitiesSeo
       "seo-utilities.seo-og": SeoUtilitiesSeoOg
       "seo-utilities.seo-twitter": SeoUtilitiesSeoTwitter
-      "seo-utilities.social-icons": SeoUtilitiesSocialIcons
       "shared.open-graph": SharedOpenGraph
       "shared.seo": SharedSeo
       "utilities.accordions": UtilitiesAccordions

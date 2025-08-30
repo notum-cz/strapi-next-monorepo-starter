@@ -57,6 +57,29 @@
     "includeYear": {
       "type": "boolean",
       "default": false
+    },
+    "socialIcons": {
+      "type": "component",
+      "repeatable": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "utilities.image-with-link"
+    },
+    "description": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "text"
+    },
+    "backgroundColor": {
+      "type": "enumeration",
+      "enum": ["light (white/gray-50)", "dark (gray-900/black)", "brand (custom brand colors)"],
+      "default": "light"
     }
   }
 }

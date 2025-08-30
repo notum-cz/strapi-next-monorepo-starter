@@ -386,6 +386,14 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
     }
   }
   attributes: {
+    backgroundColor: Schema.Attribute.Enumeration<
+      [
+        "light (white/gray-50)",
+        "dark (gray-900/black)",
+        "brand (custom brand colors)",
+      ]
+    > &
+      Schema.Attribute.DefaultTo<"light">
     copyRight: Schema.Attribute.String &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -395,6 +403,12 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
+    description: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
     includeYear: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>
     links: Schema.Attribute.Component<"utilities.link", true> &
       Schema.Attribute.SetPluginOptions<{
@@ -412,6 +426,12 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
       }>
     publishedAt: Schema.Attribute.DateTime
     sections: Schema.Attribute.Component<"elements.footer-item", true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    socialIcons: Schema.Attribute.Component<"utilities.image-with-link", true> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true
