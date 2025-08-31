@@ -129,8 +129,9 @@ export async function fetchFooter(locale: AppLocale) {
       locale,
       populate: {
         sections: { populate: { links: true } },
-        logoImage: {},
         links: true,
+        socialIcons: true,
+        quoteCarousel: { populate: { quotes: true } },
       },
     })
   } catch (e: any) {

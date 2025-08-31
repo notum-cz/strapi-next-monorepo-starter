@@ -66,7 +66,8 @@
         "forms.contact-form",
         "utilities.ck-editor-content",
         "sections.attachment-download",
-        "sections.timeline"
+        "sections.timeline",
+        "sections.quote-carousel"
       ],
       "pluginOptions": {
         "i18n": {

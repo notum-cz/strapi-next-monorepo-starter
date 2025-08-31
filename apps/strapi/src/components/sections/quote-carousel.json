@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_sections_quote_carousels",
+  "info": {
+    "displayName": "QuoteCarousel",
+    "description": "A rotating carousel of quotes section"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "quotes": {
+      "type": "component",
+      "repeatable": true,
+      "component": "utilities.quote",
+      "required": true
+    }
+  }
+}

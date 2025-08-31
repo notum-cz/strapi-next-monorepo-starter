@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_utilities_quote_carousels",
+  "info": {
+    "displayName": "QuoteCarousel",
+    "description": "A rotating carousel of quotes that displays a random quote on each page load"
+  },
+  "options": {},
+  "attributes": {
+    "quotes": {
+      "type": "component",
+      "repeatable": true,
+      "component": "utilities.quote",
+      "required": true
+    }
+  }
+}

@@ -188,6 +188,19 @@ export interface SectionsImageWithCtaButton extends Struct.ComponentSchema {
   }
 }
 
+export interface SectionsQuoteCarousel extends Struct.ComponentSchema {
+  collectionName: "components_sections_quote_carousels"
+  info: {
+    description: "A rotating carousel of quotes section"
+    displayName: "QuoteCarousel"
+  }
+  attributes: {
+    quotes: Schema.Attribute.Component<"utilities.quote", true> &
+      Schema.Attribute.Required
+    title: Schema.Attribute.String
+  }
+}
+
 export interface SectionsTimeline extends Struct.ComponentSchema {
   collectionName: "components_sections_timelines"
   info: {
@@ -437,6 +450,30 @@ export interface UtilitiesLinksWithTitle extends Struct.ComponentSchema {
   }
 }
 
+export interface UtilitiesQuote extends Struct.ComponentSchema {
+  collectionName: "components_utilities_quotes"
+  info: {
+    description: "A single quote with optional author"
+    displayName: "Quote"
+  }
+  attributes: {
+    author: Schema.Attribute.String
+    text: Schema.Attribute.Text & Schema.Attribute.Required
+  }
+}
+
+export interface UtilitiesQuoteCarousel extends Struct.ComponentSchema {
+  collectionName: "components_utilities_quote_carousels"
+  info: {
+    description: "A rotating carousel of quotes that displays a random quote on each page load"
+    displayName: "QuoteCarousel"
+  }
+  attributes: {
+    quotes: Schema.Attribute.Component<"utilities.quote", true> &
+      Schema.Attribute.Required
+  }
+}
+
 export interface UtilitiesSocialIcon extends Struct.ComponentSchema {
   collectionName: "components_utilities_social_icons"
   info: {
@@ -507,6 +544,7 @@ declare module "@strapi/strapi" {
       "sections.heading-with-cta-button": SectionsHeadingWithCtaButton
       "sections.hero": SectionsHero
       "sections.image-with-cta-button": SectionsImageWithCtaButton
+      "sections.quote-carousel": SectionsQuoteCarousel
       "sections.timeline": SectionsTimeline
       "seo-utilities.meta-social": SeoUtilitiesMetaSocial
       "seo-utilities.seo": SeoUtilitiesSeo
@@ -521,6 +559,8 @@ declare module "@strapi/strapi" {
       "utilities.image-with-link": UtilitiesImageWithLink
       "utilities.link": UtilitiesLink
       "utilities.links-with-title": UtilitiesLinksWithTitle
+      "utilities.quote": UtilitiesQuote
+      "utilities.quote-carousel": UtilitiesQuoteCarousel
       "utilities.social-icon": UtilitiesSocialIcon
       "utilities.text": UtilitiesText
       "utilities.timeline-item": UtilitiesTimelineItem

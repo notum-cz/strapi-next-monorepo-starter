@@ -295,7 +295,6 @@ export function StrapiSocialIcon({ component }: StrapiSocialIconProps) {
   if (!icon) return null
 
   const displayName =
-    component.name ||
     component.platform.charAt(0).toUpperCase() + component.platform.slice(1)
 
   return (

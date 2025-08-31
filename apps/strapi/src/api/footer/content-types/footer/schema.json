@@ -44,16 +44,7 @@
       },
       "type": "string"
     },
-    "logoImage": {
-      "type": "component",
-      "repeatable": false,
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "component": "utilities.image-with-link"
-    },
+
     "includeYear": {
       "type": "boolean",
       "default": false
@@ -66,20 +57,18 @@
           "localized": true
         }
       },
-      "component": "utilities.image-with-link"
+      "component": "utilities.social-icon"
     },
-    "description": {
+    "quoteCarousel": {
+      "type": "component",
+      "repeatable": false,
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "type": "text"
+      "component": "utilities.quote-carousel"
     },
-    "backgroundColor": {
-      "type": "enumeration",
-      "enum": ["light (white/gray-50)", "dark (gray-900/black)", "brand (custom brand colors)"],
-      "default": "light"
-    }
+
   }
 }

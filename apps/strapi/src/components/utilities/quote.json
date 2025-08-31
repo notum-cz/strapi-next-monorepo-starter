@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_utilities_quotes",
+  "info": {
+    "displayName": "Quote",
+    "description": "A single quote with optional author"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "text",
+      "required": true
+    },
+    "author": {
+      "type": "string"
+    }
+  }
+}
