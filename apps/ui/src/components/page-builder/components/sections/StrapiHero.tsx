@@ -17,19 +17,25 @@ export function StrapiHero({
 
   return (
     <section style={{ backgroundColor: component.bgColor ?? "transparent" }}>
-      <Container className="grid gap-6 px-4 py-8 md:grid-cols-12 lg:py-12 xl:gap-0">
-        <div className="mr-auto flex w-full flex-col justify-center md:col-span-6">
+      <Container className="flex flex-col md:flex-row gap-6 px-4 py-8 lg:py-12 xl:gap-0">
+        <div
+          className={`flex w-full flex-col justify-center ${component.image?.media ? "md:w-1/2" : "md:w-full"
+            }`}
+        >
           <Heading
             tag="h1"
             variant="heading1"
-            className="mb-4 max-w-2xl text-center lg:text-start"
+            className="mb-4 max-w-2xl text-center lg:text-start text-3xl sm:text-4xl"
           >
             {component.title}
           </Heading>
           {component.subTitle && (
-            <Paragraph className="mb-6 max-w-2xl text-center lg:text-start">
+            <Heading
+              tag="h2"
+              variant="heading2"
+              className="mb-6 max-w-2xl text-center lg:text-start">
               {component.subTitle}
-            </Paragraph>
+            </Heading>
           )}
           {component?.steps &&
             component?.steps?.length > 0 &&
@@ -41,12 +47,12 @@ export function StrapiHero({
             ))}
 
           {component.links && (
-            <div className="space-x flex flex-col gap-2 pt-4 lg:flex-row">
+            <div className="flex flex-col gap-2 pt-4 lg:flex-row lg:gap-4">
               {component.links.map((link, i) => (
                 <StrapiLink
                   key={i}
                   component={link}
-                  className="focus:ring-primary-300 bg-primary mr-3 inline-flex w-full items-center justify-center rounded-lg px-5 py-3 text-center text-base font-medium text-white focus:ring-4 lg:w-fit"
+                  className="inline-flex w-full lg:w-fit items-center justify-center rounded-lg bg-neutral-900 px-5 py-3 text-base font-medium text-white hover:bg-neutral-800 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400"
                 />
               ))}
             </div>
@@ -54,7 +60,7 @@ export function StrapiHero({
         </div>
 
         {component.image?.media && (
-          <div className="hidden md:col-span-6 md:mt-0 md:flex">
+          <div className="md:w-1/2 md:mt-0 flex justify-center items-center">
             <StrapiBasicImage
               component={component.image}
               className="rounded-3xl object-contain"
