@@ -11,7 +11,7 @@ export const StrapiCkEditorContent = ({
 }) => {
   removeThisWhenYouNeedMe("StrapiCkEditorContent")
 
-  return <CkEditorSSRRenderer htmlContent={component.content} />
+  return <CkEditorSSRRenderer htmlContent={component.content} className="mx-auto w-full max-w-[1296px] px-4 py-8 lg:py-12" />
 }
 
 StrapiCkEditorContent.displayName = "CkEditorContent"
