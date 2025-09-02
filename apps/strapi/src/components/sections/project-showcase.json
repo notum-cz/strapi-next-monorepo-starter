@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_sections_project_showcases",
+  "info": {
+    "displayName": "Project Showcase",
+    "description": "Display projects in a grid"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "projects": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::project.project"
+    }
+  }
+}

@@ -9,6 +9,7 @@ import StrapiFaq from "@/components/page-builder/components/sections/StrapiFaq"
 import StrapiHeadingWithCTAButton from "@/components/page-builder/components/sections/StrapiHeadingWithCTAButton"
 import StrapiHero from "@/components/page-builder/components/sections/StrapiHero"
 import StrapiImageWithCTAButton from "@/components/page-builder/components/sections/StrapiImageWithCTAButton"
+import StrapiProjectShowcase from "@/components/page-builder/components/sections/StrapiProjectShowcase"
 import StrapiQuoteCarouselSection from "@/components/page-builder/components/sections/StrapiQuoteCarousel"
 import StrapiTimeline from "@/components/page-builder/components/sections/StrapiTimeline"
 import StrapiCkEditorContent from "@/components/page-builder/components/utilities/StrapiCkEditorContent"
@@ -39,6 +40,7 @@ export const PageContentComponents: {
   "sections.timeline": StrapiTimeline,
   "sections.adaptive-gallery": StrapiAdaptiveGallery,
   "sections.quote-carousel": StrapiQuoteCarouselSection,
+  "sections.project-showcase": StrapiProjectShowcase,
 
   // Forms
   "forms.contact-form": StrapiContactForm,

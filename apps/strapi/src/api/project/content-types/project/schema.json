@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "projects",
+  "info": {
+    "singularName": "project",
+    "pluralName": "projects",
+    "displayName": "Project",
+    "description": "Portfolio projects showcase"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "tags": {
+      "type": "component",
+      "repeatable": true,
+      "component": "utilities.tag"
+    },
+    "links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "utilities.project-link"
+    }
+  }
+}

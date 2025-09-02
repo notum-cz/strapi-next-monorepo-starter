@@ -144,3 +144,54 @@ export async function fetchFooter(locale: AppLocale) {
     })
   }
 }
+
+// ------ Project fetching functions
+
+export async function fetchAllProjects(locale: AppLocale) {
+  try {
+    return await PublicStrapiClient.fetchAll("api::project.project", {
+      locale,
+      populate: {
+        image: true,
+        tags: true,
+        links: true,
+      },
+      status: "published",
+    })
+  } catch (e: any) {
+    console.error({
+      message: `Error fetching all projects for locale '${locale}'`,
+      error: {
+        error: e?.message,
+        stack: e?.stack,
+      },
+    })
+    return { data: [] }
+  }
+}
+
+export async function fetchProject(documentId: string, locale: AppLocale) {
+  try {
+    return await PublicStrapiClient.fetchOne(
+      "api::project.project",
+      documentId,
+      {
+        locale,
+        populate: {
+          image: true,
+          tags: true,
+          links: true,
+        },
+        status: "published",
+      }
+    )
+  } catch (e: any) {
+    console.error({
+      message: `Error fetching project '${documentId}' for locale '${locale}'`,
+      error: {
+        error: e?.message,
+        stack: e?.stack,
+      },
+    })
+  }
+}

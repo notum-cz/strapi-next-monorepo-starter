@@ -77,6 +77,17 @@ const pagePopulateObject: FindOne<"api::page.page">["populate"] = {
       "sections.timeline": {
         populate: { milestones: true },
       },
+      "sections.project-showcase": {
+        populate: {
+          projects: {
+            populate: {
+              image: true,
+              tags: true,
+              links: true,
+            },
+          },
+        },
+      },
       "forms.newsletter-form": { populate: { gdpr: true } },
       "forms.contact-form": { populate: { gdpr: true } },
       "utilities.ck-editor-content": true,

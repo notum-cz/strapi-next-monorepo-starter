@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_utilities_project_links",
+  "info": {
+    "displayName": "Project Link",
+    "description": "Links for projects (Source Code, Live Demo, Case Study, Live Site)"
+  },
+  "options": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": ["Source Code", "Live Demo", "Case Study", "Live Site"],
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

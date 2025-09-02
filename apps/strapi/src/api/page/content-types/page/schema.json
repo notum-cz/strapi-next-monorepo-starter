@@ -67,7 +67,8 @@
         "utilities.ck-editor-content",
         "sections.attachment-download",
         "sections.timeline",
-        "sections.quote-carousel"
+        "sections.quote-carousel",
+        "sections.project-showcase"
       ],
       "pluginOptions": {
         "i18n": {

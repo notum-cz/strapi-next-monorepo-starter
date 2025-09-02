@@ -564,6 +564,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         "sections.attachment-download",
         "sections.timeline",
         "sections.quote-carousel",
+        "sections.project-showcase",
       ]
     > &
       Schema.Attribute.SetPluginOptions<{
@@ -606,6 +607,39 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
           localized: true
         }
       }>
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+  }
+}
+
+export interface ApiProjectProject extends Struct.CollectionTypeSchema {
+  collectionName: "projects"
+  info: {
+    description: "Portfolio projects showcase"
+    displayName: "Project"
+    pluralName: "projects"
+    singularName: "project"
+  }
+  options: {
+    draftAndPublish: true
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    description: Schema.Attribute.Text & Schema.Attribute.Required
+    image: Schema.Attribute.Media<"images">
+    links: Schema.Attribute.Component<"utilities.project-link", true>
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::project.project"
+    > &
+      Schema.Attribute.Private
+    publishedAt: Schema.Attribute.DateTime
+    tags: Schema.Attribute.Component<"utilities.tag", true>
+    title: Schema.Attribute.String & Schema.Attribute.Required
     updatedAt: Schema.Attribute.DateTime
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
@@ -1186,6 +1220,7 @@ declare module "@strapi/strapi" {
       "api::internal-job.internal-job": ApiInternalJobInternalJob
       "api::navbar.navbar": ApiNavbarNavbar
       "api::page.page": ApiPagePage
+      "api::project.project": ApiProjectProject
       "api::redirect.redirect": ApiRedirectRedirect
       "api::subscriber.subscriber": ApiSubscriberSubscriber
       "plugin::content-releases.release": PluginContentReleasesRelease

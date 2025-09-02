@@ -188,6 +188,18 @@ export interface SectionsImageWithCtaButton extends Struct.ComponentSchema {
   }
 }
 
+export interface SectionsProjectShowcase extends Struct.ComponentSchema {
+  collectionName: "components_sections_project_showcases"
+  info: {
+    description: "Display projects in a grid"
+    displayName: "Project Showcase"
+  }
+  attributes: {
+    projects: Schema.Attribute.Relation<"oneToMany", "api::project.project">
+    title: Schema.Attribute.String
+  }
+}
+
 export interface SectionsQuoteCarousel extends Struct.ComponentSchema {
   collectionName: "components_sections_quote_carousels"
   info: {
@@ -450,6 +462,21 @@ export interface UtilitiesLinksWithTitle extends Struct.ComponentSchema {
   }
 }
 
+export interface UtilitiesProjectLink extends Struct.ComponentSchema {
+  collectionName: "components_utilities_project_links"
+  info: {
+    description: "Links for projects (Source Code, Live Demo, Case Study, Live Site)"
+    displayName: "Project Link"
+  }
+  attributes: {
+    type: Schema.Attribute.Enumeration<
+      ["Source Code", "Live Demo", "Case Study", "Live Site"]
+    > &
+      Schema.Attribute.Required
+    url: Schema.Attribute.String & Schema.Attribute.Required
+  }
+}
+
 export interface UtilitiesQuote extends Struct.ComponentSchema {
   collectionName: "components_utilities_quotes"
   info: {
@@ -507,6 +534,17 @@ export interface UtilitiesSocialIcon extends Struct.ComponentSchema {
   }
 }
 
+export interface UtilitiesTag extends Struct.ComponentSchema {
+  collectionName: "components_utilities_tags"
+  info: {
+    description: "Simple tag component"
+    displayName: "Tag"
+  }
+  attributes: {
+    name: Schema.Attribute.String & Schema.Attribute.Required
+  }
+}
+
 export interface UtilitiesText extends Struct.ComponentSchema {
   collectionName: "components_utilities_texts"
   info: {
@@ -544,6 +582,7 @@ declare module "@strapi/strapi" {
       "sections.heading-with-cta-button": SectionsHeadingWithCtaButton
       "sections.hero": SectionsHero
       "sections.image-with-cta-button": SectionsImageWithCtaButton
+      "sections.project-showcase": SectionsProjectShowcase
       "sections.quote-carousel": SectionsQuoteCarousel
       "sections.timeline": SectionsTimeline
       "seo-utilities.meta-social": SeoUtilitiesMetaSocial
@@ -559,9 +598,11 @@ declare module "@strapi/strapi" {
       "utilities.image-with-link": UtilitiesImageWithLink
       "utilities.link": UtilitiesLink
       "utilities.links-with-title": UtilitiesLinksWithTitle
+      "utilities.project-link": UtilitiesProjectLink
       "utilities.quote": UtilitiesQuote
       "utilities.quote-carousel": UtilitiesQuoteCarousel
       "utilities.social-icon": UtilitiesSocialIcon
+      "utilities.tag": UtilitiesTag
       "utilities.text": UtilitiesText
       "utilities.timeline-item": UtilitiesTimelineItem
     }

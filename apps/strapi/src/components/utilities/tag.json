@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_utilities_tags",
+  "info": {
+    "displayName": "Tag",
+    "description": "Simple tag component"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    }
+  }
+}
