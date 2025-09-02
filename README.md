@@ -23,49 +23,42 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 1. Clone this repository
 
-```sh
-git clone https://github.com/notum-cz/strapi-next-monorepo-starter
-```
+   ```sh
+   git clone https://github.com/notum-cz/strapi-next-monorepo-starter
+   ```
 
-2. Install dependencies
+1. Install dependencies
 
-```sh
-# in root
-# switch to correct nodejs version (v22)
-nvm use
+   ```sh
+   # in root
+   # switch to correct nodejs version (v22)
+   nvm use
 
-# install deps for apps and packages that are part of this monorepo
-yarn
-```
+   # install deps for apps and packages that are part of this monorepo
+   yarn
+   ```
 
-> Don't worry about warning "Workspaces can only be enabled in private projects <https://github.com/yarnpkg/yarn/issues/8580>
+   > Don't worry about warning "Workspaces can only be enabled in private projects <https://github.com/yarnpkg/yarn/issues/8580>
 
-3. Set up apps
+1. Run apps
 
-```sh
-# prepare environment files (.env) for each app
-yarn setup:apps
-```
+   ```sh
+   # run all apps in dev mode (this triggers `yarn dev` script in each app from `/apps` directory)
+   yarn dev
+   ```
 
-> [!WARNING]
-> More **manual setup is needed** for communication with Strapi using API tokens. Please refer to the [UI README](apps/ui/README.md#environment-variables) before running the UI app. Otherwise, you will get **401 Unauthorized error** - missing or invalid credentials.
+   > [!WARNING]
+   > More **manual setup is needed** for communication with Strapi using API tokens. Please refer to the [UI README](apps/ui/README.md#environment-variables) before running the UI app. Otherwise, you will get **401 Unauthorized error** - missing or invalid credentials.
 
-4. Run apps
+1. 🎉 Enjoy!
 
-```sh
-# run all apps in dev mode (this triggers `yarn dev` script in each app from `/apps` directory)
-yarn dev
-```
+   - Open your browser and go to [http://localhost:3000](http://localhost:3000) to see the UI app in action.
+   - Open your browser and go to [http://localhost:1337/admin](http://localhost:1337/admin) to see the Strapi app in action.
 
-5. 🎉 Enjoy!
+1. Next steps?
 
-- Open your browser and go to [http://localhost:3000](http://localhost:3000) to see the UI app in action.
-- Open your browser and go to [http://localhost:1337/admin](http://localhost:1337/admin) to see the Strapi app in action.
-
-6. Next steps?
-
-- See [What's inside?](#-whats-inside) for more details about apps and packages.
-- You also probably want to customize naming in the project. See [Transform this template to a project](#-transform-this-template-to-a-project).
+   - See [What's inside?](#-whats-inside) for more details about apps and packages.
+   - You also probably want to customize naming in the project. See [Transform this template to a project](#-transform-this-template-to-a-project).
 
 ## ✨ Features
 
