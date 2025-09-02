@@ -5,7 +5,7 @@ import { setRequestLocale } from "next-intl/server"
 
 import type { PageProps } from "@/types/next"
 
-import { fetchAllProjects } from "@/lib/strapi-api/content/server"
+import { fetchAllProjects, fetchPage } from "@/lib/strapi-api/content/server"
 import { formatStrapiMediaUrl } from "@/lib/strapi-helpers"
 import { cn } from "@/lib/styles"
 import { Breadcrumbs } from "@/components/elementary/Breadcrumbs"
@@ -18,19 +18,26 @@ export default async function ProjectsPage(props: Props) {
 
   setRequestLocale(params.locale)
 
-  const response = await fetchAllProjects(params.locale)
+  const [projectsResponse, homePageResponse] = await Promise.all([
+    fetchAllProjects(params.locale),
+    fetchPage("/", params.locale)
+  ])
 
-  if (!response?.data?.length) {
+  if (!projectsResponse?.data?.length) {
     notFound()
   }
 
-  const projects = response.data
+  const projects = projectsResponse.data
+  const homeTitle = homePageResponse?.data?.breadcrumbTitle || homePageResponse?.data?.title || "Home"
 
   return (
     <main className={cn("flex w-full flex-col overflow-hidden")}>
       <Container>
         <Breadcrumbs
-          breadcrumbs={[{ label: "Projects", href: "/projects" }]}
+          breadcrumbs={[
+            { title: homeTitle, fullPath: "/" },
+            { title: "Projects", fullPath: "/projects" }
+          ]}
           className="mt-6 mb-6"
         />
       </Container>
