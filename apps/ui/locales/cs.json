@@ -147,6 +147,13 @@
     "gdprLink": "Informace o zpracování osobních údajů"
   },
 
+  "projects": {
+    "title": "Projekty",
+    "backToProjects": "Zpět na projekty",
+    "technologies": "Technologie",
+    "links": "Odkazy"
+  },
+
   "auth": {
     "signIn": {
       "status": {

@@ -147,6 +147,13 @@
     "gdprLink": "Read more about the processing of personal data"
   },
 
+  "projects": {
+    "title": "Projects",
+    "backToProjects": "Back to Projects",
+    "technologies": "Technologies",
+    "links": "Links"
+  },
+
   "auth": {
     "signIn": {
       "status": {

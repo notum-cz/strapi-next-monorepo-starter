@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { setRequestLocale } from "next-intl/server"
+import { setRequestLocale, getTranslations } from "next-intl/server"
 
 import type { PageProps } from "@/types/next"
 
@@ -27,6 +27,7 @@ export default async function ProjectDetailPage(props: Props) {
   }
 
   const project = response.data
+  const t = await getTranslations('projects')
 
   return (
     <main className={cn("flex w-full flex-col overflow-hidden")}>
@@ -49,7 +50,7 @@ export default async function ProjectDetailPage(props: Props) {
                 d="M15 19l-7-7 7-7"
               />
             </svg>
-            Back to Projects
+            {t('backToProjects')}
           </Link>
         </nav>
       </Container>
@@ -77,7 +78,7 @@ export default async function ProjectDetailPage(props: Props) {
 
               {project.tags?.length && (
                 <div className="mb-8">
-                  <h3 className="mb-4 text-lg font-semibold">Technologies</h3>
+                  <h3 className="mb-4 text-lg font-semibold">{t('technologies')}</h3>
                   <div className="flex flex-wrap gap-2">
                     {project.tags.map((tag, index) => (
                       <span
@@ -93,7 +94,7 @@ export default async function ProjectDetailPage(props: Props) {
 
               {project.links?.length && (
                 <div className="mb-8">
-                  <h3 className="mb-4 text-lg font-semibold">Links</h3>
+                  <h3 className="mb-4 text-lg font-semibold">{t('links')}</h3>
                   <div className="flex flex-wrap gap-4">
                     {project.links.map((link, index) => (
                       <a
