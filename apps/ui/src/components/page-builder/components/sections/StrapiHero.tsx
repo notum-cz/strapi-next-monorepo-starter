@@ -17,15 +17,16 @@ export function StrapiHero({
 
   return (
     <section style={{ backgroundColor: component.bgColor ?? "transparent" }}>
-      <Container className="flex flex-col md:flex-row gap-6 px-4 py-8 lg:py-12 xl:gap-0">
+      <Container className="flex flex-col gap-6 px-4 py-8 md:flex-row lg:py-12 xl:gap-0">
         <div
-          className={`flex w-full flex-col justify-center ${component.image?.media ? "md:w-1/2" : "md:w-full"
-            }`}
+          className={`flex w-full flex-col justify-center ${
+            component.image?.media ? "md:w-1/2" : "md:w-full"
+          }`}
         >
           <Heading
             tag="h1"
             variant="heading1"
-            className="mb-4 max-w-2xl text-center lg:text-start text-3xl sm:text-4xl"
+            className="mb-4 max-w-2xl text-center text-3xl sm:text-4xl lg:text-start"
           >
             {component.title}
           </Heading>
@@ -33,7 +34,8 @@ export function StrapiHero({
             <Heading
               tag="h2"
               variant="heading2"
-              className="mb-6 max-w-2xl text-center lg:text-start">
+              className="mb-6 max-w-2xl text-center lg:text-start"
+            >
               {component.subTitle}
             </Heading>
           )}
@@ -52,7 +54,7 @@ export function StrapiHero({
                 <StrapiLink
                   key={i}
                   component={link}
-                  className="inline-flex w-full lg:w-fit items-center justify-center rounded-lg bg-neutral-900 px-5 py-3 text-base font-medium text-white hover:bg-neutral-800 transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-400"
+                  className="inline-flex w-full items-center justify-center rounded-lg bg-neutral-900 px-5 py-3 text-base font-medium text-white transition-colors hover:bg-neutral-800 focus:ring-2 focus:ring-neutral-400 focus:outline-none lg:w-fit"
                 />
               ))}
             </div>
@@ -60,7 +62,7 @@ export function StrapiHero({
         </div>
 
         {component.image?.media && (
-          <div className="md:w-1/2 md:mt-0 flex justify-center items-center">
+          <div className="flex items-center justify-center md:mt-0 md:w-1/2">
             <StrapiBasicImage
               component={component.image}
               className="rounded-3xl object-contain"
