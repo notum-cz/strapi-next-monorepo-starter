@@ -2,62 +2,78 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { MoveRight } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
-import { AppField } from "@/components/forms/AppField"
-import { AppForm } from "@/components/forms/AppForm"
 import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+
+const createNewsletterFormSchema = (t: (key: string) => string) => z.object({
+  email: z.string().min(1, t("email.required")).email(t("email.invalid")),
+})
+
+type FormSchemaType = z.infer<ReturnType<typeof createNewsletterFormSchema>>
+
+export const newsletterForm = "newsletterForm"
 
 export function NewsletterForm() {
-  const form = useForm<z.infer<FormSchemaType>>({
+  const t = useTranslations("newsletter")
+  const NewsletterFormSchema = createNewsletterFormSchema(t)
+  
+  const form = useForm<FormSchemaType>({
     resolver: zodResolver(NewsletterFormSchema),
     mode: "onBlur",
     reValidateMode: "onSubmit",
     defaultValues: { email: "" },
   })
 
-  async function onSubmit(values: z.infer<FormSchemaType>) {
+  async function onSubmit(values: FormSchemaType) {
     // TODO: Add submit logic
     // eslint-disable-next-line no-console
     console.log("Form submitted", values)
   }
 
   return (
-    <div className="flex w-full flex-col">
-      <AppForm
-        form={form}
-        onSubmit={onSubmit}
-        id={newsletterForm}
-        className="w-full"
-      >
-        <div className="relative">
-          <AppField
-            name="email"
-            type="text"
-            autoComplete="email"
-            required
-            fieldClassName="h-14 bg-white"
-            aria-label="email"
-          />
-          <Button
-            type="submit"
-            className="absolute top-1/2 right-3 -translate-y-1/2 md:w-fit"
-            form={newsletterForm}
-            aria-label="Submit form"
-          >
-            <MoveRight className="size-4" />
-          </Button>
-        </div>
-      </AppForm>
-    </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} id={newsletterForm} className="w-full">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field, fieldState }) => (
+            <FormItem className="mb-8">
+              <div className="relative">
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="email"
+                    autoComplete="email"
+                    required
+                    placeholder={t("email.placeholder")}
+                    className={`h-14 bg-white pr-16 rounded-md ${
+                      fieldState.error ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : ""
+                    }`}
+                    aria-label="email"
+                  />
+                </FormControl>
+                <Button
+                  type="submit"
+                  className="absolute top-1/2 -translate-y-1/2 right-3 aspect-square w-8 p-0 rounded-md bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 hover:scale-[1.02] shadow-md hover:shadow-lg"
+                  aria-label="Submit form"
+                >
+                  <MoveRight className="size-4" />
+                </Button>
+                {fieldState.error && (
+                  <div className="absolute -bottom-6 left-0 text-sm font-medium text-red-600 animate-in slide-in-from-top-1 duration-200">
+                    {fieldState.error.message}
+                  </div>
+                )}
+              </div>
+            </FormItem>
+          )}
+        />
+      </form>
+    </Form>
   )
 }
-
-const NewsletterFormSchema = z.object({
-  email: z.string().email(),
-})
-
-type FormSchemaType = typeof NewsletterFormSchema
-
-export const newsletterForm = "newsletterForm"

@@ -147,6 +147,14 @@
     "gdprLink": "Read more about the processing of personal data"
   },
 
+  "newsletter": {
+    "email": {
+      "required": "Email is required",
+      "invalid": "Invalid format",
+      "placeholder": "Your email"
+    }
+  },
+
   "projects": {
     "title": "Projects",
     "backToProjects": "Back to Projects",

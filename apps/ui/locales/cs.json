@@ -147,6 +147,14 @@
     "gdprLink": "Informace o zpracování osobních údajů"
   },
 
+  "newsletter": {
+    "email": {
+      "required": "E-mail je povinný",
+      "invalid": "Nesprávný formát",
+      "placeholder": "Váš e-mail"
+    }
+  },
+
   "projects": {
     "title": "Projekty",
     "backToProjects": "Zpět na projekty",
