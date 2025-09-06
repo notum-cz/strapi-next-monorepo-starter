@@ -1,6 +1,7 @@
 import type { Core } from "@strapi/strapi"
 
 import { registerPopulatePageMiddleware } from "./documentMiddlewares/page"
+import { registerPopulateProjectMiddleware } from "./documentMiddlewares/project"
 import { registerAdminUserSubscriber } from "./lifeCycles/adminUser"
 import { registerUserSubscriber } from "./lifeCycles/user"
 
@@ -25,5 +26,6 @@ export default {
     registerUserSubscriber({ strapi })
 
     registerPopulatePageMiddleware({ strapi })
+    registerPopulateProjectMiddleware({ strapi })
   },
 }

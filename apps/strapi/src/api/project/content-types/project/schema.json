@@ -10,31 +10,85 @@
   "options": {
     "draftAndPublish": true
   },
-  "pluginOptions": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
   "attributes": {
     "title": {
       "type": "string",
-      "required": true
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "description": {
       "type": "text",
-      "required": true
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "image": {
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ],
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "tags": {
       "type": "component",
       "repeatable": true,
-      "component": "utilities.tag"
+      "component": "utilities.tag",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "links": {
       "type": "component",
       "repeatable": true,
-      "component": "utilities.project-link"
+      "component": "utilities.project-link",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "content": {
+      "type": "dynamiczone",
+      "components": [
+        "sections.image-with-cta-button",
+        "sections.hero",
+        "sections.adaptive-gallery",
+        "sections.heading-with-cta-button",
+        "sections.faq",
+        "sections.animated-logo-row",
+        "forms.newsletter-form",
+        "forms.contact-form",
+        "utilities.ck-editor-content",
+        "sections.attachment-download",
+        "sections.timeline",
+        "sections.quote-carousel",
+        "sections.project-showcase"
+      ],
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     }
   }
 }

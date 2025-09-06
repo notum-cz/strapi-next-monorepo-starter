@@ -624,22 +624,75 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
   options: {
     draftAndPublish: true
   }
+  pluginOptions: {
+    i18n: {
+      localized: true
+    }
+  }
   attributes: {
+    content: Schema.Attribute.DynamicZone<
+      [
+        "sections.image-with-cta-button",
+        "sections.hero",
+        "sections.adaptive-gallery",
+        "sections.heading-with-cta-button",
+        "sections.faq",
+        "sections.animated-logo-row",
+        "forms.newsletter-form",
+        "forms.contact-form",
+        "utilities.ck-editor-content",
+        "sections.attachment-download",
+        "sections.timeline",
+        "sections.quote-carousel",
+        "sections.project-showcase",
+      ]
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
-    description: Schema.Attribute.Text & Schema.Attribute.Required
-    image: Schema.Attribute.Media<"images">
-    links: Schema.Attribute.Component<"utilities.project-link", true>
-    locale: Schema.Attribute.String & Schema.Attribute.Private
+    description: Schema.Attribute.Text &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    image: Schema.Attribute.Media<"images"> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    links: Schema.Attribute.Component<"utilities.project-link", true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    locale: Schema.Attribute.String
     localizations: Schema.Attribute.Relation<
       "oneToMany",
       "api::project.project"
-    > &
-      Schema.Attribute.Private
+    >
     publishedAt: Schema.Attribute.DateTime
-    tags: Schema.Attribute.Component<"utilities.tag", true>
-    title: Schema.Attribute.String & Schema.Attribute.Required
+    tags: Schema.Attribute.Component<"utilities.tag", true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
     updatedAt: Schema.Attribute.DateTime
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private

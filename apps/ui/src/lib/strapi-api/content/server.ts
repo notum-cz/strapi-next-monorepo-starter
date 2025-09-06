@@ -181,13 +181,41 @@ export async function fetchProject(documentId: string, locale: AppLocale) {
           image: true,
           tags: true,
           links: true,
+          content: true,
         },
+        middlewarePopulate: ["content"],
         status: "published",
       }
     )
   } catch (e: any) {
     console.error({
       message: `Error fetching project '${documentId}' for locale '${locale}'`,
+      error: {
+        error: e?.message,
+        stack: e?.stack,
+      },
+    })
+  }
+}
+
+export async function fetchProjectsPage(locale: AppLocale) {
+  try {
+    return await PublicStrapiClient.fetchOneByFullPath(
+      "api::page.page",
+      "/projects",
+      {
+        locale,
+        populate: {
+          content: true,
+          seo: true,
+        },
+        middlewarePopulate: ["content", "seo"],
+        status: "published",
+      }
+    )
+  } catch (e: any) {
+    console.error({
+      message: `Error fetching projects page for locale '${locale}'`,
       error: {
         error: e?.message,
         stack: e?.stack,

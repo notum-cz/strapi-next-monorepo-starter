@@ -1,15 +1,16 @@
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { setRequestLocale, getTranslations } from "next-intl/server"
+import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import type { PageProps } from "@/types/next"
 
 import { fetchProject } from "@/lib/strapi-api/content/server"
 import { formatStrapiMediaUrl } from "@/lib/strapi-helpers"
 import { cn } from "@/lib/styles"
-import { Breadcrumbs } from "@/components/elementary/Breadcrumbs"
 import { Container } from "@/components/elementary/Container"
+import { ErrorBoundary } from "@/components/elementary/ErrorBoundary"
+import { PageContentComponents } from "@/components/page-builder"
 
 type Props = PageProps<{
   id: string
@@ -27,7 +28,7 @@ export default async function ProjectDetailPage(props: Props) {
   }
 
   const project = response.data
-  const t = await getTranslations('projects')
+  const t = await getTranslations("projects")
 
   return (
     <main className={cn("flex w-full flex-col overflow-hidden")}>
@@ -50,11 +51,12 @@ export default async function ProjectDetailPage(props: Props) {
                 d="M15 19l-7-7 7-7"
               />
             </svg>
-            {t('backToProjects')}
+            {t("backToProjects")}
           </Link>
         </nav>
       </Container>
 
+      {/* Default project layout */}
       <div className={cn("mb-3 md:mb-8 lg:mb-10")}>
         <Container>
           <div className="py-12">
@@ -78,7 +80,9 @@ export default async function ProjectDetailPage(props: Props) {
 
               {project.tags?.length && (
                 <div className="mb-8">
-                  <h3 className="mb-4 text-lg font-semibold">{t('technologies')}</h3>
+                  <h3 className="mb-4 text-lg font-semibold">
+                    {t("technologies")}
+                  </h3>
                   <div className="flex flex-wrap gap-2">
                     {project.tags.map((tag, index) => (
                       <span
@@ -94,7 +98,7 @@ export default async function ProjectDetailPage(props: Props) {
 
               {project.links?.length && (
                 <div className="mb-8">
-                  <h3 className="mb-4 text-lg font-semibold">{t('links')}</h3>
+                  <h3 className="mb-4 text-lg font-semibold">{t("links")}</h3>
                   <div className="flex flex-wrap gap-4">
                     {project.links.map((link, index) => (
                       <a
@@ -114,6 +118,39 @@ export default async function ProjectDetailPage(props: Props) {
           </div>
         </Container>
       </div>
+
+      {/* Dynamic content below project details */}
+      {project.content?.length > 0 &&
+        project.content
+          .filter((comp) => comp != null)
+          .map((comp) => {
+            const name = comp.__component
+            const id = comp.id
+            const key = `${name}-${id}`
+            const Component = PageContentComponents[name]
+
+            if (Component == null) {
+              console.warn(`Unknown component "${name}" with id "${id}".`)
+              return (
+                <div key={key} className="font-medium text-red-500">
+                  Component &quot;{key}&quot; is not implemented on the
+                  frontend.
+                </div>
+              )
+            }
+
+            return (
+              <ErrorBoundary key={key}>
+                <div className={cn("mb-3 md:mb-8 lg:mb-10")}>
+                  <Component
+                    component={comp}
+                    pageParams={params}
+                    page={project}
+                  />
+                </div>
+              </ErrorBoundary>
+            )
+          })}
     </main>
   )
 }
