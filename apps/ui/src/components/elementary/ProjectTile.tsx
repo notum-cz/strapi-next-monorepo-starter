@@ -15,7 +15,7 @@ export function ProjectTile({ project, locale }: ProjectTileProps) {
   return (
     <Link
       href={`/${locale}/projects/${project.documentId}`}
-      className="overflow-hidden rounded-lg bg-white shadow-lg transition-shadow hover:shadow-xl flex flex-col h-full"
+      className="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-lg transition-shadow hover:shadow-xl"
     >
       {project.image?.url && (
         <div className="relative aspect-video">
@@ -27,15 +27,15 @@ export function ProjectTile({ project, locale }: ProjectTileProps) {
           />
         </div>
       )}
-      
-      <div className="p-6 flex flex-col flex-grow">
+
+      <div className="flex flex-grow flex-col p-6">
         <div className="flex-grow">
           <h3 className="mb-2 text-xl font-bold">{project.title}</h3>
           <p className="mb-4 line-clamp-3 text-gray-600">
             {project.description}
           </p>
         </div>
-        
+
         <div className="mt-auto space-y-3">
           {project.tags?.length && (
             <div className="flex flex-wrap gap-2">
@@ -49,7 +49,7 @@ export function ProjectTile({ project, locale }: ProjectTileProps) {
               ))}
             </div>
           )}
-          
+
           {project.links?.length && (
             <div className="flex flex-wrap gap-2">
               {project.links.map((link, index) => (
@@ -59,7 +59,7 @@ export function ProjectTile({ project, locale }: ProjectTileProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors"
+                  className="rounded bg-blue-600 px-3 py-1 text-sm text-white transition-colors hover:bg-blue-700"
                 >
                   {link.type}
                 </a>
