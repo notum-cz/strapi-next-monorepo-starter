@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
-const createNewsletterFormSchema = (t: (arg: string) => string) =>
+const createNewsletterFormSchema = (t: ReturnType<typeof useTranslations>) =>
   z.object({
     email: z.string().min(1, t("email.required")).email(t("email.invalid")),
   })
