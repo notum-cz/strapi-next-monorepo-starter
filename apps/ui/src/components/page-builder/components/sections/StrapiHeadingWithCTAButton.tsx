@@ -15,20 +15,23 @@ export const StrapiHeadingWithCTAButton = ({
   return (
     <section className="px-4 py-8 sm:py-16 lg:px-6">
       <Container>
-        <div className="mx-auto max-w-(--breakpoint-sm) text-center">
-          <h2 className="mb-4 text-4xl leading-tight font-extrabold tracking-tight text-gray-900">
-            {component.title}
-          </h2>
-          {component.subText && (
-            <p className="mb-6 font-light text-gray-500 md:text-lg">
-              {component.subText}
-            </p>
-          )}
-
-          <StrapiLink
-            component={component.cta}
-            className="focus:ring-primary-300 bg-primary inline-flex items-center justify-center rounded-lg px-5 py-3 text-center text-base font-medium text-white focus:ring-4"
-          />
+        <div className="mx-auto grid max-w-[--breakpoint-sm] grid-cols-1 items-center gap-8 text-left sm:grid-cols-3">
+          <div className="flex flex-col items-center text-center sm:col-span-2">
+            <h2 className="mb-4 text-4xl leading-tight font-extrabold tracking-tight text-gray-900">
+              {component.title}
+            </h2>
+            {component.subText && (
+              <p className="mb-6 font-light text-gray-500 md:text-lg">
+                {component.subText}
+              </p>
+            )}
+          </div>
+          <div className="flex h-full items-center justify-start self-center sm:col-span-1">
+            <StrapiLink
+              component={component.cta}
+              className="inline-flex w-full items-center justify-center rounded-lg bg-neutral-900 px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-neutral-800 focus:ring-2 focus:ring-neutral-400 focus:outline-none lg:w-fit"
+            />
+          </div>
         </div>
       </Container>
     </section>
