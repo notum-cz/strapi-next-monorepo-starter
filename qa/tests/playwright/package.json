@@ -12,7 +12,8 @@
     "run-all-e2e-tests": "playwright test"
   },
   "dependencies": {
-    "@axe-core/playwright": "^4.10.2"
+    "@axe-core/playwright": "^4.10.2",
+    "get-sitemap-links": "^1.1.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.53.2",

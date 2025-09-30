@@ -37,7 +37,8 @@
     "setup:apps": "find . -name '*.example' -exec sh -c 'cp \"$1\" \"${1%.example}\"' _ {} \\;",
     "start:strapi": "turbo run start --filter=@repo/strapi",
     "start:ui": "turbo run start --filter=@repo/ui",
-    "tests:playwright:axe": "turbo run axe-test --filter=@repo/tests-playwright"
+    "tests:playwright:axe": "turbo run axe-test --filter=@repo/tests-playwright",
+    "tests:playwright:e2e:test": "turbo run run-all-e2e-tests --filter=@repo/tests-playwright"
   },
   "prettier": "@repo/prettier-config",
   "devDependencies": {
