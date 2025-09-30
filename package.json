@@ -17,7 +17,7 @@
   "workspaces": [
     "packages/*",
     "apps/*",
-    "qa/*"
+    "qa/**"
   ],
   "scripts": {
     "build": "turbo build --cache-dir=.turbo",
@@ -38,7 +38,8 @@
     "start:strapi": "turbo run start --filter=@repo/strapi",
     "start:ui": "turbo run start --filter=@repo/ui",
     "tests:playwright:axe": "turbo run axe-test --filter=@repo/tests-playwright",
-    "tests:playwright:e2e:test": "turbo run run-all-e2e-tests --filter=@repo/tests-playwright"
+    "tests:playwright:e2e:test": "turbo run playwright-e2e-tests --filter=@repo/tests-playwright",
+    "tests:playwright:e2e:test:interactive": "turbo run playwright-interactive-mode --filter=@repo/tests-playwright"
   },
   "prettier": "@repo/prettier-config",
   "devDependencies": {

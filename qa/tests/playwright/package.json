@@ -8,8 +8,8 @@
   "main": "index.js",
   "scripts": {
     "axe-test": "tsx axe/axe-test.ts",
-    "open-playwright-interactive-mode": "playwright test --ui",
-    "run-all-e2e-tests": "playwright test"
+    "playwright-e2e-tests": "playwright test e2e",
+    "playwright-interactive-mode": "playwright test e2e --ui"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.10.2",

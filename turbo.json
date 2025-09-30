@@ -30,6 +30,14 @@
     "axe-test": {
       "cache": false,
       "persistent": true
+    },
+    "playwright-interactive-mode": {
+      "cache": false,
+      "persistent": true
+    },
+    "playwright-e2e-tests": {
+      "cache": false,
+      "persistent": true
     }
   },
   "ui": "tui"

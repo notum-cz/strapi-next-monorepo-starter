@@ -79,7 +79,6 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 - **Auth providers**: Ready to plug-in providers like Google, Facebook etc.
 - **Localization**: Multi-language support with [next-intl](https://next-intl-docs.vercel.app/) and [@strapi/plugin-i18n](https://www.npmjs.com/package/@strapi/plugin-i18n) packages
 - **SEO**: Pre-configured usage of [@strapi/plugin-seo](https://www.npmjs.com/package/@strapi/plugin-seo) and integrated with frontend SEO best practices like metadata, sitemap.xml or robots.txt
-- Testing TBD
 - **Turborepo**: Pre-configured, apps and packages connected and controlled by Turbo CLI
 - **Dockerized**: Ready to build in Docker containers for production
 - **Code quality**: Out-of-the-box ESLint, Prettier, and TypeScript configurations in shareable packages
@@ -128,7 +127,99 @@ yarn dev:ui
 yarn dev:strapi
 ```
 
-## Testing info TBD
+## Testing Info
+
+### 🐞 Automated Testing Suite
+
+This directory contains an automated testing suite designed to ensure quality across functionality, accessibility, performance, and SEO.
+
+It can include different testing frameworks and tools depending on project needs, for example:
+
+- **End-to-End (E2E) Tests** with tools like [Playwright](https://playwright.dev/) or [Cypress](https://www.cypress.io/)
+- **Accessibility Tests** using [axe-core](https://classic.yarnpkg.com/en/package/@axe-core/playwright)
+- **Performance Tests** with tools such as [Lighthouse-batch](https://classic.yarnpkg.com/en/package/lighthouse-batch) 📊
+- **SEO Tests** for automated validation of search engine optimizations 🔍
+
+---
+
+### 📂 Project Structure
+
+```bash
+qa/
+├── tests/
+│   ├── cypress/              ← Cypress-based tests
+│   └── playwright/           ← Playwright-based tests
+│       ├── axe/              ← Accessibility tests
+│       ├── e2e/              ← End-to-End tests
+│       └── helpers/          ← Shared test utilities/helpers
+├── .env.example              ← Example environment variables file
+├── package.json              ← Test dependencies & scripts
+├── playwright.config.ts      ← Playwright configuration
+├── tsconfig.json             ← TypeScript configuration
+├── yarn.lock                 ← Dependency lock file
+```
+
+### ▶️ Running Tests
+
+All test commands are run from the **project root**, not from inside the `qa/` folder.
+
+- **Playwright - Run E2E tests (headless)**
+
+  ```bash
+  yarn tests:playwright:e2e:test
+  ```
+
+- **Playwright - Run E2E tests in interactive mode (headed)**
+
+  ```bash
+  yarn tests:playwright:e2e:test:interactive
+  ```
+
+- **Playwright - Run AXE tests**
+  ```bash
+  yarn tests:playwright:axe
+  ```
+
+### 💻 Running Locally
+
+Instructions for setting up and running tests locally should be added here.  
+Typically this involves:
+
+- Installing dependencies
+- Configuring environment variables
+- Ensuring required browsers/tools are installed for the chosen framework (e.g., Playwright, Cypress)
+
+**Details TBD later**
+
+### 🔄 CI/CD Integration
+
+Tests can be triggered automatically in your CI/CD pipeline (e.g., GitHub Actions, GitLab CI, Azure DevOps, GitLab CI/CD, etc.) on pull requests or specific branch updates.
+
+Define pipeline steps to run each test suite as separate jobs for easier debugging and artifact management.
+
+**- Details TBD later**
+
+### 🏗️ Jobs
+
+- End-to-End (E2E) Testing
+- Accessibility Testing
+- Performance Testing
+- SEO Testing
+
+**- Details TBD later**
+
+### 📦 Artifacts Retention
+
+Configure artifact storage for test reports, screenshots, and logs based on your CI/CD provider.
+
+**- Details TBD later**
+
+### 🐛 Debugging Notes
+
+- Failed tests can produce logs, screenshots, and traces (e.g., from Playwright or Cypress).
+- Enable debugging flags locally if tests are flaky or inconsistent.
+
+**- Details TBD later**
 
 ## 🔌 VSCode Extensions
 
