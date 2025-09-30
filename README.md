@@ -182,44 +182,23 @@ All test commands are run from the **project root**, not from inside the `qa/` f
 
 ### 💻 Running Locally
 
-Instructions for setting up and running tests locally should be added here.  
-Typically this involves:
-
-- Installing dependencies
-- Configuring environment variables
-- Ensuring required browsers/tools are installed for the chosen framework (e.g., Playwright, Cypress)
-
-**Details TBD later**
+TBD
 
 ### 🔄 CI/CD Integration
 
-Tests can be triggered automatically in your CI/CD pipeline (e.g., GitHub Actions, GitLab CI, Azure DevOps, GitLab CI/CD, etc.) on pull requests or specific branch updates.
-
-Define pipeline steps to run each test suite as separate jobs for easier debugging and artifact management.
-
-**- Details TBD later**
+TBD
 
 ### 🏗️ Jobs
 
-- End-to-End (E2E) Testing
-- Accessibility Testing
-- Performance Testing
-- SEO Testing
-
-**- Details TBD later**
+TBD
 
 ### 📦 Artifacts Retention
 
-Configure artifact storage for test reports, screenshots, and logs based on your CI/CD provider.
-
-**- Details TBD later**
+TBD
 
 ### 🐛 Debugging Notes
 
-- Failed tests can produce logs, screenshots, and traces (e.g., from Playwright or Cypress).
-- Enable debugging flags locally if tests are flaky or inconsistent.
-
-**- Details TBD later**
+TBD
 
 ## 🔌 VSCode Extensions
 
