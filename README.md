@@ -136,7 +136,7 @@ This directory contains an automated testing suite designed to ensure quality ac
 It can include different testing frameworks and tools depending on project needs, for example:
 
 - **End-to-End (E2E) Tests** with tools like [Playwright](https://playwright.dev/) or [Cypress](https://www.cypress.io/)
-- **Accessibility Tests** using [axe-core](https://classic.yarnpkg.com/en/package/@axe-core/playwright)
+- **Accessibility Tests** using [AXE-Core](https://classic.yarnpkg.com/en/package/@axe-core/playwright)
 - **Performance Tests** with tools such as [Lighthouse-batch](https://classic.yarnpkg.com/en/package/lighthouse-batch) 📊
 - **SEO Tests** for automated validation of search engine optimizations 🔍
 
@@ -147,16 +147,16 @@ It can include different testing frameworks and tools depending on project needs
 ```bash
 qa/
 ├── tests/
-│   ├── cypress/              ← Cypress-based tests
-│   └── playwright/           ← Playwright-based tests
-│       ├── axe/              ← Accessibility tests
-│       ├── e2e/              ← End-to-End tests
-│       └── helpers/          ← Shared test utilities/helpers
-├── .env.example              ← Example environment variables file
-├── package.json              ← Test dependencies & scripts
-├── playwright.config.ts      ← Playwright configuration
-├── tsconfig.json             ← TypeScript configuration
-├── yarn.lock                 ← Dependency lock file
+│   ├── cypress/                          ← Cypress-based tests
+│   └── playwright/                       ← Playwright-based tests (workspace package)
+│       ├── axe/                          ← Accessibility tests
+│       ├── e2e/                          ← End-to-End tests
+│       ├── helpers/                      ← Shared test utilities/helpers
+│       ├── .env.example                  ← Example environment variables file
+│       ├── package.json                  ← Test dependencies & scripts for this package
+│       ├── playwright.config.ts          ← Playwright configuration
+│       ├── tsconfig.json                 ← TypeScript configuration for this package
+│       └── yarn.lock                     ← Dependency lock file (if used per package)
 ```
 
 ### ▶️ Running Tests
