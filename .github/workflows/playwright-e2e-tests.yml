@@ -7,6 +7,8 @@ on:
         description: 'On-demand E2E pipeline for a specific branch, tag or SHA - if not specified, defaults to main'
         required: false
         default: main
+  
+  pull_request: {}
 
 jobs:
   e2e:
