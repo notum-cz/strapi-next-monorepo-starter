@@ -31,7 +31,7 @@ jobs:
           cache: yarn
           
       - name: Tell me where I am
-        run: echo pwd
+        run: pwd
 
       - name: Install dependencies
         run: yarn --frozen-lockfile
