@@ -1,0 +1,55 @@
+name: E2E Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'On-demand E2E pipeline for a specific branch, tag or SHA - if not specified, defaults to main'
+        required: false
+        default: main
+
+jobs:
+  e2e:
+    name: Run Playwright E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          ref: ${{ inputs.ref }}
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Install Playwright Browsers
+        run: |
+          yarn playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: |
+          yarn tests:playwright:e2e:test
+
+      - uses: actions/upload-artifact@v4.6.2
+        if: failure()
+        with:
+          name: playwright-traces
+          path: qa/tests/playwright/test-results/**/trace.zip
+          retention-days: 7
+          if-no-files-found: warn
+
+      - uses: actions/upload-artifact@v4.6.2
+        if: failure()
+        with:
+          name: playwright-report
+          path: qa/tests/playwright/playwright-report/**
+          retention-days: 7
+          if-no-files-found: warn
