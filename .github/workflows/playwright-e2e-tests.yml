@@ -8,12 +8,12 @@ on:
         required: false
         default: main
   
-  # This have to removed before merging the PR
+  # This have to be removed before merging the PR
   pull_request: {}
 
 jobs:
   e2e:
-    name: Run Playwright E2E
+    name: Run Playwright E2E Tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -29,9 +29,6 @@ jobs:
         with:
           node-version: 22
           cache: yarn
-          
-      - name: Tell me where I am
-        run: pwd
 
       - name: Install dependencies
         run: yarn --frozen-lockfile
