@@ -8,6 +8,7 @@ on:
         required: false
         default: main
   
+  # This have to removed before merging the PR
   pull_request: {}
 
 jobs:
@@ -28,6 +29,9 @@ jobs:
         with:
           node-version: 22
           cache: yarn
+          
+      - name: Tell me where I am
+        run: echo pwd
 
       - name: Install dependencies
         run: yarn --frozen-lockfile
