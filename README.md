@@ -42,13 +42,23 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 1. Run apps
 
+   > [!WARNING]
+   > Before the first run, you need to retrieve [Strapi API token](https://docs.strapi.io/cms/features/api-tokens).
+   >
+   > ```sh
+   > yarn dev:strapi
+   > ```
+   >
+   > Go to Strapi admin URL and navigate to [Settings > API Tokens](http://localhost:1337/admin/settings/api-tokens).
+   >
+   > Select "Create new API token" and copy it's value to `STRAPI_REST_READONLY_API_KEY` in `/apps/ui/.env.local` file.
+   >
+   > Refer to the [UI README](apps/ui/README.md#environment-variables) for more details.
+
    ```sh
    # run all apps in dev mode (this triggers `yarn dev` script in each app from `/apps` directory)
    yarn dev
    ```
-
-   > [!WARNING]
-   > More **manual setup is needed** for communication with Strapi using API tokens. Please refer to the [UI README](apps/ui/README.md#environment-variables) before running the UI app. Otherwise, you will get **401 Unauthorized error** - missing or invalid credentials.
 
 1. 🎉 Enjoy!
 
