@@ -42,3 +42,9 @@ yarn-error.log*
 .cache
 
 .strapi-updater.json
+
+# Trail Mixx specific
+services/stream/out/*.csv
+apps/mobile/ios
+apps/mobile/android
+*.log

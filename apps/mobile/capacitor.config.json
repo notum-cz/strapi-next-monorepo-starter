@@ -1,0 +1,15 @@
+{
+  "appId": "com.executiveusa.trailmixx",
+  "appName": "Trail Mixx",
+  "webDir": "../web/out",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "http://localhost:3000",
+    "cleartext": true
+  },
+  "plugins": {
+    "MediaSession": {
+      "enabled": true
+    }
+  }
+}

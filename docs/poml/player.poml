@@ -1,0 +1,241 @@
+# Player Contract (POML - Protocol Object Modeling Language)
+
+## Overview
+Trail Mixx HLS Audio Player with accessible controls and bilingual support.
+
+## Component: Player
+
+### Inputs
+```yaml
+src:
+  type: string
+  required: true
+  format: url
+  description: HLS stream URL (m3u8 manifest)
+  example: "https://stream.trailmixx.com/live/index.m3u8"
+
+locale:
+  type: string
+  required: false
+  enum: [en, es]
+  default: en
+  description: Interface language
+
+onAdStart:
+  type: function
+  required: false
+  description: Callback fired when ad playback begins
+
+onAdEnd:
+  type: function
+  required: false
+  description: Callback fired when ad playback ends
+
+className:
+  type: string
+  required: false
+  description: Additional CSS classes
+
+autoPlay:
+  type: boolean
+  required: false
+  default: false
+  description: Auto-start playback on mount
+```
+
+### Outputs/State
+```yaml
+isPlaying:
+  type: boolean
+  description: Current playback state
+
+isLoading:
+  type: boolean
+  description: Loading/buffering state
+
+error:
+  type: string | null
+  description: Error message if playback fails
+
+currentTime:
+  type: number
+  description: Current playback position (seconds)
+
+volume:
+  type: number
+  range: [0, 1]
+  description: Audio volume level
+```
+
+### Methods
+```yaml
+play():
+  description: Start audio playback
+  returns: Promise<void>
+  throws: PlaybackError
+
+pause():
+  description: Pause audio playback
+  returns: void
+
+speak(text: string):
+  description: Text-to-speech announcement
+  parameters:
+    text: string to speak
+  returns: void
+  uses: Web Speech API
+
+setVolume(level: number):
+  description: Adjust volume
+  parameters:
+    level: 0.0 to 1.0
+  returns: void
+```
+
+### Events
+```yaml
+onPlay:
+  description: Fired when playback starts
+  payload: { timestamp: ISO8601 }
+
+onPause:
+  description: Fired when playback pauses
+  payload: { timestamp: ISO8601 }
+
+onError:
+  description: Fired on playback error
+  payload: { 
+    type: string,
+    message: string,
+    fatal: boolean 
+  }
+
+onAdStart:
+  description: Fired when ad begins
+  payload: { 
+    adId: string,
+    duration: number 
+  }
+
+onAdEnd:
+  description: Fired when ad completes
+  payload: { 
+    adId: string,
+    completed: boolean 
+  }
+
+onBuffering:
+  description: Fired during buffer events
+  payload: { 
+    buffered: number,
+    duration: number 
+  }
+```
+
+## Technical Requirements
+
+### Browser Support
+- Safari (iOS/macOS): Native HLS
+- Chrome/Firefox/Edge: hls.js fallback
+- Mobile browsers: iOS Safari 11+, Chrome Android 60+
+
+### Streaming Protocol
+- HLS (HTTP Live Streaming)
+- Manifest format: m3u8
+- Segment format: MPEG-TS or fMP4
+- Fallback: MP3 stream
+
+### Performance
+- Initial load: < 2s
+- Stall recovery: < 2s
+- Memory usage: < 50MB
+- CPU usage: < 10% average
+
+### Accessibility (WCAG 2.1 AA)
+- Keyboard navigation: Space/Enter to play/pause
+- ARIA labels: All controls labeled
+- Screen reader: Announce state changes
+- Focus indicators: Visible focus styles
+- Color contrast: 4.5:1 minimum
+
+### Localization
+- English (en): Default
+- Spanish (es): Full UI translation
+- RTL support: Not required for v1
+- Extensible: Add locales via locale prop
+
+## Error Handling
+
+### Network Errors
+```
+NETWORK_ERROR -> Retry with exponential backoff
+NETWORK_TIMEOUT -> Activate fallback MP3
+DNS_FAILURE -> Display user-friendly error
+```
+
+### Media Errors
+```
+MEDIA_DECODE -> Attempt recovery via hls.recoverMediaError()
+MEDIA_INVALID -> Skip to next segment
+MANIFEST_PARSE -> Reload manifest
+```
+
+### Playback Errors
+```
+AUTOPLAY_BLOCKED -> Show play button, don't auto-retry
+PERMISSIONS -> Request user interaction
+UNKNOWN -> Log to Sentry, show generic error
+```
+
+## Security
+
+### Content Security Policy
+- Allow HLS origin in connect-src
+- Allow hls.js CDN in script-src
+- Validate manifest before parsing
+
+### Data Privacy
+- No cookies without consent
+- No analytics in embedded widget
+- Respect Do Not Track
+
+## Testing Contract
+
+### Unit Tests
+- Play/pause functionality
+- HLS vs native detection
+- Error recovery
+- Locale switching
+
+### Integration Tests
+- Live HLS stream playback
+- Fallback to MP3
+- Ad break handling
+- Network failure scenarios
+
+### Accessibility Tests
+- Keyboard navigation
+- Screen reader compatibility
+- ARIA labels present
+- Focus management
+
+### Performance Tests
+- Lighthouse score ≥ 90
+- LCP ≤ 2.5s
+- CLS ≤ 0.1
+- FID ≤ 100ms
+
+## Version History
+
+### v1.0.0 (Current)
+- HLS playback with hls.js
+- Bilingual support (EN/ES)
+- Accessible controls
+- Ad event hooks
+- Error recovery
+
+### Future (v2.0.0)
+- Offline caching
+- Playlist queue
+- Lyrics display
+- Chromecast support

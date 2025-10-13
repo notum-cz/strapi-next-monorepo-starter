@@ -1,0 +1,48 @@
+{
+  "agentId": "mixer-agent-v1",
+  "name": "MixerAgent",
+  "version": "1.0.0",
+  "description": "Automated DJ agent that mixes tracks based on rotation policies and clock configurations",
+  "capabilities": [
+    "track-selection",
+    "rotation-management",
+    "clock-adherence",
+    "bin-balancing",
+    "locale-aware-mixing"
+  ],
+  "inputs": {
+    "clock": {
+      "type": "string",
+      "required": true,
+      "description": "Clock configuration reference (e.g., seattle-top-hour)"
+    },
+    "rotation": {
+      "type": "string",
+      "required": true,
+      "description": "Rotation policy reference"
+    },
+    "locale": {
+      "type": "string",
+      "enum": ["en", "es"],
+      "default": "en"
+    },
+    "hour": {
+      "type": "integer",
+      "description": "Hour of day (0-23) for time-based mixing"
+    }
+  },
+  "outputs": {
+    "playlist": {
+      "type": "array",
+      "description": "Array of track IDs in play order"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Metadata about the mix (duration, bins used, etc.)"
+    }
+  },
+  "endpoints": {
+    "generate": "/api/mixer/generate",
+    "validate": "/api/mixer/validate"
+  }
+}

@@ -1,76 +1,131 @@
-# 🔥 Strapi v5 & Next.js v15 Monorepo Starter
+# 🎵 Trail Mixx - Community Radio Streaming Platform
 
-This is a ready-to-go starter template for Strapi projects. It combines the power of Strapi, Next.js, Shadcn/ui libraries with Turborepo setup and kickstarts your project development. We call it a **Page builder** for enterprise applications.
+Trail Mixx is a production-ready monorepo for building community-focused internet radio stations. Built on Strapi v5, Next.js v15, and custom streaming services, it provides everything needed to launch a legal, accessible, and engaging radio platform that celebrates local artists, nonprofits, and BIPOC communities.
 
-## 🥞 Tech stack
+## 🥞 Tech Stack
 
-- [Strapi v5](https://strapi.io/) - Headless CMS to manage content
-- [Next.js App Router v15](https://nextjs.org/docs) - React framework for building web apps
-- [Shadcn/ui](https://ui.shadcn.com/) - TailwindCSS based UI components
-- [TailwindCSS v4](https://tailwindcss.com/) - Utility-first CSS framework
-- [Turborepo](https://turbo.build/) - Monorepo management tool to keep things tidy
+- [Strapi v5](https://strapi.io/) - Headless CMS for content management
+- [Next.js v15](https://nextjs.org/docs) - React framework with App Router
+- [Shadcn/ui](https://ui.shadcn.com/) - Accessible UI components
+- [TailwindCSS v4](https://tailwindcss.com/) - Utility-first styling
+- [Turborepo](https://turbo.build/) - Monorepo orchestration
+- [HLS.js](https://github.com/video-dev/hls.js/) - HTTP Live Streaming playback
+- [Capacitor](https://capacitorjs.com/) - Native mobile wrapper
+- [Node.js/Express](https://expressjs.com/) - Stream proxy service
 
-## 🚀 Getting started
+## ✨ Features
 
-[![Launch Strapi + Next.js Monorepo — Live in 5 Minutes](https://img.youtube.com/vi/VZlJZuurUH8/maxresdefault.jpg)](https://www.youtube.com/watch?v=VZlJZuurUH8 "Watch on YouTube")
+- **HLS Audio Streaming** - Native HLS for Safari, hls.js fallback for other browsers
+- **Bilingual Support** - Full English/Spanish UI and content localization (i18n)
+- **Accessible Player** - WCAG 2.1 AA compliant with keyboard navigation and screen reader support
+- **Mobile Apps** - iOS/Android via Capacitor with lock screen and Bluetooth controls
+- **Content Management** - Strapi CMS with models for Promos, Merchants, Shows, and Tracks
+- **Analytics Logging** - CSV-based play and ad tracking for royalty reporting
+- **Auto-Fallback** - Switches to MP3 stream when HLS origin is down
+- **Agent System** - Extensible A2A automation for mixing, scheduling, and content generation
+- **Legal Compliance** - Documentation for SoundExchange, PROs, and non-interactive streaming rules
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Docker
-- node 22
-- yarn 1.22
-- [nvm](https://github.com/nvm-sh/nvm) (optional, recommended)
+- **Docker** - For PostgreSQL database
+- **Node.js 22** - Runtime environment
+- **Yarn 1.22** - Package manager
+- [nvm](https://github.com/nvm-sh/nvm) - Recommended for Node version management
 
-### Run dev (in 4 steps)
+### Quick Start (5 steps)
 
-1. Clone this repository
+1. **Clone this repository**
 
    ```sh
-   git clone https://github.com/notum-cz/strapi-next-monorepo-starter
+   git clone https://github.com/executiveusa/strapi-template-v1.git trail-mixx
+   cd trail-mixx
    ```
 
-1. Install dependencies
+2. **Install dependencies**
 
    ```sh
-   # in root
-   # switch to correct nodejs version (v22)
+   # Switch to Node 22
    nvm use
 
-   # install deps for apps and packages that are part of this monorepo
+   # Install all workspace dependencies
    yarn
    ```
 
-   > Don't worry about warning "Workspaces can only be enabled in private projects <https://github.com/yarnpkg/yarn/issues/8580>
-
-1. Run apps
-
-   > [!WARNING]
-   > Before the first run, you need to retrieve [Strapi API token](https://docs.strapi.io/cms/features/api-tokens).
-   >
-   > ```sh
-   > yarn dev:strapi
-   > ```
-   >
-   > Go to Strapi admin URL and navigate to [Settings > API Tokens](http://localhost:1337/admin/settings/api-tokens).
-   >
-   > Select "Create new API token" and copy it's value to `STRAPI_REST_READONLY_API_KEY` in `/apps/ui/.env.local` file.
-   >
-   > Refer to the [UI README](apps/ui/README.md#environment-variables) for more details.
+3. **Configure environment**
 
    ```sh
-   # run all apps in dev mode (this triggers `yarn dev` script in each app from `/apps` directory)
+   # Copy example env files (auto-copied by postinstall)
+   cp .env.example .env
+   cp services/cms/.env.example services/cms/.env
+   cp services/stream/.env.example services/stream/.env
+   cp apps/web/.env.local.example apps/web/.env.local
+   ```
+
+4. **Start the database**
+
+   ```sh
+   cd services/cms
+   docker compose up -d db
+   cd ../..
+   ```
+
+5. **Run all services**
+
+   > [!TIP]
+   > Before first run, retrieve a [Strapi API token](https://docs.strapi.io/cms/features/api-tokens) after starting Strapi.
+   
+   **Terminal 1 - CMS:**
+   ```sh
+   yarn dev:cms
+   ```
+   Go to <http://localhost:1337/admin> and create an admin user. Then create a **Read-Only API Token** from Settings → API Tokens.
+
+   **Terminal 2 - Stream Service:**
+   ```sh
+   yarn dev:stream
+   ```
+
+   **Terminal 3 - Web App:**
+   ```sh
+   # First, add the API token to apps/web/.env.local
+   # STRAPI_REST_READONLY_API_KEY=your-token-here
+   yarn dev:web
+   ```
+
+   **Or run all at once:**
+   ```sh
    yarn dev
    ```
 
-1. 🎉 Enjoy!
+   **Access the apps:**
+   - 🎵 **Player:** <http://localhost:3000/en/listen>
+   - 🎛️ **CMS Admin:** <http://localhost:1337/admin>
+   - 📊 **Stream Metrics:** <http://localhost:3001/metrics>
+   - 🏠 **Website:** <http://localhost:3000/>
 
-   - Open your browser and go to [http://localhost:3000](http://localhost:3000) to see the UI app in action.
-   - Open your browser and go to [http://localhost:1337/admin](http://localhost:1337/admin) to see the Strapi app in action.
+### Seed Sample Data
 
-1. Next steps?
+After starting the CMS, populate it with sample content:
 
-   - See [What's inside?](#-whats-inside) for more details about apps and packages.
-   - You also probably want to customize naming in the project. See [Transform this template to a project](#-transform-this-template-to-a-project).
+```sh
+# Make sure CMS is running first
+node services/cms/scripts/seed/seed-data.js
+```
+
+This creates sample:
+- Promos (nonprofit, BIPOC, event)
+- Merchants (local businesses)
+- Shows (radio programs)
+- Tracks (music library)
+
+### Next Steps
+
+1. **Configure HLS:** Update `HLS_ORIGIN` in `services/stream/.env` with your stream URL
+2. **Customize branding:** See [DESIGN_AUDIT.md](./DESIGN_AUDIT.md) for theme customization
+3. **Review compliance:** Read [docs/compliance/README.md](./docs/compliance/README.md) before going live
+4. **Build mobile apps:** Follow [apps/mobile/README.md](./apps/mobile/README.md) for iOS/Android builds
 
 ## ✨ Features
 
@@ -99,29 +154,163 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 - **Heroku ready**: Ready to deploy to Heroku in a few steps
 - ... and much more is waiting for you to discover!
 
-## 📦 What's inside?
+## 📦 What's Inside?
 
 ### Apps
 
-- `apps/ui` - UI web app based on [Next.js v15](https://nextjs.org/docs/) and [shadcn/ui](https://ui.shadcn.com/) ([Tailwind](https://tailwindcss.com/)) - [README.md](./apps/ui/README.md)
-- `apps/strapi` - [Strapi v5](https://strapi.io/) API with prepared page-builder components - [README.md](./apps/strapi/README.md)
+- `apps/web` - Next.js web app with HLS player and /listen page - [README.md](./apps/web/README.md)
+- `apps/mobile` - Capacitor wrapper for iOS/Android with media controls - [README.md](./apps/mobile/README.md)
+
+### Services
+
+- `services/cms` - Strapi v5 CMS with i18n content types (Promo, Merchant, Show, Track) - [README.md](./services/cms/README.md)
+- `services/stream` - HLS proxy with fallback MP3 and analytics logging - [README.md](./services/stream/README.md)
 
 ### Packages
 
-- `packages/eslint-config`: [ESLint](https://eslint.org/) configurations for client side applications
-- `packages/prettier-config`: [Prettier](https://prettier.io/) configuration with import sort plugin and tailwind plugin included
-- `packages/typescript-config`: tsconfig JSONs used throughout the monorepo (not compatible with Strapi app now)
-- `packages/design-system`: shared styles, primarily for sharing CkEditor color configurations
-- `packages/shared-data`: package that stores common values across frontend and backend
+- `packages/player-sdk` - Reusable React player component and embeddable widget - [README.md](./packages/player-sdk/README.md)
+- `packages/eslint-config` - Shared ESLint configurations
+- `packages/prettier-config` - Code formatting standards
+- `packages/typescript-config` - TypeScript configurations
+- `packages/design-system` - Shared styles and theme tokens
+- `packages/shared-data` - Common constants and utilities
 
-## 💡 Transform this template to a project
+### Agents & Configs
 
-- In the root `package.json`, update the `name` and `description` fields to match the new project name. Optionally, update the names in `/apps` and `/packages` as well. Keep the `@repo` prefix unless you prefer a different scope or company name—changing it will require updates throughout the entire monorepo.
-- In [docker-compose.yml](./apps/strapi/docker-compose.yml), update the top-level name "dev-templates" (and optionally the network name) to reflect the new project name. This helps prevent name conflicts on developers' machines.
-- If you're not deploying to Heroku, remove all `Procfile`s from the repository.
-- For Heroku deployment, create an S3 bucket and configure the necessary environment variables, as Heroku deletes uploaded files after dyno restarts.
+- `agents/deepagents-runtime` - A2A agent auto-onboard system
+- `configs/clocks` - Programming clock configurations (e.g., seattle-top-hour.json)
+- `configs/rotations` - Music rotation policies (rotations.yaml)
 
-_[After this preparation is done, delete this section from README]_
+### Documentation
+
+- `docs/Agent-Cards` - Agent contract definitions for automation
+- `docs/BMAD-Playbooks` - Operational playbooks (DailyOps, ContentGrowth)
+- `docs/poml` - Protocol specifications (player.poml)
+- `docs/spec-kit` - Acceptance criteria and testing requirements
+- `docs/compliance` - Legal and licensing requirements
+
+## 🚀 Deployment
+
+### Web App (Vercel/Netlify)
+
+**Vercel (Recommended):**
+```sh
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy from apps/web
+cd apps/web
+vercel
+```
+
+**Environment Variables:**
+- `NEXT_PUBLIC_HLS_URL` - Your HLS stream URL
+- `STRAPI_URL` - Strapi API URL
+- `STRAPI_REST_READONLY_API_KEY` - Strapi API token
+- `APP_PUBLIC_URL` - Your production URL
+
+### CMS (Render/Fly.io)
+
+**Render:**
+1. Create a new Web Service
+2. Connect your GitHub repo
+3. Build command: `yarn build:cms`
+4. Start command: `yarn start:cms`
+5. Add PostgreSQL database
+6. Set environment variables from `services/cms/.env.example`
+
+**Fly.io:**
+```sh
+# Install Fly CLI
+curl -L https://fly.io/install.sh | sh
+
+# Deploy
+cd services/cms
+fly launch
+fly secrets set DATABASE_URL=your-db-url
+fly deploy
+```
+
+### Stream Service (Render/Railway)
+
+Deploy `services/stream` to any Node.js host:
+
+**Render:**
+1. Create new Web Service
+2. Build: `yarn build:stream`
+3. Start: `yarn start:stream`
+4. Add persistent disk for CSV logs
+5. Set `HLS_ORIGIN` and `FALLBACK_MP3`
+
+**Environment Variables:**
+- `PORT` - Service port (usually 3001)
+- `HLS_ORIGIN` - Your HLS origin server
+- `FALLBACK_MP3` - Fallback stream URL
+
+### Mobile Apps
+
+**iOS (requires macOS):**
+```sh
+cd apps/mobile
+npx cap sync ios
+npx cap open ios
+# Build in Xcode
+```
+
+**Android:**
+```sh
+cd apps/mobile
+npx cap sync android
+npx cap open android
+# Build in Android Studio
+```
+
+See [apps/mobile/README.md](./apps/mobile/README.md) for detailed instructions.
+
+## 📚 Documentation
+
+- [DESIGN_AUDIT.md](./DESIGN_AUDIT.md) - Design system, colors, typography, components
+- [MIGRATION_NOTES.md](./MIGRATION_NOTES.md) - File mappings and breaking changes
+- [CHANGELOG.md](./CHANGELOG.md) - Version history and changes
+- [docs/compliance/](./docs/compliance/) - Legal requirements and licensing
+- [docs/spec-kit/](./docs/spec-kit/) - Acceptance criteria and testing
+- [docs/BMAD-Playbooks/](./docs/BMAD-Playbooks/) - Operational procedures
+
+## 🤝 Contributing
+
+This is a community-focused project. Contributions welcome!
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🎵 Legal & Compliance
+
+Operating an internet radio station requires proper licensing:
+
+- **SoundExchange** - Statutory license for sound recordings (Sections 112 & 114)
+- **ASCAP, BMI, SESAC** - Performance rights for musical compositions
+- **State/Local** - Business registration and tax compliance
+
+See [docs/compliance/README.md](./docs/compliance/README.md) for complete details.
+
+⚠️ **Important:** Obtain all required licenses BEFORE broadcasting to the public.
+
+## 💬 Support
+
+- **Documentation:** Check the `/docs` folder for detailed guides
+- **Issues:** Use GitHub Issues for bug reports and feature requests
+- **Discussions:** Use GitHub Discussions for questions and community support
+
+---
+
+Built with ❤️ for local artists, nonprofits, and BIPOC communities.
 
 ## ☕ Turborepo scripts
 

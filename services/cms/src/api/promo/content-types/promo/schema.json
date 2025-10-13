@@ -1,0 +1,74 @@
+{
+  "kind": "collectionType",
+  "collectionName": "promos",
+  "info": {
+    "singularName": "promo",
+    "pluralName": "promos",
+    "displayName": "Promo",
+    "description": "Promotional content for nonprofit, BIPOC, events, and community partners"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "kind": {
+      "type": "enumeration",
+      "enum": ["nonprofit", "bipoc", "snacks", "event"],
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "audio": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["audio"],
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "start": {
+      "type": "datetime",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "end": {
+      "type": "datetime",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "description": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    }
+  }
+}
