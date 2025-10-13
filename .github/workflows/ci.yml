@@ -46,8 +46,9 @@ jobs:
 
       - name: Prepare Environment Variables
         run: |
-          cp apps/strapi/.env.example apps/strapi/.env
-          cp apps/ui/.env.local.example apps/ui/.env.local
+          cp services/cms/.env.example services/cms/.env
+          cp apps/web/.env.local.example apps/web/.env.local
+          cp services/stream/.env.example services/stream/.env
 
       - name: yarn format:check
         run: yarn format:check
@@ -84,11 +85,15 @@ jobs:
       
       - name: Prepare Environment Variables
         run: |
-          cp apps/strapi/.env.example apps/strapi/.env
-          cp apps/ui/.env.local.example apps/ui/.env.local
+          cp services/cms/.env.example services/cms/.env
+          cp apps/web/.env.local.example apps/web/.env.local
+          cp services/stream/.env.example services/stream/.env
 
-      - name: Build UI
-        run: yarn build:ui
+      - name: Build Web
+        run: yarn build:web
 
-      - name: Build Strapi
-        run: yarn build:strapi
+      - name: Build CMS
+        run: yarn build:cms
+      
+      - name: Build Stream
+        run: yarn build:stream
