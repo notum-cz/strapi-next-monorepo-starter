@@ -1,0 +1,110 @@
+---
+# Trail Mixx Rotation Policies
+
+standard:
+  name: "Standard Rotation"
+  description: "Balanced mix for general programming"
+  bins:
+    A:
+      weight: 30
+      description: "High-energy, popular tracks"
+      maxPlaysPerDay: 8
+    B:
+      weight: 25
+      description: "Mid-tempo, familiar favorites"
+      maxPlaysPerDay: 6
+    C:
+      weight: 20
+      description: "Mood setters, deeper album tracks"
+      maxPlaysPerDay: 4
+    D:
+      weight: 15
+      description: "Discovery zone, new releases"
+      maxPlaysPerDay: 3
+    L:
+      weight: 10
+      description: "Local artists (mandatory)"
+      minPlaysPerDay: 2
+  rules:
+    - separationMinutes: 120
+    - artistRepeatMinutes: 180
+    - genreDiversityMinimum: 3
+
+morning-mix:
+  name: "Morning Mix"
+  description: "Upbeat rotation for morning drive"
+  bins:
+    A:
+      weight: 40
+      description: "Wake-up hits"
+      maxPlaysPerDay: 10
+    B:
+      weight: 30
+      description: "Feel-good tracks"
+      maxPlaysPerDay: 8
+    C:
+      weight: 15
+      description: "Morning mood"
+      maxPlaysPerDay: 4
+    L:
+      weight: 15
+      description: "Local morning energy"
+      minPlaysPerDay: 3
+  rules:
+    - separationMinutes: 90
+    - tempoMinimum: 100
+    - energyLevel: high
+
+evening-grooves:
+  name: "Evening Grooves"
+  description: "Smooth sounds for evening commute"
+  bins:
+    B:
+      weight: 35
+      description: "Smooth favorites"
+      maxPlaysPerDay: 8
+    C:
+      weight: 35
+      description: "Mellow grooves"
+      maxPlaysPerDay: 8
+    D:
+      weight: 20
+      description: "Deep discoveries"
+      maxPlaysPerDay: 5
+    L:
+      weight: 10
+      description: "Local chill"
+      minPlaysPerDay: 2
+  rules:
+    - separationMinutes: 150
+    - tempoMaximum: 120
+    - energyLevel: medium-low
+
+weekend-special:
+  name: "Weekend Special"
+  description: "Extended sets for weekend listening"
+  bins:
+    A:
+      weight: 25
+      description: "Weekend energy"
+      maxPlaysPerDay: 6
+    B:
+      weight: 25
+      description: "Feel-good weekend"
+      maxPlaysPerDay: 6
+    C:
+      weight: 20
+      description: "Discovery weekend"
+      maxPlaysPerDay: 5
+    D:
+      weight: 15
+      description: "Deep dives"
+      maxPlaysPerDay: 4
+    L:
+      weight: 15
+      description: "Local spotlight"
+      minPlaysPerDay: 4
+  rules:
+    - separationMinutes: 180
+    - artistRepeatMinutes: 240
+    - allowExtendedSets: true

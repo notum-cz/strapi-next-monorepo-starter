@@ -1,0 +1,110 @@
+{
+  "clockId": "seattle-top-hour",
+  "name": "Seattle Top of Hour",
+  "description": "Standard top-of-hour clock for Seattle market",
+  "duration": 3600,
+  "segments": [
+    {
+      "position": 0,
+      "type": "legal-id",
+      "duration": 10,
+      "description": "FCC station identification"
+    },
+    {
+      "position": 10,
+      "type": "music",
+      "duration": 180,
+      "bin": "A",
+      "description": "High-energy opener"
+    },
+    {
+      "position": 190,
+      "type": "promo",
+      "duration": 30,
+      "kind": "nonprofit",
+      "description": "Nonprofit community announcement"
+    },
+    {
+      "position": 220,
+      "type": "music",
+      "duration": 210,
+      "bin": "B",
+      "description": "Mid-tempo track"
+    },
+    {
+      "position": 430,
+      "type": "merchant",
+      "duration": 30,
+      "description": "Local business sponsor"
+    },
+    {
+      "position": 460,
+      "type": "music",
+      "duration": 180,
+      "bin": "C",
+      "description": "Mood setter"
+    },
+    {
+      "position": 640,
+      "type": "promo",
+      "duration": 30,
+      "kind": "bipoc",
+      "description": "BIPOC artist highlight"
+    },
+    {
+      "position": 670,
+      "type": "music",
+      "duration": 240,
+      "bin": "A",
+      "description": "Peak energy"
+    },
+    {
+      "position": 910,
+      "type": "break",
+      "duration": 60,
+      "description": "Station break / weather / time"
+    },
+    {
+      "position": 970,
+      "type": "music",
+      "duration": 210,
+      "bin": "L",
+      "description": "Local artist feature"
+    },
+    {
+      "position": 1180,
+      "type": "merchant",
+      "duration": 30,
+      "description": "Featured partner"
+    },
+    {
+      "position": 1210,
+      "type": "music",
+      "duration": 180,
+      "bin": "D",
+      "description": "Deeper cut"
+    },
+    {
+      "position": 1390,
+      "type": "promo",
+      "duration": 30,
+      "kind": "event",
+      "description": "Upcoming community event"
+    },
+    {
+      "position": 1420,
+      "type": "music",
+      "duration": 180,
+      "bin": "B",
+      "description": "Hour closer"
+    }
+  ],
+  "rules": {
+    "maxMusicSegments": 6,
+    "minNonprofitPromos": 1,
+    "minBipocPromos": 1,
+    "minLocalTracks": 1,
+    "binRotation": ["A", "B", "C", "A", "L", "D", "B"],
+    "merchantFeaturedMinimum": 1
+  }
+}

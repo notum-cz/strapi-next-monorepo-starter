@@ -1,7 +1,7 @@
 # This docker-compose file contains only Postgres database for local run. 
 # Strapi should be run either in a separate container (Dockerfile) or in the host machine (yarn dev).
 
-name: dev-templates
+name: trail-mixx
 services:
   db:
     platform: linux/amd64 #for platform error on Apple M1 chips

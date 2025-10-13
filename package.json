@@ -1,31 +1,34 @@
 {
-  "name": "strapi-next-monorepo-starter",
-  "version": "2.0.0",
+  "name": "trail-mixx",
+  "version": "1.0.0",
   "private": true,
   "author": {
-    "name": "Notum Technologies",
-    "email": "info@notum.cz",
-    "url": "https://notum.cz"
+    "name": "Executive USA",
+    "email": "info@executiveusa.com",
+    "url": "https://executiveusa.com"
   },
   "maintainers": [
     {
-      "name": "Notum Technologies",
-      "email": "info@notum.cz",
-      "url": "https://notum.cz"
+      "name": "Executive USA",
+      "email": "info@executiveusa.com",
+      "url": "https://executiveusa.com"
     }
   ],
   "workspaces": [
     "packages/*",
-    "apps/*"
+    "apps/*",
+    "services/*"
   ],
   "scripts": {
     "build": "turbo build --cache-dir=.turbo",
-    "build:strapi": "turbo run build --filter=@repo/strapi",
-    "build:ui": "turbo run build --filter=@repo/ui",
+    "build:cms": "turbo run build --filter=@repo/cms",
+    "build:web": "turbo run build --filter=@repo/web",
+    "build:stream": "turbo run build --filter=@repo/stream",
     "commit": "git-cz",
-    "dev": "turbo dev",
-    "dev:strapi": "turbo run dev --filter=@repo/strapi",
-    "dev:ui": "turbo run dev --filter=@repo/ui",
+    "dev": "turbo dev --filter=@repo/web --filter=@repo/cms --filter=@repo/stream",
+    "dev:cms": "turbo run dev --filter=@repo/cms",
+    "dev:web": "turbo run dev --filter=@repo/web",
+    "dev:stream": "turbo run dev --filter=@repo/stream",
     "format": "prettier --write --cache --ignore-unknown \"**/*.{js,jsx,ts,tsx,md,css,scss}\"",
     "format:check": "prettier --check --cache --ignore-unknown \"**/*.{js,jsx,ts,tsx,md,css,scss}\"",
     "heroku-postbuild": "bash ./scripts/heroku/heroku-postbuild.sh",
@@ -33,8 +36,10 @@
     "lint": "turbo lint",
     "postinstall": "yarn setup:apps",
     "prepare": "husky",
-    "start:strapi": "turbo run start --filter=@repo/strapi",
-    "start:ui": "turbo run start --filter=@repo/ui",
+    "ios": "cd apps/mobile && npx cap open ios",
+    "android": "cd apps/mobile && npx cap open android",
+    "start:cms": "turbo run start --filter=@repo/cms",
+    "start:web": "turbo run start --filter=@repo/web",
     "setup:apps": "find . -name '*.example' -exec sh -c 'cp -n \"$1\" \"${1%.example}\"' _ {} \\;"
   },
   "prettier": "@repo/prettier-config",

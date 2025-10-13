@@ -1,0 +1,21 @@
+{
+  "name": "@repo/mobile",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'Mobile app requires native build. Use yarn ios or yarn android'",
+    "ios": "cap open ios",
+    "android": "cap open android",
+    "sync": "cap sync",
+    "copy": "cap copy"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/ios": "^6.0.0",
+    "capacitor-media-session": "^6.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.0.0"
+  }
+}
