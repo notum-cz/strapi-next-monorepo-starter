@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Blog system models
+model BlogPost {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  excerpt   String?
+  slug      String   @unique
+  topic     String   // food, water, energy, shelter
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("blog_posts")
+}
+
+// Donation tracking models
+model Donation {
+  id        String   @id @default(cuid())
+  amount    Float
+  donorId   String?
+  animalId  String?
+  message   String?
+  status    String   @default("completed") // pending, completed, failed
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("donations")
+}
+
+// User/Donor information (for leaderboards)
+model User {
+  id        String   @id @default(cuid())
+  walletId  String?  @unique // Solana wallet address
+  name      String?
+  email     String?
+  avatarUrl String?
+  points    Int      @default(0)
+  level     String   @default("helper") // helper, champion, guardian
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// Impact projects tracking
+model ImpactProject {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  location    String
+  status      String   @default("active") // active, completed, paused
+  targetFund  Float?
+  currentFund Float    @default(0)
+  startDate   DateTime @default(now())
+  endDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("impact_projects")
+}
+
+// NFT tracking for special badges
+model NFTBadge {
+  id          String   @id @default(cuid())
+  tokenId     String?  @unique
+  name        String
+  description String
+  imageUrl    String
+  rarity      String   @default("common") // common, rare, epic, legendary
+  ownerId     String?
+  mintedAt    DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("nft_badges")
+}
