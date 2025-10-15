@@ -1,114 +1,87 @@
-"use client"
+'use client';
 
-import { useSearchParams } from "next/navigation"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { signIn } from "next-auth/react"
-import { useTranslations } from "next-intl"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
+import { zodResolver } from '@hookform/resolvers/zod';
+import { signIn } from 'next-auth/react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-import { safeJSONParse } from "@/lib/general-helpers"
-import { Link, useRouter } from "@/lib/navigation"
-import { AppField } from "@/components/forms/AppField"
-import { AppForm } from "@/components/forms/AppForm"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { useToast } from "@/components/ui/use-toast"
+import { GoogleIcon } from '@/components/icons/GoogleIcon';
+import { AppForm } from '@/components/forms/AppForm';
+import { PasswordField } from '@/components/forms/fields/PasswordField';
+import { TextField } from '@/components/forms/fields/TextField';
+import { Button } from '@/components/ui/button';
+import { useAppRouter } from '@/hooks/useAppRouter';
+import { useAppSearchParams } from '@/hooks/useAppSearchParams';
+import { useTranslatedZod } from '@/hooks/useTranslatedZod';
+import { APP_ROUTES } from '@/lib/constants';
+import { Link } from '@/lib/navigation';
 
 export function SignInForm() {
-  const t = useTranslations("auth.signIn")
-  const { toast } = useToast()
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/"
+  const { router } = useAppRouter();
+  const { searchParams } = useAppSearchParams();
+  const { tZod } = useTranslatedZod();
 
-  const form = useForm<z.infer<FormSchemaType>>({
-    resolver: zodResolver(SignInFormSchema),
-    mode: "onBlur",
-    reValidateMode: "onBlur",
-    defaultValues: { email: "", password: "" },
-  })
+  const schema = z.object({
+    email: tZod.string().email(),
+    password: tZod.string(),
+  });
 
-  async function onSubmit(values: z.infer<FormSchemaType>) {
-    const res = await signIn("credentials", {
-      ...values,
-      callbackUrl,
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof schema>) => {
+    const response = await signIn('credentials', {
       redirect: false,
-    })
+      email: values.email,
+      password: values.password,
+    });
 
-    if (!res?.error) {
-      router.refresh()
-      setTimeout(() => router.push(callbackUrl), 300)
-    } else {
-      const parsedError = safeJSONParse<any>(res.error)
-      const message =
-        "message" in parsedError
-          ? parsedError.message
-          : t("errors.CredentialsSignin")
-
-      toast({
-        variant: "destructive",
-        description: message,
-      })
+    if (response?.ok) {
+      router.push(searchParams.get('callbackUrl') || APP_ROUTES.home);
     }
-  }
+
+    if (response?.error) {
+      // TODO: Handle error
+    }
+  };
 
   return (
-    <Card className="m-auto w-[400px]">
-      <CardHeader>
-        <CardTitle>{t("header")}</CardTitle>
-        <CardDescription>{t("description")}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <AppForm form={form} onSubmit={onSubmit} id={signInFormName}>
-          <AppField
-            name="email"
-            type="text"
-            autoComplete="email"
-            required
-            label={t("email")}
-          />
-          <AppField
-            name="password"
-            type="password"
-            // https://www.chromium.org/developers/design-documents/create-amazing-password-forms/
-            autoComplete="current-password"
-            required
-            label={t("password")}
-          />
-        </AppForm>
-      </CardContent>
-      <CardFooter className="flex flex-col items-center gap-2">
-        <Button type="submit" size="lg" variant="default" form={signInFormName}>
-          {t("submit")}
+    <AppForm
+      form={form}
+      onSubmit={onSubmit}
+      className="flex flex-col items-stretch gap-6"
+    >
+      <div className="flex flex-col gap-4">
+        <TextField control={form.control} name="email" label="Email" />
+        <PasswordField
+          control={form.control}
+          name="password"
+          label="Password"
+        />
+      </div>
+      <Link
+        href={APP_ROUTES.forgotPassword}
+        className="text-right text-sm font-medium text-primary underline"
+      >
+        Forgot password?
+      </Link>
+
+      <div className="flex flex-col gap-2">
+        <Button type="submit">Sign in</Button>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => signIn('google')}
+        >
+          <GoogleIcon className="mr-2 h-5 w-5" />
+          Sign in with Google
         </Button>
-
-        <div className="mt-2">
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/auth/forgot-password">{t("forgotPassword")}?</Link>
-          </Button>
-
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/auth/register">{t("createAccount")}</Link>
-          </Button>
-        </div>
-      </CardFooter>
-    </Card>
-  )
+      </div>
+    </AppForm>
+  );
 }
-
-const SignInFormSchema = z.object({
-  email: z.string().min(1).email().or(z.string().min(1)),
-  password: z.string().min(1),
-})
-
-type FormSchemaType = typeof SignInFormSchema
-
-const signInFormName = "signInForm"

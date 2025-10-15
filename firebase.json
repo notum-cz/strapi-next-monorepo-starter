@@ -1,0 +1,56 @@
+{
+  "hosting": {
+    "source": "apps/web",
+    "frameworksBackend": {
+      "region": "us-west1",
+      "maxInstances": 3
+    },
+    "redirects": [
+      {
+        "source": "/live/:path*",
+        "run": {
+          "serviceId": "stream-proxy",
+          "region": "us-west1"
+        }
+      }
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(jpg|jpeg|gif|png|svg|webp|js|css|woff|woff2|ttf|eot|otf)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          }
+        ]
+      }
+    ]
+  },
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs20"
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "storage": {
+      "port": 9199
+    },
+    "hosting": {
+      "port": 5000
+    }
+  }
+}

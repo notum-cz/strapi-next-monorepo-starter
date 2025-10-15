@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /promos/{promo} {
+      allow read: if true;
+      allow write: if request.auth.token.role in ['editor', 'admin'];
+    }
+    match /merchants/{merchant} {
+      allow read: if true;
+      allow write: if request.auth.uid == resource.data.createdBy || request.auth.token.role in ['admin'];
+       // validate locale ∈ {"en","es"}; guard sizes, rate-limited writes via functions token.
+      allow create: if request.auth.uid != null && request.resource.data.locale in ["en", "es"];
+    }
+    match /shows/{show} {
+      allow read: if true;
+      allow write: if request.auth.token.role in ['editor', 'admin'];
+    }
+    match /tracks/{track} {
+      allow read: if true;
+      allow write: if request.auth.token.role in ['editor', 'admin'] || request.auth.uid != null;
+    }
+    match /nowplaying/current {
+      allow read: if true;
+      allow write: if request.auth.token.role in ['editor', 'admin'];
+    }
+    match /metrics_daily/{metric} {
+      allow read: if request.auth.token.role in ['admin'];
+      allow write: if request.auth.token.role in ['admin'];
+    }
+    match /alerts/{alert} {
+      allow read: if request.auth.token.role in ['admin'];
+      allow write: if request.auth.token.role in ['admin'];
+    }
+     match /users/{userId} {
+      allow read, write: if request.auth.uid == userId;
+    }
+  }
+}

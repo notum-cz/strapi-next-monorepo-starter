@@ -1,171 +1,65 @@
-"use client"
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useTranslations } from "next-intl"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
+import { zodResolver } from '@hookform/resolvers/zod';
+import { signIn } from 'next-auth/react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
-import { Link } from "@/lib/navigation"
-import { cn } from "@/lib/styles"
-import { useUserMutations } from "@/hooks/useUser"
-import { AppField } from "@/components/forms/AppField"
-import { AppForm } from "@/components/forms/AppForm"
-import { Button, buttonVariants } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { useToast } from "@/components/ui/use-toast"
-
-// To enable email confirmation, Strapi Users-Permissions plugin must be configured (e.g. email provider, redirect URL)
-// http://localhost:1337/admin/settings/users-permissions/advanced-settings
-const ENABLE_EMAIL_CONFIRMATION = false
+import { GoogleIcon } from '@/components/icons/GoogleIcon';
+import { AppForm } from '@/components/forms/AppForm';
+import { PasswordField } from '@/components/forms/fields/PasswordField';
+import { TextField } from '@/components/forms/fields/TextField';
+import { Button } from '@/components/ui/button';
+import { useTranslatedZod } from '@/hooks/useTranslatedZod';
+import { registerWithEmailAndPassword } from '@/lib/firebase-api/auth/client'; // Placeholder
 
 export function RegisterForm() {
-  const t = useTranslations("auth.register")
-  const { toast } = useToast()
-  const { registerMutation } = useUserMutations()
+  const { tZod } = useTranslatedZod();
 
-  const form = useForm<z.infer<FormSchemaType>>({
-    resolver: zodResolver(RegisterFormSchema),
-    mode: "onBlur",
-    reValidateMode: "onBlur",
+  const schema = z.object({
+    email: tZod.string().email(),
+    password: tZod.string().min(8),
+  });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
     defaultValues: {
-      email: "",
-      password: "",
-      passwordConfirmation: "",
+      email: '',
+      password: '',
     },
-  })
+  });
 
-  async function onSubmit(values: z.infer<FormSchemaType>) {
-    registerMutation.mutate(
-      {
-        username: values.email,
-        email: values.email,
-        password: values.password,
-      },
-      {
-        onError: (error) => {
-          const errorMap = {
-            "already taken": t("errors.emailUsernameTaken"),
-          } as const
-
-          let errorMessage = t("errors.unexpectedError")
-
-          if (error instanceof Error) {
-            const errorKey = Object.keys(errorMap).find(
-              (key): key is keyof typeof errorMap =>
-                error.message?.includes(key)
-            )
-
-            errorMessage = errorKey ? errorMap[errorKey] : errorMessage
-          }
-
-          toast({
-            variant: "destructive",
-            description: errorMessage,
-          })
-        },
-      }
-    )
-  }
-
-  if (registerMutation.isSuccess) {
-    // This message is relevant if system requires email verification
-    // If user is `confirmed` immediately, this message is not needed
-    // and user should be redirected to sign in page
-    return (
-      <Card className="m-auto w-[400px]">
-        <CardHeader>
-          <h2 className="mx-auto">
-            {ENABLE_EMAIL_CONFIRMATION ? t("checkEmail") : t("status.success")}
-          </h2>
-        </CardHeader>
-        <CardContent>
-          <Link
-            href="/auth/signin"
-            className={cn(
-              buttonVariants({ variant: "default" }),
-              "h-[44px] w-full"
-            )}
-          >
-            <p>{t("signInLink")}</p>
-          </Link>
-        </CardContent>
-      </Card>
-    )
-  }
+  const onSubmit = async (values: z.infer<typeof schema>) => {
+    await registerWithEmailAndPassword(values.email, values.password); // Placeholder
+    // TODO: Handle success/error
+  };
 
   return (
-    <div className="flex flex-col gap-5">
-      <Card className="m-auto w-[400px]">
-        <CardHeader>
-          <CardTitle>{t("header")}</CardTitle>
-          <CardDescription>{t("description")}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <AppForm form={form} onSubmit={onSubmit} id={registerFormName}>
-            <AppField name="email" type="text" required label={t("email")} />
-            <AppField
-              name="password"
-              type="password"
-              required
-              label={t("password")}
-            />
-            <AppField
-              name="passwordConfirmation"
-              type="password"
-              required
-              label={t("checkPassword")}
-            />
-          </AppForm>
-        </CardContent>
-        <CardFooter className="flex flex-col items-center gap-2">
-          <Button
-            type="submit"
-            size="lg"
-            variant="default"
-            form={registerFormName}
-            className="w-full"
-          >
-            {t("submit")}
-          </Button>
-        </CardFooter>
-      </Card>
+    <AppForm
+      form={form}
+      onSubmit={onSubmit}
+      className="flex flex-col items-stretch gap-6"
+    >
+      <div className="flex flex-col gap-4">
+        <TextField control={form.control} name="email" label="Email" />
+        <PasswordField
+          control={form.control}
+          name="password"
+          label="Password"
+        />
+      </div>
 
-      <p className="mx-auto flex gap-1">
-        {t("signInLinkLinkDescription")}
-        <span>
-          <Link href="/auth/signin" className="underline">
-            {t("signInLink")}.
-          </Link>
-        </span>
-      </p>
-    </div>
-  )
+      <div className="flex flex-col gap-2">
+        <Button type="submit">Create account</Button>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => signIn('google')}
+        >
+          <GoogleIcon className="mr-2 h-5 w-5" />
+          Sign up with Google
+        </Button>
+      </div>
+    </AppForm>
+  );
 }
-
-const RegisterFormSchema = z
-  .object({
-    email: z.string().email(),
-    password: z.string().min(PASSWORD_MIN_LENGTH),
-    passwordConfirmation: z.string().min(PASSWORD_MIN_LENGTH),
-  })
-  .superRefine((data, ctx) => {
-    if (data.password !== data.passwordConfirmation) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        params: { type: "checkPassword" },
-        path: ["passwordConfirmation"],
-      })
-    }
-  })
-
-type FormSchemaType = typeof RegisterFormSchema
-
-const registerFormName = "registerForm"

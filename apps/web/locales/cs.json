@@ -140,7 +140,7 @@
     "email": "Email",
     "emailPlaceholder": "jan.novak@gmail.com",
     "message": "Zpráva",
-    "gdpr": "Odesláním souhlasíte se ",
+    "gdpr": "Souhlasím se zpracováním osobních údajů",
     "submit": "Odeslat",
     "success": "Formulář byl úspěšně odeslán",
     "error": "Při odesílání formuláře došlo k chybě, zkuste to prosím znovu",
@@ -192,7 +192,7 @@
     "changePassword": {
       "errors": {
         "invalidCurrentPassword": "Současné heslo se neshoduje",
-        "unexpectedError": "An unexpected error occurred. Please try again later.",
+        "unexpectedError": "Došlo k neočekávané chybě. Zkuste to prosím později.",
         "newPasswordSameAsCurrent": "Nové heslo se shoduje s aktuálním heslem"
       },
       "successfullyChanged": "Heslo bylo úspěšně změněno",
@@ -221,6 +221,7 @@
     },
 
     "resetPassword": {
+      "successfullySet": "Heslo bylo úspěšně změněno.",
       "header": "Resetování hesla",
       "description": "Zvolte si nové heslo, které budete používat k přihlašování.",
       "submit": "Nastavit heslo",
