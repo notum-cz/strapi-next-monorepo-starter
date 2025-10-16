@@ -40,7 +40,7 @@
     "@strapi/plugin-users-permissions": "^5.17.0",
     "@strapi/provider-email-mailgun": "^5.17.0",
     "@strapi/provider-upload-aws-s3": "^5.17.0",
-    "@strapi/strapi": "^5.12.4",
+    "@strapi/strapi": "^5.24.2",
     "lodash": "^4.17.21",
     "pg": "^8.13.1",
     "qs": "^6.13.0",
