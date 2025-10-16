@@ -32,7 +32,6 @@
     "format": "prettier --write --cache --ignore-unknown \"**/*.{js,jsx,ts,tsx,md,css,scss}\"",
     "format:check": "prettier --check --cache --ignore-unknown \"**/*.{js,jsx,ts,tsx,md,css,scss}\"",
     "heroku-postbuild": "bash ./scripts/heroku/heroku-postbuild.sh",
-    "preinstall": "npx only-allow yarn",
     "lint": "turbo lint",
     "postinstall": "yarn setup:apps",
     "prepare": "husky",
