@@ -1,0 +1,73 @@
+{
+  "suiteName": "New World Kids - MCP Integration Suite",
+  "version": "1.0.0",
+  "description": "Configuration for all integrated Meta-Cognitive Process (MCP) servers.",
+  "mcps": [
+    {
+      "name": "Linear",
+      "purpose": "System of Record: Manages tasks, features, and backlog.",
+      "status": "enabled",
+      "config": {
+        "teamId": "NWK"
+      }
+    },
+    {
+      "name": "GitHub",
+      "purpose": "Workflow Automation: Manages branches, PRs, and repository actions.",
+      "status": "enabled",
+      "config": {
+        "repository": "newworldkids/platform"
+      }
+    },
+    {
+      "name": "Perplexity",
+      "purpose": "Research Partner: Gathers best practices and debugs complex issues.",
+      "status": "enabled",
+      "config": {}
+    },
+    {
+      "name": "Semgrep",
+      "purpose": "Security Gate: Automates code scanning for vulnerabilities.",
+      "status": "enabled",
+      "config": {
+        "ruleset": "p/ci"
+      }
+    },
+    {
+      "name": "Playwright",
+      "purpose": "UI Validation: Enables end-to-end testing and self-grading UIs.",
+      "status": "enabled",
+      "config": {}
+    },
+    {
+      "name": "Firebase",
+      "purpose": "Backend Co-Pilot: Allows direct, secure interaction with the Firebase project.",
+      "status": "enabled",
+      "config": {
+        "projectId": "newworldkids-prod"
+      }
+    },
+    {
+      "name": "Context7",
+      "purpose": "Documentation Expert: Provides always-up-to-date library and framework docs.",
+      "status": "enabled",
+      "config": {}
+    },
+    {
+      "name": "Vibe Check",
+      "purpose": "Architectural Conscience: Provides reflective pauses to prevent over-engineering.",
+      "status": "enabled",
+      "config": {
+        "mode": "on"
+      }
+    },
+    {
+      "name": "Pieces",
+      "purpose": "Long-Term Memory: Creates a searchable history of the development process.",
+      "status": "enabled",
+      "config": {
+        "watch": ["vscode", "terminal", "chrome"]
+      }
+    }
+  ]
+}
