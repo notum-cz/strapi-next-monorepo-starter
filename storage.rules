@@ -1,13 +1,17 @@
 rules_version = '2';
+
 service firebase.storage {
   match /b/{bucket}/o {
+    // Allow public read access to all files
     match /{allPaths=**} {
-      allow read, write: if request.auth != null;
+      allow read: true;
     }
-    // virus-scan hook TODO comment.
-    // TODO: Add virus scanning
-    match /uploads/{userId}/{fileName} {
-      allow write: if request.auth.uid == userId;
+
+    // Allow writes (uploads, updates, deletes) only for authenticated users with an 'editor' or 'admin' role.
+    // We will check the user's role from their document in Firestore.
+    match /media/{fileName} {
+      allow write: if request.auth != null && 
+                    get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'editor'];
     }
   }
 }

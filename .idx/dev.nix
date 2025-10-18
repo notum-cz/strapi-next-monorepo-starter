@@ -5,7 +5,7 @@
 
   # Use https://search.nixos.org/packages to find packages
   packages = [
-    pkgs.nodejs_22,
+    pkgs.nodejs_22sk-or-v1-4c24589813b72dc763933d563c7d9a7c20236f77dc4e9f2cc7930d28deb7ec4f,
     pkgs.yarn,
     pkgs.turbo
   ];

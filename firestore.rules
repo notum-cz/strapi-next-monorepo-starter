@@ -1,38 +1,70 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /promos/{promo} {
-      allow read: if true;
-      allow write: if request.auth.token.role in ['editor', 'admin'];
+
+    // Helper function to check user roles
+    function isAdmin() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
-    match /merchants/{merchant} {
-      allow read: if true;
-      allow write: if request.auth.uid == resource.data.createdBy || request.auth.token.role in ['admin'];
-       // validate locale ∈ {"en","es"}; guard sizes, rate-limited writes via functions token.
-      allow create: if request.auth.uid != null && request.resource.data.locale in ["en", "es"];
+
+    function isEditor() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'editor'];
     }
-    match /shows/{show} {
-      allow read: if true;
-      allow write: if request.auth.token.role in ['editor', 'admin'];
+
+    // Public content can be read by anyone
+    match /pages/{pageId} {
+      allow read: if resource.data.published == true;
+      allow write: if isEditor();
     }
-    match /tracks/{track} {
-      allow read: if true;
-      allow write: if request.auth.token.role in ['editor', 'admin'] || request.auth.uid != null;
+
+    match /campaigns/{campaignId} {
+        allow read: if resource.data.public == true;
+        allow write: if isEditor();
     }
-    match /nowplaying/current {
-      allow read: if true;
-      allow write: if request.auth.token.role in ['editor', 'admin'];
+
+    match /media/{mediaId} {
+        allow read: true;
+        allow write: if isEditor();
     }
-    match /metrics_daily/{metric} {
-      allow read: if request.auth.token.role in ['admin'];
-      allow write: if request.auth.token.role in ['admin'];
+    
+    match /donations_admin_reconciled/{donationId} {
+        allow read: true;
+        allow write: if isEditor();
     }
-    match /alerts/{alert} {
-      allow read: if request.auth.token.role in ['admin'];
-      allow write: if request.auth.token.role in ['admin'];
+
+    // Client-side donation logs can be created by anyone, but only read by admins
+    match /donations_client_log/{logId} {
+        allow create: true;
+        allow read, write, delete: if isAdmin();
     }
-     match /users/{userId} {
-      allow read, write: if request.auth.uid == userId;
+
+    // Subscribers can be created by anyone, but only read by admins
+    match /subscribers/{subscriberId} {
+        allow create: true;
+        allow read, write, delete: if isAdmin();
+    }
+
+    // Donors can only be managed by admins
+    match /donors/{donorId} {
+        allow read, write, create, delete: if isAdmin();
+    }
+    
+    // Settings can only be managed by admins
+    match /settings/{settingId} {
+        allow read: true;
+        allow write: if isAdmin();
+    }
+
+    // Agent tasks are admin-only
+    match /agent_tasks/{taskId} {
+        allow read, write, create, delete: if isAdmin();
+    }
+
+    // User roles can be read by the user themselves, but only written by admins
+    match /users/{userId} {
+      allow read: if request.auth.uid == userId;
+      allow write: if isAdmin();
     }
   }
 }
