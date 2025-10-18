@@ -1,3 +1,61 @@
-https://github.com/executiveusa/newworldkids.git{
-  "mcpServers": {}
+{
+  "mcpServers": {
+    "linear": {
+      "purpose": "System of Record: Manages tasks, features, and backlog.",
+      "status": "enabled",
+      "config": {
+        "teamId": "NWK"
+      }
+    },
+    "github": {
+      "purpose": "Workflow Automation: Manages branches, PRs, and repository actions.",
+      "status": "enabled",
+      "config": {
+        "repository": "newworldkids/platform"
+      }
+    },
+    "perplexity": {
+      "purpose": "Research Partner: Gathers best practices and debugs complex issues.",
+      "status": "enabled",
+      "config": {}
+    },
+    "semgrep": {
+      "purpose": "Security Gate: Automates code scanning for vulnerabilities.",
+      "status": "enabled",
+      "config": {
+        "ruleset": "p/ci"
+      }
+    },
+    "playwright": {
+      "purpose": "UI Validation: Enables end-to-end testing and self-grading UIs.",
+      "status": "enabled",
+      "config": {}
+    },
+    "firebase": {
+      "purpose": "Backend Co-Pilot: Allows direct, secure interaction with the Firebase project.",
+      "status": "enabled",
+      "config": {
+        "projectId": "newworldkids-prod"
+      }
+    },
+    "context7": {
+      "purpose": "Documentation Expert: Provides always-up-to-date library and framework docs.",
+      "status": "enabled",
+      "config": {}
+    },
+    "vibecheck": {
+      "purpose": "Architectural Conscience: Provides reflective pauses to prevent over-engineering.",
+      "status": "enabled",
+      "config": {
+        "mode": "on"
+      }
+    },
+    "pieces": {
+      "purpose": "Long-Term Memory: Creates a searchable history of the development process.",
+      "status": "enabled",
+      "config": {
+        "watch": ["vscode", "terminal", "chrome"]
+      }
+    }
+  }
 }
