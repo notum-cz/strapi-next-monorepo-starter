@@ -1,12 +1,20 @@
 {
-  "name": "nw-kids-site",
-  "version": "0.1.0",
+  "name": "trail-mixx",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "dev:cms": "cd services/cms && yarn develop",
+    "dev:stream": "cd services/stream && yarn dev",
+    "dev:web": "yarn dev",
+    "build:cms": "cd services/cms && yarn build",
+    "build:stream": "cd services/stream && yarn build",
+    "start:cms": "cd services/cms && yarn start",
+    "start:stream": "cd services/stream && yarn start",
+    "seed:cms": "node services/cms/scripts/seed/seed-data.js && node services/cms/scripts/seed/seed-v0-leonradio-data.js"
   },
   "dependencies": {
     "firebase": "^10.8.0",
@@ -15,9 +23,13 @@
     "next-intl": "^3.11.0",
     "react": "^18",
     "react-dom": "^18",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "tweakcn-next": "github:jnsahaj/tweakcn"
   },
   "devDependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

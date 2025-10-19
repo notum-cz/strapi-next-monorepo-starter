@@ -1,3 +1,65 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --primary-color: #4f46e5;
+  --secondary-color: #f97316;
+  --text-color: #334155;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text-color);
+  background-color: #f8fafc;
+}
+
+.admin-panel {
+  --bg-admin: #1e293b;
+  --text-admin: #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.admin-header {
+  background-color: var(--bg-admin);
+  color: var(--text-admin);
+  padding: 1rem;
+}
+
+.admin-header h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.admin-nav ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+}
+
+.admin-nav li {
+  margin-right: 1rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.admin-nav li:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+
+.admin-content {
+  flex: 1;
+  padding: 2rem;
+}
+
+.admin-footer {
+  background-color: var(--bg-admin);
+  color: var(--text-admin);
+  padding: 1rem;
+  text-align: center;
+}

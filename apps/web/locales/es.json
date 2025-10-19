@@ -1,5 +1,382 @@
 {
   "test": {
     "test_key": "Hola, Mundo!"
+  },
+  "seo": {
+    "metaTitle": "TRAILMIXX FM - Tu Banda Sonora",
+    "metaDescription": "Escucha las mejores emisoras de radio con música variada las 24 horas. Tu banda sonora a la vida.",
+    "metaImageUrl": "https://trailmixxfm.com/og-image.jpg",
+    "keywords": "radio, música, streaming, emisora, pop, rock, electrónico, navidad",
+    "metaRobots": "index, follow",
+    "applicationName": "TRAILMIXX FM",
+    "siteName": "TRAILMIXX FM",
+    "email": "hello@trailmixxfm.com",
+    "twitter": {
+      "card": "summary_large_image",
+      "title": "TRAILMIXX FM - Tu Banda Sonora",
+      "description": "Escucha las mejores emisoras de radio con música variada las 24 horas. Tu banda sonora a la vida.",
+      "siteId": "@trailmixxfm",
+      "creator": "@trailmixxfm",
+      "creatorId": "@trailmixxfm",
+      "imageUrl": "https://trailmixxfm.com/og-image.jpg"
+    }
+  },
+
+  "general": {
+    "noOptionsAvailable": "No hay opciones disponibles",
+    "search": "Buscar",
+    "loading": "Cargando",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "submitForm": "Enviar",
+    "saveChanges": "Guardar cambios",
+    "listenLive": "Escuchar en Vivo",
+    "pauseLive": "Pausar",
+    "home": "Inicio",
+    "radioStations": "Emisoras de Radio",
+    "about": "Acerca de",
+    "contact": "Contacto",
+    "stations": "Emisoras",
+    "featuredStations": "Emisoras Destacadas",
+    "recommendedForYou": "Recomendado para Ti",
+    "continueListening": "Continuar Escuchando",
+    "nowPlaying": "Reproduciendo Ahora",
+    "listenNow": "Escuchar Ahora"
+  },
+
+  "tables": {
+    "previousPage": "Página anterior",
+    "nextPage": "Página siguiente",
+    "lastPage": "Última página",
+    "firstPage": "Primera página",
+    "rowsPerPage": "Filas por página",
+    "pageXOfY": "Página {x} de {y}",
+    "ascending": "Ascendente",
+    "descending": "Descendente",
+    "noData": "Sin datos"
+  },
+
+  "navbar": {
+    "account": "Cuenta",
+    "actions": {
+      "profile": "Perfil",
+      "signOut": "Cerrar sesión",
+      "changePassword": "Cambiar contraseña",
+      "signIn": "Iniciar sesión"
+    }
+  },
+
+  "comps": {
+    "fileInput": {
+      "label": "Seleccionar archivo",
+      "dragAndDrop": "Agrega un archivo arrastrándolo o seleccionándolo haciendo clic",
+      "validFileTypes": "El archivo debe estar en formato {validFileTypes}",
+      "wrongFileType": "Este tipo de archivo no es compatible",
+      "selectedFile": "Archivo seleccionado: {fileName}",
+      "removeFile": "Eliminar archivo"
+    },
+    "datePicker": {
+      "label": "Seleccionar fecha"
+    },
+    "dateRangePicker": {
+      "label": "Seleccionar rango de fechas"
+    },
+    "themeToggle": {
+      "label": "Cambiar tema"
+    },
+    "dialog": {
+      "confirmClose": "¿Quieres cerrar el diálogo? Perderás todos los cambios no guardados."
+    }
+  },
+
+  "errors": {
+    "global": {
+      "title": "Ocurrió un error desconocido",
+      "tryAgain": "Intentar de nuevo",
+      "invalidContent": "Este contenido no se pudo mostrar",
+      "somethingWentWrong": "Algo salió mal 🥺"
+    },
+
+    "notFound": {
+      "title": "Página no encontrada",
+      "description": "La página que buscas no fue encontrada.",
+      "solution": "Por favor, verifica si has ingresado la URL correcta o regresa a la página de inicio.",
+      "redirect": "Ir a la página de inicio"
+    },
+
+    "forms": {
+      "errorsInForm": "El formulario contiene errores",
+      "checkFormForErrors": "Por favor, verifica si faltan valores"
+    },
+
+    "zodValidation": {
+      "invalid_type": "Se esperaba el tipo {expected}, pero se recibió {received}",
+      "invalid_type_received_undefined": "Campo obligatorio",
+      "invalid_literal": "Valor inválido, se esperaba {expected}",
+
+      "invalid_string": {
+        "regex": "Formato inválido"
+      },
+      "too_small": {
+        "string": {
+          "exact": "La cadena debe tener exactamente {minimum} caracteres",
+          "inclusive": "La cadena debe tener al menos {minimum} caracteres",
+          "not_inclusive": "La cadena debe tener más de {minimum} caracteres"
+        },
+        "number": {
+          "exact": "El valor debe ser exactamente {minimum}",
+          "inclusive": "El valor mínimo es {minimum}",
+          "not_inclusive": "El número debe ser mayor que {minimum}"
+        }
+      },
+      "too_big": {
+        "string": {
+          "exact": "La cadena debe tener exactamente {maximum} caracteres",
+          "inclusive": "La cadena debe tener como máximo {maximum} caracteres",
+          "not_inclusive": "La cadena debe tener menos de {maximum} caracteres"
+        },
+        "number": {
+          "exact": "El valor debe ser exactamente {maximum}",
+          "inclusive": "El valor máximo es {maximum}",
+          "not_inclusive": "El número debe ser menor que {maximum}"
+        }
+      },
+      "custom": {
+        "password": "Las contraseñas no coinciden",
+        "passwordWithNumber": "La cadena debe contener al menos 1 número",
+        "phoneNumber": "Este campo debe contener 9 números"
+      }
+    }
+  },
+
+  "contactForm": {
+    "name": "Nombre y apellido",
+    "namePlaceholder": "Juan Pérez",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "juan.perez@gmail.com",
+    "message": "Mensaje",
+    "gdpr": "Acepto el procesamiento de datos personales",
+    "submit": "Enviar",
+    "success": "El formulario se ha enviado correctamente.",
+    "error": "No se pudo enviar el formulario. Por favor, inténtalo de nuevo más tarde.",
+    "gdprLink": "Leer más sobre el procesamiento de datos personales"
+  },
+
+  "auth": {
+    "signIn": {
+      "status": {
+        "fail": "Error al iniciar sesión",
+        "success": "Inicio de sesión exitoso",
+        "checkCredentials": "Por favor, verifica tus credenciales de inicio de sesión"
+      },
+      "errors": {
+        "CredentialsSignin": "Has ingresado credenciales de inicio de sesión incorrectas."
+      },
+      "header": "Iniciar sesión",
+      "description": "Ingresa tus datos de inicio de sesión.",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "submit": "Iniciar sesión",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "createAccount": "Crear una cuenta"
+    },
+
+    "register": {
+      "status": {
+        "fail": "Registro fallido",
+        "success": "Registro exitoso",
+        "checkCredentials": "Por favor, verifica tus credenciales"
+      },
+      "errors": {
+        "credentials": "Credenciales incorrectas proporcionadas",
+        "unexpectedError": "Registro fallido. Por favor, inténtalo de nuevo más tarde.",
+        "emailUsernameTaken": "El correo electrónico ya está en uso. Por favor, elige otro."
+      },
+      "header": "Registro",
+      "description": "Crea una cuenta para acceder al sistema.",
+      "email": "Dirección de correo electrónico",
+      "password": "Crear contraseña",
+      "checkPassword": "Confirmar contraseña",
+      "submit": "Crear cuenta",
+      "forgotPassword": "¿Ya tienes una cuenta? Inicia sesión.",
+      "checkEmail": "Sigue las instrucciones en tu correo electrónico para confirmar tu dirección de correo.",
+      "signInLinkLinkDescription": "¿Ya tienes una cuenta?",
+      "signInLink": "Iniciar sesión"
+    },
+
+    "changePassword": {
+      "errors": {
+        "invalidCurrentPassword": "La contraseña actual no coincide",
+        "unexpectedError": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.",
+        "newPasswordSameAsCurrent": "La nueva contraseña debe ser diferente de la contraseña actual"
+      },
+      "successfullyChanged": "Contraseña cambiada exitosamente",
+      "header": "Cambiar contraseña",
+      "description": "Elige una nueva contraseña para iniciar sesión.",
+      "currentPassword": "Contraseña actual",
+      "password": "Nueva contraseña",
+      "confirmPassword": "Confirmar nueva contraseña",
+      "submit": "Cambiar contraseña"
+    },
+
+    "accountActivation": {
+      "successfullySet": "Cuenta activada exitosamente. Ahora puedes iniciar sesión.",
+      "errors": {
+        "Incorrect code provided": "Se generó un enlace incorrecto para ti. Contacta al soporte."
+      },
+      "welcome": "Bienvenido",
+      "activateAccount": "Se ha creado una nueva cuenta con el correo electrónico {email}.",
+      "invalidLink": "Este enlace no es válido.",
+      "activate": "Activar cuenta",
+      "header": "Establecer contraseña",
+      "description": "Elige una contraseña para iniciar sesión.",
+      "submit": "Activar cuenta",
+      "password": "Nueva contraseña",
+      "confirmPassword": "Confirmar contraseña"
+    },
+
+    "resetPassword": {
+      "successfullySet": "Contraseña cambiada exitosamente.",
+      "header": "Restablecer contraseña",
+      "description": "Elige una nueva contraseña para iniciar sesión.",
+      "submit": "Establecer contraseña",
+      "password": "Nueva contraseña",
+      "confirmPassword": "Confirmar contraseña"
+    },
+
+    "forgotPassword": {
+      "passwordChangeEmailSent": "Se ha enviado un correo electrónico con instrucciones para restablecer la contraseña.",
+      "header": "¿Olvidaste tu contraseña?",
+      "description": "Ingresa el correo electrónico que usas habitualmente para iniciar sesión. Te enviaremos instrucciones para restablecer tu contraseña a este correo.",
+      "email": "Correo electrónico",
+      "submit": "Recuperar cuenta"
+    }
+  },
+
+  "home": {
+    "heroTitle": "Escucha {stationName}",
+    "heroSubtitle": "Tu Banda Sonora a la Vida",
+    "listenLive": "Escuchar en Vivo",
+    "pauseLive": "Pausar",
+    "currentlyOnPopularStations": "Actualmente en Emisoras Populares",
+    "nowOnOtherStations": "Ahora en otras emisoras de TRAILMIXX"
+  },
+
+  "about": {
+    "title": "Acerca de TRAILMIXX FM",
+    "subtitle": "Tu Música, Tu Forma",
+    "description": "Transmitiendo la mejor música a través de múltiples emisoras, brindándote la banda sonora de tu vida con listas de reproducción cuidadosamente seleccionadas y los últimos éxitos.",
+    "mission": {
+      "title": "Nuestra Misión",
+      "content": "Proporcionar transmisión de música de alta calidad en diversos géneros, conectando a los oyentes con la música que aman y descubriendo nuevos favoritos."
+    },
+    "community": {
+      "title": "Nuestra Comunidad",
+      "content": "Construyendo una comunidad vibrante de amantes de la música que comparten su pasión por descubrir y disfrutar de buena música juntos."
+    },
+    "passion": {
+      "title": "Nuestra Pasión",
+      "content": "La música es nuestra pasión. Seleccionamos cuidadosamente cada lista de reproducción y garantizamos la más alta calidad en la experiencia de transmisión para nuestros oyentes."
+    },
+    "story": {
+      "title": "La Historia de TRAILMIXX FM",
+      "content": "TRAILMIXX FM fue fundada con una visión simple: crear una red de radio que realmente entienda a los amantes de la música. Creemos que la gran música tiene el poder de unir a las personas, inspirar la creatividad y ser la banda sonora de los momentos más importantes de la vida.\n\nNuestra red opera cuatro emisoras distintas, cada una con su propia personalidad y selección de música cuidadosamente seleccionada. Desde los últimos éxitos pop hasta descubrimientos frescos, desde poderosos himnos de rock hasta beats electrónicos de tendencia, tenemos algo para todos los gustos musicales.\n\nLo que nos distingue es nuestro compromiso con la calidad y nuestra comprensión de que la música es personal. Nuestro equipo de entusiastas de la música trabaja las 24 horas para garantizar que cada canción que reproducimos cumpla con nuestros altos estándares y resuene con nuestros oyentes."
+    },
+    "stats": {
+      "stations": "Emisoras de Radio",
+      "liveStreaming": "Transmisión en Vivo",
+      "songsDaily": "Canciones Diarias",
+      "musicLove": "Amor por la Música"
+    },
+    "meetOurTeam": "Conoce a Nuestro Equipo",
+    "founder": {
+      "name": "Leon",
+      "role": "Fundador y Director Ejecutivo",
+      "bio": "Visionario detrás de TRAILMIXX FM, apasionado por llevar gran música al mundo."
+    },
+    "musicTeam": {
+      "name": "Equipo de Música",
+      "role": "Curadores y DJs",
+      "bio": "Nuestro talentoso equipo de expertos en música que seleccionan cuidadosamente cada pista que reproducimos."
+    },
+    "techTeam": {
+      "name": "Equipo Técnico",
+      "role": "Ingenieros y Desarrolladores",
+      "bio": "Los magos técnicos que mantienen nuestras transmisiones funcionando sin problemas las 24 horas."
+    },
+    "getInTouch": "Ponte en Contacto",
+    "contactDescription": "¿Tienes preguntas, sugerencias o simplemente quieres saludar? ¡Nos encantaría saber de ti!",
+    "contactInfo": {
+      "email": "hello@trailmixxfm.com",
+      "phone": "+1 (555) 123-TRAIL",
+      "address": "Ciudad de la Música, en Todo el Mundo"
+    },
+    "quickLinks": "Enlaces Rápidos"
+  },
+
+  "stations": {
+    "title": "Nuestras Emisoras",
+    "mixfm": {
+      "name": "MixFM",
+      "genre": "Pop",
+      "description": "Los éxitos pop más calientes y los éxitos de la cartelera, 24/7"
+    },
+    "mixfmFresh": {
+      "name": "MixFM Fresh",
+      "genre": "Nuevos Éxitos",
+      "description": "Los lanzamientos más recientes y descubrimientos frescos"
+    },
+    "powerHitRadio": {
+      "name": "Power Hit Radio",
+      "genre": "Éxitos",
+      "description": "Éxitos Sin Parar - Tu destino definitivo para música de éxitos ininterrumpida"
+    },
+    "trendyRadio": {
+      "name": "Trendy Radio",
+      "genre": "Tendencias",
+      "description": "Las tendencias más calientes y los últimos éxitos de los que todos hablan"
+    },
+    "hit10s": {
+      "name": "Hit10s",
+      "genre": "Años 2010",
+      "description": "Los éxitos más grandes de la década de 2010"
+    },
+    "kiss957": {
+      "name": "KISS 95.7 (Afiliada)",
+      "genre": "Top 40",
+      "description": "Tus éxitos favoritos y la música más caliente de hoy - emisora afiliada"
+    },
+    "xmasRadio": {
+      "name": "Xmas Radio",
+      "genre": "Navidad",
+      "description": "Tus canciones navideñas favoritas y clásicos de temporada todo el año"
+    }
+  },
+
+  "player": {
+    "nowPlaying": "Reproduciendo Ahora",
+    "loading": "Cargando...",
+    "unableToLoad": "No se puede cargar la información de la canción",
+    "noSongInfo": "No hay información de canción disponible",
+    "stationTemporarilyUnavailable": "Emisora Temporalmente No Disponible"
+  },
+
+  "footer": {
+    "description": "Transmitiendo la mejor música a través de múltiples emisoras. Tu banda sonora a la vida.",
+    "copyright": "© 2024 TRAILMIXX FM. Todos los derechos reservados.",
+    "ourStations": "Nuestras Emisoras",
+    "connect": "Conectar",
+    "stationsList": {
+      "mixfm": "MixFM - Éxitos Top 40",
+      "mixfmFresh": "MixFM Fresh - Últimos Lanzamientos",
+      "powerHitRadio": "Power Hit Radio - Rock y Alternativo",
+      "trendyRadio": "Trendy Radio - Electrónica y Dance"
+    },
+    "links": {
+      "aboutUs": "Acerca de Nosotros",
+      "contact": "Contacto",
+      "advertise": "Publicidad",
+      "support": "Soporte"
+    }
   }
 }
