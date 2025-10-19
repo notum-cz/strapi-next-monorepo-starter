@@ -1,70 +1,8 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Helper function to check user roles
-    function isAdmin() {
-      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
-    }
-
-    function isEditor() {
-      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'editor'];
-    }
-
-    // Public content can be read by anyone
-    match /pages/{pageId} {
-      allow read: if resource.data.published == true;
-      allow write: if isEditor();
-    }
-
-    match /campaigns/{campaignId} {
-        allow read: if resource.data.public == true;
-        allow write: if isEditor();
-    }
-
-    match /media/{mediaId} {
-        allow read: true;
-        allow write: if isEditor();
-    }
-    
-    match /donations_admin_reconciled/{donationId} {
-        allow read: true;
-        allow write: if isEditor();
-    }
-
-    // Client-side donation logs can be created by anyone, but only read by admins
-    match /donations_client_log/{logId} {
-        allow create: true;
-        allow read, write, delete: if isAdmin();
-    }
-
-    // Subscribers can be created by anyone, but only read by admins
-    match /subscribers/{subscriberId} {
-        allow create: true;
-        allow read, write, delete: if isAdmin();
-    }
-
-    // Donors can only be managed by admins
-    match /donors/{donorId} {
-        allow read, write, create, delete: if isAdmin();
-    }
-    
-    // Settings can only be managed by admins
-    match /settings/{settingId} {
-        allow read: true;
-        allow write: if isAdmin();
-    }
-
-    // Agent tasks are admin-only
-    match /agent_tasks/{taskId} {
-        allow read, write, create, delete: if isAdmin();
-    }
-
-    // User roles can be read by the user themselves, but only written by admins
-    match /users/{userId} {
-      allow read: if request.auth.uid == userId;
-      allow write: if isAdmin();
+    match /{document=**} {
+      allow read, write: if request.auth != null;
     }
   }
 }

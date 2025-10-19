@@ -12,7 +12,7 @@
   "dependencies": {
     "@capacitor/android": "^6.0.0",
     "@capacitor/core": "^6.0.0",
-    "@capacitor/ios": "^6.0.0",
+    "@capacitor/ios": "^6.2.1",
     "@erafx-tech/capacitor-media-session-capacitor6": "^4.0.0"
   },
   "devDependencies": {

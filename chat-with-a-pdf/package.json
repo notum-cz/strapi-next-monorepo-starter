@@ -1,0 +1,17 @@
+{
+  "name": "chat-with-a-pdf",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@genkit-ai/googleai": "^1.21.0",
+    "genkit": "^1.21.0",
+    "pdf-parse": "^2.4.3"
+  }
+}
