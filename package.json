@@ -2,16 +2,23 @@
   "name": "trail-mixx",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "yarn@1.22.19",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "lint": "turbo run lint",
     "dev:cms": "cd services/cms && yarn develop",
     "dev:stream": "cd services/stream && yarn dev",
-    "dev:web": "yarn dev",
+    "dev:web": "cd apps/web && yarn dev",
     "build:cms": "cd services/cms && yarn build",
     "build:stream": "cd services/stream && yarn build",
+    "build:web": "cd apps/web && yarn build",
     "start:cms": "cd services/cms && yarn start",
     "start:stream": "cd services/stream && yarn start",
     "seed:cms": "node services/cms/scripts/seed/seed-data.js && node services/cms/scripts/seed/seed-v0-leonradio-data.js"
@@ -34,6 +41,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "postcss": "^8",
+    "turbo": "^2.5.8",
     "typescript": "^5"
   }
 }

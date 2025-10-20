@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "name": "new-world-kids",
+  "buildCommand": "cd apps/web && yarn build",
+  "installCommand": "yarn install",
+  "framework": "nextjs",
+  "outputDirectory": "apps/web/.next",
+  "env": {
+    "VERCEL_PROJECT_ID": "prj_uyBo0MfsraJRp7k7ptUTt9A3vc0t",
+    "NEXT_PUBLIC_SUPABASE_URL": "https://sbbuxnyvflczfzvsglpe.supabase.co"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_SUPABASE_URL": "https://sbbuxnyvflczfzvsglpe.supabase.co"
+    }
+  }
+}
