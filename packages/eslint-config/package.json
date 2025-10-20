@@ -1,0 +1,13 @@
+{
+  "name": "@repo/eslint-config",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./index.js",
+  "files": [
+    "index.js"
+  ],
+  "devDependencies": {
+    "@next/eslint-plugin-next": "^15.3.5",
+    "eslint-config-next": "^15.3.5"
+  }
+}
