@@ -4,9 +4,9 @@ Welcome to the official repository for the New World Kids educational platform. 
 
 ## ✨ A New Way of Building: The MCP-Augmented Workflow
 
-This project is built and maintained using a state-of-the-art, AI-augmented development process. We leverage a suite of nine integrated **Meta-Cognitive Process (MCP) servers** to automate, validate, and accelerate our work. This is not just a codebase; it's an intelligent, self-improving development ecosystem.
+This project is built and maintained using a state-of-the-art, AI-augmented development process. We leverage a suite of nine integrated  (MCP) servers** to automate, validate, and accelerate our work. This is not just a codebase; it's an intelligent, self-improving development ecosystem.
 
-Our process is defined by the **BMAD Method**: Build, Measure, Amplify, and Diversify.
+
 
 ### Our Integrated MCP Suite
 
@@ -14,14 +14,14 @@ Our workflow is powered by the following specialized AI assistants:
 
 | Phase     | MCP Server      | Purpose                                     |
 | :-------- | :-------------- | :------------------------------------------ |
-| **BUILD**   | **Linear**      | The System of Record for all tasks.         |
+| ****   | **Linear**      | The System of Record for all tasks.         |
 |           | **GitHub**      | Automates repository and PR management.     |
 |           | **Perplexity**  | Our Research Partner for best practices.    |
-| **MEASURE** | **Semgrep**     | Our automated Security Analyst.             |
+| *** |       **Semgrep**     | Our automated Security Analyst.             |
 |           | **Playwright**  | Validates UI changes and prevents regressions.|
-| **AMPLIFY** | **Firebase**    | A secure co-pilot for backend operations.   |
+| **** |      **Firebase**    | A secure co-pilot for backend operations.   |
 |           | **Context7**    | Provides always-up-to-date documentation.   |
-| **DIVERSIFY**| **Vibe Check**  | Our Architectural Conscience.               |
+| ****|       **Vibe Check**  | Our Architectural Conscience.               |
 |           | **Pieces**      | Our collective Long-Term Memory.            |
 
 For a detailed guide on how these tools work together, see [`docs/mcp/SYSTEM_PROMPT.md`](docs/mcp/SYSTEM_PROMPT.md).
