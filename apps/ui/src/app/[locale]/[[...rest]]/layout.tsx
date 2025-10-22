@@ -1,5 +1,5 @@
-import { LayoutProps } from "@/types/next"
-
-export default async function Layout({ children }: LayoutProps) {
+export default function Layout({
+  children,
+}: LayoutProps<"/[locale]/[[...rest]]">) {
   return <div className="flex items-center pb-8">{children}</div>
 }
