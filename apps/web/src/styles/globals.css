@@ -91,3 +91,25 @@
     @apply bg-gray-100 text-gray-900;
   }
 }
+
+/* ============================================================================
+   STELLAR COCKPIT - CUSTOM FONT FAMILIES
+   ============================================================================ */
+@theme {
+  --font-family-display: var(--font-space-grotesk), ui-sans-serif, system-ui;
+  --font-family-cosmic: var(--font-orbitron), ui-sans-serif, system-ui;
+  --font-family-sans: var(--font-inter), ui-sans-serif, system-ui;
+  --font-family-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+/* Cosmic gradient utilities for text */
+@utility cosmic-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #3b82f6 50%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@utility cosmic-glow {
+  text-shadow: 0 0 20px rgba(102, 126, 234, 0.5), 0 0 40px rgba(139, 92, 246, 0.3);
+}

@@ -1,0 +1,140 @@
+version: '3.9'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: nwk-postgres
+    environment:
+      POSTGRES_DB: newworldkids
+      POSTGRES_USER: nwk_user
+      POSTGRES_PASSWORD: nwk_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nwk_user -d newworldkids"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: nwk-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Strapi CMS
+  cms:
+    build:
+      context: ../../services/cms
+      dockerfile: Dockerfile
+    container_name: nwk-cms
+    environment:
+      NODE_ENV: development
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: newworldkids
+      DATABASE_USERNAME: nwk_user
+      DATABASE_PASSWORD: nwk_password
+      STRAPI_ADMIN_JWT_SECRET: dev-secret-change-in-production
+    ports:
+      - "1337:1337"
+    volumes:
+      - ../../services/cms:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: yarn develop
+
+  # Blockchain Service
+  blockchain:
+    build:
+      context: ../../services/blockchain
+      dockerfile: Dockerfile
+    container_name: nwk-blockchain
+    environment:
+      NODE_ENV: development
+      PORT: 3002
+      DATABASE_URL: postgresql://nwk_user:nwk_password@postgres:5432/newworldkids
+      SOLANA_NETWORK: devnet
+      HELIUS_RPC_URL: https://devnet.helius-rpc.com
+      REDIS_URL: redis://redis:6379
+      ALLOWED_ORIGINS: http://localhost:3000
+    ports:
+      - "3002:3002"
+    volumes:
+      - ../../services/blockchain:/app
+      - /app/node_modules
+      - /app/dist
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: yarn dev
+
+  # AI Agents Service
+  ai-agents:
+    build:
+      context: ../../services/ai-agents
+      dockerfile: Dockerfile
+    container_name: nwk-ai-agents
+    environment:
+      NODE_ENV: development
+      PORT: 3003
+      REDIS_URL: redis://redis:6379
+      ALLOWED_ORIGINS: http://localhost:3000
+      OPENROUTER_DEFAULT_MODEL: meta-llama/llama-3.1-8b-instruct:free
+    ports:
+      - "3003:3003"
+    volumes:
+      - ../../services/ai-agents:/app
+      - /app/node_modules
+      - /app/dist
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: yarn dev
+
+  # Next.js Web App
+  web:
+    build:
+      context: ../../apps/web
+      dockerfile: Dockerfile
+    container_name: nwk-web
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_STRAPI_URL: http://localhost:1337
+      NEXT_PUBLIC_SOLANA_NETWORK: devnet
+      NEXT_PUBLIC_FEATURE_FLAGS: ENABLE_NEW_BRANDING,ENABLE_NFT_RECEIPTS
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../../apps/web:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - cms
+      - blockchain
+      - ai-agents
+    command: yarn dev
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  default:
+    name: nwk-network

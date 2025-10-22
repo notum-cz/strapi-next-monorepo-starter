@@ -1,0 +1,113 @@
+# Docker Compose - Local Development & Testing
+# Run all backend services with: docker-compose up
+
+version: '3.8'
+
+services:
+  # Service 1: Stellar Agents (Port 3004)
+  stellar-agents:
+    build:
+      context: ./services/stellar-agents
+      dockerfile: Dockerfile
+    container_name: stellar-agents
+    ports:
+      - "3004:3004"
+    environment:
+      - PORT=3004
+      - NODE_ENV=production
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3004/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks:
+      - stellar-network
+
+  # Service 2: Big-3 Orchestrator (Port 3010)
+  big-3-orchestrator:
+    build:
+      context: ./services/big-3-orchestrator
+      dockerfile: Dockerfile
+    container_name: big-3-orchestrator
+    ports:
+      - "3010:3010"
+    environment:
+      - PORT=3010
+      - NODE_ENV=production
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3010/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks:
+      - stellar-network
+
+  # Service 3: Browser Service (Port 3013)
+  browser-service:
+    build:
+      context: ./services/browser-service
+      dockerfile: Dockerfile
+    container_name: browser-service
+    ports:
+      - "3013:3013"
+    environment:
+      - PORT=3013
+      - NODE_ENV=production
+      - PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium-browser
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3013/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks:
+      - stellar-network
+    # Browser service needs more resources for Chromium
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
+
+  # Service 4: Chrome DevTools MCP (Port 3014)
+  chrome-devtools-mcp:
+    build:
+      context: ./services/chrome-devtools-mcp
+      dockerfile: Dockerfile
+    container_name: chrome-devtools-mcp
+    ports:
+      - "3014:3014"
+    environment:
+      - PORT=3014
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3014/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks:
+      - stellar-network
+
+networks:
+  stellar-network:
+    driver: bridge
+
+# Volume for shared data (optional)
+volumes:
+  shared-data:
