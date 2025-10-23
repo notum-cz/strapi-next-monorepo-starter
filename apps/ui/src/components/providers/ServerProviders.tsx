@@ -11,11 +11,10 @@ setupLibraries()
 
 interface Props {
   readonly children: React.ReactNode
-  readonly params: Promise<{ locale: AppLocale }>
+  readonly locale: AppLocale
 }
 
-export async function ServerProviders({ children, params }: Props) {
-  const { locale } = await params
+export async function ServerProviders({ children, locale }: Props) {
   const messages = await getMessages()
 
   return (

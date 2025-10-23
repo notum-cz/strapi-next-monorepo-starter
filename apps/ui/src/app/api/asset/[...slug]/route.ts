@@ -15,7 +15,7 @@ export const revalidate = false
 
 async function handler(
   request: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string[] }> }
 ) {
   const { slug } = await params
   const path = Array.isArray(slug) ? slug.join("/") : slug
