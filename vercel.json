@@ -1,17 +1,8 @@
 {
-  "version": 2,
-  "name": "new-world-kids",
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "cd apps/web && yarn build",
+  "devCommand": "cd apps/web && yarn dev",
   "installCommand": "yarn install",
   "framework": "nextjs",
-  "outputDirectory": "apps/web/.next",
-  "env": {
-    "VERCEL_PROJECT_ID": "prj_uyBo0MfsraJRp7k7ptUTt9A3vc0t",
-    "NEXT_PUBLIC_SUPABASE_URL": "https://sbbuxnyvflczfzvsglpe.supabase.co"
-  },
-  "build": {
-    "env": {
-      "NEXT_PUBLIC_SUPABASE_URL": "https://sbbuxnyvflczfzvsglpe.supabase.co"
-    }
-  }
+  "outputDirectory": "apps/web/.next"
 }
