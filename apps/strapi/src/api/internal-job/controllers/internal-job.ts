@@ -13,11 +13,11 @@ const validateAdminToken = (strapi, headers) => {
   }
 
   const decoded: any = jwt.verify(token, strapi.config.get("admin.auth.secret"))
-  if (!decoded?.id) {
+  if (!decoded?.userId) {
     return { valid: false, error: "Invalid token" }
   }
 
-  return { valid: true, userId: decoded.id }
+  return { valid: true, userId: decoded.userId }
 }
 
 export default factories.createCoreController(
