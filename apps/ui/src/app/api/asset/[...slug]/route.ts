@@ -26,7 +26,7 @@ async function handler(
     return NextResponse.json(
       {
         error: {
-          message: `Only asset fetching is allowed`,
+          message: `Access denied: Only paths under uploads/ are allowed`,
           name: "Forbidden",
         },
       },
