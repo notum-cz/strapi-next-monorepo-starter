@@ -497,6 +497,7 @@ export interface ApiInternalJobInternalJob extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
+    documentType: Schema.Attribute.String
     error: Schema.Attribute.String
     jobType: Schema.Attribute.Enumeration<
       ["RECALCULATE_FULLPATH", "CREATE_REDIRECT"]
@@ -508,12 +509,14 @@ export interface ApiInternalJobInternalJob extends Struct.CollectionTypeSchema {
       "api::internal-job.internal-job"
     > &
       Schema.Attribute.Private
-    payload: Schema.Attribute.JSON & Schema.Attribute.Required
+    payload: Schema.Attribute.JSON
     publishedAt: Schema.Attribute.DateTime
     relatedDocumentId: Schema.Attribute.String
+    slug: Schema.Attribute.String
     state: Schema.Attribute.Enumeration<["pending", "completed", "failed"]> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<"pending">
+    targetLocale: Schema.Attribute.String
     updatedAt: Schema.Attribute.DateTime
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
