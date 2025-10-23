@@ -3,17 +3,37 @@ import { getSession } from "next-auth/react"
 
 import { getAuth } from "@/lib/auth"
 
-// List of allowed endpoints for GET requests to Strapi
-const ALLOWED_GET_STRAPI_ENDPOINTS = ["api/pages", "api/footer", "api/navbar"]
+const ALLOWED_STRAPI_ENDPOINTS: Record<string, string[]> = {
+  GET: [
+    "api/pages",
+    "api/footer",
+    "api/navbar",
+    "api/users/mer",
+    "api/auth/local",
+    // Allow specific providers callbacks if needed
+    // "api/auth/[provider]/callback",
+  ],
+  POST: [
+    "api/subscribers",
+    "api/auth/local/register",
+    "api/auth/forgot-password",
+    "api/auth/reset-password",
+    "api/auth/change-password",
+  ],
+}
 
 /**
- * Check if the given path is allowed to be read from Strapi.
- * This is used to restrict access to certain endpoints for GET requests.
+ * Check if the given Strapi Admin/API path is allowed to be accessed
+ * with the provided HTTP method.
  */
-export const isAllowedToReadStrapiEndpoint = (path: string): boolean => {
-  // Check if the path starts with any of the allowed endpoints
-  return ALLOWED_GET_STRAPI_ENDPOINTS.some((endpoint) =>
-    path.startsWith(endpoint)
+export const isStrapiEndpointAllowed = (
+  path: string,
+  method: string
+): boolean => {
+  return (
+    ALLOWED_STRAPI_ENDPOINTS[method]?.some((endpoint) =>
+      path.startsWith(endpoint)
+    ) ?? false
   )
 }
 
