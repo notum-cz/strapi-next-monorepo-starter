@@ -25,7 +25,7 @@ async function handler(
     return NextResponse.json(
       {
         error: {
-          message: `Path '${path}' is not allowed to access`,
+          message: `Path '${path}' is not accessible`,
           name: "Forbidden",
         },
       },
