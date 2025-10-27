@@ -1,14 +1,10 @@
 import { Data } from "@strapi/strapi"
 import { errors } from "@strapi/utils"
-import { ROOT_PAGE_PATH } from "@repo/shared-data"
+import { normalizePageFullPath, ROOT_PAGE_PATH } from "@repo/shared-data"
 
 import { LifecycleEventType } from "../../../types/internals"
 import { PAGES_HIERARCHY_ENABLED } from "../constants"
-import {
-  calculateDocumentFullPath,
-  getOldPublishedDocument,
-  normalizeRedirectPaths,
-} from "./helpers"
+import { getOldPublishedDocument } from "./helpers"
 import { CreateRedirectPayload, HierarchicalDocumentType } from "./types"
 
 const { ValidationError } = errors
@@ -111,7 +107,10 @@ export const processRecalculateFullPathJob = async (
   }
 
   let oldFullPath = document.fullPath
-  const newFullPath = calculateDocumentFullPath(document)
+  const newFullPath = normalizePageFullPath([
+    document.parent?.fullPath,
+    document.slug,
+  ])
 
   if (newFullPath !== oldFullPath) {
     // Always update fullPath of document to newFullPath
@@ -173,11 +172,11 @@ export const processRecalculateFullPathJob = async (
       })
     }
 
-    const payload: CreateRedirectPayload = normalizeRedirectPaths(
-      oldFullPath,
-      newFullPath,
-      document.locale
-    )
+    const payload: CreateRedirectPayload = {
+      oldPath: normalizePageFullPath([oldFullPath], document.locale),
+      newPath: normalizePageFullPath([newFullPath], document.locale),
+    }
+
     await strapi.service("api::internal-job.internal-job").enqueueJob(
       "CREATE_REDIRECT",
       {
