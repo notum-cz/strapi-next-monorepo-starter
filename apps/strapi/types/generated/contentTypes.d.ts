@@ -621,7 +621,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     localizations: Schema.Attribute.Relation<"oneToMany", "api::page.page">
     parent: Schema.Attribute.Relation<"manyToOne", "api::page.page">
     publishedAt: Schema.Attribute.DateTime
-    redirects: Schema.Attribute.Relation<"oneToMany", "api::redirect.redirect">
     seo: Schema.Attribute.Component<"seo-utilities.seo", false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -669,7 +668,6 @@ export interface ApiRedirectRedirect extends Struct.CollectionTypeSchema {
       "api::redirect.redirect"
     > &
       Schema.Attribute.Private
-    page: Schema.Attribute.Relation<"manyToOne", "api::page.page">
     permanent: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>
     publishedAt: Schema.Attribute.DateTime
     source: Schema.Attribute.String & Schema.Attribute.Required
