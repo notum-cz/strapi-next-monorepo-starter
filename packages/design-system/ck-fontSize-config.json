@@ -1,0 +1,15 @@
+
+[
+  {
+    "model": "14px",
+    "title": "Small"
+  },
+  {
+    "model": "16px",
+    "title": "Default"
+  },
+  {
+    "model": "18px",
+    "title": "Large"
+  }
+]
