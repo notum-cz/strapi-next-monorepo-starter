@@ -79,7 +79,7 @@ export async function handleHierarchyBeforeCreate(
 
 /**
  * Handler for processing RECALCULATE_FULLPATH internal jobs. It recalculates
- * the fullPath of the document, updates it if necessary, do the same for its children,
+ * the fullPath of the document, updates it if necessary, does the same for its children,
  * and creates redirect jobs if the fullPath has changed.
  */
 export const processRecalculateFullPathJob = async (
