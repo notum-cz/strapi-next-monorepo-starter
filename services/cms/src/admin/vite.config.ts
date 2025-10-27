@@ -9,14 +9,19 @@ export default (config: UserConfig) => {
       alias: {
         "@": "/src",
       },
+      // Deduplicate date-fns to use a single version (forced to 3.6.0 via resolutions)
+      dedupe: ["date-fns"],
     },
     optimizeDeps: {
-      // Force pre-bundling of date-fns to resolve internal imports
+      // Force pre-bundling of date-fns to avoid module resolution issues
       include: ["date-fns"],
-      // Handle ESM module resolution for date-fns v4.x
       esbuildOptions: {
         mainFields: ["module", "main"],
       },
+    },
+    ssr: {
+      // Force bundling of date-fns in SSR mode to avoid module resolution issues
+      noExternal: ["date-fns"],
     },
     build: {
       // Handle date-fns ESM exports properly
