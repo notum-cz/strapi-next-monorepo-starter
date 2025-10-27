@@ -101,7 +101,7 @@ Focus on creating a logical sequence that delivers value incrementally.`;
     });
 
     const planText = response.choices[0].message.content || '{}';
-    const plan = this.safeJsonParse(planText, { goal: '', steps: [] });
+    const plan = this.safeJsonParse(planText, { goal: '', steps: [], estimatedTotalTime: 'unknown' });
 
     const tokensUsed = response.usage?.total_tokens || 0;
 

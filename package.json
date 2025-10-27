@@ -43,5 +43,9 @@
     "postcss": "^8",
     "turbo": "^2.5.8",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": "22.x",
+    "yarn": "1.22.x"
   }
 }

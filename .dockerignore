@@ -1,45 +1,89 @@
+# Dependencies
 **/node_modules
+**/.pnp
+.pnp.js
+
+# Build outputs
 **/.next
 **/.strapi
 **/.tmp
 **/dist
 **/out
+**/build
 
 # Environment files
 .env
 .env.*
 !.env.example
+!.env.production
 
 # Logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
 
-# IDE
+# IDE and editors
 .vscode
 .idea
 *.swp
 *.swo
 *~
 .DS_Store
+*.sublime-workspace
+*.sublime-project
 
 # Git
 .git
 .gitignore
 .gitattributes
-
-# Documentation
-docs
 .github
-.snapshots
+
+# Documentation and markdown (except README)
+docs
+*.md
+!README.md
 
 # Testing
 coverage
-__tests__
+**/__tests__
+**/__mocks__
 *.test.ts
 *.test.js
+*.spec.ts
+*.spec.js
+.snapshots
 
 # Build cache
 .turbo
 .cache
+.parcel-cache
+
+# Misc
+.husky
+.firebase
+.firebaserc
+firebase.json
+.idx
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+*.md.backup
+render.yaml
+railway.json
+vercel.json
+
+# Scripts and config files not needed in production
+scripts/test*
+scripts/dev*
+*.config.js
+!next.config.*
+!tailwind.config.*
+.eslintrc*
+.prettierrc*
+.lintstagedrc*
+commitlint.config.js
+tsconfig*.json
+!tsconfig.json

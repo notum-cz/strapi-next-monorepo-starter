@@ -1,0 +1,83 @@
+
+# ==============================================================================
+# GOOGLE APP ENGINE CONFIGURATION
+# Deploy with: gcloud app deploy
+# ==============================================================================
+
+runtime: nodejs22
+env: standard
+instance_class: F2
+
+# Service configuration
+service: default
+
+# Automatic scaling
+automatic_scaling:
+  target_cpu_utilization: 0.65
+  target_throughput_utilization: 0.6
+  min_instances: 1
+  max_instances: 10
+  min_idle_instances: 1
+  max_idle_instances: automatic
+  min_pending_latency: 30ms
+  max_pending_latency: automatic
+
+# Environment variables (set these in GCP Console or use env_variables)
+env_variables:
+  NODE_ENV: 'production'
+  NODE_VERSION: '22.11.0'
+  YARN_VERSION: '1.22.19'
+
+# Health check configuration
+readiness_check:
+  path: "/admin"
+  check_interval_sec: 5
+  timeout_sec: 4
+  failure_threshold: 2
+  success_threshold: 2
+  app_start_timeout_sec: 300
+
+liveness_check:
+  path: "/admin"
+  check_interval_sec: 30
+  timeout_sec: 4
+  failure_threshold: 4
+  success_threshold: 2
+
+# Handlers
+handlers:
+  # Serve static files
+  - url: /public
+    static_dir: public
+    secure: always
+    
+  - url: /uploads
+    static_dir: public/uploads
+    secure: always
+    
+  # Serve all other requests to the application
+  - url: /.*
+    script: auto
+    secure: always
+
+# Network settings
+network:
+  forwarded_ports:
+    - 8080
+
+# Resource limits
+resources:
+  cpu: 1
+  memory_gb: 2
+  disk_size_gb: 10
+
+# Build configuration
+build:
+  skip_files:
+    - ^(.*/)?#.*#$
+    - ^(.*/)?.*~$
+    - ^(.*/)?.*\.py[co]$
+    - ^(.*/)?.*/RCS/.*$
+    - ^(.*/)?\..*$
+    - ^(.*/)?.*\.md$
+    - ^node_modules/(?!required-module).*$

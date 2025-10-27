@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: strapi-template-new-world-kids
+    env: node
+    region: oregon
+    plan: starter
+    buildCommand: yarn install && yarn build
+    startCommand: yarn start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: 22.11.0
+      - key: YARN_VERSION
+        value: 1.22.19
+      - key: NODE_ENV
+        value: production
+    autoDeploy: true

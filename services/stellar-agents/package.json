@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.9.1",
+    "@anthropic-ai/sdk": "^0.67.0",
     "@google/generative-ai": "^0.1.3",
     "@supabase/supabase-js": "^2.38.4",
     "cors": "^2.8.5",

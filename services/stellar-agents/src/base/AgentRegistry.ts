@@ -39,7 +39,7 @@ export class AgentRegistry {
           type: agentData.type,
           description: agentData.description || undefined,
           capabilities: Array.isArray(agentData.capabilities) ? agentData.capabilities : [],
-          modelConfig: agentData.model_config || {},
+          modelConfig: agentData.model_config || undefined,
         };
 
         const agent = this.createAgent(name, config);
