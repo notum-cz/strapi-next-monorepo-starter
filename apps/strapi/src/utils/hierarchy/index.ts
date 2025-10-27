@@ -1,4 +1,6 @@
 import { Data } from "@strapi/strapi"
+import { errors } from "@strapi/utils"
+import { ROOT_PAGE_PATH } from "@repo/shared-data"
 
 import { LifecycleEventType } from "../../../types/internals"
 import { PAGES_HIERARCHY_ENABLED } from "../constants"
@@ -8,6 +10,8 @@ import {
   normalizeRedirectPaths,
 } from "./helpers"
 import { CreateRedirectPayload, HierarchicalDocumentType } from "./types"
+
+const { ValidationError } = errors
 
 /**
  * Lifecycle handler for `beforeCreate` event of hierarchical document types.
@@ -58,6 +62,13 @@ export async function handleHierarchyBeforeCreate(
     // There is either:
     //  - published entity and some change in slug or parent relation
     //  - new entity and no fullPath set
+
+    if (wasSlugChanged && oldDataPublished?.slug === ROOT_PAGE_PATH) {
+      // Prevent changing the slug of the homepage/root page
+      throw new ValidationError(
+        `The slug '${ROOT_PAGE_PATH}' is reserved for the root page and cannot be changed.`
+      )
+    }
 
     await strapi
       .service("api::internal-job.internal-job")
