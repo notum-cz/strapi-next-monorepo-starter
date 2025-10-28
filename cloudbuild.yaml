@@ -13,14 +13,14 @@ steps:
       - '-c'
       - |
         apk add --no-cache git python3 make g++
-        yarn install --frozen-lockfile --production=false
+        npm install
     id: 'install-dependencies'
     waitFor: ['-']
 
   # Step 2: Run TypeScript compilation check
   - name: 'node:22-alpine'
-    entrypoint: 'yarn'
-    args: ['build']
+    entrypoint: 'npm'
+    args: ['run', 'build']
     id: 'build'
     waitFor: ['install-dependencies']
 
