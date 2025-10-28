@@ -60,6 +60,28 @@ const nextConfig = {
 const withConfig = (() => {
   let config = withNextIntl(withPlaiceholder(nextConfig))
 
+  // Add path aliases for Tweak CN components
+  config.webpack = (config, { dev }) => {
+    if (!config.resolve) config.resolve = {}
+    if (!config.resolve.alias) config.resolve.alias = {}
+    
+    config.resolve.alias["@components"] = require("path").resolve(
+      __dirname,
+      "../../../tweakcn/components"
+    )
+    
+    if (config.cache && !dev) {
+      // Switching between memory and filesystem cache
+      // Memory cache is faster and can be beneficial in environments with slow or limited disk access,
+      // but it isn't persistent across builds and requires higher memory usage.
+      // Filesystem cache survives across builds but may cause large `.next/cache` folder.
+      config.cache = Object.freeze({
+        type: env.WEBPACK_CACHE_TYPE || "filesystem",
+      })
+    }
+    return config
+  }
+
   config = withSentryConfig(config, {
     // For all available options, see:
     // https://github.com/getsentry/sentry-webpack-plugin#options

@@ -21,7 +21,7 @@ ARG WORKSPACE
 WORKDIR /app
 COPY . .
 
-RUN yarn global add turbo@^1.13.4
+RUN npm install -g turbo@^1.13.4
 # see https://turbo.build/repo/docs/reference/command-line-reference#turbo-prune---scopetarget
 RUN turbo prune ${WORKSPACE} --docker
 
@@ -35,18 +35,14 @@ WORKDIR /app
 # First install dependencies (as they change less often)
 COPY .gitignore .gitignore
 COPY --from=pruned /app/out/json/ .
-COPY --from=pruned /app/out/yarn.lock ./yarn.lock
+COPY --from=pruned /app/out/package-lock.json ./package-lock.json
 
-RUN yarn global add turbo@^1.13.4
+RUN npm install -g turbo@^1.13.4
 
 RUN \
-    --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
-    yarn --prefer-offline --frozen-lockfile --ignore-scripts
+    --mount=type=cache,target=/root/.npm,sharing=locked \
+    npm ci
 
-# Because of yarn v1 install sharp explicitly with "--ignore-engines". See https://github.com/lovell/sharp/issues/3871
-RUN \
-    --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
-    yarn workspace ${WORKSPACE} add sharp --ignore-engines --prefer-offline --frozen-lockfile
 
 # Build the project and its dependencies
 COPY --from=pruned /app/out/full/ .

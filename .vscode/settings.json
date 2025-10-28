@@ -38,5 +38,13 @@
   "javascript.preferences.importModuleSpecifier": "non-relative",
   "IDX.agenticWorkspace": true,
   "IDX.aI.showChatInEditorTab": true,
-  "IDX.corgiMode": true
+  "IDX.corgiMode": true,
+  "git.verboseCommit": true,
+  "html.format.indentHandlebars": false,
+  "html.format.indentInnerHtml": false,
+  "git.useCommitInputAsStashMessage": true,
+  "git.timeline.showUncommitted": true,
+  "git.terminalGitEditor": true,
+  "git.showPushSuccessNotification": true,
+  "git.enableSmartCommit": true
 }

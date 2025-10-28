@@ -22,6 +22,13 @@
     ],
     "rewrites": [
       {
+        "source": "/api/**",
+        "run": {
+          "serviceId": "new-world-kids",
+          "region": "us-west1"
+        }
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
