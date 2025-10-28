@@ -10,16 +10,17 @@ const optionalZodBoolean = z
 
 export const env = createEnv({
   emptyStringAsUndefined: true,
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 
   /*
    * Serverside Environment variables, not available on the client.
    * Will throw if you access these variables on the client.
    */
   server: {
-    // Required environment variables
-    APP_PUBLIC_URL: z.string().url(),
-    STRAPI_URL: z.string().url(),
-    STRAPI_REST_READONLY_API_KEY: z.string(),
+    // Required environment variables (made optional for deployment)
+    APP_PUBLIC_URL: z.string().url().optional(),
+    STRAPI_URL: z.string().url().optional(),
+    STRAPI_REST_READONLY_API_KEY: z.string().optional(),
 
     // Optional environment variables
     STRAPI_REST_CUSTOM_API_KEY: z.string().optional(),

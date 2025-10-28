@@ -1,0 +1,110 @@
+// Blockchain Service Database Schema
+// Prefix: nwk_ (New World Kids namespace)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Donation {
+  id              String   @id @default(uuid())
+  userId          String?  @map("user_id")
+  walletAddress   String   @map("wallet_address")
+  amount          Float
+  currency        Currency
+  usdValue        Float    @map("usd_value")
+  projectId       String?  @map("project_id")
+  transactionHash String   @unique @map("transaction_hash")
+  blockNumber     Int      @map("block_number")
+  status          DonationStatus
+  nftReceiptId    String?  @unique @map("nft_receipt_id")
+  isAnonymous     Boolean  @default(false) @map("is_anonymous")
+  isRecurring     Boolean  @default(false) @map("is_recurring")
+  recurringPlanId String?  @map("recurring_plan_id")
+  metadata        Json     @default("{}")
+  createdAt       DateTime @default(now()) @map("created_at")
+  confirmedAt     DateTime? @map("confirmed_at")
+
+  @@map("nwk_donations")
+  @@index([userId])
+  @@index([transactionHash])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+}
+
+model NFTReceipt {
+  id                  String       @id @default(uuid())
+  donationId          String       @unique @map("donation_id")
+  mintAddress         String?      @unique @map("mint_address")
+  tokenAccount        String?      @map("token_account")
+  metadataUri         String?      @map("metadata_uri")
+  metadata            Json
+  mintingStatus       MintingStatus @map("minting_status")
+  mintTransactionHash String?      @map("mint_transaction_hash")
+  mintedAt            DateTime?    @map("minted_at")
+  createdAt           DateTime     @default(now()) @map("created_at")
+  updatedAt           DateTime     @updatedAt @map("updated_at")
+
+  @@map("nwk_nft_receipts")
+  @@index([mintAddress])
+  @@index([donationId])
+  @@index([mintingStatus])
+}
+
+model BlockchainTransaction {
+  id          String      @id @default(uuid())
+  signature   String      @unique
+  blockNumber Int         @map("block_number")
+  timestamp   DateTime
+  type        TxType
+  fromAddress String      @map("from_address")
+  toAddress   String      @map("to_address")
+  amount      Float
+  currency    String
+  donationId  String?     @map("donation_id")
+  status      TxStatus
+  fee         Float
+  programId   String?     @map("program_id")
+  rawData     Json        @map("raw_data")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  syncedAt    DateTime    @default(now()) @map("synced_at")
+
+  @@map("nwk_blockchain_txns")
+  @@index([signature])
+  @@index([type])
+  @@index([timestamp(sort: Desc)])
+}
+
+enum Currency {
+  SOL
+  USDC
+}
+
+enum DonationStatus {
+  pending
+  confirmed
+  failed
+}
+
+enum MintingStatus {
+  queued
+  minting
+  minted
+  failed
+}
+
+enum TxType {
+  donation
+  nft_mint
+  token_transfer
+}
+
+enum TxStatus {
+  pending
+  confirmed
+  failed
+}

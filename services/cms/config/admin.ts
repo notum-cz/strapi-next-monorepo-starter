@@ -57,5 +57,31 @@ export default ({ env }) => {
       },
     },
     watchIgnoreFiles: ["**/config/sync/**"],
+    bundler: {
+      customizations: {
+        vite: {
+          config: {
+            optimizeDeps: {
+              include: ['date-fns'],
+              esbuildOptions: {
+                target: 'esnext',
+              },
+            },
+            build: {
+              commonjsOptions: {
+                include: [/date-fns/, /node_modules/],
+                transformMixedEsModules: true,
+              },
+            },
+            resolve: {
+              alias: {
+                // Force resolution of date-fns internal imports to main entry
+                'date-fns/_lib': 'date-fns',
+              },
+            },
+          },
+        },
+      },
+    },
   }
 }

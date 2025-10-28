@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(yarn install)",
+      "Bash(node --version)",
+      "Bash(npm --version)",
+      "Bash(corepack enable)",
+      "Bash(yarn --version)",
+      "Bash(git add packages/design-system/ packages/eslint-config/ packages/prettier-config/ packages/shared-data/ packages/typescript-config/package.json)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nFix Vercel build: Add missing monorepo packages\n\nCreates package.json files for all missing workspace packages that were causing Yarn installation failures:\n- @repo/design-system\n- @repo/shared-data  \n- @repo/typescript-config\n- @repo/eslint-config\n- @repo/prettier-config\n\nThis resolves the \"Couldn 't find package\" errors during Vercel deployment.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push)",
+      "Bash(node test-supabase-simple.js)",
+      "Bash(mkdir -p .spec-kit/{templates,docs,prompts})",
+      "Bash(vercel --version)",
+      "Bash(vercel ls --yes)",
+      "Bash(vercel inspect https://strapi-template-new-world-kids-rivjwhnv8.vercel.app)",
+      "Bash(yarn build)",
+      "Bash(chmod +x deploy.sh)",
+      "Bash(supabase --version)",
+      "Bash(npm install -g supabase)",
+      "Bash(vercel env ls)",
+      "Bash(vercel env add SKIP_ENV_VALIDATION production)",
+      "Bash(docker --version)",
+      "Bash(node -e:*)",
+      "Bash(ls:*)",
+      "Bash(uv --version:*)",
+      "Bash(yarn add:*)",
+      "Bash(npm install:*)",
+      "Bash(git clone:*)",
+      "Bash(node apply-migrations-api.js:*)",
+      "Bash(vercel env add:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git rm:*)",
+      "Bash(git push:*)",
+      "Bash(find . -name \"*.md\" -type f -exec sed -i 's/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/sk-proj-YOUR_OPENAI_KEY_HERE/g' {} ;)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

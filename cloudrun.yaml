@@ -1,0 +1,109 @@
+
+# ==============================================================================
+# GOOGLE CLOUD RUN SERVICE CONFIGURATION
+# Deploy with: gcloud run services replace cloudrun.yaml
+# ==============================================================================
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: strapi-template
+  labels:
+    cloud.googleapis.com/location: us-west1
+    app: strapi
+    environment: production
+  annotations:
+    run.googleapis.com/ingress: all
+    run.googleapis.com/ingress-status: all
+spec:
+  template:
+    metadata:
+      annotations:
+        # Auto-scaling configuration
+        autoscaling.knative.dev/minScale: '1'
+        autoscaling.knative.dev/maxScale: '10'
+        
+        # CPU throttling (false = CPU always allocated)
+        run.googleapis.com/cpu-throttling: 'false'
+        
+        # Startup probe (health check during startup)
+        run.googleapis.com/startup-cpu-boost: 'true'
+        
+        # Execution environment (second generation)
+        run.googleapis.com/execution-environment: gen2
+        
+        # VPC connector (uncomment if using VPC)
+        # run.googleapis.com/vpc-access-connector: projects/PROJECT_ID/locations/REGION/connectors/CONNECTOR_NAME
+        # run.googleapis.com/vpc-access-egress: private-ranges-only
+        
+    spec:
+      # Service account for the container
+      # serviceAccountName: strapi-sa@PROJECT_ID.iam.gserviceaccount.com
+      
+      # Container timeout (maximum request duration)
+      timeoutSeconds: 300
+      
+      # Container specification
+      containers:
+      - name: strapi-container
+        # Image from Container Registry or Artifact Registry
+        image: gcr.io/PROJECT_ID/strapi-template:latest
+        
+        # Container port
+        ports:
+        - name: http1
+          containerPort: 1337
+        
+        # Environment variables
+        env:
+        - name: NODE_ENV
+          value: production
+        - name: PORT
+          value: '1337'
+        - name: NODE_VERSION
+          value: '22.11.0'
+        
+        # Resource allocation
+        resources:
+          limits:
+            cpu: '2'
+            memory: 2Gi
+          requests:
+            cpu: '1'
+            memory: 1Gi
+        
+        # Startup probe
+        startupProbe:
+          httpGet:
+            path: /admin
+            port: 1337
+          initialDelaySeconds: 10
+          timeoutSeconds: 3
+          periodSeconds: 10
+          failureThreshold: 10
+        
+        # Liveness probe
+        livenessProbe:
+          httpGet:
+            path: /admin
+            port: 1337
+          initialDelaySeconds: 30
+          timeoutSeconds: 3
+          periodSeconds: 30
+          failureThreshold: 3
+        
+        # Readiness probe
+        readinessProbe:
+          httpGet:
+            path: /admin
+            port: 1337
+          initialDelaySeconds: 10
+          timeoutSeconds: 3
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+  
+  # Traffic configuration
+  traffic:
+  - percent: 100
+    latestRevision: true

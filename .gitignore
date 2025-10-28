@@ -33,6 +33,10 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# MCP configuration (contains API keys)
+.claude/mcp.json
+.claude/mcp.yaml
+
 # turbo
 .turbo
 
@@ -48,3 +52,12 @@ services/stream/out/*.csv
 apps/mobile/ios
 apps/mobile/android
 *.log
+.vercel
+.clinerules/byterover-rules.md
+.kilocode/rules/byterover-rules.md
+.roo/rules/byterover-rules.md
+.windsurf/rules/byterover-rules.md
+.cursor/rules/byterover-rules.mdc
+.kiro/steering/byterover-rules.md
+.qoder/rules/byterover-rules.md
+.augment/rules/byterover-rules.md
