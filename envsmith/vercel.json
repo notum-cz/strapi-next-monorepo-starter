@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "next build",
+  "installCommand": "npm ci",
+  "github": {
+    "enabled": true
+  },
+  "env": {
+    "NEXT_RUNTIME_FORCE_EDGE": "false"
+  }
+}
