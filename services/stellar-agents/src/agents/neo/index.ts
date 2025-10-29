@@ -1,6 +1,6 @@
 // ============================================================================
-// BETELGEUSE - THE BUILDER (DevOps Agent)
-// "The red supergiant in Orion"
+// NEO - THE BUILDER (DevOps Agent)
+// "Building the new world"
 // ============================================================================
 
 import Anthropic from '@anthropic-ai/sdk';
@@ -11,7 +11,7 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-export class BetelgeuseAgent extends BaseAgent {
+export class NeoAgent extends BaseAgent {
   /**
    * Main execution method
    */

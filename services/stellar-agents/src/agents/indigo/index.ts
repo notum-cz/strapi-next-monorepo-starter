@@ -1,6 +1,6 @@
 // ============================================================================
-// SIRIUS - THE NAVIGATOR (Orchestrator Agent)
-// "The brightest star in the night sky"
+// INDIGO - THE NAVIGATOR (Orchestrator Agent)
+// "Guiding the path forward"
 // ============================================================================
 
 import OpenAI from 'openai';
@@ -11,13 +11,13 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export class SiriusAgent extends BaseAgent {
+export class IndigoAgent extends BaseAgent {
   private availableAgents: string[] = [
-    'andromeda', // Coder
-    'vega',      // Validator
-    'rigel',     // Researcher
-    'cassiopeia', // Voice
-    'betelgeuse', // Builder
+    'mari',    // Coder
+    'azul',    // Validator
+    'beyond',  // Researcher
+    'duo',     // Voice
+    'neo',     // Builder
   ];
 
   /**
@@ -59,17 +59,17 @@ export class SiriusAgent extends BaseAgent {
 
     await this.logInfo(sessionId, 'Creating feature plan', `Analyzing requirements for: ${description}`);
 
-    const prompt = `You are Sirius, an AI orchestrator for a software development team.
+    const prompt = `You are Indigo, an AI orchestrator for a software development team.
 
 Task: Create a detailed implementation plan for this feature:
 "${description}"
 
 Available agents you can assign work to:
-- Andromeda (Coder): Code generation, refactoring, debugging
-- Vega (Validator): UI testing, visual regression, accessibility
-- Rigel (Researcher): Web research, documentation, API discovery
-- Cassiopeia (Voice): Voice interactions, TTS, natural language
-- Betelgeuse (Builder): Deployments, CI/CD, infrastructure
+- Mari (Coder): Code generation, refactoring, debugging
+- Azul (Validator): UI testing, visual regression, accessibility
+- Beyond (Researcher): Web research, documentation, API discovery
+- Duo (Voice): Voice interactions, TTS, natural language
+- Neo (Builder): Deployments, CI/CD, infrastructure
 
 Return a JSON plan with this structure:
 {
@@ -78,7 +78,7 @@ Return a JSON plan with this structure:
     {
       "id": "step_1",
       "description": "What needs to be done",
-      "assignedAgent": "andromeda",
+      "assignedAgent": "mari",
       "type": "coding|testing|research|deployment",
       "inputs": {},
       "outputs": ["expected output"],
@@ -242,14 +242,14 @@ Keep subtasks small (10-30 minutes each). Assign to the most appropriate agent.`
    */
   private selectAgent(taskType: string): string {
     const mapping: Record<string, string> = {
-      coding: 'andromeda',
-      testing: 'vega',
-      research: 'rigel',
-      voice: 'cassiopeia',
-      deployment: 'betelgeuse',
-      infrastructure: 'betelgeuse',
+      coding: 'mari',
+      testing: 'azul',
+      research: 'beyond',
+      voice: 'duo',
+      deployment: 'neo',
+      infrastructure: 'neo',
     };
 
-    return mapping[taskType] || 'andromeda';
+    return mapping[taskType] || 'mari';
   }
 }
