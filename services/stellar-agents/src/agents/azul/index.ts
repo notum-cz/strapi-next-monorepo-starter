@@ -1,6 +1,6 @@
 // ============================================================================
-// VEGA - THE VALIDATOR (Browser Testing Agent)
-// "One of the brightest stars in the northern sky"
+// AZUL - THE VALIDATOR (Browser Testing Agent)
+// "Guardian of quality, ensuring excellence"
 // ============================================================================
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
@@ -9,7 +9,7 @@ import type { Task, AgentResult, BrowserTask, BrowserResult } from '../../types'
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 
-export class VegaAgent extends BaseAgent {
+export class AzulAgent extends BaseAgent {
   /**
    * Main execution method
    */

@@ -3,12 +3,12 @@
 // ============================================================================
 
 import { getAgent } from '../config/supabase';
-import { SiriusAgent } from '../agents/sirius';
-import { AndromedaAgent } from '../agents/andromeda';
-import { VegaAgent } from '../agents/vega';
-import { RigelAgent } from '../agents/rigel';
-import { CassiopeiaAgent } from '../agents/cassiopeia';
-import { BetelgeuseAgent } from '../agents/betelgeuse';
+import { IndigoAgent } from '../agents/indigo';
+import { MariAgent } from '../agents/mari';
+import { AzulAgent } from '../agents/azul';
+import { BeyondAgent } from '../agents/beyond';
+import { DuoAgent } from '../agents/duo';
+import { NeoAgent } from '../agents/neo';
 import type { BaseAgent } from './BaseAgent';
 import type { AgentConfig } from '../types';
 
@@ -21,7 +21,7 @@ export class AgentRegistry {
   async initialize(): Promise<void> {
     console.log('[AgentRegistry] Initializing agents...');
 
-    const agentNames = ['sirius', 'andromeda', 'vega', 'rigel', 'cassiopeia', 'betelgeuse'];
+    const agentNames = ['indigo', 'mari', 'azul', 'beyond', 'duo', 'neo'];
 
     for (const name of agentNames) {
       try {
@@ -61,18 +61,18 @@ export class AgentRegistry {
    */
   private createAgent(name: string, config: AgentConfig): BaseAgent | null {
     switch (name) {
-      case 'sirius':
-        return new SiriusAgent(config);
-      case 'andromeda':
-        return new AndromedaAgent(config);
-      case 'vega':
-        return new VegaAgent(config);
-      case 'rigel':
-        return new RigelAgent(config);
-      case 'cassiopeia':
-        return new CassiopeiaAgent(config);
-      case 'betelgeuse':
-        return new BetelgeuseAgent(config);
+      case 'indigo':
+        return new IndigoAgent(config);
+      case 'mari':
+        return new MariAgent(config);
+      case 'azul':
+        return new AzulAgent(config);
+      case 'beyond':
+        return new BeyondAgent(config);
+      case 'duo':
+        return new DuoAgent(config);
+      case 'neo':
+        return new NeoAgent(config);
       default:
         console.warn(`[AgentRegistry] Unknown agent: ${name}`);
         return null;

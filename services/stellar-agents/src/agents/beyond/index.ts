@@ -1,6 +1,6 @@
 // ============================================================================
-// RIGEL - THE RESEARCHER
-// "A blue supergiant in Orion"
+// BEYOND - THE RESEARCHER
+// "Exploring beyond the known"
 // ============================================================================
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
@@ -9,7 +9,7 @@ import type { Task, AgentResult, ResearchRequest, ResearchResult } from '../../t
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 
-export class RigelAgent extends BaseAgent {
+export class BeyondAgent extends BaseAgent {
   /**
    * Main execution method
    */

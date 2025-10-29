@@ -1,6 +1,6 @@
 // ============================================================================
-// CASSIOPEIA - THE COMMUNICATOR (Voice Agent)
-// "The queen constellation"
+// DUO - THE COMMUNICATOR (Voice Agent)
+// "Voice of connection and understanding"
 // ============================================================================
 
 import OpenAI from 'openai';
@@ -11,7 +11,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export class CassiopeiaAgent extends BaseAgent {
+export class DuoAgent extends BaseAgent {
   /**
    * Main execution method
    */
