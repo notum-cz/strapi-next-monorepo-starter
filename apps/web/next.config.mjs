@@ -1,8 +1,13 @@
 import withPlaiceholder from "@plaiceholder/next"
 import { withSentryConfig } from "@sentry/nextjs"
 import plugin from "next-intl/plugin"
+import path from "path"
+import { fileURLToPath } from "url"
 
 import { env } from "./src/env.mjs"
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const withNextIntl = plugin("./src/lib/i18n.ts")
 
@@ -65,7 +70,7 @@ const withConfig = (() => {
     if (!config.resolve) config.resolve = {}
     if (!config.resolve.alias) config.resolve.alias = {}
     
-    config.resolve.alias["@components"] = require("path").resolve(
+    config.resolve.alias["@components"] = path.resolve(
       __dirname,
       "../../../tweakcn/components"
     )
