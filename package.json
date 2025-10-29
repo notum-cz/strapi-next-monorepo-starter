@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
+    "test": "turbo run test",
     "start": "turbo run start",
     "lint": "turbo run lint",
     "dev:cms": "cd services/cms && yarn develop",
