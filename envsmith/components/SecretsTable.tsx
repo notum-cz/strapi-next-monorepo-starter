@@ -76,7 +76,7 @@ export default function SecretsTable({ variables, onUpdate }: SecretsTableProps)
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {variables.map((variable, index) => (
-                <tr key={index} className="hover:bg-gray-50">
+                <tr key={`${variable.key}-${index}`} className="hover:bg-gray-50">
                   <td className="px-4 py-3 text-sm font-mono text-gray-900">
                     {variable.key}
                   </td>
