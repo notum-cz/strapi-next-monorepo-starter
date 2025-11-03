@@ -2,6 +2,14 @@
 
 This is a ready-to-go starter template for Strapi projects. It combines the power of Strapi, Next.js, Shadcn/ui libraries with Turborepo setup and kickstarts your project development. We call it a **Page builder** for enterprise applications.
 
+## 👀 Live demo
+
+- UI - [https://www.notum-dev.cz/](https://www.notum-dev.cz/)
+- Strapi - [https://api.notum-dev.cz/admin](https://api.notum-dev.cz/admin)
+- **Readonly user:**
+  - Email: user@notum.cz
+  - Password: Secret-pass-55
+
 ## 🥞 Tech stack
 
 - [Strapi v5](https://strapi.io/) - Headless CMS to manage content
@@ -11,6 +19,8 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 - [Turborepo](https://turbo.build/) - Monorepo management tool to keep things tidy
 
 ## 🚀 Getting started
+
+[![Launch Strapi + Next.js Monorepo — Live in 5 Minutes](https://img.youtube.com/vi/VZlJZuurUH8/maxresdefault.jpg)](https://www.youtube.com/watch?v=VZlJZuurUH8 "Watch on YouTube")
 
 ### Prerequisites
 
@@ -42,13 +52,23 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 1. Run apps
 
+   > [!WARNING]
+   > Before the first run, you need to retrieve [Strapi API token](https://docs.strapi.io/cms/features/api-tokens).
+   >
+   > ```sh
+   > yarn dev:strapi
+   > ```
+   >
+   > Go to Strapi admin URL and navigate to [Settings > API Tokens](http://localhost:1337/admin/settings/api-tokens).
+   >
+   > Select "Create new API token" and copy it's value to `STRAPI_REST_READONLY_API_KEY` in `/apps/ui/.env.local` file.
+   >
+   > Refer to the [UI README](apps/ui/README.md#environment-variables) for more details.
+
    ```sh
    # run all apps in dev mode (this triggers `yarn dev` script in each app from `/apps` directory)
    yarn dev
    ```
-
-   > [!WARNING]
-   > More **manual setup is needed** for communication with Strapi using API tokens. Please refer to the [UI README](apps/ui/README.md#environment-variables) before running the UI app. Otherwise, you will get **401 Unauthorized error** - missing or invalid credentials.
 
 1. 🎉 Enjoy!
 

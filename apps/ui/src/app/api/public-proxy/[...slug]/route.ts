@@ -18,7 +18,7 @@ import {
  */
 async function handler(
   request: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string[] }> }
 ) {
   const { slug } = await params
 
