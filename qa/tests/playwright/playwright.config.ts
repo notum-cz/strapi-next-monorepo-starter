@@ -1,3 +1,5 @@
+import { env } from "process"
+
 import { defineConfig, devices } from "@playwright/test"
 
 export default defineConfig({
@@ -9,7 +11,7 @@ export default defineConfig({
   reporter: "html",
 
   use: {
-    baseURL: "https://notum.cz/cs/",
+    baseURL: env.BASE_URL,
     trace: "on-first-retry",
   },
 
@@ -30,23 +32,23 @@ export default defineConfig({
     },
 
     /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
+    //  {
+    //    name: 'Mobile Chrome',
+    //    use: { ...devices['Pixel 5'] },
+    //  },
+    //  {
+    //    name: 'Mobile Safari',
+    //    use: { ...devices['iPhone 12'] },
+    //  },
 
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
+    // /* Test against branded browsers. */
+    //  {
+    //    name: 'Microsoft Edge',
+    //    use: { ...devices['Desktop Edge'], channel: 'msedge' },
+    //  },
+    //  {
+    //    name: 'Google Chrome',
+    //    use: { ...devices['Desktop Chrome'], channel: 'chrome' },
+    //  },
   ],
 })

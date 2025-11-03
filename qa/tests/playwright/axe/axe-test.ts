@@ -1,13 +1,16 @@
 import fs from "fs"
 import path from "path"
+import { env } from "process"
 
 import AxeBuilder from "@axe-core/playwright"
 import { chromium } from "playwright"
 
+import type { AxeResults, NodeResult, Result } from "axe-core"
+
 import { fetchSitemap } from "../helpers/get-sitemap-links"
 
 // Rule IDs that should be treated as warnings instead of errors
-const WARNING_RULE_IDS = new Set<string>([""])
+const WARNING_RULE_IDS = new Set<string>(["[]"])
 
 type SiteOutcome = {
   url: string
@@ -17,15 +20,15 @@ type SiteOutcome = {
 
 function formatViolationsSection(
   title: string,
-  violations: any[],
+  violations: Result[],
   icon: string
 ): string {
   if (violations.length === 0) return `${title}\n———\nNone\n`
 
-  const blocks = violations.map((v: any) => {
+  const blocks = violations.map((v: Result) => {
     const nodes = v.nodes?.length
       ? v.nodes
-          .map((n: any, idx: number) => {
+          .map((n: NodeResult, idx: number) => {
             const target = Array.isArray(n.target) ? n.target.join(", ") : ""
             return `  ${idx + 1}. ${n.html}\n     target: ${target}`
           })
@@ -45,7 +48,7 @@ function formatViolationsSection(
 }
 
 ;(async () => {
-  await fetchSitemap("https://www.example.com/sitemap.xml", "--json")
+  await fetchSitemap(env.baseUrl + "/sitemap.xml", "--json")
 
   const sitesPath = path.join(__dirname, "../helpers/sites.json")
   const sites: string[] = JSON.parse(fs.readFileSync(sitesPath, "utf-8"))
@@ -80,8 +83,8 @@ function formatViolationsSection(
       try {
         await page.goto(site, { waitUntil: "load", timeout: 20000 })
 
-        const results = await new AxeBuilder({ page }).analyze()
-        const allViolations = results.violations ?? []
+        const results: AxeResults = await new AxeBuilder({ page }).analyze()
+        const allViolations: Result[] = results.violations ?? []
 
         const warningViolations = allViolations.filter((v) =>
           WARNING_RULE_IDS.has(v.id)
@@ -129,15 +132,16 @@ function formatViolationsSection(
           hasErrors: errorViolations.length > 0,
           hasWarnings: warningViolations.length > 0,
         })
-      } catch (error) {
-        console.error(`❌ Error checking ${site}:`, error)
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error)
+        console.error(`❌ Error checking ${site}:`, message)
         fs.appendFileSync(
           reportFilePath,
           [
             `AXE accessibility REPORT`,
             `Timestamp: ${runTimestamp}`,
             `Page: ${site}`,
-            `ERROR running analysis: ${String(error)}`,
+            `ERROR running analysis: ${message}`,
             ``,
           ].join("\n")
         )

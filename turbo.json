@@ -28,16 +28,18 @@
       "persistent": true
     },
     "axe-test": {
+      "dependsOn": ["^build"],
       "cache": false,
-      "persistent": true
+      "persistent": false
     },
     "playwright-interactive-mode": {
       "cache": false,
-      "persistent": true
+      "persistent": false
     },
     "playwright-e2e-tests": {
+      "dependsOn": ["^build"],
       "cache": false,
-      "persistent": true
+      "persistent": false
     }
   },
   "ui": "tui"
