@@ -2,6 +2,14 @@
 
 This is a ready-to-go starter template for Strapi projects. It combines the power of Strapi, Next.js, Shadcn/ui libraries with Turborepo setup and kickstarts your project development. We call it a **Page builder** for enterprise applications.
 
+## 👀 Live demo
+
+- UI - [https://www.notum-dev.cz/](https://www.notum-dev.cz/)
+- Strapi - [https://api.notum-dev.cz/admin](https://api.notum-dev.cz/admin)
+- **Readonly user:**
+  - Email: user@notum.cz
+  - Password: Secret-pass-55
+
 ## 🥞 Tech stack
 
 - [Strapi v5](https://strapi.io/) - Headless CMS to manage content
