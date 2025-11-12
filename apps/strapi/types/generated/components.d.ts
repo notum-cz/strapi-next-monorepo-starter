@@ -268,7 +268,7 @@ export interface UtilitiesBasicImage extends Struct.ComponentSchema {
     displayName: "BasicImage"
   }
   attributes: {
-    alt: Schema.Attribute.String & Schema.Attribute.Required
+    alt: Schema.Attribute.String
     fallbackSrc: Schema.Attribute.String
     height: Schema.Attribute.Integer
     media: Schema.Attribute.Media<"images" | "videos"> &

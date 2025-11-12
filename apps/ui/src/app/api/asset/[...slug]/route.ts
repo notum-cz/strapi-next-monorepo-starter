@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server"
 import { env } from "@/env.mjs"
 
 /**
@@ -19,6 +20,19 @@ async function handler(
 ) {
   const { slug } = await params
   const path = Array.isArray(slug) ? slug.join("/") : slug
+
+  if (!path.startsWith("uploads/")) {
+    // allow only uploads to be fetched through this proxy
+    return NextResponse.json(
+      {
+        error: {
+          message: `Access denied: Only paths under uploads/ are allowed`,
+          name: "Forbidden",
+        },
+      },
+      { status: 403 }
+    )
+  }
 
   const url = `${env.STRAPI_URL}/${path}`
   const clonedRequest = request.clone()
