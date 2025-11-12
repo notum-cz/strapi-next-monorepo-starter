@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 import { env } from "@/env.mjs"
 
+import { isStrapiEndpointAllowed } from "@/lib/strapi-api/request-auth"
+
 /**
  * This route handler acts as a private proxy for frontend requests with one goal:
  * - Hide the backend URL, so it cannot be accessed directly.
@@ -17,8 +19,21 @@ async function handler(
   const { slug } = await params
 
   const path = Array.isArray(slug) ? slug.join("/") : slug
-  const isReadOnly = request.method === "GET" || request.method === "HEAD"
 
+  const isAccessible = isStrapiEndpointAllowed(path, request.method)
+  if (!isAccessible) {
+    return NextResponse.json(
+      {
+        error: {
+          message: `Path '${path}' is not accessible`,
+          name: "Forbidden",
+        },
+      },
+      { status: 403 }
+    )
+  }
+
+  const isReadOnly = request.method === "GET" || request.method === "HEAD"
   const { search } = new URL(request.url)
   const url = `${env.STRAPI_URL}/${path}${search ?? ""}`
 
