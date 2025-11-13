@@ -19,9 +19,18 @@
       "type": "string",
       "required": false
     },
+    "targetLocale": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
     "payload": {
-      "type": "json",
-      "required": true
+      "type": "json"
+    },
+    "documentType": {
+      "type": "string",
+      "regex": "^(api::page.page)$"
     },
     "state": {
       "type": "enumeration",

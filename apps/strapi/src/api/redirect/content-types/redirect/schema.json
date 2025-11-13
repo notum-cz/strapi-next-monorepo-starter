@@ -21,12 +21,6 @@
     "permanent": {
       "type": "boolean",
       "default": false
-    },
-    "page": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::page.page",
-      "inversedBy": "redirects"
     }
   }
 }

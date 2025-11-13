@@ -4,35 +4,62 @@
 
 import { Data, factories } from "@strapi/strapi"
 
-import { hierarchyService } from "./hierarchyService"
+import {
+  processCreateRedirectJob,
+  processRecalculateFullPathJob,
+} from "../../../utils/hierarchy"
 
 export default factories.createCoreService(
   "api::internal-job.internal-job",
   ({ strapi }) => ({
     async enqueueJob(
       jobType: Data.ContentType<"api::internal-job.internal-job">["jobType"],
-      relatedDocumentId: Data.ContentType<"api::internal-job.internal-job">["relatedDocumentId"],
-      payload: Data.ContentType<"api::internal-job.internal-job">["payload"]
+      requiredData: {
+        documentType: string // used to find the right collection
+        relatedDocumentId: string // the documentId of the related document
+        targetLocale: string // locale of the target document
+        slug?: string // optional, used for better displaying in the admin panel
+      },
+      optionalPayload?: Data.ContentType<"api::internal-job.internal-job">["payload"]
     ) {
-      if (!payload) {
-        throw new Error("Payload is required for job creation")
+      if (
+        !requiredData ||
+        !requiredData.documentType ||
+        !requiredData.relatedDocumentId ||
+        !requiredData.targetLocale
+      ) {
+        throw new Error("Missing required data to enqueue job")
       }
+
+      const { relatedDocumentId, targetLocale, documentType, slug } =
+        requiredData
 
       const samePendingJob = await strapi
         .documents("api::internal-job.internal-job")
         .findFirst({
-          filters: { jobType, relatedDocumentId, state: "pending" },
+          filters: {
+            jobType,
+            relatedDocumentId,
+            targetLocale,
+            state: "pending",
+          },
         })
 
       if (samePendingJob) {
-        return samePendingJob
+        // remove the same pending job
+        await strapi.documents("api::internal-job.internal-job").delete({
+          documentId: samePendingJob.documentId,
+        })
       }
 
       return strapi.documents("api::internal-job.internal-job").create({
         data: {
           jobType,
           relatedDocumentId,
-          payload: JSON.stringify(payload),
+          documentType,
+          targetLocale,
+          slug,
+          payload: optionalPayload ? JSON.stringify(optionalPayload) : null,
           state: "pending",
         },
       })
@@ -58,17 +85,26 @@ export default factories.createCoreService(
       })
     },
 
+    async removeJob(documentId: string) {
+      return strapi.documents("api::internal-job.internal-job").delete({
+        documentId,
+      })
+    },
+
     async runAll(
       jobType: Data.ContentType<"api::internal-job.internal-job">["jobType"]
     ) {
-      let job = await this.getNextJob(jobType)
+      const handlers = this.getJobHandlers()
       const successfulJobs: string[] = []
       const failedJobs: string[] = []
 
+      let job = await this.getNextJob(jobType)
+
       while (job != null) {
         try {
-          await hierarchyService[jobType](job.payload as any)
-          await this.updateJobStatus(job.documentId, "completed")
+          await handlers[jobType](job)
+          await this.removeJob(job.documentId)
+
           successfulJobs.push(job.documentId)
 
           strapi.log.info(`Job ${jobType} (${job.id}) completed`)
@@ -87,6 +123,16 @@ export default factories.createCoreService(
       return {
         successfulJobs,
         failedJobs,
+      }
+    },
+
+    getJobHandlers(): Record<
+      Data.ContentType<"api::internal-job.internal-job">["jobType"],
+      Function
+    > {
+      return {
+        RECALCULATE_FULLPATH: processRecalculateFullPathJob,
+        CREATE_REDIRECT: processCreateRedirectJob,
       }
     },
   })
