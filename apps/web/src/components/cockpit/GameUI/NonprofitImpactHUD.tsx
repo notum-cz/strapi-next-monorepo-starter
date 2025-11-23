@@ -5,9 +5,9 @@
  * Real-time donation tracking, project funding, impact visualization
  */
 
-import { motion } from 'framer-motion'
-import { DollarSign, Users, Target, TrendingUp, Heart, Sparkles } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { DollarSign, Users, Target, TrendingUp, Heart, Sparkles, Activity, RefreshCw } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
 
 interface ImpactMetrics {
   totalDonations: number
@@ -16,6 +16,15 @@ interface ImpactMetrics {
   milestonesAchieved: number
   livesImpacted: number
   volunteersActive: number
+  growthRate?: number
+}
+
+interface ActivityItem {
+  id: string
+  type: 'donation' | 'milestone' | 'volunteer' | 'project'
+  message: string
+  amount?: number
+  timestamp: string
 }
 
 export function NonprofitImpactHUD() {
@@ -26,13 +35,35 @@ export function NonprofitImpactHUD() {
     milestonesAchieved: 0,
     livesImpacted: 0,
     volunteersActive: 0,
+    growthRate: 0,
   })
 
+  const [recentActivity, setRecentActivity] = useState<ActivityItem[]>([])
   const [isAnimating, setIsAnimating] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isDemo, setIsDemo] = useState(false)
+  const [lastUpdate, setLastUpdate] = useState<Date>(new Date())
 
-  // Simulate real-time updates (replace with actual Supabase subscription)
+  const fetchMetrics = useCallback(async () => {
+    try {
+      const response = await fetch('/api/impact/metrics')
+      const data = await response.json()
+
+      if (data.success) {
+        setMetrics(data.metrics)
+        setRecentActivity(data.metrics.recentActivity || [])
+        setIsDemo(data.isDemo)
+        setLastUpdate(new Date())
+      }
+    } catch (error) {
+      console.error('Failed to fetch metrics:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  // Initial fetch and real-time updates
   useEffect(() => {
-    // Initial fetch
     fetchMetrics()
 
     // Real-time updates every 5 seconds
@@ -43,27 +74,7 @@ export function NonprofitImpactHUD() {
     }, 5000)
 
     return () => clearInterval(interval)
-  }, [])
-
-  const fetchMetrics = async () => {
-    try {
-      // TODO: Replace with actual API call
-      // const response = await fetch('/api/impact/metrics')
-      // const data = await response.json()
-
-      // Mock data for now
-      setMetrics({
-        totalDonations: 247,
-        totalDonated: 45280,
-        activeProjects: 12,
-        milestonesAchieved: 34,
-        livesImpacted: 1547,
-        volunteersActive: 89,
-      })
-    } catch (error) {
-      console.error('Failed to fetch metrics:', error)
-    }
-  }
+  }, [fetchMetrics])
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -125,7 +136,7 @@ export function NonprofitImpactHUD() {
     },
     {
       label: 'Growth Rate',
-      value: '+23%',
+      value: `+${metrics.growthRate || 23}%`,
       icon: TrendingUp,
       color: 'from-cyan-500 to-blue-600',
       bgColor: 'border-cyan-500/30',
@@ -133,6 +144,29 @@ export function NonprofitImpactHUD() {
       subtext: 'This month',
     },
   ]
+
+  // Loading skeleton
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="h-8 w-48 bg-slate-700/50 rounded animate-pulse mb-2" />
+            <div className="h-4 w-64 bg-slate-700/30 rounded animate-pulse" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="bg-slate-900/80 rounded-xl p-4 border border-slate-700/50">
+              <div className="h-8 w-8 bg-slate-700/50 rounded-lg animate-pulse mb-3" />
+              <div className="h-8 w-16 bg-slate-700/50 rounded animate-pulse mb-2" />
+              <div className="h-3 w-20 bg-slate-700/30 rounded animate-pulse" />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -143,14 +177,28 @@ export function NonprofitImpactHUD() {
           <p className="text-sm text-slate-400">Real-time nonprofit impact metrics</p>
         </div>
 
-        {/* Live indicator */}
-        <div className="flex items-center gap-2 px-4 py-2 bg-slate-900/50 rounded-full border border-green-500/30">
-          <motion.div
-            className="w-2 h-2 bg-green-400 rounded-full"
-            animate={{ scale: [1, 1.2, 1], opacity: [1, 0.6, 1] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-          />
-          <span className="text-xs text-green-400 font-mono uppercase">Live Data</span>
+        {/* Live indicator and controls */}
+        <div className="flex items-center gap-3">
+          {isDemo && (
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 rounded-full border border-amber-500/30">
+              <span className="text-xs text-amber-400 font-mono uppercase">Demo Mode</span>
+            </div>
+          )}
+          <button
+            onClick={() => { setIsAnimating(true); fetchMetrics(); setTimeout(() => setIsAnimating(false), 500); }}
+            className="p-2 bg-slate-800/50 rounded-lg border border-slate-700/50 hover:border-cyan-500/50 transition-colors group"
+            title="Refresh data"
+          >
+            <RefreshCw className={`w-4 h-4 text-slate-400 group-hover:text-cyan-400 transition-colors ${isAnimating ? 'animate-spin' : ''}`} />
+          </button>
+          <div className="flex items-center gap-2 px-4 py-2 bg-slate-900/50 rounded-full border border-green-500/30">
+            <motion.div
+              className="w-2 h-2 bg-green-400 rounded-full"
+              animate={{ scale: [1, 1.2, 1], opacity: [1, 0.6, 1] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+            />
+            <span className="text-xs text-green-400 font-mono uppercase">Live</span>
+          </div>
         </div>
       </div>
 
