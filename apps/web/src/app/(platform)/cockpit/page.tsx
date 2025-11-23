@@ -10,12 +10,48 @@ import { AgentCardGame } from '@/components/cockpit/GameUI/AgentCardGame';
 import { LiveLogsViewer } from '@/components/cockpit/LiveLogsViewer';
 import { VoiceCommandGame } from '@/components/cockpit/GameUI/VoiceCommandGame';
 import { StarField3D } from '@/components/cockpit/GameUI/StarField3D';
-import { motion } from 'framer-motion';
-import { Zap, Users, TrendingUp, Heart } from 'lucide-react';
+import { NonprofitImpactHUD } from '@/components/cockpit/GameUI/NonprofitImpactHUD';
+import { AgentCardSkeleton } from '@/components/ui/game-skeleton';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Zap, Users, TrendingUp, Heart, Eye, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
+import { useState, useEffect, useCallback } from 'react';
 
 export default function CockpitDashboard() {
-  const { data: agents, isLoading, error } = useAgents();
+  const { data: agents, isLoading, error, refetch } = useAgents();
+  const [stats, setStats] = useState({ totalTasks: 0, successRate: 97, activeAgents: 0 });
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Fetch stats from API
+  const fetchStats = useCallback(async () => {
+    try {
+      const response = await fetch('/api/agents/stats');
+      const data = await response.json();
+      if (data.success) {
+        const totalTasks = data.agents.reduce((sum: number, a: any) => sum + a.stats.tasksCompleted, 0);
+        const avgSuccess = data.agents.reduce((sum: number, a: any) => sum + a.stats.successRate, 0) / data.agents.length;
+        setStats({
+          totalTasks,
+          successRate: Math.round(avgSuccess),
+          activeAgents: data.agents.filter((a: any) => a.status === 'online' || a.status === 'busy').length,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to fetch stats:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchStats();
+    const interval = setInterval(fetchStats, 10000);
+    return () => clearInterval(interval);
+  }, [fetchStats]);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await Promise.all([refetch(), fetchStats()]);
+    setIsRefreshing(false);
+  };
 
   // Mock agents data if database isn't ready
   const mockAgents = [
@@ -154,10 +190,18 @@ export default function CockpitDashboard() {
                 </Link>
                 <Link
                   href="/cockpit/observability"
-                  className="px-6 py-3 bg-slate-800/50 backdrop-blur rounded-xl font-semibold text-slate-300 border border-slate-700/50 hover:border-cyan-500/50 hover:text-white transition-all"
+                  className="px-6 py-3 bg-slate-800/50 backdrop-blur rounded-xl font-semibold text-slate-300 border border-slate-700/50 hover:border-cyan-500/50 hover:text-white transition-all flex items-center gap-2"
                 >
+                  <Eye className="w-4 h-4" />
                   Activity Logs
                 </Link>
+                <button
+                  onClick={handleRefresh}
+                  disabled={isRefreshing}
+                  className="p-3 bg-slate-800/50 backdrop-blur rounded-xl text-slate-300 border border-slate-700/50 hover:border-cyan-500/50 hover:text-white transition-all disabled:opacity-50"
+                >
+                  <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin' : ''}`} />
+                </button>
               </motion.div>
             </div>
 
@@ -201,7 +245,14 @@ export default function CockpitDashboard() {
                     <TrendingUp className="w-4 h-4 text-purple-400" />
                     <span className="text-xs text-slate-400 uppercase tracking-wide">Success</span>
                   </div>
-                  <div className="text-3xl font-bold text-white">97%</div>
+                  <motion.div
+                    key={stats.successRate}
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: 1 }}
+                    className="text-3xl font-bold text-white"
+                  >
+                    {stats.successRate}%
+                  </motion.div>
                   <div className="text-xs text-purple-400">Task completion</div>
                 </div>
               </div>
@@ -213,7 +264,14 @@ export default function CockpitDashboard() {
                     <Heart className="w-4 h-4 text-pink-400" />
                     <span className="text-xs text-slate-400 uppercase tracking-wide">Impact</span>
                   </div>
-                  <div className="text-3xl font-bold text-white">1.2K+</div>
+                  <motion.div
+                    key={stats.totalTasks}
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: 1 }}
+                    className="text-3xl font-bold text-white"
+                  >
+                    {stats.totalTasks > 1000 ? `${(stats.totalTasks / 1000).toFixed(1)}K+` : stats.totalTasks || '1.2K+'}
+                  </motion.div>
                   <div className="text-xs text-pink-400">Tasks completed</div>
                 </div>
               </div>
@@ -238,11 +296,10 @@ export default function CockpitDashboard() {
             </div>
 
             {isLoading && (
-              <div className="flex items-center justify-center py-20">
-                <div className="relative">
-                  <div className="h-16 w-16 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
-                  <div className="absolute inset-0 h-16 w-16 animate-ping rounded-full border-4 border-purple-500 opacity-20" />
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <AgentCardSkeleton key={i} />
+                ))}
               </div>
             )}
 
@@ -284,6 +341,16 @@ export default function CockpitDashboard() {
             <div className="rounded-2xl border border-slate-700/50 bg-slate-900/50 backdrop-blur-xl overflow-hidden">
               <LiveLogsViewer />
             </div>
+          </motion.div>
+
+          {/* Impact Dashboard */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.4 }}
+            className="mt-12"
+          >
+            <NonprofitImpactHUD />
           </motion.div>
         </div>
       </div>
