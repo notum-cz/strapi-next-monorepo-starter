@@ -7,7 +7,7 @@ import { cs } from "./cs"
 import "@repo/design-system/styles.css"
 
 import { defaultCkEditorConfig } from "./ckeditor/configs"
-import InternalJobsActions from "./extensions/InternalJobs"
+import InternalJobs from "./extensions/InternalJobs"
 
 export default {
   config: {
@@ -18,8 +18,8 @@ export default {
   },
   bootstrap(app: StrapiApp) {
     app.getPlugin("content-manager").injectComponent("listView", "actions", {
-      name: "InternalJobsRunAction",
-      Component: InternalJobsActions,
+      name: "InternalJobs",
+      Component: InternalJobs,
     })
   },
   register() {
