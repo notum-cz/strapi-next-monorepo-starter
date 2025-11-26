@@ -497,6 +497,7 @@ export interface ApiInternalJobInternalJob extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
+    documentType: Schema.Attribute.String
     error: Schema.Attribute.String
     jobType: Schema.Attribute.Enumeration<
       ["RECALCULATE_FULLPATH", "CREATE_REDIRECT"]
@@ -508,12 +509,14 @@ export interface ApiInternalJobInternalJob extends Struct.CollectionTypeSchema {
       "api::internal-job.internal-job"
     > &
       Schema.Attribute.Private
-    payload: Schema.Attribute.JSON & Schema.Attribute.Required
+    payload: Schema.Attribute.JSON
     publishedAt: Schema.Attribute.DateTime
     relatedDocumentId: Schema.Attribute.String
+    slug: Schema.Attribute.String
     state: Schema.Attribute.Enumeration<["pending", "completed", "failed"]> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<"pending">
+    targetLocale: Schema.Attribute.String
     updatedAt: Schema.Attribute.DateTime
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
@@ -618,7 +621,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     localizations: Schema.Attribute.Relation<"oneToMany", "api::page.page">
     parent: Schema.Attribute.Relation<"manyToOne", "api::page.page">
     publishedAt: Schema.Attribute.DateTime
-    redirects: Schema.Attribute.Relation<"oneToMany", "api::redirect.redirect">
     seo: Schema.Attribute.Component<"seo-utilities.seo", false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -666,7 +668,6 @@ export interface ApiRedirectRedirect extends Struct.CollectionTypeSchema {
       "api::redirect.redirect"
     > &
       Schema.Attribute.Private
-    page: Schema.Attribute.Relation<"manyToOne", "api::page.page">
     permanent: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>
     publishedAt: Schema.Attribute.DateTime
     source: Schema.Attribute.String & Schema.Attribute.Required
