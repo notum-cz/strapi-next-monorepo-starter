@@ -10,12 +10,13 @@ import type { AxeResults, NodeResult, Result } from "axe-core"
 import { fetchSitemap } from "../helpers/get-sitemap-links"
 
 // Rule IDs that should be treated as warnings instead of errors
-const WARNING_RULE_IDS = new Set<string>(["[]"])
+const WARNING_RULE_IDS = new Set<string>()
 
 type SiteOutcome = {
   url: string
   hasErrors: boolean
   hasWarnings: boolean
+  analysisFailed: boolean
 }
 
 function formatViolationsSection(
@@ -131,6 +132,7 @@ function formatViolationsSection(
           url: site,
           hasErrors: errorViolations.length > 0,
           hasWarnings: warningViolations.length > 0,
+          analysisFailed: false,
         })
       } catch (error: unknown) {
         const message = error instanceof Error ? error.message : String(error)
@@ -147,8 +149,9 @@ function formatViolationsSection(
         )
         siteOutcomes.push({
           url: site,
-          hasErrors: true,
+          hasErrors: false,
           hasWarnings: false,
+          analysisFailed: true,
         })
       } finally {
         await context.close()
@@ -158,11 +161,16 @@ function formatViolationsSection(
     await browser.close()
   }
 
-  const sitesWithErrors = siteOutcomes.filter((s) => s.hasErrors)
-  const sitesWithOnlyWarnings = siteOutcomes.filter(
-    (s) => !s.hasErrors && s.hasWarnings
+  const analysisFailedSites = siteOutcomes.filter((s) => s.analysisFailed)
+  const sitesWithErrors = siteOutcomes.filter(
+    (s) => s.hasErrors && !s.analysisFailed
   )
-  const cleanSites = siteOutcomes.filter((s) => !s.hasErrors && !s.hasWarnings)
+  const sitesWithOnlyWarnings = siteOutcomes.filter(
+    (s) => !s.hasErrors && s.hasWarnings && !s.analysisFailed
+  )
+  const cleanSites = siteOutcomes.filter(
+    (s) => !s.hasErrors && !s.hasWarnings && !s.analysisFailed
+  )
 
   if (sitesWithErrors.length > 0) {
     console.error(
@@ -184,5 +192,14 @@ function formatViolationsSection(
     )
   }
 
-  process.exit(sitesWithErrors.length > 0 ? 1 : 0)
+  if (analysisFailedSites.length > 0) {
+    console.error(
+      `\n⚠️ Analysis failed on ${analysisFailedSites.length} site(s):`
+    )
+    analysisFailedSites.forEach(({ url }) => console.error(`- ${url}`))
+  }
+
+  process.exit(
+    sitesWithErrors.length > 0 || analysisFailedSites.length > 0 ? 1 : 0
+  )
 })()
