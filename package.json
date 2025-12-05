@@ -16,7 +16,8 @@
   ],
   "workspaces": [
     "packages/*",
-    "apps/*"
+    "apps/*",
+    "qa/**"
   ],
   "scripts": {
     "build": "turbo build --cache-dir=.turbo",
@@ -30,12 +31,15 @@
     "format:check": "prettier --check --cache --ignore-unknown \"**/*.{js,jsx,ts,tsx,md,css,scss}\"",
     "heroku-postbuild": "bash ./scripts/heroku/heroku-postbuild.sh",
     "preinstall": "npx only-allow yarn",
-    "lint": "turbo lint",
     "postinstall": "yarn setup:apps",
+    "lint": "turbo lint",
     "prepare": "husky",
+    "setup:apps": "find . -name '*.example' -exec sh -c 'cp -n \"$1\" \"${1%.example}\"' _ {} \\;",
     "start:strapi": "turbo run start --filter=@repo/strapi",
     "start:ui": "turbo run start --filter=@repo/ui",
-    "setup:apps": "find . -name '*.example' -exec sh -c 'cp -n \"$1\" \"${1%.example}\"' _ {} \\;"
+    "tests:playwright:axe": "turbo run axe-test --filter=@repo/tests-playwright",
+    "tests:playwright:e2e:test": "turbo run playwright-e2e-tests --filter=@repo/tests-playwright",
+    "tests:playwright:e2e:test:interactive": "turbo run playwright-interactive-mode --filter=@repo/tests-playwright"
   },
   "prettier": "@repo/prettier-config",
   "devDependencies": {
