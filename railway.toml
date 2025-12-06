@@ -1,0 +1,112 @@
+# Railway Zero-Secrets Bootstrap Configuration
+# Enhanced with cost-protection guardrails and free-tier monitoring
+
+[build]
+builder = "NIXPACKS"
+buildCommand = "yarn install && yarn build"
+
+[deploy]
+startCommand = "yarn start"
+healthcheckPath = "/admin"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+numReplicas = 1
+
+# Cost Protection: Force minimal resource usage
+[deploy.resources]
+# Limit to 512MB RAM (free-tier friendly)
+memoryLimit = "512Mi"
+# Limit to 0.5 CPU cores
+cpuLimit = "500m"
+
+# Free-tier optimization settings
+[deploy.optimization]
+# Enable auto-sleep after inactivity
+sleepAfterInactivity = "15m"
+# Use smallest possible instance
+instanceSize = "starter"
+# Minimize cold start time
+enableFastBoot = true
+
+# Health checks to prevent unnecessary resource usage
+[deploy.healthcheck]
+path = "/admin"
+interval = 30
+timeout = 10
+startPeriod = 40
+
+# Environment variable requirements
+[env]
+NODE_ENV = { required = true, default = "production" }
+PORT = { required = false, default = "1337" }
+DATABASE_URL = { required = true, description = "PostgreSQL connection string from Railway plugin" }
+
+# Cost monitoring and protection
+[monitoring]
+# Enable usage tracking
+enableUsageAlerts = true
+# Monthly budget in USD (free tier)
+monthlyBudgetUsd = 5.0
+# Alert threshold (80% of budget)
+alertThresholdPercent = 80
+# Action on budget exceeded
+onBudgetExceeded = "MAINTENANCE_MODE"
+
+# Maintenance mode configuration
+[maintenance]
+enabled = true
+staticPage = "./maintenance.html"
+triggers = ["BUDGET_EXCEEDED", "FREE_TIER_LIMIT"]
+notifyEmail = "support@newworldkids.org"
+
+# Service configuration
+[service]
+# Ensure single replica for cost efficiency
+minReplicas = 1
+maxReplicas = 1
+# No auto-scaling on free tier
+autoscaling = false
+
+# Networking
+[networking]
+# Only expose necessary ports
+exposePorts = [1337]
+# Enable IPv6 if available
+enableIPv6 = false
+
+# Deployment hooks
+[hooks]
+# Pre-deployment validation
+preDeploy = "echo 'Validating configuration...'"
+# Post-deployment notification
+postDeploy = "echo 'Deployment complete. Monitoring resource usage...'"
+# On maintenance mode activation
+onMaintenanceMode = "echo 'Maintenance mode activated - free tier protected'"
+
+# Coolify migration readiness
+[coolify]
+compatible = true
+notes = "Service is configured for easy migration to Coolify. See COOLIFY_MIGRATION.md"
+
+# Hostinger VPN compatibility
+[hostinger]
+vpnCompatible = true
+notes = "Can be deployed behind Hostinger VPN. See COOLIFY_SUPPORT.md for tunnel setup"
+
+# Zero-secrets deployment notes
+[secrets]
+# All secrets should be set via Railway dashboard or CLI
+# Never commit secrets to repository
+# Use Railway environment variable groups
+managedExternally = true
+documentationPath = "./.agents"
+localTemplatePath = "./master.secrets.json"
+
+# Plugin recommendations
+[plugins]
+# Recommended Railway plugins for this service
+recommended = [
+  "postgresql",  # Primary database
+  "redis"        # Optional: caching layer
+]

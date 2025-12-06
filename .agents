@@ -1,0 +1,637 @@
+{
+  "project": "strapi-template-new-world-kids",
+  "description": "Railway Zero-Secrets Deployment Configuration - Secret Specification for Downstream Provisioning Agents",
+  "version": "1.0.0",
+  "generated": "2025-12-06T09:32:26.307Z",
+  "core": {
+    "description": "Core infrastructure secrets required for basic application functionality",
+    "secrets": [
+      {
+        "name": "NODE_ENV",
+        "type": "string",
+        "required": true,
+        "default": "production",
+        "format": "development|production|test",
+        "description": "Node environment mode"
+      },
+      {
+        "name": "PORT",
+        "type": "number",
+        "required": false,
+        "default": "1337",
+        "format": "1024-65535",
+        "description": "Application port number"
+      },
+      {
+        "name": "DATABASE_URL",
+        "type": "string",
+        "required": true,
+        "default": "postgresql://postgres:postgres@localhost:5432/newworldkids",
+        "format": "postgresql://[user]:[password]@[host]:[port]/[database]",
+        "description": "PostgreSQL database connection string",
+        "category": "database"
+      },
+      {
+        "name": "DATABASE_HOST",
+        "type": "string",
+        "required": false,
+        "default": "localhost",
+        "format": "hostname or IP",
+        "description": "Database host",
+        "category": "database"
+      },
+      {
+        "name": "DATABASE_PORT",
+        "type": "number",
+        "required": false,
+        "default": "5432",
+        "format": "port number",
+        "description": "Database port",
+        "category": "database"
+      },
+      {
+        "name": "DATABASE_NAME",
+        "type": "string",
+        "required": false,
+        "default": "newworldkids",
+        "format": "database name",
+        "description": "Database name",
+        "category": "database"
+      },
+      {
+        "name": "DATABASE_USERNAME",
+        "type": "string",
+        "required": false,
+        "default": "postgres",
+        "format": "username",
+        "description": "Database username",
+        "category": "database"
+      },
+      {
+        "name": "DATABASE_PASSWORD",
+        "type": "string",
+        "required": false,
+        "default": "postgres",
+        "format": "password",
+        "description": "Database password - KEEP SECRET",
+        "category": "database",
+        "sensitive": true
+      },
+      {
+        "name": "DATABASE_SSL",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "format": "true|false",
+        "description": "Enable SSL for database connections",
+        "category": "database"
+      }
+    ]
+  },
+  "required_secrets": {
+    "description": "Required secrets that must be set for production deployment",
+    "secrets": [
+      {
+        "name": "STRAPI_ADMIN_JWT",
+        "type": "string",
+        "required": true,
+        "default": "GENERATE_WITH_CRYPTO_RANDOM_BYTES",
+        "format": "64-character hex string",
+        "description": "Strapi admin JWT secret - Generate with: node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\"",
+        "category": "strapi",
+        "sensitive": true,
+        "generation": "crypto.randomBytes(32).toString('hex')"
+      },
+      {
+        "name": "STRAPI_TOKEN",
+        "type": "string",
+        "required": true,
+        "default": "GENERATE_API_TOKEN",
+        "format": "API token string",
+        "description": "Strapi API token for server-to-server communication",
+        "category": "strapi",
+        "sensitive": true
+      },
+      {
+        "name": "STRAPI_REST_READONLY_API_KEY",
+        "type": "string",
+        "required": false,
+        "default": "GENERATE_API_KEY",
+        "format": "API key string",
+        "description": "Strapi read-only API key",
+        "category": "strapi",
+        "sensitive": true
+      }
+    ]
+  },
+  "optional": {
+    "description": "Optional third-party integration secrets - can be stubbed or disabled for first deployment",
+    "integrations": [
+      {
+        "name": "Vercel Deployment",
+        "enabled_by_default": false,
+        "secrets": [
+          {
+            "name": "VERCEL_PROJECT_ID",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "format": "prj_xxxxx",
+            "description": "Vercel project identifier",
+            "stub_value": "prj_stub_disabled"
+          },
+          {
+            "name": "VERCEL_TOKEN",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "format": "token string",
+            "description": "Vercel deployment token",
+            "sensitive": true,
+            "stub_value": "disabled"
+          },
+          {
+            "name": "VERCEL_ORG_ID",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "format": "org ID",
+            "description": "Vercel organization ID",
+            "stub_value": "org_stub_disabled"
+          }
+        ]
+      },
+      {
+        "name": "Supabase Authentication",
+        "enabled_by_default": false,
+        "secrets": [
+          {
+            "name": "NEXT_PUBLIC_SUPABASE_URL",
+            "type": "string",
+            "required": false,
+            "default": "https://example.supabase.co",
+            "format": "https://[project-id].supabase.co",
+            "description": "Supabase project URL - client-side safe",
+            "stub_value": "https://stub.supabase.co"
+          },
+          {
+            "name": "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "format": "JWT token",
+            "description": "Supabase anonymous key - client-side safe",
+            "stub_value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.stub"
+          },
+          {
+            "name": "SUPABASE_URL",
+            "type": "string",
+            "required": false,
+            "default": "https://example.supabase.co",
+            "format": "https://[project-id].supabase.co",
+            "description": "Supabase project URL - server-side",
+            "stub_value": "https://stub.supabase.co"
+          },
+          {
+            "name": "SUPABASE_SERVICE_ROLE_KEY",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "format": "JWT token",
+            "description": "Supabase service role key - KEEP SECRET - server-side only",
+            "sensitive": true,
+            "stub_value": "disabled_stub_key"
+          }
+        ]
+      },
+      {
+        "name": "Blockchain/Solana/NFT",
+        "enabled_by_default": false,
+        "secrets": [
+          {
+            "name": "NEXT_PUBLIC_SOLANA_NETWORK",
+            "type": "string",
+            "required": false,
+            "default": "devnet",
+            "format": "mainnet-beta|devnet|testnet",
+            "description": "Solana network to use",
+            "stub_value": "devnet"
+          },
+          {
+            "name": "SOLANA_NETWORK",
+            "type": "string",
+            "required": false,
+            "default": "devnet",
+            "format": "mainnet-beta|devnet|testnet",
+            "description": "Solana network (server-side)",
+            "stub_value": "devnet"
+          },
+          {
+            "name": "HELIUS_RPC_URL",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "format": "https://devnet.helius-rpc.com/?api-key=YOUR_KEY",
+            "description": "Helius RPC endpoint for Solana",
+            "sensitive": true,
+            "stub_value": "https://api.devnet.solana.com"
+          },
+          {
+            "name": "NFT_MINT_WALLET_PRIVATE_KEY",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "format": "base58 encoded private key",
+            "description": "NFT minting wallet private key - CRITICAL SECRET",
+            "sensitive": true,
+            "stub_value": "disabled_no_nft_minting"
+          },
+          {
+            "name": "METAPLEX_PROGRAM_ID",
+            "type": "string",
+            "required": false,
+            "default": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
+            "format": "Solana program ID",
+            "description": "Metaplex program ID for NFT operations",
+            "stub_value": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+          },
+          {
+            "name": "ENABLE_NFT_RECEIPTS",
+            "type": "boolean",
+            "required": false,
+            "default": "false",
+            "format": "true|false",
+            "description": "Feature flag for NFT receipts",
+            "stub_value": "false"
+          },
+          {
+            "name": "NFT_THRESHOLD_USD",
+            "type": "number",
+            "required": false,
+            "default": "50",
+            "format": "number",
+            "description": "Minimum USD amount for NFT receipt generation",
+            "stub_value": "999999"
+          }
+        ]
+      },
+      {
+        "name": "IPFS/Pinata Storage",
+        "enabled_by_default": false,
+        "secrets": [
+          {
+            "name": "PINATA_API_KEY",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "format": "API key",
+            "description": "Pinata API key for IPFS storage",
+            "sensitive": true,
+            "stub_value": "disabled"
+          },
+          {
+            "name": "PINATA_SECRET_KEY",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "format": "secret key",
+            "description": "Pinata secret key",
+            "sensitive": true,
+            "stub_value": "disabled"
+          }
+        ]
+      },
+      {
+        "name": "AI/LLM Services",
+        "enabled_by_default": false,
+        "secrets": [
+          {
+            "name": "OPENROUTER_API_KEY",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "format": "sk-or-v1-xxxxx",
+            "description": "OpenRouter API key for LLM access",
+            "sensitive": true,
+            "stub_value": "disabled"
+          },
+          {
+            "name": "OPENROUTER_DEFAULT_MODEL",
+            "type": "string",
+            "required": false,
+            "default": "meta-llama/llama-3.1-8b-instruct:free",
+            "format": "model identifier",
+            "description": "Default LLM model to use",
+            "stub_value": "disabled"
+          },
+          {
+            "name": "OPENROUTER_NOVA_SIGN_MODEL",
+            "type": "string",
+            "required": false,
+            "default": "openai/gpt-4-turbo",
+            "format": "model identifier",
+            "description": "Model for Nova Sign agent",
+            "stub_value": "disabled"
+          },
+          {
+            "name": "OPENROUTER_ECHO_AGENT_MODEL",
+            "type": "string",
+            "required": false,
+            "default": "anthropic/claude-3-5-sonnet",
+            "format": "model identifier",
+            "description": "Model for Echo agent",
+            "stub_value": "disabled"
+          },
+          {
+            "name": "OPENROUTER_FLOW_AGENT_MODEL",
+            "type": "string",
+            "required": false,
+            "default": "openai/gpt-4-turbo",
+            "format": "model identifier",
+            "description": "Model for Flow agent",
+            "stub_value": "disabled"
+          },
+          {
+            "name": "OPENROUTER_PULSE_AGENT_MODEL",
+            "type": "string",
+            "required": false,
+            "default": "anthropic/claude-3-5-sonnet",
+            "format": "model identifier",
+            "description": "Model for Pulse agent",
+            "stub_value": "disabled"
+          },
+          {
+            "name": "RATE_LIMIT_MESSAGES_PER_HOUR",
+            "type": "number",
+            "required": false,
+            "default": "10",
+            "format": "number",
+            "description": "Rate limit for AI messages",
+            "stub_value": "0"
+          },
+          {
+            "name": "MAX_API_COST_PER_MONTH",
+            "type": "number",
+            "required": false,
+            "default": "500",
+            "format": "number in USD",
+            "description": "Maximum API cost per month",
+            "stub_value": "0"
+          }
+        ]
+      },
+      {
+        "name": "Redis Cache",
+        "enabled_by_default": false,
+        "secrets": [
+          {
+            "name": "REDIS_URL",
+            "type": "string",
+            "required": false,
+            "default": "redis://localhost:6379",
+            "format": "redis://[host]:[port]",
+            "description": "Redis connection URL",
+            "stub_value": "disabled"
+          }
+        ]
+      },
+      {
+        "name": "Monitoring/Sentry",
+        "enabled_by_default": false,
+        "secrets": [
+          {
+            "name": "SENTRY_DSN",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "format": "https://[key]@[org].ingest.sentry.io/[project]",
+            "description": "Sentry DSN for error tracking",
+            "sensitive": true,
+            "stub_value": ""
+          },
+          {
+            "name": "SENTRY_AUTH_TOKEN",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "format": "token",
+            "description": "Sentry authentication token",
+            "sensitive": true,
+            "stub_value": ""
+          },
+          {
+            "name": "SENTRY_ORG",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "format": "organization slug",
+            "description": "Sentry organization",
+            "stub_value": ""
+          },
+          {
+            "name": "SENTRY_PROJECT",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "format": "project slug",
+            "description": "Sentry project",
+            "stub_value": ""
+          }
+        ]
+      },
+      {
+        "name": "AWS S3 Storage",
+        "enabled_by_default": false,
+        "secrets": [
+          {
+            "name": "AWS_ACCESS_KEY_ID",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "format": "AKIA...",
+            "description": "AWS access key ID",
+            "sensitive": true,
+            "stub_value": ""
+          },
+          {
+            "name": "AWS_ACCESS_SECRET",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "format": "secret key",
+            "description": "AWS secret access key",
+            "sensitive": true,
+            "stub_value": ""
+          },
+          {
+            "name": "AWS_REGION",
+            "type": "string",
+            "required": false,
+            "default": "us-east-1",
+            "format": "AWS region code",
+            "description": "AWS region",
+            "stub_value": "us-east-1"
+          },
+          {
+            "name": "AWS_S3_BUCKET",
+            "type": "string",
+            "required": false,
+            "default": "",
+            "format": "bucket name",
+            "description": "S3 bucket name",
+            "stub_value": ""
+          }
+        ]
+      },
+      {
+        "name": "Streaming Service",
+        "enabled_by_default": false,
+        "secrets": [
+          {
+            "name": "HLS_ORIGIN",
+            "type": "string",
+            "required": false,
+            "default": "https://example.com/hls",
+            "format": "URL",
+            "description": "HLS stream origin URL",
+            "stub_value": "https://stub.example.com/hls"
+          },
+          {
+            "name": "FALLBACK_MP3",
+            "type": "string",
+            "required": false,
+            "default": "https://example.com/fallback.mp3",
+            "format": "URL",
+            "description": "Fallback MP3 stream URL",
+            "stub_value": "https://stub.example.com/fallback.mp3"
+          }
+        ]
+      }
+    ]
+  },
+  "frontend_public": {
+    "description": "Client-side safe environment variables (NEXT_PUBLIC_ prefix)",
+    "variables": [
+      {
+        "name": "NEXT_PUBLIC_STRAPI_URL",
+        "type": "string",
+        "required": false,
+        "default": "http://localhost:1337",
+        "format": "URL",
+        "description": "Strapi CMS backend URL"
+      },
+      {
+        "name": "NEXT_PUBLIC_HLS_URL",
+        "type": "string",
+        "required": false,
+        "default": "http://localhost:3001/live/index.m3u8",
+        "format": "URL",
+        "description": "HLS stream URL"
+      },
+      {
+        "name": "NEXT_PUBLIC_STREAM_SERVICE_URL",
+        "type": "string",
+        "required": false,
+        "default": "http://localhost:3001",
+        "format": "URL",
+        "description": "Stream service URL"
+      },
+      {
+        "name": "NEXT_PUBLIC_FEATURE_FLAGS",
+        "type": "string",
+        "required": false,
+        "default": "ENABLE_NEW_BRANDING",
+        "format": "comma-separated flags",
+        "description": "Feature flags for frontend"
+      },
+      {
+        "name": "APP_PUBLIC_URL",
+        "type": "string",
+        "required": false,
+        "default": "http://localhost:3000",
+        "format": "URL",
+        "description": "Public application URL"
+      }
+    ]
+  },
+  "service_urls": {
+    "description": "Internal service URLs and endpoints",
+    "variables": [
+      {
+        "name": "STRAPI_URL",
+        "type": "string",
+        "required": false,
+        "default": "http://localhost:1337",
+        "format": "URL",
+        "description": "Strapi CMS URL (server-side)"
+      },
+      {
+        "name": "BLOCKCHAIN_SERVICE_URL",
+        "type": "string",
+        "required": false,
+        "default": "http://localhost:3002",
+        "format": "URL",
+        "description": "Blockchain service URL"
+      },
+      {
+        "name": "AI_AGENTS_PORT",
+        "type": "number",
+        "required": false,
+        "default": "3003",
+        "format": "port number",
+        "description": "AI agents service port"
+      },
+      {
+        "name": "LOG_LEVEL",
+        "type": "string",
+        "required": false,
+        "default": "info",
+        "format": "debug|info|warn|error",
+        "description": "Application logging level"
+      },
+      {
+        "name": "ALLOWED_ORIGINS",
+        "type": "string",
+        "required": false,
+        "default": "http://localhost:3000",
+        "format": "comma-separated URLs",
+        "description": "CORS allowed origins"
+      }
+    ]
+  },
+  "deployment_notes": {
+    "railway": {
+      "minimal_config": [
+        "NODE_ENV=production",
+        "DATABASE_URL=${{Postgres.DATABASE_URL}}",
+        "STRAPI_ADMIN_JWT=<generate with crypto.randomBytes>",
+        "PORT=1337"
+      ],
+      "optional_plugins": [
+        "Railway PostgreSQL plugin for DATABASE_URL",
+        "Railway Redis plugin for REDIS_URL"
+      ],
+      "cost_protection": {
+        "enabled": true,
+        "max_memory_mb": 512,
+        "max_cpu_cores": 0.5,
+        "auto_sleep": true,
+        "free_tier_monitoring": true
+      }
+    },
+    "coolify": {
+      "compatible": true,
+      "requires_manual_setup": [
+        "PostgreSQL database",
+        "Environment variable configuration",
+        "Hostinger VPN tunnel (if private network required)"
+      ]
+    }
+  },
+  "schema": {
+    "version": "1.0.0",
+    "format": "json",
+    "consumer": "secrets-provisioning-agent",
+    "usage": "This file is consumed by downstream agents for automated secret injection and deployment configuration"
+  }
+}
