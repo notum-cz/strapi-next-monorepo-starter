@@ -98,6 +98,29 @@ Here's the result of running `cat -n` on /home/ubuntu/github_repos/strapi-templa
     97	---
     98	
     99	## 🌐 Deployment
+### 🚀 Railway (Recommended - Zero-Secrets Deploy)
+
+**NEW: Deploy in 5 minutes with automatic cost protection!**
+
+```bash
+# Quick deploy
+npm i -g @railway/cli
+railway login
+railway init
+railway add --plugin postgresql
+railway variables set STRAPI_ADMIN_JWT=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))") 
+railway up
+```
+
+**Features:** ✅ Zero secrets | ✅ Cost protection | ✅ Auto-sleep | ✅ Easy Coolify migration
+
+**📚 Guides**: [QUICK_DEPLOY.md](QUICK_DEPLOY.md) | [RAILWAY_ZERO_SECRETS_DEPLOYMENT.md](RAILWAY_ZERO_SECRETS_DEPLOYMENT.md)
+
+### 🐳 Coolify (Self-Hosted)
+
+For production with fixed costs and full control. See [COOLIFY_SUPPORT.md](COOLIFY_SUPPORT.md)
+
+
    100	
    101	### Render (Production)
    102	
