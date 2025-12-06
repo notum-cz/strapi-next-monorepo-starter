@@ -20,14 +20,11 @@ memoryLimit = "512Mi"
 # Limit to 0.5 CPU cores
 cpuLimit = "500m"
 
-# Free-tier optimization settings
-[deploy.optimization]
-# Enable auto-sleep after inactivity
-sleepAfterInactivity = "15m"
-# Use smallest possible instance
-instanceSize = "starter"
-# Minimize cold start time
-enableFastBoot = true
+# Note: Free-tier optimization (auto-sleep, instance sizing) is managed via Railway dashboard
+# These are documentation notes, not Railway-native config options:
+# - Auto-sleep: Configure in Railway dashboard under service settings
+# - Instance size: Controlled by resource limits above
+# - Cost monitoring: Manual via Railway dashboard usage tracking
 
 # Health checks to prevent unnecessary resource usage
 [deploy.healthcheck]
@@ -42,23 +39,16 @@ NODE_ENV = { required = true, default = "production" }
 PORT = { required = false, default = "1337" }
 DATABASE_URL = { required = true, description = "PostgreSQL connection string from Railway plugin" }
 
-# Cost monitoring and protection
-[monitoring]
-# Enable usage tracking
-enableUsageAlerts = true
-# Monthly budget in USD (free tier)
-monthlyBudgetUsd = 5.0
-# Alert threshold (80% of budget)
-alertThresholdPercent = 80
-# Action on budget exceeded
-onBudgetExceeded = "MAINTENANCE_MODE"
-
-# Maintenance mode configuration
-[maintenance]
-enabled = true
-staticPage = "./maintenance.html"
-triggers = ["BUDGET_EXCEEDED", "FREE_TIER_LIMIT"]
-notifyEmail = "support@newworldkids.org"
+# COST MONITORING DOCUMENTATION (Manual Implementation Required)
+# Note: Railway does not have built-in budget alerts or automatic maintenance mode.
+# These are implementation guidelines for manual monitoring:
+#
+# 1. Monitor usage via Railway dashboard: https://railway.app/dashboard
+# 2. Set up external monitoring for cost tracking
+# 3. Manually deploy maintenance.html when approaching limits:
+#    railway service create maintenance && railway up --service maintenance
+# 4. Free tier limit: $5 USD/month or 500 execution hours
+# 5. maintenance.html is available in repository root for manual deployment
 
 # Service configuration
 [service]
@@ -84,24 +74,19 @@ postDeploy = "echo 'Deployment complete. Monitoring resource usage...'"
 # On maintenance mode activation
 onMaintenanceMode = "echo 'Maintenance mode activated - free tier protected'"
 
-# Coolify migration readiness
-[coolify]
-compatible = true
-notes = "Service is configured for easy migration to Coolify. See COOLIFY_MIGRATION.md"
+# DOCUMENTATION AND MIGRATION NOTES
+# The following sections are documentation, not Railway configuration:
 
-# Hostinger VPN compatibility
-[hostinger]
-vpnCompatible = true
-notes = "Can be deployed behind Hostinger VPN. See COOLIFY_SUPPORT.md for tunnel setup"
+# Coolify Migration Support
+# - This service can be migrated to Coolify self-hosted platform
+# - See COOLIFY_MIGRATION.md for complete migration checklist
+# - See COOLIFY_SUPPORT.md for Hostinger VPN setup
 
-# Zero-secrets deployment notes
-[secrets]
-# All secrets should be set via Railway dashboard or CLI
-# Never commit secrets to repository
-# Use Railway environment variable groups
-managedExternally = true
-documentationPath = "./.agents"
-localTemplatePath = "./master.secrets.json"
+# Secret Management
+# - All secrets managed via Railway dashboard or CLI: railway variables set KEY=value
+# - Never commit secrets to repository
+# - See .agents file for complete secret specification
+# - See master.secrets.json for local template (gitignored)
 
 # Plugin recommendations
 [plugins]

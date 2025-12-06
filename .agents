@@ -612,11 +612,22 @@
         "Railway Redis plugin for REDIS_URL"
       ],
       "cost_protection": {
-        "enabled": true,
-        "max_memory_mb": 512,
-        "max_cpu_cores": 0.5,
-        "auto_sleep": true,
-        "free_tier_monitoring": true
+        "description": "Manual cost protection implementation guidelines",
+        "resource_limits": {
+          "max_memory_mb": 512,
+          "max_cpu_cores": 0.5,
+          "note": "Set via railway.toml/railway.json deploy.resourceLimits"
+        },
+        "auto_sleep": {
+          "enabled": "Configure in Railway dashboard service settings",
+          "not_in_config": "Railway auto-sleep is a dashboard feature, not config file option"
+        },
+        "free_tier_monitoring": {
+          "manual_required": true,
+          "monitor_via": "Railway dashboard usage tab",
+          "free_tier_limit": "$5 USD/month or 500 execution hours",
+          "maintenance_html": "Deploy manually when approaching limits"
+        }
       }
     },
     "coolify": {

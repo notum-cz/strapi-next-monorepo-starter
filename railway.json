@@ -16,32 +16,19 @@
       "cpu": "500m"
     }
   },
-  "costProtection": {
-    "enabled": true,
-    "description": "Free-tier cost protection guardrails",
-    "maxMemoryMb": 512,
-    "maxCpuCores": 0.5,
-    "autoSleep": {
-      "enabled": true,
-      "idleTimeoutMinutes": 15,
-      "description": "Auto-sleep after 15 minutes of inactivity to conserve resources"
+  "_documentation": {
+    "_note": "The following fields are documentation notes, not Railway-native configuration",
+    "costProtection": {
+      "description": "Manual cost protection guidelines - implement via Railway dashboard",
+      "resourceLimits": "Set in deploy.resourceLimits above (512MB RAM, 0.5 CPU)",
+      "monitoring": "Monitor usage manually via Railway dashboard",
+      "freeTierLimit": "$5 USD/month or 500 execution hours",
+      "autoSleep": "Configure in Railway service settings (not in config file)"
     },
-    "freeTierMonitoring": {
-      "enabled": true,
-      "thresholds": {
-        "monthlyUsageUsd": 5.0,
-        "executionHours": 500,
-        "description": "Monitor usage and trigger maintenance mode if free tier at risk"
-      }
+    "maintenanceMode": {
+      "description": "Manual maintenance mode deployment when needed",
+      "staticPage": "./maintenance.html available for manual deployment",
+      "procedure": "Deploy via: railway service create maintenance && railway up --service maintenance"
     }
-  },
-  "maintenanceMode": {
-    "description": "Configuration for automatic maintenance mode deployment when free tier is breached",
-    "enabled": true,
-    "staticPagePath": "./maintenance.html",
-    "triggers": [
-      "FREE_TIER_EXCEEDED",
-      "COST_THRESHOLD_REACHED"
-    ]
   }
 }

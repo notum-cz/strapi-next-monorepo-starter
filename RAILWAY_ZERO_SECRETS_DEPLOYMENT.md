@@ -151,27 +151,30 @@ railway up
 
 ### Phase 4: Cost Protection Configuration
 
-#### Automatic Guardrails (Pre-configured)
+#### Cost Protection Guardrails
 
-The following cost protections are **already active**:
+The following cost protections are implemented:
 
-1. **Resource Limits**
+1. **Resource Limits** ✅ Automatic (Pre-configured)
    - Memory: 512 MB (hard limit)
    - CPU: 0.5 cores (hard limit)
    - Enforced in `railway.toml` and `railway.json`
 
-2. **Auto-Sleep**
-   - Activates after 15 minutes of inactivity
+2. **Auto-Sleep** ⚙️ Manual Configuration Required
+   - Configure in Railway dashboard → Service Settings → Auto-Sleep
+   - Recommended: Enable with 15-minute idle timeout
    - Conserves free-tier hours
    - Instant wake-up on first request
 
-3. **Free-Tier Monitoring**
-   - Budget threshold: $5 USD/month
-   - Alert at 80% usage
-   - Auto-maintenance mode at 100%
+3. **Free-Tier Monitoring** 👁️ Manual Monitoring Required
+   - Budget threshold: $5 USD/month or 500 execution hours
+   - Monitor via Railway dashboard → Usage tab
+   - **Important**: Railway does not have automatic cost alerts
+   - Set up external monitoring or check dashboard regularly
+   - Deploy `maintenance.html` manually if approaching limits
 
-4. **Single Replica**
-   - No auto-scaling
+4. **Single Replica** ✅ Automatic (Pre-configured)
+   - No auto-scaling enabled
    - Minimal resource footprint
    - Sufficient for development/staging
 
@@ -195,24 +198,28 @@ railway status
 
 #### What is Maintenance Mode?
 
-When free-tier limits are reached:
-1. **Main application shuts down** automatically
-2. **Static maintenance page deploys** (`maintenance.html`)
-3. **No further costs incurred**
-4. **Migration guide activated** (`COOLIFY_MIGRATION.md`)
+**Important**: Maintenance mode is a **manual process**, not automatic. Railway does not provide automatic cost-based shutdowns.
 
-#### How It Works
+When you detect free-tier limits approaching (via manual monitoring):
+1. **Manually suspend main application** via Railway dashboard
+2. **Deploy static maintenance page** (`maintenance.html`)
+3. **No further costs incurred**
+4. **Consider migration** to Coolify (`COOLIFY_MIGRATION.md`)
+
+#### How It Works (Manual Process)
 
 ```
-Normal Operation → Free Tier 80% → Warning Logged
-                                  ↓
-                     Free Tier 100% → Maintenance Mode Active
-                                  ↓
-                           maintenance.html Deployed
-                                  ↓
-                          Main Service Suspended
-                                  ↓
-                        Migration to Coolify Recommended
+Normal Operation → Monitor Railway Dashboard
+                          ↓
+             Approaching Free Tier Limit (80%)
+                          ↓
+           MANUAL: Deploy maintenance.html
+                          ↓
+           MANUAL: Suspend main service
+                          ↓
+                No Further Costs
+                          ↓
+        Consider Migration to Coolify
 ```
 
 #### Manual Maintenance Mode
