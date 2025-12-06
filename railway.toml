@@ -50,29 +50,16 @@ DATABASE_URL = { required = true, description = "PostgreSQL connection string fr
 # 4. Free tier limit: $5 USD/month or 500 execution hours
 # 5. maintenance.html is available in repository root for manual deployment
 
-# Service configuration
-[service]
-# Ensure single replica for cost efficiency
-minReplicas = 1
-maxReplicas = 1
-# No auto-scaling on free tier
-autoscaling = false
+# DOCUMENTATION NOTES (Not Railway Configuration)
+# Service Configuration:
+# - Railway automatically manages replicas based on your plan
+# - Scaling is controlled via Railway dashboard, not config file
+# - Port exposure is auto-detected from your application
+# - No IPv6 configuration needed in Railway
 
-# Networking
-[networking]
-# Only expose necessary ports
-exposePorts = [1337]
-# Enable IPv6 if available
-enableIPv6 = false
-
-# Deployment hooks
-[hooks]
-# Pre-deployment validation
-preDeploy = "echo 'Validating configuration...'"
-# Post-deployment notification
-postDeploy = "echo 'Deployment complete. Monitoring resource usage...'"
-# On maintenance mode activation
-onMaintenanceMode = "echo 'Maintenance mode activated - free tier protected'"
+# Deployment Hooks (Standard Railway):
+# Railway does support some deployment lifecycle hooks via the dashboard
+# For custom scripts, add them to your package.json scripts section
 
 # DOCUMENTATION AND MIGRATION NOTES
 # The following sections are documentation, not Railway configuration:
@@ -88,10 +75,7 @@ onMaintenanceMode = "echo 'Maintenance mode activated - free tier protected'"
 # - See .agents file for complete secret specification
 # - See master.secrets.json for local template (gitignored)
 
-# Plugin recommendations
-[plugins]
-# Recommended Railway plugins for this service
-recommended = [
-  "postgresql",  # Primary database
-  "redis"        # Optional: caching layer
-]
+# RECOMMENDED RAILWAY PLUGINS (Add via CLI or Dashboard)
+# Add PostgreSQL: railway add --plugin postgresql
+# Add Redis: railway add --plugin redis
+# Plugins cannot be configured in railway.toml, only via CLI/dashboard
