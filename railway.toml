@@ -1,0 +1,81 @@
+# Railway Zero-Secrets Bootstrap Configuration
+# Enhanced with cost-protection guardrails and free-tier monitoring
+
+[build]
+builder = "NIXPACKS"
+buildCommand = "yarn install && yarn build"
+
+[deploy]
+startCommand = "yarn start"
+healthcheckPath = "/admin"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+numReplicas = 1
+
+# Cost Protection: Force minimal resource usage
+[deploy.resources]
+# Limit to 512MB RAM (free-tier friendly)
+memoryLimit = "512Mi"
+# Limit to 0.5 CPU cores
+cpuLimit = "500m"
+
+# Note: Free-tier optimization (auto-sleep, instance sizing) is managed via Railway dashboard
+# These are documentation notes, not Railway-native config options:
+# - Auto-sleep: Configure in Railway dashboard under service settings
+# - Instance size: Controlled by resource limits above
+# - Cost monitoring: Manual via Railway dashboard usage tracking
+
+# Health checks to prevent unnecessary resource usage
+[deploy.healthcheck]
+path = "/admin"
+interval = 30
+timeout = 10
+startPeriod = 40
+
+# Environment variable requirements
+[env]
+NODE_ENV = { required = true, default = "production" }
+PORT = { required = false, default = "1337" }
+DATABASE_URL = { required = true, description = "PostgreSQL connection string from Railway plugin" }
+
+# COST MONITORING DOCUMENTATION (Manual Implementation Required)
+# Note: Railway does not have built-in budget alerts or automatic maintenance mode.
+# These are implementation guidelines for manual monitoring:
+#
+# 1. Monitor usage via Railway dashboard: https://railway.app/dashboard
+# 2. Set up external monitoring for cost tracking
+# 3. Manually deploy maintenance.html when approaching limits:
+#    railway service create maintenance && railway up --service maintenance
+# 4. Free tier limit: $5 USD/month or 500 execution hours
+# 5. maintenance.html is available in repository root for manual deployment
+
+# DOCUMENTATION NOTES (Not Railway Configuration)
+# Service Configuration:
+# - Railway automatically manages replicas based on your plan
+# - Scaling is controlled via Railway dashboard, not config file
+# - Port exposure is auto-detected from your application
+# - No IPv6 configuration needed in Railway
+
+# Deployment Hooks (Standard Railway):
+# Railway does support some deployment lifecycle hooks via the dashboard
+# For custom scripts, add them to your package.json scripts section
+
+# DOCUMENTATION AND MIGRATION NOTES
+# The following sections are documentation, not Railway configuration:
+
+# Coolify Migration Support
+# - This service can be migrated to Coolify self-hosted platform
+# - See COOLIFY_MIGRATION.md for complete migration checklist
+# - See COOLIFY_SUPPORT.md for Hostinger VPN setup
+
+# Secret Management
+# - All secrets managed via Railway dashboard or CLI: railway variables set KEY=value
+# - Never commit secrets to repository
+# - See .agents file for complete secret specification
+# - See master.secrets.json for local template (gitignored)
+
+# RECOMMENDED RAILWAY PLUGINS (Add via CLI or Dashboard)
+# Add PostgreSQL: railway add --plugin postgresql
+# Add Redis: railway add --plugin redis
+# Plugins cannot be configured in railway.toml, only via CLI/dashboard

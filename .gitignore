@@ -33,6 +33,9 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# Master secrets file - NEVER COMMIT
+master.secrets.json
+
 # MCP configuration (contains API keys)
 .claude/mcp.json
 .claude/mcp.yaml

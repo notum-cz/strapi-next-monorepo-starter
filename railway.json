@@ -8,6 +8,27 @@
     "numReplicas": 1,
     "sleepApplication": false,
     "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10
+    "restartPolicyMaxRetries": 10,
+    "healthcheckPath": "/admin",
+    "healthcheckTimeout": 300,
+    "resourceLimits": {
+      "memory": "512Mi",
+      "cpu": "500m"
+    }
+  },
+  "_documentation": {
+    "_note": "The following fields are documentation notes, not Railway-native configuration",
+    "costProtection": {
+      "description": "Manual cost protection guidelines - implement via Railway dashboard",
+      "resourceLimits": "Set in deploy.resourceLimits above (512MB RAM, 0.5 CPU)",
+      "monitoring": "Monitor usage manually via Railway dashboard",
+      "freeTierLimit": "$5 USD/month or 500 execution hours",
+      "autoSleep": "Configure in Railway service settings (not in config file)"
+    },
+    "maintenanceMode": {
+      "description": "Manual maintenance mode deployment when needed",
+      "staticPage": "./maintenance.html available for manual deployment",
+      "procedure": "Deploy via: railway service create maintenance && railway up --service maintenance"
+    }
   }
 }
