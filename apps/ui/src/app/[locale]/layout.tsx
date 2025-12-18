@@ -53,9 +53,9 @@ export default async function RootLayout({
           fontRoboto.variable
         )}
       >
-        <StrapiPreviewListener />
         <TrackingScripts />
         <ServerProviders locale={locale}>
+          <StrapiPreviewListener />
           <ClientProviders>
             <div className="relative flex min-h-screen flex-col">
               <ErrorBoundary hideFallback>
