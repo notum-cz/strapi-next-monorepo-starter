@@ -252,7 +252,7 @@ In client React components/hooks use `useQuery` (or `useMutation`) hook from `@t
 
 ```tsx
 // src/lib/strapi-api/content/server.ts
-export async function fetchNavbar(locale: AppLocale) {
+export async function fetchNavbar(locale: Locale) {
   try {
     return await PublicStrapiClient.fetchOne("api::navbar.navbar", undefined, {
       locale,
@@ -269,7 +269,7 @@ export async function fetchNavbar(locale: AppLocale) {
 // src/components/page-builder/single-types/navbar/StrapiNavbar.tsx
 import { fetchNavbar } from "@/lib/strapi-api/content/server"
 
-export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
+export async function StrapiNavbar({ locale }: { readonly locale: Locale }) {
   const response = await fetchNavbar(locale)
 }
 ```
@@ -310,8 +310,11 @@ App is ready for localization. It uses `next-intl` package with basic configurat
 
 - Next-intl plugin is defined in [src/lib/i18n.ts](src/lib/i18n.ts) and used by [src/middleware.ts](src/middleware.ts) and registered in [next.config.mjs](next.config.mjs)
 - locales (messages) in [src/locales](locales/) directory
-- augmented types configured in `src/types/global.d.ts`, so messages keys in `useTranslation()` or `getTranslations()` are auto-completeable during development
-- Navigation utils are wrapped using `createSharedPathnamesNavigation()` in [src/lib/navigation.ts](src/lib/navigation.ts) to provide `usePathname`, `Link`, `redirect` and `useRouter` with correct locale prefix
+- [augmented types](https://next-intl.dev/docs/workflows/typescript) are configured in `src/types/global.d.ts`
+  - so messages keys in `useTranslation()` or `getTranslations()` are auto-completeable during development
+  - so `Locale` from `next-intl` is typed to the locales used in the app (so no need to define `AppLocale`, and `Locale` is used directly by other utilities from `next-intl`)
+  - additionally also `Format` can be configured so `useFormatter` is type-safe and auto-completeable
+- Navigation utils are wrapped using `createNavigation()` in [src/lib/navigation.ts](src/lib/navigation.ts) to provide `usePathname`, `Link`, `redirect` and `useRouter` with correct locale prefix
 
 Usage:
 
@@ -342,6 +345,25 @@ export default async function ProfilePage() {
   )
 }
 ```
+
+```tsx
+// Component using Locale
+
+import { Locale } from "next-intl"
+
+export default async function Layout({
+  children,
+  params,
+}: LayoutProps<"/[locale]">) {
+  const { locale } = (await params) as { locale: Locale }
+
+  ...
+}
+```
+
+#### Upcoming Next features
+
+Next-intl might not be yet fully compatible with upcoming Next features, please refer to [this section](https://next-intl.dev/blog/next-intl-4-0#nextjs-future).
 
 ### Navigation
 

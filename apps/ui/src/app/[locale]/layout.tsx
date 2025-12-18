@@ -2,9 +2,8 @@ import "@/styles/globals.css"
 
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
+import { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
-
-import { AppLocale } from "@/types/general"
 
 import { fontRoboto } from "@/lib/fonts"
 import { routing } from "@/lib/navigation"
@@ -34,7 +33,7 @@ export default async function RootLayout({
   children,
   params,
 }: LayoutProps<"/[locale]">) {
-  const { locale } = (await params) as { locale: AppLocale }
+  const { locale } = (await params) as { locale: Locale }
 
   // Enable static rendering
   // https://next-intl-docs.vercel.app/docs/getting-started/app-router/with-i18n-routing#static-rendering
@@ -53,9 +52,9 @@ export default async function RootLayout({
           fontRoboto.variable
         )}
       >
-        <StrapiPreviewListener />
         <TrackingScripts />
-        <ServerProviders locale={locale}>
+        <ServerProviders>
+          <StrapiPreviewListener />
           <ClientProviders>
             <div className="relative flex min-h-screen flex-col">
               <ErrorBoundary hideFallback>

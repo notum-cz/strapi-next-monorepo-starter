@@ -2,8 +2,9 @@ import "server-only"
 
 import { draftMode } from "next/headers"
 import { UID } from "@repo/strapi"
+import { Locale } from "next-intl"
 
-import type { AppLocale, CustomFetchOptions } from "@/types/general"
+import type { CustomFetchOptions } from "@/types/general"
 
 import { PublicStrapiClient } from "@/lib/strapi-api"
 
@@ -11,7 +12,7 @@ import { PublicStrapiClient } from "@/lib/strapi-api"
 
 export async function fetchPage(
   fullPath: string,
-  locale: AppLocale,
+  locale: Locale,
   requestInit?: RequestInit,
   options?: CustomFetchOptions
 ) {
@@ -46,7 +47,7 @@ export async function fetchPage(
 
 export async function fetchAllPages(
   uid: Extract<UID.ContentType, "api::page.page"> = "api::page.page",
-  locale: AppLocale
+  locale: Locale
 ) {
   try {
     return await PublicStrapiClient.fetchAll(uid, {
@@ -72,7 +73,7 @@ export async function fetchAllPages(
 export async function fetchSeo(
   uid: Extract<UID.ContentType, "api::page.page"> = "api::page.page",
   fullPath: string | null,
-  locale: AppLocale
+  locale: Locale
 ) {
   try {
     return await PublicStrapiClient.fetchOneByFullPath(uid, fullPath, {
@@ -100,7 +101,7 @@ export async function fetchSeo(
 
 // ------ Navbar fetching functions
 
-export async function fetchNavbar(locale: AppLocale) {
+export async function fetchNavbar(locale: Locale) {
   try {
     return await PublicStrapiClient.fetchOne("api::navbar.navbar", undefined, {
       locale,
@@ -122,7 +123,7 @@ export async function fetchNavbar(locale: AppLocale) {
 
 // ------ Footer fetching functions
 
-export async function fetchFooter(locale: AppLocale) {
+export async function fetchFooter(locale: Locale) {
   try {
     return await PublicStrapiClient.fetchOne("api::footer.footer", undefined, {
       locale,
