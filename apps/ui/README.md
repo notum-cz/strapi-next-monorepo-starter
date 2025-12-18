@@ -252,7 +252,7 @@ In client React components/hooks use `useQuery` (or `useMutation`) hook from `@t
 
 ```tsx
 // src/lib/strapi-api/content/server.ts
-export async function fetchNavbar(locale: AppLocale) {
+export async function fetchNavbar(locale: Locale) {
   try {
     return await PublicStrapiClient.fetchOne("api::navbar.navbar", undefined, {
       locale,
@@ -269,7 +269,7 @@ export async function fetchNavbar(locale: AppLocale) {
 // src/components/page-builder/single-types/navbar/StrapiNavbar.tsx
 import { fetchNavbar } from "@/lib/strapi-api/content/server"
 
-export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
+export async function StrapiNavbar({ locale }: { readonly locale: Locale }) {
   const response = await fetchNavbar(locale)
 }
 ```

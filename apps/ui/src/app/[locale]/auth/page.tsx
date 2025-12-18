@@ -1,3 +1,4 @@
+import { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
 import { getAuth } from "@/lib/auth"
@@ -15,7 +16,7 @@ import {
 export default async function AuthPage({
   params,
 }: PageProps<"/[locale]/auth">) {
-  const { locale } = await params
+  const { locale } = (await params) as { locale: Locale }
 
   setRequestLocale(locale)
 

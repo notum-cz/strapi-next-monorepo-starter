@@ -1,8 +1,8 @@
 import { env } from "@/env.mjs"
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
+import { Locale } from "next-intl"
 
 import type { MetadataRoute } from "next"
-import { AppLocale } from "@/types/general"
 
 import { isDevelopment, isProduction } from "@/lib/general-helpers"
 import { routing } from "@/lib/navigation"
@@ -40,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
  * @returns Sitemap entries for a single locale
  */
 async function generateLocalizedSitemap(
-  locale: AppLocale
+  locale: Locale
 ): Promise<MetadataRoute.Sitemap> {
   let pageEntities: Partial<
     Record<PageEntityUID, Awaited<ReturnType<typeof fetchAllPages>>["data"]>

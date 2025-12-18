@@ -1,8 +1,9 @@
 import { env } from "@/env.mjs"
 import { mergeWith } from "lodash"
+import { Locale } from "next-intl"
 import { getTranslations } from "next-intl/server"
 
-import type { AppLocale, NextMetadataTwitterCard } from "@/types/general"
+import type { NextMetadataTwitterCard } from "@/types/general"
 import type { Data, UID } from "@repo/strapi"
 import type { Metadata } from "next"
 
@@ -20,7 +21,7 @@ export async function getMetadataFromStrapi({
   uid = "api::page.page",
 }: {
   fullPath?: string
-  locale: AppLocale
+  locale: Locale
   customMetadata?: Metadata
   // Add more content types here if we want to fetch SEO components for them
   uid?: Extract<UID.ContentType, "api::page.page">
@@ -76,7 +77,7 @@ export async function getMetadataFromStrapi({
 }
 
 async function fetchAndMapStrapiMetadata(
-  locale: AppLocale,
+  locale: Locale,
   fullPath: string | null,
   defaultMeta: Metadata,
   defaultOgMeta: Metadata["openGraph"],

@@ -1,14 +1,13 @@
+import { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
-
-import { AppLocale } from "@/types/general"
 
 export default async function AuthLayout({
   children,
   params,
 }: LayoutProps<"/[locale]/auth">) {
-  const { locale } = await params
+  const { locale } = (await params) as { locale: Locale }
 
-  setRequestLocale(locale as AppLocale)
+  setRequestLocale(locale)
 
   return (
     <section className="container grid items-center gap-6 pt-6 pb-8 md:py-10">
