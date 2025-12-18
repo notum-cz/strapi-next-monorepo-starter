@@ -149,76 +149,8 @@ yarn dev:strapi
 
 ## Testing Info
 
-### 🐞 Automated Testing Suite
-
-This directory contains an automated testing suite designed to ensure quality across functionality, accessibility, performance, and SEO.
-
-It can include different testing frameworks and tools depending on project needs, for example:
-
-- **End-to-End (E2E) Tests** with tools like [Playwright](https://playwright.dev/) or [Cypress](https://www.cypress.io/)
-- **Accessibility Tests** using [AXE-Core](https://classic.yarnpkg.com/en/package/@axe-core/playwright)
-- **Performance Tests** with tools such as [Lighthouse-batch](https://classic.yarnpkg.com/en/package/lighthouse-batch) 📊
-- **SEO Tests** for automated validation of search engine optimizations 🔍
-
----
-
-### 📂 Project Structure
-
-```bash
-qa/
-├── tests/
-│   ├── cypress/                          ← Cypress-based tests
-│   └── playwright/                       ← Playwright-based tests (workspace package)
-│       ├── axe/                          ← Accessibility tests
-│       ├── e2e/                          ← End-to-End tests
-│       ├── helpers/                      ← Shared test utilities/helpers
-│       ├── .env.example                  ← Example environment variables file
-│       ├── package.json                  ← Test dependencies & scripts for this package
-│       ├── playwright.config.ts          ← Playwright configuration
-│       ├── tsconfig.json                 ← TypeScript configuration for this package
-│       └── yarn.lock                     ← Dependency lock file (if used per package)
-```
-
-### ▶️ Running Tests
-
-All test commands are run from the **project root**, not from inside the `qa/` folder.
-
-- **Playwright - Run E2E tests (headless)**
-
-  ```bash
-  yarn tests:playwright:e2e:test
-  ```
-
-- **Playwright - Run E2E tests in interactive mode (headed)**
-
-  ```bash
-  yarn tests:playwright:e2e:test:interactive
-  ```
-
-- **Playwright - Run AXE tests**
-  ```bash
-  yarn tests:playwright:axe
-  ```
-
-### 💻 Running Locally
-
-TBD
-
-### 🔄 CI/CD Integration
-
-TBD
-
-### 🏗️ Jobs
-
-TBD
-
-### 📦 Artifacts Retention
-
-TBD
-
-### 🐛 Debugging Notes
-
-TBD
+A dedicated QA workspace is available under the qa/ directory, providing automated tests for E2E, accessibility, performance, and SEO validation.
+👉 See [README](./qa/tests/README.md) for available test suites and commands.
 
 ## 🔌 VSCode Extensions
 
