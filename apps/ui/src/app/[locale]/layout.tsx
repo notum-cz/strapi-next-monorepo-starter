@@ -54,7 +54,7 @@ export default async function RootLayout({
         )}
       >
         <TrackingScripts />
-        <ServerProviders locale={locale}>
+        <ServerProviders>
           <StrapiPreviewListener />
           <ClientProviders>
             <div className="relative flex min-h-screen flex-col">
