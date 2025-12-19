@@ -45,18 +45,9 @@ const nextConfig = {
     ],
   },
 
-  webpack: (config, { dev }) => {
-    if (config.cache && !dev) {
-      // Switching between memory and filesystem cache
-      // Memory cache is faster and can be beneficial in environments with slow or limited disk access,
-      // but it isn't persistent across builds and requires higher memory usage.
-      // Filesystem cache survives across builds but may cause large `.next/cache` folder.
-      config.cache = Object.freeze({
-        type: env.WEBPACK_CACHE_TYPE || "filesystem",
-      })
-    }
-    return config
-  },
+  // Turbopack configuration (replaces webpack config)
+  // Turbopack has built-in intelligent caching, so no manual cache configuration needed
+  // Note: Custom webpack loaders/plugins are not supported in Turbopack
 }
 
 const withConfig = (() => {

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest } from "next/server"
 import { withAuth } from "next-auth/middleware"
 import createMiddleware from "next-intl/middleware"
 
@@ -26,7 +26,7 @@ const authMiddleware = withAuth(
   }
 )
 
-export default function middleware(req: NextRequest) {
+export default function proxy(req: NextRequest) {
   // Handle HTTPS redirection in production in Heroku servers
   // Comment this block when running locally (using `next start`)
   const xForwardedProtoHeader = req.headers.get("x-forwarded-proto")
@@ -35,10 +35,10 @@ export default function middleware(req: NextRequest) {
     (xForwardedProtoHeader === null ||
       xForwardedProtoHeader.includes("https") === false)
   ) {
-    return NextResponse.redirect(
-      `https://${req.headers.get("host")}${req.nextUrl.pathname}`,
-      301
-    )
+    // return NextResponse.redirect(
+    //   `https://${req.headers.get("host")}${req.nextUrl.pathname}`,
+    //   301
+    // )
   }
 
   // Build regex for auth (non-public) pages
