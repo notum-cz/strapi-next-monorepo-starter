@@ -11,22 +11,13 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@copilotkit/react-core": "^1.0.0",
-    "@copilotkit/react-ui": "^1.0.0",
-    "@copilotkit/react-textarea": "^1.0.0",
     "next": "^15.0.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "axios": "^1.6.0",
     "swr": "^2.2.0",
-    "framer-motion": "^11.0.0",
     "lucide-react": "^0.400.0",
-    "date-fns": "^3.0.0",
-    "react-dropzone": "^14.2.0",
-    "react-image-lightbox": "^5.1.4",
-    "marked": "^12.0.0",
-    "gray-matter": "^4.0.3",
-    "zod": "^3.22.0"
+    "react-dropzone": "^14.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

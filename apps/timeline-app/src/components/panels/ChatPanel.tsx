@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Send, Loader } from 'lucide-react';
-import { useCopilotAction } from '@copilotkit/react-core';
 import { PRE_SEEDED_QUESTIONS } from '@/lib/constants';
 import type { ChatMessage } from '@/lib/types';
 
