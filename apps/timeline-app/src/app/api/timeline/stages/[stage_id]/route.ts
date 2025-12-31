@@ -9,11 +9,11 @@ import type { StageDetailsResponse } from '@/lib/types';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { stage_id: string } }
+  { params }: { params: Promise<{ stage_id: string }> }
 ) {
-  try {
-    const { stage_id } = params;
+  const { stage_id } = await params;
 
+  try {
     // Check if Strapi is configured
     const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
     const strapiToken = process.env.STRAPI_API_TOKEN;
@@ -80,14 +80,14 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error(`Error fetching stage ${params.stage_id}, falling back to mock data:`, error);
+    console.error(`Error fetching stage ${stage_id}, falling back to mock data:`, error);
 
     // Fallback to mock data
-    const stage = MOCK_STAGES.find((s) => s.stage_id === params.stage_id);
+    const stage = MOCK_STAGES.find((s) => s.stage_id === stage_id);
 
     if (!stage) {
       return NextResponse.json(
-        { error: `Stage not found: ${params.stage_id}` },
+        { error: `Stage not found: ${stage_id}` },
         { status: 404 }
       );
     }
@@ -95,9 +95,9 @@ export async function GET(
     const response: StageDetailsResponse = {
       stage,
       gallery: stage.gallery_images || [],
-      documents: MOCK_DOCUMENTS[params.stage_id] || [],
-      people: MOCK_PEOPLE[params.stage_id] || [],
-      metrics: MOCK_METRICS[params.stage_id] || [],
+      documents: MOCK_DOCUMENTS[stage_id] || [],
+      people: MOCK_PEOPLE[stage_id] || [],
+      metrics: MOCK_METRICS[stage_id] || [],
     };
 
     return NextResponse.json(response, {

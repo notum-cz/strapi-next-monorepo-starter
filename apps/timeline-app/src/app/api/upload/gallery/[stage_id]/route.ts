@@ -9,11 +9,11 @@ import { UPLOAD_CONFIG, ERROR_MESSAGES, SUCCESS_MESSAGES } from '@/lib/constants
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { stage_id: string } }
+  { params }: { params: Promise<{ stage_id: string }> }
 ) {
-  try {
-    const { stage_id } = params;
+  const { stage_id } = await params;
 
+  try {
     // Parse form data
     const formData = await request.formData();
     const file = formData.get('file') as File;

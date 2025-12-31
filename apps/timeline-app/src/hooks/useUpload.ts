@@ -89,10 +89,7 @@ export function useUpload() {
         setUploading(false);
         setProgress(100);
 
-        return {
-          success: true,
-          ...result,
-        };
+        return result;
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : ERROR_MESSAGES.upload.uploadFailed;
