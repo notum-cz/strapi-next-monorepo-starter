@@ -57,7 +57,7 @@
     "next-themes": "^0.4.6",
     "node-html-parser": "^7.0.1",
     "plaiceholder": "^3.0.0",
-    "qs": "^6.13.0",
+    "qs": "^6.14.1",
     "react": "^18.3.1",
     "react-day-picker": "^9.2.1",
     "react-device-detect": "^2.2.3",
