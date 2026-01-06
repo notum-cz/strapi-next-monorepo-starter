@@ -234,7 +234,7 @@ The [BaseStrapiClient](src/lib/strapi-api/base.ts) class contains functions that
   - The endpoint is already used by another handler (e.g. the content type `"plugin::users-permissions.user"` is reserved for `GET /users`, so `GET /users/me` must use `fetchAPI` instead — see below):
 
 ```ts
-import { Result } from "@repo/strapi"
+import { Result } from "@repo/strapi-types"
 
 const fetchedUser: Result<"plugin::users-permissions.user"> =
   await Strapi.PrivateStrapiClient("/users/me", undefined, undefined, {
