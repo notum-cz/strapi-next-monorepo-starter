@@ -1,0 +1,25 @@
+{
+  "name": "@repo/strapi-types",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts"
+    },
+    "./generated/components": {
+      "types": "./generated/components.d.ts"
+    },
+    "./generated/contentTypes": {
+      "types": "./generated/contentTypes.d.ts"
+    }
+  },
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "echo 'Types-only package, no build needed'",
+    "dev": "echo 'Types-only package, no dev needed'",
+    "sync-types": "cp ../../apps/strapi/types/generated/*.d.ts ./generated/"
+  },
+  "devDependencies": {
+    "@strapi/strapi": "^5.29.0"
+  }
+}

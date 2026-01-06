@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { Data } from "@repo/strapi"
+import { Data } from "@repo/strapi-types"
 import { Locale } from "next-intl"
 import { getTranslations } from "next-intl/server"
 
