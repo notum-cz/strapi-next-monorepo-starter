@@ -22,8 +22,8 @@ ARG WORKSPACE
 WORKDIR /app
 COPY . .
 
+RUN yarn global add turbo@^2.0.9
 # see https://turbo.build/repo/docs/reference/command-line-reference#turbo-prune---scopetarget
-RUN yarn global add turbo@^1.13.4
 RUN turbo prune ${WORKSPACE} --docker
 
 # -------------------------- stage installer ---------------------------------
@@ -43,16 +43,16 @@ COPY --from=pruned /app/out/json/ .
 COPY --from=pruned /app/out/yarn.lock ./yarn.lock
 
 RUN yarn global add node-gyp
-RUN yarn global add turbo@^1.13.4
+RUN yarn global add turbo@^2.0.9
 # see https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/reference.md#run---mounttypecache
 RUN \
     --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
     yarn --prefer-offline --frozen-lockfile --ignore-scripts --production
 
 # Because of yarn v1 install sharp explicitly with "--ignore-engines". See https://github.com/lovell/sharp/issues/3871
-RUN \
-    --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
-    yarn workspace ${WORKSPACE} add sharp --ignore-engines --prefer-offline --frozen-lockfile
+# RUN \
+#     --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
+#     yarn workspace ${WORKSPACE} add sharp --ignore-engines --prefer-offline --frozen-lockfile
 
 ENV PATH /app/apps/${APP}/node_modules/.bin:$PATH
 
