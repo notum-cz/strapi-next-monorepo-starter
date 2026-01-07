@@ -25,11 +25,9 @@ COPY . .
 # If generated/ is a symlink, replace it with a real directory + copied files.
 # This runs while we still have the full repo in the Docker build context
 RUN set -eux; \
-  if [ -L "packages/strapi-types/generated" ]; then rm -f "packages/strapi-types/generated"; fi; \
   rm -rf "packages/strapi-types/generated"; \
   mkdir -p "packages/strapi-types/generated"; \
   cp -f apps/strapi/types/generated/*.d.ts "packages/strapi-types/generated/"
-
 RUN yarn global add turbo@^2.0.9
 # see https://turbo.build/repo/docs/reference/command-line-reference#turbo-prune---scopetarget
 RUN turbo prune ${WORKSPACE} --docker
