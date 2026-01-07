@@ -1,6 +1,6 @@
 # 🔥 STRAPI - `@repo/strapi`
 
-This is a [Stapi v5](https://strapi.io/) project.
+This is a [Strapi v5](https://strapi.io/) project.
 
 ## 🥞 Tech stack
 
