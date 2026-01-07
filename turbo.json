@@ -26,6 +26,20 @@
       "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
+    },
+    "axe-test": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-interactive-mode": {
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-e2e-tests": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": false
     }
   },
   "ui": "tui"

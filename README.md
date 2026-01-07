@@ -147,6 +147,11 @@ yarn dev:ui
 yarn dev:strapi
 ```
 
+## Testing Info
+
+A dedicated QA workspace is available under the qa/ directory, providing automated tests for E2E, accessibility, performance, and SEO validation.
+👉 See [README](./qa/tests/README.md) for available test suites and commands.
+
 ## 🔌 VSCode Extensions
 
 Install extensions listed in the [.vscode/extensions.json](.vscode/extensions.json) file and have a better development experience.
