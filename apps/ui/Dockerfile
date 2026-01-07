@@ -28,7 +28,6 @@ RUN set -eux; \
   rm -rf "packages/strapi-types/generated"; \
   mkdir -p "packages/strapi-types/generated"; \
   cp -f apps/strapi/types/generated/*.d.ts "packages/strapi-types/generated/"
-
 RUN yarn global add turbo@^2.0.9
 # see https://turbo.build/repo/docs/reference/command-line-reference#turbo-prune---scopetarget
 RUN turbo prune ${WORKSPACE} --docker
