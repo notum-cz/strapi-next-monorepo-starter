@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation"
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
+import { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
-
-import { AppLocale } from "@/types/general"
 
 import { isDevelopment } from "@/lib/general-helpers"
 import { getMetadataFromStrapi } from "@/lib/metadata"
@@ -42,7 +41,7 @@ export async function generateMetadata(
   props: PageProps<"/[locale]/[[...rest]]">
 ) {
   const params = await props.params
-  const locale = params.locale as AppLocale
+  const locale = params.locale as Locale
 
   const fullPath = ROOT_PAGE_PATH + (params.rest ?? []).join("/")
 
@@ -53,7 +52,7 @@ export default async function StrapiPage(
   props: PageProps<"/[locale]/[[...rest]]">
 ) {
   const params = await props.params
-  const locale = params.locale as AppLocale
+  const locale = params.locale as Locale
 
   setRequestLocale(locale)
 

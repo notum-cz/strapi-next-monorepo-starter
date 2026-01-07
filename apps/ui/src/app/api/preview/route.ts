@@ -2,6 +2,7 @@
 import { cookies, draftMode } from "next/headers"
 import { env } from "@/env.mjs"
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
+import { hasLocale } from "next-intl"
 
 import { redirect, routing } from "@/lib/navigation"
 
@@ -62,7 +63,7 @@ export async function GET(request: Request) {
   // --------------------------------------------------------------------
   // Check if the locale in the request is a correct frontend locale
   const localeParam = String(searchParams.get("locale"))
-  const locale = routing.locales.includes(localeParam as never)
+  const locale = hasLocale(routing.locales, localeParam)
     ? localeParam
     : routing.defaultLocale
   console.log(
