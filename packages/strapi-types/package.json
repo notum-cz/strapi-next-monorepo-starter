@@ -17,7 +17,7 @@
   "scripts": {
     "build": "echo 'Types-only package, no build needed'",
     "dev": "echo 'Types-only package, no dev needed'",
-    "sync-types": "cp ../../apps/strapi/types/generated/*.d.ts ./generated/"
+    "sync-types": "cp -r ../../apps/strapi/types/generated ./generated"
   },
   "devDependencies": {
     "@strapi/strapi": "^5.29.0"
