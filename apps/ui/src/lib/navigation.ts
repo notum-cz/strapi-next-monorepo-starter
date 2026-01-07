@@ -1,6 +1,7 @@
-import { env } from "@/env.mjs"
 import { createNavigation } from "next-intl/navigation"
 import { defineRouting } from "next-intl/routing"
+
+import { getAppPublicUrl } from "@/lib/urls"
 
 export const routing = defineRouting({
   // A list of all locales that are supported
@@ -24,20 +25,15 @@ export const {
 // https://next-intl-docs.vercel.app/docs/routing/navigation#redirect
 export const redirect: typeof _redirect = _redirect
 
-export const getAppPublicUrl = () => {
-  // Determine the base URL: use APP_PUBLIC_URL on the server or window.location.origin on the client
-  const baseUrl =
-    typeof window === "undefined" ? env.APP_PUBLIC_URL : window.location.origin
-  return baseUrl
-}
-
+/**
+ * Function to check if a given link belongs to the same application - it is internal link.
+ *
+ * @param link
+ * @returns true if the link is internal, false otherwise
+ */
 export const isAppLink = (link: string): boolean => {
   try {
-    const baseUrl = getAppPublicUrl()
-    if (!baseUrl) {
-      throw new Error("Base URL is not defined.")
-    }
-
+    const baseUrl = getAppPublicUrl(true)
     const url = new URL(link, baseUrl)
     return url.hostname === new URL(baseUrl).hostname
   } catch (error) {

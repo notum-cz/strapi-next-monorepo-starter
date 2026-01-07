@@ -1,4 +1,3 @@
-import { env } from "@/env.mjs"
 import { mergeWith } from "lodash"
 import { Locale } from "next-intl"
 import { getTranslations } from "next-intl/server"
@@ -13,6 +12,7 @@ import {
   getDefaultTwitterMeta,
 } from "@/lib/metadata/defaults"
 import { fetchSeo } from "@/lib/strapi-api/content/server"
+import { getAppPublicUrl } from "@/lib/urls"
 
 export async function getMetadataFromStrapi({
   fullPath,
@@ -27,13 +27,9 @@ export async function getMetadataFromStrapi({
   uid?: Extract<UID.ContentType, "api::page.page">
 }): Promise<Metadata | null> {
   const t = await getTranslations({ locale, namespace: "seo" })
-
-  const siteUrl = env.APP_PUBLIC_URL
-
+  const siteUrl = getAppPublicUrl()
   if (!siteUrl) {
-    console.error(
-      "Please provide APP_PUBLIC_URL (public URL of site) for SEO metadata generation."
-    )
+    console.warn("APP_PUBLIC_URL is not defined, cannot generate metadata")
     return null
   }
 

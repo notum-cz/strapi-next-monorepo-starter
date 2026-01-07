@@ -3,11 +3,12 @@
   "globalDependencies": ["**/.env", "**/.env.*local"],
   "globalEnv": [
     "NEXT_OUTPUT",
-    "APP_PUBLIC_URL",
-    "STRAPI_URL",
-    "STRAPI_REST_READONLY_API_KEY",
+    "WEBPACK_CACHE_TYPE",
+    "SENTRY_AUTH_TOKEN",
+    "SENTRY_ORG",
+    "SENTRY_PROJECT",
     "SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING",
-    "WEBPACK_CACHE_TYPE"
+    "CI"
   ],
   "tasks": {
     "build": {

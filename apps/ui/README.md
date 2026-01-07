@@ -34,7 +34,7 @@ This is a [Next.js v15](https://nextjs.org/docs) project.
 
 ### Environment variables
 
-Copy & rename `.env.local.example` to `.env.local` and fill or update in the values. `APP_PUBLIC_URL`, `STRAPI_URL` and `STRAPI_REST_READONLY_API_KEY` are required.
+Copy & rename `.env.local.example` to `.env.local` and fill or update in the values. `APP_PUBLIC_URL`, `STRAPI_URL` and `STRAPI_REST_READONLY_API_KEY` are required for running the app correctly (this is checked only during the runtime).
 
 #### Read-only API token
 
@@ -88,7 +88,7 @@ docker build -t ui:latest -f apps/ui/Dockerfile .
 docker run -it --rm --name ui -p 3000:3000 --env-file apps/ui/.env ui:latest
 ```
 
-To change port, set `PORT` env variable in `.env` file and in `docker run` command (`-p` flag means port mapping between host:container).
+Port is 3000 and mapping can be changed in `docker run` command using `-p` flag (host:container).
 
 Dockerfile assumes that Next.js app is ["outputed"](https://nextjs.org/docs/14/app/api-reference/next-config-js/output) in `standalone` mode (see [next.config.mjs's output option](next.config.mjs) for details), which is useful for self-hosting in a Docker container (includes only necessary files and dependencies). It is controlled using `NEXT_OUTPUT` env variable. Any other value than `standalone` will require changes in Dockerfile (eg. `runner` stage).
 
@@ -382,15 +382,17 @@ Define them in [.env.local.example](./.env.local.example), [.env.local](./.env.l
 import { env } from "@/env.mjs"
 
 // ✅ OK
-console.log(env.STRAPI_URL)
+console.log(env.RECAPTCHA_SECRET_KEY)
 
 // ❌ NOT OK
-console.log(process.env.STRAPI_URL)
+console.log(process.env.RECAPTCHA_SECRET_KEY)
 ```
 
-Environment variables that need to be available in the build-time context of Turborepo tasks must be defined in the [turbo.json](../../turbo.json) file under the `globalEnv` section. The build step (`turbo run build`) runs in a sandboxed environment where only explicitly specified environment variables are accessible. Mandatory variables (e.g. `STRAPI_URL`, `APP_PUBLIC_URL` or `STRAPI_REST_READONLY_API_KEY`), as defined in `env.mjs`, must be included in `globalEnv`. **This is essential** for the build process to function correctly with Turborepo and t3 package.
+All default server-side variables are optional. This lets you build the application once and run it in different environments with different configurations without the need to rebuild. Baking them into the Docker image or build artifacts is not good practice. In that case, their correctness must be checked at runtime (see [urls.ts](./src/lib/urls.ts) for example).
 
-Environment variables starting with `NEXT_PUBLIC_` are [automatically available](https://nextjs.org/docs/app/guides/environment-variables#runtime-environment-variables) in the client-side code. Don't store any sensitive information in these variables, as they are exposed.
+Environment variables starting with `NEXT_PUBLIC_` are [automatically available](https://nextjs.org/docs/app/guides/environment-variables#runtime-environment-variables) in the client-side code. Don't store any sensitive information in these variables, as they are exposed. They must be present at build time.
+
+Environment variables that need to be available in the build-time context of Turborepo tasks must be defined in the [turbo.json](../../turbo.json) file under the `globalEnv` section. The build step (`turbo run build`) runs in a sandboxed environment where only explicitly specified environment variables are accessible.
 
 ### Error handling
 

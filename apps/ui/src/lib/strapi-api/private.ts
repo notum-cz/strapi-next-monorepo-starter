@@ -1,4 +1,3 @@
-import { env } from "@/env.mjs"
 import qs from "qs"
 
 import { CustomFetchOptions } from "@/types/general"
@@ -8,6 +7,7 @@ import {
   createStrapiAuthHeader,
   formatStrapiAuthorizationHeader,
 } from "@/lib/strapi-api/request-auth"
+import { getStrapiUrl } from "@/lib/urls"
 
 export class PrivateClient extends BaseStrapiClient {
   protected async prepareRequest(
@@ -34,7 +34,7 @@ export class PrivateClient extends BaseStrapiClient {
     } else {
       // Directly use the Strapi URL. Same logic as in proxy route handler must be applied
       // (for SSR components and server actions/context)
-      completeUrl = `${env.STRAPI_URL}${url}`
+      completeUrl = `${getStrapiUrl(true)}${url}`
     }
 
     if (!options?.omitUserAuthorization) {
