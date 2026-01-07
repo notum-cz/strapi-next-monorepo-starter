@@ -1,4 +1,5 @@
-import type { AppLocale } from "@/types/general"
+import { Locale } from "next-intl"
+
 import type { Metadata } from "next"
 import type { getTranslations } from "next-intl/server"
 
@@ -30,7 +31,7 @@ export function getDefaultMetadata(
 
           return acc
         },
-        {} as Record<AppLocale, string>
+        {} as Record<Locale, string>
       ),
     },
 
@@ -41,7 +42,7 @@ export function getDefaultMetadata(
 }
 
 export function getDefaultOgMeta(
-  locale: AppLocale | undefined,
+  locale: Locale | undefined,
   fullPath: string | undefined,
   t: TranslateFn
 ): Metadata["openGraph"] {

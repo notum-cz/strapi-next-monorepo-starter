@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "lint": "next lint",
     "preview": "next build && next start",
     "start": "next start",
@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@hookform/error-message": "^2.0.1",
-    "@hookform/resolvers": "^3.9.1",
+    "@hookform/resolvers": "^5.2.2",
     "@plaiceholder/next": "^3.0.0",
     "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-checkbox": "^1.1.2",
@@ -50,14 +50,14 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.487.0",
     "markdown-to-jsx": "^7.5.0",
-    "next": "^15.3.3",
-    "next-auth": "^4.24.10",
-    "next-intl": "^3.26.5",
+    "next": "^15.5.9",
+    "next-auth": "^4.24.12",
+    "next-intl": "4.6.1",
     "next-recaptcha-v3": "^1.5.2",
     "next-themes": "^0.4.6",
     "node-html-parser": "^7.0.1",
     "plaiceholder": "^3.0.0",
-    "qs": "^6.13.0",
+    "qs": "^6.14.1",
     "react": "^18.3.1",
     "react-day-picker": "^9.2.1",
     "react-device-detect": "^2.2.3",
@@ -71,7 +71,7 @@
     "tailwindcss-animate": "^1.0.7",
     "ts-pattern": "^5.5.0",
     "tw-animate-css": "^1.2.5",
-    "zod": "^3.23.8"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "15.3.5",

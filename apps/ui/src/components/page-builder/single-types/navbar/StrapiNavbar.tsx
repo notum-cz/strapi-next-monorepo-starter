@@ -1,8 +1,7 @@
 import Image from "next/image"
 import { Data } from "@repo/strapi"
+import { Locale } from "next-intl"
 import { getTranslations } from "next-intl/server"
-
-import { AppLocale } from "@/types/general"
 
 import { getAuth } from "@/lib/auth"
 import { fetchNavbar } from "@/lib/strapi-api/content/server"
@@ -17,7 +16,7 @@ const hardcodedLinks: NonNullable<
   Data.ContentType<"api::navbar.navbar">["links"]
 > = [{ id: "client-page", href: "/client-page", label: "Client Page" }]
 
-export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
+export async function StrapiNavbar({ locale }: { readonly locale: Locale }) {
   const response = await fetchNavbar(locale)
   const navbar = response?.data
 

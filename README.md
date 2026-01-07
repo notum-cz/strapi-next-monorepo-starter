@@ -2,6 +2,14 @@
 
 This is a ready-to-go starter template for Strapi projects. It combines the power of Strapi, Next.js, Shadcn/ui libraries with Turborepo setup and kickstarts your project development. We call it a **Page builder** for enterprise applications.
 
+## 👀 Live demo
+
+- UI - [https://www.notum-dev.cz/](https://www.notum-dev.cz/)
+- Strapi - [https://api.notum-dev.cz/admin](https://api.notum-dev.cz/admin)
+- **Readonly user:**
+  - Email: user@notum.cz
+  - Password: Secret-pass-55
+
 ## 🥞 Tech stack
 
 - [Strapi v5](https://strapi.io/) - Headless CMS to manage content
@@ -11,6 +19,8 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 - [Turborepo](https://turbo.build/) - Monorepo management tool to keep things tidy
 
 ## 🚀 Getting started
+
+[![Launch Strapi + Next.js Monorepo — Live in 5 Minutes](https://img.youtube.com/vi/VZlJZuurUH8/maxresdefault.jpg)](https://www.youtube.com/watch?v=VZlJZuurUH8 "Watch on YouTube")
 
 ### Prerequisites
 
@@ -23,49 +33,52 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 1. Clone this repository
 
-```sh
-git clone https://github.com/notum-cz/strapi-next-monorepo-starter
-```
+   ```sh
+   git clone https://github.com/notum-cz/strapi-next-monorepo-starter
+   ```
 
-2. Install dependencies
+1. Install dependencies
 
-```sh
-# in root
-# switch to correct nodejs version (v22)
-nvm use
+   ```sh
+   # in root
+   # switch to correct nodejs version (v22)
+   nvm use
 
-# install deps for apps and packages that are part of this monorepo
-yarn
-```
+   # install deps for apps and packages that are part of this monorepo
+   yarn
+   ```
 
-> Don't worry about warning "Workspaces can only be enabled in private projects <https://github.com/yarnpkg/yarn/issues/8580>
+   > Don't worry about warning "Workspaces can only be enabled in private projects <https://github.com/yarnpkg/yarn/issues/8580>
 
-3. Set up apps
+1. Run apps
 
-```sh
-# prepare environment files (.env) for each app
-yarn setup:apps
-```
+   > [!WARNING]
+   > Before the first run, you need to retrieve [Strapi API token](https://docs.strapi.io/cms/features/api-tokens).
+   >
+   > ```sh
+   > yarn dev:strapi
+   > ```
+   >
+   > Go to Strapi admin URL and navigate to [Settings > API Tokens](http://localhost:1337/admin/settings/api-tokens).
+   >
+   > Select "Create new API token" and copy it's value to `STRAPI_REST_READONLY_API_KEY` in `/apps/ui/.env.local` file.
+   >
+   > Refer to the [UI README](apps/ui/README.md#environment-variables) for more details.
 
-> [!WARNING]
-> More **manual setup is needed** for communication with Strapi using API tokens. Please refer to the [UI README](apps/ui/README.md#environment-variables) before running the UI app. Otherwise, you will get **401 Unauthorized error** - missing or invalid credentials.
+   ```sh
+   # run all apps in dev mode (this triggers `yarn dev` script in each app from `/apps` directory)
+   yarn dev
+   ```
 
-4. Run apps
+1. 🎉 Enjoy!
 
-```sh
-# run all apps in dev mode (this triggers `yarn dev` script in each app from `/apps` directory)
-yarn dev
-```
+   - Open your browser and go to [http://localhost:3000](http://localhost:3000) to see the UI app in action.
+   - Open your browser and go to [http://localhost:1337/admin](http://localhost:1337/admin) to see the Strapi app in action.
 
-5. 🎉 Enjoy!
+1. Next steps?
 
-- Open your browser and go to [http://localhost:3000](http://localhost:3000) to see the UI app in action.
-- Open your browser and go to [http://localhost:1337/admin](http://localhost:1337/admin) to see the Strapi app in action.
-
-6. Next steps?
-
-- See [What's inside?](#-whats-inside) for more details about apps and packages.
-- You also probably want to customize naming in the project. See [Transform this template to a project](#-transform-this-template-to-a-project).
+   - See [What's inside?](#-whats-inside) for more details about apps and packages.
+   - You also probably want to customize naming in the project. See [Transform this template to a project](#-transform-this-template-to-a-project).
 
 ## ✨ Features
 
@@ -167,6 +180,10 @@ We are using `GitHub Actions` for continuous integration. The `CI` expects some 
 ### Heroku
 
 - `./scripts/heroku/heroku-postbuild.sh` - Script for Heroku deployment to decide which app to build. It can be removed if not deploying to Heroku.
+
+## Documentation
+
+There is a plenty of documentation in README files in individual apps and packages. Make sure to check them out. In addition, there are some more in the [/docs](./docs) directory. We want to [improve the documentation over time](https://github.com/notum-cz/strapi-next-monorepo-starter/issues/113), so stay tuned.
 
 ## 💙 Feedback
 

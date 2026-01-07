@@ -10,6 +10,9 @@ const withNextIntl = plugin("./src/lib/i18n.ts")
 const nextConfig = {
   output: env.NEXT_OUTPUT,
   reactStrictMode: true,
+  devIndicators: {
+    position: "bottom-right",
+  },
   experimental: {},
   transpilePackages: ["@repo/design-system"],
   images: {

@@ -2,9 +2,8 @@ import "@/styles/globals.css"
 
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
+import { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
-
-import { LayoutProps } from "@/types/next"
 
 import { fontRoboto } from "@/lib/fonts"
 import { routing } from "@/lib/navigation"
@@ -30,16 +29,19 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function RootLayout({ children, params }: LayoutProps) {
-  const { locale } = await params
-
-  if (!routing.locales.includes(locale)) {
-    notFound()
-  }
+export default async function RootLayout({
+  children,
+  params,
+}: LayoutProps<"/[locale]">) {
+  const { locale } = (await params) as { locale: Locale }
 
   // Enable static rendering
   // https://next-intl-docs.vercel.app/docs/getting-started/app-router/with-i18n-routing#static-rendering
   setRequestLocale(locale)
+
+  if (!routing.locales.includes(locale)) {
+    notFound()
+  }
 
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -50,9 +52,9 @@ export default async function RootLayout({ children, params }: LayoutProps) {
           fontRoboto.variable
         )}
       >
-        <StrapiPreviewListener />
         <TrackingScripts />
-        <ServerProviders params={params}>
+        <ServerProviders>
+          <StrapiPreviewListener />
           <ClientProviders>
             <div className="relative flex min-h-screen flex-col">
               <ErrorBoundary hideFallback>

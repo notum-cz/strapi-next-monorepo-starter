@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation"
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
+import { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
-
-import type { PageProps } from "@/types/next"
 
 import { isDevelopment } from "@/lib/general-helpers"
 import { getMetadataFromStrapi } from "@/lib/metadata"
@@ -38,24 +37,27 @@ export async function generateStaticParams() {
   return params
 }
 
-type Props = PageProps<{
-  rest: string[]
-}>
-
-export async function generateMetadata(props: Props) {
+export async function generateMetadata(
+  props: PageProps<"/[locale]/[[...rest]]">
+) {
   const params = await props.params
+  const locale = params.locale as Locale
+
   const fullPath = ROOT_PAGE_PATH + (params.rest ?? []).join("/")
 
-  return getMetadataFromStrapi({ fullPath, locale: params.locale })
+  return getMetadataFromStrapi({ fullPath, locale })
 }
 
-export default async function StrapiPage(props: Props) {
+export default async function StrapiPage(
+  props: PageProps<"/[locale]/[[...rest]]">
+) {
   const params = await props.params
+  const locale = params.locale as Locale
 
-  setRequestLocale(params.locale)
+  setRequestLocale(locale)
 
   const fullPath = ROOT_PAGE_PATH + (params.rest ?? []).join("/")
-  const response = await fetchPage(fullPath, params.locale)
+  const response = await fetchPage(fullPath, locale)
 
   const data = response?.data
 

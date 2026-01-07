@@ -1,3 +1,4 @@
+
 name: Verify build
 
 on:
@@ -14,13 +15,15 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  CI: true
+  NPM_CONFIG_IGNORE_SCRIPTS: "true"
   STRAPI_REST_READONLY_API_KEY: random-value-just-for-build
 
 jobs:
   lint:
     name: Lint
     timeout-minutes: 15
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -41,18 +44,18 @@ jobs:
           node-version: 22
           cache: yarn
 
-      - name: Install dependencies
-        run: yarn
+      - name: Install dependencies (immutable)
+        run: yarn install --frozen-lockfile
 
       - name: Prepare Environment Variables
         run: |
           cp apps/strapi/.env.example apps/strapi/.env
           cp apps/ui/.env.local.example apps/ui/.env.local
 
-      - name: yarn format:check
+      - name: Format check
         run: yarn format:check
 
-      - name: yarn lint
+      - name: Lint
         run: yarn lint
 
   build:
@@ -79,9 +82,9 @@ jobs:
           node-version: 22
           cache: yarn
 
-      - name: Install dependencies
-        run: yarn
-      
+      - name: Install dependencies (immutable)
+        run: yarn install --frozen-lockfile
+
       - name: Prepare Environment Variables
         run: |
           cp apps/strapi/.env.example apps/strapi/.env

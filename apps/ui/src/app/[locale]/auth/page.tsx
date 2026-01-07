@@ -1,6 +1,5 @@
+import { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
-
-import { PageProps } from "@/types/next"
 
 import { getAuth } from "@/lib/auth"
 import { Link } from "@/lib/navigation"
@@ -14,11 +13,14 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-export default async function AuthPage({ params }: PageProps) {
-  const session = await getAuth()
+export default async function AuthPage({
+  params,
+}: PageProps<"/[locale]/auth">) {
+  const { locale } = (await params) as { locale: Locale }
 
-  const { locale } = await params
   setRequestLocale(locale)
+
+  const session = await getAuth()
 
   return (
     <div className="space-y-10">
