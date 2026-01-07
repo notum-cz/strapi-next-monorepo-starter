@@ -1,13 +1,6 @@
 import { createEnv } from "@t3-oss/env-nextjs"
 import { z } from "zod"
 
-const optionalZodBoolean = z
-  .string()
-  .toLowerCase()
-  .transform((x) => x === "true")
-  .pipe(z.boolean())
-  .optional()
-
 export const env = createEnv({
   emptyStringAsUndefined: true,
 
@@ -43,7 +36,6 @@ export const env = createEnv({
    * You'll get type errors if these are not prefixed with NEXT_PUBLIC_.
    */
   client: {
-    NEXT_PUBLIC_REVALIDATE: z.number().or(z.literal(false)).optional(),
     NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
     NEXT_PUBLIC_RECAPTCHA_SITE_KEY: z.string().optional(),
     NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS: optionalZodBoolean,
@@ -61,24 +53,12 @@ export const env = createEnv({
    */
   runtimeEnv: {
     APP_PUBLIC_URL: process.env.APP_PUBLIC_URL,
-
     STRAPI_URL: process.env.STRAPI_URL,
     STRAPI_REST_READONLY_API_KEY: process.env.STRAPI_REST_READONLY_API_KEY,
     STRAPI_REST_CUSTOM_API_KEY: process.env.STRAPI_REST_CUSTOM_API_KEY,
 
     NEXT_OUTPUT: process.env.NEXT_OUTPUT,
     WEBPACK_CACHE_TYPE: process.env.WEBPACK_CACHE_TYPE,
-    NEXT_PUBLIC_REVALIDATE: (() => {
-      const revalidate = process.env.NEXT_PUBLIC_REVALIDATE
-      const coercedRevalidate =
-        revalidate != null
-          ? isNaN(Number(revalidate))
-            ? false
-            : Number(revalidate)
-          : undefined
-
-      return coercedRevalidate
-    })(),
 
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
@@ -100,3 +80,10 @@ export const env = createEnv({
     NEXT_PUBLIC_RECAPTCHA_SITE_KEY: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
   },
 })
+
+const optionalZodBoolean = z
+  .string()
+  .toLowerCase()
+  .transform((x) => x === "true")
+  .pipe(z.boolean())
+  .optional()
