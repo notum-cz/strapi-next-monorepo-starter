@@ -1,0 +1,26 @@
+{
+  "name": "@repo/tests-playwright",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "main": "index.js",
+  "scripts": {
+    "axe-test": "tsx axe/axe-test.ts",
+    "playwright-e2e-tests": "playwright test e2e",
+    "playwright-interactive-mode": "playwright test e2e --ui"
+  },
+  "dependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "get-sitemap-links": "^1.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.53.2",
+    "@types/node": "^22",
+    "eslint-plugin-playwright": "^2.2.0",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  }
+}
