@@ -1,4 +1,4 @@
-# 🔥 STRAPI Starter Template
+# 🔥 STRAPI - `@repo/strapi`
 
 This is a [Stapi v5](https://strapi.io/) project.
 
@@ -210,7 +210,7 @@ This requires active maintenance, as any changes to collections (i.e. the DZ in 
 [Typescript is used in this template](https://docs.strapi.io/dev-docs/typescript). Typings schemas are generated automatically after code change by Strapi (based on configuration in [config/typescript.ts](config/typescript.ts) and stored in [types/generated/\*](types/generated) as ts definition files. Do not modify them manually, let Strapi do it. Don't forget to version them in git.
 
 > [!WARNING]
-> By enabling and generating types in Strapi, the API and models on the frontend are typed out-of-box. By turning it off, the code related to the API on the frontend will have to be modified.
+> By enabling and generating types in Strapi, the API and models on the frontend are typed out-of-box through [@repo/strapi-types](../../packages/strapi-types/README.md) workspace package. By turning it off, the code related to the API on the frontend will have to be modified.
 
 ### Lifecycle hooks
 
