@@ -37,7 +37,7 @@ strapi-template-new-world-kids/
 │
 ├── services/                  # Backend microservices (13 services)
 │   ├── cms/                   # Strapi 5 CMS (content management)
-│   ├── stellar-agents/        # 6 AI agents (Sirius, Andromeda, Vega, Rigel, Cassiopeia, Betelgeuse)
+│   ├── stellar-agents/        # 6 AI agents (Indigo, Mari, Azul, Beyond, Duo, Neo)
 │   ├── big-3-orchestrator/    # AI orchestration service
 │   ├── stream/                # HLS video streaming service
 │   ├── blockchain/            # Solana NFT minting + donations
@@ -278,12 +278,12 @@ The platform features **6 specialized AI agents** named after stellar bodies, ea
 stellar-agents/
 ├── src/
 │   ├── agents/           # Individual agent implementations
-│   │   ├── sirius/       # Orchestrator
-│   │   ├── andromeda/    # Coder
-│   │   ├── vega/         # Validator
-│   │   ├── rigel/        # Researcher
-│   │   ├── cassiopeia/   # Voice
-│   │   └── betelgeuse/   # Builder
+│   │   ├── indigo/       # Orchestrator
+│   │   ├── mari/         # Coder
+│   │   ├── azul/         # Validator
+│   │   ├── beyond/       # Researcher
+│   │   ├── duo/          # Voice
+│   │   └── neo/          # Builder
 │   ├── base/
 │   │   ├── BaseAgent.ts  # Abstract agent class
 │   │   └── AgentRegistry.ts  # Agent management
@@ -557,7 +557,7 @@ Location: `supabase/migrations/`
 1. **Unit Tests** - Jest
 2. **Integration Tests** - Jest + Supertest
 3. **E2E Tests** - Playwright
-4. **UI Tests** - Vega agent + Playwright
+4. **UI Tests** - Azul agent + Playwright
 
 ### Test Commands
 ```bash

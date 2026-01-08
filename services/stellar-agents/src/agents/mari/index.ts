@@ -1,6 +1,6 @@
 // ============================================================================
-// ANDROMEDA - THE CODER
-// "Named after our nearest galaxy"
+// MARI - THE CODER
+// "Master architect of code"
 // ============================================================================
 
 import Anthropic from '@anthropic-ai/sdk';
@@ -11,7 +11,7 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-export class AndromedaAgent extends BaseAgent {
+export class MariAgent extends BaseAgent {
   /**
    * Main execution method
    */
