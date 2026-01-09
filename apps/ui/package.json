@@ -77,7 +77,7 @@
     "@next/eslint-plugin-next": "15.3.5",
     "@repo/eslint-config": "*",
     "@repo/prettier-config": "*",
-    "@repo/strapi": "*",
+    "@repo/strapi-types": "*",
     "@repo/typescript-config": "*",
     "@tailwindcss/postcss": "^4.0.9",
     "@types/lodash": "^4",

@@ -1,4 +1,4 @@
-import { UID } from "@repo/strapi"
+import { UID } from "@repo/strapi-types"
 
 import StrapiContactForm from "@/components/page-builder/components/forms/StrapiContactForm"
 import StrapiNewsletterForm from "@/components/page-builder/components/forms/StrapiNewsletterForm"

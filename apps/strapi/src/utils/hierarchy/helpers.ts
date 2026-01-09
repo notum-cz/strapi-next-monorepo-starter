@@ -1,4 +1,5 @@
-import { ID } from "../../../types"
+import { Modules } from "@strapi/strapi"
+
 import { HierarchicalDocumentType } from "./types"
 
 /**
@@ -6,7 +7,7 @@ import { HierarchicalDocumentType } from "./types"
  */
 export const getOldPublishedDocument = (
   documentType: HierarchicalDocumentType,
-  documentId: ID
+  documentId: Modules.Documents.ID
 ) => {
   switch (documentType) {
     case "api::page.page": {

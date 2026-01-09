@@ -1,7 +1,7 @@
 import "server-only"
 
 import { draftMode } from "next/headers"
-import { UID } from "@repo/strapi"
+import { UID } from "@repo/strapi-types"
 import { Locale } from "next-intl"
 
 import type { CustomFetchOptions } from "@/types/general"

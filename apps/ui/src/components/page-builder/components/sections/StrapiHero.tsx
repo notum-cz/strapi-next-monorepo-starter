@@ -1,4 +1,4 @@
-import { Data } from "@repo/strapi"
+import { Data } from "@repo/strapi-types"
 import { Check } from "lucide-react"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
