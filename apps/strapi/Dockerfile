@@ -50,9 +50,9 @@ RUN \
     yarn --prefer-offline --frozen-lockfile --ignore-scripts --production
 
 # Because of yarn v1 install sharp explicitly with "--ignore-engines". See https://github.com/lovell/sharp/issues/3871
-# RUN \
-#     --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
-#     yarn workspace ${WORKSPACE} add sharp --ignore-engines --prefer-offline --frozen-lockfile
+RUN \
+    --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
+    yarn workspace ${WORKSPACE} add sharp --ignore-engines --prefer-offline --frozen-lockfile
 
 ENV PATH /app/apps/${APP}/node_modules/.bin:$PATH
 
