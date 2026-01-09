@@ -39,10 +39,6 @@ export function StrapiBasicImage({
 
   const ImageComp = useNativeNextImageOnly ? Image : ImageWithFallback
 
-  // TODO: the placeholder library is not working properly and crashes the storybook - revise its usage
-  // const ImageComp = useClient ? ImageWithFallback : ImageWithPlaiceholder
-  // useClient  ? ImageWithFallback : ImageWithPlaiceholder
-
   const sizes = {
     width:
       forcedSizes?.width ??
