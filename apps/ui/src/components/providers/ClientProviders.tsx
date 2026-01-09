@@ -43,7 +43,10 @@ function TokenProvider({ children }: { readonly children: React.ReactNode }) {
   const session = useSession()
 
   useEffect(() => {
-    if (session.data?.error === "invalid_strapi_token") {
+    if (
+      session.data?.error === "invalid_strapi_token" ||
+      session.data?.error === "oauth_error"
+    ) {
       signOut({ callbackUrl: "/auth/signin" })
     }
   }, [session])
