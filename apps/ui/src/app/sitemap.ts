@@ -8,6 +8,7 @@ import { routing } from "@/lib/navigation"
 import { fetchAllPages } from "@/lib/strapi-api/content/server"
 import { getAppPublicUrl } from "@/lib/urls"
 
+// This should be static or dynamic based on build/runtime needs
 export const dynamic = "force-dynamic"
 
 /**
@@ -15,11 +16,19 @@ export const dynamic = "force-dynamic"
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (!isProduction() && !isDevelopment()) {
+    // Deployment environments other than production should not generate sitemap
+    return []
+  }
+
+  const baseUrl = getAppPublicUrl()
+
+  if (!baseUrl) {
+    console.error("Sitemap generation aborted: APP_PUBLIC_URL is not defined")
     return []
   }
 
   const promises = routing.locales.map((locale) =>
-    generateLocalizedSitemap(locale)
+    generateLocalizedSitemap(locale, baseUrl)
   )
   const results = await Promise.allSettled(promises)
 
@@ -38,7 +47,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
  * @returns Sitemap entries for a single locale
  */
 async function generateLocalizedSitemap(
-  locale: Locale
+  locale: Locale,
+  baseUrl: string
 ): Promise<MetadataRoute.Sitemap> {
   let pageEntities: Partial<
     Record<PageEntityUID, Awaited<ReturnType<typeof fetchAllPages>>["data"]>
@@ -52,8 +62,6 @@ async function generateLocalizedSitemap(
       pageEntities[entityUid] = entityResponse.data
     }
   }
-
-  const baseUrl = getAppPublicUrl(true)
 
   /**
    * iterate over all pageable collections, and push each entry into the sitemap array,

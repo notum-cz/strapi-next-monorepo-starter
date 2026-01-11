@@ -2,6 +2,10 @@
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env", "**/.env.*local"],
   "globalEnv": [
+    "APP_PUBLIC_URL",
+    "STRAPI_URL",
+    "STRAPI_REST_READONLY_API_KEY",
+    "NEXTAUTH_SECRET",
     "NEXT_OUTPUT",
     "WEBPACK_CACHE_TYPE",
     "SENTRY_AUTH_TOKEN",

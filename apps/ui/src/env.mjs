@@ -10,7 +10,8 @@ export const env = createEnv({
    *
    * These are marked as optional to allow Docker builds to succeed without
    * baking variables into the image. Runtime validation in the code is necessary
-   * to ensure required variables are present.
+   * to ensure required variables are present. Making them mandatory here would
+   * require them to be present at build time, which is not always desired or possible (see README).
    */
   server: {
     APP_PUBLIC_URL: z.string().url().optional(),

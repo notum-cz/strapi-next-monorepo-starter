@@ -3,23 +3,15 @@ import type { MetadataRoute } from "next"
 import { isProduction } from "@/lib/general-helpers"
 import { getAppPublicUrl } from "@/lib/urls"
 
-export const dynamic = "force-dynamic"
-
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = getAppPublicUrl(true)
+  const baseUrl = getAppPublicUrl()
 
-  return isProduction()
-    ? {
-        rules: {
-          userAgent: "*",
-          allow: "/",
-        },
-        sitemap: new URL("sitemap.xml", baseUrl).toString(),
-      }
-    : {
-        rules: {
-          userAgent: "*",
-          disallow: "/",
-        },
-      }
+  if (!isProduction()) {
+    return { rules: { userAgent: "*", disallow: "/" } }
+  }
+
+  return {
+    rules: { userAgent: "*", allow: "/" },
+    ...(baseUrl ? { sitemap: new URL("sitemap.xml", baseUrl).toString() } : {}),
+  }
 }

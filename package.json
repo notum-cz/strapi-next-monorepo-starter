@@ -54,7 +54,7 @@
     "husky": "^9.1.1",
     "lint-staged": "15.2.7",
     "prettier": "3.3.2",
-    "turbo": "^2.0.9"
+    "turbo": "^2.7.3"
   },
   "packageManager": "yarn@1.22.22",
   "engines": {
