@@ -29,6 +29,7 @@
     "dev:ui": "turbo run dev --filter=@repo/ui",
     "format": "prettier --write --cache --ignore-unknown \"**/*.{js,jsx,ts,tsx,md,css,scss}\"",
     "format:check": "prettier --check --cache --ignore-unknown \"**/*.{js,jsx,ts,tsx,md,css,scss}\"",
+    "heroku-postbuild": "bash ./scripts/heroku/heroku-postbuild.sh",
     "preinstall": "npx only-allow yarn",
     "postinstall": "yarn setup:apps",
     "lint": "turbo lint",
