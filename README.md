@@ -181,7 +181,7 @@ Husky is installed by default and configured to run following tasks:
 
 ### GitHub Actions
 
-We are using `GitHub Actions` for continuous integration. The `CI` expects some variables (`APP_PUBLIC_URL`, `STRAPI_URL` and `STRAPI_REST_READONLY_API_KEY`) to be available on the runner, so make sure to add them in the repository's settings. Have a look at the [workflow](.github/workflows/ci.yml) definition for more details.
+We are using `GitHub Actions` for continuous integration. Have a look at the [workflow](.github/workflows/ci.yml) definition for more details.
 
 ### Heroku
 
