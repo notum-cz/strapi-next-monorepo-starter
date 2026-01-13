@@ -12,7 +12,12 @@ const nextConfig = {
   devIndicators: {
     position: "bottom-right",
   },
-  experimental: {},
+  // FIXME: Enable it in second step while caching will be introduced
+  // cacheComponents: true,
+  experimental: {
+    turbopackFileSystemCacheForDev: true,
+  },
+  reactCompiler: true,
   transpilePackages: ["@repo/design-system"],
   images: {
     // Be aware that Strapi has optimization on by default
