@@ -183,10 +183,6 @@ Husky is installed by default and configured to run following tasks:
 
 We are using `GitHub Actions` for continuous integration. Have a look at the [workflow](.github/workflows/ci.yml) definition for more details.
 
-### Heroku
-
-- `./scripts/heroku/heroku-postbuild.sh` - Script for Heroku deployment to decide which app to build. It can be removed if not deploying to Heroku.
-
 ## Documentation
 
 There is a plenty of documentation in README files in individual apps and packages. Make sure to check them out. In addition, there are some more in the [/docs](./docs) directory. We want to [improve the documentation over time](https://github.com/notum-cz/strapi-next-monorepo-starter/issues/113), so stay tuned.
