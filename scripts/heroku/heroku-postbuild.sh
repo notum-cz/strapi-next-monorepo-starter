@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-if [ "$APP" == "ui" ]; then
-    yarn build:ui
-elif [ "$APP" == "strapi" ]; then
-    yarn build:strapi
+if [ "${TURBO_SCOPE:-}" = "@repo/ui" ]; then
+  yarn workspace @repo/ui build
+elif [ "${TURBO_SCOPE:-}" = "@repo/strapi" ]; then
+  yarn workspace @repo/strapi build
 else
-    echo "Invalid APP env value. Please set APP to one of: ui, strapi"
+  echo "Invalid TURBO_SCOPE env value. Please set TURBO_SCOPE to one of: @repo/ui, @repo/strapi"
+  exit 1
 fi
+
+rm -rf .turbo node_modules/.cache
