@@ -17,7 +17,12 @@ import StrapiStructuredData from "@/components/page-builder/components/seo-utili
 export async function generateStaticParams() {
   if (isDevelopment()) {
     // do not prefetch all locales when developing
-    return []
+    return [
+      {
+        locale: "en",
+        rest: [""],
+      },
+    ]
   }
 
   const promises = routing.locales.map((locale) =>
