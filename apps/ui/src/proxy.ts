@@ -40,13 +40,13 @@ export default async function middleware(req: NextRequest) {
   // If the request is for a non-public (auth) page, require authentication
   if (isAuthPage) {
     try {
-      // Check Better Auth session
+      // Check Better Auth session (Strapi JWT validation happens automatically via plugin hook)
       const session = await auth.api.getSession({
         headers: req.headers,
       })
 
       if (!session?.user) {
-        // No session found, redirect to sign in
+        // No session found or token invalid, redirect to sign in
         const signInUrl = new URL("/auth/signin", req.url)
         signInUrl.searchParams.set("callbackUrl", req.nextUrl.pathname)
         return NextResponse.redirect(signInUrl)

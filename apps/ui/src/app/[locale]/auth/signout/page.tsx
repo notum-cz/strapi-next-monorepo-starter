@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect } from "react"
-import { useRouter } from "next/navigation"
 import { authClient } from "@/auth-client"
 import { useLocale } from "next-intl"
 
@@ -13,7 +12,6 @@ export default function SignOutPage() {
 
   const { data: session, isPending } = authClient.useSession()
   const locale = useLocale()
-  const router = useRouter()
 
   useEffect(() => {
     const handleSignOut = async () => {
@@ -26,8 +24,10 @@ export default function SignOutPage() {
         // User is authenticated, sign them out
         await authClient.signOut({
           fetchOptions: {
-            onSuccess: () => {
-              router.push("/")
+            onSuccess: async () => {
+              // Use full page navigation for consistency with login/register
+              // This ensures session is fully cleared and navbar updates
+              window.location.href = `/${locale}`
             },
           },
         })

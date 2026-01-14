@@ -1,16 +1,16 @@
 "use client"
 
+import { useState } from "react"
+import { authClient } from "@/auth-client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
-import { useState } from "react"
 
-import { authClient } from "@/auth-client"
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
-import { Link, useRouter } from "@/lib/navigation"
-import { cn } from "@/lib/styles"
 import { safeJSONParse } from "@/lib/general-helpers"
+import { Link } from "@/lib/navigation"
+import { cn } from "@/lib/styles"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -31,7 +31,6 @@ const ENABLE_EMAIL_CONFIRMATION = false
 export function RegisterForm() {
   const t = useTranslations("auth.register")
   const { toast } = useToast()
-  const router = useRouter()
   const [isSuccess, setIsSuccess] = useState(false)
 
   const form = useForm<z.infer<FormSchemaType>>({
@@ -58,11 +57,10 @@ export function RegisterForm() {
       if (result.data) {
         // User is now registered AND signed in automatically!
         setIsSuccess(true)
-        
+
         if (!ENABLE_EMAIL_CONFIRMATION) {
-          // Redirect to home after successful registration
-          router.refresh()
-          setTimeout(() => router.push("/"), 300)
+          // Use full page navigation to ensure session is reloaded
+          window.location.href = "/"
         }
       } else if (result.error) {
         const errorMap = {
@@ -89,7 +87,7 @@ export function RegisterForm() {
       } as const
 
       let errorMessage = t("errors.unexpectedError")
-      
+
       if (parsedError && "message" in parsedError) {
         const errorKey = Object.keys(errorMap).find(
           (key): key is keyof typeof errorMap =>

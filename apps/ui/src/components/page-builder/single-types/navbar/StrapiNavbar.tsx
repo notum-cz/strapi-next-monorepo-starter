@@ -1,17 +1,14 @@
 import Image from "next/image"
 import { Data } from "@repo/strapi-types"
 import { Locale } from "next-intl"
-import { getTranslations } from "next-intl/server"
-import { headers } from "next/headers"
 
-import { auth } from "@/lib/auth"
 import { fetchNavbar } from "@/lib/strapi-api/content/server"
 import { cn } from "@/lib/styles"
 import AppLink from "@/components/elementary/AppLink"
 import LocaleSwitcher from "@/components/elementary/LocaleSwitcher"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
-import { LoggedUserMenu } from "@/components/page-builder/single-types/navbar/LoggedUserMenu"
+import { NavbarAuthSection } from "@/components/page-builder/single-types/navbar/NavbarAuthSection"
 
 const hardcodedLinks: NonNullable<
   Data.ContentType<"api::navbar.navbar">["links"]
@@ -25,17 +22,9 @@ export async function StrapiNavbar({ locale }: { readonly locale: Locale }) {
     return null
   }
 
-  const t = await getTranslations("navbar")
-
   const links = (navbar.links ?? [])
     .filter((link) => link.href)
     .concat(...hardcodedLinks)
-
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
-
-  console.log("session", session)
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-white/90 shadow-sm backdrop-blur transition-colors duration-300">
@@ -71,16 +60,9 @@ export async function StrapiNavbar({ locale }: { readonly locale: Locale }) {
           ) : null}
         </div>
 
-        <div className="hidden flex-1 items-center justify-end space-x-4 lg:flex">
-          {session?.user ? (
-            <nav className="flex items-center space-x-1">
-              <LoggedUserMenu user={session.user} />
-            </nav>
-          ) : (
-            <AppLink href="/auth/signin">{t("actions.signIn")}</AppLink>
-          )}
-          <LocaleSwitcher locale={locale} />
-        </div>
+        {/* Client component that updates reactively when session changes */}
+        <NavbarAuthSection />
+        <LocaleSwitcher locale={locale} />
       </div>
     </header>
   )

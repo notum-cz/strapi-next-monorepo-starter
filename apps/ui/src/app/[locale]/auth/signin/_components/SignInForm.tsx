@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 import { safeJSONParse } from "@/lib/general-helpers"
-import { Link, useRouter } from "@/lib/navigation"
+import { Link } from "@/lib/navigation"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { UseSearchParamsWrapper } from "@/components/helpers/UseSearchParamsWrapper"
@@ -34,7 +34,6 @@ export function SignInForm() {
 function SuspensedSignInForm() {
   const t = useTranslations("auth.signIn")
   const { toast } = useToast()
-  const router = useRouter()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl") ?? "/"
 
@@ -49,14 +48,15 @@ function SuspensedSignInForm() {
     try {
       // Call Better Auth custom endpoint
       // The path /sign-in-strapi becomes signInStrapi (kebab-case to camelCase)
-      const result = await authClient.signInStrapi({
+      const result = await (authClient.signInStrapi as any)({
         email: values.email,
         password: values.password,
       })
 
       if (result.data) {
-        router.refresh()
-        setTimeout(() => router.push(callbackUrl), 300)
+        // Use full page navigation to ensure session is reloaded
+        // This is more reliable than client-side navigation for session updates
+        window.location.href = callbackUrl
       } else if (result.error) {
         const message = result.error.message || t("errors.CredentialsSignin")
 
