@@ -1,4 +1,4 @@
-# 🔥 UI Starter Template
+# 🔥 UI - `@repo/ui`
 
 This is a [Next.js v15](https://nextjs.org/docs) project.
 
@@ -233,7 +233,7 @@ The [BaseStrapiClient](src/lib/strapi-api/base.ts) class contains functions that
   - The endpoint is already used by another handler (e.g. the content type `"plugin::users-permissions.user"` is reserved for `GET /users`, so `GET /users/me` must use `fetchAPI` instead — see below):
 
 ```ts
-import { Result } from "@repo/strapi"
+import { Result } from "@repo/strapi-types"
 
 const fetchedUser: Result<"plugin::users-permissions.user"> =
   await Strapi.PrivateStrapiClient("/users/me", undefined, undefined, {
@@ -241,11 +241,8 @@ const fetchedUser: Result<"plugin::users-permissions.user"> =
   })
 ```
 
-- other fetch functions – these are directly tied to Strapi content types. When calling them, you must specify the UUID (e.g. `"api::"`, `"admin::"`) of the `ContentType` you want to fetch. Based on this UUID, the response type is automatically inferred.
+- other fetch functions – these are directly tied to Strapi content types. When calling them, you must specify the UUID (e.g. `"api::"`, `"admin::"`) of the `ContentType` you want to fetch. Based on this UUID, the response type is automatically inferred. Read the [@repo/strapi-types documentation](../../packages/strapi-types/README.md#troubleshooting) for more details on how type inference works.
   **To make this work**, you need to maintain a mapping between the `ContentType` UUID and the corresponding endpoint URL path—refer to the `API_ENDPOINTS` object in the [BaseStrapiClient](src/lib/strapi-api/base.ts) file. Also, Strapi **must have** [types generation](https://docs.strapi.io/cms/configurations/typescript#strapi-specific-configuration-for-typescript) enabled (true by default).
-
-> [!WARNING]
-> All attributes (and relations) are currently typed as optional (`... | null | undefined`) even if they are required in Strapi. This is current limitation of automatic typing inference and needs to be improved in future versions of this starter.
 
 In client React components/hooks use `useQuery` (or `useMutation`) hook from `@tanstack/react-query` to query/mutate data in reactive way (see example in [usePages](./src/hooks/usePages.ts)). In server components call endpoint directly and fetch data (`/GET` endpoints) on server side. Fetch functions are stored in [strapi-api/content/server file](./src/lib/strapi-api/content/server.ts). You can also use Next.js' [server actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations).
 

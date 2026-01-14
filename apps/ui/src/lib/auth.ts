@@ -1,4 +1,4 @@
-import { Result } from "@repo/strapi"
+import { Result } from "@repo/strapi-types"
 import { getServerSession } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 

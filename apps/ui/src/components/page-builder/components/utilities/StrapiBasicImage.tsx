@@ -2,7 +2,7 @@ import Image from "next/image"
 
 import type { StrapiImageMedia } from "@/types/api"
 import type { ImageExtendedProps } from "@/types/next"
-import type { Data } from "@repo/strapi"
+import type { Data } from "@repo/strapi-types"
 
 import { formatStrapiMediaUrl } from "@/lib/strapi-helpers"
 import { ImageWithFallback } from "@/components/elementary/ImageWithFallback"

@@ -21,7 +21,14 @@ ARG WORKSPACE
 WORKDIR /app
 COPY . .
 
-RUN yarn global add turbo@^1.13.4
+# Materialize generated .d.ts files (symlink may not survive prune)
+# If generated/ is a symlink, replace it with a real directory + copied files.
+# This runs while we still have the full repo in the Docker build context
+RUN set -eux; \
+  rm -rf "packages/strapi-types/generated"; \
+  mkdir -p "packages/strapi-types/generated"; \
+  cp -f apps/strapi/types/generated/*.d.ts "packages/strapi-types/generated/"
+RUN yarn global add turbo@^2.0.9
 # see https://turbo.build/repo/docs/reference/command-line-reference#turbo-prune---scopetarget
 RUN turbo prune ${WORKSPACE} --docker
 
@@ -37,22 +44,23 @@ COPY .gitignore .gitignore
 COPY --from=pruned /app/out/json/ .
 COPY --from=pruned /app/out/yarn.lock ./yarn.lock
 
-RUN yarn global add turbo@^1.13.4
+RUN yarn global add turbo@^2.0.9
 
 RUN \
     --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
     yarn --prefer-offline --frozen-lockfile --ignore-scripts
 
 # Because of yarn v1 install sharp explicitly with "--ignore-engines". See https://github.com/lovell/sharp/issues/3871
-RUN \
-    --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
-    yarn workspace ${WORKSPACE} add sharp --ignore-engines --prefer-offline --frozen-lockfile
+# RUN \
+#     --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
+#     yarn workspace ${WORKSPACE} add sharp --ignore-engines --prefer-offline --frozen-lockfile
 
 # Build the project and its dependencies
 COPY --from=pruned /app/out/full/ .
 COPY turbo.json turbo.json
 
 ENV NODE_ENV=production
+ENV NEXT_OUTPUT=standalone
 
 RUN turbo run build --filter=${WORKSPACE}
 

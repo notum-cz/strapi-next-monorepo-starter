@@ -1,4 +1,4 @@
-import type { Data } from "@repo/strapi"
+import type { Data } from "@repo/strapi-types"
 
 export const StrapiStructuredData = ({
   structuredData,

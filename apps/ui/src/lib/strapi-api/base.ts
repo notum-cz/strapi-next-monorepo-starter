@@ -6,7 +6,7 @@ import type {
   PageLocalization,
 } from "@/types/api"
 import type { AppError, CustomFetchOptions } from "@/types/general"
-import type { FindFirst, FindMany, ID, Result, UID } from "@repo/strapi"
+import type { FindFirst, FindMany, ID, Result, UID } from "@repo/strapi-types"
 
 import { isDevelopment } from "@/lib/general-helpers"
 

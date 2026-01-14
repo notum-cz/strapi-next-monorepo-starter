@@ -1,4 +1,4 @@
-import { Data } from "@repo/strapi"
+import { Data } from "@repo/strapi-types"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"

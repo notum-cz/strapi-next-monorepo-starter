@@ -17,6 +17,9 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
+    "sync-types": {
+      "cache": false
+    },
     "dev": {
       "dependsOn": ["@repo/shared-data#build", "@repo/design-system#build"],
       "cache": false,

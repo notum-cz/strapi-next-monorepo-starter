@@ -4,7 +4,7 @@ import { Locale } from "next-intl"
 import { getTranslations } from "next-intl/server"
 
 import type { NextMetadataTwitterCard } from "@/types/general"
-import type { Data, UID } from "@repo/strapi"
+import type { Data, UID } from "@repo/strapi-types"
 import type { Metadata } from "next"
 
 import {
