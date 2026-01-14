@@ -12,6 +12,8 @@ import { env } from "@/env.mjs"
  * @param anonymous query parameters of the request
  */
 
+export const revalidate = false
+
 async function handler(
   request: Request,
   { params }: { params: Promise<{ slug: string[] }> }
@@ -35,7 +37,6 @@ async function handler(
   const url = `${env.STRAPI_URL}/${path}`
   const clonedRequest = request.clone()
 
-   
   const { url: _, ...rest } = clonedRequest
   const response = await fetch(url, {
     ...rest,
