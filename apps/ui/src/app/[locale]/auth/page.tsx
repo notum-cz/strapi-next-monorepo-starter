@@ -1,7 +1,8 @@
+import { headers } from "next/headers"
 import { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
-import { getAuth } from "@/lib/auth"
+import { auth } from "@/lib/auth"
 import { Link } from "@/lib/navigation"
 import { Button } from "@/components/ui/button"
 import {
@@ -20,7 +21,9 @@ export default async function AuthPage({
 
   setRequestLocale(locale)
 
-  const session = await getAuth()
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
 
   return (
     <div className="space-y-10">

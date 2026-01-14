@@ -13,7 +13,7 @@ This is a [Next.js v16](https://nextjs.org/docs) project.
 
 ## 📦 Included packages
 
-- next-auth
+- better-auth
 - next-intl
 - next-themes (for dark mode)
 - next-recaptcha-v3
@@ -140,7 +140,7 @@ Port is 3000 and mapping can be changed in `docker run` command using `-p` flag 
 
 Next.js has three `output` modes:
 
-- `export` – Static HTML/CSS/JS files [are generated at build time](https://nextjs.org/docs/15/app/guides/static-exports) and can be served by any static hosting or CDN. No Node.js server is required. [Dynamic features are not supported](https://nextjs.org/docs/15/app/guides/static-exports#unsupported-features). This mode is **not supported** in this starter by default due to its dynamic features (e.g. NextAuth and the [POST endpoint](src/app/api/auth/[...nextauth]/route.ts)). With some modifications, it can be turned into a fully static app.
+- `export` – Static HTML/CSS/JS files [are generated at build time](https://nextjs.org/docs/15/app/guides/static-exports) and can be served by any static hosting or CDN. No Node.js server is required. [Dynamic features are not supported](https://nextjs.org/docs/15/app/guides/static-exports#unsupported-features). This mode is **not supported** in this starter by default due to its dynamic features (e.g. better-auth and the [POST endpoint](src/app/api/auth/[...all]/route.ts)). With some modifications, it can be turned into a fully static app.
 - `standalone` – Optimized output for self-hosting in a Docker container (see above). It includes only the necessary files and dependencies.
 - `undefined` – Default build output in the `.next` directory. This mode is used with `next start` in production or by hosting providers like Vercel. It requires a Node.js server.
 
@@ -248,36 +248,26 @@ Applications with authentication pages (e.g. `/auth/signin`, `/auth/register`) r
 
 It works similarly to the public API client - for requests coming from the **server context**, you should use the client instance without setting `useProxy` option in `CustomFetchOptions` (by default). In this case the Strapi is called directly. For requests coming from the **client context**, you must set `useProxy: true` in the `CustomFetchOptions`. In this case the client uses [route handler](src/app/api/private-proxy/[...slug]/route.ts) as a private proxy. This proxy hides the Strapi backend URL, preventing users from accessing it directly.
 
-The frontend app uses the `next-auth` package, which is configured in [src/lib/auth.ts](src/lib/auth.ts) and [src/app/api/auth/[...nextauth]/route.ts](src/app/api/auth/[...nextauth]/route.ts) to manage user sessions.
+The frontend app uses the `better-auth` package, which is configured in [src/lib/auth.ts](src/lib/auth.ts) and [src/app/api/auth/[...all]/route.ts](src/app/api/auth/[...all]/route.ts) to manage user sessions.
 
 In the [middleware.ts](src/middleware.ts) file, the `authMiddleware` is used to check whether the user is authenticated. A list called `authPages` contains the routes that require authentication. If a user is not authenticated and tries to access a private route, they are redirected to the login page.
 
-To retrieve the session (logged-in user) in server components, use the `getAuth()` helper.
+To retrieve the session (logged-in user) in server components, use this:
 
 ```tsx
-import { getAuth } from "@/lib/auth"
-
-export default async function ProfilePage() {
-  const session = await getAuth()
-  const user = session?.user.data
-
-  return <div></div>
-}
+const session = await auth.api.getSession({
+  headers: await headers(),
+})
 ```
 
-To get session in client components use `useSession()` from `next-auth/react`:
+To get session in client components use `useSession()` (reactive) or `getSession()`:
 
 ```tsx
-"use client"
+import { authClient } from "@/lib/client"
+const { data: session } = authClient.useSession()
 
-import { useSession } from "next-auth/react"
-
-export default function ProfilePage() {
-  const session = useSession()
-  const user = session.data?.user
-
-  return <div></div>
-}
+import { authClient } from "@/lib/client"
+const { data: session } = await authClient.getSession()
 ```
 
 To omit the `Authorization` header and skip token detection, you can pass `omitUserAuthorization: true` in the `options` object of the `fetchAPI` function. Token detection is a dynamic operation, which prevents static rendering of the page.

@@ -210,7 +210,7 @@ export const strapiSessionPlugin = customSession(
 
 export const auth = betterAuth({
   baseURL: env.APP_PUBLIC_URL,
-  secret: env.NEXTAUTH_SECRET || "fallback-secret-for-development-only",
+  secret: env.BETTER_AUTH_SECRET ?? "fallback-secret-for-development-only",
 
   // Stateless mode
   session: {

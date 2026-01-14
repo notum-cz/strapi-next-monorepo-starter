@@ -26,8 +26,8 @@ export const env = createEnv({
     NEXT_OUTPUT: z.string().optional(),
     WEBPACK_CACHE_TYPE: z.enum(["filesystem", "memory"]).optional(),
 
-    NEXTAUTH_URL: z.string().url().optional(),
-    NEXTAUTH_SECRET: z.string().optional(),
+    BETTER_AUTH_URL: z.string().url().optional(),
+    BETTER_AUTH_SECRET: z.string().optional(),
 
     SENTRY_AUTH_TOKEN: z.string().optional(),
     SENTRY_ORG: z.string().optional(),
@@ -77,8 +77,8 @@ export const env = createEnv({
     NEXT_OUTPUT: process.env.NEXT_OUTPUT,
     WEBPACK_CACHE_TYPE: process.env.WEBPACK_CACHE_TYPE,
 
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+    BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+    BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
 
     SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
     SENTRY_ORG: process.env.SENTRY_ORG,

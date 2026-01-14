@@ -10,7 +10,7 @@ import { getStrapiUrl } from "@/lib/urls"
  * It is a private proxy because it accesses Strapi API endpoints requiring Users-permissions (https://docs.strapi.io/cms/features/users-permissions)
  * authentication. Every user has a unique token, which is used to authenticate requests.
  *
- * Authorization tokens are injected on the client-side, based on NextAuth's session.
+ * Authorization tokens are injected on the client-side, based on BetterAuth's session.
  */
 async function handler(
   request: Request,

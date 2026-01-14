@@ -1,6 +1,7 @@
 import { LogOutIcon, User, UserRoundCogIcon } from "lucide-react"
-import { Session } from "next-auth"
 import { useTranslations } from "next-intl"
+
+import { BetterAuthUserWithStrapi } from "@/types/better-auth"
 
 import { Link } from "@/lib/navigation"
 import { Button } from "@/components/ui/button"
@@ -13,7 +14,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-export function LoggedUserMenu({ user }: { readonly user: Session["user"] }) {
+export function LoggedUserMenu({
+  user,
+}: {
+  readonly user: BetterAuthUserWithStrapi
+}) {
   const t = useTranslations("navbar")
 
   return (

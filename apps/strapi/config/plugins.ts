@@ -22,7 +22,7 @@ export default ({ env }) => {
     "users-permissions": {
       config: {
         jwt: {
-          expiresIn: "30d", // this value is synced with NextAuth session maxAge
+          expiresIn: "30d", // this value is synced with Better Auth session maxAge
         },
       },
     },
