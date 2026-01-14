@@ -1,13 +1,15 @@
 "use client"
 
+import { useState } from "react"
+import { authClient } from "@/auth-client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
+import { safeJSONParse } from "@/lib/general-helpers"
 import { useRouter } from "@/lib/navigation"
-import { useUserMutations } from "@/hooks/useUser"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button } from "@/components/ui/button"
@@ -25,7 +27,7 @@ export function ChangePasswordForm() {
   const t = useTranslations("auth.changePassword")
   const router = useRouter()
   const { toast } = useToast()
-  const { changePasswordMutation } = useUserMutations()
+  const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(ChangePasswordFormSchema),
@@ -38,38 +40,67 @@ export function ChangePasswordForm() {
     },
   })
 
-  const onSubmit = (data: z.infer<FormSchemaType>) =>
-    changePasswordMutation.mutate(data, {
-      onSuccess: () => {
+  const onSubmit = async (data: z.infer<FormSchemaType>) => {
+    setIsLoading(true)
+    try {
+      // Call Better Auth update password endpoint
+      const result = await authClient.updatePassword({
+        currentPassword: data.currentPassword,
+        password: data.password,
+        passwordConfirmation: data.passwordConfirmation,
+      } as any)
+
+      if (result.data) {
         toast({
           variant: "default",
           description: t("successfullyChanged"),
         })
         form.reset()
         router.push("/")
-      },
-      onError: (error: any) => {
+      } else if (result.error) {
         const errorMap = {
           "is invalid": t("errors.invalidCurrentPassword"),
           "be different": t("errors.newPasswordSameAsCurrent"),
         } as const
 
         let errorMessage = t("errors.unexpectedError")
+        const errorKey = Object.keys(errorMap).find(
+          (key): key is keyof typeof errorMap =>
+            result.error?.message?.includes(key) ?? false
+        )
 
-        if (error instanceof Error) {
-          const errorKey = Object.keys(errorMap).find(
-            (key): key is keyof typeof errorMap => error.message?.includes(key)
-          )
-
-          errorMessage = errorKey ? errorMap[errorKey] : errorMessage
-        }
+        errorMessage = errorKey ? errorMap[errorKey] : errorMessage
 
         toast({
           variant: "destructive",
           description: errorMessage,
         })
-      },
-    })
+      }
+    } catch (error: any) {
+      const parsedError = safeJSONParse<any>(error?.message || error)
+      const errorMap = {
+        "is invalid": t("errors.invalidCurrentPassword"),
+        "be different": t("errors.newPasswordSameAsCurrent"),
+      } as const
+
+      let errorMessage = t("errors.unexpectedError")
+
+      if (parsedError && "message" in parsedError) {
+        const errorKey = Object.keys(errorMap).find(
+          (key): key is keyof typeof errorMap =>
+            parsedError.message?.includes(key)
+        )
+        errorMessage = errorKey ? errorMap[errorKey] : parsedError.message
+      }
+
+      toast({
+        variant: "destructive",
+        description: errorMessage,
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <Card className="m-auto w-[400px]">
@@ -105,6 +136,7 @@ export function ChangePasswordForm() {
           size="lg"
           variant="default"
           form={changePasswordFormName}
+          disabled={isLoading}
         >
           {t("submit")}
         </Button>

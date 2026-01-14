@@ -1,4 +1,7 @@
-// https://next-auth.js.org/getting-started/typescript
+// LEGACY: NextAuth type definitions
+// These are kept for backward compatibility but are no longer actively used
+// since we've migrated to Better Auth.
+// TODO: Remove this file once all NextAuth references are removed from the codebase
 
 import { DefaultSession } from "next-auth"
 

@@ -2,8 +2,9 @@ import Image from "next/image"
 import { Data } from "@repo/strapi-types"
 import { Locale } from "next-intl"
 import { getTranslations } from "next-intl/server"
+import { headers } from "next/headers"
 
-import { getAuth } from "@/lib/auth"
+import { auth } from "@/lib/auth"
 import { fetchNavbar } from "@/lib/strapi-api/content/server"
 import { cn } from "@/lib/styles"
 import AppLink from "@/components/elementary/AppLink"
@@ -30,7 +31,11 @@ export async function StrapiNavbar({ locale }: { readonly locale: Locale }) {
     .filter((link) => link.href)
     .concat(...hardcodedLinks)
 
-  const session = await getAuth()
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  console.log("session", session)
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-white/90 shadow-sm backdrop-blur transition-colors duration-300">

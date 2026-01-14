@@ -1,176 +1,196 @@
-import { Result } from "@repo/strapi-types"
-import { getServerSession } from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
+// apps/ui/src/lib/auth.ts
+import { env } from "@/env.mjs"
+import { betterAuth } from "better-auth"
+import { createAuthEndpoint, sessionMiddleware } from "better-auth/api"
+import { setSessionCookie } from "better-auth/cookies"
 
-import type {
-  GetServerSidePropsContext,
-  NextApiRequest,
-  NextApiResponse,
-} from "next"
-import type { NextAuthOptions } from "next-auth"
+import type { BetterAuthPlugin } from "better-auth"
 
 import { PrivateStrapiClient } from "@/lib/strapi-api"
 
-export const authOptions: NextAuthOptions = {
-  session: {
-    strategy: "jwt",
-    maxAge: 2592000, // 30 days - synced with strapi
-  },
-  providers: [
-    CredentialsProvider({
-      name: "StrapiCredentials",
-      credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" },
+// Plugin for custom sign-in and registration endpoints
+export const strapiAuthPlugin = {
+  id: "strapi-auth",
+  endpoints: {
+    signInWithStrapi: createAuthEndpoint(
+      "/sign-in-strapi",
+      {
+        method: "POST",
       },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials.password) {
-          return null
-        }
-
-        return PrivateStrapiClient.fetchAPI(
+      async (ctx) => {
+        const data = await PrivateStrapiClient.fetchAPI(
           `/auth/local`,
           undefined,
           {
             body: JSON.stringify({
-              identifier: credentials.email,
-              password: credentials.password,
+              identifier: ctx.body.email,
+              password: ctx.body.password,
             }),
             method: "POST",
           },
           { omitUserAuthorization: true }
         )
-          .then((data) => {
-            const { jwt, user } = data
-            if (jwt == null || user == null) {
-              return null
-            }
+        const { jwt, user } = data
+        if (jwt == null || user == null) {
+          throw new Error("Invalid credentials")
+        }
 
-            return {
-              name: user.username,
-              email: user.email,
-              // strapi user id is a number, but next-auth expects a string
-              id: user.id.toString(),
-              userId: user.id,
-              blocked: user.blocked,
-              strapiJWT: jwt,
-            }
-          })
-          .catch((error) => {
-            throw new Error(error.message)
-          })
+        const userToSession = {
+          id: user.id.toString(),
+          email: user.email,
+          name: user.username,
+          emailVerified: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          image: null,
+          strapiJWT: jwt,
+          userId: user.id,
+          blocked: user.blocked,
+        }
+
+        // IMPORTANT: generate a real Better Auth session (has token, timestamps, etc.)
+        const session = await ctx.context.internalAdapter.createSession(
+          userToSession.id
+        )
+
+        // IMPORTANT: actually set the cookie(s)
+        await setSessionCookie(ctx, { user: userToSession, session })
+
+        return ctx.json({ user: userToSession, session })
+      }
+    ),
+
+    registerWithStrapi: createAuthEndpoint(
+      "/register-strapi",
+      {
+        method: "POST",
       },
-    }),
-  ],
-  callbacks: {
-    jwt: async ({ token, user, trigger, account, session }) => {
-      if (trigger === "update" && session?.username) {
-        // change username update
-        token.name = session.username
-      }
+      async (ctx) => {
+        // Call Strapi to register user
+        const data = await PrivateStrapiClient.fetchAPI(
+          `/auth/local/register`,
+          undefined,
+          {
+            body: JSON.stringify({
+              username: ctx.body.username,
+              email: ctx.body.email,
+              password: ctx.body.password,
+            }),
+            method: "POST",
+          },
+          { omitUserAuthorization: true }
+        )
 
-      if (trigger === "update" && session?.strapiJWT) {
-        // change password update
-        token.strapiJWT = session.strapiJWT
-      }
-
-      if (account) {
-        // initial login
-
-        if (account.access_token != null) {
-          // OAuth login - connect the account
-          try {
-            const data = await PrivateStrapiClient.fetchAPI(
-              `/auth/${account.provider}/callback?access_token=${account.access_token}`,
-              undefined
-            )
-            const { jwt, user } = data
-
-            if (jwt == null) {
-              throw new Error("No JWT provided by Strapi API")
-            }
-
-            // add only necessary data to the token
-            token.strapiJWT = jwt
-            token.userId = user?.id
-            token.blocked = user?.blocked
-          } catch (error: any) {
-            token.error = "oauth_error"
-
-            if (error?.message?.includes("Email is already taken")) {
-              token.error = "different_provider"
-            }
-          }
+        const { jwt, user } = data
+        if (jwt == null || user == null) {
+          throw new Error("Registration failed")
         }
 
-        if (account.provider === "credentials") {
-          // credentials login
-          // add only necessary data to the token
-          // make sure structure is the same as in OAuth login
-          token.strapiJWT = user.strapiJWT
-          token.userId = user.userId
-          token.blocked = user.blocked
+        const userToSession = {
+          id: user.id.toString(),
+          email: user.email,
+          name: user.username,
+          emailVerified: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          image: null,
+          strapiJWT: jwt,
+          userId: user.id,
+          blocked: user.blocked,
         }
+
+        const session = await ctx.context.internalAdapter.createSession(
+          userToSession.id
+        )
+
+        await setSessionCookie(ctx, { user: userToSession, session })
+
+        return ctx.json({ user: userToSession, session })
       }
+    ),
+  },
+} satisfies BetterAuthPlugin
 
-      // do not attach the whole user data to this final token object
-      // the token object is encrypted into JWT cookie string which is then sent in the requests
-      // very long tokens can cause problems (cookie size limit, performance, kill the server)
-      return token
-    },
-    session: async ({ token, session }) => {
-      if (token?.strapiJWT != null && token?.error == null) {
-        // check if token is valid and user data is still up-to-date
-        // this is optional
-        // this block checks validity of the token against strapi
-        // the check happens on every get session call (many times)
-        // it can be removed to improve performance but weird things can happen
-        // (user is logged in within NextAuth and UI but not in Strapi API)
-        try {
-          const fetchedUser: Result<"plugin::users-permissions.user"> =
-            await PrivateStrapiClient.fetchAPI(
-              "/users/me",
-              undefined,
-              undefined,
-              { userJWT: token.strapiJWT }
-            )
+// Plugin to update password and refresh session
+export const updatePasswordPlugin = {
+  id: "update-password",
+  endpoints: {
+    updatePassword: createAuthEndpoint(
+      "/update-password",
+      {
+        method: "POST",
+        use: [sessionMiddleware], // Require session
+      },
+      async (ctx) => {
+        // Get current session to access strapiJWT
+        const currentUser = ctx.context.session.user
 
-          // API token is valid - update/reload user data or add more data
-          token.name = fetchedUser.username
-          token.blocked = fetchedUser.blocked ?? false
-        } catch (error: any) {
-          // API token is invalid - send error to client and user is logged out
-          // console.error("Strapi JWT token is invalid: ", error.message)
-          token.error = "invalid_strapi_token"
+        if (!currentUser?.strapiJWT) {
+          throw new Error("No active session")
         }
-      }
 
-      if (token) {
-        // expose following data to the client (/api/auth/session response)
-        // don't expose sensitive data
-        // we can add more data to "session" object if needed (user roles, avatar, etc.)
-        // data passed from here are not part of the JWT token and cookie
-        session.error = token.error
-        session.strapiJWT = token.strapiJWT
-        session.user.userId = token.userId
-        session.user.blocked = token.blocked
-      }
+        // Update password in Strapi
+        const data = await PrivateStrapiClient.fetchAPI(
+          "/auth/change-password",
+          undefined,
+          {
+            body: JSON.stringify({
+              currentPassword: ctx.body.currentPassword,
+              password: ctx.body.password,
+              passwordConfirmation: ctx.body.passwordConfirmation,
+            }),
+            method: "POST",
+          },
+          { userJWT: currentUser.strapiJWT }
+        )
 
-      return session
+        // Strapi returns new JWT after password change
+        const { jwt, user } = data
+
+        if (!jwt || !user) {
+          throw new Error("Failed to update password")
+        }
+
+        // Update session with new JWT
+        const updatedUser = {
+          ...currentUser,
+          strapiJWT: jwt,
+          userId: user.id,
+          blocked: user.blocked,
+        }
+
+        // Update the session cookie with new data
+        await setSessionCookie(ctx, {
+          user: updatedUser,
+          session: ctx.context.session.session,
+        })
+
+        return ctx.json({
+          user: updatedUser,
+          session: ctx.context.session.session,
+        })
+      }
+    ),
+  },
+} satisfies BetterAuthPlugin
+
+export const auth = betterAuth({
+  baseURL: env.APP_PUBLIC_URL,
+  secret: env.NEXTAUTH_SECRET || "fallback-secret-for-development-only",
+
+  // Stateless mode
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 30 * 24 * 60 * 60, // 30 days
+      strategy: "jwe",
+      refreshCache: true,
     },
   },
-  pages: {
-    signIn: "/auth/signin",
-    signOut: "/auth/signout",
+  account: {
+    storeStateStrategy: "cookie",
+    storeAccountCookie: true,
   },
-}
 
-// Use it in server contexts
-export function getAuth(
-  ...args:
-    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
-    | [NextApiRequest, NextApiResponse]
-    | []
-) {
-  return getServerSession(...args, authOptions)
-}
+  plugins: [strapiAuthPlugin, updatePasswordPlugin],
+})

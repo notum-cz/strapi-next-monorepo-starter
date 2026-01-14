@@ -1,7 +1,5 @@
+import { authClient } from "@/auth-client"
 import { env } from "@/env.mjs"
-import { getSession } from "next-auth/react"
-
-import { getAuth } from "@/lib/auth"
 
 const ALLOWED_STRAPI_ENDPOINTS: Record<string, string[]> = {
   GET: [
@@ -39,7 +37,7 @@ export const isStrapiEndpointAllowed = (
 
 /**
  * Create Strapi authorization header based on the request type.
- * If the request is private, it retrieves the user token from NextAuth.
+ * If the request is private, it retrieves the user token from Better Auth session.
  * If the request is public, it uses the appropriate API token based on read-only status.
  */
 export const createStrapiAuthHeader = async ({
@@ -50,7 +48,7 @@ export const createStrapiAuthHeader = async ({
   isPrivate: boolean
 }) => {
   if (isPrivate) {
-    const userToken = await getStrapiUserTokenFromNextAuth()
+    const userToken = await getStrapiUserTokenFromBetterAuth()
     return formatStrapiAuthorizationHeader(userToken)
   }
 
@@ -72,20 +70,28 @@ export const formatStrapiAuthorizationHeader = (token?: string) => {
 }
 
 /**
- * Get user-permission token from the NextAuth session
+ * Get user-permission token from the Better Auth session
+ *
+ * Uses `typeof window === "undefined"` to detect server vs client environment.
  */
-const getStrapiUserTokenFromNextAuth = async () => {
+const getStrapiUserTokenFromBetterAuth = async () => {
   const isRSC = typeof window === "undefined"
+
   if (isRSC) {
-    // server side
-    const session = await getAuth()
-    return session?.strapiJWT
+    // Server side: Read session directly from cookies (no HTTP request)
+    // Dynamically import both headers and auth to avoid client bundle issues
+    const { headers } = await import("next/headers")
+    const { auth } = await import("@/lib/auth")
+
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    })
+    return session?.user?.strapiJWT
   }
 
-  // client side
-  // this makes HTTP request to /api/auth/session to get the session
-  // this is not the best solution because it makes HTTP request to the server
-  // but useSession() can't be used here
-  const session = await getSession()
-  return session?.strapiJWT
+  // Client side: Make HTTP request to /api/auth/session
+  // Note: This is necessary because we can't use React hooks here
+  // (this function might be called outside React component context)
+  const { data: session } = await authClient.getSession()
+  return session?.user?.strapiJWT
 }

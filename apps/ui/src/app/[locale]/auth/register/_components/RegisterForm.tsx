@@ -4,11 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
+import { useState } from "react"
 
+import { authClient } from "@/auth-client"
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
-import { Link } from "@/lib/navigation"
+import { Link, useRouter } from "@/lib/navigation"
 import { cn } from "@/lib/styles"
-import { useUserMutations } from "@/hooks/useUser"
+import { safeJSONParse } from "@/lib/general-helpers"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -29,7 +31,8 @@ const ENABLE_EMAIL_CONFIRMATION = false
 export function RegisterForm() {
   const t = useTranslations("auth.register")
   const { toast } = useToast()
-  const { registerMutation } = useUserMutations()
+  const router = useRouter()
+  const [isSuccess, setIsSuccess] = useState(false)
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(RegisterFormSchema),
@@ -43,48 +46,71 @@ export function RegisterForm() {
   })
 
   async function onSubmit(values: z.infer<FormSchemaType>) {
-    registerMutation.mutate(
-      {
+    try {
+      // Call Better Auth custom registration endpoint
+      // The path /register-strapi becomes registerStrapi (kebab-case to camelCase)
+      const result = await authClient.registerStrapi({
         username: values.email,
         email: values.email,
         password: values.password,
-      },
-      {
-        onError: (error) => {
-          const errorMap = {
-            "already taken": t("errors.emailUsernameTaken"),
-          } as const
+      } as any)
 
-          let errorMessage = t("errors.unexpectedError")
+      if (result.data) {
+        // User is now registered AND signed in automatically!
+        setIsSuccess(true)
+        
+        if (!ENABLE_EMAIL_CONFIRMATION) {
+          // Redirect to home after successful registration
+          router.refresh()
+          setTimeout(() => router.push("/"), 300)
+        }
+      } else if (result.error) {
+        const errorMap = {
+          "already taken": t("errors.emailUsernameTaken"),
+        } as const
 
-          if (error instanceof Error) {
-            const errorKey = Object.keys(errorMap).find(
-              (key): key is keyof typeof errorMap =>
-                error.message?.includes(key)
-            )
+        let errorMessage = t("errors.unexpectedError")
+        const errorKey = Object.keys(errorMap).find(
+          (key): key is keyof typeof errorMap =>
+            result.error?.message?.includes(key) ?? false
+        )
 
-            errorMessage = errorKey ? errorMap[errorKey] : errorMessage
-          }
+        errorMessage = errorKey ? errorMap[errorKey] : errorMessage
 
-          toast({
-            variant: "destructive",
-            description: errorMessage,
-          })
-        },
+        toast({
+          variant: "destructive",
+          description: errorMessage,
+        })
       }
-    )
+    } catch (error: any) {
+      const parsedError = safeJSONParse<any>(error?.message || error)
+      const errorMap = {
+        "already taken": t("errors.emailUsernameTaken"),
+      } as const
+
+      let errorMessage = t("errors.unexpectedError")
+      
+      if (parsedError && "message" in parsedError) {
+        const errorKey = Object.keys(errorMap).find(
+          (key): key is keyof typeof errorMap =>
+            parsedError.message?.includes(key)
+        )
+        errorMessage = errorKey ? errorMap[errorKey] : parsedError.message
+      }
+
+      toast({
+        variant: "destructive",
+        description: errorMessage,
+      })
+    }
   }
 
-  if (registerMutation.isSuccess) {
+  if (isSuccess && ENABLE_EMAIL_CONFIRMATION) {
     // This message is relevant if system requires email verification
-    // If user is `confirmed` immediately, this message is not needed
-    // and user should be redirected to sign in page
     return (
       <Card className="m-auto w-[400px]">
         <CardHeader>
-          <h2 className="mx-auto">
-            {ENABLE_EMAIL_CONFIRMATION ? t("checkEmail") : t("status.success")}
-          </h2>
+          <h2 className="mx-auto">{t("checkEmail")}</h2>
         </CardHeader>
         <CardContent>
           <Link

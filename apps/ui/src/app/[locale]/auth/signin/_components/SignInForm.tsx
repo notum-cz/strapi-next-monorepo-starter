@@ -1,8 +1,8 @@
 "use client"
 
 import { useSearchParams } from "next/navigation"
+import { authClient } from "@/auth-client"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { signIn } from "next-auth/react"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -46,19 +46,29 @@ function SuspensedSignInForm() {
   })
 
   async function onSubmit(values: z.infer<FormSchemaType>) {
-    const res = await signIn("credentials", {
-      ...values,
-      callbackUrl,
-      redirect: false,
-    })
+    try {
+      // Call Better Auth custom endpoint
+      // The path /sign-in-strapi becomes signInStrapi (kebab-case to camelCase)
+      const result = await authClient.signInStrapi({
+        email: values.email,
+        password: values.password,
+      })
 
-    if (!res?.error) {
-      router.refresh()
-      setTimeout(() => router.push(callbackUrl), 300)
-    } else {
-      const parsedError = safeJSONParse<any>(res.error)
+      if (result.data) {
+        router.refresh()
+        setTimeout(() => router.push(callbackUrl), 300)
+      } else if (result.error) {
+        const message = result.error.message || t("errors.CredentialsSignin")
+
+        toast({
+          variant: "destructive",
+          description: message,
+        })
+      }
+    } catch (error: any) {
+      const parsedError = safeJSONParse<any>(error?.message || error)
       const message =
-        "message" in parsedError
+        parsedError && "message" in parsedError
           ? parsedError.message
           : t("errors.CredentialsSignin")
 
