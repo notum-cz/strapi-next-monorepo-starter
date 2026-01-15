@@ -28,7 +28,6 @@ This is a [Next.js v15](https://nextjs.org/docs) project.
 - @sentry/nextjs
 - dayjs
 - lodash
-- plaiceholder
 - tailwindcss, cva, tailwindcss-animate
 
 ## 🚀 Get up and develop
@@ -428,10 +427,6 @@ The following image components are provided as wrappers around the native `Image
 
 1. `/src/components/elementary/ImageWithBlur.tsx` – Displays images with a synchronous blur effect. Ideal for improving UX and performance. Has no side effects.
 2. `/src/components/elementary/ImageWithFallback.tsx` – A **client-only** enhancement of `ImageWithBlur`. It checks if the image is loaded and displays a fallback image if not. If both primary and secondary sources fail, it falls back to a local placeholder.
-3. `/src/components/elementary/ImageWithPlaiceholder.tsx` – Uses [plaiceholder](https://plaiceholder.co/docs) to generate visually appealing placeholders asynchronously. Supports server-side rendering and fallback logic. If both primary and secondary images fail, it falls back to a local placeholder.
-
-> [!INFO]
-> ImageWithPlaiceholder is currently put on hold due to performance issues.
 
 ### reCAPTCHA v3
 
