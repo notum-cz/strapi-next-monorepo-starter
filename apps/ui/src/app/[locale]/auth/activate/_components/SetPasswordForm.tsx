@@ -1,14 +1,16 @@
 "use client"
 
+import { useState } from "react"
 import { useSearchParams } from "next/navigation"
+import { authClient } from "@/auth-client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
+import { getAuthErrorMessage } from "@/lib/general-helpers"
 import { useRouter } from "@/lib/navigation"
-import { useUserMutations } from "@/hooks/useUser"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { UseSearchParamsWrapper } from "@/components/helpers/UseSearchParamsWrapper"
@@ -41,7 +43,7 @@ function SuspensedSetPasswordForm({ accountActivation }: SetPasswordFormProps) {
     accountActivation ? "auth.accountActivation" : "auth.resetPassword"
   )
   const { toast } = useToast()
-  const { resetPasswordMutation } = useUserMutations()
+  const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(SetPasswordFormSchema),
@@ -54,20 +56,53 @@ function SuspensedSetPasswordForm({ accountActivation }: SetPasswordFormProps) {
   const params = useSearchParams()
   const code = params.get("code") as string
 
-  const onSubmit = (data: z.infer<FormSchemaType>) =>
-    resetPasswordMutation.mutate(
-      { code, ...data },
-      {
-        onSuccess: () => {
-          toast({
-            variant: "default",
-            description: t("successfullySet"),
-          })
-          form.reset()
-          router.push("/auth/signin")
-        },
+  const onSubmit = async (data: z.infer<FormSchemaType>) => {
+    if (!code) {
+      toast({
+        variant: "destructive",
+        description: "Missing reset code",
+      })
+      return
+    }
+
+    setIsLoading(true)
+    try {
+      const result = await authClient.resetPasswordStrapi({
+        code,
+        password: data.password,
+        passwordConfirmation: data.passwordConfirmation,
+      })
+
+      if (result.data) {
+        toast({
+          variant: "default",
+          description: t("successfullySet"),
+        })
+        form.reset()
+        router.push("/auth/signin")
+      } else if (result.error) {
+        const message = getAuthErrorMessage(
+          result.error.message,
+          "Failed to reset password"
+        )
+        toast({
+          variant: "destructive",
+          description: message,
+        })
       }
-    )
+    } catch (error: any) {
+      const message = getAuthErrorMessage(
+        error?.message,
+        "Failed to reset password"
+      )
+      toast({
+        variant: "destructive",
+        description: message,
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <Card className="m-auto w-[400px]">
@@ -97,6 +132,7 @@ function SuspensedSetPasswordForm({ accountActivation }: SetPasswordFormProps) {
           size="lg"
           variant="default"
           form={setPasswordFormName}
+          disabled={isLoading}
         >
           {t("submit")}
         </Button>

@@ -234,7 +234,10 @@
       "header": "Forgot password",
       "description": "Enter the email you usually use to sign in. We will send instructions to reset your password to this email.",
       "email": "Email",
-      "submit": "Recover account"
+      "submit": "Recover account",
+      "errors": {
+        "failedToSendPasswordResetEmail": "Failed to send password reset email"
+      }
     }
   }
 }

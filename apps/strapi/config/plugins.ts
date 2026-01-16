@@ -36,20 +36,84 @@ export default ({ env }) => {
       },
     },
 
-    // email: {
-    //   config: {
-    //     provider: "mailgun",
-    //     providerOptions: {
-    //       key: env("MAILGUN_API_KEY"),
-    //       domain: env("MAILGUN_DOMAIN"),
-    //       url: env("MAILGUN_HOST", "https://api.eu.mailgun.net"),
-    //     },
-    //     settings: {
-    //       defaultFrom: env("MAILGUN_EMAIL"),
-    //       defaultReplyTo: env("MAILGUN_EMAIL"),
-    //     },
-    //   },
-    // },
+    email: {
+      config: (() => {
+        // For development: Use Mailtrap (free email testing service)
+        // For production: Use Mailgun
+        const isProduction = env("NODE_ENV") === "production"
+        const hasMailgunCreds = env("MAILGUN_API_KEY") && env("MAILGUN_DOMAIN")
+        const hasMailtrapCreds = env("MAILTRAP_USER") && env("MAILTRAP_PASS")
+
+        if (isProduction) {
+          // Production: Mailgun (required)
+          if (!hasMailgunCreds) {
+            console.warn(
+              "⚠️  Mailgun credentials not found. Email functionality will not work in production."
+            )
+          }
+          return {
+            provider: "mailgun",
+            providerOptions: {
+              key: env("MAILGUN_API_KEY"),
+              domain: env("MAILGUN_DOMAIN"),
+              url: env("MAILGUN_HOST", "https://api.eu.mailgun.net"),
+            },
+            settings: {
+              defaultFrom: env("MAILGUN_EMAIL"),
+              defaultReplyTo: env("MAILGUN_EMAIL"),
+            },
+          }
+        }
+
+        // Development: Use Mailtrap
+        if (hasMailtrapCreds) {
+          return {
+            provider: "nodemailer",
+            providerOptions: {
+              host: env("MAILTRAP_HOST", "sandbox.smtp.mailtrap.io"),
+              port: parseInt(env("MAILTRAP_PORT", "2525"), 10),
+              auth: {
+                user: env("MAILTRAP_USER"),
+                pass: env("MAILTRAP_PASS"),
+              },
+            },
+            settings: {
+              defaultFrom: env("MAILGUN_EMAIL") || "noreply@example.com",
+              defaultReplyTo: env("MAILGUN_EMAIL") || "noreply@example.com",
+            },
+          }
+        }
+
+        // Fallback to Mailgun in development if Mailtrap not configured
+        if (hasMailgunCreds) {
+          return {
+            provider: "mailgun",
+            providerOptions: {
+              key: env("MAILGUN_API_KEY"),
+              domain: env("MAILGUN_DOMAIN"),
+              url: env("MAILGUN_HOST", "https://api.eu.mailgun.net"),
+            },
+            settings: {
+              defaultFrom: env("MAILGUN_EMAIL"),
+              defaultReplyTo: env("MAILGUN_EMAIL"),
+            },
+          }
+        }
+
+        return {
+          provider: "mailgun",
+          providerOptions: {
+            key: "",
+            domain: "",
+            url: "https://api.eu.mailgun.net",
+          },
+          settings: {
+            defaultFrom: "noreply@example.com",
+            defaultReplyTo: "noreply@example.com",
+          },
+        }
+      })(),
+    },
   }
 }
 

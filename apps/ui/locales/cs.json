@@ -233,7 +233,10 @@
       "header": "Zapomenuté heslo",
       "description": "Zadejte email se kterým se zvyknete přihlašovat. Na tento email odešleme instrukce k obnově hesla.",
       "email": "E-mail",
-      "submit": "Obnovit účet"
+      "submit": "Obnovit účet",
+      "errors": {
+        "failedToSendPasswordResetEmail": "Nepodařilo se odeslat email s instrukcemi pro obnovení hesla."
+      }
     }
   }
 }

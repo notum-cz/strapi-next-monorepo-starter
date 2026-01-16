@@ -180,6 +180,70 @@ export const strapiAuthPlugin = {
         }
       }
     ),
+
+    forgotPasswordWithStrapi: createAuthEndpoint(
+      "/forgot-password-strapi",
+      {
+        method: "POST",
+        body: z.object({
+          email: z.string().email(),
+        }),
+      },
+      async (ctx) => {
+        try {
+          await PrivateStrapiClient.fetchAPI(
+            `/auth/forgot-password`,
+            undefined,
+            {
+              body: JSON.stringify({
+                email: ctx.body.email,
+              }),
+              method: "POST",
+            },
+            { omitUserAuthorization: true }
+          )
+
+          // Strapi's forgot-password endpoint returns success even if email doesn't exist
+          // (for security reasons - don't reveal if email exists)
+          return ctx.json({ success: true })
+        } catch (error: any) {
+          throwStrapiError(error, "Failed to send password reset email")
+        }
+      }
+    ),
+
+    resetPasswordWithStrapi: createAuthEndpoint(
+      "/reset-password-strapi",
+      {
+        method: "POST",
+        body: z.object({
+          code: z.string(),
+          password: z.string(),
+          passwordConfirmation: z.string(),
+        }),
+      },
+      async (ctx) => {
+        try {
+          await PrivateStrapiClient.fetchAPI(
+            `/auth/reset-password`,
+            undefined,
+            {
+              body: JSON.stringify({
+                code: ctx.body.code,
+                password: ctx.body.password,
+                passwordConfirmation: ctx.body.passwordConfirmation,
+              }),
+              method: "POST",
+            },
+            { omitUserAuthorization: true }
+          )
+
+          return ctx.json({ success: true })
+        } catch (error: any) {
+          throwStrapiError(error, "Failed to reset password")
+        }
+      }
+    ),
   },
 } satisfies BetterAuthPlugin
 

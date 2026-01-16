@@ -1,12 +1,13 @@
 "use client"
 
+import { authClient } from "@/auth-client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
+import { getAuthErrorMessage } from "@/lib/general-helpers"
 import { useRouter } from "@/lib/navigation"
-import { useUserMutations } from "@/hooks/useUser"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button } from "@/components/ui/button"
@@ -24,7 +25,6 @@ export function ForgotPasswordForm() {
   const t = useTranslations("auth.forgotPassword")
   const router = useRouter()
   const { toast } = useToast()
-  const { forgotPasswordMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(ForgotPasswordFormSchema),
@@ -33,17 +33,40 @@ export function ForgotPasswordForm() {
     defaultValues: { email: "" },
   })
 
-  const onSubmit = (data: z.infer<FormSchemaType>) =>
-    forgotPasswordMutation.mutate(data, {
-      onSuccess: () => {
+  const onSubmit = async (data: z.infer<FormSchemaType>) => {
+    try {
+      const result = await authClient.forgotPasswordStrapi({
+        email: data.email,
+      })
+
+      if (result.data) {
         toast({
           variant: "default",
           description: t("passwordChangeEmailSent"),
         })
         form.reset()
         router.push("/auth/signin")
-      },
-    })
+      } else if (result.error) {
+        const message = getAuthErrorMessage(
+          result.error.message,
+          t("errors.failedToSendPasswordResetEmail")
+        )
+        toast({
+          variant: "destructive",
+          description: message,
+        })
+      }
+    } catch (error: any) {
+      const message = getAuthErrorMessage(
+        error?.message,
+        t("errors.failedToSendPasswordResetEmail")
+      )
+      toast({
+        variant: "destructive",
+        description: message || "Failed to send password reset email",
+      })
+    }
+  }
 
   return (
     <Card className="m-auto w-[400px]">
