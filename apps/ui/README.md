@@ -82,7 +82,11 @@ App runs on [http://localhost:3000](http://localhost:3000) by default.
 
 ## 🛠️ Production Docker
 
-To build and run Next.js in Docker container use [Dockerfile](Dockerfile) prepared for **production** environment. It follows recommended way of running app in Turborepo monorepo structure. Note, that Turborepo requires access to root `package.json`, `yarn.lock` and `turbo.json` files so you have to build it within whole monorepo context - run `docker build` from monorepo root. [More info here](https://turbo.build/repo/docs/handbook/deploying-with-docker).
+To build and run Next.js in Docker container use [Dockerfile](Dockerfile) prepared for **production** environment. It follows recommended way of running app in Turborepo monorepo structure.
+
+> [!WARNING]
+> Note, that Turborepo requires access to root `package.json`, `yarn.lock` and `turbo.json` files so you have to build it within whole monorepo context - run `docker build` from monorepo root.
+> [More info here](https://turbo.build/repo/docs/handbook/deploying-with-docker).
 
 ### Build
 
@@ -95,7 +99,7 @@ Next.js requires `standalone` output mode to run in Docker container. In this mo
 
 # Build image without providing Strapi information.
 # Those pages won't be pre-rendered at build time.
-docker build -t ui:latest -f apps/ui/Dockerfile .
+docker build -t starter-ui:latest -f apps/ui/Dockerfile .
 ```
 
 - **build per environment** - build Docker image with `STRAPI_URL` and other required env variables passed as build-time arguments. This will pre-render pages that depend on `STRAPI_URL` during the build process, resulting in faster initial load times for these pages. However, the image will be tied to a specific Strapi instance and need to be rebuilt for different environments. **This will bake the Strapi READONLY API key into the image, so make sure you are okay with that.**
@@ -106,7 +110,7 @@ docker build -t ui:latest -f apps/ui/Dockerfile .
 # Build image with Strapi information passed as a build-time arguments.
 # Pages depending on it will be pre-rendered during build.
 # These vars will be baked into the image.
-docker build -t ui:latest -f apps/ui/Dockerfile \
+docker build -t starter-ui:latest -f apps/ui/Dockerfile \
   # You can set it to your local Strapi instance or remote one - "https://strapi-next-starter-api-dev-c6c718c7e60e.herokuapp.com"
   --build-arg STRAPI_URL="http://host.docker.internal:1337" \
   --build-arg STRAPI_REST_READONLY_API_KEY="your-readonly-api-key" \
@@ -119,7 +123,7 @@ docker build -t ui:latest -f apps/ui/Dockerfile \
 
 ```bash
 # run container using image with runtime config (.env.local)
-docker run -it --rm --name ui -p 3000:3000 --env-file apps/ui/.env.local ui:latest
+docker run -it --rm --name starter-ui -p 3000:3000 --env-file apps/ui/.env.local starter-ui:latest
 ```
 
 Port is 3000 and mapping can be changed in `docker run` command using `-p` flag (host:container).
