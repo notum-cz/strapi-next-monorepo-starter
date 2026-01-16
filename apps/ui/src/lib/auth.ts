@@ -2,13 +2,68 @@
 import { env } from "@/env.mjs"
 import { Result } from "@repo/strapi-types"
 import { betterAuth } from "better-auth"
-import { createAuthEndpoint, sessionMiddleware } from "better-auth/api"
+import {
+  APIError,
+  createAuthEndpoint,
+  sessionMiddleware,
+} from "better-auth/api"
 import { deleteSessionCookie, setSessionCookie } from "better-auth/cookies"
 import { customSession } from "better-auth/plugins"
+import { z } from "zod"
 
 import type { BetterAuthPlugin } from "better-auth"
 
 import { PrivateStrapiClient } from "@/lib/strapi-api"
+
+const mapStrapiStatusToApiError = (status?: number) => {
+  switch (status) {
+    case 400:
+      return "BAD_REQUEST"
+    case 401:
+      return "UNAUTHORIZED"
+    case 403:
+      return "FORBIDDEN"
+    case 404:
+      return "NOT_FOUND"
+    case 409:
+      return "CONFLICT"
+    case 422:
+      return "UNPROCESSABLE_ENTITY"
+    case 429:
+      return "TOO_MANY_REQUESTS"
+    default:
+      return "INTERNAL_SERVER_ERROR"
+  }
+}
+
+const throwStrapiError = (
+  error: unknown,
+  fallbackMessage: string,
+  fallbackStatus?: number
+) => {
+  if (error instanceof APIError) {
+    throw error
+  }
+  try {
+    const parsed = JSON.parse(
+      typeof error === "string" ? error : (error as Error)?.message ?? ""
+    )
+    const status =
+      typeof parsed?.status === "number" ? parsed.status : undefined
+    const message =
+      typeof parsed?.message === "string" ? parsed.message : fallbackMessage
+    throw new APIError(mapStrapiStatusToApiError(status), {
+      message,
+      code: typeof parsed?.name === "string" ? parsed.name : undefined,
+    })
+  } catch {
+    const message =
+      typeof (error as Error)?.message === "string"
+        ? (error as Error).message
+        : fallbackMessage
+    throw new APIError(mapStrapiStatusToApiError(fallbackStatus), { message })
+  }
+}
 
 export const strapiAuthPlugin = {
   id: "strapi-auth",
@@ -17,43 +72,53 @@ export const strapiAuthPlugin = {
       "/sign-in-strapi",
       {
         method: "POST",
+        body: z.object({
+          email: z.string(),
+          password: z.string(),
+        }),
       },
       async (ctx) => {
-        const data = await PrivateStrapiClient.fetchAPI(
-          `/auth/local`,
-          undefined,
-          {
-            body: JSON.stringify({
-              identifier: ctx.body.email,
-              password: ctx.body.password,
-            }),
-            method: "POST",
-          },
-          { omitUserAuthorization: true }
-        )
-        const { jwt, user } = data
-        if (jwt == null || user == null) {
-          throw new Error("Invalid credentials")
+        try {
+          const data = await PrivateStrapiClient.fetchAPI(
+            `/auth/local`,
+            undefined,
+            {
+              body: JSON.stringify({
+                identifier: ctx.body.email,
+                password: ctx.body.password,
+              }),
+              method: "POST",
+            },
+            { omitUserAuthorization: true }
+          )
+          const { jwt, user } = data
+          if (jwt == null || user == null) {
+            throw new APIError("UNAUTHORIZED", {
+              message: "Invalid credentials",
+            })
+          }
+
+          const userToSession = {
+            id: user.id.toString(),
+            email: user.email,
+            name: user.username,
+            emailVerified: false,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            strapiJWT: jwt,
+            blocked: user.blocked,
+          }
+
+          const session = await ctx.context.internalAdapter.createSession(
+            userToSession.id
+          )
+
+          await setSessionCookie(ctx, { user: userToSession, session })
+
+          return ctx.json({ user: userToSession, session })
+        } catch (error: any) {
+          throwStrapiError(error, "Authentication failed")
         }
-
-        const userToSession = {
-          id: user.id.toString(),
-          email: user.email,
-          name: user.username,
-          emailVerified: false,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          strapiJWT: jwt,
-          blocked: user.blocked,
-        }
-
-        const session = await ctx.context.internalAdapter.createSession(
-          userToSession.id
-        )
-
-        await setSessionCookie(ctx, { user: userToSession, session })
-
-        return ctx.json({ user: userToSession, session })
       }
     ),
 
@@ -61,47 +126,58 @@ export const strapiAuthPlugin = {
       "/register-strapi",
       {
         method: "POST",
+        body: z.object({
+          username: z.string(),
+          email: z.string(),
+          password: z.string(),
+        }),
       },
       async (ctx) => {
-        // Call Strapi to register user
-        const data = await PrivateStrapiClient.fetchAPI(
-          `/auth/local/register`,
-          undefined,
-          {
-            body: JSON.stringify({
-              username: ctx.body.username,
-              email: ctx.body.email,
-              password: ctx.body.password,
-            }),
-            method: "POST",
-          },
-          { omitUserAuthorization: true }
-        )
+        try {
+          // Call Strapi to register user
+          const data = await PrivateStrapiClient.fetchAPI(
+            `/auth/local/register`,
+            undefined,
+            {
+              body: JSON.stringify({
+                username: ctx.body.username,
+                email: ctx.body.email,
+                password: ctx.body.password,
+              }),
+              method: "POST",
+            },
+            { omitUserAuthorization: true }
+          )
 
-        const { jwt, user } = data
-        if (jwt == null || user == null) {
-          throw new Error("Registration failed")
+          const { jwt, user } = data
+          if (jwt == null || user == null) {
+            throw new APIError("BAD_REQUEST", {
+              message: "Registration failed",
+            })
+          }
+
+          const userToSession = {
+            id: user.id.toString(),
+            email: user.email,
+            name: user.username,
+            emailVerified: false,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            image: null,
+            strapiJWT: jwt,
+            blocked: user.blocked,
+          }
+
+          const session = await ctx.context.internalAdapter.createSession(
+            userToSession.id
+          )
+
+          await setSessionCookie(ctx, { user: userToSession, session })
+
+          return ctx.json({ user: userToSession, session })
+        } catch (error: any) {
+          throwStrapiError(error, "Registration failed")
         }
-
-        const userToSession = {
-          id: user.id.toString(),
-          email: user.email,
-          name: user.username,
-          emailVerified: false,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          image: null,
-          strapiJWT: jwt,
-          blocked: user.blocked,
-        }
-
-        const session = await ctx.context.internalAdapter.createSession(
-          userToSession.id
-        )
-
-        await setSessionCookie(ctx, { user: userToSession, session })
-
-        return ctx.json({ user: userToSession, session })
       }
     ),
   },
@@ -116,54 +192,67 @@ export const updatePasswordPlugin = {
       {
         method: "POST",
         use: [sessionMiddleware],
+        body: z.object({
+          currentPassword: z.string(),
+          password: z.string(),
+          passwordConfirmation: z.string(),
+        }),
       },
       async (ctx) => {
         // Get current session to access strapiJWT
         const currentUser = ctx.context.session.user
 
         if (!currentUser?.strapiJWT) {
-          throw new Error("No active session")
+          throw new APIError("UNAUTHORIZED", {
+            message: "No active session",
+          })
         }
 
-        // Update password in Strapi
-        const data = await PrivateStrapiClient.fetchAPI(
-          "/auth/change-password",
-          undefined,
-          {
-            body: JSON.stringify({
-              currentPassword: ctx.body.currentPassword,
-              password: ctx.body.password,
-              passwordConfirmation: ctx.body.passwordConfirmation,
-            }),
-            method: "POST",
-          },
-          { userJWT: currentUser.strapiJWT }
-        )
+        try {
+          // Update password in Strapi
+          const data = await PrivateStrapiClient.fetchAPI(
+            "/auth/change-password",
+            undefined,
+            {
+              body: JSON.stringify({
+                currentPassword: ctx.body.currentPassword,
+                password: ctx.body.password,
+                passwordConfirmation: ctx.body.passwordConfirmation,
+              }),
+              method: "POST",
+            },
+            { userJWT: currentUser.strapiJWT }
+          )
 
-        // Strapi returns new JWT after password change
-        const { jwt, user } = data
+          // Strapi returns new JWT after password change
+          const { jwt, user } = data
 
-        if (!jwt || !user) {
-          throw new Error("Failed to update password")
+          if (!jwt || !user) {
+            throw new APIError("INTERNAL_SERVER_ERROR", {
+              message: "Failed to update password",
+            })
+          }
+
+          // Update session with new JWT
+          const updatedUser = {
+            ...currentUser,
+            strapiJWT: jwt,
+            userId: user.id,
+            blocked: user.blocked,
+          }
+          // Update the session cookie with new data
+          await setSessionCookie(ctx, {
+            user: updatedUser,
+            session: ctx.context.session.session,
+          })
+
+          return ctx.json({
+            user: updatedUser,
+            session: ctx.context.session.session,
+          })
+        } catch (error: any) {
+          throwStrapiError(error, "Failed to update password")
         }
-
-        // Update session with new JWT
-        const updatedUser = {
-          ...currentUser,
-          strapiJWT: jwt,
-          userId: user.id,
-          blocked: user.blocked,
-        }
-        // Update the session cookie with new data
-        await setSessionCookie(ctx, {
-          user: updatedUser,
-          session: ctx.context.session.session,
-        })
-
-        return ctx.json({
-          user: updatedUser,
-          session: ctx.context.session.session,
-        })
       }
     ),
   },
@@ -187,7 +276,8 @@ export const strapiSessionPlugin = customSession(
 
       // if blocked -> clear session and throw to log out
       if (fetchedUser?.blocked) {
-        await deleteSessionCookie(ctx)
+        deleteSessionCookie(ctx)
+        //TODO: POTŘEBUJEM???
         throw new Error("User is blocked")
       }
 
@@ -202,7 +292,7 @@ export const strapiSessionPlugin = customSession(
     } catch (error) {
       // invalid/expired Strapi JWT -> clear Better Auth session cookie
       console.error("Strapi JWT validation failed:", error)
-      await deleteSessionCookie(ctx)
+      deleteSessionCookie(ctx)
       throw error
     }
   }

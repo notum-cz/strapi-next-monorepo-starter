@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
-import { safeJSONParse } from "@/lib/general-helpers"
+import { getAuthErrorMessage } from "@/lib/general-helpers"
 import { Link } from "@/lib/navigation"
 import { cn } from "@/lib/styles"
 import { AppField } from "@/components/forms/AppField"
@@ -52,10 +52,10 @@ export function RegisterForm() {
         username: values.email,
         email: values.email,
         password: values.password,
-      } as any)
+      })
 
       if (result.data) {
-        // User is now registered AND signed in automatically!
+        // User is registered AND signed in automatically!
         setIsSuccess(true)
 
         if (!ENABLE_EMAIL_CONFIRMATION) {
@@ -63,38 +63,44 @@ export function RegisterForm() {
           window.location.href = "/"
         }
       } else if (result.error) {
+        const errorMessage = getAuthErrorMessage(
+          result.error.message,
+          t("errors.unexpectedError")
+        )
+
+        // Try to match common errors to translated messages
         const errorMap = {
           "already taken": t("errors.emailUsernameTaken"),
         } as const
 
-        let errorMessage = t("errors.unexpectedError")
         const errorKey = Object.keys(errorMap).find(
           (key): key is keyof typeof errorMap =>
-            result.error?.message?.includes(key) ?? false
+            errorMessage?.includes(key) ?? false
         )
 
-        errorMessage = errorKey ? errorMap[errorKey] : errorMessage
+        const displayMessage = errorKey ? errorMap[errorKey] : errorMessage
 
         toast({
           variant: "destructive",
-          description: errorMessage,
+          description: displayMessage,
         })
       }
     } catch (error: any) {
-      const parsedError = safeJSONParse<any>(error?.message || error)
+      // Fallback error handling
+      const rawMessage =
+        typeof error === "string" ? error : (error as Error)?.message
       const errorMap = {
         "already taken": t("errors.emailUsernameTaken"),
       } as const
 
-      let errorMessage = t("errors.unexpectedError")
-
-      if (parsedError && "message" in parsedError) {
-        const errorKey = Object.keys(errorMap).find(
-          (key): key is keyof typeof errorMap =>
-            parsedError.message?.includes(key)
-        )
-        errorMessage = errorKey ? errorMap[errorKey] : parsedError.message
-      }
+      let errorMessage = getAuthErrorMessage(
+        rawMessage,
+        t("errors.unexpectedError")
+      )
+      const errorKey = Object.keys(errorMap).find(
+        (key): key is keyof typeof errorMap => errorMessage?.includes(key)
+      )
+      errorMessage = errorKey ? errorMap[errorKey] : errorMessage
 
       toast({
         variant: "destructive",

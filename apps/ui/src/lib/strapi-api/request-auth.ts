@@ -1,6 +1,8 @@
 import { authClient } from "@/auth-client"
 import { env } from "@/env.mjs"
 
+import type { BetterAuthSessionWithStrapi } from "@/types/better-auth"
+
 const ALLOWED_STRAPI_ENDPOINTS: Record<string, string[]> = {
   GET: [
     "api/pages",
@@ -83,15 +85,17 @@ const getStrapiUserTokenFromBetterAuth = async () => {
     const { headers } = await import("next/headers")
     const { auth } = await import("@/lib/auth")
 
-    const session = await auth.api.getSession({
+    const session = (await auth.api.getSession({
       headers: await headers(),
-    })
+    })) as BetterAuthSessionWithStrapi | null
     return session?.user?.strapiJWT
   }
 
   // Client side: Make HTTP request to /api/auth/session
   // Note: This is necessary because we can't use React hooks here
   // (this function might be called outside React component context)
-  const { data: session } = await authClient.getSession()
+  const { data: session } = (await authClient.getSession()) as {
+    data: BetterAuthSessionWithStrapi | null
+  }
   return session?.user?.strapiJWT
 }

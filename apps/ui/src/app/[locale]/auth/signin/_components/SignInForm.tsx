@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
-import { safeJSONParse } from "@/lib/general-helpers"
+import { getAuthErrorMessage } from "@/lib/general-helpers"
 import { Link } from "@/lib/navigation"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
@@ -48,7 +48,7 @@ function SuspensedSignInForm() {
     try {
       // Call Better Auth custom endpoint
       // The path /sign-in-strapi becomes signInStrapi (kebab-case to camelCase)
-      const result = await (authClient.signInStrapi as any)({
+      const result = await authClient.signInStrapi({
         email: values.email,
         password: values.password,
       })
@@ -58,7 +58,10 @@ function SuspensedSignInForm() {
         // This is more reliable than client-side navigation for session updates
         window.location.href = callbackUrl
       } else if (result.error) {
-        const message = result.error.message || t("errors.CredentialsSignin")
+        const message = getAuthErrorMessage(
+          result.error.message,
+          t("errors.CredentialsSignin")
+        )
 
         toast({
           variant: "destructive",
@@ -66,11 +69,12 @@ function SuspensedSignInForm() {
         })
       }
     } catch (error: any) {
-      const parsedError = safeJSONParse<any>(error?.message || error)
-      const message =
-        parsedError && "message" in parsedError
-          ? parsedError.message
-          : t("errors.CredentialsSignin")
+      const rawMessage =
+        typeof error === "string" ? error : (error as Error)?.message
+      const message = getAuthErrorMessage(
+        rawMessage,
+        t("errors.CredentialsSignin")
+      )
 
       toast({
         variant: "destructive",
