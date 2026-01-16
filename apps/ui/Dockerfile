@@ -93,4 +93,5 @@ COPY --from=builder --chown=nextjs:nextjs /app/apps/${APP}/.next/static ./apps/$
 COPY --from=builder --chown=nextjs:nextjs /app/apps/${APP}/public ./apps/${APP}/public
 
 WORKDIR /apps/${APP}
+EXPOSE 3000
 CMD ["node", "server.js"]
