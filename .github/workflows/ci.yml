@@ -1,11 +1,7 @@
-
 name: Verify build
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
@@ -17,34 +13,22 @@ concurrency:
 env:
   CI: true
   NPM_CONFIG_IGNORE_SCRIPTS: "true"
-  STRAPI_REST_READONLY_API_KEY: random-value-just-for-build
 
 jobs:
-  lint:
-    name: Lint
-    timeout-minutes: 15
+  build_and_verify:
+    name: Install, Lint, and Build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
 
-      - name: Cache turbo build setup
-        uses: actions/cache@v4
-        with:
-          path: .turbo
-          key: '${{ runner.os }}-turbo-${{ github.sha }}'
-          restore-keys: |
-            ${{ runner.os }}-turbo-
-
-      - name: Setup Node.js environment
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: yarn
 
-      - name: Install dependencies (immutable)
+      - name: Install dependencies
         run: yarn install --frozen-lockfile
 
       - name: Prepare Environment Variables
@@ -52,46 +36,106 @@ jobs:
           cp apps/strapi/.env.example apps/strapi/.env
           cp apps/ui/.env.local.example apps/ui/.env.local
 
-      - name: Format check
+      - name: Check code formatting
         run: yarn format:check
 
-      - name: Lint
+      - name: Run linter
         run: yarn lint
 
-  build:
-    name: Build all apps
-    timeout-minutes: 15
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: Cache turbo build setup
-        uses: actions/cache@v4
-        with:
-          path: .turbo
-          key: '${{ runner.os }}-turbo-${{ github.sha }}'
-          restore-keys: |
-            ${{ runner.os }}-turbo-
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: yarn
-
-      - name: Install dependencies (immutable)
-        run: yarn install --frozen-lockfile
-
-      - name: Prepare Environment Variables
-        run: |
-          cp apps/strapi/.env.example apps/strapi/.env
-          cp apps/ui/.env.local.example apps/ui/.env.local
-
       - name: Build UI
-        run: yarn build:ui
+        run: |
+          rm -rf .next
+          yarn build:ui
+
+      # - name: Build UI (output=export)
+      #   run: |
+      #     rm -rf .next
+      #     yarn build:ui:static
 
       - name: Build Strapi
         run: yarn build:strapi
+
+  e2e:
+    name: E2E tests
+    needs: build_and_verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Install Playwright Browsers
+        run: |
+          yarn playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: |
+          yarn tests:playwright:e2e:test
+
+      - uses: actions/upload-artifact@v4.6.2
+        if: failure()
+        with:
+          name: playwright-traces
+          path: qa/tests/test-results/**/trace.zip
+          retention-days: 7
+          if-no-files-found: warn
+
+      - uses: actions/upload-artifact@v4.6.2
+        if: failure()
+        with:
+          name: playwright-report
+          path: qa/tests/playwright-report/**
+          retention-days: 7
+          if-no-files-found: warn
+
+  axe:
+    name: Axe tests
+    needs: build_and_verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+
+      - name: Install Playwright Browsers
+        run: |
+          yarn playwright install --with-deps
+
+      - name: Run Axe tests
+        run: |
+          yarn tests:playwright:axe
+
+      - name: Pack Axe reports
+        if: failure()
+        run: |
+          tar -czf axe-reports-${{ github.run_id }}.tgz -C qa/tests/axe/reports .
+      - uses: actions/upload-artifact@v4.6.2
+        if: failure()
+        with:
+          name: axe-report
+          path: axe-reports-${{ github.run_id }}.tgz
+          retention-days: 7
