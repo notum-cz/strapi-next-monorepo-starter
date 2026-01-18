@@ -110,8 +110,8 @@ docker build -t starter-ui:latest -f apps/ui/Dockerfile .
 # Build image with Strapi information passed as a build-time arguments.
 # Pages depending on it will be pre-rendered during build.
 # These vars will be baked into the image.
+# You can set STRAPI_URL to your local Strapi instance or remote one - "https://strapi-next-starter-api-dev-c6c718c7e60e.herokuapp.com"
 docker build -t starter-ui:latest -f apps/ui/Dockerfile \
-  # You can set it to your local Strapi instance or remote one - "https://strapi-next-starter-api-dev-c6c718c7e60e.herokuapp.com"
   --build-arg STRAPI_URL="http://host.docker.internal:1337" \
   --build-arg STRAPI_REST_READONLY_API_KEY="your-readonly-api-key" \
   --build-arg APP_PUBLIC_URL="http://localhost:3000" \
@@ -132,7 +132,7 @@ Port is 3000 and mapping can be changed in `docker run` command using `-p` flag 
 
 Next.js has three `output` modes:
 
-- `export` – Static HTML/CSS/JS files [are generated at build time](https://nextjs.org/docs/15/app/guides/static-exports) and can be served by any static hosting or CDN. No Node.js server is required. [Dynamic features are not supported](https://nextjs.org/docs/15/app/guides/static-exports#unsupported-features). This mode is **not supported** in this starter by defauly due to its dynamic features (e.g. NextAuth and the [POST endpoint](src/app/api/auth/[...nextauth]/route.ts)). With some modifications, it can be turned into a fully static app.
+- `export` – Static HTML/CSS/JS files [are generated at build time](https://nextjs.org/docs/15/app/guides/static-exports) and can be served by any static hosting or CDN. No Node.js server is required. [Dynamic features are not supported](https://nextjs.org/docs/15/app/guides/static-exports#unsupported-features). This mode is **not supported** in this starter by default due to its dynamic features (e.g. NextAuth and the [POST endpoint](src/app/api/auth/[...nextauth]/route.ts)). With some modifications, it can be turned into a fully static app.
 - `standalone` – Optimized output for self-hosting in a Docker container (see above). It includes only the necessary files and dependencies.
 - `undefined` – Default build output in the `.next` directory. This mode is used with `next start` in production or by hosting providers like Vercel. It requires a Node.js server.
 
