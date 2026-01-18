@@ -30,8 +30,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: yarn
-          cache-dependency-path: yarn.lock
 
       - name: Cache node_modules
         id: cache-node-modules
@@ -43,6 +41,7 @@ jobs:
             ${{ runner.os }}-node22-yarn1-node-modules-
 
       - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
       - name: Prepare Environment Variables

@@ -42,8 +42,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: yarn
-          cache-dependency-path: yarn.lock
 
       - name: Cache node_modules
         id: cache-node-modules
@@ -104,8 +102,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: yarn
-          cache-dependency-path: yarn.lock
 
       - name: Cache node_modules
         id: cache-node-modules
