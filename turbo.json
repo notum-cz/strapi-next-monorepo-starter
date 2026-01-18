@@ -12,7 +12,8 @@
     "SENTRY_ORG",
     "SENTRY_PROJECT",
     "SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING",
-    "CI"
+    "CI",
+    "MOBILE_VIEWPORTS_TESTING_ENABLED"
   ],
   "tasks": {
     "build": {
