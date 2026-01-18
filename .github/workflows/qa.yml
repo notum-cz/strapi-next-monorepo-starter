@@ -53,7 +53,6 @@ jobs:
             ${{ runner.os }}-node22-yarn1-node-modules-
 
       - name: Install dependencies
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
       - name: Cache Playwright browsers
@@ -113,7 +112,6 @@ jobs:
             ${{ runner.os }}-node22-yarn1-node-modules-
 
       - name: Install dependencies
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
       - name: Cache Playwright browsers
