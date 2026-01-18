@@ -44,7 +44,7 @@ export async function generateStaticParams({
     rest: [page.slug],
   }))
 
-  return params
+  return params ?? []
 }
 
 export async function generateMetadata(
