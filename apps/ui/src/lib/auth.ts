@@ -46,7 +46,7 @@ const throwStrapiError = (
   }
   try {
     const parsed = JSON.parse(
-      typeof error === "string" ? error : (error as Error)?.message ?? ""
+      typeof error === "string" ? error : ((error as Error)?.message ?? "")
     )
     const status =
       typeof parsed?.status === "number" ? parsed.status : undefined
@@ -353,7 +353,7 @@ export const strapiSessionPlugin = customSession(
       const mappedProvider =
         strapiProvider === "local"
           ? "credentials"
-          : strapiProvider ?? (user as any).provider ?? "credentials"
+          : (strapiProvider ?? (user as any).provider ?? "credentials")
 
       const updatedUser = {
         ...user,
@@ -374,7 +374,7 @@ export const strapiSessionPlugin = customSession(
 
 // Plugin to sync OAuth with Strapi
 // After Better Auth OAuth succeeds, this endpoint syncs the account with Strapi
- export const strapiOAuthPlugin = {
+export const strapiOAuthPlugin = {
   id: "strapi-oauth",
   endpoints: {
     syncOAuthWithStrapi: createAuthEndpoint(
@@ -391,7 +391,7 @@ export const strapiSessionPlugin = customSession(
           const { accessToken, provider } = ctx.body
 
           // Call Strapi's OAuth callback endpoint
-          const strapiData = await PrivateStrapiClient.fetchAPI(  
+          const strapiData = await PrivateStrapiClient.fetchAPI(
             `/auth/${provider}/callback?access_token=${accessToken}`,
             undefined,
             undefined,

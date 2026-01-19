@@ -123,7 +123,10 @@ function SuspensedSignInForm() {
           size="lg"
           className="w-full"
           onClick={() => {
-            const connectUrl = new URL("/api/connect/github", process.env.STRAPI_URL)
+            const connectUrl = new URL(
+              "/api/connect/github",
+              process.env.STRAPI_URL
+            )
             window.location.href = connectUrl.toString()
           }}
         >
