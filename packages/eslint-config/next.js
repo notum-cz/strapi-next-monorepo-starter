@@ -7,7 +7,7 @@ import { globalIgnores } from "eslint/config"
 import globals from "globals"
 import tseslint from "typescript-eslint"
 
-// import { config as baseConfig } from "./base.js"
+import { config as baseConfig } from "./base.js"
 
 /**
  * A custom ESLint configuration for libraries that use Next.js.
@@ -15,7 +15,7 @@ import tseslint from "typescript-eslint"
  * @type {import("eslint").Linter.Config[]}
  * */
 export const nextJsConfig = [
-  // ...baseConfig,
+  ...baseConfig,
   js.configs.recommended,
   eslintConfigPrettier,
   ...tseslint.configs.recommended,
