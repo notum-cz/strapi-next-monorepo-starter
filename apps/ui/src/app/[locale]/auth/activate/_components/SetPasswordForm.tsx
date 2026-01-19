@@ -74,12 +74,12 @@ function SuspensedSetPasswordForm({ accountActivation }: SetPasswordFormProps) {
       })
 
       if (result.data) {
-        toast({
-          variant: "default",
-          description: t("successfullySet"),
-        })
-        form.reset()
-        router.push("/auth/signin")
+          toast({
+            variant: "default",
+            description: t("successfullySet"),
+          })
+          form.reset()
+          router.push("/auth/signin")
       } else if (result.error) {
         const message = getAuthErrorMessage(
           result.error.message,

@@ -107,6 +107,7 @@ export const strapiAuthPlugin = {
             updatedAt: new Date(),
             strapiJWT: jwt,
             blocked: user.blocked,
+            provider: "credentials",
           }
 
           const session = await ctx.context.internalAdapter.createSession(
@@ -166,6 +167,7 @@ export const strapiAuthPlugin = {
             image: null,
             strapiJWT: jwt,
             blocked: user.blocked,
+            provider: "credentials",
           }
 
           const session = await ctx.context.internalAdapter.createSession(
@@ -341,15 +343,23 @@ export const strapiSessionPlugin = customSession(
       // if blocked -> clear session and throw to log out
       if (fetchedUser?.blocked) {
         deleteSessionCookie(ctx)
-        //TODO: POTŘEBUJEM???
-        throw new Error("User is blocked")
       }
 
       // update user fields with fresh Strapi data
+      // Map Strapi's "local" provider to "credentials" for consistency
+      // For OAuth users, Strapi should return provider (e.g., "github", "google")
+      // If Strapi doesn't return provider, fall back to existing user.provider from session
+      const strapiProvider = fetchedUser.provider
+      const mappedProvider =
+        strapiProvider === "local"
+          ? "credentials"
+          : strapiProvider ?? (user as any).provider ?? "credentials"
+
       const updatedUser = {
         ...user,
         name: fetchedUser.username ?? user.name,
         blocked: fetchedUser.blocked ?? false,
+        provider: mappedProvider,
       }
 
       return { user: updatedUser, session }
@@ -361,6 +371,79 @@ export const strapiSessionPlugin = customSession(
     }
   }
 )
+
+// Plugin to sync OAuth with Strapi
+// After Better Auth OAuth succeeds, this endpoint syncs the account with Strapi
+ export const strapiOAuthPlugin = {
+  id: "strapi-oauth",
+  endpoints: {
+    syncOAuthWithStrapi: createAuthEndpoint(
+      "/sync-oauth-strapi",
+      {
+        method: "POST",
+        body: z.object({
+          accessToken: z.string(),
+          provider: z.string().default("github"),
+        }),
+      },
+      async (ctx) => {
+        try {
+          const { accessToken, provider } = ctx.body
+
+          // Call Strapi's OAuth callback endpoint
+          const strapiData = await PrivateStrapiClient.fetchAPI(  
+            `/auth/${provider}/callback?access_token=${accessToken}`,
+            undefined,
+            undefined,
+            { omitUserAuthorization: true }
+          )
+
+          const { jwt, user: strapiUser } = strapiData
+
+          if (!jwt || !strapiUser) {
+            throw new APIError("UNAUTHORIZED", {
+              message: "Failed to authenticate with Strapi",
+            })
+          }
+
+          if (!strapiUser.email) {
+            throw new APIError("UNAUTHORIZED", {
+              message: "Missing email from Strapi",
+            })
+          }
+
+          const userToSession = {
+            id: strapiUser.id.toString(),
+            email: strapiUser.email,
+            name: strapiUser.username ?? strapiUser.email,
+            emailVerified: false,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            strapiJWT: jwt,
+            blocked: strapiUser.blocked ?? false,
+            provider: provider,
+          }
+
+          const session = await ctx.context.internalAdapter.createSession(
+            userToSession.id
+          )
+
+          await setSessionCookie(ctx, {
+            user: userToSession,
+            session,
+          })
+
+          return ctx.json({
+            user: userToSession,
+            session,
+          })
+        } catch (error: any) {
+          throwStrapiError(error, "Failed to sync OAuth with Strapi")
+        }
+      }
+    ),
+  },
+} satisfies BetterAuthPlugin
 
 export const auth = betterAuth({
   baseURL: env.APP_PUBLIC_URL,
@@ -380,5 +463,10 @@ export const auth = betterAuth({
     storeAccountCookie: true,
   },
 
-  plugins: [strapiAuthPlugin, updatePasswordPlugin, strapiSessionPlugin],
+  plugins: [
+    strapiAuthPlugin,
+    updatePasswordPlugin,
+    strapiSessionPlugin,
+    strapiOAuthPlugin,
+  ],
 })

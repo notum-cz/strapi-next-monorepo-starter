@@ -31,9 +31,9 @@ export default function SignOutPage() {
             },
           },
         })
-      } else {
+    } else {
         // User is not authenticated, redirect to home
-        redirect({ href: "/", locale })
+      redirect({ href: "/", locale })
       }
     }
 

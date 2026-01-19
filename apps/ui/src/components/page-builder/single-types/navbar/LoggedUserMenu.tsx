@@ -33,15 +33,18 @@ export function LoggedUserMenu({
         <DropdownMenuLabel>{t("account")}</DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>
-          <Link
-            href="/auth/change-password"
-            className="flex w-full items-center gap-1"
-          >
-            <UserRoundCogIcon className="mr-2 size-4" />
-            <span>{t("actions.changePassword")}</span>
-          </Link>
-        </DropdownMenuItem>
+        {/* Only show change password for email/password users (not OAuth) */}
+        {(!user.provider || user.provider === "credentials") && (
+          <DropdownMenuItem>
+            <Link
+              href="/auth/change-password"
+              className="flex w-full items-center gap-1"
+            >
+              <UserRoundCogIcon className="mr-2 size-4" />
+              <span>{t("actions.changePassword")}</span>
+            </Link>
+          </DropdownMenuItem>
+        )}
 
         <DropdownMenuItem>
           <Link href="/auth/signout" className="flex w-full items-center gap-1">

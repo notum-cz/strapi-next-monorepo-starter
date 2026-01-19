@@ -19,6 +19,7 @@ export type BetterAuthUserWithStrapi = {
   strapiJWT?: string
   userId?: number
   blocked?: boolean
+  provider?: string // OAuth provider (e.g., "github", "google") or "credentials" for email/password
 }
 
 // Type helper for Better Auth Session with Strapi user

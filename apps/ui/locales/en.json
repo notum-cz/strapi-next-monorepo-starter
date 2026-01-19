@@ -163,7 +163,8 @@
       "password": "Password",
       "submit": "Sign in",
       "forgotPassword": "Forgot password",
-      "createAccount": "Create an account"
+      "createAccount": "Create an account",
+      "orContinueWith": "Or continue with"
     },
 
     "register": {

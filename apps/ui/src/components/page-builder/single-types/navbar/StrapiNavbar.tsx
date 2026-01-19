@@ -62,7 +62,7 @@ export async function StrapiNavbar({ locale }: { readonly locale: Locale }) {
 
         {/* Client component that updates reactively when session changes */}
         <NavbarAuthSection />
-        <LocaleSwitcher locale={locale} />
+          <LocaleSwitcher locale={locale} />
       </div>
     </header>
   )
