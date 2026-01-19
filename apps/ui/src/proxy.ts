@@ -30,9 +30,11 @@ export default function proxy(req: NextRequest) {
   // Handle HTTPS redirection in production in Heroku servers
   // Comment this block when running locally (using `next start`)
   const xForwardedProtoHeader = req.headers.get("x-forwarded-proto")
-  const host = req.headers.get("host")
+  const host = req.headers.get("host") ?? ""
 
-  const isDevelopmentEnvironment = isDevelopment() || host === "localhost"
+  const isDevelopmentEnvironment = isDevelopment() || host.includes("localhost")
+
+  console.log(host)
 
   if (
     !isDevelopmentEnvironment &&
