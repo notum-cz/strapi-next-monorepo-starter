@@ -1,7 +1,6 @@
 {
   "recommendations": [
-    "streetsidesoftware.code-spell-checker",
-    "esbenp.prettier-vscode"
-  ],
+    "streetsidesoftware.code-spell-checker"
+    ],
   "unwantedRecommendations": []
 }
