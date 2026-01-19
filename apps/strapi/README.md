@@ -183,6 +183,59 @@ async find(ctx) {
 },
 ```
 
+#### Mailtrap (Email testing)
+
+For development, the email plugin is configured to use [Mailtrap](https://mailtrap.io/) - a free email testing service that captures all outgoing emails without sending them to real recipients. This is perfect for testing registration emails, password resets, and other email functionality.
+
+**How it works:**
+
+- In development (`NODE_ENV !== "production"`), Strapi uses Mailtrap if credentials are provided
+- In production, it automatically switches to Mailgun
+- Configuration is handled automatically in [config/plugins.ts](config/plugins.ts)
+
+**Setup:**
+
+1. Create a free account at [mailtrap.io](https://mailtrap.io/)
+2. Go to your inbox settings and copy the SMTP credentials
+3. Add the following to your `.env` file:
+
+```bash
+MAILTRAP_USER=your_mailtrap_username
+MAILTRAP_PASS=your_mailtrap_password
+MAILTRAP_HOST=sandbox.smtp.mailtrap.io
+MAILTRAP_PORT=2525
+```
+
+4. Restart Strapi - emails will now be captured in your Mailtrap inbox instead of being sent
+
+**Note:** If Mailtrap credentials are not provided, Strapi will fall back to Mailgun (if configured) or use a dummy configuration.
+
+#### OAuth providers (GitHub, Google, etc.)
+
+The starter supports OAuth authentication through Strapi's Users & Permissions plugin. Users can sign in with providers like GitHub, Google, Facebook, etc.
+
+**How it works:**
+
+1. User clicks "Sign in with GitHub" (or other provider) on the frontend
+2. Frontend redirects to Strapi's OAuth endpoint: `/api/connect/{provider}`
+3. Strapi handles OAuth flow and redirects back to frontend with access token
+4. Frontend syncs the OAuth session with Strapi via `/auth/strapi-oauth/callback`
+5. User is authenticated and session is created
+
+**Setup:**
+
+1. Go to Strapi admin panel: Settings > Users & Permissions > Providers
+2. Enable your desired provider (e.g., GitHub)
+3. Configure the provider:
+   - **Client ID** and **Client Secret**: Get these from your OAuth provider (e.g., GitHub Developer Settings)
+   - **Redirect URL**: Add `http://localhost:1337/api/connect/{provider}/callback` (replace `{provider}` with actual provider name)
+4. In your OAuth provider's settings (e.g., GitHub), add the redirect URL: `http://localhost:1337/api/connect/github/callback`
+5. The frontend automatically handles the OAuth flow - no additional configuration needed
+
+**Supported providers:**
+
+Any provider supported by Strapi's Users & Permissions plugin (GitHub, Google, Facebook, Discord, etc.). The frontend code in [apps/ui/src/app/[locale]/auth/signin/\_components/SignInForm.tsx](../../apps/ui/src/app/[locale]/auth/signin/_components/SignInForm.tsx) shows how to add additional provider buttons.
+
 #### Config-sync
 
 [strapi-plugin-config-sync](https://www.npmjs.com/package/strapi-plugin-config-sync) plugin is installed by default to sync configuration between environments.
