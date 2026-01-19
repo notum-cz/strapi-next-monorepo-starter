@@ -49,7 +49,7 @@ export default async function middleware(req: NextRequest) {
         // No session found or token invalid, redirect to sign in
         const signInUrl = new URL("/auth/signin", req.url)
         signInUrl.searchParams.set("callbackUrl", req.nextUrl.pathname)
-        return NextResponse.redirect(signInUrl)
+        return NextResponse.redirect(signInUrl, 401)
       }
 
       // User is authenticated, proceed with internationalization middleware
