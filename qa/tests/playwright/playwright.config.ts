@@ -1,8 +1,16 @@
-import { env } from "process"
+import fs from "node:fs"
+import path from "node:path"
 
 import { defineConfig, devices } from "@playwright/test"
+import dotenv from "dotenv"
 
-const mobileViewportsEnabled = env.MOBILE_VIEWPORTS_TESTING_ENABLED === "true"
+const envPath = path.resolve(__dirname, ".env")
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath, override: false })
+}
+
+const mobileViewportsEnabled =
+  process.env.MOBILE_VIEWPORTS_TESTING_ENABLED === "true"
 
 const projects = [
   {
@@ -43,8 +51,17 @@ export default defineConfig({
   reporter: "html",
 
   use: {
-    baseURL: env.BASE_URL,
+    baseURL: process.env.BASE_URL,
+
+    // Uncomment if credentials are needed
+    // httpCredentials: {
+    //   username: "xx",
+    //   password: "yyy",
+    // },
+
     trace: "on-first-retry",
+    screenshot: "only-on-failure",
+    video: "retain-on-failure",
   },
 
   projects,

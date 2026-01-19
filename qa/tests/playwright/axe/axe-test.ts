@@ -1,6 +1,5 @@
 import fs from "fs"
 import path from "path"
-import { env } from "process"
 
 import AxeBuilder from "@axe-core/playwright"
 import { chromium } from "playwright"
@@ -49,7 +48,13 @@ function formatViolationsSection(
 }
 
 ;(async () => {
-  await fetchSitemap(env.baseUrl + "/sitemap.xml", "--json")
+  const baseUrl = process.env.BASE_URL
+  if (!baseUrl) {
+    console.error("Missing BASE_URL environment variable")
+    process.exit(1)
+  }
+
+  await fetchSitemap(baseUrl + "/sitemap.xml", "--json")
 
   const sitesPath = path.join(__dirname, "../helpers/sites.json")
   const sites: string[] = JSON.parse(fs.readFileSync(sitesPath, "utf-8"))

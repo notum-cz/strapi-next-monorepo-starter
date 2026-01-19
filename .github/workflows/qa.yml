@@ -1,0 +1,144 @@
+name: QA (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_e2e:
+        description: Run Playwright E2E
+        type: boolean
+        default: false
+      run_axe:
+        description: Run Axe accessibility checks
+        type: boolean
+        default: false
+      base_url:
+        description: Base URL to test against (must include protocol)
+        type: string
+        required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CI: true
+  NPM_CONFIG_IGNORE_SCRIPTS: "true"
+
+jobs:
+  e2e:
+    if: ${{ inputs.run_e2e }}
+    name: Playwright E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node22-yarn1-node-modules-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node22-yarn1-node-modules-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright Browsers
+        run: yarn playwright install --with-deps
+
+      - name: Run Playwright tests
+        env:
+          BASE_URL: ${{ inputs.base_url }}
+        run: yarn tests:playwright:e2e:test
+
+      - uses: actions/upload-artifact@v4.6.2
+        if: failure()
+        with:
+          name: playwright-report
+          path: qa/tests/playwright/playwright-report/**
+          retention-days: 7
+          if-no-files-found: warn
+
+      - uses: actions/upload-artifact@v4.6.2
+        if: failure()
+        with:
+          name: playwright-traces
+          path: qa/tests/playwright/test-results/**/trace.zip
+          retention-days: 7
+          if-no-files-found: warn
+
+  axe:
+    if: ${{ inputs.run_axe }}
+    name: Axe accessibility
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node22-yarn1-node-modules-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node22-yarn1-node-modules-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright Browsers
+        run: yarn playwright install --with-deps
+
+      - name: Run Axe tests
+        env:
+          BASE_URL: ${{ inputs.base_url }}
+        run: yarn tests:playwright:axe
+
+      - name: Pack Axe reports
+        if: failure()
+        run: |
+          tar -czf axe-reports-${{ github.run_id }}.tgz -C qa/tests/playwright/axe/reports .
+
+      - uses: actions/upload-artifact@v4.6.2
+        if: failure()
+        with:
+          name: axe-report
+          path: axe-reports-${{ github.run_id }}.tgz
+          retention-days: 7
+          if-no-files-found: warn

@@ -1,24 +1,17 @@
-import { env } from "@/env.mjs"
-
 import type { MetadataRoute } from "next"
 
 import { isProduction } from "@/lib/general-helpers"
-
-const baseUrl = env.APP_PUBLIC_URL
+import { getAppPublicUrl } from "@/lib/urls"
 
 export default function robots(): MetadataRoute.Robots {
-  return isProduction()
-    ? {
-        rules: {
-          userAgent: "*",
-          allow: "/",
-        },
-        sitemap: new URL("sitemap.xml", baseUrl).toString(),
-      }
-    : {
-        rules: {
-          userAgent: "*",
-          disallow: "/",
-        },
-      }
+  const baseUrl = getAppPublicUrl()
+
+  if (!isProduction()) {
+    return { rules: { userAgent: "*", disallow: "/" } }
+  }
+
+  return {
+    rules: { userAgent: "*", allow: "/" },
+    ...(baseUrl ? { sitemap: new URL("sitemap.xml", baseUrl).toString() } : {}),
+  }
 }

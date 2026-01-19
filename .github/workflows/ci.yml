@@ -1,50 +1,46 @@
-
-name: Verify build
+name: CI
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
+      - dev
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 env:
   CI: true
   NPM_CONFIG_IGNORE_SCRIPTS: "true"
-  STRAPI_REST_READONLY_API_KEY: random-value-just-for-build
 
 jobs:
-  lint:
-    name: Lint
-    timeout-minutes: 15
+  build_and_verify:
+    name: Install, Lint, and Build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
 
-      - name: Cache turbo build setup
-        uses: actions/cache@v4
-        with:
-          path: .turbo
-          key: '${{ runner.os }}-turbo-${{ github.sha }}'
-          restore-keys: |
-            ${{ runner.os }}-turbo-
-
-      - name: Setup Node.js environment
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: yarn
 
-      - name: Install dependencies (immutable)
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node22-yarn1-node-modules-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node22-yarn1-node-modules-
+
+      - name: Install dependencies
         run: yarn install --frozen-lockfile
 
       - name: Prepare Environment Variables
@@ -52,46 +48,21 @@ jobs:
           cp apps/strapi/.env.example apps/strapi/.env
           cp apps/ui/.env.local.example apps/ui/.env.local
 
-      - name: Format check
+      - name: Check code formatting
         run: yarn format:check
 
-      - name: Lint
+      - name: Run linter
         run: yarn lint
 
-  build:
-    name: Build all apps
-    timeout-minutes: 15
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: Cache turbo build setup
-        uses: actions/cache@v4
-        with:
-          path: .turbo
-          key: '${{ runner.os }}-turbo-${{ github.sha }}'
-          restore-keys: |
-            ${{ runner.os }}-turbo-
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: yarn
-
-      - name: Install dependencies (immutable)
-        run: yarn install --frozen-lockfile
-
-      - name: Prepare Environment Variables
-        run: |
-          cp apps/strapi/.env.example apps/strapi/.env
-          cp apps/ui/.env.local.example apps/ui/.env.local
-
       - name: Build UI
-        run: yarn build:ui
+        run: |
+          rm -rf apps/ui/.next
+          yarn build:ui
+
+      # - name: Build UI (output=export)
+      #   run: |
+      #     rm -rf .next
+      #     yarn build:ui:static
 
       - name: Build Strapi
         run: yarn build:strapi

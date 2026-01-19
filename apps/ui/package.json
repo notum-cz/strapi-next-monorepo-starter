@@ -89,10 +89,6 @@
     "tailwindcss": "^4.0.9",
     "typescript": "^5"
   },
-  "engines": {
-    "node": "22.x.x",
-    "yarn": "1.22.x"
-  },
   "trustedDependencies": [
     "sharp"
   ]
