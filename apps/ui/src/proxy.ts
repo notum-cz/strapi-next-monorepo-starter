@@ -66,6 +66,9 @@ export default async function middleware(req: NextRequest) {
   return intlProxy(req)
 }
 
+// Use Node.js runtime instead of Edge runtime for Better Auth compatibility
+export const runtime = "nodejs"
+
 export const config = {
   // Match only internationalized pathnames
   matcher: [

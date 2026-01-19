@@ -1,4 +1,3 @@
-// apps/ui/src/lib/auth.ts
 import { env } from "@/env.mjs"
 import { Result } from "@repo/strapi-types"
 import { betterAuth } from "better-auth"

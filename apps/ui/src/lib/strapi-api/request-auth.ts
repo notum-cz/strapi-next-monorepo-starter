@@ -2,8 +2,6 @@ import { env } from "@/env.mjs"
 
 import type { BetterAuthSessionWithStrapi } from "@/types/better-auth"
 
-import { authClient } from "@/lib/auth-client"
-
 const ALLOWED_STRAPI_ENDPOINTS: Record<string, string[]> = {
   GET: [
     "api/pages",
@@ -95,6 +93,8 @@ const getStrapiUserTokenFromBetterAuth = async () => {
   // Client side: Make HTTP request to /api/auth/session
   // Note: This is necessary because we can't use React hooks here
   // (this function might be called outside React component context)
+  // Dynamically import authClient to avoid bundling client code in server/edge runtime
+  const { authClient } = await import("@/lib/auth-client")
   const { data: session } = (await authClient.getSession()) as {
     data: BetterAuthSessionWithStrapi | null
   }
