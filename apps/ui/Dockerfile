@@ -81,7 +81,7 @@ WORKDIR /app
 COPY --from=installer /app/apps/${APP}/next.config.mjs .
 COPY --from=installer /app/apps/${APP}/package.json .
 
-# Automatically leverage output traces to reduce image size - https://nextjs.org/docs/14/pages/api-reference/next-config-js/output
+# Automatically leverage output traces to reduce image size - https://nextjs.org/docs/app/api-reference/config/next-config-js/output
 # next.config.mjs's `output` options has to be set to "standalone" to make this work (see README)
 COPY --from=installer --chown=nextjs:nextjs /app/apps/${APP}/.next/standalone ./
 COPY --from=installer --chown=nextjs:nextjs /app/apps/${APP}/.next/static ./apps/${APP}/.next/static
