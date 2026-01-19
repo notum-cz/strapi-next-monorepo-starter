@@ -228,9 +228,51 @@ The starter supports OAuth authentication through Strapi's Users & Permissions p
 2. Enable your desired provider (e.g., GitHub)
 3. Configure the provider:
    - **Client ID** and **Client Secret**: Get these from your OAuth provider (e.g., GitHub Developer Settings)
-   - **Redirect URL**: Add `http://localhost:1337/api/connect/{provider}/callback` (replace `{provider}` with actual provider name)
-4. In your OAuth provider's settings (e.g., GitHub), add the redirect URL: `http://localhost:1337/api/connect/github/callback`
+   - **Redirect URL**: Your frontend callback URL (e.g., `https://your-domain.com/auth/strapi-oauth/callback`)
+4. In your OAuth provider's settings (e.g., GitHub OAuth App):
+   - **Homepage URL**: Your Strapi URL (e.g., `https://your-domain.com`)
+   - **Authorization callback URL**: `https://your-domain.com/api/connect/github/callback`
 5. The frontend automatically handles the OAuth flow - no additional configuration needed
+
+**Local testing with ngrok:**
+
+⚠️ **Important:** Most OAuth providers (including GitHub) don't accept `localhost` URLs. You must use ngrok or a similar tunneling service for local development.
+
+1. Install ngrok: `brew install ngrok` (or download from [ngrok.com](https://ngrok.com))
+2. Start your Strapi backend: `yarn dev:strapi`
+3. In another terminal, tunnel to Strapi:
+   ```bash
+   ngrok http 1337
+   ```
+4. Copy the generated ngrok URL (e.g., `https://abc123.ngrok.io`)
+5. Update `apps/strapi/config/server.ts`:
+   ```ts
+   url: "https://abc123.ngrok.io"
+   ```
+6. Update `apps/strapi/src/admin/vite.config.ts`:
+   ```ts
+   server: {
+     allowedHosts: ["abc123.ngrok.io"]
+   }
+   ```
+7. Set environment variables:
+
+   ```bash
+   # apps/strapi/.env
+   APP_URL=https://abc123.ngrok.io
+
+   # apps/ui/.env.local
+   NEXT_PUBLIC_STRAPI_URL=https://abc123.ngrok.io
+   ```
+
+8. Update your OAuth provider (GitHub) with the ngrok URLs:
+   - **Homepage URL**: `https://abc123.ngrok.io`
+   - **Authorization callback URL**: `https://abc123.ngrok.io/api/connect/github/callback`
+9. In Strapi admin (Settings > Users & Permissions > Providers > GitHub):
+   - **Redirect URL**: Your frontend callback (e.g., `http://localhost:3000/auth/strapi-oauth/callback`)
+10. Restart both backend and frontend
+
+See the [Strapi GitHub provider documentation](https://docs.strapi.io/cms/configurations/users-and-permissions-providers/github) for more details.
 
 **Supported providers:**
 
