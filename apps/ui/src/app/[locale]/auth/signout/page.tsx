@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect } from "react"
-import { authClient } from "@/auth-client"
 import { useLocale } from "next-intl"
 
+import { authClient } from "@/lib/auth-client"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { redirect } from "@/lib/navigation"
 

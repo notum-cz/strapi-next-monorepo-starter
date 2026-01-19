@@ -1,12 +1,12 @@
 "use client"
 
 import { useSearchParams } from "next/navigation"
-import { authClient } from "@/auth-client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
+import { authClient } from "@/lib/auth-client"
 import { getAuthErrorMessage } from "@/lib/general-helpers"
 import { Link } from "@/lib/navigation"
 import { AppField } from "@/components/forms/AppField"
@@ -121,11 +121,11 @@ function SuspensedSignInForm() {
           type="button"
           variant="outline"
           size="lg"
-          className="w-full"
+          className="w-full cursor-pointer"
           onClick={() => {
             const connectUrl = new URL(
               "/api/connect/github",
-              process.env.STRAPI_URL
+              process.env.NEXT_PUBLIC_STRAPI_URL
             )
             window.location.href = connectUrl.toString()
           }}

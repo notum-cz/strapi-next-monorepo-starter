@@ -1,11 +1,11 @@
 "use client"
 
-import { authClient } from "@/auth-client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
+import { authClient } from "@/lib/auth-client"
 import { getAuthErrorMessage } from "@/lib/general-helpers"
 import { useRouter } from "@/lib/navigation"
 import { AppField } from "@/components/forms/AppField"

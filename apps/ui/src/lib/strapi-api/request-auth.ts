@@ -1,7 +1,8 @@
-import { authClient } from "@/auth-client"
 import { env } from "@/env.mjs"
 
 import type { BetterAuthSessionWithStrapi } from "@/types/better-auth"
+
+import { authClient } from "@/lib/auth-client"
 
 const ALLOWED_STRAPI_ENDPOINTS: Record<string, string[]> = {
   GET: [

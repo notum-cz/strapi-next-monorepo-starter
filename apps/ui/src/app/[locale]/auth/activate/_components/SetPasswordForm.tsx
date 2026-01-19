@@ -2,12 +2,12 @@
 
 import { useState } from "react"
 import { useSearchParams } from "next/navigation"
-import { authClient } from "@/auth-client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
+import { authClient } from "@/lib/auth-client"
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
 import { getAuthErrorMessage } from "@/lib/general-helpers"
 import { useRouter } from "@/lib/navigation"

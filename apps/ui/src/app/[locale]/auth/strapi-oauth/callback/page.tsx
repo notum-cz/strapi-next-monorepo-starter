@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
-import { authClient } from "@/auth-client"
 import { useLocale } from "next-intl"
 
+import { authClient } from "@/lib/auth-client"
 import { getAuthErrorMessage } from "@/lib/general-helpers"
 import { useToast } from "@/components/ui/use-toast"
 

@@ -1,8 +1,8 @@
 "use client"
 
-import { authClient } from "@/auth-client"
 import { useTranslations } from "next-intl"
 
+import { authClient } from "@/lib/auth-client"
 import AppLink from "@/components/elementary/AppLink"
 import { LoggedUserMenu } from "@/components/page-builder/single-types/navbar/LoggedUserMenu"
 
