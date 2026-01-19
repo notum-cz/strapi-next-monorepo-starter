@@ -1,12 +1,12 @@
 # 🔥 UI - `@repo/ui`
 
-This is a [Next.js v15](https://nextjs.org/docs) project.
+This is a [Next.js v16](https://nextjs.org/docs) project.
 
 ## 🥞 Tech stack
 
 - node 22
 - yarn 1.22
-- Next.js 15 App router
+- Next.js 16 App router
 - React 18
 - TypeScript
 - [shadcn/ui](https://ui.shadcn.com/)

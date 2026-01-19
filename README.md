@@ -1,4 +1,4 @@
-# 🔥 Strapi v5 & Next.js v15 Monorepo Starter
+# 🔥 Strapi v5 & Next.js v16 Monorepo Starter
 
 This is a ready-to-go starter template for Strapi projects. It combines the power of Strapi, Next.js, Shadcn/ui libraries with Turborepo setup and kickstarts your project development. We call it a **Page builder** for enterprise applications.
 
@@ -13,7 +13,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 ## 🥞 Tech stack
 
 - [Strapi v5](https://strapi.io/) - Headless CMS to manage content
-- [Next.js App Router v15](https://nextjs.org/docs) - React framework for building web apps
+- [Next.js App Router v16](https://nextjs.org/docs) - React framework for building web apps
 - [Shadcn/ui](https://ui.shadcn.com/) - TailwindCSS based UI components
 - [TailwindCSS v4](https://tailwindcss.com/) - Utility-first CSS framework
 - [Turborepo](https://turbo.build/) - Monorepo management tool to keep things tidy
@@ -87,7 +87,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 - **Page builder**: Page rendering mechanism and prepared useful components. Ready to plug-and-play
 - **Strapi live preview**: Preview/draft mode for Next.js app to see changes in Strapi in real-time
 - **DB seed**: Seed script to populate DB with initial data
-- **Next.js**: Fully typed and modern Next.js v15 App router project
+- **Next.js**: Fully typed and modern Next.js v16 App router project
 - **Proxies**: Proxy API calls to Strapi from Next.js app to avoid CORS issues, hide API keys and backend address
 - **API**: Typed API calls to Strapi via API clients
 - **UI library**: 20+ pre-installed components, beautifully designed by [Shadcn/ui](https://ui.shadcn.com/)
@@ -111,7 +111,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 ### Apps
 
-- `apps/ui` - UI web app based on [Next.js v15](https://nextjs.org/docs/) and [shadcn/ui](https://ui.shadcn.com/) ([Tailwind](https://tailwindcss.com/)) - [README.md](./apps/ui/README.md)
+- `apps/ui` - UI web app based on [Next.js v16](https://nextjs.org/docs/) and [shadcn/ui](https://ui.shadcn.com/) ([Tailwind](https://tailwindcss.com/)) - [README.md](./apps/ui/README.md)
 - `apps/strapi` - [Strapi v5](https://strapi.io/) API with prepared page-builder components - [README.md](./apps/strapi/README.md)
 
 ### Packages
