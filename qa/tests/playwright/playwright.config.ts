@@ -53,6 +53,7 @@ export default defineConfig({
   use: {
     baseURL: process.env.BASE_URL,
 
+    // Uncomment if credentials are needed
     // httpCredentials: {
     //   username: "xx",
     //   password: "yyy",
