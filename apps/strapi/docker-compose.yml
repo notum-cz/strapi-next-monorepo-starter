@@ -1,4 +1,4 @@
-# This docker-compose file contains only Postgres database for local run. 
+# This docker-compose file contains only Postgres database for local run.
 # Strapi should be run either in a separate container (Dockerfile) or in the host machine (yarn dev).
 
 name: dev-templates
@@ -16,7 +16,7 @@ services:
       - data:/var/lib/postgresql/data/ #using a volume
       #- ./data:/var/lib/postgresql/data/ # if you want to use a bind folder
     ports:
-      - "5432:5432"
+      - "54325:5432"
     networks:
       - db_network
 
