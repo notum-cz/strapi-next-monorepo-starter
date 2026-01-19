@@ -21,8 +21,6 @@
     "@types/react-dom": "19.2.3"
   },
   "dependencies": {
-    "@eslint/eslintrc": "^3.3.3",
-    "@eslint/js": "^9.39.2",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-accordion": "^1.2.1",
@@ -89,7 +87,6 @@
     "@types/react": "19.2.8",
     "@types/react-dom": "19.2.3",
     "eslint": "^9.39.2",
-    "eslint-config-next": "^16.1.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "postcss": "^8.4.47",
     "prettier-plugin-tailwindcss": "^0.6.11",
