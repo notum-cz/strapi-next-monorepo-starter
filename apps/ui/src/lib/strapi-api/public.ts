@@ -1,10 +1,10 @@
-import { env } from "@/env.mjs"
 import qs from "qs"
 
 import { CustomFetchOptions } from "@/types/general"
 
 import BaseStrapiClient from "@/lib/strapi-api/base"
 import { createStrapiAuthHeader } from "@/lib/strapi-api/request-auth"
+import { getStrapiUrl } from "@/lib/urls"
 
 export class PublicClient extends BaseStrapiClient {
   protected async prepareRequest(
@@ -31,7 +31,7 @@ export class PublicClient extends BaseStrapiClient {
     } else {
       // Directly use the Strapi URL. Same logic as in proxy route handler must be applied
       // (for SSR components and server actions/context)
-      completeUrl = `${env.STRAPI_URL}${url}`
+      completeUrl = `${getStrapiUrl(true)}${url}`
 
       // If there is no method specified in requestInit, default is GET
       const isReadOnly = ["GET", "HEAD"].includes(requestInit?.method ?? "GET")

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
-import { env } from "@/env.mjs"
+
+import { getStrapiUrl } from "@/lib/urls"
 
 /**
  * This route handler allows asset fetching from Strapi backend even from client-side components,
@@ -34,7 +35,7 @@ async function handler(
     )
   }
 
-  const url = `${env.STRAPI_URL}/${path}`
+  const url = `${getStrapiUrl(true)}/${path}`
   const clonedRequest = request.clone()
 
   const { url: _, ...rest } = clonedRequest

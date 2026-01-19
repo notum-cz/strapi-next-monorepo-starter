@@ -78,35 +78,59 @@ yarn strapi import -f strapi-export.tar.gz
 
 Go to Strapi admin panel and navigate to Settings > Config Sync > Tools. Click on "Import" button to import the configuration from files. More info about config sync is [below](#config-sync).
 
-## 🛠️ Production build (Docker)
+## 🛠️ Production Docker
 
-To build and run Strapi in Docker container use [Dockerfile](Dockerfile) prepared for **production** environment. It follows Strapi official documentation and recommended way of running app in Turborepo monorepo structure. Note, that Turborepo requires access to root `package.json`, `yarn.lock` and `turbo.json` files so you have to build it within whole monorepo context - run `docker build` from monorepo root. [More info here](https://turbo.build/repo/docs/handbook/deploying-with-docker).
+To build and run Strapi in Docker container use [Dockerfile](Dockerfile) prepared for **production** environment. It follows Strapi official documentation and recommended way of running app in Turborepo monorepo structure.
+
+> [!WARNING]
+> Note, that Turborepo requires access to root `package.json`, `yarn.lock` and `turbo.json` files so you have to build it within whole monorepo context - run `docker build` from monorepo root.
+> [More info here](https://turbo.build/repo/docs/handbook/deploying-with-docker).
+
+### Build
 
 ```bash
 # from monorepo root
 
-# build image, name it and pass APP_URL as build arg to override localhost:1337 default value
-docker build -t strapi:latest -f apps/strapi/Dockerfile --build-arg APP_URL=https://cms.strapi-domain.dev .
+# build image, name and tag it
+docker build -t starter-strapi:latest -f apps/strapi/Dockerfile .
 
+# or build image and set APP_URL build arg to override localhost:1337 (default public URL of Admin panel)
+docker build -t starter-strapi:latest -f apps/strapi/Dockerfile --build-arg APP_URL=https://cms.strapi-domain.dev .
+```
+
+### Run
+
+```bash
 # run container using image
-docker run -it --rm --name strapi -p 1337:1337 --env-file apps/strapi/.env strapi:latest
+docker run -it --rm --name starter-strapi -p 1337:1337 --env-file apps/strapi/.env starter-strapi:latest
 ```
 
 To change port, set `PORT` env variable in `.env` file and in `docker run` command (`-p` flag means port mapping between host:container).
 
+### Connect to Postgres in Docker
+
 Strapi requires Postgres database to run before it starts. There is no production `docker-compose.yml` file prepared with both services connected. Usually they are run separately (database in one container or in cloud servise, Strapi in another container).
 
-To connect 2 different containers (Strapi and Postgres) in Docker, you have to create a network and run both containers in that network. So, for example, to run whole strapi app in docker containers:
+A) If you have Postgres connection string or credentials, set them in `.env` file before running Strapi container. Example:
+
+```
+# .env
+DATABASE_URL=postgres://user:password@host:port/database
+
+# or use separate variables like DATABASE_NAME, DATABASE_HOST, etc.
+```
+
+B) To connect 2 different containers (Strapi and Postgres) **both running in Docker**, you have to create a network and connect both containers to that network. Here is an example of how to do it locally:
 
 ```bash
 # run Postgres in docker - you can use docker-compose.yml from this directory
 docker compose up -d db
 
-# run Strapi in docker and connect to same network. In docker-compose.yml there is a "db_network" network already defined, so you don't need to create it manually again, but just reference it in this run command
-docker run -it --rm --name strapi -p 1337:1337 --env-file apps/strapi/.env --network=dev-templates_db_network strapi:latest
-
 # set DATABASE_HOST or DATABASE_URL for Strapi in .env file - host should be set to "db" (name of the Postgres service in docker-compose.yml) or to IP of the host machine instead of "0.0.0.0"
 DATABASE_HOST=db
+
+# run Strapi in docker and connect to same network. In docker-compose.yml there is a "db_network" network already defined, so you don't have to create it. Just reference it in run command
+docker run -it --rm --name starter-strapi -p 1337:1337 --env-file apps/strapi/.env --network=strapi-next-starter_db_network starter-strapi:latest
 ```
 
 ## ✨ Features

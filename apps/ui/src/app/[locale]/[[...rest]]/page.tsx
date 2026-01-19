@@ -5,7 +5,6 @@ import { setRequestLocale } from "next-intl/server"
 
 import { isDevelopment } from "@/lib/general-helpers"
 import { getMetadataFromStrapi } from "@/lib/metadata"
-import { routing } from "@/lib/navigation"
 import { fetchAllPages, fetchPage } from "@/lib/strapi-api/content/server"
 import { cn } from "@/lib/styles"
 import { Breadcrumbs } from "@/components/elementary/Breadcrumbs"
@@ -14,7 +13,24 @@ import { ErrorBoundary } from "@/components/elementary/ErrorBoundary"
 import { PageContentComponents } from "@/components/page-builder"
 import StrapiStructuredData from "@/components/page-builder/components/seo-utilities/StrapiStructuredData"
 
-export async function generateStaticParams() {
+// Allow this dynamic route to behave like a static/ISR page
+// even if slugs are unknown at build time or STRAPI_URL is not defined
+// or fetching fails
+export const dynamic = "force-static"
+
+// Set ISR revalidation interval: regenerate the page every 5 minutes (300s)
+export const revalidate = 300
+
+// Enable on-demand generation for pages not returned by generateStaticParams
+// First request will SSR the page, then cache it for future requests
+export const dynamicParams = true
+
+export async function generateStaticParams({
+  params: { locale },
+}: {
+  // retrieve locales - this is being passed from root layout.tsx's generateStaticParams
+  params: { locale: string }
+}) {
   if (isDevelopment()) {
     // do not prefetch all locales when developing
     return [
@@ -25,21 +41,14 @@ export async function generateStaticParams() {
     ]
   }
 
-  const promises = routing.locales.map((locale) =>
-    fetchAllPages("api::page.page", locale)
-  )
+  const results = await fetchAllPages("api::page.page", locale as Locale)
 
-  const results = await Promise.allSettled(promises)
+  const params = results?.data.map((page) => ({
+    locale: page.locale as Locale,
+    rest: [page.slug],
+  }))
 
-  const params = results
-    .filter((result) => result.status === "fulfilled")
-    .flatMap((result) => result.value.data)
-    .map((page) => ({
-      locale: page.locale,
-      rest: [page.slug],
-    }))
-
-  return params
+  return params ?? []
 }
 
 export async function generateMetadata(

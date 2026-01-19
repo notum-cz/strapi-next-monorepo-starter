@@ -34,7 +34,13 @@ This is a [Next.js v16](https://nextjs.org/docs) project.
 
 ### Environment variables
 
-Copy & rename `.env.local.example` to `.env.local` and fill or update in the values. `APP_PUBLIC_URL`, `STRAPI_URL` and `STRAPI_REST_READONLY_API_KEY` are required.
+Copy & rename `.env.local.example` to `.env.local` and fill or update in the values. Following environment variables are required to enable build-time pre-rendering or runtime ISR:
+
+- `STRAPI_URL` – The URL of the Strapi instance. Required at build time when pre-rendering ISR pages with `generateStaticParams()`. Optional if ISR pages are generated entirely at runtime.
+- `STRAPI_REST_READONLY_API_KEY` – API key for read-only access to Strapi content. Required at build time if content is fetched during pre-rendering.
+- `APP_PUBLIC_URL` – Used to generate canonical URLs, absolute links and metadata. Required when pre-rendering pages.
+
+If ISR pages are generated only at runtime, `STRAPI_URL` and other environment variables must be available at runtime instead of build time. See [Production Docker](#🛠️-production-docker) and [Environment variables - usage](#environment-variables---usage) sections for more details.
 
 #### Read-only API token
 
@@ -74,37 +80,77 @@ yarn dev
 
 App runs on [http://localhost:3000](http://localhost:3000) by default.
 
-## 🛠️ Production build (Docker)
+## 🛠️ Production Docker
 
-To build and run Next.js in Docker container use [Dockerfile](Dockerfile) prepared for **production** environment. It follows recommended way of running app in Turborepo monorepo structure. Note, that Turborepo requires access to root `package.json`, `yarn.lock` and `turbo.json` files so you have to build it within whole monorepo context - run `docker build` from monorepo root. [More info here](https://turbo.build/repo/docs/handbook/deploying-with-docker).
+To build and run Next.js in Docker container use [Dockerfile](Dockerfile) prepared for **production** environment. It follows recommended way of running app in Turborepo monorepo structure.
+
+> [!WARNING]
+> Note, that Turborepo requires access to root `package.json`, `yarn.lock` and `turbo.json` files so you have to build it within whole monorepo context - run `docker build` from monorepo root.
+> [More info here](https://turbo.build/repo/docs/handbook/deploying-with-docker).
+
+### Build
+
+Next.js requires `standalone` output mode to run in Docker container. In this mode, only the necessary files and dependencies are included in the final image, so the image size is smaller and more efficient. This is hardcoded in Dockerfile using `NEXT_OUTPUT=standalone` env variable that is then read by [next.config.mjs](next.config.mjs). Based on your needs, you can build Docker image in two ways:
+
+- **build once, deploy many times** - build Docker image without env variables required at build time. This will opt-out pre-rendering of pages that require `STRAPI_URL` at build time (i.e. pages using `generateStaticParams()` function). These pages will be generated entirely at runtime (with runtime configuration) using ISR (or SSR). This approach is more flexible, as the same image can be deployed to different environments (e.g. staging, production) without rebuilding. However, the first (or every) request to these pages may be slower due to on-demand generation.
 
 ```bash
 # from monorepo root
 
-# build image and name it
-docker build -t ui:latest -f apps/ui/Dockerfile .
-
-# run container using image
-docker run -it --rm --name ui -p 3000:3000 --env-file apps/ui/.env ui:latest
+# Build image without providing Strapi information.
+# Those pages won't be pre-rendered at build time.
+docker build -t starter-ui:latest -f apps/ui/Dockerfile .
 ```
 
-To change port, set `PORT` env variable in `.env` file and in `docker run` command (`-p` flag means port mapping between host:container).
+- **build per environment** - build Docker image with `STRAPI_URL` and other required env variables passed as build-time arguments. This will pre-render pages that depend on `STRAPI_URL` during the build process, resulting in faster initial load times for these pages. However, the image will be tied to a specific Strapi instance and need to be rebuilt for different environments. **This will bake the Strapi READONLY API key into the image, so make sure you are okay with that.**
 
-Dockerfile assumes that Next.js app is ["outputed"](https://nextjs.org/docs/14/app/api-reference/next-config-js/output) in `standalone` mode (see [next.config.mjs's output option](next.config.mjs) for details), which is useful for self-hosting in a Docker container (includes only necessary files and dependencies). It is controlled using `NEXT_OUTPUT` env variable. Any other value than `standalone` will require changes in Dockerfile (eg. `runner` stage).
+```bash
+# from monorepo root
+
+# Build image with Strapi information passed as a build-time arguments.
+# Pages depending on it will be pre-rendered during build.
+# These vars will be baked into the image.
+# You can set STRAPI_URL to your local Strapi instance or remote one - "https://strapi-next-starter-api-dev-c6c718c7e60e.herokuapp.com"
+docker build -t starter-ui:latest -f apps/ui/Dockerfile \
+  --build-arg STRAPI_URL="http://host.docker.internal:1337" \
+  --build-arg STRAPI_REST_READONLY_API_KEY="your-readonly-api-key" \
+  --build-arg APP_PUBLIC_URL="http://localhost:3000" \
+  --progress=plain \
+  .
+```
+
+### Run
+
+```bash
+# run container using image with runtime config (.env.local)
+docker run -it --rm --name starter-ui -p 3000:3000 --env-file apps/ui/.env.local starter-ui:latest
+```
+
+Port is 3000 and mapping can be changed in `docker run` command using `-p` flag (host:container).
 
 ### Output modes
 
 Next.js has three `output` modes:
 
-- `export` – Static HTML/CSS/JS files [are generated at build time](https://nextjs.org/docs/14/app/building-your-application/deploying/static-exports) and can be served by any static hosting or CDN. No Node.js server is required. [Dynamic features are not supported](https://nextjs.org/docs/14/app/building-your-application/deploying/static-exports#unsupported-features). This mode is **not supported** in this starter repo due to its dynamic features (e.g. NextAuth and the [POST endpoint](src/app/api/auth/[...nextauth]/route.ts)).
-- `standalone` – Optimized output for self-hosting in a Docker container. It includes only the necessary files and dependencies (see above for more info).
+- `export` – Static HTML/CSS/JS files [are generated at build time](https://nextjs.org/docs/15/app/guides/static-exports) and can be served by any static hosting or CDN. No Node.js server is required. [Dynamic features are not supported](https://nextjs.org/docs/15/app/guides/static-exports#unsupported-features). This mode is **not supported** in this starter by default due to its dynamic features (e.g. NextAuth and the [POST endpoint](src/app/api/auth/[...nextauth]/route.ts)). With some modifications, it can be turned into a fully static app.
+- `standalone` – Optimized output for self-hosting in a Docker container (see above). It includes only the necessary files and dependencies.
 - `undefined` – Default build output in the `.next` directory. This mode is used with `next start` in production or by hosting providers like Vercel. It requires a Node.js server.
 
 ### Data revalidation (ISR)
 
 This approach allows static content to be updated without rebuilding the entire site. Data revalidation does not work in plain static `export` output mode, as the app is fully static and lacks a server to handle revalidation. Incremental Static Regeneration (ISR) improves performance and reduces server load.
 
-In this starter, ISR with time-based revalidation is used by default. Revalidation is applied globally to all fetch requests, but it can also be controlled individually via parameters in the fetch functions (see [BaseStrapiClient](src/lib/strapi-api/base.ts)). The revalidation interval is configurable using the `NEXT_PUBLIC_REVALIDATE` environment variable, and is set to `0` (no caching) during development.
+In this starter, ISR with time-based revalidation is used by default. Revalidation is applied globally to all fetch requests, but it can also be controlled individually via parameters in the fetch functions (see [BaseStrapiClient](src/lib/strapi-api/base.ts)). The requests revalidation interval is set to `0` (no caching) during development and `60` seconds in production by default.
+
+For dynamic routes where slugs are unknown at build time, runtime generation is possible. Pages will be rendered on the first request and cached for subsequent requests if the following page-level flags are set:
+
+```
+export const dynamic = 'force-static'
+export const dynamicParams = true
+export const revalidate = 300
+```
+
+These flags enable ISR for runtime-generated pages, avoiding errors such as `DYNAMIC_SERVER_USAGE` when environment variables are only available at runtime.
 
 [More information about ISR](https://nextjs.org/docs/app/building-your-application/data-fetching/incremental-static-regeneration)
 
@@ -290,7 +336,7 @@ Another important aspect is the mapping between Strapi components and frontend c
 
 To generate **metadata** for each Page Builder page, the `generateMetadata()` function is used. It is called in the main [page builder page](./src/app/[locale]/[[...rest]]/page.tsx) and generates metadata based on the Strapi page's `seo` attribute. It creates standard page metadata, as well as Open Graph and Twitter tags, with fallbacks from locale files. See [getMetadataFromStrapi function](./src/lib/metadata/index.ts) for more details. To add structured data (LD-JSON), use the [StrapiStructuredData](./src/components/page-builder/components/seo-utilities/StrapiStructuredData.tsx) component, which is included by default.
 
-To generate **sitemap.xml**, we use the [built-in](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap) Next.js [sitemap.ts file](./src/app/sitemap.ts). It generates a sitemap based on Strapi data. You can specify which collections are pageable and should appear in the XML (defaults to `"api::page.page"`). The sitemap is created at runtime and revalidated according to the `NEXT_PUBLIC_REVALIDATE` environment variable. This behavior can be easily customized in the `fetchAll` function. The sitemap is not generated in environments other than production (env.APP_ENV === "production"). The sitemap is available at [localhost:3000/sitemap.xml](http://localhost:3000/sitemap.xml).
+To generate **sitemap.xml**, we use the [built-in](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap) Next.js [sitemap.ts file](./src/app/sitemap.ts). It generates a sitemap based on Strapi data. You can specify which collections are pageable and should appear in the XML (defaults to `"api::page.page"`). The sitemap is created at runtime and revalidated similarly to default fetch revalidation. This behavior can be easily customized in the `fetchAll` function. The sitemap is not generated in environments other than production (env.APP_ENV === "production"). The sitemap is available at [localhost:3000/sitemap.xml](http://localhost:3000/sitemap.xml).
 
 To generate **robots.txt**, we also use the [built-in](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots) Next.js [robots.ts file](./src/app/robots.ts). It generates a robots.txt file with a basic configuration. Like `sitemap.xml`, this file is created only in the `production` environment. The robots.txt file is available at [localhost:3000/robots.txt](http://localhost:3000/robots.txt).
 
@@ -374,7 +420,7 @@ import { Link, useRouter, redirect } from "@/lib/navigation"
 import { Link, useRouter, redirect } from "next/navigation"
 ```
 
-### Environment variables
+### Environment variables - usage
 
 Define them in [.env.local.example](./.env.local.example), [.env.local](./.env.local) and [src/env.mjs](./src/env.mjs) file where [@t3-oss/env-nextjs](https://github.com/t3-oss/t3-env) validation package is used. This package is used to validate and type-check environment variables. Usage:
 
@@ -382,15 +428,21 @@ Define them in [.env.local.example](./.env.local.example), [.env.local](./.env.l
 import { env } from "@/env.mjs"
 
 // ✅ OK
-console.log(env.STRAPI_URL)
+console.log(env.RECAPTCHA_SECRET_KEY)
 
 // ❌ NOT OK
-console.log(process.env.STRAPI_URL)
+console.log(process.env.RECAPTCHA_SECRET_KEY)
 ```
 
-Environment variables that need to be available in the build-time context of Turborepo tasks must be defined in the [turbo.json](../../turbo.json) file under the `globalEnv` section. The build step (`turbo run build`) runs in a sandboxed environment where only explicitly specified environment variables are accessible. Mandatory variables (e.g. `STRAPI_URL`, `APP_PUBLIC_URL` or `STRAPI_REST_READONLY_API_KEY`), as defined in `env.mjs`, must be included in `globalEnv`. **This is essential** for the build process to function correctly with Turborepo and t3 package.
+All default server-side variables are optional. This lets you build the application once and run it in different environments with different configurations without the need to rebuild. Baking them into the Docker image or build artifacts may not be desirable in many cases. In that case, their correctness must be checked at runtime (see [urls.ts](./src/lib/urls.ts) for example). Requiring them at build time is also possible by updating the schema in [env.mjs](./src/env.mjs) and passing them from the environment:
 
-Environment variables starting with `NEXT_PUBLIC_` are [automatically available](https://nextjs.org/docs/app/guides/environment-variables#runtime-environment-variables) in the client-side code. Don't store any sensitive information in these variables, as they are exposed.
+- as build-time arguments in Docker (see [Production Docker](#🛠️-production-docker) section),
+- in `env.local` file when building locally,
+- Config vars in hosting providers (e.g. Vercel, Heroku).
+
+Environment variables starting with `NEXT_PUBLIC_` are [automatically available](https://nextjs.org/docs/app/guides/environment-variables#runtime-environment-variables) in the client-side code. Don't store any sensitive information in these variables, as they are exposed. They must be present at build time.
+
+Environment variables that need to be available in the build-time context of Turborepo tasks must be defined in the [turbo.json](../../turbo.json) file under the `globalEnv` section. The build step (`turbo run build`) runs in a sandboxed environment where only explicitly specified environment variables are accessible.
 
 ### Error handling
 

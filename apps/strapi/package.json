@@ -56,10 +56,6 @@
     "@types/react-dom": "^18",
     "typescript": "^5"
   },
-  "engines": {
-    "node": "22.x.x",
-    "yarn": "1.22.x"
-  },
   "strapi": {
     "uuid": "@repo/strapi"
   }

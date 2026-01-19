@@ -150,8 +150,9 @@ yarn dev:strapi
 
 ## Testing Info
 
-A dedicated QA workspace is available under the qa/ directory, providing automated tests for E2E, accessibility, performance, and SEO validation.
-👉 See [README](./qa/tests/README.md) for available test suites and commands.
+A dedicated QA workspace is available under the `qa/` directory, providing automated tests for E2E, accessibility, performance, and SEO validation.
+
+See [README](./qa/tests/README.md) for available test suites and commands.
 
 ## 🔌 VSCode Extensions
 
@@ -177,15 +178,46 @@ Husky is installed by default and configured to run following tasks:
 - `bash ./scripts/utils/rm-modules.sh` - Remove all `node_modules` folders in the monorepo. Useful for scratch dependencies installation.
 - `bash ./scripts/utils/rm-all.sh` - Remove all `node_modules`, `.next`, `.turbo`, `.strapi`, `dist` folders.
 
-## ♾️ CI/CD
+## ♾️ Deployment
 
 ### GitHub Actions
 
-We are using `GitHub Actions` for continuous integration. The `CI` expects some variables (`APP_PUBLIC_URL`, `STRAPI_URL` and `STRAPI_REST_READONLY_API_KEY`) to be available on the runner, so make sure to add them in the repository's settings. Have a look at the [workflow](.github/workflows/ci.yml) definition for more details.
+We are using GitHub Actions for validation of builds and running tests. There are 2 workflows prepared:
+
+1. [ci.yml](.github/workflows/ci.yml) - runs on every push and pull request to `main` branch. It verifies if code builds.
+2. [qa.yml](.github/workflows/qa.yml) - manually triggered workflow that runs the QA tests from `qa/tests` directory. Ideally it should be run against deployed frontend (by setting `BASE_URL` env variable and passing to [playwright.config.ts](./qa/tests/playwright/playwright.config.ts)).
 
 ### Heroku
 
-- `./scripts/heroku/heroku-postbuild.sh` - Script for Heroku deployment to decide which app to build. It can be removed if not deploying to Heroku.
+_This section is under construction._
+
+Create 2 apps in Heroku, one for Strapi and one for Next.js UI. Stack is `heroku-24`. Connect both to GitHub repository in the Deploy tab and configure automatic deploys from your branch.
+
+We published two buildpacks to make deployment easier and more efficient. They can **reduce the slug size by more than 70 %** by pruning unnecessary files from the Turborepo monorepo during the build and they also **speed up the build** process:
+
+- [https://github.com/notum-cz/heroku-buildpack-turbo-prune.git](https://github.com/notum-cz/heroku-buildpack-turbo-prune.git)
+- [https://github.com/notum-cz/heroku-buildpack-next-standalone-slim.git](https://github.com/notum-cz/heroku-buildpack-next-standalone-slim.git)
+
+#### Strapi app configuration
+
+1. Connect a database ([Heroku Postgres](https://elements.heroku.com/addons/heroku-postgresql)). `DATABASE_URL` env variable will be set automatically so you can skip any other database-related configuration.
+2. Set env variables based on `.env.example`, **don't forget to set**:
+   - `APP`- set to `strapi`
+   - `WORKSPACE` - set to `@repo/strapi`
+3. Set buildpacks in this order:
+   - https://github.com/notum-cz/heroku-buildpack-turbo-prune.git
+   - `heroku/nodejs`
+
+#### UI app configuration
+
+1. Set env variables based on `.env.example`, **don't forget to set**:
+   - `APP`- set to `ui`
+   - `WORKSPACE` - set to `@repo/ui`
+   - `NEXT_OUTPUT` - set to `standalone`
+2. Set buildpacks in this order:
+   - https://github.com/notum-cz/heroku-buildpack-turbo-prune.git
+   - `heroku/nodejs`
+   - https://github.com/notum-cz/heroku-buildpack-next-standalone-slim.git
 
 ## Documentation
 
