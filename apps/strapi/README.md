@@ -62,16 +62,6 @@ Another way is to run **Strapi in docker** container too. Currently, an availabl
 - Admin panel is available on [http://localhost:1337/admin](http://localhost:1337/admin)
 - Postgres runs on [http://localhost:5432](http://localhost:5432)
 
-### Init database
-
-There is `strapi-export.tar.gz` file in root directory with some init data. You can optionally import it to your local database with:
-
-```bash
-# in this directory
-
-pnpm strapi import -f strapi-export.tar.gz
-```
-
 ### Sync configuration
 
 Go to Strapi admin panel and navigate to Settings > Config Sync > Tools. Click on "Import" button to import the configuration from files. More info about config sync is [below](#config-sync).
