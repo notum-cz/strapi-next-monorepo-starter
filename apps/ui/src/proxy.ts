@@ -34,8 +34,6 @@ export default function proxy(req: NextRequest) {
 
   const isDevelopmentEnvironment = isDevelopment() || host.includes("localhost")
 
-  console.log(host)
-
   if (
     !isDevelopmentEnvironment &&
     (xForwardedProtoHeader === null ||
