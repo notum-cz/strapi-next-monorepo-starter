@@ -13,7 +13,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 ## 🥞 Tech stack
 
 - [Strapi v5](https://strapi.io/) - Headless CMS to manage content
-- [Next.js App Router v16](https://nextjs.org/docs) - React framework for building web apps
+- [Next.js App Router v16](https://nextjs.org/docs) - React v19 for building web apps
 - [Shadcn/ui](https://ui.shadcn.com/) - TailwindCSS based UI components
 - [TailwindCSS v4](https://tailwindcss.com/) - Utility-first CSS framework
 - [Turborepo](https://turbo.build/) - Monorepo management tool to keep things tidy
@@ -26,7 +26,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 - Docker
 - node 22
-- yarn 1.22
+- pnpm 8.15
 - [nvm](https://github.com/nvm-sh/nvm) (optional, recommended)
 
 ### Run dev (in 4 steps)
@@ -45,10 +45,8 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
    nvm use
 
    # install deps for apps and packages that are part of this monorepo
-   yarn
+   pnpm install
    ```
-
-   > Don't worry about warning "Workspaces can only be enabled in private projects <https://github.com/yarnpkg/yarn/issues/8580>
 
 1. Run apps
 
@@ -56,7 +54,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
    > Before the first run, you need to retrieve [Strapi API token](https://docs.strapi.io/cms/features/api-tokens).
    >
    > ```sh
-   > yarn dev:strapi
+   > pnpm run dev:strapi
    > ```
    >
    > Go to Strapi admin URL and navigate to [Settings > API Tokens](http://localhost:1337/admin/settings/api-tokens).
@@ -66,8 +64,8 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
    > Refer to the [UI README](apps/ui/README.md#environment-variables) for more details.
 
    ```sh
-   # run all apps in dev mode (this triggers `yarn dev` script in each app from `/apps` directory)
-   yarn dev
+   # run all apps in dev mode (this triggers `pnpm dev` script in each app from `/apps` directory)
+   pnpm run dev
    ```
 
 1. 🎉 Enjoy!
@@ -134,19 +132,25 @@ _[After this preparation is done, delete this section from README]_
 
 ## ☕ Turborepo scripts
 
-After installing dependencies and setting env vars up, you can control all apps using Turbo CLI. Some common commands are wrapped into `yarn` scripts. You can find them in root [package.json](./package.json) file. For example:
+After installing dependencies and setting env vars up, you can control all apps using Turbo CLI. Some common commands are wrapped into scripts. You can find them in root [package.json](./package.json) file. For example:
 
 ```bash
-# run all apps in dev mode (this triggers `yarn dev` script in each app from `/apps` directory)
-yarn dev
+# run all apps in dev mode (this triggers `pnpm dev` script in each app from `/apps` directory)
+pnpm run dev
+
+# run apps separately
+pnpm run dev:ui
+pnpm run dev:strapi
 
 # build all apps
-yarn build
+pnpm run build
 
-# dev run of specific app(s)
-yarn dev:ui
-yarn dev:strapi
+# build specific app
+pnpm run build:ui
+pnpm run build:strapi
 ```
+
+Using those scripts is preferred, because they ensure correct dependency installation and environment setup.
 
 ## Testing Info
 
@@ -170,7 +174,7 @@ Husky is installed by default and configured to run following tasks:
 
 ### Package.json
 
-- `yarn commit` - interactive commit message generator 🔥. How? Stage files you want to commit (e.g. using VS Code Source Control) and then run this script in the terminal from root and fill in the required information.
+- `pnpm run commit` - interactive commit message generator 🔥. How? Stage files you want to commit (e.g. using VS Code Source Control) and then run this script in the terminal from root and fill in the required information.
 - `yarn format` - format code using prettier in whole monorepo. Prettier formats `package.json` files too.
 
 ### Utils

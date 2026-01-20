@@ -68,7 +68,7 @@ Tailwind v4 builds its config directly from CSS, not JS/TS. Strapi's CSS injecti
 
 - **Build:**
   ```bash
-  yarn build
+  pnpm run build
   ```
   This runs Tailwind to generate `dist/styles.css` and builds CKEditor configs.
 

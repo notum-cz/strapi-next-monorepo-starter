@@ -1,5 +1,5 @@
 # This docker-compose file contains only Postgres database for local run. 
-# Strapi should be run either in a separate container (Dockerfile) or in the host machine (yarn dev).
+# Strapi should be run either in a separate container (Dockerfile) or in the host machine.
 
 name: strapi-next-starter
 services:

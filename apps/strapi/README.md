@@ -4,8 +4,6 @@ This is a [Strapi v5](https://strapi.io/) project.
 
 ## 🥞 Tech stack
 
-- node 22
-- yarn 1.22
 - Strapi 5
 - TypeScript
 - Docker
@@ -37,23 +35,23 @@ Preferred way of running Strapi locally is to run **Postgres in docker** contain
 
 ```bash
 (nvm use) # switch node version
-(yarn) # deps are probably already installed running `yarn` in root
+(pnpm i) # deps should be installed running `pnpm install` in the root
 
 # start both services in 1 command [easiest way]
-yarn dev
+pnpm run dev
 ```
 
 or
 
 ```bash
 (nvm use) # switch node version
-(yarn) # deps are probably already installed running `yarn` in root
+(pnpm i) # deps should be installed running `pnpm install` in the root
 
 # start Postgres in docker container
 docker compose up -d db
 
 # start Strapi locally
-yarn develop
+pnpm run develop
 ```
 
 Another way is to run **Strapi in docker** container too. Currently, an available Strapi [Dockerfile](Dockerfile) is prepared only for **production** run (see below).
@@ -71,7 +69,7 @@ There is `strapi-export.tar.gz` file in root directory with some init data. You 
 ```bash
 # in this directory
 
-yarn strapi import -f strapi-export.tar.gz
+pnpm strapi import -f strapi-export.tar.gz
 ```
 
 ### Sync configuration
@@ -83,7 +81,7 @@ Go to Strapi admin panel and navigate to Settings > Config Sync > Tools. Click o
 To build and run Strapi in Docker container use [Dockerfile](Dockerfile) prepared for **production** environment. It follows Strapi official documentation and recommended way of running app in Turborepo monorepo structure.
 
 > [!WARNING]
-> Note, that Turborepo requires access to root `package.json`, `yarn.lock` and `turbo.json` files so you have to build it within whole monorepo context - run `docker build` from monorepo root.
+> Note, that Turborepo requires access to root `package.json`, `pnpm-lock.yaml` and `turbo.json` files so you have to build it within whole monorepo context - run `docker build` from monorepo root.
 > [More info here](https://turbo.build/repo/docs/handbook/deploying-with-docker).
 
 ### Build

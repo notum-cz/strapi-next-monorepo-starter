@@ -4,10 +4,8 @@ This is a [Next.js v16](https://nextjs.org/docs) project.
 
 ## 🥞 Tech stack
 
-- node 22
-- yarn 1.22
 - Next.js 16 App router
-- React 18
+- React 19
 - TypeScript
 - [shadcn/ui](https://ui.shadcn.com/)
 - [TailwindCSS 4](https://tailwindcss.com/)
@@ -73,9 +71,9 @@ To run the app locally use:
 
 ```bash
 (nvm use) # switch node version
-(yarn) # deps are probably already installed running `yarn` in root
+(pnpm install) # deps should be installed running `pnpm install` in the root
 
-yarn dev
+pnpm run dev
 ```
 
 App runs on [http://localhost:3000](http://localhost:3000) by default.
@@ -85,7 +83,7 @@ App runs on [http://localhost:3000](http://localhost:3000) by default.
 To build and run Next.js in Docker container use [Dockerfile](Dockerfile) prepared for **production** environment. It follows recommended way of running app in Turborepo monorepo structure.
 
 > [!WARNING]
-> Note, that Turborepo requires access to root `package.json`, `yarn.lock` and `turbo.json` files so you have to build it within whole monorepo context - run `docker build` from monorepo root.
+> Note, that Turborepo requires access to root `package.json`, `pnpm-lock.yaml` and `turbo.json` files so you have to build it within whole monorepo context - run `docker build` from monorepo root.
 > [More info here](https://turbo.build/repo/docs/handbook/deploying-with-docker).
 
 ### Build
@@ -281,10 +279,14 @@ The [BaseStrapiClient](src/lib/strapi-api/base.ts) class contains functions that
 ```ts
 import { Result } from "@repo/strapi-types"
 
-const fetchedUser: Result<"plugin::users-permissions.user"> =
-  await Strapi.PrivateStrapiClient("/users/me", undefined, undefined, {
+const fetchedUser: Result = await Strapi.PrivateStrapiClient(
+  "/users/me",
+  undefined,
+  undefined,
+  {
     userJWT: token.strapiJWT,
-  })
+  }
+)
 ```
 
 - other fetch functions – these are directly tied to Strapi content types. When calling them, you must specify the UUID (e.g. `"api::"`, `"admin::"`) of the `ContentType` you want to fetch. Based on this UUID, the response type is automatically inferred. Read the [@repo/strapi-types documentation](../../packages/strapi-types/README.md#troubleshooting) for more details on how type inference works.
@@ -413,11 +415,16 @@ For full navigation functionality in cooperation with `next-intl`, some function
 
 ```tsx
 // ✅ OK
-import { notFound, useSearchParams } from "next/navigation"
-import { Link, useRouter, redirect } from "@/lib/navigation"
-
 // ❌ NOT OK
-import { Link, useRouter, redirect } from "next/navigation"
+import {
+  Link,
+  notFound,
+  redirect,
+  useRouter,
+  useSearchParams,
+} from "next/navigation"
+
+import { Link, redirect, useRouter } from "@/lib/navigation"
 ```
 
 ### Environment variables - usage
@@ -500,13 +507,14 @@ export const submitContactUsForm = (payload: FormData) => {
 ```
 
 ```tsx
+import { env } from "@/env.mjs"
+import { ReCaptchaProvider } from "next-recaptcha-v3"
+
+import { ContactUsForm } from "@/components/forms/ContactUsForm"
+
 // Wrap form with reCAPTCHA provider
 
 export default function Page() {
-  import { ReCaptchaProvider } from "next-recaptcha-v3"
-  import { ContactUsForm } from "@/components/forms/ContactUsForm"
-  import { env } from "@/env.mjs"
-
   return (
     <ReCaptchaProvider reCaptchaKey={env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}>
       <ContactUsForm />

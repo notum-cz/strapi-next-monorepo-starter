@@ -1,1 +1,1 @@
-web: cd apps/strapi && yarn start 
+web: cd apps/strapi && pnpm start 
