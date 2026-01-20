@@ -42,3 +42,4 @@ yarn-error.log*
 .cache
 
 .strapi-updater.json
+next-env.d.ts
