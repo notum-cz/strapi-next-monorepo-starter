@@ -62,7 +62,6 @@ Tailwind v4 builds its config directly from CSS, not JS/TS. Strapi's CSS injecti
 
 - **Modify tokens or styles:**  
   Edit files in `src/`.
-
   - Changes in Next.js are picked up immediately.
   - For Strapi, rebuild the package and restart the dev server.
 

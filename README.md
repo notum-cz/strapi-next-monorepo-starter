@@ -69,12 +69,10 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
    ```
 
 1. 🎉 Enjoy!
-
    - Open your browser and go to [http://localhost:3000](http://localhost:3000) to see the UI app in action.
    - Open your browser and go to [http://localhost:1337/admin](http://localhost:1337/admin) to see the Strapi app in action.
 
 1. Next steps?
-
    - See [What's inside?](#-whats-inside) for more details about apps and packages.
    - You also probably want to customize naming in the project. See [Transform this template to a project](#-transform-this-template-to-a-project).
 

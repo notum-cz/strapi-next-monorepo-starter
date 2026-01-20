@@ -271,7 +271,6 @@ To omit the `Authorization` header and skip token detection, you can pass `omitU
 The [BaseStrapiClient](src/lib/strapi-api/base.ts) class contains functions that wrap the native `fetch()` method, with pre-configured base path, token management, headers, and query parameter handling. It provides the following functions: `fetchAPI`, `fetchOne`, `fetchMany`, `fetchAll`, `fetchOneBySlug`, and `fetchOneByFullPath`.
 
 - `fetchAPI` – the most general-purpose function for making API requests (`GET`, `POST`, `PUT`, `DELETE`). It can be used in any scenario, but the return type must be manually specified. This function is especially useful when:
-
   - Fetching data from or sending data to a custom Strapi endpoint (e.g. `GET /users/my-logic-endpoint`)
   - The data is not associated with any Strapi content type
   - The endpoint is already used by another handler (e.g. the content type `"plugin::users-permissions.user"` is reserved for `GET /users`, so `GET /users/me` must use `fetchAPI` instead — see below):
