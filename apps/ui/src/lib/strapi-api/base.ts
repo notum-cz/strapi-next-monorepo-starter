@@ -12,7 +12,6 @@ import { isDevelopment } from "@/lib/general-helpers"
 
 // Add endpoints here that are queried from the frontend.
 // Mapping of Strapi content type UIDs to API endpoint paths.
-
 export const API_ENDPOINTS: { [key in UID.ContentType]?: string } = {
   "api::page.page": "/pages",
   "api::footer.footer": "/footer",
@@ -246,11 +245,8 @@ export default abstract class BaseStrapiClient {
 
   protected abstract prepareRequest(
     path: string,
-
     params: object,
-
     requestInit?: RequestInit,
-
     options?: CustomFetchOptions
   ): Promise<{ url: string; headers: Record<string, string> }>
 
