@@ -7,7 +7,7 @@
     ".*Styles*",
     ".*ClassName*"
   ],
-  "npm.packageManager": "yarn",
+  "npm.packageManager": "pnpm",
   "editor.formatOnSave": true,
   // "[json]": {
   //   "editor.defaultFormatter": "esbenp.prettier-vscode"

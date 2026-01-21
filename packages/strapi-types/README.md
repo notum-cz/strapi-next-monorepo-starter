@@ -36,10 +36,10 @@ Notes:
 
 ```sh
 # from repo root
-yarn workspace @repo/strapi-types sync-types
+pnpm --filter @repo/strapi-types sync-types
 
 # from here
-yarn sync-types
+pnpm run sync-types
 ```
 
 It copies `apps/strapi/types/generated/*.d.ts` into `packages/strapi-types/generated/`.

@@ -6,16 +6,16 @@ import { isDevelopment } from "./lib/general-helpers"
 import { routing } from "./lib/navigation"
 
 // https://next-intl-docs.vercel.app/docs/getting-started/app-router
-const intlMiddleware = createMiddleware(routing)
+const intlProxy = createMiddleware(routing)
 
 // List all pages that require authentication (non-public)
 const authPages = ["/auth/change-password", "/auth/signout"]
 
-const authMiddleware = withAuth(
+const authProxy = withAuth(
   // Note that this callback is only invoked if
   // the `authorized` callback has returned `true`
   // and not for pages listed in `pages`.
-  (req) => intlMiddleware(req),
+  (req) => intlProxy(req),
   {
     callbacks: {
       authorized: ({ token }) => token != null,
@@ -26,12 +26,16 @@ const authMiddleware = withAuth(
   }
 )
 
-export default function middleware(req: NextRequest) {
+export default function proxy(req: NextRequest) {
   // Handle HTTPS redirection in production in Heroku servers
   // Comment this block when running locally (using `next start`)
   const xForwardedProtoHeader = req.headers.get("x-forwarded-proto")
+  const host = req.headers.get("host") ?? ""
+
+  const isDevelopmentEnvironment = isDevelopment() || host.includes("localhost")
+
   if (
-    !isDevelopment() &&
+    !isDevelopmentEnvironment &&
     (xForwardedProtoHeader === null ||
       xForwardedProtoHeader.includes("https") === false)
   ) {
@@ -50,11 +54,11 @@ export default function middleware(req: NextRequest) {
 
   // If the request is for a non-public (auth) page, require authentication
   if (isAuthPage) {
-    return (authMiddleware as any)(req)
+    return (authProxy as any)(req)
   }
 
   // All other pages are public
-  return intlMiddleware(req)
+  return intlProxy(req)
 }
 
 export const config = {

@@ -49,7 +49,6 @@ We want to change the slug of a page from `page-a` to `page-b` in `en` locale. T
 4. Verify that the page has new `fullPath` and its child page (`page-child`) has updated `fullPath` as well.
 
 5. Verify that 2 redirects are created in the "Redirect" collection for the page and its children. Their `source` and `destination` URLs should be correct and also include locale prefix:
-
    - `/en/page-a` -> `/en/page-b`
 
    - `/en/page-a/page-child` -> `/en/page-b/page-child`
@@ -73,11 +72,9 @@ We want to change the slug of a page from `page-a` to `page-b` in `en` locale. T
 - Once the `CREATE_REDIRECT` job is processed, any other change will produce a new `RECALCULATE_FULLPATH` job and then after submitting the `CREATE_REDIRECT` job, a new redirect will be created with the latest values.
 
 - Strapi handles every locale separately - page in `en` locale can have different `slug` or even different `parent` relation. That means that changing the `slug` in one locale creates jobs only for that locale. If you want to change the `slug` in multiple locales, you must manually do same change for every required locale (it isn't a bug).
-
   - Based on this, the redirects are also created separately for each touched locale and the locale is embedded into `source` and `destination` URLs.
 
 - Unrelevant jobs are automatically deleted:
-
   - slug `a` changed to `b`, then to `c` before processing - only job for `c` is kept. The redirect from `a` to `c` is created.
 
   - slug `a` changed to `b`, then back to `a` before processing - no job is kept, no redirect is created.

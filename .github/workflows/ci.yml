@@ -26,22 +26,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-
-      - name: Cache node_modules
-        id: cache-node-modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node22-yarn1-node-modules-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node22-yarn1-node-modules-
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Prepare Environment Variables
         run: |
@@ -49,20 +44,20 @@ jobs:
           cp apps/ui/.env.local.example apps/ui/.env.local
 
       - name: Check code formatting
-        run: yarn format:check
+        run: pnpm format:check
 
       - name: Run linter
-        run: yarn lint
+        run: pnpm lint
 
       - name: Build UI
         run: |
           rm -rf apps/ui/.next
-          yarn build:ui
+          pnpm build:ui
 
       # - name: Build UI (output=export)
       #   run: |
       #     rm -rf .next
-      #     yarn build:ui:static
+      #     pnpm build:ui:static
 
       - name: Build Strapi
-        run: yarn build:strapi
+        run: pnpm build:strapi

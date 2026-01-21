@@ -13,6 +13,11 @@ ARG WORKSPACE=@repo/ui
 # https://edu.chainguard.dev/chainguard/chainguard-images/about/images-compiled-programs/glibc-vs-musl/#high-level-differences-between-glibc-and-musl
 FROM node:22-slim AS base
 
+# Install pnpm globally
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 # Set working directory
 WORKDIR /app
 
@@ -21,7 +26,7 @@ FROM base AS prepare
 ARG WORKSPACE
 
 # Install turbo globally to prune below
-RUN yarn global add turbo@^2.7.3
+RUN pnpm add -g turbo@2.7.3
 
 COPY . .
 
@@ -40,17 +45,18 @@ RUN turbo prune ${WORKSPACE} --docker
 FROM base AS builder
 
 # Install turbo globally to use during build below
-RUN yarn global add turbo@^2.7.3
+RUN pnpm add -g turbo@2.7.3
 
 # First install dependencies (as they change less often)
 COPY .gitignore .gitignore
 COPY --from=prepare /app/out/json/ .
-COPY --from=prepare /app/out/yarn.lock ./yarn.lock
+COPY --from=prepare /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=prepare /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
-# Installation with caching
+# Installation with caching and frozen-lockfile
 RUN \
-    --mount=type=cache,target=/usr/local/share/.cache/yarn/v6,sharing=locked \
-    yarn --prefer-offline --frozen-lockfile --ignore-scripts
+    --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install --frozen-lockfile --prefer-offline --ignore-scripts
 
 # Build the project and its dependencies
 COPY --from=prepare /app/out/full/ .
@@ -86,12 +92,12 @@ USER nextjs
 COPY --from=builder /app/apps/${APP}/next.config.mjs .
 COPY --from=builder /app/apps/${APP}/package.json .
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
+# Automatically leverage output traces to reduce image size - https://nextjs.org/docs/app/api-reference/config/next-config-js/output
+# next.config.mjs's `output` options has to be set to "standalone" to make this work (see README)
 COPY --from=builder --chown=nextjs:nextjs /app/apps/${APP}/.next/standalone ./
 COPY --from=builder --chown=nextjs:nextjs /app/apps/${APP}/.next/static ./apps/${APP}/.next/static
 COPY --from=builder --chown=nextjs:nextjs /app/apps/${APP}/public ./apps/${APP}/public
 
-WORKDIR /app/apps/${APP}
+WORKDIR /apps/${APP}
 EXPOSE 3000
 CMD ["node", "server.js"]

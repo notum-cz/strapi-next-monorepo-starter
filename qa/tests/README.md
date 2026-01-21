@@ -27,7 +27,6 @@ qa/
 │       ├── package.json                  ← Test dependencies & scripts for this package
 │       ├── playwright.config.ts          ← Playwright configuration
 │       ├── tsconfig.json                 ← TypeScript configuration for this package
-│       └── yarn.lock                     ← Dependency lock file (if used per package)
 ```
 
 ### Playwright
@@ -46,7 +45,19 @@ Playwright tests require a `.env` file.
    ```
    `BASE_URL` defines the base URL of the application under test and is used as the starting point for all Playwright test suites.
 
-#### 📱 Mobile Viewport Testing
+#### 🌎 Install Playwright Browsers
+
+Before running tests for the first time, install the required browsers:
+
+```bash
+# From project root
+pnpm -F @repo/tests-playwright exec playwright install --with-deps
+
+# Or from the playwright directory
+cd qa/tests/playwright && pnpm exec playwright install --with-deps
+```
+
+#### �📱 Mobile Viewport Testing
 
 Mobile browser projects can be enabled via an environment variable.
 
@@ -61,16 +72,16 @@ All test commands are run from the **project root**, not from inside the `qa/` f
 - **Playwright - Run E2E tests (headless)**
 
   ```bash
-  yarn tests:playwright:e2e:test
+  pnpm run tests:playwright:e2e:test
   ```
 
 - **Playwright - Run E2E tests in interactive mode (headed)**
 
   ```bash
-  yarn tests:playwright:e2e:test:interactive
+  pnpm run tests:playwright:e2e:test:interactive
   ```
 
 - **Playwright - Run AXE tests**
   ```bash
-  yarn tests:playwright:axe
+  pnpm run tests:playwright:axe
   ```

@@ -7,8 +7,10 @@ import type { Data } from "@repo/strapi-types"
 import { formatStrapiMediaUrl } from "@/lib/strapi-helpers"
 import { ImageWithFallback } from "@/components/elementary/ImageWithFallback"
 
-export interface BasicImageProps
-  extends Omit<ImageExtendedProps, "src" | "alt"> {
+export interface BasicImageProps extends Omit<
+  ImageExtendedProps,
+  "src" | "alt"
+> {
   readonly component: Data.Component<"utilities.basic-image"> | undefined | null
   readonly useNativeNextImageOnly?: boolean
   readonly className?: ImageExtendedProps["className"]

@@ -31,8 +31,7 @@
   @apply mt-0! pt-0!;
 }
 
-.ck-content iframe[src^="https://www.youtube.com"]
-{
+.ck-content iframe[src^="https://www.youtube.com"] {
   width: 100%;
   aspect-ratio: 16/9;
   @apply mb-5;

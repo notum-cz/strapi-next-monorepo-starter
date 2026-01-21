@@ -5,15 +5,15 @@
 
 version: 2
 updates:
-  - package-ecosystem: "yarn" # See documentation for possible values
+  - package-ecosystem: "npm" # Dependabot uses "npm" for pnpm
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
-  - package-ecosystem: "yarn"
+  - package-ecosystem: "npm"
     directory: "/apps/ui"
     schedule:
       interval: "weekly"
-  - package-ecosystem: "yarn"
+  - package-ecosystem: "npm"
     directory: "/apps/strapi"
     schedule:
       interval: "weekly"

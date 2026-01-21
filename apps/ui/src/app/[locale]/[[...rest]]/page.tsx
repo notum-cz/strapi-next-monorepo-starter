@@ -33,8 +33,12 @@ export async function generateStaticParams({
 }) {
   if (isDevelopment()) {
     // do not prefetch all locales when developing
-    // All paths at runtime - https://nextjs.org/docs/15/app/api-reference/functions/generate-static-params#all-paths-at-runtime
-    return []
+    return [
+      {
+        locale: "en",
+        rest: [""],
+      },
+    ]
   }
 
   const results = await fetchAllPages("api::page.page", locale as Locale)

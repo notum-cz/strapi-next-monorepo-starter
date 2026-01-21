@@ -38,7 +38,6 @@ async function handler(
   const url = `${getStrapiUrl(true)}/${path}`
   const clonedRequest = request.clone()
 
-  // eslint-disable-next-line no-unused-vars
   const { url: _, ...rest } = clonedRequest
   const response = await fetch(url, {
     ...rest,

@@ -12,7 +12,6 @@ import { isDevelopment } from "@/lib/general-helpers"
 
 // Add endpoints here that are queried from the frontend.
 // Mapping of Strapi content type UIDs to API endpoint paths.
-// eslint-disable-next-line no-unused-vars
 export const API_ENDPOINTS: { [key in UID.ContentType]?: string } = {
   "api::page.page": "/pages",
   "api::footer.footer": "/footer",
@@ -44,7 +43,7 @@ export default abstract class BaseStrapiClient {
       next: {
         ...requestInit?.next,
         // if revalidate is set to a number since 0 implies cache: 'no-store' and a positive value implies cache: 'force-cache'.
-        revalidate: isDevelopment() ? 0 : requestInit?.next?.revalidate ?? 60,
+        revalidate: isDevelopment() ? 0 : (requestInit?.next?.revalidate ?? 60),
       },
       headers: {
         ...requestInit?.headers,
@@ -245,13 +244,9 @@ export default abstract class BaseStrapiClient {
   }
 
   protected abstract prepareRequest(
-    // eslint-disable-next-line no-unused-vars
     path: string,
-    // eslint-disable-next-line no-unused-vars
     params: object,
-    // eslint-disable-next-line no-unused-vars
     requestInit?: RequestInit,
-    // eslint-disable-next-line no-unused-vars
     options?: CustomFetchOptions
   ): Promise<{ url: string; headers: Record<string, string> }>
 
