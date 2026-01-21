@@ -3,7 +3,7 @@ import { ROOT_PAGE_PATH } from "@repo/shared-data"
 import { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
-import { debugStaticParams } from "@/lib/build"
+import { createFallbackPath, debugStaticParams } from "@/lib/build"
 import { isDevelopment } from "@/lib/general-helpers"
 import { getMetadataFromStrapi } from "@/lib/metadata"
 import { fetchAllPages, fetchPage } from "@/lib/strapi-api/content/server"
@@ -30,7 +30,7 @@ export async function generateStaticParams({
   params: { locale },
 }: {
   // retrieve locales - this is being passed from root layout.tsx's generateStaticParams
-  params: { locale: string }
+  params: { locale: Locale }
 }) {
   if (isDevelopment()) {
     debugStaticParams([], "[[...rest]]", { isDevelopment: true })
@@ -53,7 +53,11 @@ export async function generateStaticParams({
 
   debugStaticParams(params, "[[...rest]]")
 
-  return params
+  // statically generated applications with output: 'export' require at least one entry (even invalid)
+  // within the dynamic segment to avoid build errors
+  const fallbackPath = createFallbackPath(locale, { rest: ["fallback"] })
+
+  return params.length > 0 ? params : [fallbackPath]
 }
 
 export async function generateMetadata(

@@ -1,4 +1,5 @@
 import { env } from "@/env.mjs"
+import { Locale } from "next-intl"
 
 export const DEBUG_STATIC_PARAMS_GENERATION = env.DEBUG_STATIC_PARAMS_GENERATION
 
@@ -23,3 +24,22 @@ export const debugStaticParams = (
     }
   }
 }
+
+/**
+ * Returning an empty array from generateStaticParams in {output: 'export'} mode yields a build error. Therefore
+ * we need to return atleast a dummy value, even if it will result in a 404.
+ *
+ * @param params object containing parameter names and their fallback values
+ * @returns object containing default locale and fallback values for each parameter
+ * @example createFallbackPath("en", { slug: 'fallback' }) => {locale: "en", slug: "fallback"}
+ * @example createFallbackPath("en", { slug: 'fallback', page: 'fallback' }) => {locale: "en", slug: "fallback", page: "fallback"}
+ * @example createFallbackPath("en", { rest: ['fallback'] }) => {locale: "en", rest: ["fallback"]}
+ */
+export const createFallbackPath = (
+  locale: Locale,
+  params: Record<string, string | string[]>
+) => ({
+  locale,
+  rest: [],
+  ...params,
+})
