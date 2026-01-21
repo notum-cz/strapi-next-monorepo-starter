@@ -136,7 +136,7 @@ Next.js has three `output` modes:
 
 > [!IMPORTANT]
 > There is an additional script included in this repository:
-> `pnpm run build:ui:static` which triggers the `output: "export"` build, however, this one is not working out of the box, as it's necessary to remove usage of dynamic functions (see [docs](https://nextjs.org/docs/app/guides/static-exports#unsupported-features) for more info). This includes BetterAuth, etc. You would also need to adjust `cosnt revalidate` and `const dynamic` attributes for your dynamic segments and layouts.
+> `pnpm run build:ui:static` which triggers the `output: "export"` build, however, this one is not working out of the box, as it's necessary to remove usage of dynamic functions (see [docs](https://nextjs.org/docs/app/guides/static-exports#unsupported-features) for more info). This includes BetterAuth, etc. You would also need to adjust `const revalidate` and `const dynamic` attributes for your dynamic segments and layouts.
 
 ### Data revalidation (ISR)
 
