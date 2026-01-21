@@ -38,7 +38,7 @@
     "@strapi/design-system": "2.1.2",
     "@strapi/plugin-color-picker": "5.33.3",
     "@strapi/plugin-sentry": "5.33.3",
-    "@strapi/plugin-seo": "2.0.8",
+    "@strapi/plugin-seo": "2.0.9",
     "@strapi/plugin-users-permissions": "5.33.3",
     "@strapi/provider-email-mailgun": "5.33.3",
     "@strapi/provider-upload-aws-s3": "5.33.3",
