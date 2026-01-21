@@ -6,6 +6,7 @@ import { Locale } from "next-intl"
 
 import type { CustomFetchOptions } from "@/types/general"
 
+import { logNonBlockingError } from "@/lib/general-helpers"
 import { PublicStrapiClient } from "@/lib/strapi-api"
 
 // ------ Page fetching functions
@@ -35,7 +36,7 @@ export async function fetchPage(
       options
     )
   } catch (e: any) {
-    console.error({
+    logNonBlockingError({
       message: `Error fetching page '${fullPath}' for locale '${locale}'`,
       error: {
         error: e?.message,
@@ -57,7 +58,7 @@ export async function fetchAllPages(
       status: "published",
     })
   } catch (e: any) {
-    console.error({
+    logNonBlockingError({
       message: `Error fetching all pages for locale '${locale}'`,
       error: {
         error: e?.message,
@@ -89,7 +90,7 @@ export async function fetchSeo(
       fields: [],
     })
   } catch (e: any) {
-    console.error({
+    logNonBlockingError({
       message: `Error fetching SEO for '${uid}' with fullPath '${fullPath}' for locale '${locale}'`,
       error: {
         error: e?.message,
@@ -111,7 +112,7 @@ export async function fetchNavbar(locale: Locale) {
       },
     })
   } catch (e: any) {
-    console.error({
+    logNonBlockingError({
       message: `Error fetching navbar for locale '${locale}'`,
       error: {
         error: e?.message,
@@ -134,7 +135,7 @@ export async function fetchFooter(locale: Locale) {
       },
     })
   } catch (e: any) {
-    console.error({
+    logNonBlockingError({
       message: `Error fetching footer for locale '${locale}'`,
       error: {
         error: e?.message,

@@ -16,6 +16,7 @@ export const env = createEnv({
   server: {
     APP_PUBLIC_URL: z.string().url().optional(),
     DEBUG_STATIC_PARAMS_GENERATION: optionalZodBoolean(),
+    SHOW_NON_BLOCKING_ERRORS: optionalZodBoolean(),
     STRAPI_URL: z.string().url().optional(),
     STRAPI_REST_READONLY_API_KEY: z.string().optional(),
     STRAPI_REST_CUSTOM_API_KEY: z.string().optional(),
@@ -65,6 +66,7 @@ export const env = createEnv({
     // server
     APP_PUBLIC_URL: process.env.APP_PUBLIC_URL,
     DEBUG_STATIC_PARAMS_GENERATION: process.env.DEBUG_STATIC_PARAMS_GENERATION,
+    SHOW_NON_BLOCKING_ERRORS: process.env.SHOW_NON_BLOCKING_ERRORS,
     STRAPI_URL: process.env.STRAPI_URL,
     STRAPI_REST_READONLY_API_KEY: process.env.STRAPI_REST_READONLY_API_KEY,
     STRAPI_REST_CUSTOM_API_KEY: process.env.STRAPI_REST_CUSTOM_API_KEY,
@@ -85,6 +87,7 @@ export const env = createEnv({
     RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY,
 
     // client
+    // TODO: @dominik-juriga - find out if these are specific per environment
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     NEXT_PUBLIC_RECAPTCHA_SITE_KEY: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
     NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS:

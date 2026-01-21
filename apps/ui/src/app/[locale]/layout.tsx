@@ -2,6 +2,7 @@ import "@/styles/globals.css"
 
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
+import Script from "next/script"
 import { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
@@ -46,9 +47,42 @@ export default async function RootLayout({
     notFound()
   }
 
+  /**
+   * This allows you to make all env variables RUNTIME.
+   *
+   * No env variables are going to be embedded during the build-time. To avoid embedding,
+   * you must not use "NEXT_PUBLIC_" prefix for any env variable that you want to keep
+   * private and dynamic at runtime.
+   *
+   * Instead, use this method to pass only the required env variables to the client side.
+   * To access them from CSR or SSR context,
+   */
+  const CSR_ENVs = [
+    "NODE_ENV",
+    "REVALIDATE",
+    "SENTRY_DSN",
+    "DEBUG_STRAPI_CLIENT_API_CALLS",
+    "SHOW_NON_BLOCKING_ERRORS",
+  ]
+
   return (
     <html lang={locale} suppressHydrationWarning>
-      <head />
+      <head>
+        <Script id="csr-config" strategy="beforeInteractive">
+          {`
+         window.CSR_CONFIG = window.CSR_CONFIG || {};
+         window.CSR_CONFIG = ${JSON.stringify({
+           ...CSR_ENVs.reduce(
+             (acc, curr) => {
+               acc[curr] = process.env?.[curr]
+               return acc
+             },
+             {} as Record<string, string | undefined>
+           ),
+         })};
+       `}
+        </Script>
+      </head>
       <body
         className={cn(
           "min-h-screen bg-gray-100 font-sans antialiased",
