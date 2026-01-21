@@ -40,9 +40,9 @@
   "devDependencies": {
     "@commitlint/cli": "19.3.0",
     "@commitlint/config-conventional": "19.2.2",
-    "@repo/eslint-config": "*",
-    "@repo/prettier-config": "*",
-    "@repo/typescript-config": "*",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/prettier-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "commitizen": "4.3.0",
     "cz-conventional-changelog": "^3.3.0",
     "husky": "^9.1.1",
@@ -50,7 +50,7 @@
     "prettier": "3.8.0",
     "turbo": "2.7.3"
   },
-  "packageManager": "pnpm@8.15.5",
+  "packageManager": "pnpm@10.28.1",
   "engines": {
     "node": "^22.0.0"
   },

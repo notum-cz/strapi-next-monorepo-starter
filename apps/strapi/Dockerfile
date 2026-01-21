@@ -16,7 +16,7 @@ RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev l
 # Install pnpm globally
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}

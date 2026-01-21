@@ -26,7 +26,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 - Docker
 - node 22
-- pnpm 8.15
+- pnpm 10
 - [nvm](https://github.com/nvm-sh/nvm) (optional, recommended)
 
 ### Run dev (in 4 steps)
@@ -43,6 +43,9 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
    # in root
    # switch to correct nodejs version (v22)
    nvm use
+
+   # optionally, switch to pnpm v10.28.1
+   (corepack prepare pnpm@10.28.1 --activate)
 
    # install deps for apps and packages that are part of this monorepo
    pnpm install
