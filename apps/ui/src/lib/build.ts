@@ -27,7 +27,7 @@ export const debugStaticParams = (
 
 /**
  * Returning an empty array from generateStaticParams in {output: 'export'} mode yields a build error. Therefore
- * we need to return atleast a dummy value, even if it will result in a 404.
+ * we need to return at least a dummy value, even if it will result in a 404.
  *
  * @param params object containing parameter names and their fallback values
  * @returns object containing default locale and fallback values for each parameter
