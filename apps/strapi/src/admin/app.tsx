@@ -29,6 +29,7 @@ export default {
        * and apply them to the admin panel.
        *
        * This can be used to inject CSS into the admin panel based on runtime env variables.
+       * This is an example of usage, feel free to modify per your needs.
        */
       const configRequest = await fetch("/api/admin-panel-config", {
         headers: {
@@ -50,8 +51,8 @@ export default {
 
         const colors =
           configData.APP_BRAND === "BRAND_A"
-            ? { primary: "#204546", accent: "#59878c" }
-            : { primary: "#000000", accent: "#ae8f5b" }
+            ? { primary: "#123123", accent: "#234234" }
+            : { primary: "#321321", accent: "#432432" }
 
         document.documentElement.style.setProperty(
           "--color-primary-default",
