@@ -49,7 +49,7 @@
     "lodash": "^4.17.21",
     "pg": "^8.13.1",
     "qs": "^6.14.1",
-    "react": "^18.0.0",
+    "react": "^19.2.3",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
     "strapi-plugin-config-sync": "2.1.0",
@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "@types/node": "^22",
-    "@types/react": "^18",
+    "@types/react": "^19",
     "@types/react-dom": "^18",
     "typescript": "^5"
   },
