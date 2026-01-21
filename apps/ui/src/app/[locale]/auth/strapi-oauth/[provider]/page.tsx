@@ -8,7 +8,11 @@ import { authClient } from "@/lib/auth-client"
 import { getAuthErrorMessage } from "@/lib/general-helpers"
 import { useToast } from "@/components/ui/use-toast"
 
-export default function StrapiOAuthCallbackPage() {
+export default function StrapiOAuthCallbackPage({
+  params,
+}: {
+  params: { locale: string; provider: string }
+}) {
   const locale = useLocale()
   const searchParams = useSearchParams()
   const { toast } = useToast()
@@ -19,6 +23,7 @@ export default function StrapiOAuthCallbackPage() {
 
   useEffect(() => {
     const accessToken = searchParams.get("access_token")
+    const provider = params?.provider || "github"
 
     if (!accessToken) {
       setStatus("error")
@@ -29,7 +34,7 @@ export default function StrapiOAuthCallbackPage() {
     authClient
       .syncOauthStrapi({
         accessToken,
-        provider: "github",
+        provider,
       })
       .then((result) => {
         if (result.error) {
@@ -56,7 +61,7 @@ export default function StrapiOAuthCallbackPage() {
         setMessage(message)
         toast({ variant: "destructive", description: message })
       })
-  }, [locale, searchParams, toast])
+  }, [locale, params?.provider, searchParams, toast])
 
   return (
     <div className="p-6">
