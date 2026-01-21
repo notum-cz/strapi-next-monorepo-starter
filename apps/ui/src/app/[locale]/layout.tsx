@@ -60,7 +60,6 @@ export default async function RootLayout({
    */
   const CSR_ENVs = [
     "NODE_ENV",
-    "REVALIDATE",
     "SENTRY_DSN",
     "DEBUG_STRAPI_CLIENT_API_CALLS",
     "SHOW_NON_BLOCKING_ERRORS",

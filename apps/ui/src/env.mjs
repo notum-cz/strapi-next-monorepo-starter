@@ -17,6 +17,7 @@ export const env = createEnv({
     APP_PUBLIC_URL: z.string().url().optional(),
     DEBUG_STATIC_PARAMS_GENERATION: optionalZodBoolean(),
     SHOW_NON_BLOCKING_ERRORS: optionalZodBoolean(),
+    DEBUG_STRAPI_CLIENT_API_CALLS: optionalZodBoolean(),
     STRAPI_URL: z.string().url().optional(),
     STRAPI_REST_READONLY_API_KEY: z.string().optional(),
     STRAPI_REST_CUSTOM_API_KEY: z.string().optional(),
@@ -34,6 +35,7 @@ export const env = createEnv({
     SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING: z.string().optional(),
 
     RECAPTCHA_SECRET_KEY: z.string().optional(),
+    NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
   },
 
   /*
@@ -45,7 +47,6 @@ export const env = createEnv({
    * consider runtime injection instead (through `window.__ENV__` or similar hack).
    */
   client: {
-    NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
     NEXT_PUBLIC_RECAPTCHA_SITE_KEY: z.string().optional(),
     NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS: optionalZodBoolean(),
   },
@@ -66,6 +67,7 @@ export const env = createEnv({
     // server
     APP_PUBLIC_URL: process.env.APP_PUBLIC_URL,
     DEBUG_STATIC_PARAMS_GENERATION: process.env.DEBUG_STATIC_PARAMS_GENERATION,
+    DEBUG_STRAPI_CLIENT_API_CALLS: process.env.DEBUG_STRAPI_CLIENT_API_CALLS,
     SHOW_NON_BLOCKING_ERRORS: process.env.SHOW_NON_BLOCKING_ERRORS,
     STRAPI_URL: process.env.STRAPI_URL,
     STRAPI_REST_READONLY_API_KEY: process.env.STRAPI_REST_READONLY_API_KEY,
@@ -88,7 +90,7 @@ export const env = createEnv({
 
     // client
     // TODO: @dominik-juriga - find out if these are specific per environment
-    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     NEXT_PUBLIC_RECAPTCHA_SITE_KEY: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
     NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS:
       process.env.NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS,

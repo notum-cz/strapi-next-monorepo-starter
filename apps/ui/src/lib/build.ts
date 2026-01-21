@@ -40,6 +40,6 @@ export const createFallbackPath = (
   params: Record<string, string | string[]>
 ) => ({
   locale,
-  rest: [],
+  rest: [], // to satisfy type checking for [[...rest]], but can be overridden via `params`
   ...params,
 })
