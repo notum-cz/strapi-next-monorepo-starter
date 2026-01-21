@@ -264,9 +264,9 @@ To get session in client components use `useSession()` (reactive) or `getSession
 
 ```tsx
 import { authClient } from "@/lib/client"
+
 const { data: session } = authClient.useSession()
 
-import { authClient } from "@/lib/client"
 const { data: session } = await authClient.getSession()
 ```
 

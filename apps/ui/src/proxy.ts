@@ -11,7 +11,7 @@ const intlProxy = createMiddleware(routing)
 // List all pages that require authentication (non-public)
 const authPages = ["/auth/change-password", "/auth/signout"]
 
-export default async function middleware(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
   // Handle HTTPS redirection in production in Heroku servers
   // Comment this block when running locally (using `next start`)
   const xForwardedProtoHeader = req.headers.get("x-forwarded-proto")
@@ -53,7 +53,7 @@ export default async function middleware(req: NextRequest) {
       }
 
       // User is authenticated, proceed with internationalization middleware
-      return intlMiddleware(req)
+      return intlProxy(req)
     } catch (error) {
       // Error checking session, redirect to sign in
       const signInUrl = new URL("/auth/signin", req.url)
@@ -65,9 +65,6 @@ export default async function middleware(req: NextRequest) {
   // All other pages are public
   return intlProxy(req)
 }
-
-// Use Node.js runtime instead of Edge runtime for Better Auth compatibility
-export const runtime = "nodejs"
 
 export const config = {
   // Match only internationalized pathnames
