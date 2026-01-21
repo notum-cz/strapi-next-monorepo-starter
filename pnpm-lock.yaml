@@ -233,8 +233,8 @@ importers:
         specifier: ^4.24.12
         version: 4.24.13(next@16.1.4)(react-dom@19.2.3)(react@19.2.3)
       next-intl:
-        specifier: 4.6.1
-        version: 4.6.1(next@16.1.4)(react@19.2.3)(typescript@5.9.3)
+        specifier: 4.7.0
+        version: 4.7.0(next@16.1.4)(react@19.2.3)(typescript@5.9.3)
       next-recaptcha-v3:
         specifier: ^1.5.2
         version: 1.5.3(next@16.1.4)(react@19.2.3)
@@ -17358,8 +17358,8 @@ packages:
     resolution: {integrity: sha512-iAqflu2FWdQMWhwB0B2z52X7LmEpvnMNJXqVERZQ7bK5p9iqQLu70ur6Ka6NfiXLxfb+AeAkUX5qIciQOg+87A==}
     dev: false
 
-  /next-intl@4.6.1(next@16.1.4)(react@19.2.3)(typescript@5.9.3):
-    resolution: {integrity: sha512-KlWgWtKLBPUsTPgxqwyjws1wCMD2QKxLlVjeeGj53DC1JWfKmBShKOrhIP0NznZrRQ0GleeoDUeHSETmyyIFeA==}
+  /next-intl@4.7.0(next@16.1.4)(react@19.2.3)(typescript@5.9.3):
+    resolution: {integrity: sha512-gvROzcNr/HM0jTzQlKWQxUNk8jrZ0bREz+bht3wNbv+uzlZ5Kn3J+m+viosub18QJ72S08UJnVK50PXWcUvwpQ==}
     peerDependencies:
       next: ^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc <19.0.0 || ^19.0.0
