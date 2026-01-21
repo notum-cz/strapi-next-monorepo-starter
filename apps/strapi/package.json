@@ -50,7 +50,7 @@
     "pg": "^8.13.1",
     "qs": "^6.14.1",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react-dom": "^19.2.3",
     "react-router-dom": "^6.0.0",
     "strapi-plugin-config-sync": "2.1.0",
     "styled-components": "^6.0.0"
