@@ -222,6 +222,9 @@ If you're sure about being within the server context, use the `env` utility to i
 
 Strapi admin panel is using a similar approach. The values are injected into the admin HTML page using a script tag. You can access them using `window.STRAPI_ADMIN_CONFIG` object.
 
+> [!IMPORTANT]
+> This is disabled by default in Strapi. To configure this feature, you will need to set the `ADMIN_PANEL_CONFIG_API_AUTH_TOKEN` env variable for Strapi. You are free to generate your token value, for example using `openssl rand -base64 32` command. Once set, Strapi admin panel will start fetching the configuration during runtime.
+
 This happens during the bootstrap phase in the [app.tsx](./apps/strapi/src/admin/app.tsx) and it calls an [internal endpoint](./apps/strapi/src/api/admin-panel-config/services/admin-panel-config.ts) which requires configuration if you need additional ENV variables to be propagated. You can use this approach to add custom CSS, variables or JS code using the `window` API.
 
 ### GitHub Actions
