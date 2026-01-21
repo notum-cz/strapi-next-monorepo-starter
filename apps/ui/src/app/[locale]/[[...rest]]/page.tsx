@@ -30,7 +30,7 @@ export async function generateStaticParams({
   params: { locale },
 }: {
   // retrieve locales - this is being passed from root layout.tsx's generateStaticParams
-  params: { locale: Locale }
+  params: { locale: string }
 }) {
   if (isDevelopment()) {
     debugStaticParams([], "[[...rest]]", { isDevelopment: true })
@@ -55,7 +55,9 @@ export async function generateStaticParams({
 
   // statically generated applications with output: 'export' require at least one entry (even invalid)
   // within the dynamic segment to avoid build errors
-  const fallbackPath = createFallbackPath(locale, { rest: ["fallback"] })
+  const fallbackPath = createFallbackPath(locale as Locale, {
+    rest: ["fallback"],
+  })
 
   return params.length > 0 ? params : [fallbackPath]
 }
