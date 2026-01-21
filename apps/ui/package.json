@@ -62,7 +62,7 @@
     "react-hook-form": "^7.53.1",
     "react-use": "^17.5.1",
     "server-only": "^0.0.1",
-    "sharp": "0.33.5",
+    "sharp": "0.34.5",
     "tailwind-merge": "^3.2.0",
     "tailwindcss-animate": "^1.0.7",
     "ts-pattern": "^5.5.0",
