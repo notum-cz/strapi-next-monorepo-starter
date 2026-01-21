@@ -44,7 +44,7 @@
     "@strapi/provider-upload-aws-s3": "5.33.3",
     "@strapi/strapi": "5.33.3",
     "@strapi/utils": "5.33.3",
-    "ckeditor5": "45.2.2",
+    "ckeditor5": "47.4.0",
     "jsonwebtoken": "9.0.3",
     "lodash": "^4.17.21",
     "pg": "^8.13.1",
