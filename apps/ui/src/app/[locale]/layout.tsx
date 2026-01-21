@@ -5,6 +5,7 @@ import { notFound } from "next/navigation"
 import { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
+import { debugStaticParams } from "@/lib/build"
 import { fontRoboto } from "@/lib/fonts"
 import { routing } from "@/lib/navigation"
 import { cn } from "@/lib/styles"
@@ -19,7 +20,9 @@ import TrackingScripts from "@/components/providers/TrackingScripts"
 import { Toaster } from "@/components/ui/toaster"
 
 export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }))
+  const locales = routing.locales.map((locale) => ({ locale }))
+  debugStaticParams(locales, "[locale]")
+  return locales
 }
 
 export const metadata: Metadata = {

@@ -15,7 +15,7 @@ export const env = createEnv({
    */
   server: {
     APP_PUBLIC_URL: z.string().url().optional(),
-
+    DEBUG_STATIC_PARAMS_GENERATION: optionalZodBoolean(),
     STRAPI_URL: z.string().url().optional(),
     STRAPI_REST_READONLY_API_KEY: z.string().optional(),
     STRAPI_REST_CUSTOM_API_KEY: z.string().optional(),
@@ -64,7 +64,7 @@ export const env = createEnv({
   runtimeEnv: {
     // server
     APP_PUBLIC_URL: process.env.APP_PUBLIC_URL,
-
+    DEBUG_STATIC_PARAMS_GENERATION: process.env.DEBUG_STATIC_PARAMS_GENERATION,
     STRAPI_URL: process.env.STRAPI_URL,
     STRAPI_REST_READONLY_API_KEY: process.env.STRAPI_REST_READONLY_API_KEY,
     STRAPI_REST_CUSTOM_API_KEY: process.env.STRAPI_REST_CUSTOM_API_KEY,
