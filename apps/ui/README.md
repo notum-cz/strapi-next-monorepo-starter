@@ -134,6 +134,10 @@ Next.js has three `output` modes:
 - `standalone` – Optimized output for self-hosting in a Docker container (see above). It includes only the necessary files and dependencies.
 - `undefined` – Default build output in the `.next` directory. This mode is used with `next start` in production or by hosting providers like Vercel. It requires a Node.js server.
 
+> [!IMPORTANT]
+> There is an additional script included in this repository:
+> `pnpm run build:ui:static` which triggers the `output: "export"` build, however, this one is not working out of the box, as it's necessary to remove usage of dynamic functions (see [docs](https://nextjs.org/docs/app/guides/static-exports#unsupported-features) for more info). This includes BetterAuth, etc. You would also need to adjust `cosnt revalidate` and `const dynamic` attributes for your dynamic segments and layouts.
+
 ### Data revalidation (ISR)
 
 This approach allows static content to be updated without rebuilding the entire site. Data revalidation does not work in plain static `export` output mode, as the app is fully static and lacks a server to handle revalidation. Incremental Static Regeneration (ISR) improves performance and reduces server load.
