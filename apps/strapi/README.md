@@ -260,9 +260,6 @@ The starter supports OAuth authentication through Strapi's Users & Permissions p
    ```bash
    # apps/strapi/.env
    APP_URL=https://abc123.ngrok.io
-
-   # apps/ui/.env.local
-   NEXT_PUBLIC_STRAPI_URL=https://abc123.ngrok.io
    ```
 
 8. Update your OAuth provider (GitHub) with the ngrok URLs:
