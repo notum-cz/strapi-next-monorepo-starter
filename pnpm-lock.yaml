@@ -94,8 +94,8 @@ importers:
         specifier: 9.0.3
         version: 9.0.3
       lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
+        specifier: ^4.17.23
+        version: 4.17.23
       pg:
         specifier: ^8.13.1
         version: 8.17.1
@@ -186,7 +186,7 @@ importers:
         version: link:../../packages/shared-data
       '@sentry/nextjs':
         specifier: 10.35.0
-        version: 10.35.0(@opentelemetry/context-async-hooks@2.4.0)(@opentelemetry/core@2.4.0)(@opentelemetry/sdk-trace-base@2.4.0)(next@16.1.4)(react@19.2.3)(webpack@5.104.1)
+        version: 10.35.0(@opentelemetry/context-async-hooks@2.5.0)(@opentelemetry/core@2.5.0)(@opentelemetry/sdk-trace-base@2.5.0)(next@16.1.4)(react@19.2.3)(webpack@5.104.1)
       '@t3-oss/env-nextjs':
         specifier: ^0.11.1
         version: 0.11.1(typescript@5.9.3)(zod@3.25.76)
@@ -218,8 +218,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
+        specifier: ^4.17.23
+        version: 4.17.23
       lucide-react:
         specifier: ^0.487.0
         version: 0.487.0(react@19.2.3)
@@ -4458,6 +4458,15 @@ packages:
       '@opentelemetry/api': 1.9.0
     dev: false
 
+  /@opentelemetry/context-async-hooks@2.5.0(@opentelemetry/api@1.9.0):
+    resolution: {integrity: sha512-uOXpVX0ZjO7heSVjhheW2XEPrhQAWr2BScDPoZ9UDycl5iuHG+Usyc3AIfG6kZeC1GyLpMInpQ6X5+9n69yOFw==}
+    engines: {node: ^18.19.0 || >=20.6.0}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.0.0 <1.10.0'
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+    dev: false
+
   /@opentelemetry/core@2.2.0(@opentelemetry/api@1.9.0):
     resolution: {integrity: sha512-FuabnnUm8LflnieVxs6eP7Z383hgQU4W1e3KJS6aOG3RxWxcHyBxH8fDMHNgu/gFx/M2jvTOW/4/PHhLz6bjWw==}
     engines: {node: ^18.19.0 || >=20.6.0}
@@ -4470,6 +4479,16 @@ packages:
 
   /@opentelemetry/core@2.4.0(@opentelemetry/api@1.9.0):
     resolution: {integrity: sha512-KtcyFHssTn5ZgDu6SXmUznS80OFs/wN7y6MyFRRcKU6TOw8hNcGxKvt8hsdaLJfhzUszNSjURetq5Qpkad14Gw==}
+    engines: {node: ^18.19.0 || >=20.6.0}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.0.0 <1.10.0'
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/semantic-conventions': 1.39.0
+    dev: false
+
+  /@opentelemetry/core@2.5.0(@opentelemetry/api@1.9.0):
+    resolution: {integrity: sha512-ka4H8OM6+DlUhSAZpONu0cPBtPPTQKxbxVzC4CzVx5+K4JnroJVBtDzLAMx4/3CDTJXRvVFhpFjtl4SaiTNoyQ==}
     engines: {node: ^18.19.0 || >=20.6.0}
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
@@ -4803,6 +4822,17 @@ packages:
       '@opentelemetry/semantic-conventions': 1.39.0
     dev: false
 
+  /@opentelemetry/resources@2.5.0(@opentelemetry/api@1.9.0):
+    resolution: {integrity: sha512-F8W52ApePshpoSrfsSk1H2yJn9aKjCrbpQF1M9Qii0GHzbfVeFUB+rc3X4aggyZD8x9Gu3Slua+s6krmq6Dt8g==}
+    engines: {node: ^18.19.0 || >=20.6.0}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.3.0 <1.10.0'
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/core': 2.5.0(@opentelemetry/api@1.9.0)
+      '@opentelemetry/semantic-conventions': 1.39.0
+    dev: false
+
   /@opentelemetry/sdk-trace-base@2.4.0(@opentelemetry/api@1.9.0):
     resolution: {integrity: sha512-WH0xXkz/OHORDLKqaxcUZS0X+t1s7gGlumr2ebiEgNZQl2b0upK2cdoD0tatf7l8iP74woGJ/Kmxe82jdvcWRw==}
     engines: {node: ^18.19.0 || >=20.6.0}
@@ -4812,6 +4842,18 @@ packages:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/core': 2.4.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/resources': 2.4.0(@opentelemetry/api@1.9.0)
+      '@opentelemetry/semantic-conventions': 1.39.0
+    dev: false
+
+  /@opentelemetry/sdk-trace-base@2.5.0(@opentelemetry/api@1.9.0):
+    resolution: {integrity: sha512-VzRf8LzotASEyNDUxTdaJ9IRJ1/h692WyArDBInf5puLCjxbICD6XkHgpuudis56EndyS7LYFmtTMny6UABNdQ==}
+    engines: {node: ^18.19.0 || >=20.6.0}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.3.0 <1.10.0'
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/core': 2.5.0(@opentelemetry/api@1.9.0)
+      '@opentelemetry/resources': 2.5.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions': 1.39.0
     dev: false
 
@@ -7334,7 +7376,7 @@ packages:
       localforage: 1.10.0
     dev: false
 
-  /@sentry/nextjs@10.35.0(@opentelemetry/context-async-hooks@2.4.0)(@opentelemetry/core@2.4.0)(@opentelemetry/sdk-trace-base@2.4.0)(next@16.1.4)(react@19.2.3)(webpack@5.104.1):
+  /@sentry/nextjs@10.35.0(@opentelemetry/context-async-hooks@2.5.0)(@opentelemetry/core@2.5.0)(@opentelemetry/sdk-trace-base@2.5.0)(next@16.1.4)(react@19.2.3)(webpack@5.104.1):
     resolution: {integrity: sha512-9MsaUP2R7DE59zAU22BvKlsR2wwSis5YGVdgJjMcUAO83UxUX9gprdJ7Cxb4gWScc2w4ARd7AGigz443sx44Dg==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -7347,7 +7389,7 @@ packages:
       '@sentry/bundler-plugin-core': 4.7.0
       '@sentry/core': 10.35.0
       '@sentry/node': 10.35.0
-      '@sentry/opentelemetry': 10.35.0(@opentelemetry/api@1.9.0)(@opentelemetry/context-async-hooks@2.4.0)(@opentelemetry/core@2.4.0)(@opentelemetry/sdk-trace-base@2.4.0)(@opentelemetry/semantic-conventions@1.39.0)
+      '@sentry/opentelemetry': 10.35.0(@opentelemetry/api@1.9.0)(@opentelemetry/context-async-hooks@2.5.0)(@opentelemetry/core@2.5.0)(@opentelemetry/sdk-trace-base@2.5.0)(@opentelemetry/semantic-conventions@1.39.0)
       '@sentry/react': 10.35.0(react@19.2.3)
       '@sentry/vercel-edge': 10.35.0
       '@sentry/webpack-plugin': 4.7.0(webpack@5.104.1)
@@ -7459,6 +7501,24 @@ packages:
       '@opentelemetry/context-async-hooks': 2.4.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/core': 2.4.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-base': 2.4.0(@opentelemetry/api@1.9.0)
+      '@opentelemetry/semantic-conventions': 1.39.0
+      '@sentry/core': 10.35.0
+    dev: false
+
+  /@sentry/opentelemetry@10.35.0(@opentelemetry/api@1.9.0)(@opentelemetry/context-async-hooks@2.5.0)(@opentelemetry/core@2.5.0)(@opentelemetry/sdk-trace-base@2.5.0)(@opentelemetry/semantic-conventions@1.39.0):
+    resolution: {integrity: sha512-6RolzEXh9o9gorhyYZ+y0IbExdZKWb0N7DY+ltOTt9SxyQ02evUgxDqLi1pOW2pvXahEghjrGPAKVBv7uccLNw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@opentelemetry/api': ^1.9.0
+      '@opentelemetry/context-async-hooks': ^1.30.1 || ^2.1.0 || ^2.2.0
+      '@opentelemetry/core': ^1.30.1 || ^2.1.0 || ^2.2.0
+      '@opentelemetry/sdk-trace-base': ^1.30.1 || ^2.1.0 || ^2.2.0
+      '@opentelemetry/semantic-conventions': ^1.37.0
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/context-async-hooks': 2.5.0(@opentelemetry/api@1.9.0)
+      '@opentelemetry/core': 2.5.0(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-base': 2.5.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions': 1.39.0
       '@sentry/core': 10.35.0
     dev: false
@@ -9710,7 +9770,7 @@ packages:
       '@strapi/icons': 2.1.2(react-dom@18.3.1)(react@18.3.1)(styled-components@6.3.8)
       '@strapi/strapi': 5.33.3(@babel/runtime@7.28.6)(@codemirror/autocomplete@6.20.0)(@codemirror/language@6.12.1)(@codemirror/lint@6.9.2)(@codemirror/search@6.6.0)(@codemirror/state@6.5.4)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.39.11)(@types/node@22.19.7)(@types/react-dom@19.2.3)(@types/react@19.2.8)(codemirror@6.0.2)(esbuild@0.27.2)(koa@2.16.3)(pg@8.17.1)(react-dom@18.3.1)(react-router-dom@6.30.3)(react@18.3.1)(redux@4.2.1)(styled-components@6.3.8)
       date-fns: 4.1.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       prettier: 3.8.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -12777,7 +12837,7 @@ packages:
     dependencies:
       chalk: 4.1.2
       date-fns: 2.30.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       rxjs: 7.8.2
       shell-quote: 1.8.3
       spawn-command: 0.0.2
@@ -14431,7 +14491,7 @@ packages:
       '@types/hoist-non-react-statics': 3.3.7(@types/react@19.2.8)
       deepmerge: 2.2.1
       hoist-non-react-statics: 3.3.2
-      lodash: 4.17.21
+      lodash: 4.17.23
       lodash-es: 4.17.22
       react: 18.3.1
       react-fast-compare: 2.0.4
@@ -15036,7 +15096,7 @@ packages:
     dependencies:
       '@types/html-minifier-terser': 6.1.0
       html-minifier-terser: 6.1.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       pretty-error: 4.0.0
       tapable: 2.3.0
       webpack: 5.104.1(esbuild@0.27.2)
@@ -15282,7 +15342,7 @@ packages:
       cli-width: 3.0.0
       external-editor: 3.1.0
       figures: 3.2.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       mute-stream: 0.0.8
       ora: 5.4.1
       run-async: 2.4.1
@@ -15302,7 +15362,7 @@ packages:
       cli-cursor: 3.1.0
       cli-width: 3.0.0
       figures: 3.2.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       mute-stream: 0.0.8
       ora: 5.4.1
       run-async: 2.4.1
@@ -15910,7 +15970,7 @@ packages:
     engines: {node: '>=12', npm: '>=6'}
     dependencies:
       jws: 3.2.3
-      lodash: 4.17.21
+      lodash: 4.17.23
       ms: 2.1.3
       semver: 7.7.3
 
@@ -16066,7 +16126,7 @@ packages:
       get-package-type: 0.1.0
       getopts: 2.3.0
       interpret: 2.2.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       pg: 8.17.1
       pg-connection-string: 2.6.1
       rechoir: 0.8.0
@@ -16561,6 +16621,9 @@ packages:
 
   /lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+
+  /lodash@4.17.23:
+    resolution: {integrity: sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==}
 
   /log-symbols@4.1.0:
     resolution: {integrity: sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg==}
@@ -18388,7 +18451,7 @@ packages:
   /pretty-error@4.0.0:
     resolution: {integrity: sha512-AoJ5YMAcXKYxKhuJGdcvse+Voc6v1RgnsR3nWcYU7q4t6z0Q6T86sv5Zq8VIRbOWWFpvdGE83LtdSMNd+6Y0xw==}
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.17.23
       renderkid: 3.0.0
 
   /pretty-format@27.5.1:
@@ -19204,7 +19267,7 @@ packages:
       css-select: 4.3.0
       dom-converter: 0.2.0
       htmlparser2: 6.1.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       strip-ansi: 6.0.1
 
   /request-compose@2.1.7:
@@ -19811,7 +19874,7 @@ packages:
       direction: 1.0.4
       is-hotkey: 0.1.8
       is-plain-object: 5.0.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       scroll-into-view-if-needed: 2.2.31
@@ -21629,7 +21692,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.28.6
       '@types/lodash': 4.17.23
-      lodash: 4.17.21
+      lodash: 4.17.23
       lodash-es: 4.17.22
       nanoclone: 0.2.1
       property-expr: 2.0.6
