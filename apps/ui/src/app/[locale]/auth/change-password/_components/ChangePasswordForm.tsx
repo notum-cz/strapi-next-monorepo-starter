@@ -6,10 +6,10 @@ import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
-import { authClient } from "@/lib/auth-client"
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
 import { getAuthErrorMessage } from "@/lib/general-helpers"
 import { useRouter } from "@/lib/navigation"
+import { useUserMutations } from "@/hooks/useUserMutations"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button } from "@/components/ui/button"
@@ -27,7 +27,7 @@ export function ChangePasswordForm() {
   const t = useTranslations("auth.changePassword")
   const router = useRouter()
   const { toast } = useToast()
-  const [isLoading, setIsLoading] = useState(false)
+  const { changePasswordMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(ChangePasswordFormSchema),
@@ -41,14 +41,9 @@ export function ChangePasswordForm() {
   })
 
   const onSubmit = async (data: z.infer<FormSchemaType>) => {
-    setIsLoading(true)
     try {
       // Call Better Auth update password endpoint
-      const result = await authClient.updatePassword({
-        currentPassword: data.currentPassword,
-        password: data.password,
-        passwordConfirmation: data.passwordConfirmation,
-      })
+      const result = await changePasswordMutation.mutateAsync(data)
 
       if (result.data) {
         toast({
@@ -100,8 +95,6 @@ export function ChangePasswordForm() {
         variant: "destructive",
         description: errorMessage,
       })
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -139,7 +132,7 @@ export function ChangePasswordForm() {
           size="lg"
           variant="default"
           form={changePasswordFormName}
-          disabled={isLoading}
+          disabled={changePasswordMutation.isPending}
         >
           {t("submit")}
         </Button>

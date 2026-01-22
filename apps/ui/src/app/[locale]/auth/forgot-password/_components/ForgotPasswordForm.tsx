@@ -5,9 +5,9 @@ import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
-import { authClient } from "@/lib/auth-client"
 import { getAuthErrorMessage } from "@/lib/general-helpers"
 import { useRouter } from "@/lib/navigation"
+import { useUserMutations } from "@/hooks/useUserMutations"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button } from "@/components/ui/button"
@@ -25,6 +25,7 @@ export function ForgotPasswordForm() {
   const t = useTranslations("auth.forgotPassword")
   const router = useRouter()
   const { toast } = useToast()
+  const { forgotPasswordMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(ForgotPasswordFormSchema),
@@ -35,9 +36,7 @@ export function ForgotPasswordForm() {
 
   const onSubmit = async (data: z.infer<FormSchemaType>) => {
     try {
-      const result = await authClient.forgotPasswordStrapi({
-        email: data.email,
-      })
+      const result = await forgotPasswordMutation.mutateAsync(data)
 
       if (result.data) {
         toast({
@@ -85,6 +84,7 @@ export function ForgotPasswordForm() {
           size="lg"
           variant="default"
           form={forgotPasswordFormName}
+          disabled={forgotPasswordMutation.isPending}
         >
           {t("submit")}
         </Button>

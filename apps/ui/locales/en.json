@@ -239,6 +239,13 @@
       "errors": {
         "failedToSendPasswordResetEmail": "Failed to send password reset email"
       }
+    },
+
+    "oauth": {
+      "signingIn": "Signing you in...",
+      "signedInSuccessfully": "Signed in successfully",
+      "redirecting": "Redirecting...",
+      "signInFailed": "Sign in failed"
     }
   }
 }

@@ -237,6 +237,13 @@
       "errors": {
         "failedToSendPasswordResetEmail": "Nepodařilo se odeslat email s instrukcemi pro obnovení hesla."
       }
+    },
+
+    "oauth": {
+      "signingIn": "Přihlašuji vás...",
+      "signedInSuccessfully": "Úspěšně přihlášen",
+      "redirecting": "Přesměrovávám...",
+      "signInFailed": "Přihlášení selhalo"
     }
   }
 }

@@ -6,9 +6,9 @@ import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
-import { authClient } from "@/lib/auth-client"
 import { getAuthErrorMessage } from "@/lib/general-helpers"
 import { Link } from "@/lib/navigation"
+import { useUserMutations } from "@/hooks/useUserMutations"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { UseSearchParamsWrapper } from "@/components/helpers/UseSearchParamsWrapper"
@@ -36,6 +36,7 @@ function SuspensedSignInForm() {
   const { toast } = useToast()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl") ?? "/"
+  const { signInMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(SignInFormSchema),
@@ -46,10 +47,7 @@ function SuspensedSignInForm() {
 
   async function onSubmit(values: z.infer<FormSchemaType>) {
     try {
-      const result = await authClient.signInStrapi({
-        email: values.email,
-        password: values.password,
-      })
+      const result = await signInMutation.mutateAsync(values)
 
       if (result.data) {
         // Use full page navigation to ensure session is reloaded
@@ -107,8 +105,14 @@ function SuspensedSignInForm() {
         </AppForm>
       </CardContent>
       <CardFooter className="flex flex-col items-center gap-2">
-        <Button type="submit" size="lg" variant="default" form={signInFormName}>
-          {t("submit")}
+        <Button
+          type="submit"
+          size="lg"
+          variant="default"
+          form={signInFormName}
+          disabled={signInMutation.isPending}
+        >
+          {signInMutation.isPending ? "Signing in..." : t("submit")}
         </Button>
 
         <div className="relative my-4 w-full">

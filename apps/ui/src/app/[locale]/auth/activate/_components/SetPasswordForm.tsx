@@ -7,10 +7,10 @@ import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
-import { authClient } from "@/lib/auth-client"
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
 import { getAuthErrorMessage } from "@/lib/general-helpers"
 import { useRouter } from "@/lib/navigation"
+import { useUserMutations } from "@/hooks/useUserMutations"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { UseSearchParamsWrapper } from "@/components/helpers/UseSearchParamsWrapper"
@@ -43,7 +43,7 @@ function SuspensedSetPasswordForm({ accountActivation }: SetPasswordFormProps) {
     accountActivation ? "auth.accountActivation" : "auth.resetPassword"
   )
   const { toast } = useToast()
-  const [isLoading, setIsLoading] = useState(false)
+  const { resetPasswordMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(SetPasswordFormSchema),
@@ -65,9 +65,8 @@ function SuspensedSetPasswordForm({ accountActivation }: SetPasswordFormProps) {
       return
     }
 
-    setIsLoading(true)
     try {
-      const result = await authClient.resetPasswordStrapi({
+      const result = await resetPasswordMutation.mutateAsync({
         code,
         password: data.password,
         passwordConfirmation: data.passwordConfirmation,
@@ -99,8 +98,6 @@ function SuspensedSetPasswordForm({ accountActivation }: SetPasswordFormProps) {
         variant: "destructive",
         description: message,
       })
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -132,7 +129,7 @@ function SuspensedSetPasswordForm({ accountActivation }: SetPasswordFormProps) {
           size="lg"
           variant="default"
           form={setPasswordFormName}
-          disabled={isLoading}
+          disabled={resetPasswordMutation.isPending}
         >
           {t("submit")}
         </Button>

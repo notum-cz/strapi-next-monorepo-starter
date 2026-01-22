@@ -6,11 +6,11 @@ import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
-import { authClient } from "@/lib/auth-client"
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
 import { getAuthErrorMessage } from "@/lib/general-helpers"
 import { Link } from "@/lib/navigation"
 import { cn } from "@/lib/styles"
+import { useUserMutations } from "@/hooks/useUserMutations"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -32,6 +32,7 @@ export function RegisterForm() {
   const t = useTranslations("auth.register")
   const { toast } = useToast()
   const [isSuccess, setIsSuccess] = useState(false)
+  const { registerMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(RegisterFormSchema),
@@ -48,8 +49,7 @@ export function RegisterForm() {
     try {
       // Call Better Auth custom registration endpoint
       // The path /register-strapi becomes registerStrapi (kebab-case to camelCase)
-      const result = await authClient.registerStrapi({
-        username: values.email,
+      const result = await registerMutation.mutateAsync({
         email: values.email,
         password: values.password,
       })
@@ -162,6 +162,7 @@ export function RegisterForm() {
             variant="default"
             form={registerFormName}
             className="w-full"
+            disabled={registerMutation.isPending}
           >
             {t("submit")}
           </Button>
