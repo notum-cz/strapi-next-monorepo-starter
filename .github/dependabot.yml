@@ -9,7 +9,9 @@ updates:
       interval: "weekly"
     allow:
       - dependency-type: "direct"
-    security-updates-only: true
+    # Skip regular update PRs, do only security updates
+    # https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference#open-pull-requests-limit-
+    open-pull-requests-limit: 0
 
   - package-ecosystem: "npm"
     directory: "/apps/ui"
@@ -17,7 +19,7 @@ updates:
       interval: "weekly"
     allow:
       - dependency-type: "direct"
-    security-updates-only: true
+    open-pull-requests-limit: 0
 
   - package-ecosystem: "npm"
     directory: "/apps/strapi"
@@ -25,4 +27,4 @@ updates:
       interval: "weekly"
     allow:
       - dependency-type: "direct"
-    security-updates-only: true
+    open-pull-requests-limit: 0
