@@ -29,6 +29,15 @@ This is a [Strapi v5](https://strapi.io/) project.
 
 Copy & rename `.env.example` to `.env` and fill or update the values (most of the values are already set to default values, but you probably want to tweak them for your needs).
 
+> [!TIP]
+> React applications are notorious for embedding environmental variables into the build output of the application. If you want to avoid this, you can use our custom injectors for the UI and Strapi apps. This means you don't need to use the `STRAPI_ADMIN_` prefix.
+>
+> The values are injected into the admin HTML page using a script tag. You can access them using `window.STRAPI_ADMIN_CONFIG` object.
+>
+> This is disabled by default in Strapi. To configure this feature, you will need to set the `ADMIN_PANEL_CONFIG_API_AUTH_TOKEN` env variable for Strapi. You are free to generate your token value, for example using `openssl rand -base64 32` command. Once set, Strapi admin panel will start fetching the configuration during runtime.
+>
+> This happens during the bootstrap phase in the [app.tsx](./apps/strapi/src/admin/app.tsx) and it calls an [internal endpoint](./apps/strapi/src/api/admin-panel-config/services/admin-panel-config.ts) which requires configuration if you need additional ENV variables to be propagated. You can use this approach to add custom CSS, variables or JS code using the `window` API.
+
 ### Run locally in dev mode (with hot-reloading)
 
 Preferred way of running Strapi locally is to run **Postgres in docker** container and **Strapi locally**.

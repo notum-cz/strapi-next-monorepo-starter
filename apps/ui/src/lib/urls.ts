@@ -1,20 +1,23 @@
 import { env } from "@/env.mjs"
 
+export const getEnvVariableValue = (varName: string) =>
+  // @ts-expect-error - accessing dynamic env variable
+  typeof window === "undefined" ? env?.[varName] : window.CSR_CONFIG?.[varName]
+
 /**
  * Function to get the public URL of the application.
  * Function overloads to make the return type conditional based on the `throwIfMissing` parameter.
  *
  * @param throwIfMissing
  */
-// eslint-disable-next-line no-unused-vars
+
 export function getAppPublicUrl(throwIfMissing: true): string
-// eslint-disable-next-line no-redeclare, no-unused-vars
+
 export function getAppPublicUrl(throwIfMissing?: false): string | undefined
-// eslint-disable-next-line no-redeclare
+
 export function getAppPublicUrl(throwIfMissing = false): string | undefined {
   // Determine the base URL: use APP_PUBLIC_URL on the server or window.location.origin on the client
-  const baseUrl =
-    typeof window === "undefined" ? env.APP_PUBLIC_URL : window.location.origin
+  const baseUrl = getEnvVariableValue("APP_PUBLIC_URL")
 
   if (!baseUrl && throwIfMissing) {
     throw new Error(
@@ -31,11 +34,11 @@ export function getAppPublicUrl(throwIfMissing = false): string | undefined {
  *
  * @param throwIfMissing
  */
-// eslint-disable-next-line no-unused-vars
+
 export function getStrapiUrl(throwIfMissing: true): string
-// eslint-disable-next-line no-redeclare, no-unused-vars
+
 export function getStrapiUrl(throwIfMissing?: false): string | undefined
-// eslint-disable-next-line no-redeclare
+
 export function getStrapiUrl(throwIfMissing = false): string | undefined {
   const url = env.STRAPI_URL
 

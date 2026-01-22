@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation"
 import { Locale } from "next-intl"
 
 import { routing, usePathname, useRouter } from "@/lib/navigation"
+import { UseSearchParamsWrapper } from "@/components/helpers/UseSearchParamsWrapper"
 import {
   Select,
   SelectContent,
@@ -19,6 +20,13 @@ const localeTranslation = {
 }
 
 const LocaleSwitcher = ({ locale }: { locale: Locale }) => {
+  return (
+    <UseSearchParamsWrapper>
+      <SuspensedLocaleSwitcher locale={locale} />
+    </UseSearchParamsWrapper>
+  )
+}
+const SuspensedLocaleSwitcher = ({ locale }: { locale: Locale }) => {
   // prevent the locale switch from blocking the UI thread
   const [, startTransition] = useTransition()
 

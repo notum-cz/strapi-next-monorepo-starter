@@ -40,6 +40,16 @@ Copy & rename `.env.local.example` to `.env.local` and fill or update in the val
 
 If ISR pages are generated only at runtime, `STRAPI_URL` and other environment variables must be available at runtime instead of build time. See [Production Docker](#🛠️-production-docker) and [Environment variables - usage](#environment-variables---usage) sections for more details.
 
+> [!TIP]
+> React applications are notorious for embedding environmental variables into the build output of the application. If you want to avoid this, you can use our custom injectors for the UI and Strapi apps. This means you don't need to use the `NEXT_PUBLIC_` prefix.
+>
+> Our UI apps layout is reading the values within the server context (in [layout](./apps/ui/src/app/[locale]/layout.tsx)) and injects then into the window using a script tag. This way, the values are available for both server and client code. If you're unsure about CSR/SSR context, use the `getEnvVariableValue()` helper from [urls.ts](./src/lib/urls.ts) file. Any additional values which should be injected into the app during runtime can be configured in the `CSR_ENVs` variable in [layout](./src/app/[locale]/layout.tsx) file.
+>
+> - If you're sure you're within the server context:
+>   - Read env values using `env.ENV_NAME` from `@/env.mjs`
+> - If you're in the client context, or if you're unsure (nested components)
+>   - useRead env values using the `getEnvVariableValue()` helper
+
 #### Read-only API token
 
 To fetch public content from Strapi, you need to set `STRAPI_REST_READONLY_API_KEY` env variable. Based on [Strapi docs](https://docs.strapi.io/cms/features/api-tokens) you have to go to [Settings > API Tokens](http://localhost:1337/admin/settings/api-tokens) and "Create new API token". Token configuration:
@@ -133,6 +143,12 @@ Next.js has three `output` modes:
 - `export` – Static HTML/CSS/JS files [are generated at build time](https://nextjs.org/docs/15/app/guides/static-exports) and can be served by any static hosting or CDN. No Node.js server is required. [Dynamic features are not supported](https://nextjs.org/docs/15/app/guides/static-exports#unsupported-features). This mode is **not supported** in this starter by default due to its dynamic features (e.g. NextAuth and the [POST endpoint](src/app/api/auth/[...nextauth]/route.ts)). With some modifications, it can be turned into a fully static app.
 - `standalone` – Optimized output for self-hosting in a Docker container (see above). It includes only the necessary files and dependencies.
 - `undefined` – Default build output in the `.next` directory. This mode is used with `next start` in production or by hosting providers like Vercel. It requires a Node.js server.
+
+> [!IMPORTANT]
+> There is an additional script included in this repository:
+> `pnpm run build:ui:static` which triggers the `output: "export"` build, however, this one is not working out of the box, as it's necessary to remove usage of dynamic functions (see [docs](https://nextjs.org/docs/app/guides/static-exports#unsupported-features) for more info). This includes BetterAuth, etc. You would also need to adjust `const revalidate` and `const dynamic` attributes for your dynamic segments and layouts.
+>
+> If you're using this variant, you should also enable the CI check for static export builds in the [GitHub Actions workflow](../../.github/workflows/ci.yml) by uncommenting the relevant step. Building the app with `output: "export"` will help identify any unsupported features that need to be addressed.
 
 ### Data revalidation (ISR)
 
@@ -539,5 +555,57 @@ export function ContactUsForm() {
   }
 
   return <form onSubmit={onSubmit}>{/* ... */}</form>
+}
+```
+
+## Configure log verbosity
+
+There are a few configuration flags which can help you reduce chatter in the console. Enabling them is done by setting the respective environment variable to `true` in your environment configuration (e.g. `.env.local` file). By default, all of them are disabled.
+
+> [!IMPORTANT]
+> These debug options will log errors caught in fetch, so some events such as "No Page Found" will not be logged if you're using findMany endpoint with filters (such request will have 200 status, but data will be an empty array). This is used in the page-builder for example.
+>
+> As a rule of thumb, if you're passing `filters` attribute to a Strapi GET request, you may need to handle no results cases manually.
+
+> [!TIP]
+> We recommend developing with these logs, as they may help you identify issues early. Before deploying to production, consider disabling them to reduce log verbosity.
+
+### `DEBUG_STATIC_PARAMS_GENERATION`
+
+This flag will enable `debugStaticParams` function which logs the output of `generateStaticParams` function used for page generation, making it easier to see if you're missing or duplicating any pages.
+
+### `SHOW_NON_BLOCKING_ERRORS`
+
+- This flag will show non-blocking errors in the console, which are otherwise hidden to avoid cluttering the output. Non-blocking errors are those that do not prevent the application from functioning but may indicate potential issues.
+
+Log example:
+
+```plaintext
+[BaseStrapiClient] Strapi API request error:  {
+  name: 'NotFoundError',
+  message: 'Not Found',
+  details: {},
+  status: 404
+}
+```
+
+### `DEBUG_STRAPI_CLIENT_API_CALLS`
+
+This flag will log all API calls made by the Strapi client. This is useful for debugging data fetching issues and ensuring that the correct endpoints are being called.
+
+Log example:
+
+```plaintext
+{
+  message: "Error fetching navbar for locale 'cs'",
+  error: {
+    error: '{"name":"NotFoundError","message":"Not Found","details":{},"status":404}',
+    stack: 'Error: {"name":"NotFoundError","message":"Not Found","details":{},"status":404}\n' +
+      '    at PublicClient.fetchAPI (./strapi-next-monorepo-starter/apps/ui/.next/dev/server/chunks/ssr/[root-of-the-server]__0a38093c._.js:737:19)\n' +
+      '    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n' +
+      '    at async PublicClient.fetchOne (./strapi-next-monorepo-starter/apps/ui/.next/dev/server/chunks/ssr/[root-of-the-server]__0a38093c._.js:746:16)\n' +
+      '    at async fetchNavbar (./strapi-next-monorepo-starter/apps/ui/.next/dev/server/chunks/ssr/[root-of-the-server]__0a38093c._.js:1396:16)\n' +
+      '    at async StrapiNavbar (./strapi-next-monorepo-starter/apps/ui/.next/dev/server/chunks/ssr/[root-of-the-server]__0a38093c._.js:2376:22)'
+  }
 }
 ```

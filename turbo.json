@@ -20,6 +20,16 @@
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**", "public/**"]
     },
+    "build:static": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**",
+        "public/**",
+        "out/**"
+      ]
+    },
     "lint": {
       "dependsOn": ["^lint"]
     },

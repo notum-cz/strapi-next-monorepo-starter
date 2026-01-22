@@ -54,6 +54,7 @@ jobs:
           rm -rf apps/ui/.next
           pnpm build:ui
 
+      # Only enable this if you plan to deploy a static export of the UI
       # - name: Build UI (output=export)
       #   run: |
       #     rm -rf .next

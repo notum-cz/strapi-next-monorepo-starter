@@ -18,6 +18,7 @@
     "build": "turbo build --cache-dir=.turbo",
     "build:strapi": "turbo run build --filter=@repo/strapi",
     "build:ui": "turbo run build --filter=@repo/ui",
+    "build:ui:static": "NODE_OPTIONS=--max-old-space-size=2048 turbo run build:static --filter=@repo/ui",
     "commit": "git-cz",
     "dev": "turbo dev",
     "dev:strapi": "turbo run dev --filter=@repo/strapi",
