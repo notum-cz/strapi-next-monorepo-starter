@@ -5,12 +5,13 @@ import { useSearchParams } from "next/navigation"
 import { useTranslations } from "next-intl"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import { UseSearchParamsWrapper } from "@/components/helpers/UseSearchParamsWrapper"
 import { Alert } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 
 import { SetPasswordForm } from "./_components/SetPasswordForm"
 
-export default function ActivateAccountPage() {
+function ActivateAccount() {
   removeThisWhenYouNeedMe("ActivateAccountPage")
 
   const t = useTranslations("auth.accountActivation")
@@ -43,5 +44,13 @@ export default function ActivateAccountPage() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function ActivateAccountPage() {
+  return (
+    <UseSearchParamsWrapper>
+      <ActivateAccount />
+    </UseSearchParamsWrapper>
   )
 }

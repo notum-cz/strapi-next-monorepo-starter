@@ -11,6 +11,7 @@ import { safeJSONParse } from "@/lib/general-helpers"
 import { Link, useRouter } from "@/lib/navigation"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
+import { UseSearchParamsWrapper } from "@/components/helpers/UseSearchParamsWrapper"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -23,6 +24,14 @@ import {
 import { useToast } from "@/components/ui/use-toast"
 
 export function SignInForm() {
+  return (
+    <UseSearchParamsWrapper>
+      <SuspensedSignInForm />
+    </UseSearchParamsWrapper>
+  )
+}
+
+function SuspensedSignInForm() {
   const t = useTranslations("auth.signIn")
   const { toast } = useToast()
   const router = useRouter()

@@ -11,6 +11,7 @@ import { useRouter } from "@/lib/navigation"
 import { useUserMutations } from "@/hooks/useUser"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
+import { UseSearchParamsWrapper } from "@/components/helpers/UseSearchParamsWrapper"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -22,7 +23,20 @@ import {
 } from "@/components/ui/card"
 import { useToast } from "@/components/ui/use-toast"
 
-export function SetPasswordForm({ accountActivation = false }) {
+type SetPasswordFormProps = {
+  accountActivation?: boolean
+}
+
+export function SetPasswordForm({
+  accountActivation = false,
+}: SetPasswordFormProps) {
+  return (
+    <UseSearchParamsWrapper>
+      <SuspensedSetPasswordForm accountActivation={accountActivation} />
+    </UseSearchParamsWrapper>
+  )
+}
+function SuspensedSetPasswordForm({ accountActivation }: SetPasswordFormProps) {
   const t = useTranslations(
     accountActivation ? "auth.accountActivation" : "auth.resetPassword"
   )
