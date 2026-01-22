@@ -40,6 +40,16 @@ Copy & rename `.env.local.example` to `.env.local` and fill or update in the val
 
 If ISR pages are generated only at runtime, `STRAPI_URL` and other environment variables must be available at runtime instead of build time. See [Production Docker](#🛠️-production-docker) and [Environment variables - usage](#environment-variables---usage) sections for more details.
 
+> [!TIP]
+> React applications are notorious for embedding environmental variables into the build output of the application. If you want to avoid this, you can use our custom injectors for the UI and Strapi apps. This means you don't need to use the `NEXT_PUBLIC_` prefix.
+>
+> Our UI apps layout is reading the values within the server context (in [layout](./apps/ui/src/app/[locale]/layout.tsx)) and injects then into the window using a script tag. This way, the values are available for both server and client code. If you're unsure about CSR/SSR context, use the `getEnvVariableValue()` helper from [urls.ts](./src/lib/urls.ts) file. Any additional values which should be injected into the app during runtime can be configured in the `CSR_ENVs` variable in [layout](./src/app/[locale]/layout.tsx) file.
+>
+> - If you're sure you're within the server context:
+>   - Read env values using `env.ENV_NAME` from `@/env.mjs`
+> - If you're in the client context, or if you're unsure (nested components)
+>   - useRead env values using the `getEnvVariableValue()` helper
+
 #### Read-only API token
 
 To fetch public content from Strapi, you need to set `STRAPI_REST_READONLY_API_KEY` env variable. Based on [Strapi docs](https://docs.strapi.io/cms/features/api-tokens) you have to go to [Settings > API Tokens](http://localhost:1337/admin/settings/api-tokens) and "Create new API token". Token configuration:

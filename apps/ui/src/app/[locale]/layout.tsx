@@ -57,12 +57,15 @@ export default async function RootLayout({
    * Instead, use this method to pass only the required env variables to the client side.
    * To access them from CSR or SSR context, read them from `window.CSR_CONFIG`
    * (or `globalThis.CSR_CONFIG` in shared/SSR code) instead of using `process.env` directly.
+   *
+   * Do not include "STRAPI_URL", we want to keep it private (hence why we use proxying).
    */
   const CSR_ENVs = [
     "NODE_ENV",
     "SENTRY_DSN",
     "DEBUG_STRAPI_CLIENT_API_CALLS",
     "SHOW_NON_BLOCKING_ERRORS",
+    "APP_PUBLIC_URL",
   ]
 
   return (

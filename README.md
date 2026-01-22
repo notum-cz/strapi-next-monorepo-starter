@@ -205,28 +205,6 @@ Husky is installed by default and configured to run following tasks:
 
 ## ♾️ Deployment
 
-### Working with Environmental variables
-
-React applications are notorious for embedding environmental variables into the build output of the application. This approach does not suite us, because we want to embrace the "build once, deploy anywhere" mantra. That is why we implemented custom injectors for the UI and Strapi apps. This means you don't need to use the `NEXT_PUBLIC_` prefix for NextJS or `STRAPI_ADMIN_` prefix for Strapi app.
-
-> [!NOTE]
-> This works in the core application, byt may not work within custom plugins.
-
-#### NextJS UI
-
-Our UI apps layout is reading the values within the server context (in [layout](./apps/ui/src/app/[locale]/layout.tsx)) and injects then into the window using a script tag. This way, the values are available for both server and client code. If you're unsure about CSR/SSR context, use the `getEnvVariableValue()` helper from [general-helpers.ts](./apps/ui/src/lib/general-helpers.ts) file. Any additional values which should be injected into the app during runtime can be configured in the `CSR_ENVs` variable in [layout](./apps/ui/src/app/[locale]/layout.tsx) file.
-
-If you're sure about being within the server context, use the `env` utility to import the values directly.
-
-#### Strapi Admin Panel
-
-Strapi admin panel is using a similar approach. The values are injected into the admin HTML page using a script tag. You can access them using `window.STRAPI_ADMIN_CONFIG` object.
-
-> [!IMPORTANT]
-> This is disabled by default in Strapi. To configure this feature, you will need to set the `ADMIN_PANEL_CONFIG_API_AUTH_TOKEN` env variable for Strapi. You are free to generate your token value, for example using `openssl rand -base64 32` command. Once set, Strapi admin panel will start fetching the configuration during runtime.
-
-This happens during the bootstrap phase in the [app.tsx](./apps/strapi/src/admin/app.tsx) and it calls an [internal endpoint](./apps/strapi/src/api/admin-panel-config/services/admin-panel-config.ts) which requires configuration if you need additional ENV variables to be propagated. You can use this approach to add custom CSS, variables or JS code using the `window` API.
-
 ### GitHub Actions
 
 We are using GitHub Actions for validation of builds and running tests. There are 2 workflows prepared:

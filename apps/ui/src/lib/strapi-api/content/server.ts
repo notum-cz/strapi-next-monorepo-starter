@@ -6,7 +6,7 @@ import { Locale } from "next-intl"
 
 import type { CustomFetchOptions } from "@/types/general"
 
-import { logNonBlockingError } from "@/lib/general-helpers"
+import { logNonBlockingError } from "@/lib/logging"
 import { PublicStrapiClient } from "@/lib/strapi-api"
 
 // ------ Page fetching functions
