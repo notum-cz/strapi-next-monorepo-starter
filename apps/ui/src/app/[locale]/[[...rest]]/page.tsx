@@ -100,7 +100,7 @@ export default async function StrapiPage(
         <Container>
           <Breadcrumbs
             breadcrumbs={response?.meta?.breadcrumbs}
-            className="mt-6 mb-6"
+            className="mb-6 mt-6"
           />
         </Container>
 
