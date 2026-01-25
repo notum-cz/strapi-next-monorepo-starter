@@ -40,16 +40,6 @@ Copy & rename `.env.local.example` to `.env.local` and fill or update in the val
 
 If ISR pages are generated only at runtime, `STRAPI_URL` and other environment variables must be available at runtime instead of build time. See [Production Docker](#🛠️-production-docker) and [Environment variables - usage](#environment-variables---usage) sections for more details.
 
-> [!TIP]
-> React applications are notorious for embedding environmental variables into the build output of the application. If you want to avoid this, you can use our custom injectors for the UI and Strapi apps. This means you don't need to use the `NEXT_PUBLIC_` prefix.
->
-> Our UI apps layout is reading the values within the server context (in [layout](./apps/ui/src/app/[locale]/layout.tsx)) and injects then into the window using a script tag. This way, the values are available for both server and client code. If you're unsure about CSR/SSR context, use the `getEnvVariableValue()` helper from [urls.ts](./src/lib/urls.ts) file. Any additional values which should be injected into the app during runtime can be configured in the `CSR_ENVs` variable in [layout](./src/app/[locale]/layout.tsx) file.
->
-> - If you're sure you're within the server context:
->   - Read env values using `env.ENV_NAME` from `@/env.mjs`
-> - If you're in the client context, or if you're unsure (nested components)
->   - useRead env values using the `getEnvVariableValue()` helper
-
 #### Read-only API token
 
 To fetch public content from Strapi, you need to set `STRAPI_REST_READONLY_API_KEY` env variable. Based on [Strapi docs](https://docs.strapi.io/cms/features/api-tokens) you have to go to [Settings > API Tokens](http://localhost:1337/admin/settings/api-tokens) and "Create new API token". Token configuration:
@@ -419,7 +409,6 @@ Next-intl might not be yet fully compatible with upcoming Next features, please 
 For full navigation functionality in cooperation with `next-intl`, some functions/components from `next/navigation` must be wrapped (see above). This applies to: `Link, redirect, usePathname, useRouter`. You **have to** use them instead of the original ones.
 
 ```tsx
-// ✅ OK
 // ❌ NOT OK
 import {
   Link,
@@ -429,30 +418,45 @@ import {
   useSearchParams,
 } from "next/navigation"
 
+// ✅ OK
 import { Link, redirect, useRouter } from "@/lib/navigation"
 ```
 
 ### Environment variables - usage
 
-Define them in [.env.local.example](./.env.local.example), [.env.local](./.env.local) and [src/env.mjs](./src/env.mjs) file where [@t3-oss/env-nextjs](https://github.com/t3-oss/t3-env) validation package is used. This package is used to validate and type-check environment variables. Usage:
+Define them in [.env.local.example](./.env.local.example), [.env.local](./.env.local) and [src/env.mjs](./src/env.mjs) file where [@t3-oss/env-nextjs](https://github.com/t3-oss/t3-env) validation package is used. This package is used to validate and type-check environment variables.
+
+**Always prefer `getEnvVar()` helper to read env variables!** It works both in CSR and SSR context. See more info in [env-vars.ts](./src/lib/env-vars.ts) file.
 
 ```tsx
 import { env } from "@/env.mjs"
 
+import { getEnvVar } from "@/lib/env-vars"
+
 // ✅ OK
+console.log(getEnvVar("RECAPTCHA_SECRET_KEY"))
+
+// ✅ good, but prefer above
 console.log(env.RECAPTCHA_SECRET_KEY)
 
 // ❌ NOT OK
 console.log(process.env.RECAPTCHA_SECRET_KEY)
 ```
 
-All default server-side variables are optional. This lets you build the application once and run it in different environments with different configurations without the need to rebuild. Baking them into the Docker image or build artifacts may not be desirable in many cases. In that case, their correctness must be checked at runtime (see [urls.ts](./src/lib/urls.ts) for example). Requiring them at build time is also possible by updating the schema in [env.mjs](./src/env.mjs) and passing them from the environment:
+All default server-side variables are optional. This lets you build the application once and run it in different environments with different configurations without the need to rebuild. Baking them into the Docker image or build artifacts may not be desirable in many cases. In that case, their correctness must be checked at runtime (handled in `getEnvVar` by throwing an error). Requiring them at build time is also possible by updating the schema in [env.mjs](./src/env.mjs) (marking them required) and passing them from the environment:
 
 - as build-time arguments in Docker (see [Production Docker](#🛠️-production-docker) section),
 - in `env.local` file when building locally,
-- Config vars in hosting providers (e.g. Vercel, Heroku).
+- config/env vars in hosting providers (e.g. Vercel, Heroku).
 
 Environment variables starting with `NEXT_PUBLIC_` are [automatically available](https://nextjs.org/docs/app/guides/environment-variables#runtime-environment-variables) in the client-side code. Don't store any sensitive information in these variables, as they are exposed. They must be present at build time.
+
+> [!TIP]
+> SPA applications are notorious for embedding environmental variables into the build output of the application. If you want to avoid this, you can use custom injector. This allows you to omit the `NEXT_PUBLIC_` prefix and follow "build once, run anywhere" approach (without baking these vars into the client-side code especially when different enviroments require different values).
+>
+> Root layout can read specific values within the server context (in [layout](./src/app/[locale]/layout.tsx)) and injects then into the window using a script tag. This way, the values don't have to be available during build, but they will be injected into the app during runtime. This is configurable through `CSR_ENVs` variable in the root layout file.
+>
+> The `getEnvVar` helper function also reads these dynamically injected variables from the `window` object (`CSR_CONFIG` variable) when running in the client context so you can use it seamlessly in both server and client components.
 
 Environment variables that need to be available in the build-time context of Turborepo tasks must be defined in the [turbo.json](../../turbo.json) file under the `globalEnv` section. The build step (`turbo run build`) runs in a sandboxed environment where only explicitly specified environment variables are accessible.
 
@@ -512,16 +516,18 @@ export const submitContactUsForm = (payload: FormData) => {
 ```
 
 ```tsx
-import { env } from "@/env.mjs"
 import { ReCaptchaProvider } from "next-recaptcha-v3"
 
+import { getEnvVar } from "@/lib/env-vars"
 import { ContactUsForm } from "@/components/forms/ContactUsForm"
 
 // Wrap form with reCAPTCHA provider
 
 export default function Page() {
   return (
-    <ReCaptchaProvider reCaptchaKey={env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}>
+    <ReCaptchaProvider
+      reCaptchaKey={getEnvVar("NEXT_PUBLIC_RECAPTCHA_SITE_KEY")}
+    >
       <ContactUsForm />
     </ReCaptchaProvider>
   )

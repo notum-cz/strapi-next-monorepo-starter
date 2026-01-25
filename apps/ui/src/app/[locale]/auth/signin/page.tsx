@@ -1,8 +1,8 @@
 import { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
+import { getEnvVar } from "@/lib/env-vars"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { getStrapiUrl } from "@/lib/urls"
 
 import { SignInForm } from "./_components/SignInForm"
 
@@ -15,5 +15,5 @@ export default async function SignInPage({
 
   setRequestLocale(locale)
 
-  return <SignInForm strapiUrl={getStrapiUrl()} />
+  return <SignInForm strapiUrl={getEnvVar("STRAPI_URL")} />
 }

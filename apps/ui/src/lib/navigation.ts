@@ -1,7 +1,7 @@
 import { createNavigation } from "next-intl/navigation"
 import { defineRouting } from "next-intl/routing"
 
-import { getAppPublicUrl } from "@/lib/urls"
+import { getEnvVar } from "@/lib/env-vars"
 
 export const routing = defineRouting({
   // A list of all locales that are supported
@@ -33,7 +33,7 @@ export const redirect: typeof _redirect = _redirect
  */
 export const isAppLink = (link: string): boolean => {
   try {
-    const baseUrl = getAppPublicUrl(true)
+    const baseUrl = getEnvVar("APP_PUBLIC_URL", true) as string
     const url = new URL(link, baseUrl)
     return url.hostname === new URL(baseUrl).hostname
   } catch (error) {

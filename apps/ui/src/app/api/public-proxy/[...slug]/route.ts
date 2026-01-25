@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server"
 
+import { getEnvVar } from "@/lib/env-vars"
 import {
   createStrapiAuthHeader,
   isStrapiEndpointAllowed,
 } from "@/lib/strapi-api/request-auth"
-import { getStrapiUrl } from "@/lib/urls"
 
 /**
  * This route handler acts as a public proxy for frontend requests with two primary goals:
@@ -37,8 +37,9 @@ async function handler(
     )
   }
 
+  const strapiUrl = getEnvVar("STRAPI_URL", true)
   const { search } = new URL(request.url)
-  const url = `${getStrapiUrl(true)}/${path}${search ?? ""}`
+  const url = `${strapiUrl!}/${path}${search ?? ""}`
   const isReadOnly = request.method === "GET" || request.method === "HEAD"
 
   const clonedRequest = request.clone()

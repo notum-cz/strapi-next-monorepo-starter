@@ -6,13 +6,13 @@ import type { NextMetadataTwitterCard } from "@/types/general"
 import type { Data, UID } from "@repo/strapi-types"
 import type { Metadata } from "next"
 
+import { getEnvVar } from "@/lib/env-vars"
 import {
   getDefaultMetadata,
   getDefaultOgMeta,
   getDefaultTwitterMeta,
 } from "@/lib/metadata/defaults"
 import { fetchSeo } from "@/lib/strapi-api/content/server"
-import { getAppPublicUrl } from "@/lib/urls"
 
 export async function getMetadataFromStrapi({
   fullPath,
@@ -27,7 +27,7 @@ export async function getMetadataFromStrapi({
   uid?: Extract<UID.ContentType, "api::page.page">
 }): Promise<Metadata | null> {
   const t = await getTranslations({ locale, namespace: "seo" })
-  const siteUrl = getAppPublicUrl()
+  const siteUrl = getEnvVar("APP_PUBLIC_URL")
   if (!siteUrl) {
     console.warn("APP_PUBLIC_URL is not defined, cannot generate metadata")
     return null

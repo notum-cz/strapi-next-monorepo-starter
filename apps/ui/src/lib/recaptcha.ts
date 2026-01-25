@@ -1,11 +1,13 @@
-import { env } from "@/env.mjs"
+import { getEnvVar } from "@/lib/env-vars"
 
 const verificationUrl = "https://www.google.com/recaptcha/api/siteverify"
 
 export const verifyRecaptcha = async (token?: string): Promise<boolean> => {
   "use server"
 
-  if (!token || !env.RECAPTCHA_SECRET_KEY) {
+  const secret = getEnvVar("RECAPTCHA_SECRET_KEY")
+
+  if (!token || !secret) {
     return false
   }
 
@@ -14,7 +16,7 @@ export const verifyRecaptcha = async (token?: string): Promise<boolean> => {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
-        secret: env.RECAPTCHA_SECRET_KEY,
+        secret,
         response: token,
       }).toString(),
       cache: "no-store",

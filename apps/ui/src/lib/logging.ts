@@ -1,8 +1,4 @@
-import { getEnvVariableValue } from "@/lib/urls"
-
-export const DEBUG_STRAPI_CLIENT_API_CALLS = getEnvVariableValue(
-  "DEBUG_STRAPI_CLIENT_API_CALLS"
-)
+import { getEnvVar } from "@/lib/env-vars"
 
 /**
  * Logs non-blocking errors only if SHOW_NON_BLOCKING_ERRORS environment variable is set to true.
@@ -10,7 +6,7 @@ export const DEBUG_STRAPI_CLIENT_API_CALLS = getEnvVariableValue(
  * @param args - Arguments to pass to console.error (same signature as console.error)
  */
 export const logNonBlockingError = (...args: any[]) => {
-  const showErrors = getEnvVariableValue("SHOW_NON_BLOCKING_ERRORS")
+  const showErrors = getEnvVar("SHOW_NON_BLOCKING_ERRORS")
   if (showErrors) {
     console.error(...args)
   }

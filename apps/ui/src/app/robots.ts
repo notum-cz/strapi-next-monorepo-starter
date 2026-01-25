@@ -1,10 +1,10 @@
 import type { MetadataRoute } from "next"
 
+import { getEnvVar } from "@/lib/env-vars"
 import { isProduction } from "@/lib/general-helpers"
-import { getAppPublicUrl } from "@/lib/urls"
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = getAppPublicUrl()
+  const baseUrl = getEnvVar("APP_PUBLIC_URL")
 
   if (!isProduction()) {
     return { rules: { userAgent: "*", disallow: "/" } }

@@ -3,10 +3,10 @@ import { Locale } from "next-intl"
 
 import type { MetadataRoute } from "next"
 
+import { getEnvVar } from "@/lib/env-vars"
 import { isDevelopment, isProduction } from "@/lib/general-helpers"
 import { routing } from "@/lib/navigation"
 import { fetchAllPages } from "@/lib/strapi-api/content/server"
-import { getAppPublicUrl } from "@/lib/urls"
 
 // This should be static or dynamic based on build/runtime needs
 export const dynamic = "force-dynamic"
@@ -20,7 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return []
   }
 
-  const baseUrl = getAppPublicUrl()
+  const baseUrl = getEnvVar("APP_PUBLIC_URL")
 
   if (!baseUrl) {
     console.error("Sitemap generation aborted: APP_PUBLIC_URL is not defined")
@@ -50,7 +50,7 @@ async function generateLocalizedSitemap(
   locale: Locale,
   baseUrl: string
 ): Promise<MetadataRoute.Sitemap> {
-  let pageEntities: Partial<
+  const pageEntities: Partial<
     Record<PageEntityUID, Awaited<ReturnType<typeof fetchAllPages>>["data"]>
   > = {}
 

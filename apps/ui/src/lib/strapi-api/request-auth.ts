@@ -1,6 +1,6 @@
-import { env } from "@/env.mjs"
-
 import type { BetterAuthSessionWithStrapi } from "@/types/better-auth"
+
+import { getEnvVar } from "@/lib/env-vars"
 
 const ALLOWED_STRAPI_ENDPOINTS: Record<string, string[]> = {
   GET: [
@@ -54,8 +54,8 @@ export const createStrapiAuthHeader = async ({
   }
 
   const apiToken = isReadOnly
-    ? env.STRAPI_REST_READONLY_API_KEY
-    : env.STRAPI_REST_CUSTOM_API_KEY
+    ? getEnvVar("STRAPI_REST_READONLY_API_KEY")
+    : getEnvVar("STRAPI_REST_CUSTOM_API_KEY")
 
   return formatStrapiAuthorizationHeader(apiToken)
 }
