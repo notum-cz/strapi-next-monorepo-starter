@@ -17,6 +17,7 @@ This is a [Strapi v5](https://strapi.io/) project.
 - @strapi/plugin-seo
 - @strapi/plugin-users-permissions
 - @strapi/provider-email-mailgun
+- @strapi/provider-email-nodemailer
 - @strapi/provider-upload-aws-s3
 - strapi-plugin-config-sync
 - qs
@@ -138,13 +139,14 @@ Documentation is in [/docs/pages-hierarchy.md](../../docs/pages-hierarchy.md)
 
 ### Plugins
 
-Some preinstalled plugins (mailgun) are disabled by default. To turn them on go to [config/plugins.ts](config/plugins.ts) file and uncomment the lines. Some of them may require additional setting of API keys or different ENV variables.
+All plugins are configured in [config/plugins.ts](config/plugins.ts) file. Some of them may require additional setting of API keys or different ENV variables. User-permissions, seo and config-sync plugins are enabled by default and don't require additional configuration.
 
-User-permissions, seo and config-sync plugins are enabled by default. Sentry plugin requires setting up DSN key in ENV variables (see below).
+#### `@strapi/provider-upload-aws-s3` (S3 file storage)
 
-#### AWS S3 caveats
+This plugin is used to store uploaded files (images, documents, etc.) in AWS S3 bucket instead of default local upload folder. This is required for production deployments where local file system is not persistent or files need to be served from CDN.
 
-In Heroku deployments you always should use S3 (or different external) storage instead of default local upload directory. Heroku resets dyno periodically (at least once a day or after every re-deploy) and so all uploaded files are removed.
+> [!TIP]
+> In Heroku deployments you always should use S3 (or different external) storage instead of default local upload directory. Heroku resets dyno periodically (at least once a day or after every re-deploy) and so all uploaded files are removed.
 
 Steps:
 
@@ -154,7 +156,7 @@ Steps:
 
 [More info here](https://market.strapi.io/providers/@strapi-provider-upload-aws-s3)
 
-#### Sentry logging
+#### `@strapi/plugin-sentry` (Sentry logging)
 
 Tu enable Sentry plugin, set `SENTRY_DSN` to environment variables. By default, Sentry runs only in production mode, but you can change it in [config/plugins.ts](config/plugins.ts) file.
 
@@ -183,15 +185,24 @@ async find(ctx) {
 },
 ```
 
-#### Mailtrap (Email testing)
+#### Emails
+
+To send emails from Strapi (e.g., registration confirmation, password reset, etc.), this starter preconfigures 2 email providers: Mailgun and Mailtrap. It is supposed that Mailtrap is used during development and Mailgun in production, but you can change this easily in [config/plugins.ts](config/plugins.ts) file - the selection is based on provided ENV variables.
+
+##### `@strapi/provider-email-mailgun` (Mailgun)
+
+It is supposed, that you created Mailgun account on [mailgun.com](https://www.mailgun.com/) and have your domain verified. Then set the following ENV variables in your `.env` file:
+
+```bash
+MAILGUN_API_KEY=your-mailgun-api-key
+MAILGUN_DOMAIN=your-mailgun-domain
+MAILGUN_EMAIL=default-from-and-replyto-address
+MAILGUN_HOST=https://api.eu.mailgun.net
+```
+
+##### `@strapi/provider-email-nodemailer` (Mailtrap)
 
 For development, the email plugin is configured to use [Mailtrap](https://mailtrap.io/) - a free email testing service that captures all outgoing emails without sending them to real recipients. This is perfect for testing registration emails, password resets, and other email functionality.
-
-**How it works:**
-
-- In development (`NODE_ENV !== "production"`), Strapi uses Mailtrap if credentials are provided
-- In production, it automatically switches to Mailgun
-- Configuration is handled automatically in [config/plugins.ts](config/plugins.ts)
 
 **Setup:**
 
@@ -204,11 +215,10 @@ MAILTRAP_USER=your_mailtrap_username
 MAILTRAP_PASS=your_mailtrap_password
 MAILTRAP_HOST=sandbox.smtp.mailtrap.io
 MAILTRAP_PORT=2525
+MAILTRAP_EMAIL=default-from-and-replyto-address
 ```
 
 4. Restart Strapi - emails will now be captured in your Mailtrap inbox instead of being sent
-
-**Note:** If Mailtrap credentials are not provided, Strapi will fall back to Mailgun (if configured) or use a dummy configuration.
 
 #### OAuth providers (GitHub, Google, etc.)
 
