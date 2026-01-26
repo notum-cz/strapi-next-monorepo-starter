@@ -13,10 +13,10 @@ import StrapiCkEditorContent from "@/components/page-builder/components/utilitie
 
 /**
  * Mapping of Strapi Component UID to React Component
- * TODO: This should map Strapi component uid -> component path to reduce bundle size,
+ * TODO: Improve dynamic/lazy loading of these components to reduce bundle size
  */
-
 export const PageContentComponents: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in UID.Component]?: React.ComponentType<any>
 } = {
   // elements, seo-utilities, utilities
