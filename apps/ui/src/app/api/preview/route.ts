@@ -1,4 +1,3 @@
- 
 import { cookies, draftMode } from "next/headers"
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
 import { hasLocale } from "next-intl"

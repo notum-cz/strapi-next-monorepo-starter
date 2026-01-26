@@ -17,7 +17,6 @@ import StrapiCkEditorContent from "@/components/page-builder/components/utilitie
  */
 
 export const PageContentComponents: {
-   
   [K in UID.Component]?: React.ComponentType<any>
 } = {
   // elements, seo-utilities, utilities
