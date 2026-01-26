@@ -2,7 +2,7 @@ import { env } from "@/env.mjs"
 
 /**
  * Use this function to get environment variables safely both in server and client contexts.
- * This is wrapper around the `env` object from `env.mjs` which provides additional
+ * This is wrapper around the `env` object from `env.mjs` and provides additional
  * functionality for client-side access.
  */
 export const getEnvVar = <K extends keyof typeof env>(
