@@ -25,6 +25,7 @@ export const nextJsConfig = [
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "prettier.config.js",
   ]),
   {
     ...pluginReact.configs.flat.recommended,
