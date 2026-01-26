@@ -7,8 +7,8 @@ module.exports = {
   trailingComma: "es5",
   useTabs: false,
   plugins: [
-    "prettier-plugin-packagejson",
-    "@ianvs/prettier-plugin-sort-imports",
+    require.resolve("prettier-plugin-packagejson"),
+    require.resolve("@ianvs/prettier-plugin-sort-imports"),
   ],
   importOrder: [
     "<BUILTIN_MODULES>",

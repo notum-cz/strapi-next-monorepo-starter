@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 
+import { getEnvVar } from "@/lib/env-vars"
 import { isStrapiEndpointAllowed } from "@/lib/strapi-api/request-auth"
-import { getStrapiUrl } from "@/lib/urls"
 
 /**
  * This route handler acts as a private proxy for frontend requests with one goal:
@@ -10,7 +10,7 @@ import { getStrapiUrl } from "@/lib/urls"
  * It is a private proxy because it accesses Strapi API endpoints requiring Users-permissions (https://docs.strapi.io/cms/features/users-permissions)
  * authentication. Every user has a unique token, which is used to authenticate requests.
  *
- * Authorization tokens are injected on the client-side, based on NextAuth's session.
+ * Authorization tokens are injected on the client-side, based on BetterAuth's session.
  */
 async function handler(
   request: Request,
@@ -35,7 +35,8 @@ async function handler(
 
   const isReadOnly = request.method === "GET" || request.method === "HEAD"
   const { search } = new URL(request.url)
-  const url = `${getStrapiUrl(true)}/${path}${search ?? ""}`
+  const strapiUrl = getEnvVar("STRAPI_URL", true)
+  const url = `${strapiUrl!}/${path}${search ?? ""}`
 
   const clonedRequest = request.clone()
   // Extract the body explicitly from the cloned request

@@ -1,5 +1,7 @@
 import type { StaticImport } from "next/dist/shared/lib/get-img-props"
 
+import { safeJSONParse } from "@/lib/general-helpers"
+
 /**
  * Function to format Strapi media URLs. There are 2 types of upload:
  * - S3 bucket - in this case, the URL is already correct and starts with https

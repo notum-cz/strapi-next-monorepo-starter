@@ -8,8 +8,8 @@ import type {
 import type { AppError, CustomFetchOptions } from "@/types/general"
 import type { FindFirst, FindMany, ID, Result, UID } from "@repo/strapi-types"
 
+import { getEnvVar } from "@/lib/env-vars"
 import { isDevelopment } from "@/lib/general-helpers"
-import { DEBUG_STRAPI_CLIENT_API_CALLS } from "@/lib/logging"
 
 // Add endpoints here that are queried from the frontend.
 // Mapping of Strapi content type UIDs to API endpoint paths.
@@ -59,6 +59,7 @@ export default abstract class BaseStrapiClient {
         name: "Invalid response format",
         message: text,
         status: response.status,
+        details: { url },
       }
       console.error("[BaseStrapiClient] Strapi API request error: ", appError)
       throw new Error(JSON.stringify(appError))
@@ -69,10 +70,12 @@ export default abstract class BaseStrapiClient {
       const appError: AppError = {
         name: error?.name,
         message: error?.message,
-        details: error?.details,
+        details: {
+          url,
+        },
         status: response.status ?? error?.status,
       }
-      if (DEBUG_STRAPI_CLIENT_API_CALLS) {
+      if (getEnvVar("DEBUG_STRAPI_CLIENT_API_CALLS")) {
         console.error("[BaseStrapiClient] Strapi API request error: ", appError)
       }
       throw new Error(JSON.stringify(appError))

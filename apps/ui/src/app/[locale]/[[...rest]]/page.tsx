@@ -1,3 +1,4 @@
+import { use } from "react"
 import { notFound } from "next/navigation"
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
 import { Locale } from "next-intl"
@@ -17,14 +18,14 @@ import StrapiStructuredData from "@/components/page-builder/components/seo-utili
 // Allow this dynamic route to behave like a static/ISR page
 // even if slugs are unknown at build time or STRAPI_URL is not defined
 // or fetching fails
-export const dynamic = "force-static"
+// export const dynamic = "force-static"
 
 // Set ISR revalidation interval: regenerate the page every 5 minutes (300s)
-export const revalidate = 300
+// export const revalidate = 300
 
-// Enable on-demand generation for pages not returned by generateStaticParams
+// Enable static/ISR generation for pages not returned by generateStaticParams
 // First request will SSR the page, then cache it for future requests
-export const dynamicParams = true
+// export const dynamicParams = true
 
 export async function generateStaticParams({
   params: { locale },
@@ -73,16 +74,14 @@ export async function generateMetadata(
   return getMetadataFromStrapi({ fullPath, locale })
 }
 
-export default async function StrapiPage(
-  props: PageProps<"/[locale]/[[...rest]]">
-) {
-  const params = await props.params
+export default function StrapiPage(props: PageProps<"/[locale]/[[...rest]]">) {
+  const params = use(props.params)
   const locale = params.locale as Locale
 
   setRequestLocale(locale)
 
   const fullPath = ROOT_PAGE_PATH + (params.rest ?? []).join("/")
-  const response = await fetchPage(fullPath, locale)
+  const response = use(fetchPage(fullPath, locale))
 
   const data = response?.data
 
@@ -121,14 +120,6 @@ export default async function StrapiPage(
                 </div>
               )
             }
-
-            // TODO: Resolve dynamic import issue with NextJS 15
-            // const Component = dynamic<{
-            // 	component: typeof comp
-            // 	pageParams: Awaited<Props['params']>
-            // 	page: typeof data
-            // 	// breadcrumbs: typeof breadcrumbs
-            // }>(() => import(`@/components/page-builder${componentPath}`))
 
             return (
               <ErrorBoundary key={key}>

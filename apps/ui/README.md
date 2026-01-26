@@ -13,7 +13,7 @@ This is a [Next.js v16](https://nextjs.org/docs) project.
 
 ## 📦 Included packages
 
-- next-auth
+- better-auth
 - next-intl
 - next-themes (for dark mode)
 - next-recaptcha-v3
@@ -22,7 +22,6 @@ This is a [Next.js v16](https://nextjs.org/docs) project.
 - @tanstack/react-query
 - @tanstack/react-table
 - react-use
-- react-device-detect
 - @sentry/nextjs
 - dayjs
 - lodash
@@ -39,16 +38,6 @@ Copy & rename `.env.local.example` to `.env.local` and fill or update in the val
 - `APP_PUBLIC_URL` – Used to generate canonical URLs, absolute links and metadata. Required when pre-rendering pages.
 
 If ISR pages are generated only at runtime, `STRAPI_URL` and other environment variables must be available at runtime instead of build time. See [Production Docker](#🛠️-production-docker) and [Environment variables - usage](#environment-variables---usage) sections for more details.
-
-> [!TIP]
-> React applications are notorious for embedding environmental variables into the build output of the application. If you want to avoid this, you can use our custom injectors for the UI and Strapi apps. This means you don't need to use the `NEXT_PUBLIC_` prefix.
->
-> Our UI apps layout is reading the values within the server context (in [layout](./apps/ui/src/app/[locale]/layout.tsx)) and injects then into the window using a script tag. This way, the values are available for both server and client code. If you're unsure about CSR/SSR context, use the `getEnvVariableValue()` helper from [urls.ts](./src/lib/urls.ts) file. Any additional values which should be injected into the app during runtime can be configured in the `CSR_ENVs` variable in [layout](./src/app/[locale]/layout.tsx) file.
->
-> - If you're sure you're within the server context:
->   - Read env values using `env.ENV_NAME` from `@/env.mjs`
-> - If you're in the client context, or if you're unsure (nested components)
->   - useRead env values using the `getEnvVariableValue()` helper
 
 #### Read-only API token
 
@@ -140,7 +129,7 @@ Port is 3000 and mapping can be changed in `docker run` command using `-p` flag 
 
 Next.js has three `output` modes:
 
-- `export` – Static HTML/CSS/JS files [are generated at build time](https://nextjs.org/docs/15/app/guides/static-exports) and can be served by any static hosting or CDN. No Node.js server is required. [Dynamic features are not supported](https://nextjs.org/docs/15/app/guides/static-exports#unsupported-features). This mode is **not supported** in this starter by default due to its dynamic features (e.g. NextAuth and the [POST endpoint](src/app/api/auth/[...nextauth]/route.ts)). With some modifications, it can be turned into a fully static app.
+- `export` – Static HTML/CSS/JS files [are generated at build time](https://nextjs.org/docs/15/app/guides/static-exports) and can be served by any static hosting or CDN. No Node.js server is required. [Dynamic features are not supported](https://nextjs.org/docs/15/app/guides/static-exports#unsupported-features). This mode is **not supported** in this starter by default due to its dynamic features (e.g. better-auth and the [POST endpoint](src/app/api/auth/[...all]/route.ts)). With some modifications, it can be turned into a fully static app.
 - `standalone` – Optimized output for self-hosting in a Docker container (see above). It includes only the necessary files and dependencies.
 - `undefined` – Default build output in the `.next` directory. This mode is used with `next start` in production or by hosting providers like Vercel. It requires a Node.js server.
 
@@ -156,15 +145,24 @@ This approach allows static content to be updated without rebuilding the entire 
 
 In this starter, ISR with time-based revalidation is used by default. Revalidation is applied globally to all fetch requests, but it can also be controlled individually via parameters in the fetch functions (see [BaseStrapiClient](src/lib/strapi-api/base.ts)). The requests revalidation interval is set to `0` (no caching) during development and `60` seconds in production by default.
 
-For dynamic routes where slugs are unknown at build time, runtime generation is possible. Pages will be rendered on the first request and cached for subsequent requests if the following page-level flags are set:
+#### Runtime static generation for unknown dynamic routes
 
-```
-export const dynamic = 'force-static'
+For dynamic routes where some slugs are not known at build time, Next.js can **statically generate pages on the first request** and cache them using **ISR**.
+
+```ts
+export const dynamic = "force-static"
 export const dynamicParams = true
 export const revalidate = 300
 ```
 
-These flags enable ISR for runtime-generated pages, avoiding errors such as `DYNAMIC_SERVER_USAGE` when environment variables are only available at runtime.
+- Unknown slugs are generated **once on first request**, then cached as static HTML.
+- Pages are **revalidated every 300 seconds**.
+- Rendering remains **static** (not per-request SSR); request-time APIs like `cookies()` are not allowed.
+- Allows access to environment variables available only at runtime without triggering `DYNAMIC_SERVER_USAGE`.
+
+> [!TIP]
+> Don’t use this setup for pages that render user-specific data (e.g. a logged-in user session).
+> Without [cacheComponents](https://nextjs.org/docs/app/getting-started/cache-components) enabled, accessing request-time APIs (cookies(), headers(), auth) will force the entire route to render dynamically and disable static/ISR behavior.
 
 [More information about ISR](https://nextjs.org/docs/app/building-your-application/data-fetching/incremental-static-regeneration)
 
@@ -248,36 +246,30 @@ Applications with authentication pages (e.g. `/auth/signin`, `/auth/register`) r
 
 It works similarly to the public API client - for requests coming from the **server context**, you should use the client instance without setting `useProxy` option in `CustomFetchOptions` (by default). In this case the Strapi is called directly. For requests coming from the **client context**, you must set `useProxy: true` in the `CustomFetchOptions`. In this case the client uses [route handler](src/app/api/private-proxy/[...slug]/route.ts) as a private proxy. This proxy hides the Strapi backend URL, preventing users from accessing it directly.
 
-The frontend app uses the `next-auth` package, which is configured in [src/lib/auth.ts](src/lib/auth.ts) and [src/app/api/auth/[...nextauth]/route.ts](src/app/api/auth/[...nextauth]/route.ts) to manage user sessions.
+The frontend app uses the `better-auth` package, which is configured in [src/lib/auth.ts](src/lib/auth.ts) and [src/app/api/auth/[...all]/route.ts](src/app/api/auth/[...all]/route.ts) to manage user sessions.
 
 In the [middleware.ts](src/middleware.ts) file, the `authMiddleware` is used to check whether the user is authenticated. A list called `authPages` contains the routes that require authentication. If a user is not authenticated and tries to access a private route, they are redirected to the login page.
 
-To retrieve the session (logged-in user) in server components, use the `getAuth()` helper.
+To retrieve the session (logged-in user) in server components, use `getSessionSSR()` function that returns typed session data:
 
 ```tsx
-import { getAuth } from "@/lib/auth"
+import { headers } from "next/headers"
 
-export default async function ProfilePage() {
-  const session = await getAuth()
-  const user = session?.user.data
+import { getSessionSSR } from "@/lib/auth"
 
-  return <div></div>
-}
+const session = await getSessionSSR(await headers())
 ```
 
-To get session in client components use `useSession()` from `next-auth/react`:
+To get session in client components use `useSession()` (reactive) or `getSession()`:
 
 ```tsx
-"use client"
+import { authClient } from "@/lib/client"
 
-import { useSession } from "next-auth/react"
+// in client component/hook
+const { data: session } = authClient.useSession()
 
-export default function ProfilePage() {
-  const session = useSession()
-  const user = session.data?.user
-
-  return <div></div>
-}
+// or imperatively
+const { data: session } = await authClient.getSession()
 ```
 
 To omit the `Authorization` header and skip token detection, you can pass `omitUserAuthorization: true` in the `options` object of the `fetchAPI` function. Token detection is a dynamic operation, which prevents static rendering of the page.
@@ -429,7 +421,6 @@ Next-intl might not be yet fully compatible with upcoming Next features, please 
 For full navigation functionality in cooperation with `next-intl`, some functions/components from `next/navigation` must be wrapped (see above). This applies to: `Link, redirect, usePathname, useRouter`. You **have to** use them instead of the original ones.
 
 ```tsx
-// ✅ OK
 // ❌ NOT OK
 import {
   Link,
@@ -439,30 +430,45 @@ import {
   useSearchParams,
 } from "next/navigation"
 
+// ✅ OK
 import { Link, redirect, useRouter } from "@/lib/navigation"
 ```
 
 ### Environment variables - usage
 
-Define them in [.env.local.example](./.env.local.example), [.env.local](./.env.local) and [src/env.mjs](./src/env.mjs) file where [@t3-oss/env-nextjs](https://github.com/t3-oss/t3-env) validation package is used. This package is used to validate and type-check environment variables. Usage:
+Define them in [.env.local.example](./.env.local.example), [.env.local](./.env.local) and [src/env.mjs](./src/env.mjs) file where [@t3-oss/env-nextjs](https://github.com/t3-oss/t3-env) validation package is used. This package is used to validate and type-check environment variables.
+
+**Always prefer `getEnvVar()` helper to read env variables!** It works both in CSR and SSR context. See more info in [env-vars.ts](./src/lib/env-vars.ts) file.
 
 ```tsx
 import { env } from "@/env.mjs"
 
+import { getEnvVar } from "@/lib/env-vars"
+
 // ✅ OK
+console.log(getEnvVar("RECAPTCHA_SECRET_KEY"))
+
+// ✅ good, but prefer above
 console.log(env.RECAPTCHA_SECRET_KEY)
 
 // ❌ NOT OK
 console.log(process.env.RECAPTCHA_SECRET_KEY)
 ```
 
-All default server-side variables are optional. This lets you build the application once and run it in different environments with different configurations without the need to rebuild. Baking them into the Docker image or build artifacts may not be desirable in many cases. In that case, their correctness must be checked at runtime (see [urls.ts](./src/lib/urls.ts) for example). Requiring them at build time is also possible by updating the schema in [env.mjs](./src/env.mjs) and passing them from the environment:
+All default server-side variables are optional. This lets you build the application once and run it in different environments with different configurations without the need to rebuild. Baking them into the Docker image or build artifacts may not be desirable in many cases. In that case, their correctness must be checked at runtime (handled in `getEnvVar` by throwing an error). Requiring them at build time is also possible by updating the schema in [env.mjs](./src/env.mjs) (marking them required) and passing them from the environment:
 
 - as build-time arguments in Docker (see [Production Docker](#🛠️-production-docker) section),
 - in `env.local` file when building locally,
-- Config vars in hosting providers (e.g. Vercel, Heroku).
+- config/env vars in hosting providers (e.g. Vercel, Heroku).
 
 Environment variables starting with `NEXT_PUBLIC_` are [automatically available](https://nextjs.org/docs/app/guides/environment-variables#runtime-environment-variables) in the client-side code. Don't store any sensitive information in these variables, as they are exposed. They must be present at build time.
+
+> [!TIP]
+> SPA applications are notorious for embedding environmental variables into the build output of the application. If you want to avoid this, you can use custom injector. This allows you to omit the `NEXT_PUBLIC_` prefix and follow "build once, run anywhere" approach (without baking these vars into the client-side code especially when different enviroments require different values).
+>
+> Root layout can read specific values within the server context (in [layout](./src/app/[locale]/layout.tsx)) and injects then into the window using a script tag. This way, the values don't have to be available during build, but they will be injected into the app during runtime. This is configurable through `CSR_ENVs` variable in the root layout file.
+>
+> The `getEnvVar` helper function also reads these dynamically injected variables from the `window` object (`CSR_CONFIG` variable) when running in the client context so you can use it seamlessly in both server and client components.
 
 Environment variables that need to be available in the build-time context of Turborepo tasks must be defined in the [turbo.json](../../turbo.json) file under the `globalEnv` section. The build step (`turbo run build`) runs in a sandboxed environment where only explicitly specified environment variables are accessible.
 
@@ -522,16 +528,18 @@ export const submitContactUsForm = (payload: FormData) => {
 ```
 
 ```tsx
-import { env } from "@/env.mjs"
 import { ReCaptchaProvider } from "next-recaptcha-v3"
 
+import { getEnvVar } from "@/lib/env-vars"
 import { ContactUsForm } from "@/components/forms/ContactUsForm"
 
 // Wrap form with reCAPTCHA provider
 
 export default function Page() {
   return (
-    <ReCaptchaProvider reCaptchaKey={env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}>
+    <ReCaptchaProvider
+      reCaptchaKey={getEnvVar("NEXT_PUBLIC_RECAPTCHA_SITE_KEY")}
+    >
       <ContactUsForm />
     </ReCaptchaProvider>
   )

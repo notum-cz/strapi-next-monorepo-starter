@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 import { useRouter } from "@/lib/navigation"
-import { useUserMutations } from "@/hooks/useUser"
+import { useUserMutations } from "@/hooks/useUserMutations"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button } from "@/components/ui/button"
@@ -33,17 +33,24 @@ export function ForgotPasswordForm() {
     defaultValues: { email: "" },
   })
 
-  const onSubmit = (data: z.infer<FormSchemaType>) =>
+  const onSubmit = async (data: z.infer<FormSchemaType>) => {
     forgotPasswordMutation.mutate(data, {
       onSuccess: () => {
-        toast({
-          variant: "default",
-          description: t("passwordChangeEmailSent"),
-        })
+        // This flow happens even if the email does not exist in the system
+        toast({ variant: "default", description: t("passwordChangeEmailSent") })
         form.reset()
         router.push("/auth/signin")
       },
+      onError: (error) => {
+        // This happens only on unexpected errors (e.g. network issues)
+        const errorMessage = error?.message
+        const displayMessage =
+          errorMessage ?? t("errors.failedToSendPasswordResetEmail")
+
+        toast({ variant: "destructive", description: displayMessage })
+      },
     })
+  }
 
   return (
     <Card className="m-auto w-[400px]">
@@ -62,6 +69,7 @@ export function ForgotPasswordForm() {
           size="lg"
           variant="default"
           form={forgotPasswordFormName}
+          disabled={forgotPasswordMutation.isPending}
         >
           {t("submit")}
         </Button>

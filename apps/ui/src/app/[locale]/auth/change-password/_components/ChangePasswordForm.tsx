@@ -7,7 +7,7 @@ import * as z from "zod"
 
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
 import { useRouter } from "@/lib/navigation"
-import { useUserMutations } from "@/hooks/useUser"
+import { useUserMutations } from "@/hooks/useUserMutations"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button } from "@/components/ui/button"
@@ -38,38 +38,35 @@ export function ChangePasswordForm() {
     },
   })
 
-  const onSubmit = (data: z.infer<FormSchemaType>) =>
+  const onSubmit = async (data: z.infer<FormSchemaType>) => {
     changePasswordMutation.mutate(data, {
       onSuccess: () => {
-        toast({
-          variant: "default",
-          description: t("successfullyChanged"),
-        })
+        toast({ variant: "default", description: t("successfullyChanged") })
         form.reset()
         router.push("/")
       },
-      onError: (error: any) => {
+      onError: (error) => {
+        const errorMessage = error?.message
+
+        // Try to match common errors to translated messages
         const errorMap = {
           "is invalid": t("errors.invalidCurrentPassword"),
           "be different": t("errors.newPasswordSameAsCurrent"),
         } as const
 
-        let errorMessage = t("errors.unexpectedError")
+        const errorKey = Object.keys(errorMap).find(
+          (key): key is keyof typeof errorMap =>
+            errorMessage.includes(key) ?? false
+        )
 
-        if (error instanceof Error) {
-          const errorKey = Object.keys(errorMap).find(
-            (key): key is keyof typeof errorMap => error.message?.includes(key)
-          )
+        const displayMessage = errorKey
+          ? errorMap[errorKey]
+          : (errorMessage ?? t("errors.unexpectedError"))
 
-          errorMessage = errorKey ? errorMap[errorKey] : errorMessage
-        }
-
-        toast({
-          variant: "destructive",
-          description: errorMessage,
-        })
+        toast({ variant: "destructive", description: displayMessage })
       },
     })
+  }
 
   return (
     <Card className="m-auto w-[400px]">
@@ -105,6 +102,7 @@ export function ChangePasswordForm() {
           size="lg"
           variant="default"
           form={changePasswordFormName}
+          disabled={changePasswordMutation.isPending}
         >
           {t("submit")}
         </Button>

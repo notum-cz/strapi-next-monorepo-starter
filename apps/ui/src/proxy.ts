@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
-import { withAuth } from "next-auth/middleware"
 import createMiddleware from "next-intl/middleware"
 
+import { getSessionSSR } from "./lib/auth"
 import { isDevelopment } from "./lib/general-helpers"
 import { routing } from "./lib/navigation"
 
@@ -9,24 +9,9 @@ import { routing } from "./lib/navigation"
 const intlProxy = createMiddleware(routing)
 
 // List all pages that require authentication (non-public)
-const authPages = ["/auth/change-password", "/auth/signout"]
+const authPages = ["/auth/change-password", "/auth"]
 
-const authProxy = withAuth(
-  // Note that this callback is only invoked if
-  // the `authorized` callback has returned `true`
-  // and not for pages listed in `pages`.
-  (req) => intlProxy(req),
-  {
-    callbacks: {
-      authorized: ({ token }) => token != null,
-    },
-    pages: {
-      signIn: "/auth/signin",
-    },
-  }
-)
-
-export default function proxy(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
   // Handle HTTPS redirection in production in Heroku servers
   // Comment this block when running locally (using `next start`)
   const xForwardedProtoHeader = req.headers.get("x-forwarded-proto")
@@ -54,7 +39,23 @@ export default function proxy(req: NextRequest) {
 
   // If the request is for a non-public (auth) page, require authentication
   if (isAuthPage) {
-    return (authProxy as any)(req)
+    try {
+      // Check Better Auth session (Strapi JWT validation happens automatically via plugin hook)
+      const session = await getSessionSSR(req.headers)
+
+      if (!session?.user) {
+        // No session found or token invalid, redirect to sign in
+        throw new Error("No valid session")
+      }
+
+      // User is authenticated, proceed with internationalization middleware
+      return intlProxy(req)
+    } catch (error) {
+      // Error checking session, redirect to sign in
+      const signInUrl = new URL("/auth/signin", req.url)
+      signInUrl.searchParams.set("callbackUrl", req.nextUrl.pathname)
+      return NextResponse.redirect(signInUrl)
+    }
   }
 
   // All other pages are public

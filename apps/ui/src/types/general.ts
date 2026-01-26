@@ -1,5 +1,3 @@
-import { AppSession } from "@/types/next-auth"
-
 // Use type safe message keys with `next-intl`
 type Messages = typeof import("../../locales/en.json")
 
@@ -12,7 +10,7 @@ export interface CustomFetchOptions {
   // force JWT token for the request
   // if omitted, the token will be retrieved from the session
   // used by PrivateStrapiClient
-  userJWT?: AppSession["strapiJWT"]
+  userJWT?: string
   // omit "Authorization" header from the request (don't retrieve JWT token from session)
   // used by PrivateStrapiClient
   omitUserAuthorization?: boolean

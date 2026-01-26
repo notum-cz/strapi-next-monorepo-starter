@@ -24,10 +24,9 @@ export const env = createEnv({
     STRAPI_PREVIEW_SECRET: z.string().optional(),
 
     NEXT_OUTPUT: z.string().optional(),
-    WEBPACK_CACHE_TYPE: z.enum(["filesystem", "memory"]).optional(),
 
-    NEXTAUTH_URL: z.string().url().optional(),
-    NEXTAUTH_SECRET: z.string().optional(),
+    BETTER_AUTH_URL: z.string().url().optional(),
+    BETTER_AUTH_SECRET: z.string().optional(),
 
     SENTRY_AUTH_TOKEN: z.string().optional(),
     SENTRY_ORG: z.string().optional(),
@@ -35,7 +34,6 @@ export const env = createEnv({
     SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING: z.string().optional(),
 
     RECAPTCHA_SECRET_KEY: z.string().optional(),
-    NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
   },
 
   /*
@@ -47,6 +45,7 @@ export const env = createEnv({
    * consider runtime injection instead (through `window.__ENV__` or similar hack).
    */
   client: {
+    NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
     NEXT_PUBLIC_RECAPTCHA_SITE_KEY: z.string().optional(),
     NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS: optionalZodBoolean(),
   },
@@ -75,10 +74,9 @@ export const env = createEnv({
     STRAPI_PREVIEW_SECRET: process.env.STRAPI_PREVIEW_SECRET,
 
     NEXT_OUTPUT: process.env.NEXT_OUTPUT,
-    WEBPACK_CACHE_TYPE: process.env.WEBPACK_CACHE_TYPE,
 
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+    BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+    BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
 
     SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
     SENTRY_ORG: process.env.SENTRY_ORG,
@@ -90,7 +88,7 @@ export const env = createEnv({
 
     // client
     // TODO: @dominik-juriga - find out if these are specific per environment
-    SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     NEXT_PUBLIC_RECAPTCHA_SITE_KEY: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
     NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS:
       process.env.NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS,

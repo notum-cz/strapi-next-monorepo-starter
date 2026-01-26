@@ -48,21 +48,19 @@ export default async function RootLayout({
   }
 
   /**
-   * This allows you to make all env variables RUNTIME.
+   * This allows you to make following env variables RUNTIME.
    *
-   * No env variables are going to be embedded during the build-time. To avoid embedding,
-   * you must not use "NEXT_PUBLIC_" prefix for any env variable that you want to keep
+   * Following variables aren't going to be embedded during the build-time. To avoid embedding,
+   * you must not use "NEXT_PUBLIC_" prefix for env variable that you want to keep
    * private and dynamic at runtime.
    *
    * Instead, use this method to pass only the required env variables to the client side.
-   * To access them from CSR or SSR context, read them from `window.CSR_CONFIG`
-   * (or `globalThis.CSR_CONFIG` in shared/SSR code) instead of using `process.env` directly.
+   * To access them from CSR or SSR context, read them using `getEnvVar()` helper.
    *
    * Do not include "STRAPI_URL", we want to keep it private (hence why we use proxying).
    */
   const CSR_ENVs = [
     "NODE_ENV",
-    "SENTRY_DSN",
     "DEBUG_STRAPI_CLIENT_API_CALLS",
     "SHOW_NON_BLOCKING_ERRORS",
     "APP_PUBLIC_URL",
@@ -97,7 +95,7 @@ export default async function RootLayout({
           <StrapiPreviewListener />
           <ClientProviders>
             <div className="relative flex min-h-screen flex-col">
-              <ErrorBoundary hideFallback>
+              <ErrorBoundary showErrorMessage>
                 <StrapiNavbar locale={locale} />
               </ErrorBoundary>
 

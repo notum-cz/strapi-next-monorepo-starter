@@ -2,12 +2,12 @@ import qs from "qs"
 
 import { CustomFetchOptions } from "@/types/general"
 
+import { getEnvVar } from "@/lib/env-vars"
 import BaseStrapiClient from "@/lib/strapi-api/base"
 import {
   createStrapiAuthHeader,
   formatStrapiAuthorizationHeader,
 } from "@/lib/strapi-api/request-auth"
-import { getStrapiUrl } from "@/lib/urls"
 
 export class PrivateClient extends BaseStrapiClient {
   protected async prepareRequest(
@@ -34,7 +34,8 @@ export class PrivateClient extends BaseStrapiClient {
     } else {
       // Directly use the Strapi URL. Same logic as in proxy route handler must be applied
       // (for SSR components and server actions/context)
-      completeUrl = `${getStrapiUrl(true)}${url}`
+      const strapiUrl = getEnvVar("STRAPI_URL", true)
+      completeUrl = `${strapiUrl!}${url}`
     }
 
     if (!options?.omitUserAuthorization) {

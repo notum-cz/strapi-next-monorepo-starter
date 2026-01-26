@@ -13,12 +13,10 @@ import StrapiCkEditorContent from "@/components/page-builder/components/utilitie
 
 /**
  * Mapping of Strapi Component UID to React Component
- * TODO: This should map Strapi component uid -> component path to reduce bundle size, however this became an issue with nextjs 15 update
+ * TODO: Improve dynamic/lazy loading of these components to reduce bundle size
  */
-
 export const PageContentComponents: {
-  // [K in UID.Component]?: string // TODO: Next.js 15 has issues with dynamic imports inside pages
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [K in UID.Component]?: React.ComponentType<any>
 } = {
   // elements, seo-utilities, utilities

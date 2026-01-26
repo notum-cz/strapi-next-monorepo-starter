@@ -25,7 +25,7 @@ function ActivateAccount() {
   const title = [t("welcome"), name].join(", ")
 
   if (formToggled) {
-    return <SetPasswordForm accountActivation />
+    return <SetPasswordForm code={code} accountActivation />
   }
 
   return (

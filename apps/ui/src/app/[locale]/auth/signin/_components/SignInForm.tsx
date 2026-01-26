@@ -2,13 +2,12 @@
 
 import { useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { signIn } from "next-auth/react"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
-import { safeJSONParse } from "@/lib/general-helpers"
-import { Link, useRouter } from "@/lib/navigation"
+import { Link } from "@/lib/navigation"
+import { useUserMutations } from "@/hooks/useUserMutations"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { UseSearchParamsWrapper } from "@/components/helpers/UseSearchParamsWrapper"
@@ -22,21 +21,22 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { useToast } from "@/components/ui/use-toast"
+import { SocialButtons } from "@/app/[locale]/auth/signin/_components/SocialButtons"
 
-export function SignInForm() {
+export function SignInForm({ strapiUrl }: { strapiUrl?: string }) {
   return (
     <UseSearchParamsWrapper>
-      <SuspensedSignInForm />
+      <SuspensedSignInForm strapiUrl={strapiUrl} />
     </UseSearchParamsWrapper>
   )
 }
 
-function SuspensedSignInForm() {
+function SuspensedSignInForm({ strapiUrl }: { strapiUrl?: string }) {
   const t = useTranslations("auth.signIn")
   const { toast } = useToast()
-  const router = useRouter()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl") ?? "/"
+  const { signInMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({
     resolver: zodResolver(SignInFormSchema),
@@ -46,27 +46,32 @@ function SuspensedSignInForm() {
   })
 
   async function onSubmit(values: z.infer<FormSchemaType>) {
-    const res = await signIn("credentials", {
-      ...values,
-      callbackUrl,
-      redirect: false,
+    signInMutation.mutate(values, {
+      onSuccess: () => {
+        // Use full page navigation to ensure session is reloaded
+        // This is more reliable than client-side navigation for session updates
+        window.location.href = callbackUrl
+      },
+      onError: (error) => {
+        const errorMessage = error?.message
+
+        // Try to match common errors to translated messages
+        const errorMap = {
+          "identifier or password": t("errors.CredentialsSignin"),
+        } as const
+
+        const errorKey = Object.keys(errorMap).find(
+          (key): key is keyof typeof errorMap =>
+            errorMessage?.includes(key) ?? false
+        )
+
+        const displayMessage = errorKey
+          ? errorMap[errorKey]
+          : (errorMessage ?? t("errors.unexpectedError"))
+
+        toast({ variant: "destructive", description: displayMessage })
+      },
     })
-
-    if (!res?.error) {
-      router.refresh()
-      setTimeout(() => router.push(callbackUrl), 300)
-    } else {
-      const parsedError = safeJSONParse<any>(res.error)
-      const message =
-        "message" in parsedError
-          ? parsedError.message
-          : t("errors.CredentialsSignin")
-
-      toast({
-        variant: "destructive",
-        description: message,
-      })
-    }
   }
 
   return (
@@ -95,9 +100,18 @@ function SuspensedSignInForm() {
         </AppForm>
       </CardContent>
       <CardFooter className="flex flex-col items-center gap-2">
-        <Button type="submit" size="lg" variant="default" form={signInFormName}>
-          {t("submit")}
+        <Button
+          type="submit"
+          size="lg"
+          variant="default"
+          form={signInFormName}
+          disabled={signInMutation.isPending}
+          className="w-full cursor-pointer"
+        >
+          {signInMutation.isPending ? t("signingIn") : t("submit")}
         </Button>
+
+        {strapiUrl && <SocialButtons strapiUrl={strapiUrl} />}
 
         <div className="mt-2">
           <Button asChild variant="ghost" size="sm">

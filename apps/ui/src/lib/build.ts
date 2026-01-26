@@ -1,7 +1,6 @@
-import { env } from "@/env.mjs"
 import { Locale } from "next-intl"
 
-export const DEBUG_STATIC_PARAMS_GENERATION = env.DEBUG_STATIC_PARAMS_GENERATION
+import { getEnvVar } from "@/lib/env-vars"
 
 /**
  * Logs the output of generateStaticParams when the debug flag is enabled
@@ -15,7 +14,7 @@ export const debugStaticParams = (
 ) => {
   const { isDevelopment } = config ?? {}
 
-  if (DEBUG_STATIC_PARAMS_GENERATION) {
+  if (getEnvVar("DEBUG_STATIC_PARAMS_GENERATION")) {
     console.log(`generateStaticParams output <${segment}>`)
     if (isDevelopment === true) {
       console.log(" L (skipped in development mode)")
