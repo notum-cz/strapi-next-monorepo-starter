@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "main": "prettier.config.js",
-  "devDependencies": {
+  "dependencies": {
     "@ianvs/prettier-plugin-sort-imports": "4.7.0",
     "prettier-plugin-packagejson": "3.0.0"
   }

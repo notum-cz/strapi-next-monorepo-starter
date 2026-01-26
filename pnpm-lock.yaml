@@ -407,7 +407,7 @@ importers:
         version: 8.54.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
 
   packages/prettier-config:
-    devDependencies:
+    dependencies:
       '@ianvs/prettier-plugin-sort-imports':
         specifier: 4.7.0
         version: 4.7.0(prettier@3.8.0)
@@ -16622,7 +16622,7 @@ snapshots:
       '@strapi/design-system': 2.0.1(@babel/runtime@7.28.6)(@codemirror/autocomplete@6.20.0)(@codemirror/language@6.12.1)(@codemirror/lint@6.9.2)(@codemirror/search@6.6.0)(@codemirror/state@6.5.4)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.39.11)(@strapi/icons@2.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.3.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@types/react-dom@19.2.3(@types/react@19.2.8))(@types/react@19.2.8)(codemirror@5.65.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.3.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@strapi/icons': 2.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.3.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@strapi/permissions': 5.33.3
-      '@strapi/types': 5.33.3(@types/node@22.19.7)(pg@8.17.2)(typescript@5.4.4)
+      '@strapi/types': 5.33.3(@types/node@22.19.7)(pg@8.17.2)(typescript@5.9.3)
       '@strapi/typescript-utils': 5.33.3
       '@strapi/utils': 5.33.3
       '@testing-library/dom': 10.4.1
@@ -16995,7 +16995,7 @@ snapshots:
       '@strapi/database': 5.33.3(@types/node@22.19.7)(pg@8.17.2)
       '@strapi/design-system': 2.0.1(@babel/runtime@7.28.6)(@codemirror/autocomplete@6.20.0)(@codemirror/language@6.12.1)(@codemirror/lint@6.9.2)(@codemirror/search@6.6.0)(@codemirror/state@6.5.4)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.39.11)(@strapi/icons@2.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.3.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)))(@types/react-dom@19.2.3(@types/react@19.2.8))(@types/react@19.2.8)(codemirror@5.65.20)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.3.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@strapi/icons': 2.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.3.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
-      '@strapi/types': 5.33.3(@types/node@22.19.7)(pg@8.17.2)(typescript@5.4.4)
+      '@strapi/types': 5.33.3(@types/node@22.19.7)(pg@8.17.2)(typescript@5.9.3)
       '@strapi/utils': 5.33.3
       date-fns: 2.30.0
       date-fns-tz: 2.0.1(date-fns@2.30.0)
@@ -17195,7 +17195,7 @@ snapshots:
       '@strapi/generators': 5.33.3(@types/node@22.19.7)
       '@strapi/logger': 5.33.3
       '@strapi/permissions': 5.33.3
-      '@strapi/types': 5.33.3(@types/node@22.19.7)(pg@8.17.2)(typescript@5.4.4)
+      '@strapi/types': 5.33.3(@types/node@22.19.7)(pg@8.17.2)(typescript@5.9.3)
       '@strapi/typescript-utils': 5.33.3
       '@strapi/utils': 5.33.3
       '@vercel/stega': 0.1.2
@@ -18087,7 +18087,7 @@ snapshots:
       '@strapi/openapi': 5.33.3
       '@strapi/permissions': 5.33.3
       '@strapi/review-workflows': 5.33.3(fef381cb4721512bd0776b2fe2c7300b)
-      '@strapi/types': 5.33.3(@types/node@22.19.7)(pg@8.17.2)(typescript@5.4.4)
+      '@strapi/types': 5.33.3(@types/node@22.19.7)(pg@8.17.2)(typescript@5.9.3)
       '@strapi/typescript-utils': 5.33.3
       '@strapi/upload': 5.33.3(ca833df6802159b7013de1a7f1d0f8eb)
       '@strapi/utils': 5.33.3
@@ -18312,36 +18312,6 @@ snapshots:
       - webpack-cli
       - webpack-dev-server
       - webpack-plugin-serve
-
-  '@strapi/types@5.33.3(@types/node@22.19.7)(pg@8.17.2)(typescript@5.4.4)':
-    dependencies:
-      '@casl/ability': 6.5.0
-      '@koa/cors': 5.0.0
-      '@koa/router': 12.0.2
-      '@strapi/database': 5.33.3(@types/node@22.19.7)(pg@8.17.2)
-      '@strapi/logger': 5.33.3
-      '@strapi/permissions': 5.33.3
-      '@strapi/utils': 5.33.3
-      commander: 8.3.0
-      json-logic-js: 2.0.5
-      koa: 2.16.3
-      koa-body: 6.0.1
-      node-schedule: 2.1.1
-      typedoc: 0.25.10(typescript@5.4.4)
-      typedoc-github-wiki-theme: 1.1.0(typedoc-plugin-markdown@3.17.1(typedoc@0.25.10(typescript@5.9.3)))(typedoc@0.25.10(typescript@5.9.3))
-      typedoc-plugin-markdown: 3.17.1(typedoc@0.25.10(typescript@5.9.3))
-      zod: 3.25.67
-    transitivePeerDependencies:
-      - '@types/node'
-      - better-sqlite3
-      - mysql
-      - mysql2
-      - pg
-      - pg-native
-      - sqlite3
-      - supports-color
-      - tedious
-      - typescript
 
   '@strapi/types@5.33.3(@types/node@22.19.7)(pg@8.17.2)(typescript@5.9.3)':
     dependencies:
@@ -24110,7 +24080,7 @@ snapshots:
     dependencies:
       '@formatjs/ecma402-abstract': 1.18.2
       '@formatjs/icu-messageformat-parser': 2.7.6
-      '@formatjs/intl': 2.10.0(typescript@5.4.4)
+      '@formatjs/intl': 2.10.0(typescript@5.9.3)
       '@formatjs/intl-displaynames': 6.6.6
       '@formatjs/intl-listformat': 7.5.5
       '@types/hoist-non-react-statics': 3.3.7(@types/react@19.2.8)
