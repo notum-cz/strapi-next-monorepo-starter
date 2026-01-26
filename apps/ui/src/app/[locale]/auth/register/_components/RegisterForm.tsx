@@ -1,13 +1,11 @@
 "use client"
 
-import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
-import { getAuthErrorMessage } from "@/lib/general-helpers"
 import { Link } from "@/lib/navigation"
 import { cn } from "@/lib/styles"
 import { useUserMutations } from "@/hooks/useUserMutations"
@@ -31,7 +29,6 @@ const ENABLE_EMAIL_CONFIRMATION = false
 export function RegisterForm() {
   const t = useTranslations("auth.register")
   const { toast } = useToast()
-  const [isSuccess, setIsSuccess] = useState(false)
   const { registerMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({
@@ -46,70 +43,44 @@ export function RegisterForm() {
   })
 
   async function onSubmit(values: z.infer<FormSchemaType>) {
-    try {
-      // Call Better Auth custom registration endpoint
-      // The path /register-strapi becomes registerStrapi (kebab-case to camelCase)
-      const result = await registerMutation.mutateAsync({
+    registerMutation.mutate(
+      {
         email: values.email,
         password: values.password,
-      })
+      },
+      {
+        onSuccess: () => {
+          // User is registered AND signed in automatically!
 
-      if (result.data) {
-        // User is registered AND signed in automatically!
-        setIsSuccess(true)
+          if (!ENABLE_EMAIL_CONFIRMATION) {
+            // Use full page navigation to ensure session is reloaded
+            window.location.href = "/"
+          }
+        },
+        onError: (error) => {
+          const errorMessage = error?.message
 
-        if (!ENABLE_EMAIL_CONFIRMATION) {
-          // Use full page navigation to ensure session is reloaded
-          window.location.href = "/"
-        }
-      } else if (result.error) {
-        const errorMessage = getAuthErrorMessage(
-          result.error.message,
-          t("errors.unexpectedError")
-        )
+          // Try to match common errors to translated messages
+          const errorMap = {
+            "already taken": t("errors.emailUsernameTaken"),
+          } as const
 
-        // Try to match common errors to translated messages
-        const errorMap = {
-          "already taken": t("errors.emailUsernameTaken"),
-        } as const
+          const errorKey = Object.keys(errorMap).find(
+            (key): key is keyof typeof errorMap =>
+              errorMessage?.includes(key) ?? false
+          )
 
-        const errorKey = Object.keys(errorMap).find(
-          (key): key is keyof typeof errorMap =>
-            errorMessage?.includes(key) ?? false
-        )
+          const displayMessage = errorKey
+            ? errorMap[errorKey]
+            : (errorMessage ?? t("errors.unexpectedError"))
 
-        const displayMessage = errorKey ? errorMap[errorKey] : errorMessage
-
-        toast({
-          variant: "destructive",
-          description: displayMessage,
-        })
+          toast({ variant: "destructive", description: displayMessage })
+        },
       }
-    } catch (error: any) {
-      // Fallback error handling
-      const rawMessage =
-        typeof error === "string" ? error : (error as Error)?.message
-      const errorMap = {
-        "already taken": t("errors.emailUsernameTaken"),
-      } as const
-
-      let errorMessage = getAuthErrorMessage(
-        rawMessage,
-        t("errors.unexpectedError")
-      )
-      const errorKey = Object.keys(errorMap).find(
-        (key): key is keyof typeof errorMap => errorMessage?.includes(key)
-      )
-      errorMessage = errorKey ? errorMap[errorKey] : errorMessage
-
-      toast({
-        variant: "destructive",
-        description: errorMessage,
-      })
-    }
+    )
   }
 
-  if (isSuccess && ENABLE_EMAIL_CONFIRMATION) {
+  if (registerMutation.isSuccess && ENABLE_EMAIL_CONFIRMATION) {
     // This message is relevant if system requires email verification
     return (
       <Card className="m-auto w-[400px]">

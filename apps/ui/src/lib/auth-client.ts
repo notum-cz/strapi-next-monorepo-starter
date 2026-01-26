@@ -1,36 +1,32 @@
 import { createAuthClient } from "better-auth/react"
 
 import type { BetterAuthClientPlugin } from "better-auth/client"
+import { BetterAuthSessionWithStrapi } from "@/types/better-auth"
 
-import {
-  strapiAuthPlugin,
-  strapiOAuthPlugin,
-  updatePasswordPlugin,
-} from "./auth"
+import { getEnvVar } from "@/lib/env-vars"
 
-// Client plugin that infers endpoints from server plugin
+import { strapiAuthPlugin, strapiOAuthPlugin } from "./auth"
+
 const strapiAuthClientPlugin = {
   id: "strapi-auth",
   $InferServerPlugin: {} as typeof strapiAuthPlugin,
 } satisfies BetterAuthClientPlugin
 
-// Client plugin for update password endpoint
-const updatePasswordClientPlugin = {
-  id: "update-password",
-  $InferServerPlugin: {} as typeof updatePasswordPlugin,
-} satisfies BetterAuthClientPlugin
-
-// Client plugin for Strapi OAuth endpoint
 const strapiOAuthClientPlugin = {
   id: "strapi-oauth",
   $InferServerPlugin: {} as typeof strapiOAuthPlugin,
-}
+} satisfies BetterAuthClientPlugin
 
 export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_APP_URL,
-  plugins: [
-    strapiAuthClientPlugin,
-    updatePasswordClientPlugin,
-    strapiOAuthClientPlugin,
-  ],
+  baseURL: getEnvVar("APP_PUBLIC_URL"),
+  plugins: [strapiAuthClientPlugin, strapiOAuthClientPlugin],
 })
+
+export const getSessionCSR = async () => {
+  const session = await authClient.getSession()
+
+  return {
+    data: session.data as BetterAuthSessionWithStrapi | null,
+    error: session.error,
+  }
+}

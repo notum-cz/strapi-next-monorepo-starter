@@ -1,5 +1,3 @@
-import type { BetterAuthSessionWithStrapi } from "@/types/better-auth"
-
 import { getEnvVar } from "@/lib/env-vars"
 
 const ALLOWED_STRAPI_ENDPOINTS: Record<string, string[]> = {
@@ -80,23 +78,14 @@ const getStrapiUserTokenFromBetterAuth = async () => {
 
   if (isRSC) {
     // Server side: Read session directly from cookies (no HTTP request)
-    // Dynamically import both headers and auth to avoid client bundle issues
     const { headers } = await import("next/headers")
-    const { auth } = await import("@/lib/auth")
-
-    const session = (await auth.api.getSession({
-      headers: await headers(),
-    })) as BetterAuthSessionWithStrapi | null
+    const { getSessionSSR } = await import("@/lib/auth")
+    const session = await getSessionSSR(await headers())
     return session?.user?.strapiJWT
   }
 
   // Client side: Make HTTP request to /api/auth/session
-  // Note: This is necessary because we can't use React hooks here
-  // (this function might be called outside React component context)
-  // Dynamically import authClient to avoid bundling client code in server/edge runtime
-  const { authClient } = await import("@/lib/auth-client")
-  const { data: session } = (await authClient.getSession()) as {
-    data: BetterAuthSessionWithStrapi | null
-  }
+  const { getSessionCSR } = await import("@/lib/auth-client")
+  const { data: session } = await getSessionCSR()
   return session?.user?.strapiJWT
 }

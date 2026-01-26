@@ -22,7 +22,6 @@ This is a [Next.js v16](https://nextjs.org/docs) project.
 - @tanstack/react-query
 - @tanstack/react-table
 - react-use
-- react-device-detect
 - @sentry/nextjs
 - dayjs
 - lodash
@@ -146,15 +145,24 @@ This approach allows static content to be updated without rebuilding the entire 
 
 In this starter, ISR with time-based revalidation is used by default. Revalidation is applied globally to all fetch requests, but it can also be controlled individually via parameters in the fetch functions (see [BaseStrapiClient](src/lib/strapi-api/base.ts)). The requests revalidation interval is set to `0` (no caching) during development and `60` seconds in production by default.
 
-For dynamic routes where slugs are unknown at build time, runtime generation is possible. Pages will be rendered on the first request and cached for subsequent requests if the following page-level flags are set:
+#### Runtime static generation for unknown dynamic routes
 
-```
-export const dynamic = 'force-static'
+For dynamic routes where some slugs are not known at build time, Next.js can **statically generate pages on the first request** and cache them using **ISR**.
+
+```ts
+export const dynamic = "force-static"
 export const dynamicParams = true
 export const revalidate = 300
 ```
 
-These flags enable ISR for runtime-generated pages, avoiding errors such as `DYNAMIC_SERVER_USAGE` when environment variables are only available at runtime.
+- Unknown slugs are generated **once on first request**, then cached as static HTML.
+- Pages are **revalidated every 300 seconds**.
+- Rendering remains **static** (not per-request SSR); request-time APIs like `cookies()` are not allowed.
+- Allows access to environment variables available only at runtime without triggering `DYNAMIC_SERVER_USAGE`.
+
+> [!TIP]
+> Don’t use this setup for pages that render user-specific data (e.g. a logged-in user session).
+> Without [cacheComponents](https://nextjs.org/docs/app/getting-started/cache-components) enabled, accessing request-time APIs (cookies(), headers(), auth) will force the entire route to render dynamically and disable static/ISR behavior.
 
 [More information about ISR](https://nextjs.org/docs/app/building-your-application/data-fetching/incremental-static-regeneration)
 
@@ -242,12 +250,14 @@ The frontend app uses the `better-auth` package, which is configured in [src/lib
 
 In the [middleware.ts](src/middleware.ts) file, the `authMiddleware` is used to check whether the user is authenticated. A list called `authPages` contains the routes that require authentication. If a user is not authenticated and tries to access a private route, they are redirected to the login page.
 
-To retrieve the session (logged-in user) in server components, use this:
+To retrieve the session (logged-in user) in server components, use `getSessionSSR()` function that returns typed session data:
 
 ```tsx
-const session = await auth.api.getSession({
-  headers: await headers(),
-})
+import { headers } from "next/headers"
+
+import { getSessionSSR } from "@/lib/auth"
+
+const session = await getSessionSSR(await headers())
 ```
 
 To get session in client components use `useSession()` (reactive) or `getSession()`:
@@ -255,8 +265,10 @@ To get session in client components use `useSession()` (reactive) or `getSession
 ```tsx
 import { authClient } from "@/lib/client"
 
+// in client component/hook
 const { data: session } = authClient.useSession()
 
+// or imperatively
 const { data: session } = await authClient.getSession()
 ```
 

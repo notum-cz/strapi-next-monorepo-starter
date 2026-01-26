@@ -1,4 +1,4 @@
-import { env } from "@/env.mjs"
+import { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers"
 import { Result } from "@repo/strapi-types"
 import { betterAuth } from "better-auth"
 import {
@@ -11,58 +11,14 @@ import { customSession } from "better-auth/plugins"
 import { z } from "zod"
 
 import type { BetterAuthPlugin } from "better-auth"
+import {
+  BetterAuthSessionWithStrapi,
+  BetterAuthUserWithStrapi,
+} from "@/types/better-auth"
 
+import { getEnvVar } from "@/lib/env-vars"
+import { safeJSONParse } from "@/lib/general-helpers"
 import { PrivateStrapiClient } from "@/lib/strapi-api"
-
-const mapStrapiStatusToApiError = (status?: number) => {
-  switch (status) {
-    case 400:
-      return "BAD_REQUEST"
-    case 401:
-      return "UNAUTHORIZED"
-    case 403:
-      return "FORBIDDEN"
-    case 404:
-      return "NOT_FOUND"
-    case 409:
-      return "CONFLICT"
-    case 422:
-      return "UNPROCESSABLE_ENTITY"
-    case 429:
-      return "TOO_MANY_REQUESTS"
-    default:
-      return "INTERNAL_SERVER_ERROR"
-  }
-}
-
-const throwStrapiError = (
-  error: unknown,
-  fallbackMessage: string,
-  fallbackStatus?: number
-) => {
-  if (error instanceof APIError) {
-    throw error
-  }
-  try {
-    const parsed = JSON.parse(
-      typeof error === "string" ? error : ((error as Error)?.message ?? "")
-    )
-    const status =
-      typeof parsed?.status === "number" ? parsed.status : undefined
-    const message =
-      typeof parsed?.message === "string" ? parsed.message : fallbackMessage
-    throw new APIError(mapStrapiStatusToApiError(status), {
-      message,
-      code: typeof parsed?.name === "string" ? parsed.name : undefined,
-    })
-  } catch {
-    const message =
-      typeof (error as Error)?.message === "string"
-        ? (error as Error).message
-        : fallbackMessage
-    throw new APIError(mapStrapiStatusToApiError(fallbackStatus), { message })
-  }
-}
 
 export const strapiAuthPlugin = {
   id: "strapi-auth",
@@ -101,7 +57,7 @@ export const strapiAuthPlugin = {
             id: user.id.toString(),
             email: user.email,
             name: user.username,
-            emailVerified: false,
+            emailVerified: true,
             createdAt: new Date(),
             updatedAt: new Date(),
             strapiJWT: jwt,
@@ -116,8 +72,8 @@ export const strapiAuthPlugin = {
           await setSessionCookie(ctx, { user: userToSession, session })
 
           return ctx.json({ user: userToSession, session })
-        } catch (error: any) {
-          throwStrapiError(error, "Authentication failed")
+        } catch (error) {
+          throwBetterAuthError(error, "Authentication failed")
         }
       }
     ),
@@ -156,7 +112,7 @@ export const strapiAuthPlugin = {
             })
           }
 
-          const userToSession = {
+          const userToSession: BetterAuthUserWithStrapi = {
             id: user.id.toString(),
             email: user.email,
             name: user.username,
@@ -176,8 +132,8 @@ export const strapiAuthPlugin = {
           await setSessionCookie(ctx, { user: userToSession, session })
 
           return ctx.json({ user: userToSession, session })
-        } catch (error: any) {
-          throwStrapiError(error, "Registration failed")
+        } catch (error) {
+          throwBetterAuthError(error, "Registration failed")
         }
       }
     ),
@@ -207,8 +163,8 @@ export const strapiAuthPlugin = {
           // Strapi's forgot-password endpoint returns success even if email doesn't exist
           // (for security reasons - don't reveal if email exists)
           return ctx.json({ success: true })
-        } catch (error: any) {
-          throwStrapiError(error, "Failed to send password reset email")
+        } catch (error) {
+          throwBetterAuthError(error, "Failed to send password reset email")
         }
       }
     ),
@@ -240,20 +196,14 @@ export const strapiAuthPlugin = {
           )
 
           return ctx.json({ success: true })
-        } catch (error: any) {
-          throwStrapiError(error, "Failed to reset password")
+        } catch (error) {
+          throwBetterAuthError(error, "Failed to set a new password")
         }
       }
     ),
-  },
-} satisfies BetterAuthPlugin
 
-// Plugin to update password and refresh session
-export const updatePasswordPlugin = {
-  id: "update-password",
-  endpoints: {
-    updatePassword: createAuthEndpoint(
-      "/update-password",
+    updatePasswordWithStrapi: createAuthEndpoint(
+      "/update-password-strapi",
       {
         method: "POST",
         use: [sessionMiddleware],
@@ -315,8 +265,8 @@ export const updatePasswordPlugin = {
             user: updatedUser,
             session: ctx.context.session.session,
           })
-        } catch (error: any) {
-          throwStrapiError(error, "Failed to update password")
+        } catch (error) {
+          throwBetterAuthError(error, "Failed to update password")
         }
       }
     ),
@@ -339,9 +289,11 @@ export const strapiSessionPlugin = customSession(
           userJWT: strapiJWT,
         })
 
-      // if blocked -> clear session and throw to log out
       if (fetchedUser?.blocked) {
-        deleteSessionCookie(ctx)
+        // use is blocked in Strapi, reject session
+        throw new APIError("FORBIDDEN", {
+          message: "User account is blocked",
+        })
       }
 
       // update user fields with fresh Strapi data
@@ -349,24 +301,30 @@ export const strapiSessionPlugin = customSession(
       // For OAuth users, Strapi should return provider (e.g., "github", "google")
       // If Strapi doesn't return provider, fall back to existing user.provider from session
       const strapiProvider = fetchedUser.provider
-      const mappedProvider =
+      const provider =
         strapiProvider === "local"
           ? "credentials"
-          : (strapiProvider ?? (user as any).provider ?? "credentials")
+          : (strapiProvider ?? (user as any).provider)
 
       const updatedUser = {
         ...user,
         name: fetchedUser.username ?? user.name,
         blocked: fetchedUser.blocked ?? false,
-        provider: mappedProvider,
+        provider: provider ?? "credentials",
       }
 
       return { user: updatedUser, session }
     } catch (error) {
       // invalid/expired Strapi JWT -> clear Better Auth session cookie
-      console.error("Strapi JWT validation failed:", error)
       deleteSessionCookie(ctx)
-      throw error
+
+      if (session?.token) {
+        // optional but recommended: also revoke server-side session if you have it
+        await ctx.context.internalAdapter.deleteSession(session.token)
+      }
+
+      return { user: null, session: null }
+      // return throwBetterAuthError(error, "Strapi JWT validation failed")
     }
   }
 )
@@ -415,7 +373,7 @@ export const strapiOAuthPlugin = {
             id: strapiUser.id.toString(),
             email: strapiUser.email,
             name: strapiUser.username ?? strapiUser.email,
-            emailVerified: false,
+            emailVerified: true,
             createdAt: new Date(),
             updatedAt: new Date(),
             strapiJWT: jwt,
@@ -432,12 +390,9 @@ export const strapiOAuthPlugin = {
             session,
           })
 
-          return ctx.json({
-            user: userToSession,
-            session,
-          })
-        } catch (error: any) {
-          throwStrapiError(error, "Failed to sync OAuth with Strapi")
+          return ctx.json({ user: userToSession, session })
+        } catch (error) {
+          throwBetterAuthError(error, "Failed to sync OAuth with Strapi")
         }
       }
     ),
@@ -445,8 +400,8 @@ export const strapiOAuthPlugin = {
 } satisfies BetterAuthPlugin
 
 export const auth = betterAuth({
-  baseURL: env.APP_PUBLIC_URL,
-  secret: env.BETTER_AUTH_SECRET ?? "fallback-secret-for-development-only",
+  baseURL: getEnvVar("APP_PUBLIC_URL"),
+  secret: getEnvVar("BETTER_AUTH_SECRET"),
 
   // Stateless mode
   session: {
@@ -462,10 +417,58 @@ export const auth = betterAuth({
     storeAccountCookie: true,
   },
 
-  plugins: [
-    strapiAuthPlugin,
-    updatePasswordPlugin,
-    strapiSessionPlugin,
-    strapiOAuthPlugin,
-  ],
+  plugins: [strapiAuthPlugin, strapiSessionPlugin, strapiOAuthPlugin],
 })
+
+/**
+ * Helper to get session server-side from request headers and return typed session
+ */
+export const getSessionSSR = async (
+  headers: ReadonlyHeaders
+): Promise<BetterAuthSessionWithStrapi | null> =>
+  auth.api.getSession({ headers })
+
+/**
+ * Convert Strapi errors to Better Auth APIError
+ */
+const throwBetterAuthError = (
+  strapiError: unknown,
+  fallbackMessage: string,
+  fallbackStatus: number = 500
+) => {
+  if (strapiError instanceof APIError) {
+    throw strapiError
+  }
+
+  const e = safeJSONParse<{
+    status?: number
+    message?: string
+    name?: string
+  }>(
+    typeof strapiError === "string"
+      ? strapiError
+      : ((strapiError as Error)?.message ?? "")
+  )
+
+  const message = typeof e?.message === "string" ? e.message : fallbackMessage
+
+  // APIError requires status text, map common HTTP status codes
+  const statuses = {
+    400: "BAD_REQUEST",
+    401: "UNAUTHORIZED",
+    403: "FORBIDDEN",
+    404: "NOT_FOUND",
+    409: "CONFLICT",
+    422: "UNPROCESSABLE_ENTITY",
+    429: "TOO_MANY_REQUESTS",
+  } as const
+
+  const status = typeof e?.status === "number" ? e.status : fallbackStatus
+  const statusText =
+    statuses[status as keyof typeof statuses] || "INTERNAL_SERVER_ERROR"
+
+  throw new APIError(statusText, {
+    message,
+    code: typeof e?.name === "string" ? e.name : undefined,
+  })
+}

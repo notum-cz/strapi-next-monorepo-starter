@@ -6,65 +6,79 @@ import { authClient } from "@/lib/auth-client"
 
 export function useUserMutations() {
   const signInMutation = useMutation({
-    mutationFn: (values: { email: string; password: string }) =>
-      authClient.signInStrapi({
+    mutationFn: async (values: { email: string; password: string }) => {
+      const result = await authClient.signInStrapi({
         email: values.email,
         password: values.password,
-      }),
+      })
+
+      return unwrapBetterAuth(result)
+    },
   })
 
   const registerMutation = useMutation({
-    mutationFn: (values: { email: string; password: string }) =>
-      authClient.registerStrapi({
+    mutationFn: async (values: { email: string; password: string }) => {
+      const result = await authClient.registerStrapi({
         username: values.email,
         email: values.email,
         password: values.password,
-      }),
+      })
+
+      return unwrapBetterAuth(result)
+    },
   })
 
   const changePasswordMutation = useMutation({
-    mutationFn: (values: {
+    mutationFn: async (values: {
       currentPassword: string
       password: string
       passwordConfirmation: string
-    }) =>
-      authClient.updatePassword({
+    }) => {
+      const result = await authClient.updatePasswordStrapi({
         currentPassword: values.currentPassword,
         password: values.password,
         passwordConfirmation: values.passwordConfirmation,
-      }),
+      })
+
+      return unwrapBetterAuth(result)
+    },
   })
 
   const forgotPasswordMutation = useMutation({
-    mutationFn: (values: { email: string }) =>
-      authClient.forgotPasswordStrapi({
+    mutationFn: async (values: { email: string }) => {
+      const result = await authClient.forgotPasswordStrapi({
         email: values.email,
-      }),
+      })
+
+      return unwrapBetterAuth(result)
+    },
   })
 
   const resetPasswordMutation = useMutation({
-    mutationFn: (values: {
+    mutationFn: async (values: {
       password: string
       passwordConfirmation: string
       code: string
-    }) =>
-      authClient.resetPasswordStrapi({
+    }) => {
+      const result = await authClient.resetPasswordStrapi({
         password: values.password,
         passwordConfirmation: values.passwordConfirmation,
         code: values.code,
-      }),
-  })
+      })
 
-  const signOutMutation = useMutation({
-    mutationFn: () => authClient.signOut(),
+      return unwrapBetterAuth(result)
+    },
   })
 
   const syncOauthStrapiMutation = useMutation({
-    mutationFn: (values: { accessToken: string; provider: string }) =>
-      authClient.syncOauthStrapi({
+    mutationFn: async (values: { accessToken: string; provider: string }) => {
+      const result = await authClient.syncOauthStrapi({
         accessToken: values.accessToken,
         provider: values.provider,
-      }),
+      })
+
+      return unwrapBetterAuth(result)
+    },
   })
 
   return {
@@ -73,7 +87,21 @@ export function useUserMutations() {
     changePasswordMutation,
     forgotPasswordMutation,
     resetPasswordMutation,
-    signOutMutation,
     syncOauthStrapiMutation,
   }
+}
+
+/**
+ * Function that throws error if present, otherwise returns data.
+ * This is suitable for use with react-query mutations.
+ */
+function unwrapBetterAuth<T>(result: {
+  data: T | null
+  error: unknown | null
+}): T {
+  if (result.error) {
+    throw result.error
+  }
+
+  return result.data as T
 }

@@ -59,6 +59,7 @@ export default abstract class BaseStrapiClient {
         name: "Invalid response format",
         message: text,
         status: response.status,
+        details: { url },
       }
       console.error("[BaseStrapiClient] Strapi API request error: ", appError)
       throw new Error(JSON.stringify(appError))
@@ -69,7 +70,9 @@ export default abstract class BaseStrapiClient {
       const appError: AppError = {
         name: error?.name,
         message: error?.message,
-        details: error?.details,
+        details: {
+          url,
+        },
         status: response.status ?? error?.status,
       }
       if (getEnvVar("DEBUG_STRAPI_CLIENT_API_CALLS")) {

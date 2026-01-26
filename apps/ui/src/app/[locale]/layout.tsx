@@ -95,7 +95,7 @@ export default async function RootLayout({
           <StrapiPreviewListener />
           <ClientProviders>
             <div className="relative flex min-h-screen flex-col">
-              <ErrorBoundary hideFallback>
+              <ErrorBoundary showErrorMessage>
                 <StrapiNavbar locale={locale} />
               </ErrorBoundary>
 

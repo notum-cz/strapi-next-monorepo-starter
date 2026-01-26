@@ -1,14 +1,11 @@
 "use client"
 
-import { useState } from "react"
-import { useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
-import { getAuthErrorMessage } from "@/lib/general-helpers"
 import { useRouter } from "@/lib/navigation"
 import { useUserMutations } from "@/hooks/useUserMutations"
 import { AppField } from "@/components/forms/AppField"
@@ -25,20 +22,22 @@ import {
 } from "@/components/ui/card"
 import { useToast } from "@/components/ui/use-toast"
 
-type SetPasswordFormProps = {
+type Props = {
+  code?: string
   accountActivation?: boolean
 }
 
-export function SetPasswordForm({
-  accountActivation = false,
-}: SetPasswordFormProps) {
+export function SetPasswordForm({ code, accountActivation = false }: Props) {
   return (
     <UseSearchParamsWrapper>
-      <SuspensedSetPasswordForm accountActivation={accountActivation} />
+      <SuspensedSetPasswordForm
+        code={code}
+        accountActivation={accountActivation}
+      />
     </UseSearchParamsWrapper>
   )
 }
-function SuspensedSetPasswordForm({ accountActivation }: SetPasswordFormProps) {
+function SuspensedSetPasswordForm({ code, accountActivation }: Props) {
   const t = useTranslations(
     accountActivation ? "auth.accountActivation" : "auth.resetPassword"
   )
@@ -53,52 +52,35 @@ function SuspensedSetPasswordForm({ accountActivation }: SetPasswordFormProps) {
   })
 
   const router = useRouter()
-  const params = useSearchParams()
-  const code = params.get("code") as string
 
   const onSubmit = async (data: z.infer<FormSchemaType>) => {
     if (!code) {
-      toast({
+      return toast({
         variant: "destructive",
-        description: "Missing reset code",
+        description: t("errors.incorrectCodeProvided"),
       })
-      return
     }
 
-    try {
-      const result = await resetPasswordMutation.mutateAsync({
+    resetPasswordMutation.mutate(
+      {
         code,
         password: data.password,
         passwordConfirmation: data.passwordConfirmation,
-      })
-
-      if (result.data) {
-        toast({
-          variant: "default",
-          description: t("successfullySet"),
-        })
-        form.reset()
-        router.push("/auth/signin")
-      } else if (result.error) {
-        const message = getAuthErrorMessage(
-          result.error.message,
-          "Failed to reset password"
-        )
-        toast({
-          variant: "destructive",
-          description: message,
-        })
+      },
+      {
+        onSuccess: () => {
+          toast({ variant: "default", description: t("successfullySet") })
+          form.reset()
+          router.push("/auth/signin")
+        },
+        onError: () => {
+          toast({
+            variant: "destructive",
+            description: t("errors.incorrectCodeProvided"),
+          })
+        },
       }
-    } catch (error: any) {
-      const message = getAuthErrorMessage(
-        error?.message,
-        "Failed to reset password"
-      )
-      toast({
-        variant: "destructive",
-        description: message,
-      })
-    }
+    )
   }
 
   return (

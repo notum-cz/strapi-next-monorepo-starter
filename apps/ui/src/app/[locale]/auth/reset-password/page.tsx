@@ -7,12 +7,14 @@ import { SetPasswordForm } from "@/app/[locale]/auth/activate/_components/SetPas
 
 export default function ResetPasswordPage({
   params,
+  searchParams,
 }: PageProps<"/[locale]/auth/reset-password">) {
   removeThisWhenYouNeedMe("ResetPasswordPage")
 
   const { locale } = use(params) as { locale: Locale }
+  const { code } = use(searchParams) as { code?: string }
 
   setRequestLocale(locale)
 
-  return <SetPasswordForm />
+  return <SetPasswordForm code={code} />
 }

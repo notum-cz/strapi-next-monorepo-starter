@@ -155,16 +155,17 @@
         "checkCredentials": "Please check your login credentials"
       },
       "errors": {
-        "CredentialsSignin": "You have entered incorrect login credentials."
+        "CredentialsSignin": "You have entered incorrect login credentials.",
+        "unexpectedError": "Sign in failed. Please try again later."
       },
       "header": "Sign in",
       "description": "Enter your login details.",
       "email": "Email",
       "password": "Password",
       "submit": "Sign in",
+      "signingIn": "Signing you in...",
       "forgotPassword": "Forgot password",
-      "createAccount": "Create an account",
-      "orContinueWith": "Or continue with"
+      "createAccount": "Create an account"
     },
 
     "register": {
@@ -208,7 +209,7 @@
     "accountActivation": {
       "successfullySet": "Account successfully activated. You can now sign in.",
       "errors": {
-        "Incorrect code provided": "An incorrect link was generated for you. Contact support."
+        "incorrectCodeProvided": "An incorrect link was generated for you. Contact support."
       },
       "welcome": "Welcome",
       "activateAccount": "A new account has been created with the email {email}.",
@@ -227,7 +228,10 @@
       "description": "Choose a new password to use for logging in.",
       "submit": "Set password",
       "password": "New password",
-      "confirmPassword": "Confirm password"
+      "confirmPassword": "Confirm password",
+      "errors": {
+        "incorrectCodeProvided": "Invalid or expired code. Please request a password reset again."
+      }
     },
 
     "forgotPassword": {
@@ -242,10 +246,14 @@
     },
 
     "oauth": {
+      "orContinueWith": "Or continue with",
       "signingIn": "Signing you in...",
       "signedInSuccessfully": "Signed in successfully",
       "redirecting": "Redirecting...",
-      "signInFailed": "Sign in failed"
+      "errors": {
+        "signInFailed": "OAuth sign-in failed"
+      },
+      "withGithub": "Sign in with GitHub"
     }
   }
 }

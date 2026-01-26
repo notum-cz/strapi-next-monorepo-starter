@@ -155,13 +155,15 @@
         "checkCredentials": "Zkontrolujte prosím přihlašovací údaje"
       },
       "errors": {
-        "CredentialsSignin": "Zadal/a jste nesprávné přihlašovací údaje."
+        "CredentialsSignin": "Zadal/a jste nesprávné přihlašovací údaje.",
+        "unexpectedError": "Registrace selhala. Zkuste to prosím později."
       },
       "header": "Přihlášení",
       "description": "Zadejte přihlašovací údaje.",
       "email": "E-mail",
       "password": "Heslo",
       "submit": "Přihlásit se",
+      "signingIn": "Přihlašuji vás...",
       "forgotPassword": "Zapomenuté heslo",
       "createAccount": "Vytvořit účet"
     },
@@ -207,7 +209,7 @@
     "accountActivation": {
       "successfullySet": "Účet byl úspěšně aktivován. Můžete se přihlásit.",
       "errors": {
-        "Incorrect code provided": "Byl vám vygenerován nesprávný odkaz. Kontaktujte podporu."
+        "incorrectCodeProvided": "Byl vám vygenerován nesprávný odkaz. Kontaktujte podporu."
       },
       "welcome": "Vítej",
       "activateAccount": "Byl Vám založen nový účet s emailem {email}.",
@@ -225,7 +227,10 @@
       "description": "Zvolte si nové heslo, které budete používat k přihlašování.",
       "submit": "Nastavit heslo",
       "password": "Nové heslo",
-      "confirmPassword": "Potvrdit heslo"
+      "confirmPassword": "Potvrdit heslo",
+      "errors": {
+        "incorrectCodeProvided": "Neplatný nebo expirovaný kód. Požádejte prosím o obnovení hesla znovu."
+      }
     },
 
     "forgotPassword": {
@@ -240,10 +245,15 @@
     },
 
     "oauth": {
+      "orContinueWith": "Nebo pokračujte s",
       "signingIn": "Přihlašuji vás...",
       "signedInSuccessfully": "Úspěšně přihlášen",
       "redirecting": "Přesměrovávám...",
-      "signInFailed": "Přihlášení selhalo"
+      "signInFailed": "Přihlášení selhalo",
+      "errors": {
+        "signInFailed": "OAuth přihlášení selhalo"
+      },
+      "withGithub": "Přihlásit se přes GitHub"
     }
   }
 }

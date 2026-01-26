@@ -1,7 +1,10 @@
+import { use } from "react"
+import { headers } from "next/headers"
 import Image from "next/image"
 import { Data } from "@repo/strapi-types"
 import { Locale } from "next-intl"
 
+import { getSessionSSR } from "@/lib/auth"
 import { fetchNavbar } from "@/lib/strapi-api/content/server"
 import { cn } from "@/lib/styles"
 import AppLink from "@/components/elementary/AppLink"
@@ -14,13 +17,15 @@ const hardcodedLinks: NonNullable<
   Data.ContentType<"api::navbar.navbar">["links"]
 > = [{ id: "client-page", href: "/client-page", label: "Client Page" }]
 
-export async function StrapiNavbar({ locale }: { readonly locale: Locale }) {
-  const response = await fetchNavbar(locale)
+export function StrapiNavbar({ locale }: { readonly locale: Locale }) {
+  const response = use(fetchNavbar(locale))
   const navbar = response?.data
 
   if (navbar == null) {
     return null
   }
+
+  const session = use(getSessionSSR(use(headers())))
 
   const links = (navbar.links ?? [])
     .filter((link) => link.href)
@@ -60,8 +65,7 @@ export async function StrapiNavbar({ locale }: { readonly locale: Locale }) {
           ) : null}
         </div>
 
-        {/* Client component that updates reactively when session changes */}
-        <NavbarAuthSection />
+        <NavbarAuthSection sessionSSR={session} />
         <LocaleSwitcher locale={locale} />
       </div>
     </header>

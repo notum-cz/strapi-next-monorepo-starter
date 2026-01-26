@@ -24,7 +24,7 @@ export type BetterAuthUserWithStrapi = {
 
 // Type helper for Better Auth Session with Strapi user
 export type BetterAuthSessionWithStrapi = {
-  user: BetterAuthUserWithStrapi
+  user: BetterAuthUserWithStrapi | null
   session: {
     id: string
     userId: string
@@ -32,5 +32,5 @@ export type BetterAuthSessionWithStrapi = {
     token: string
     ipAddress?: string | null
     userAgent?: string | null
-  }
+  } | null
 }

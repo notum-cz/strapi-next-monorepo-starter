@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import createMiddleware from "next-intl/middleware"
 
-import { auth } from "./lib/auth"
+import { getSessionSSR } from "./lib/auth"
 import { isDevelopment } from "./lib/general-helpers"
 import { routing } from "./lib/navigation"
 
@@ -9,7 +9,7 @@ import { routing } from "./lib/navigation"
 const intlProxy = createMiddleware(routing)
 
 // List all pages that require authentication (non-public)
-const authPages = ["/auth/change-password", "/auth/signout"]
+const authPages = ["/auth/change-password", "/auth"]
 
 export default async function proxy(req: NextRequest) {
   // Handle HTTPS redirection in production in Heroku servers
@@ -41,15 +41,11 @@ export default async function proxy(req: NextRequest) {
   if (isAuthPage) {
     try {
       // Check Better Auth session (Strapi JWT validation happens automatically via plugin hook)
-      const session = await auth.api.getSession({
-        headers: req.headers,
-      })
+      const session = await getSessionSSR(req.headers)
 
       if (!session?.user) {
         // No session found or token invalid, redirect to sign in
-        const signInUrl = new URL("/auth/signin", req.url)
-        signInUrl.searchParams.set("callbackUrl", req.nextUrl.pathname)
-        return NextResponse.redirect(signInUrl, 401)
+        throw new Error("No valid session")
       }
 
       // User is authenticated, proceed with internationalization middleware

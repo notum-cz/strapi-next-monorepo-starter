@@ -1,13 +1,11 @@
 "use client"
 
-import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
-import { getAuthErrorMessage } from "@/lib/general-helpers"
 import { useRouter } from "@/lib/navigation"
 import { useUserMutations } from "@/hooks/useUserMutations"
 import { AppField } from "@/components/forms/AppField"
@@ -41,61 +39,33 @@ export function ChangePasswordForm() {
   })
 
   const onSubmit = async (data: z.infer<FormSchemaType>) => {
-    try {
-      // Call Better Auth update password endpoint
-      const result = await changePasswordMutation.mutateAsync(data)
-
-      if (result.data) {
-        toast({
-          variant: "default",
-          description: t("successfullyChanged"),
-        })
+    changePasswordMutation.mutate(data, {
+      onSuccess: () => {
+        toast({ variant: "default", description: t("successfullyChanged") })
         form.reset()
         router.push("/")
-      } else if (result.error) {
-        const rawMessage = getAuthErrorMessage(result.error.message, "")
+      },
+      onError: (error) => {
+        const errorMessage = error?.message
+
+        // Try to match common errors to translated messages
         const errorMap = {
           "is invalid": t("errors.invalidCurrentPassword"),
           "be different": t("errors.newPasswordSameAsCurrent"),
         } as const
 
-        let errorMessage = t("errors.unexpectedError")
         const errorKey = Object.keys(errorMap).find(
           (key): key is keyof typeof errorMap =>
-            rawMessage.includes(key) ?? false
+            errorMessage.includes(key) ?? false
         )
 
-        errorMessage = errorKey
+        const displayMessage = errorKey
           ? errorMap[errorKey]
-          : rawMessage || errorMessage
+          : (errorMessage ?? t("errors.unexpectedError"))
 
-        toast({
-          variant: "destructive",
-          description: errorMessage,
-        })
-      }
-    } catch (error: any) {
-      const rawMessage =
-        typeof error === "string" ? error : (error as Error)?.message
-      const errorMap = {
-        "is invalid": t("errors.invalidCurrentPassword"),
-        "be different": t("errors.newPasswordSameAsCurrent"),
-      } as const
-
-      let errorMessage = getAuthErrorMessage(
-        rawMessage,
-        t("errors.unexpectedError")
-      )
-      const errorKey = Object.keys(errorMap).find(
-        (key): key is keyof typeof errorMap => errorMessage?.includes(key)
-      )
-      errorMessage = errorKey ? errorMap[errorKey] : errorMessage
-
-      toast({
-        variant: "destructive",
-        description: errorMessage,
-      })
-    }
+        toast({ variant: "destructive", description: displayMessage })
+      },
+    })
   }
 
   return (
