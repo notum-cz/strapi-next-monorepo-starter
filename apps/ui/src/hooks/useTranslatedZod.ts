@@ -12,78 +12,68 @@ import { z } from "zod"
 export function useTranslatedZod(zod: typeof z) {
   const t = useTranslations("errors.zodValidation")
 
-  const errorMap: z.ZodErrorMap = React.useCallback(
-    // eslint-disable-next-line no-unused-vars
-    (issue, _ctx) => {
+  const errorMap: z.core.$ZodErrorMap = React.useCallback(
+    (issue) => {
       let message
-      // eslint-disable-next-line no-unused-vars
-      const { code, ...values } = issue
-      switch (issue.code) {
-        case z.ZodIssueCode.invalid_type:
-          if (issue.received === z.ZodParsedType.undefined) {
-            message = "invalid_type_received_undefined"
-          } else {
-            message = `invalid_type`
-          }
-          break
-        case z.ZodIssueCode.too_small:
-          if (issue.type === "string") {
-            if (issue.exact) {
-              message = "too_small.string.exact"
-            } else {
-              message = `too_small.string.${
-                issue.inclusive ? "inclusive" : "exclusive"
-              }`
-            }
-          } else if (issue.type === "number")
-            if (issue.exact) {
-              message = "too_small.number.exact"
-            } else {
-              message = `too_small.number.${
-                issue.inclusive ? "inclusive" : "exclusive"
-              }`
-            }
-          else message = "invalid_type"
-          break
-        case z.ZodIssueCode.too_big:
-          if (issue.type === "string") {
-            if (issue.exact) {
-              message = "too_big.string.exact"
-            } else {
-              message = `too_big.string.${
-                issue.inclusive ? "inclusive" : "exclusive"
-              }`
-            }
-          } else if (issue.type === "number")
-            if (issue.exact) {
-              message = "too_big.number.exact"
-            } else {
-              message = `too_big.number.${
-                issue.inclusive ? "inclusive" : "exclusive"
-              }`
-            }
-          else message = "invalid_type"
-          break
-        case z.ZodIssueCode.invalid_string:
-          if (typeof issue.validation === "object") {
-            if ("includes" in issue.validation) {
-              message = `Invalid input: must include "${issue.validation.includes}"`
+      const { code, message: _message, ...values } = issue
+      const normalizedValues: Record<string, unknown> = { ...values }
 
-              if (typeof issue.validation.position === "number") {
-                message = `${message} at one or more positions greater than or equal to ${issue.validation.position}`
-              }
-            } else if ("startsWith" in issue.validation) {
-              message = `Invalid input: must start with "${issue.validation.startsWith}"`
-            } else if ("endsWith" in issue.validation) {
-              message = `Invalid input: must end with "${issue.validation.endsWith}"`
-            } else {
-              z.util.assertNever(issue.validation)
-            }
+      switch (issue.code) {
+        case "invalid_type": {
+          const received = zod.util.parsedType(issue.input)
+          normalizedValues.received = received
+          message =
+            received === "undefined"
+              ? "invalid_type_received_undefined"
+              : "invalid_type"
+          break
+        }
+        case "too_small": {
+          const sizeKey = issue.inclusive ? "inclusive" : "not_inclusive"
+          if (issue.origin === "string") {
+            message = issue.exact
+              ? "too_small.string.exact"
+              : `too_small.string.${sizeKey}`
+          } else if (
+            issue.origin === "number" ||
+            issue.origin === "int" ||
+            issue.origin === "bigint"
+          ) {
+            message = issue.exact
+              ? "too_small.number.exact"
+              : `too_small.number.${sizeKey}`
           } else {
-            message = `invalid_string.regex`
+            message = "invalid_type"
           }
           break
-        case z.ZodIssueCode.custom:
+        }
+        case "too_big": {
+          const sizeKey = issue.inclusive ? "inclusive" : "not_inclusive"
+          if (issue.origin === "string") {
+            message = issue.exact
+              ? "too_big.string.exact"
+              : `too_big.string.${sizeKey}`
+          } else if (
+            issue.origin === "number" ||
+            issue.origin === "int" ||
+            issue.origin === "bigint"
+          ) {
+            message = issue.exact
+              ? "too_big.number.exact"
+              : `too_big.number.${sizeKey}`
+          } else {
+            message = "invalid_type"
+          }
+          break
+        }
+        case "invalid_format":
+          message = "invalid_string.regex"
+          break
+        case "invalid_value":
+          normalizedValues.expected = issue.values?.join(", ")
+          message = "invalid_literal"
+          break
+        case "custom":
           if (issue.params?.type === "passwordNumber") {
             message = "custom.passwordWithNumber"
           } else if (issue.params?.type === "phoneNumber") {
@@ -95,13 +85,14 @@ export function useTranslatedZod(zod: typeof z) {
         default:
           message = issue.code
       }
-      return { message: t(message as any, values as any) }
+
+      return { message: t(message as any, normalizedValues as any) }
     },
-    [t]
+    [t, zod]
   )
 
   React.useEffect(() => {
-    zod.setErrorMap(errorMap)
+    zod.config({ localeError: errorMap })
   }, [errorMap, zod])
 
   return {}
