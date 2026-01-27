@@ -26,7 +26,7 @@ This is a [Strapi v5](https://strapi.io/) project.
 
 ## 🚀 Get up and develop
 
-### Environment variables
+### 1. Environment variables
 
 Copy & rename `.env.example` to `.env` and fill or update the values (most of the values are already set to default values, but you probably want to tweak them for your needs).
 
@@ -39,7 +39,7 @@ Copy & rename `.env.example` to `.env` and fill or update the values (most of th
 >
 > This happens during the bootstrap phase in the [app.tsx](./apps/strapi/src/admin/app.tsx) and it calls an [internal endpoint](./apps/strapi/src/api/admin-panel-config/services/admin-panel-config.ts) which requires configuration if you need additional ENV variables to be propagated. You can use this approach to add custom CSS, variables or JS code using the `window` API.
 
-### Run locally in dev mode (with hot-reloading)
+### 2. Run locally in dev mode (with hot-reloading)
 
 Preferred way of running Strapi locally is to run **Postgres in docker** container and **Strapi locally**.
 
@@ -72,7 +72,25 @@ Another way is to run **Strapi in docker** container too. Currently, an availabl
 - Admin panel is available on [http://localhost:1337/admin](http://localhost:1337/admin)
 - Postgres runs on [http://localhost:5432](http://localhost:5432)
 
-### Sync configuration
+### 3. Init database (first run)
+
+There is `strapi-export.tar.gz` file in this directory with required initial data. **You should import** it to your local database with:
+
+```bash
+# in this directory
+
+pnpm run import
+```
+
+Otherwise, you have to create following manually in Strapi admin panel:
+
+- Create one page in `Page` collection with fullPath and slug = `/` (home page)
+- Create navbar in `Navbar` single type
+- Create footer in `Footer` single type
+
+Because FE supports 2 languages (`en` and `cs`) by default, you have to enable both languages in Strapi (Settings > Internationalization). Then you need to create corresponding content for both languages.
+
+### 4. Sync configuration
 
 Go to Strapi admin panel and navigate to Settings > Config Sync > Tools. Click on "Import" button to import the configuration from files. More info about config sync is [below](#config-sync).
 
