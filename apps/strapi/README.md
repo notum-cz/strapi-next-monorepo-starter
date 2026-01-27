@@ -1,11 +1,9 @@
-# 🔥 STRAPI Starter Template
+# 🔥 STRAPI - `@repo/strapi`
 
-This is a [Stapi v5](https://strapi.io/) project.
+This is a [Strapi v5](https://strapi.io/) project.
 
 ## 🥞 Tech stack
 
-- node 22
-- yarn 1.22
 - Strapi 5
 - TypeScript
 - Docker
@@ -19,6 +17,7 @@ This is a [Stapi v5](https://strapi.io/) project.
 - @strapi/plugin-seo
 - @strapi/plugin-users-permissions
 - @strapi/provider-email-mailgun
+- @strapi/provider-email-nodemailer
 - @strapi/provider-upload-aws-s3
 - strapi-plugin-config-sync
 - qs
@@ -31,29 +30,38 @@ This is a [Stapi v5](https://strapi.io/) project.
 
 Copy & rename `.env.example` to `.env` and fill or update the values (most of the values are already set to default values, but you probably want to tweak them for your needs).
 
+> [!TIP]
+> React applications are notorious for embedding environmental variables into the build output of the application. If you want to avoid this, you can use our custom injectors for the UI and Strapi apps. This means you don't need to use the `STRAPI_ADMIN_` prefix.
+>
+> The values are injected into the admin HTML page using a script tag. You can access them using `window.STRAPI_ADMIN_CONFIG` object.
+>
+> This is disabled by default in Strapi. To configure this feature, you will need to set the `ADMIN_PANEL_CONFIG_API_AUTH_TOKEN` env variable for Strapi. You are free to generate your token value, for example using `openssl rand -base64 32` command. Once set, Strapi admin panel will start fetching the configuration during runtime.
+>
+> This happens during the bootstrap phase in the [app.tsx](./apps/strapi/src/admin/app.tsx) and it calls an [internal endpoint](./apps/strapi/src/api/admin-panel-config/services/admin-panel-config.ts) which requires configuration if you need additional ENV variables to be propagated. You can use this approach to add custom CSS, variables or JS code using the `window` API.
+
 ### Run locally in dev mode (with hot-reloading)
 
 Preferred way of running Strapi locally is to run **Postgres in docker** container and **Strapi locally**.
 
 ```bash
 (nvm use) # switch node version
-(yarn) # deps are probably already installed running `yarn` in root
+(pnpm i) # deps should be installed running `pnpm install` in the root
 
 # start both services in 1 command [easiest way]
-yarn dev
+pnpm run dev
 ```
 
 or
 
 ```bash
 (nvm use) # switch node version
-(yarn) # deps are probably already installed running `yarn` in root
+(pnpm i) # deps should be installed running `pnpm install` in the root
 
 # start Postgres in docker container
 docker compose up -d db
 
 # start Strapi locally
-yarn develop
+pnpm run develop
 ```
 
 Another way is to run **Strapi in docker** container too. Currently, an available Strapi [Dockerfile](Dockerfile) is prepared only for **production** run (see below).
@@ -64,82 +72,81 @@ Another way is to run **Strapi in docker** container too. Currently, an availabl
 - Admin panel is available on [http://localhost:1337/admin](http://localhost:1337/admin)
 - Postgres runs on [http://localhost:5432](http://localhost:5432)
 
-### Init database
-
-There is `strapi-export.tar.gz` file in root directory with some init data. You can optionally import it to your local database with:
-
-```bash
-# in this directory
-
-yarn strapi import -f strapi-export.tar.gz
-```
-
 ### Sync configuration
 
 Go to Strapi admin panel and navigate to Settings > Config Sync > Tools. Click on "Import" button to import the configuration from files. More info about config sync is [below](#config-sync).
 
-## 🛠️ Production build (Docker)
+## 🛠️ Production Docker
 
-To build and run Strapi in Docker container use [Dockerfile](Dockerfile) prepared for **production** environment. It follows Strapi official documentation and recommended way of running app in Turborepo monorepo structure. Note, that Turborepo requires access to root `package.json`, `yarn.lock` and `turbo.json` files so you have to build it within whole monorepo context - run `docker build` from monorepo root. [More info here](https://turbo.build/repo/docs/handbook/deploying-with-docker).
+To build and run Strapi in Docker container use [Dockerfile](Dockerfile) prepared for **production** environment. It follows Strapi official documentation and recommended way of running app in Turborepo monorepo structure.
+
+> [!WARNING]
+> Note, that Turborepo requires access to root `package.json`, `pnpm-lock.yaml` and `turbo.json` files so you have to build it within whole monorepo context - run `docker build` from monorepo root.
+> [More info here](https://turbo.build/repo/docs/handbook/deploying-with-docker).
+
+### Build
 
 ```bash
 # from monorepo root
 
-# build image, name it and pass APP_URL as build arg to override localhost:1337 default value
-docker build -t strapi:latest -f apps/strapi/Dockerfile --build-arg APP_URL=https://cms.strapi-domain.dev .
+# build image, name and tag it
+docker build -t starter-strapi:latest -f apps/strapi/Dockerfile .
 
+# or build image and set APP_URL build arg to override localhost:1337 (default public URL of Admin panel)
+docker build -t starter-strapi:latest -f apps/strapi/Dockerfile --build-arg APP_URL=https://cms.strapi-domain.dev .
+```
+
+### Run
+
+```bash
 # run container using image
-docker run -it --rm --name strapi -p 1337:1337 --env-file apps/strapi/.env strapi:latest
+docker run -it --rm --name starter-strapi -p 1337:1337 --env-file apps/strapi/.env starter-strapi:latest
 ```
 
 To change port, set `PORT` env variable in `.env` file and in `docker run` command (`-p` flag means port mapping between host:container).
 
+### Connect to Postgres in Docker
+
 Strapi requires Postgres database to run before it starts. There is no production `docker-compose.yml` file prepared with both services connected. Usually they are run separately (database in one container or in cloud servise, Strapi in another container).
 
-To connect 2 different containers (Strapi and Postgres) in Docker, you have to create a network and run both containers in that network. So, for example, to run whole strapi app in docker containers:
+A) If you have Postgres connection string or credentials, set them in `.env` file before running Strapi container. Example:
+
+```
+# .env
+DATABASE_URL=postgres://user:password@host:port/database
+
+# or use separate variables like DATABASE_NAME, DATABASE_HOST, etc.
+```
+
+B) To connect 2 different containers (Strapi and Postgres) **both running in Docker**, you have to create a network and connect both containers to that network. Here is an example of how to do it locally:
 
 ```bash
 # run Postgres in docker - you can use docker-compose.yml from this directory
 docker compose up -d db
 
-# run Strapi in docker and connect to same network. In docker-compose.yml there is a "db_network" network already defined, so you don't need to create it manually again, but just reference it in this run command
-docker run -it --rm --name strapi -p 1337:1337 --env-file apps/strapi/.env --network=dev-templates_db_network strapi:latest
-
 # set DATABASE_HOST or DATABASE_URL for Strapi in .env file - host should be set to "db" (name of the Postgres service in docker-compose.yml) or to IP of the host machine instead of "0.0.0.0"
 DATABASE_HOST=db
+
+# run Strapi in docker and connect to same network. In docker-compose.yml there is a "db_network" network already defined, so you don't have to create it. Just reference it in run command
+docker run -it --rm --name starter-strapi -p 1337:1337 --env-file apps/strapi/.env --network=strapi-next-starter_db_network starter-strapi:latest
 ```
 
 ## ✨ Features
 
 ### Pages hierarchy
 
-The pages (`api::page.page` content type) are organized in a hierarchy using the `parent` and `children` relation fields. Each page can have a parent page, and it can also have multiple child pages. There must be one root/index page that has no parent. All other pages are children of this root page. This page has the `slug` set to `/` and this value is synchronized with the [ROOT_PAGE_PATH constant](../../packages/shared-data/index.ts).
-
-#### Page slug
-
-Every page has required `slug` field, which is used to identify the page in the URL. Slug doesn't need to be unique, but it must follow `[a-z0-9/-]+$` pattern.
-
-#### Fullpath generation and redirects
-
-The `fullpath` field is automatically generated and contains the full path of the page, including all parent slugs. It is used to identify the page in the URL (frontend finds pages using `fullpath` filter). The `fullpath` is generated from the `slug` and the `parent` relation field. To disable automatic generation of `fullpath`, set `PAGES_HIERARCHY_ENABLED` to `false` in [utils/constants](./src/utils/constants.ts).
-
-How it works:
-
-1. Every time the page (`api::page.page`) is published and the `slug` or `parent` relation field was changed, new internal job (`api::internal-job.internal-job`) is created to regenerate the `fullpath` field. This is configured in [page `beforeCreate` lifecycle](src/api/page/content-types/page/lifecycles.ts) and related code is in [src/utils/hierarchy.ts](src/utils/hierarchy.ts). So the `fullpath` is not updated immediately, but after the job is processed. This is done to avoid performance issues and cascading updates of the `fullpath` field for all child pages within lifecycle hooks.
-
-2. New `RECALCULATE_FULLPATH` job is displayed in the Strapi admin panel under "Internal Jobs" content type. To trigger the recalculation of the `fullpath` of all pending jobs, click the "Recalculate all fullpaths" button in the admin panel. This will update the `fullpath` field for all pending pages and their children. All pages will be **published** during update. The recalculation is done in the background, so it may take some time depending on the number of pages and their hierarchy.
-
-3. During the recalculation, the script create `CREATE_REDIRECT` jobs for all pages that have changed `fullpath` and save them in the "Internal Jobs" content type. To trigger them, click the "Create all redirects" button in the admin panel. This will create redirects (`api::redirect.redirect`) for all included jobs and save them in the "Redirect" content type.
+Documentation is in [/docs/pages-hierarchy.md](../../docs/pages-hierarchy.md)
 
 ### Plugins
 
-Some preinstalled plugins (mailgun) are disabled by default. To turn them on go to [config/plugins.ts](config/plugins.ts) file and uncomment the lines. Some of them may require additional setting of API keys or different ENV variables.
+All plugins are configured in [config/plugins.ts](config/plugins.ts) file. Some of them may require additional setting of API keys or different ENV variables. User-permissions, seo and config-sync plugins are enabled by default and don't require additional configuration.
 
-User-permissions, seo and config-sync plugins are enabled by default. Sentry plugin requires setting up DSN key in ENV variables (see below).
+#### `@strapi/provider-upload-aws-s3` (S3 file storage)
 
-#### AWS S3 caveats
+This plugin is used to store uploaded files (images, documents, etc.) in AWS S3 bucket instead of default local upload folder. This is required for production deployments where local file system is not persistent or files need to be served from CDN.
 
-In Heroku deployments you always should use S3 (or different external) storage instead of default local upload directory. Heroku resets dyno periodically (at least once a day or after every re-deploy) and so all uploaded files are removed.
+> [!TIP]
+> In Heroku deployments you always should use S3 (or different external) storage instead of default local upload directory. Heroku resets dyno periodically (at least once a day or after every re-deploy) and so all uploaded files are removed.
 
 Steps:
 
@@ -149,7 +156,7 @@ Steps:
 
 [More info here](https://market.strapi.io/providers/@strapi-provider-upload-aws-s3)
 
-#### Sentry logging
+#### `@strapi/plugin-sentry` (Sentry logging)
 
 Tu enable Sentry plugin, set `SENTRY_DSN` to environment variables. By default, Sentry runs only in production mode, but you can change it in [config/plugins.ts](config/plugins.ts) file.
 
@@ -177,6 +184,106 @@ async find(ctx) {
     return []
 },
 ```
+
+#### Emails
+
+To send emails from Strapi (e.g., registration confirmation, password reset, etc.), this starter preconfigures 2 email providers: Mailgun and Mailtrap. It is supposed that Mailtrap is used during development and Mailgun in production, but you can change this easily in [config/plugins.ts](config/plugins.ts) file - the selection is based on provided ENV variables.
+
+##### `@strapi/provider-email-mailgun` (Mailgun)
+
+It is supposed, that you created Mailgun account on [mailgun.com](https://www.mailgun.com/) and have your domain verified. Then set the following ENV variables in your `.env` file:
+
+```bash
+MAILGUN_API_KEY=your-mailgun-api-key
+MAILGUN_DOMAIN=your-mailgun-domain
+MAILGUN_EMAIL=default-from-and-replyto-address
+MAILGUN_HOST=https://api.eu.mailgun.net
+```
+
+##### `@strapi/provider-email-nodemailer` (Mailtrap)
+
+For development, the email plugin is configured to use [Mailtrap](https://mailtrap.io/) - a free email testing service that captures all outgoing emails without sending them to real recipients. This is perfect for testing registration emails, password resets, and other email functionality.
+
+**Setup:**
+
+1. Create a free account at [mailtrap.io](https://mailtrap.io/)
+2. Go to your inbox settings and copy the SMTP credentials
+3. Add the following to your `.env` file:
+
+```bash
+MAILTRAP_USER=your_mailtrap_username
+MAILTRAP_PASS=your_mailtrap_password
+MAILTRAP_HOST=sandbox.smtp.mailtrap.io
+MAILTRAP_PORT=2525
+MAILTRAP_EMAIL=default-from-and-replyto-address
+```
+
+4. Restart Strapi - emails will now be captured in your Mailtrap inbox instead of being sent
+
+#### OAuth providers (GitHub, Google, etc.)
+
+The starter supports OAuth authentication through Strapi's Users & Permissions plugin. Users can sign in with providers like GitHub, Google, Facebook, etc.
+
+**How it works:**
+
+1. User clicks "Sign in with GitHub" (or other provider) on the frontend
+2. Frontend redirects to Strapi's OAuth endpoint: `/api/connect/{provider}`
+3. Strapi handles OAuth flow and redirects back to frontend with access token
+4. Frontend syncs the OAuth session with Strapi via `/auth/strapi-oauth/callback`
+5. User is authenticated and session is created
+
+**Setup:**
+
+1. Go to Strapi admin panel: Settings > Users & Permissions > Providers
+2. Enable your desired provider (e.g., GitHub)
+3. Configure the provider:
+   - **Client ID** and **Client Secret**: Get these from your OAuth provider (e.g., GitHub Developer Settings)
+   - **Redirect URL**: Your frontend callback URL (e.g., `https://your-domain.com/auth/strapi-oauth/callback`)
+4. In your OAuth provider's settings (e.g., GitHub OAuth App):
+   - **Homepage URL**: Your Strapi URL (e.g., `https://your-domain.com`)
+   - **Authorization callback URL**: `https://your-domain.com/api/connect/github/callback`
+5. The frontend automatically handles the OAuth flow - no additional configuration needed
+
+**Local testing with ngrok:**
+
+⚠️ **Important:** Most OAuth providers (including GitHub) don't accept `localhost` URLs. You must use ngrok or a similar tunneling service for local development.
+
+1. Install ngrok: `brew install ngrok` (or download from [ngrok.com](https://ngrok.com))
+2. Start your Strapi backend: `yarn dev:strapi`
+3. In another terminal, tunnel to Strapi:
+   ```bash
+   ngrok http 1337
+   ```
+4. Copy the generated ngrok URL (e.g., `https://abc123.ngrok.io`)
+5. Update `apps/strapi/config/server.ts`:
+   ```ts
+   url: "https://abc123.ngrok.io"
+   ```
+6. Update `apps/strapi/src/admin/vite.config.ts`:
+   ```ts
+   server: {
+     allowedHosts: ["abc123.ngrok.io"]
+   }
+   ```
+7. Set environment variables:
+
+   ```bash
+   # apps/strapi/.env
+   APP_URL=https://abc123.ngrok.io
+   ```
+
+8. Update your OAuth provider (GitHub) with the ngrok URLs:
+   - **Homepage URL**: `https://abc123.ngrok.io`
+   - **Authorization callback URL**: `https://abc123.ngrok.io/api/connect/github/callback`
+9. In Strapi admin (Settings > Users & Permissions > Providers > GitHub):
+   - **Redirect URL**: Your frontend callback (e.g., `http://localhost:3000/auth/strapi-oauth/callback`)
+10. Restart both backend and frontend
+
+See the [Strapi GitHub provider documentation](https://docs.strapi.io/cms/configurations/users-and-permissions-providers/github) for more details.
+
+**Supported providers:**
+
+Any provider supported by Strapi's Users & Permissions plugin (GitHub, Google, Facebook, Discord, etc.). The frontend code in [apps/ui/src/app/[locale]/auth/signin/\_components/SignInForm.tsx](../../apps/ui/src/app/[locale]/auth/signin/_components/SignInForm.tsx) shows how to add additional provider buttons.
 
 #### Config-sync
 
@@ -226,7 +333,7 @@ This requires active maintenance, as any changes to collections (i.e. the DZ in 
 [Typescript is used in this template](https://docs.strapi.io/dev-docs/typescript). Typings schemas are generated automatically after code change by Strapi (based on configuration in [config/typescript.ts](config/typescript.ts) and stored in [types/generated/\*](types/generated) as ts definition files. Do not modify them manually, let Strapi do it. Don't forget to version them in git.
 
 > [!WARNING]
-> By enabling and generating types in Strapi, the API and models on the frontend are typed out-of-box. By turning it off, the code related to the API on the frontend will have to be modified.
+> By enabling and generating types in Strapi, the API and models on the frontend are typed out-of-box through [@repo/strapi-types](../../packages/strapi-types/README.md) workspace package. By turning it off, the code related to the API on the frontend will have to be modified.
 
 ### Lifecycle hooks
 

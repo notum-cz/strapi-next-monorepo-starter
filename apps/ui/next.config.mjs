@@ -1,4 +1,3 @@
-import withPlaiceholder from "@plaiceholder/next"
 import { withSentryConfig } from "@sentry/nextjs"
 import plugin from "next-intl/plugin"
 
@@ -10,7 +9,15 @@ const withNextIntl = plugin("./src/lib/i18n.ts")
 const nextConfig = {
   output: env.NEXT_OUTPUT,
   reactStrictMode: true,
-  experimental: {},
+  devIndicators: {
+    position: "bottom-right",
+  },
+  // FIXME: Enable it in second step while caching will be introduced
+  // cacheComponents: true,
+  experimental: {
+    turbopackFileSystemCacheForDev: true,
+  },
+  reactCompiler: true,
   transpilePackages: ["@repo/design-system"],
   images: {
     // Be aware that Strapi has optimization on by default
@@ -28,7 +35,7 @@ const nextConfig = {
     minimumCacheTTL: 60 * 15, // 15 minutes - after this time, the image will be revalidated
 
     // You can configure deviceSizes or imageSizes to reduce the total number of possible generated images.
-    // Please check: https://nextjs.org/docs/14/app/api-reference/components/image#imagesizes
+    // Please check: https://nextjs.org/docs/app/api-reference/components/image
     deviceSizes: [420, 768, 1024],
 
     remotePatterns: [
@@ -43,22 +50,13 @@ const nextConfig = {
     ],
   },
 
-  webpack: (config, { dev }) => {
-    if (config.cache && !dev) {
-      // Switching between memory and filesystem cache
-      // Memory cache is faster and can be beneficial in environments with slow or limited disk access,
-      // but it isn't persistent across builds and requires higher memory usage.
-      // Filesystem cache survives across builds but may cause large `.next/cache` folder.
-      config.cache = Object.freeze({
-        type: env.WEBPACK_CACHE_TYPE || "filesystem",
-      })
-    }
-    return config
-  },
+  // Turbopack configuration (replaces webpack config)
+  // Turbopack has built-in intelligent caching, so no manual cache configuration needed
+  // Note: Custom webpack loaders/plugins are not supported in Turbopack
 }
 
 const withConfig = (() => {
-  let config = withNextIntl(withPlaiceholder(nextConfig))
+  let config = withNextIntl(nextConfig)
 
   config = withSentryConfig(config, {
     // For all available options, see:

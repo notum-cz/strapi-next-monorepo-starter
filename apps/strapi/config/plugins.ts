@@ -22,7 +22,7 @@ export default ({ env }) => {
     "users-permissions": {
       config: {
         jwt: {
-          expiresIn: "30d", // this value is synced with NextAuth session maxAge
+          expiresIn: "30d", // this value is synced with Better Auth session maxAge
         },
       },
     },
@@ -36,20 +36,9 @@ export default ({ env }) => {
       },
     },
 
-    // email: {
-    //   config: {
-    //     provider: "mailgun",
-    //     providerOptions: {
-    //       key: env("MAILGUN_API_KEY"),
-    //       domain: env("MAILGUN_DOMAIN"),
-    //       url: env("MAILGUN_HOST", "https://api.eu.mailgun.net"),
-    //     },
-    //     settings: {
-    //       defaultFrom: env("MAILGUN_EMAIL"),
-    //       defaultReplyTo: env("MAILGUN_EMAIL"),
-    //     },
-    //   },
-    // },
+    email: {
+      config: prepareEmailConfig(env),
+    },
   }
 }
 
@@ -102,4 +91,51 @@ const prepareAwsS3Config = (env) => {
   }
 
   return undefined
+}
+
+const prepareEmailConfig = (env) => {
+  const hasMailgunCreds = env("MAILGUN_API_KEY") && env("MAILGUN_DOMAIN")
+  const hasMailtrapCreds = env("MAILTRAP_USER") && env("MAILTRAP_PASS")
+
+  // Mailgun has bigger priority
+  // Mailtrap is only for development/testing purposes
+
+  if (hasMailgunCreds) {
+    return {
+      provider: "mailgun",
+      providerOptions: {
+        key: env("MAILGUN_API_KEY"),
+        domain: env("MAILGUN_DOMAIN"),
+        url: env("MAILGUN_HOST", "https://api.eu.mailgun.net"),
+      },
+      settings: {
+        defaultFrom: env("MAILGUN_EMAIL") || "noreply@example.com",
+        defaultReplyTo: env("MAILGUN_EMAIL") || "noreply@example.com",
+      },
+    }
+  }
+
+  if (hasMailtrapCreds) {
+    return {
+      provider: "nodemailer",
+      providerOptions: {
+        host: env("MAILTRAP_HOST", "sandbox.smtp.mailtrap.io"),
+        port: parseInt(env("MAILTRAP_PORT", "2525"), 10),
+        auth: {
+          user: env("MAILTRAP_USER"),
+          pass: env("MAILTRAP_PASS"),
+        },
+      },
+      settings: {
+        defaultFrom: env("MAILTRAP_EMAIL") || "noreply@example.com",
+        defaultReplyTo: env("MAILTRAP_EMAIL") || "noreply@example.com",
+      },
+    }
+  }
+
+  console.warn(
+    "⚠️  No email provider is configured. Email functionality will not work."
+  )
+
+  return null
 }

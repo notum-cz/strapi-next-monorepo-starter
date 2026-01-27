@@ -2,20 +2,39 @@
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env", "**/.env.*local"],
   "globalEnv": [
-    "NEXT_OUTPUT",
     "APP_PUBLIC_URL",
     "STRAPI_URL",
     "STRAPI_REST_READONLY_API_KEY",
+    "NEXTAUTH_SECRET",
+    "NEXT_OUTPUT",
+    "WEBPACK_CACHE_TYPE",
+    "SENTRY_AUTH_TOKEN",
+    "SENTRY_ORG",
+    "SENTRY_PROJECT",
     "SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING",
-    "WEBPACK_CACHE_TYPE"
+    "CI",
+    "MOBILE_VIEWPORTS_TESTING_ENABLED"
   ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**", "public/**"]
     },
+    "build:static": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**",
+        "public/**",
+        "out/**"
+      ]
+    },
     "lint": {
       "dependsOn": ["^lint"]
+    },
+    "sync-types": {
+      "cache": false
     },
     "dev": {
       "dependsOn": ["@repo/shared-data#build", "@repo/design-system#build"],
@@ -26,6 +45,20 @@
       "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
+    },
+    "axe-test": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-interactive-mode": {
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-e2e-tests": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": false
     }
   },
   "ui": "tui"

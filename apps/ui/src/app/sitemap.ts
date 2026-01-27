@@ -1,27 +1,34 @@
-import { env } from "@/env.mjs"
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
+import { Locale } from "next-intl"
 
 import type { MetadataRoute } from "next"
-import { AppLocale } from "@/types/general"
 
+import { getEnvVar } from "@/lib/env-vars"
 import { isDevelopment, isProduction } from "@/lib/general-helpers"
 import { routing } from "@/lib/navigation"
 import { fetchAllPages } from "@/lib/strapi-api/content/server"
 
-// The URL should be absolute, including the baseUrl (e.g. http://localhost:3000/some/nested-page)
-const baseUrl = env.APP_PUBLIC_URL
+// This should be static or dynamic based on build/runtime needs
+export const dynamic = "force-dynamic"
 
 /**
  * Note: We could use generateSitemaps to separate the sitemaps, however that does not create the root sitemap.
  */
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (!isProduction() && !isDevelopment()) {
+    // Deployment environments other than production should not generate sitemap
+    return []
+  }
+
+  const baseUrl = getEnvVar("APP_PUBLIC_URL")
+
+  if (!baseUrl) {
+    console.error("Sitemap generation aborted: APP_PUBLIC_URL is not defined")
     return []
   }
 
   const promises = routing.locales.map((locale) =>
-    generateLocalizedSitemap(locale)
+    generateLocalizedSitemap(locale, baseUrl)
   )
   const results = await Promise.allSettled(promises)
 
@@ -40,9 +47,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
  * @returns Sitemap entries for a single locale
  */
 async function generateLocalizedSitemap(
-  locale: AppLocale
+  locale: Locale,
+  baseUrl: string
 ): Promise<MetadataRoute.Sitemap> {
-  let pageEntities: Partial<
+  const pageEntities: Partial<
     Record<PageEntityUID, Awaited<ReturnType<typeof fetchAllPages>>["data"]>
   > = {}
 
@@ -63,7 +71,11 @@ async function generateLocalizedSitemap(
     pages.forEach((page) => {
       if (page.fullPath) {
         acc.push({
-          url: generateSitemapEntryUrl(page.fullPath, String(page.locale)),
+          url: generateSitemapEntryUrl(
+            baseUrl,
+            page.fullPath,
+            String(page.locale)
+          ),
           lastModified: page.updatedAt ?? page.createdAt ?? undefined,
           changeFrequency:
             entityChangeFrequency[uid as PageEntityUID] ?? "monthly",
@@ -74,7 +86,11 @@ async function generateLocalizedSitemap(
   }, [] as MetadataRoute.Sitemap)
 }
 
-const generateSitemapEntryUrl = (fullPath: string, locale: string) => {
+const generateSitemapEntryUrl = (
+  baseUrl: string,
+  fullPath: string,
+  locale: string
+) => {
   const isDefaultLocale = locale === routing.defaultLocale
   let url
   if (fullPath === ROOT_PAGE_PATH) {

@@ -1,18 +1,21 @@
-import React from "react"
-import { env } from "@/env.mjs"
-
 import { hashStringSHA256 } from "@/lib/crypto"
+import { getEnvVar } from "@/lib/env-vars"
 
 import StrapiPreviewWindowChangeListener from "./StrapiPreviewListener"
 
-const STRAPI_PREVIEW_ENABLED = Boolean(env.STRAPI_PREVIEW_SECRET)
-
 const StrapiPreviewListener = async () => {
-  const strapiPreviewHashedOrigin = STRAPI_PREVIEW_ENABLED
-    ? await hashStringSHA256(env.STRAPI_URL)
+  const strapiUrl = getEnvVar("STRAPI_URL")
+
+  if (!strapiUrl) {
+    return null
+  }
+
+  const previewSecret = Boolean(getEnvVar("STRAPI_PREVIEW_SECRET"))
+  const strapiPreviewHashedOrigin = previewSecret
+    ? await hashStringSHA256(strapiUrl)
     : undefined
 
-  if (!STRAPI_PREVIEW_ENABLED || !strapiPreviewHashedOrigin) {
+  if (!previewSecret || !strapiPreviewHashedOrigin) {
     return null
   }
 

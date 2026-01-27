@@ -1,37 +1,35 @@
+import { use } from "react"
+import { headers } from "next/headers"
 import Image from "next/image"
-import { Data } from "@repo/strapi"
-import { getTranslations } from "next-intl/server"
+import { Data } from "@repo/strapi-types"
+import { Locale } from "next-intl"
 
-import { AppLocale } from "@/types/general"
-
-import { getAuth } from "@/lib/auth"
+import { getSessionSSR } from "@/lib/auth"
 import { fetchNavbar } from "@/lib/strapi-api/content/server"
 import { cn } from "@/lib/styles"
 import AppLink from "@/components/elementary/AppLink"
 import LocaleSwitcher from "@/components/elementary/LocaleSwitcher"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
-import { LoggedUserMenu } from "@/components/page-builder/single-types/navbar/LoggedUserMenu"
+import { NavbarAuthSection } from "@/components/page-builder/single-types/navbar/NavbarAuthSection"
 
 const hardcodedLinks: NonNullable<
   Data.ContentType<"api::navbar.navbar">["links"]
 > = [{ id: "client-page", href: "/client-page", label: "Client Page" }]
 
-export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
-  const response = await fetchNavbar(locale)
+export function StrapiNavbar({ locale }: { readonly locale: Locale }) {
+  const response = use(fetchNavbar(locale))
   const navbar = response?.data
 
   if (navbar == null) {
     return null
   }
 
-  const t = await getTranslations("navbar")
+  const session = use(getSessionSSR(use(headers())))
 
   const links = (navbar.links ?? [])
     .filter((link) => link.href)
     .concat(...hardcodedLinks)
-
-  const session = await getAuth()
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-white/90 shadow-sm backdrop-blur transition-colors duration-300">
@@ -67,16 +65,8 @@ export async function StrapiNavbar({ locale }: { readonly locale: AppLocale }) {
           ) : null}
         </div>
 
-        <div className="hidden flex-1 items-center justify-end space-x-4 lg:flex">
-          {session?.user ? (
-            <nav className="flex items-center space-x-1">
-              <LoggedUserMenu user={session.user} />
-            </nav>
-          ) : (
-            <AppLink href="/auth/signin">{t("actions.signIn")}</AppLink>
-          )}
-          <LocaleSwitcher locale={locale} />
-        </div>
+        <NavbarAuthSection sessionSSR={session} />
+        <LocaleSwitcher locale={locale} />
       </div>
     </header>
   )

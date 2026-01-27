@@ -1,94 +1,64 @@
-name: Verify build
+name: CI
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
+      - dev
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 env:
-  STRAPI_REST_READONLY_API_KEY: random-value-just-for-build
+  CI: true
+  NPM_CONFIG_IGNORE_SCRIPTS: "true"
 
 jobs:
-  lint:
-    name: Lint
-    timeout-minutes: 15
-    runs-on: ubuntu-latest 
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: Cache turbo build setup
-        uses: actions/cache@v4
-        with:
-          path: .turbo
-          key: '${{ runner.os }}-turbo-${{ github.sha }}'
-          restore-keys: |
-            ${{ runner.os }}-turbo-
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: yarn
-
-      - name: Install dependencies
-        run: yarn
-
-      - name: Prepare Environment Variables
-        run: |
-          cp apps/strapi/.env.example apps/strapi/.env
-          cp apps/ui/.env.local.example apps/ui/.env.local
-
-      - name: yarn format:check
-        run: yarn format:check
-
-      - name: yarn lint
-        run: yarn lint
-
-  build:
-    name: Build all apps
-    timeout-minutes: 15
+  build_and_verify:
+    name: Install, Lint, and Build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
 
-      - name: Cache turbo build setup
-        uses: actions/cache@v4
-        with:
-          path: .turbo
-          key: '${{ runner.os }}-turbo-${{ github.sha }}'
-          restore-keys: |
-            ${{ runner.os }}-turbo-
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
-      - name: Setup Node.js environment
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: yarn
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: yarn
-      
+        run: pnpm install --frozen-lockfile
+
       - name: Prepare Environment Variables
         run: |
           cp apps/strapi/.env.example apps/strapi/.env
           cp apps/ui/.env.local.example apps/ui/.env.local
+
+      - name: Check code formatting
+        run: pnpm format:check
+
+      - name: Run linter
+        run: pnpm lint
 
       - name: Build UI
-        run: yarn build:ui
+        run: |
+          rm -rf apps/ui/.next
+          pnpm build:ui
+
+      # Only enable this if you plan to deploy a static export of the UI
+      # - name: Build UI (output=export)
+      #   run: |
+      #     rm -rf .next
+      #     pnpm build:ui:static
 
       - name: Build Strapi
-        run: yarn build:strapi
+        run: pnpm build:strapi

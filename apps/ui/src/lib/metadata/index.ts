@@ -1,11 +1,12 @@
-import { env } from "@/env.mjs"
 import { mergeWith } from "lodash"
+import { Locale } from "next-intl"
 import { getTranslations } from "next-intl/server"
 
-import type { AppLocale, NextMetadataTwitterCard } from "@/types/general"
-import type { Data, UID } from "@repo/strapi"
+import type { NextMetadataTwitterCard } from "@/types/general"
+import type { Data, UID } from "@repo/strapi-types"
 import type { Metadata } from "next"
 
+import { getEnvVar } from "@/lib/env-vars"
 import {
   getDefaultMetadata,
   getDefaultOgMeta,
@@ -20,19 +21,15 @@ export async function getMetadataFromStrapi({
   uid = "api::page.page",
 }: {
   fullPath?: string
-  locale: AppLocale
+  locale: Locale
   customMetadata?: Metadata
   // Add more content types here if we want to fetch SEO components for them
   uid?: Extract<UID.ContentType, "api::page.page">
 }): Promise<Metadata | null> {
   const t = await getTranslations({ locale, namespace: "seo" })
-
-  const siteUrl = env.APP_PUBLIC_URL
-
+  const siteUrl = getEnvVar("APP_PUBLIC_URL")
   if (!siteUrl) {
-    console.error(
-      "Please provide APP_PUBLIC_URL (public URL of site) for SEO metadata generation."
-    )
+    console.warn("APP_PUBLIC_URL is not defined, cannot generate metadata")
     return null
   }
 
@@ -76,7 +73,7 @@ export async function getMetadataFromStrapi({
 }
 
 async function fetchAndMapStrapiMetadata(
-  locale: AppLocale,
+  locale: Locale,
   fullPath: string | null,
   defaultMeta: Metadata,
   defaultOgMeta: Metadata["openGraph"],

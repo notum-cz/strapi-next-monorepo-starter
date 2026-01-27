@@ -1,12 +1,13 @@
-/* eslint-disable no-console */
 import { cookies, draftMode } from "next/headers"
-import { env } from "@/env.mjs"
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
+import { hasLocale } from "next-intl"
 
+import { getEnvVar } from "@/lib/env-vars"
 import { redirect, routing } from "@/lib/navigation"
 
 export async function GET(request: Request) {
-  if (!env.STRAPI_PREVIEW_SECRET) {
+  const previewSecret = getEnvVar("STRAPI_PREVIEW_SECRET")
+  if (!previewSecret) {
     console.log(
       "[STRAPI_PREVIEW]: Preview request received, but [STRAPI_PREVIEW_SECRET] has not been configured. Status: 404."
     )
@@ -15,7 +16,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   // Check if the provided secret matches our secret key
   const secret = String(searchParams.get("secret"))
-  if (secret !== env.STRAPI_PREVIEW_SECRET) {
+  if (secret !== previewSecret) {
     console.log(
       "[STRAPI_PREVIEW]: Preview request received, but [secret] does not match [STRAPI_PREVIEW_SECRET]. Status: 401."
     )
@@ -62,7 +63,7 @@ export async function GET(request: Request) {
   // --------------------------------------------------------------------
   // Check if the locale in the request is a correct frontend locale
   const localeParam = String(searchParams.get("locale"))
-  const locale = routing.locales.includes(localeParam as never)
+  const locale = hasLocale(routing.locales, localeParam)
     ? localeParam
     : routing.defaultLocale
   console.log(

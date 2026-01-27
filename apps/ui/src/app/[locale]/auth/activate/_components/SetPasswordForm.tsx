@@ -1,6 +1,5 @@
 "use client"
 
-import { useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
@@ -8,9 +7,10 @@ import * as z from "zod"
 
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
 import { useRouter } from "@/lib/navigation"
-import { useUserMutations } from "@/hooks/useUser"
+import { useUserMutations } from "@/hooks/useUserMutations"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
+import { UseSearchParamsWrapper } from "@/components/helpers/UseSearchParamsWrapper"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -22,7 +22,22 @@ import {
 } from "@/components/ui/card"
 import { useToast } from "@/components/ui/use-toast"
 
-export function SetPasswordForm({ accountActivation = false }) {
+type Props = {
+  code?: string
+  accountActivation?: boolean
+}
+
+export function SetPasswordForm({ code, accountActivation = false }: Props) {
+  return (
+    <UseSearchParamsWrapper>
+      <SuspensedSetPasswordForm
+        code={code}
+        accountActivation={accountActivation}
+      />
+    </UseSearchParamsWrapper>
+  )
+}
+function SuspensedSetPasswordForm({ code, accountActivation }: Props) {
   const t = useTranslations(
     accountActivation ? "auth.accountActivation" : "auth.resetPassword"
   )
@@ -37,23 +52,36 @@ export function SetPasswordForm({ accountActivation = false }) {
   })
 
   const router = useRouter()
-  const params = useSearchParams()
-  const code = params.get("code") as string
 
-  const onSubmit = (data: z.infer<FormSchemaType>) =>
+  const onSubmit = async (data: z.infer<FormSchemaType>) => {
+    if (!code) {
+      return toast({
+        variant: "destructive",
+        description: t("errors.incorrectCodeProvided"),
+      })
+    }
+
     resetPasswordMutation.mutate(
-      { code, ...data },
+      {
+        code,
+        password: data.password,
+        passwordConfirmation: data.passwordConfirmation,
+      },
       {
         onSuccess: () => {
-          toast({
-            variant: "default",
-            description: t("successfullySet"),
-          })
+          toast({ variant: "default", description: t("successfullySet") })
           form.reset()
           router.push("/auth/signin")
         },
+        onError: () => {
+          toast({
+            variant: "destructive",
+            description: t("errors.incorrectCodeProvided"),
+          })
+        },
       }
     )
+  }
 
   return (
     <Card className="m-auto w-[400px]">
@@ -83,6 +111,7 @@ export function SetPasswordForm({ accountActivation = false }) {
           size="lg"
           variant="default"
           form={setPasswordFormName}
+          disabled={resetPasswordMutation.isPending}
         >
           {t("submit")}
         </Button>

@@ -1,17 +1,19 @@
 import "server-only"
 
 import { draftMode } from "next/headers"
-import { UID } from "@repo/strapi"
+import { UID } from "@repo/strapi-types"
+import { Locale } from "next-intl"
 
-import type { AppLocale, CustomFetchOptions } from "@/types/general"
+import type { CustomFetchOptions } from "@/types/general"
 
+import { logNonBlockingError } from "@/lib/logging"
 import { PublicStrapiClient } from "@/lib/strapi-api"
 
 // ------ Page fetching functions
 
 export async function fetchPage(
   fullPath: string,
-  locale: AppLocale,
+  locale: Locale,
   requestInit?: RequestInit,
   options?: CustomFetchOptions
 ) {
@@ -34,7 +36,7 @@ export async function fetchPage(
       options
     )
   } catch (e: any) {
-    console.error({
+    logNonBlockingError({
       message: `Error fetching page '${fullPath}' for locale '${locale}'`,
       error: {
         error: e?.message,
@@ -46,7 +48,7 @@ export async function fetchPage(
 
 export async function fetchAllPages(
   uid: Extract<UID.ContentType, "api::page.page"> = "api::page.page",
-  locale: AppLocale
+  locale: Locale
 ) {
   try {
     return await PublicStrapiClient.fetchAll(uid, {
@@ -56,7 +58,7 @@ export async function fetchAllPages(
       status: "published",
     })
   } catch (e: any) {
-    console.error({
+    logNonBlockingError({
       message: `Error fetching all pages for locale '${locale}'`,
       error: {
         error: e?.message,
@@ -72,7 +74,7 @@ export async function fetchAllPages(
 export async function fetchSeo(
   uid: Extract<UID.ContentType, "api::page.page"> = "api::page.page",
   fullPath: string | null,
-  locale: AppLocale
+  locale: Locale
 ) {
   try {
     return await PublicStrapiClient.fetchOneByFullPath(uid, fullPath, {
@@ -88,7 +90,7 @@ export async function fetchSeo(
       fields: [],
     })
   } catch (e: any) {
-    console.error({
+    logNonBlockingError({
       message: `Error fetching SEO for '${uid}' with fullPath '${fullPath}' for locale '${locale}'`,
       error: {
         error: e?.message,
@@ -100,7 +102,7 @@ export async function fetchSeo(
 
 // ------ Navbar fetching functions
 
-export async function fetchNavbar(locale: AppLocale) {
+export async function fetchNavbar(locale: Locale) {
   try {
     return await PublicStrapiClient.fetchOne("api::navbar.navbar", undefined, {
       locale,
@@ -110,7 +112,7 @@ export async function fetchNavbar(locale: AppLocale) {
       },
     })
   } catch (e: any) {
-    console.error({
+    logNonBlockingError({
       message: `Error fetching navbar for locale '${locale}'`,
       error: {
         error: e?.message,
@@ -122,7 +124,7 @@ export async function fetchNavbar(locale: AppLocale) {
 
 // ------ Footer fetching functions
 
-export async function fetchFooter(locale: AppLocale) {
+export async function fetchFooter(locale: Locale) {
   try {
     return await PublicStrapiClient.fetchOne("api::footer.footer", undefined, {
       locale,
@@ -133,7 +135,7 @@ export async function fetchFooter(locale: AppLocale) {
       },
     })
   } catch (e: any) {
-    console.error({
+    logNonBlockingError({
       message: `Error fetching footer for locale '${locale}'`,
       error: {
         error: e?.message,

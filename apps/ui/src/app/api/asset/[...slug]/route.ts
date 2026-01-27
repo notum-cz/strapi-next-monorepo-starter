@@ -1,4 +1,6 @@
-import { env } from "@/env.mjs"
+import { NextResponse } from "next/server"
+
+import { getEnvVar } from "@/lib/env-vars"
 
 /**
  * This route handler allows asset fetching from Strapi backend even from client-side components,
@@ -15,15 +17,28 @@ export const revalidate = false
 
 async function handler(
   request: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string[] }> }
 ) {
   const { slug } = await params
   const path = Array.isArray(slug) ? slug.join("/") : slug
 
-  const url = `${env.STRAPI_URL}/${path}`
+  if (!path.startsWith("uploads/")) {
+    // allow only uploads to be fetched through this proxy
+    return NextResponse.json(
+      {
+        error: {
+          message: `Access denied: Only paths under uploads/ are allowed`,
+          name: "Forbidden",
+        },
+      },
+      { status: 403 }
+    )
+  }
+
+  const strapiUrl = getEnvVar("STRAPI_URL", true)
+  const url = `${strapiUrl!}/${path}`
   const clonedRequest = request.clone()
 
-  // eslint-disable-next-line no-unused-vars
   const { url: _, ...rest } = clonedRequest
   const response = await fetch(url, {
     ...rest,

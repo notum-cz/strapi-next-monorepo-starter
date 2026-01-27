@@ -1,8 +1,8 @@
+import { headers } from "next/headers"
+import { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
-import { PageProps } from "@/types/next"
-
-import { getAuth } from "@/lib/auth"
+import { getSessionSSR } from "@/lib/auth"
 import { Link } from "@/lib/navigation"
 import { Button } from "@/components/ui/button"
 import {
@@ -14,11 +14,14 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-export default async function AuthPage({ params }: PageProps) {
-  const session = await getAuth()
+export default async function AuthPage({
+  params,
+}: PageProps<"/[locale]/auth">) {
+  const { locale } = (await params) as { locale: Locale }
 
-  const { locale } = await params
   setRequestLocale(locale)
+
+  const session = await getSessionSSR(await headers())
 
   return (
     <div className="space-y-10">
@@ -30,7 +33,7 @@ export default async function AuthPage({ params }: PageProps) {
               This is available only for authenticated users.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <CardContent className="space-y-2 wrap-break-word">
             <strong>Session: </strong> {JSON.stringify(session.user)}
           </CardContent>
           <CardFooter className="flex w-full items-center justify-end gap-3">

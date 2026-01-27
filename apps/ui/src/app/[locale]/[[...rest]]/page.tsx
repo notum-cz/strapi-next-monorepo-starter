@@ -1,12 +1,12 @@
+import { use } from "react"
 import { notFound } from "next/navigation"
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
+import { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
-import type { PageProps } from "@/types/next"
-
+import { createFallbackPath, debugStaticParams } from "@/lib/build"
 import { isDevelopment } from "@/lib/general-helpers"
 import { getMetadataFromStrapi } from "@/lib/metadata"
-import { routing } from "@/lib/navigation"
 import { fetchAllPages, fetchPage } from "@/lib/strapi-api/content/server"
 import { cn } from "@/lib/styles"
 import { Breadcrumbs } from "@/components/elementary/Breadcrumbs"
@@ -15,47 +15,73 @@ import { ErrorBoundary } from "@/components/elementary/ErrorBoundary"
 import { PageContentComponents } from "@/components/page-builder"
 import StrapiStructuredData from "@/components/page-builder/components/seo-utilities/StrapiStructuredData"
 
-export async function generateStaticParams() {
+// Allow this dynamic route to behave like a static/ISR page
+// even if slugs are unknown at build time or STRAPI_URL is not defined
+// or fetching fails
+// export const dynamic = "force-static"
+
+// Set ISR revalidation interval: regenerate the page every 5 minutes (300s)
+// export const revalidate = 300
+
+// Enable static/ISR generation for pages not returned by generateStaticParams
+// First request will SSR the page, then cache it for future requests
+// export const dynamicParams = true
+
+export async function generateStaticParams({
+  params: { locale },
+}: {
+  // retrieve locales - this is being passed from root layout.tsx's generateStaticParams
+  params: { locale: string }
+}) {
   if (isDevelopment()) {
+    debugStaticParams([], "[[...rest]]", { isDevelopment: true })
     // do not prefetch all locales when developing
-    return []
+    return [
+      {
+        locale: "en",
+        rest: [""],
+      },
+    ]
   }
 
-  const promises = routing.locales.map((locale) =>
-    fetchAllPages("api::page.page", locale)
-  )
+  const results = await fetchAllPages("api::page.page", locale as Locale)
 
-  const results = await Promise.allSettled(promises)
-
-  const params = results
-    .filter((result) => result.status === "fulfilled")
-    .flatMap((result) => result.value.data)
-    .map((page) => ({
-      locale: page.locale,
+  const params =
+    results?.data.map((page) => ({
+      locale: page.locale as Locale,
       rest: [page.slug],
-    }))
+    })) ?? []
 
-  return params
+  debugStaticParams(params, "[[...rest]]")
+
+  // statically generated applications with output: 'export' require at least one entry (even invalid)
+  // within the dynamic segment to avoid build errors
+  const fallbackPath = createFallbackPath(locale as Locale, {
+    rest: ["fallback"],
+  })
+
+  return params.length > 0 ? params : [fallbackPath]
 }
 
-type Props = PageProps<{
-  rest: string[]
-}>
-
-export async function generateMetadata(props: Props) {
+export async function generateMetadata(
+  props: PageProps<"/[locale]/[[...rest]]">
+) {
   const params = await props.params
+  const locale = params.locale as Locale
+
   const fullPath = ROOT_PAGE_PATH + (params.rest ?? []).join("/")
 
-  return getMetadataFromStrapi({ fullPath, locale: params.locale })
+  return getMetadataFromStrapi({ fullPath, locale })
 }
 
-export default async function StrapiPage(props: Props) {
-  const params = await props.params
+export default function StrapiPage(props: PageProps<"/[locale]/[[...rest]]">) {
+  const params = use(props.params)
+  const locale = params.locale as Locale
 
-  setRequestLocale(params.locale)
+  setRequestLocale(locale)
 
   const fullPath = ROOT_PAGE_PATH + (params.rest ?? []).join("/")
-  const response = await fetchPage(fullPath, params.locale)
+  const response = use(fetchPage(fullPath, locale))
 
   const data = response?.data
 
@@ -94,14 +120,6 @@ export default async function StrapiPage(props: Props) {
                 </div>
               )
             }
-
-            // TODO: Resolve dynamic import issue with NextJS 15
-            // const Component = dynamic<{
-            // 	component: typeof comp
-            // 	pageParams: Awaited<Props['params']>
-            // 	page: typeof data
-            // 	// breadcrumbs: typeof breadcrumbs
-            // }>(() => import(`@/components/page-builder${componentPath}`))
 
             return (
               <ErrorBoundary key={key}>

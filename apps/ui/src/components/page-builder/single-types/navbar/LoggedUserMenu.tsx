@@ -1,6 +1,7 @@
 import { LogOutIcon, User, UserRoundCogIcon } from "lucide-react"
-import { Session } from "next-auth"
 import { useTranslations } from "next-intl"
+
+import { BetterAuthUserWithStrapi } from "@/types/better-auth"
 
 import { Link } from "@/lib/navigation"
 import { Button } from "@/components/ui/button"
@@ -13,7 +14,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-export function LoggedUserMenu({ user }: { readonly user: Session["user"] }) {
+export function LoggedUserMenu({
+  user,
+}: {
+  readonly user: BetterAuthUserWithStrapi
+}) {
   const t = useTranslations("navbar")
 
   return (
@@ -28,15 +33,18 @@ export function LoggedUserMenu({ user }: { readonly user: Session["user"] }) {
         <DropdownMenuLabel>{t("account")}</DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>
-          <Link
-            href="/auth/change-password"
-            className="flex w-full items-center gap-1"
-          >
-            <UserRoundCogIcon className="mr-2 size-4" />
-            <span>{t("actions.changePassword")}</span>
-          </Link>
-        </DropdownMenuItem>
+        {/* Only show change password for email/password users (not OAuth) */}
+        {(!user.provider || user.provider === "credentials") && (
+          <DropdownMenuItem>
+            <Link
+              href="/auth/change-password"
+              className="flex w-full items-center gap-1"
+            >
+              <UserRoundCogIcon className="mr-2 size-4" />
+              <span>{t("actions.changePassword")}</span>
+            </Link>
+          </DropdownMenuItem>
+        )}
 
         <DropdownMenuItem>
           <Link href="/auth/signout" className="flex w-full items-center gap-1">

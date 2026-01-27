@@ -3,12 +3,10 @@
 import { useQuery } from "@tanstack/react-query"
 import { useLocale } from "next-intl"
 
-import { AppLocale } from "@/types/general"
-
 import { PublicStrapiClient } from "@/lib/strapi-api"
 
 export function useAllPages() {
-  const locale = useLocale() as AppLocale
+  const locale = useLocale()
 
   return useQuery({
     queryKey: ["pages", locale],

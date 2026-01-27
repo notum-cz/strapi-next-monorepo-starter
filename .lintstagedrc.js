@@ -1,3 +1,3 @@
 module.exports = {
-  "*.{js,jsx,ts,tsx,md,css,scss}": ["yarn format"],
+  "*.{js,jsx,ts,tsx,md,css,scss}": ["pnpm run format"],
 }

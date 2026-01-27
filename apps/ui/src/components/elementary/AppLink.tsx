@@ -6,7 +6,8 @@ import { cn } from "@/lib/styles"
 import { buttonVariants } from "@/components/ui/button"
 
 export interface AppLinkProps
-  extends React.AnchorHTMLAttributes<HTMLAnchorElement>,
+  extends
+    React.AnchorHTMLAttributes<HTMLAnchorElement>,
     VariantProps<typeof buttonVariants> {
   readonly href: string
   readonly children?: React.ReactNode

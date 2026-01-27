@@ -3,6 +3,7 @@ cache
 public
 CHANGELOG.md
 .yarn
+pnpm-lock.yaml
 dist
 node_modules
 .next

@@ -1,5 +1,5 @@
 import React from "react"
-import { Data } from "@repo/strapi"
+import { Data } from "@repo/strapi-types"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import CkEditorSSRRenderer from "@/components/elementary/ck-editor/CkEditorSSRRenderer"

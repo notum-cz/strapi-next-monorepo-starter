@@ -1,8 +1,8 @@
-import { env } from "@/env.mjs"
 import qs from "qs"
 
 import { CustomFetchOptions } from "@/types/general"
 
+import { getEnvVar } from "@/lib/env-vars"
 import BaseStrapiClient from "@/lib/strapi-api/base"
 import {
   createStrapiAuthHeader,
@@ -31,16 +31,11 @@ export class PrivateClient extends BaseStrapiClient {
       // If useProxy is set, we need to use the public-proxy endpoint here in Next.js
       // (for client-side requests)
       completeUrl = `/api/private-proxy${url}`
-
-      if (typeof window === "undefined") {
-        // SSR components do not support relative URLs, so we have to prefix it with local app URL
-        // @deprecated: SSR components should not use proxy, they should use the Strapi URL directly
-        completeUrl = `${env.APP_PUBLIC_URL}${completeUrl}`
-      }
     } else {
       // Directly use the Strapi URL. Same logic as in proxy route handler must be applied
       // (for SSR components and server actions/context)
-      completeUrl = `${env.STRAPI_URL}${url}`
+      const strapiUrl = getEnvVar("STRAPI_URL", true)
+      completeUrl = `${strapiUrl!}${url}`
     }
 
     if (!options?.omitUserAuthorization) {

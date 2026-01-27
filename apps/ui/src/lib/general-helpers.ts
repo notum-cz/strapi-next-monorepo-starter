@@ -1,19 +1,22 @@
-import { env } from "@/env.mjs"
+import { getEnvVar } from "@/lib/env-vars"
 
 import { setupDayJs } from "./dates"
 
-export const isProduction = () => env.APP_ENV === "production"
+export const isProduction = () => getEnvVar("APP_ENV") === "production"
 
-export const isTesting = () => env.APP_ENV === "testing"
+export const isTesting = () => getEnvVar("APP_ENV") === "testing"
 
-export const isDevelopment = () => env.NODE_ENV === "development"
+export const isDevelopment = () => getEnvVar("NODE_ENV") === "development"
 
 export const setupLibraries = () => {
   setupDayJs()
 }
 
 export const removeThisWhenYouNeedMe = (functionName: string) => {
-  if (!isDevelopment() || env.NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS) {
+  if (
+    !isDevelopment() ||
+    getEnvVar("NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS")
+  ) {
     return
   }
 

@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server"
-import { env } from "@/env.mjs"
 
+import { getEnvVar } from "@/lib/env-vars"
 import {
   createStrapiAuthHeader,
-  isAllowedToReadStrapiEndpoint,
+  isStrapiEndpointAllowed,
 } from "@/lib/strapi-api/request-auth"
 
 /**
@@ -18,22 +18,18 @@ import {
  */
 async function handler(
   request: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string[] }> }
 ) {
   const { slug } = await params
 
   const path = Array.isArray(slug) ? slug.join("/") : slug
-  const isReadOnly = request.method === "GET" || request.method === "HEAD"
 
-  const isAllowedToRead = isReadOnly
-    ? isAllowedToReadStrapiEndpoint(path)
-    : true
-
-  if (!isAllowedToRead) {
+  const isAccessible = isStrapiEndpointAllowed(path, request.method)
+  if (!isAccessible) {
     return NextResponse.json(
       {
         error: {
-          message: `Endpoint "${path}" is not allowed for GET requests`,
+          message: `Path '${path}' is not accessible`,
           name: "Forbidden",
         },
       },
@@ -41,8 +37,10 @@ async function handler(
     )
   }
 
+  const strapiUrl = getEnvVar("STRAPI_URL", true)
   const { search } = new URL(request.url)
-  const url = `${env.STRAPI_URL}/${path}${search ?? ""}`
+  const url = `${strapiUrl!}/${path}${search ?? ""}`
+  const isReadOnly = request.method === "GET" || request.method === "HEAD"
 
   const clonedRequest = request.clone()
   // Extract the body explicitly from the cloned request
@@ -89,9 +87,9 @@ async function handler(
 }
 
 export {
-  handler as HEAD,
+  handler as DELETE,
   handler as GET,
+  handler as HEAD,
   handler as POST,
   handler as PUT,
-  handler as DELETE,
 }

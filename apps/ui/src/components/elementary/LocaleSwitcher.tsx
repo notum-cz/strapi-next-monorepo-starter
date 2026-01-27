@@ -2,10 +2,10 @@
 
 import React, { useTransition } from "react"
 import { useSearchParams } from "next/navigation"
-
-import { AppLocale } from "@/types/general"
+import { Locale } from "next-intl"
 
 import { routing, usePathname, useRouter } from "@/lib/navigation"
+import { UseSearchParamsWrapper } from "@/components/helpers/UseSearchParamsWrapper"
 import {
   Select,
   SelectContent,
@@ -19,7 +19,14 @@ const localeTranslation = {
   en: "English",
 }
 
-const LocaleSwitcher = ({ locale }: { locale: AppLocale }) => {
+const LocaleSwitcher = ({ locale }: { locale: Locale }) => {
+  return (
+    <UseSearchParamsWrapper>
+      <SuspensedLocaleSwitcher locale={locale} />
+    </UseSearchParamsWrapper>
+  )
+}
+const SuspensedLocaleSwitcher = ({ locale }: { locale: Locale }) => {
   // prevent the locale switch from blocking the UI thread
   const [, startTransition] = useTransition()
 
@@ -27,7 +34,7 @@ const LocaleSwitcher = ({ locale }: { locale: AppLocale }) => {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const handleLocaleChange = (locale: AppLocale) => {
+  const handleLocaleChange = (locale: Locale) => {
     const queryParams = searchParams.toString()
 
     // next-intl router.replace does not persist query params
