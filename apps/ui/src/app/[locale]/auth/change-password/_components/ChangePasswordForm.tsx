@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import * as z from "zod"
 
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
@@ -19,12 +20,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useToast } from "@/components/ui/use-toast"
 
 export function ChangePasswordForm() {
   const t = useTranslations("auth.changePassword")
   const router = useRouter()
-  const { toast } = useToast()
   const { changePasswordMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({
@@ -41,7 +40,7 @@ export function ChangePasswordForm() {
   const onSubmit = async (data: z.infer<FormSchemaType>) => {
     changePasswordMutation.mutate(data, {
       onSuccess: () => {
-        toast({ variant: "default", description: t("successfullyChanged") })
+        toast.success(t("successfullyChanged"))
         form.reset()
         router.push("/")
       },
@@ -63,7 +62,7 @@ export function ChangePasswordForm() {
           ? errorMap[errorKey]
           : (errorMessage ?? t("errors.unexpectedError"))
 
-        toast({ variant: "destructive", description: displayMessage })
+        toast.error(displayMessage)
       },
     })
   }

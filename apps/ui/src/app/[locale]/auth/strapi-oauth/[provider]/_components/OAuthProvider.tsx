@@ -3,9 +3,9 @@
 import { useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { useLocale, useTranslations } from "next-intl"
+import { toast } from "sonner"
 
 import { useUserMutations } from "@/hooks/useUserMutations"
-import { useToast } from "@/components/ui/use-toast"
 
 export function OAuthProvider({
   params,
@@ -15,7 +15,6 @@ export function OAuthProvider({
   const locale = useLocale()
   const t = useTranslations("auth.oauth")
   const searchParams = useSearchParams()
-  const { toast } = useToast()
   const { syncOauthStrapiMutation } = useUserMutations()
 
   const handleSync = (accessToken: string, provider: string) => {
@@ -31,7 +30,7 @@ export function OAuthProvider({
 
           const displayMessage = errorMessage ?? t("errors.signInFailed")
 
-          toast({ variant: "destructive", description: displayMessage })
+          toast.error(displayMessage)
         },
       }
     )
@@ -42,10 +41,7 @@ export function OAuthProvider({
     const provider = params?.provider || "github"
 
     if (!accessToken) {
-      toast({
-        variant: "destructive",
-        description: "Missing access_token from Strapi redirect",
-      })
+      toast.error("Missing access_token from Strapi redirect")
     } else {
       handleSync(accessToken, provider)
     }

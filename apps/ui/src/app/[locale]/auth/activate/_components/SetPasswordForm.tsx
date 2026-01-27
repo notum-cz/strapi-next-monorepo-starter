@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import * as z from "zod"
 
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
@@ -20,7 +21,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useToast } from "@/components/ui/use-toast"
 
 type Props = {
   code?: string
@@ -41,7 +41,6 @@ function SuspensedSetPasswordForm({ code, accountActivation }: Props) {
   const t = useTranslations(
     accountActivation ? "auth.accountActivation" : "auth.resetPassword"
   )
-  const { toast } = useToast()
   const { resetPasswordMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({
@@ -55,10 +54,7 @@ function SuspensedSetPasswordForm({ code, accountActivation }: Props) {
 
   const onSubmit = async (data: z.infer<FormSchemaType>) => {
     if (!code) {
-      return toast({
-        variant: "destructive",
-        description: t("errors.incorrectCodeProvided"),
-      })
+      return toast.error(t("errors.incorrectCodeProvided"))
     }
 
     resetPasswordMutation.mutate(
@@ -69,15 +65,12 @@ function SuspensedSetPasswordForm({ code, accountActivation }: Props) {
       },
       {
         onSuccess: () => {
-          toast({ variant: "default", description: t("successfullySet") })
+          toast.success(t("successfullySet"))
           form.reset()
           router.push("/auth/signin")
         },
         onError: () => {
-          toast({
-            variant: "destructive",
-            description: t("errors.incorrectCodeProvided"),
-          })
+          toast.error(t("errors.incorrectCodeProvided"))
         },
       }
     )

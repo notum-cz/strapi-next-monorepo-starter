@@ -98,6 +98,7 @@
       "invalid_type": "Požadovaný typ je {expected}, zadán byl {received}",
       "invalid_type_received_undefined": "Pole je požadované",
       "invalid_literal": "Nesprávná hodnota, očekává sa {expected}",
+      "invalid_union": "Nesprávná hodnota",
 
       "invalid_string": {
         "regex": "Nesprávný formát"

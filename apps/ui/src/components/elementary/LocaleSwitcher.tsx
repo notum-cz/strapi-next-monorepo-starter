@@ -12,6 +12,7 @@ import {
   SelectItem,
   SelectSeparator,
   SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select"
 
 const localeTranslation = {
@@ -49,9 +50,9 @@ const SuspensedLocaleSwitcher = ({ locale }: { locale: Locale }) => {
   return (
     <Select value={locale} onValueChange={handleLocaleChange}>
       <SelectTrigger className="w-18 font-bold uppercase">
-        {locale}
+        <SelectValue>{locale}</SelectValue>
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent position="popper">
         {routing.locales.map((locale, index) => (
           <React.Fragment key={locale}>
             <SelectItem key={locale} value={locale}>

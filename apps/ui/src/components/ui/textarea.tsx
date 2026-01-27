@@ -2,23 +2,17 @@ import * as React from "react"
 
 import { cn } from "@/lib/styles"
 
-export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
-
-const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, ...props }, ref) => {
-    return (
-      <textarea
-        className={cn(
-          "text-grey-text placeholder:text-primary flex h-full min-h-24 w-full rounded-[4px] border border-gray-300 bg-white p-2 text-xs shadow-xs focus:ring-0 focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
-          className
-        )}
-        style={{ resize: "none" }}
-        ref={ref}
-        {...props}
-      />
-    )
-  }
-)
-Textarea.displayName = "Textarea"
+function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
+  return (
+    <textarea
+      data-slot="textarea"
+      className={cn(
+        "border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        className
+      )}
+      {...props}
+    />
+  )
+}
 
 export { Textarea }

@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import * as z from "zod"
 
 import { useRouter } from "@/lib/navigation"
@@ -18,12 +19,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useToast } from "@/components/ui/use-toast"
 
 export function ForgotPasswordForm() {
   const t = useTranslations("auth.forgotPassword")
   const router = useRouter()
-  const { toast } = useToast()
   const { forgotPasswordMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({
@@ -37,7 +36,7 @@ export function ForgotPasswordForm() {
     forgotPasswordMutation.mutate(data, {
       onSuccess: () => {
         // This flow happens even if the email does not exist in the system
-        toast({ variant: "default", description: t("passwordChangeEmailSent") })
+        toast.success(t("passwordChangeEmailSent"))
         form.reset()
         router.push("/auth/signin")
       },
@@ -47,7 +46,7 @@ export function ForgotPasswordForm() {
         const displayMessage =
           errorMessage ?? t("errors.failedToSendPasswordResetEmail")
 
-        toast({ variant: "destructive", description: displayMessage })
+        toast.error(displayMessage)
       },
     })
   }
@@ -67,9 +66,10 @@ export function ForgotPasswordForm() {
         <Button
           type="submit"
           size="lg"
-          variant="default"
+          variant="outline"
           form={forgotPasswordFormName}
           disabled={forgotPasswordMutation.isPending}
+          className="w-full cursor-pointer"
         >
           {t("submit")}
         </Button>
