@@ -14,7 +14,7 @@ import { FormItem } from "@/components/ui/form"
 
 interface Props {
   readonly selectedFile: File | null
-   
+
   readonly setSelectedFile: (file: File | null) => void
   readonly tabIndex?: number
   readonly validTypes?: string[]
