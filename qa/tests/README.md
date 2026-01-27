@@ -8,8 +8,7 @@ It can include different testing frameworks and tools depending on project needs
 
 - **End-to-End (E2E) Tests** with tools like [Playwright](https://playwright.dev/) or [Cypress](https://www.cypress.io/)
 - **Accessibility Tests** using [AXE-Core](https://classic.yarnpkg.com/en/package/@axe-core/playwright)
-- **Performance Tests** with tools such as [Lighthouse-batch](https://classic.yarnpkg.com/en/package/lighthouse-batch) 📊
-- **SEO Tests** for automated validation of search engine optimizations 🔍
+- **SEO Tests** for automated validation of search engine optimizations
 
 ---
 
