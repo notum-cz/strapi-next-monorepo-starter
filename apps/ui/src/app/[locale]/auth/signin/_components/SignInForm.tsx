@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import * as z from "zod"
 
 import { Link } from "@/lib/navigation"
@@ -20,7 +21,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useToast } from "@/components/ui/use-toast"
 import { SocialButtons } from "@/app/[locale]/auth/signin/_components/SocialButtons"
 
 export function SignInForm({ strapiUrl }: { strapiUrl?: string }) {
@@ -33,7 +33,6 @@ export function SignInForm({ strapiUrl }: { strapiUrl?: string }) {
 
 function SuspensedSignInForm({ strapiUrl }: { strapiUrl?: string }) {
   const t = useTranslations("auth.signIn")
-  const { toast } = useToast()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl") ?? "/"
   const { signInMutation } = useUserMutations()
@@ -69,7 +68,7 @@ function SuspensedSignInForm({ strapiUrl }: { strapiUrl?: string }) {
           ? errorMap[errorKey]
           : (errorMessage ?? t("errors.unexpectedError"))
 
-        toast({ variant: "destructive", description: displayMessage })
+        toast.error(displayMessage)
       },
     })
   }
@@ -103,7 +102,7 @@ function SuspensedSignInForm({ strapiUrl }: { strapiUrl?: string }) {
         <Button
           type="submit"
           size="lg"
-          variant="default"
+          variant="outline"
           form={signInFormName}
           disabled={signInMutation.isPending}
           className="w-full cursor-pointer"

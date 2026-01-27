@@ -16,7 +16,7 @@ export function SocialButtons({ strapiUrl }: { strapiUrl: string }) {
       <Button
         type="button"
         variant="outline"
-        size="lg"
+        size="sm"
         className="w-full cursor-pointer"
         onClick={() => {
           const connectUrl = new URL("/api/connect/github", strapiUrl)

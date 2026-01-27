@@ -4,17 +4,17 @@ import { useRef, useState } from "react"
 import { Cross1Icon } from "@radix-ui/react-icons"
 import { PaperclipIcon } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { toast } from "sonner"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
 import { Tooltip } from "@/components/elementary/Tooltip"
 import { AppFormLabel } from "@/components/forms/AppFormLabel"
 import { FormItem } from "@/components/ui/form"
-import { useToast } from "@/components/ui/use-toast"
 
 interface Props {
   readonly selectedFile: File | null
-  // eslint-disable-next-line no-unused-vars
+
   readonly setSelectedFile: (file: File | null) => void
   readonly tabIndex?: number
   readonly validTypes?: string[]
@@ -44,15 +44,12 @@ export function AppFilePicker({
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const t = useTranslations("comps.fileInput")
-  const { toast } = useToast()
 
   const setFile = (file: File | null) => {
     if (file === null || validTypes.includes(file.type)) {
       setSelectedFile(file)
     } else {
-      toast({
-        variant: "destructive",
-        title: t("wrongFileType"),
+      toast.error(t("wrongFileType"), {
         description: t("validFileTypes", {
           validFileTypes: validTypes
             .map((type) => (type.includes("/") ? type.split("/").pop() : type))

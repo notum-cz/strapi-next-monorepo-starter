@@ -199,7 +199,7 @@ Not all predefined components or routes are needed in the final app, so unnecess
 
 Shadcn/ui is a lightweight UI library that combines Radix UI components with Tailwind CSS for styling. A list of available components can be found in the [docs](https://ui.shadcn.com/docs/components). Many components are pre-installed in this project by default. If you need additional components, you can either manually copy them from the docs or, preferably, use the CLI.
 
-For example, to add an [accordion component](https://ui.shadcn.com/docs/components/accordion), run `npx shadcn-ui@latest add accordion` in this directory. The component will be added to the `/src/components/ui` folder, as defined in the [Shadcn config file](https://ui.shadcn.com/docs/components-json) located at [components.json](components.json). Once added, the component can be imported normally or its source code modified as needed.
+For example, to add an [accordion component](https://ui.shadcn.com/docs/components/accordion), run `pnpm dlx shadcn@latest add select` in this directory. The component will be added to the `/src/components/ui` folder, as defined in the [Shadcn config file](https://ui.shadcn.com/docs/components-json) located at [components.json](components.json). Once added, the component can be imported normally or its source code modified as needed.
 
 #### Themes
 

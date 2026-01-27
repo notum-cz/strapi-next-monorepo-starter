@@ -98,6 +98,7 @@
       "invalid_type": "Expected type is {expected}, but received {received}",
       "invalid_type_received_undefined": "Field is required",
       "invalid_literal": "Invalid value, expected {expected}",
+      "invalid_union": "Invalid value",
 
       "invalid_string": {
         "regex": "Invalid format"

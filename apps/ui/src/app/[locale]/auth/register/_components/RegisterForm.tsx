@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import * as z from "zod"
 
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
@@ -20,7 +21,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useToast } from "@/components/ui/use-toast"
 
 // To enable email confirmation, Strapi Users-Permissions plugin must be configured (e.g. email provider, redirect URL)
 // http://localhost:1337/admin/settings/users-permissions/advanced-settings
@@ -28,7 +28,6 @@ const ENABLE_EMAIL_CONFIRMATION = false
 
 export function RegisterForm() {
   const t = useTranslations("auth.register")
-  const { toast } = useToast()
   const { registerMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({
@@ -74,7 +73,7 @@ export function RegisterForm() {
             ? errorMap[errorKey]
             : (errorMessage ?? t("errors.unexpectedError"))
 
-          toast({ variant: "destructive", description: displayMessage })
+          toast.error(displayMessage)
         },
       }
     )
@@ -130,9 +129,9 @@ export function RegisterForm() {
           <Button
             type="submit"
             size="lg"
-            variant="default"
+            variant="outline"
             form={registerFormName}
-            className="w-full"
+            className="w-full cursor-pointer"
             disabled={registerMutation.isPending}
           >
             {t("submit")}

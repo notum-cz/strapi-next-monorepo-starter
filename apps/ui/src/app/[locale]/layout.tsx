@@ -18,7 +18,7 @@ import StrapiNavbar from "@/components/page-builder/single-types/navbar/StrapiNa
 import { ClientProviders } from "@/components/providers/ClientProviders"
 import { ServerProviders } from "@/components/providers/ServerProviders"
 import TrackingScripts from "@/components/providers/TrackingScripts"
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/sonner"
 
 export function generateStaticParams() {
   const locales = routing.locales.map((locale) => ({ locale }))
