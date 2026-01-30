@@ -1,0 +1,15 @@
+{
+  "collectionName": "developers",
+  "info": { "singularName": "developer", "pluralName": "developers", "displayName": "Developer" },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "name": { "type": "string", "required": true },
+    "slug": { "type": "uid", "targetField": "name" },
+    "logo": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "patreon_link": { "type": "string" },
+    "website_link": { "type": "string" },
+    "twitter": { "type": "string" },
+    "discord": { "type": "string" },
+    "subscribestar": { "type": "string" }
+  }
+}

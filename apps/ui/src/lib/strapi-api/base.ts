@@ -20,7 +20,7 @@ export const API_ENDPOINTS: { [key in UID.ContentType]?: string } = {
   "api::subscriber.subscriber": "/subscribers",
 } as const
 
-export default abstract class BaseStrapiClient {
+export default class BaseStrapiClient {
   public async fetchAPI(
     path: string,
     params: AppLocalizedParams<Record<string, any>> = {},
@@ -249,12 +249,29 @@ export default abstract class BaseStrapiClient {
     }
   }
 
-  protected abstract prepareRequest(
+  protected async prepareRequest(
     path: string,
     params: object,
     requestInit?: RequestInit,
     options?: CustomFetchOptions
-  ): Promise<{ url: string; headers: Record<string, string> }>
+  ): Promise<{ url: string; headers: Record<string, string> }> {
+    const baseUrl = getEnvVar("NEXT_PUBLIC_STRAPI_API_URL") || "http://localhost:1337"
+    
+    // Ensure path starts with / for proper URL construction
+    const normalizedPath = path.startsWith("/") ? path : `/${path}`
+    const url = `${baseUrl}/api${normalizedPath}`
+    
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    }
+    
+    const token = getEnvVar("NEXT_PUBLIC_STRAPI_API_TOKEN")
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`
+    }
+    
+    return { url, headers }
+  }
 
   /**
    * Get Path of the API route by UID

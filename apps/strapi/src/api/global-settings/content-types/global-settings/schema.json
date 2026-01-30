@@ -1,0 +1,13 @@
+{
+  "collectionName": "global_settings",
+  "info": { "singularName": "global-settings", "pluralName": "site-settings", "displayName": "GlobalSettings", "description": "Global site settings" },
+  "kind": "singleType",
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "site_name": { "type": "string" },
+    "logo": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "footer_text": { "type": "text" },
+    "social_links": { "type": "component", "repeatable": true, "component": "shared.socials" },
+    "dmca_text": { "type": "richtext" }
+  }
+}

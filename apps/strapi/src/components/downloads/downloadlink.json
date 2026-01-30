@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_downloads_downloadlinks",
+  "info": {
+    "displayName": "DownloadLink",
+    "description": "Link to downloadable file/host"
+  },
+  "attributes": {
+    "label": { "type": "string" },
+    "host": { "type": "enumeration", "enum": ["Mega", "Google Drive", "Workupload", "Gofile", "Pixeldrain"], "default": "Google Drive" },
+    "url": { "type": "string" },
+    "file_size": { "type": "string" },
+    "password": { "type": "string" },
+    "platform_icon": { "type": "relation", "relation": "manyToOne", "target": "api::platform.platform" }
+  }
+}

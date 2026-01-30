@@ -1,0 +1,9 @@
+{
+  "collectionName": "engines",
+  "info": { "singularName": "engine", "pluralName": "engines", "displayName": "Engine" },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "name": { "type": "string", "required": true },
+    "slug": { "type": "uid", "targetField": "name" }
+  }
+}

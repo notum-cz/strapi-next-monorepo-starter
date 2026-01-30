@@ -1,0 +1,116 @@
+{
+  "kind": "collectionType",
+  "collectionName": "games",
+  "info": {
+    "singularName": "game",
+    "pluralName": "games",
+    "displayName": "Game"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "cover_image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "header_image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "version": {
+      "type": "string"
+    },
+    "gameStatus": {
+      "type": "enumeration",
+      "default": "Ongoing",
+      "enum": [
+        "Ongoing",
+        "Completed",
+        "Cancelled"
+      ]
+    },
+    "release_date": {
+      "type": "date"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "trending_score": {
+      "type": "integer",
+      "default": 0
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "changelog": {
+      "type": "richtext"
+    },
+    "developer": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::developer.developer"
+    },
+    "genres": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::genre.genre"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag"
+    },
+    "engine": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::engine.engine"
+    },
+    "platforms": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::platform.platform"
+    },
+    "downloads": {
+      "type": "component",
+      "component": "downloads.downloadlink",
+      "repeatable": true
+    },
+    "gallery": {
+      "type": "component",
+      "component": "media.gallery",
+      "repeatable": false
+    },
+    "requirements": {
+      "type": "component",
+      "component": "system.requirements",
+      "repeatable": false
+    },
+    "seo": {
+      "type": "component",
+      "component": "seo.seo",
+      "repeatable": false
+    }
+  }
+}

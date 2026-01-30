@@ -1,0 +1,11 @@
+{
+  "collectionName": "homepage",
+  "info": { "singularName": "homepage", "pluralName": "homepage-site", "displayName": "Homepage", "description": "Homepage content" },
+  "kind": "singleType",
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "hero_slider": { "type": "relation", "relation": "manyToMany", "target": "api::game.game" },
+    "featured_categories": { "type": "relation", "relation": "manyToMany", "target": "api::genre.genre" },
+    "announcement_banner": { "type": "text" }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "collectionName": "genres",
+  "info": { "singularName": "genre", "pluralName": "genres", "displayName": "Genre" },
+  "options": { "draftAndPublish": false },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "name": { "type": "string", "required": true },
+    "slug": { "type": "uid", "targetField": "name" }
+  }
+}

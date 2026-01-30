@@ -10,6 +10,8 @@ export default ({ env }) => {
     enabledContentTypeUids: ["api::page.page"],
   }
   return {
+    host: "0.0.0.0",
+    autoOpen: false,
     auth: {
       secret: env("ADMIN_JWT_SECRET"),
     },

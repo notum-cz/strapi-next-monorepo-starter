@@ -1,0 +1,9 @@
+{
+  "collectionName": "components_shared_socials",
+  "info": { "displayName": "Socials", "description": "Social links for a creator" },
+  "attributes": {
+    "twitter": { "type": "string" },
+    "discord": { "type": "string" },
+    "subscribestar": { "type": "string" }
+  }
+}

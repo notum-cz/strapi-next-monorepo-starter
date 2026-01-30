@@ -1,0 +1,12 @@
+{
+  "collectionName": "blog_posts",
+  "info": { "singularName": "blog-post", "pluralName": "blog-posts", "displayName": "BlogPost" },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "slug": { "type": "uid", "targetField": "title" },
+    "content": { "type": "richtext" },
+    "publishedAt": { "type": "datetime" },
+    "related_games": { "type": "relation", "relation": "manyToMany", "target": "api::game.game" }
+  }
+}

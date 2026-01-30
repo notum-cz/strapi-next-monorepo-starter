@@ -430,6 +430,101 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   }
 }
 
+export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
+  collectionName: "blog_posts"
+  info: {
+    displayName: "BlogPost"
+    pluralName: "blog-posts"
+    singularName: "blog-post"
+  }
+  options: {
+    draftAndPublish: true
+  }
+  attributes: {
+    content: Schema.Attribute.RichText
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::blog-post.blog-post"
+    > &
+      Schema.Attribute.Private
+    publishedAt: Schema.Attribute.DateTime
+    related_games: Schema.Attribute.Relation<"manyToMany", "api::game.game">
+    slug: Schema.Attribute.UID<"title">
+    title: Schema.Attribute.String & Schema.Attribute.Required
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+  }
+}
+
+export interface ApiDeveloperDeveloper extends Struct.CollectionTypeSchema {
+  collectionName: "developers"
+  info: {
+    displayName: "Developer"
+    pluralName: "developers"
+    singularName: "developer"
+  }
+  options: {
+    draftAndPublish: false
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    discord: Schema.Attribute.String
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::developer.developer"
+    > &
+      Schema.Attribute.Private
+    logo: Schema.Attribute.Media<"images">
+    name: Schema.Attribute.String & Schema.Attribute.Required
+    patreon_link: Schema.Attribute.String
+    publishedAt: Schema.Attribute.DateTime
+    slug: Schema.Attribute.UID<"name">
+    subscribestar: Schema.Attribute.String
+    twitter: Schema.Attribute.String
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    website_link: Schema.Attribute.String
+  }
+}
+
+export interface ApiEngineEngine extends Struct.CollectionTypeSchema {
+  collectionName: "engines"
+  info: {
+    displayName: "Engine"
+    pluralName: "engines"
+    singularName: "engine"
+  }
+  options: {
+    draftAndPublish: false
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::engine.engine"
+    > &
+      Schema.Attribute.Private
+    name: Schema.Attribute.String & Schema.Attribute.Required
+    publishedAt: Schema.Attribute.DateTime
+    slug: Schema.Attribute.UID<"name">
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+  }
+}
+
 export interface ApiFooterFooter extends Struct.SingleTypeSchema {
   collectionName: "footers"
   info: {
@@ -477,6 +572,158 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
           localized: true
         }
       }>
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+  }
+}
+
+export interface ApiGameGame extends Struct.CollectionTypeSchema {
+  collectionName: "games"
+  info: {
+    displayName: "Game"
+    pluralName: "games"
+    singularName: "game"
+  }
+  options: {
+    draftAndPublish: true
+  }
+  pluginOptions: {
+    i18n: {
+      localized: true
+    }
+  }
+  attributes: {
+    changelog: Schema.Attribute.RichText
+    cover_image: Schema.Attribute.Media<"images">
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    description: Schema.Attribute.RichText
+    developer: Schema.Attribute.Relation<
+      "manyToOne",
+      "api::developer.developer"
+    >
+    downloads: Schema.Attribute.Component<"downloads.downloadlink", true>
+    engine: Schema.Attribute.Relation<"manyToOne", "api::engine.engine">
+    gallery: Schema.Attribute.Component<"media.gallery", false>
+    gameStatus: Schema.Attribute.Enumeration<
+      ["Ongoing", "Completed", "Cancelled"]
+    > &
+      Schema.Attribute.DefaultTo<"Ongoing">
+    genres: Schema.Attribute.Relation<"manyToMany", "api::genre.genre">
+    header_image: Schema.Attribute.Media<"images">
+    is_featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>
+    locale: Schema.Attribute.String
+    localizations: Schema.Attribute.Relation<"oneToMany", "api::game.game">
+    platforms: Schema.Attribute.Relation<"manyToMany", "api::platform.platform">
+    publishedAt: Schema.Attribute.DateTime
+    release_date: Schema.Attribute.Date
+    requirements: Schema.Attribute.Component<"system.requirements", false>
+    seo: Schema.Attribute.Component<"seo.seo", false>
+    slug: Schema.Attribute.UID<"title"> & Schema.Attribute.Required
+    tags: Schema.Attribute.Relation<"manyToMany", "api::tag.tag">
+    title: Schema.Attribute.String & Schema.Attribute.Required
+    trending_score: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    version: Schema.Attribute.String
+  }
+}
+
+export interface ApiGenreGenre extends Struct.CollectionTypeSchema {
+  collectionName: "genres"
+  info: {
+    displayName: "Genre"
+    pluralName: "genres"
+    singularName: "genre"
+  }
+  options: {
+    draftAndPublish: false
+  }
+  pluginOptions: {
+    i18n: {
+      localized: true
+    }
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    locale: Schema.Attribute.String
+    localizations: Schema.Attribute.Relation<"oneToMany", "api::genre.genre">
+    name: Schema.Attribute.String & Schema.Attribute.Required
+    publishedAt: Schema.Attribute.DateTime
+    slug: Schema.Attribute.UID<"name">
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+  }
+}
+
+export interface ApiGlobalSettingsGlobalSettings
+  extends Struct.SingleTypeSchema {
+  collectionName: "global_settings"
+  info: {
+    description: "Global site settings"
+    displayName: "GlobalSettings"
+    pluralName: "site-settings"
+    singularName: "global-settings"
+  }
+  options: {
+    draftAndPublish: false
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    dmca_text: Schema.Attribute.RichText
+    footer_text: Schema.Attribute.Text
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::global-settings.global-settings"
+    > &
+      Schema.Attribute.Private
+    logo: Schema.Attribute.Media<"images">
+    publishedAt: Schema.Attribute.DateTime
+    site_name: Schema.Attribute.String
+    social_links: Schema.Attribute.Component<"shared.socials", true>
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+  }
+}
+
+export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
+  collectionName: "homepage"
+  info: {
+    description: "Homepage content"
+    displayName: "Homepage"
+    pluralName: "homepage-site"
+    singularName: "homepage"
+  }
+  options: {
+    draftAndPublish: false
+  }
+  attributes: {
+    announcement_banner: Schema.Attribute.Text
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    featured_categories: Schema.Attribute.Relation<
+      "manyToMany",
+      "api::genre.genre"
+    >
+    hero_slider: Schema.Attribute.Relation<"manyToMany", "api::game.game">
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::homepage.homepage"
+    > &
+      Schema.Attribute.Private
+    publishedAt: Schema.Attribute.DateTime
     updatedAt: Schema.Attribute.DateTime
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
@@ -647,6 +894,40 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
   }
 }
 
+export interface ApiPlatformPlatform extends Struct.CollectionTypeSchema {
+  collectionName: "platforms"
+  info: {
+    displayName: "Platform"
+    pluralName: "platforms"
+    singularName: "platform"
+  }
+  options: {
+    draftAndPublish: false
+  }
+  pluginOptions: {
+    i18n: {
+      localized: true
+    }
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    icon: Schema.Attribute.Media<"images">
+    locale: Schema.Attribute.String
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::platform.platform"
+    >
+    name: Schema.Attribute.String & Schema.Attribute.Required
+    publishedAt: Schema.Attribute.DateTime
+    slug: Schema.Attribute.UID<"name">
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+  }
+}
+
 export interface ApiRedirectRedirect extends Struct.CollectionTypeSchema {
   collectionName: "redirects"
   info: {
@@ -701,6 +982,33 @@ export interface ApiSubscriberSubscriber extends Struct.CollectionTypeSchema {
     message: Schema.Attribute.Text
     name: Schema.Attribute.String
     publishedAt: Schema.Attribute.DateTime
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+  }
+}
+
+export interface ApiTagTag extends Struct.CollectionTypeSchema {
+  collectionName: "tags"
+  info: {
+    displayName: "Tag"
+    pluralName: "tags"
+    singularName: "tag"
+  }
+  options: {
+    draftAndPublish: false
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    is_explicit: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<"oneToMany", "api::tag.tag"> &
+      Schema.Attribute.Private
+    name: Schema.Attribute.String & Schema.Attribute.Required
+    publishedAt: Schema.Attribute.DateTime
+    slug: Schema.Attribute.UID<"name">
     updatedAt: Schema.Attribute.DateTime
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
@@ -1217,12 +1525,21 @@ declare module "@strapi/strapi" {
       "admin::transfer-token": AdminTransferToken
       "admin::transfer-token-permission": AdminTransferTokenPermission
       "admin::user": AdminUser
+      "api::blog-post.blog-post": ApiBlogPostBlogPost
+      "api::developer.developer": ApiDeveloperDeveloper
+      "api::engine.engine": ApiEngineEngine
       "api::footer.footer": ApiFooterFooter
+      "api::game.game": ApiGameGame
+      "api::genre.genre": ApiGenreGenre
+      "api::global-settings.global-settings": ApiGlobalSettingsGlobalSettings
+      "api::homepage.homepage": ApiHomepageHomepage
       "api::internal-job.internal-job": ApiInternalJobInternalJob
       "api::navbar.navbar": ApiNavbarNavbar
       "api::page.page": ApiPagePage
+      "api::platform.platform": ApiPlatformPlatform
       "api::redirect.redirect": ApiRedirectRedirect
       "api::subscriber.subscriber": ApiSubscriberSubscriber
+      "api::tag.tag": ApiTagTag
       "plugin::content-releases.release": PluginContentReleasesRelease
       "plugin::content-releases.release-action": PluginContentReleasesReleaseAction
       "plugin::i18n.locale": PluginI18NLocale

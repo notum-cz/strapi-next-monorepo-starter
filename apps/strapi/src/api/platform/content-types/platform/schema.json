@@ -1,0 +1,15 @@
+{
+  "collectionName": "platforms",
+  "info": { "singularName": "platform", "pluralName": "platforms", "displayName": "Platform" },
+  "options": { "draftAndPublish": false },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "name": { "type": "string", "required": true },
+    "slug": { "type": "uid", "targetField": "name" },
+    "icon": { "type": "media", "multiple": false, "allowedTypes": ["images"] }
+  }
+}

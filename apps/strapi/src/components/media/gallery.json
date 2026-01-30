@@ -1,0 +1,9 @@
+{
+  "collectionName": "components_media_galleries",
+  "info": { "displayName": "Gallery", "description": "Screenshots and trailer for a game" },
+  "attributes": {
+    "screenshots": { "type": "media", "multiple": true, "allowedTypes": ["images"] },
+    "trailer_url": { "type": "string" },
+    "is_nsfw_preview": { "type": "boolean", "default": false }
+  }
+}

@@ -1,5 +1,27 @@
 import type { Schema, Struct } from "@strapi/strapi"
 
+export interface DownloadsDownloadlink extends Struct.ComponentSchema {
+  collectionName: "components_downloads_downloadlinks"
+  info: {
+    description: "Link to downloadable file/host"
+    displayName: "DownloadLink"
+  }
+  attributes: {
+    file_size: Schema.Attribute.String
+    host: Schema.Attribute.Enumeration<
+      ["Mega", "Google Drive", "Workupload", "Gofile", "Pixeldrain"]
+    > &
+      Schema.Attribute.DefaultTo<"Google Drive">
+    label: Schema.Attribute.String
+    password: Schema.Attribute.String
+    platform_icon: Schema.Attribute.Relation<
+      "manyToOne",
+      "api::platform.platform"
+    >
+    url: Schema.Attribute.String
+  }
+}
+
 export interface ElementsFooterItem extends Struct.ComponentSchema {
   collectionName: "components_elements_footer_items"
   info: {
@@ -33,6 +55,20 @@ export interface FormsNewsletterForm extends Struct.ComponentSchema {
     description: Schema.Attribute.Text
     gdpr: Schema.Attribute.Component<"utilities.link", false>
     title: Schema.Attribute.String
+  }
+}
+
+export interface MediaGallery extends Struct.ComponentSchema {
+  collectionName: "components_media_galleries"
+  info: {
+    description: "Screenshots and trailer for a game"
+    displayName: "Gallery"
+  }
+  attributes: {
+    is_nsfw_preview: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>
+    screenshots: Schema.Attribute.Media<"images", true>
+    trailer_url: Schema.Attribute.String
   }
 }
 
@@ -250,6 +286,99 @@ export interface SeoUtilitiesSocialIcons extends Struct.ComponentSchema {
   }
 }
 
+export interface SeoSeo extends Struct.ComponentSchema {
+  collectionName: "components_seo_seos"
+  info: {
+    description: "SEO fields"
+    displayName: "Seo"
+  }
+  attributes: {
+    keywords: Schema.Attribute.String
+    metaDescription: Schema.Attribute.Text
+    metaImage: Schema.Attribute.Media<"images">
+    metaTitle: Schema.Attribute.String
+  }
+}
+
+export interface SharedOpenGraph extends Struct.ComponentSchema {
+  collectionName: "components_shared_open_graphs"
+  info: {
+    displayName: "openGraph"
+    icon: "project-diagram"
+  }
+  attributes: {
+    ogDescription: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200
+      }>
+    ogImage: Schema.Attribute.Media<"images">
+    ogTitle: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 70
+      }>
+    ogType: Schema.Attribute.String
+    ogUrl: Schema.Attribute.String
+  }
+}
+
+export interface SharedSeo extends Struct.ComponentSchema {
+  collectionName: "components_shared_seos"
+  info: {
+    displayName: "seo"
+    icon: "search"
+  }
+  attributes: {
+    canonicalURL: Schema.Attribute.String
+    keywords: Schema.Attribute.Text
+    metaDescription: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 160
+        minLength: 50
+      }>
+    metaImage: Schema.Attribute.Media<"images">
+    metaRobots: Schema.Attribute.String
+    metaTitle: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 60
+      }>
+    metaViewport: Schema.Attribute.String
+    openGraph: Schema.Attribute.Component<"shared.open-graph", false>
+    structuredData: Schema.Attribute.JSON
+  }
+}
+
+export interface SharedSocials extends Struct.ComponentSchema {
+  collectionName: "components_shared_socials"
+  info: {
+    description: "Social links for a creator"
+    displayName: "Socials"
+  }
+  attributes: {
+    discord: Schema.Attribute.String
+    subscribestar: Schema.Attribute.String
+    twitter: Schema.Attribute.String
+  }
+}
+
+export interface SystemRequirements extends Struct.ComponentSchema {
+  collectionName: "components_system_requirements"
+  info: {
+    description: "System requirements component"
+    displayName: "Requirements"
+  }
+  attributes: {
+    graphics: Schema.Attribute.String
+    os: Schema.Attribute.String
+    processor: Schema.Attribute.String
+    ram: Schema.Attribute.String
+    storage: Schema.Attribute.String
+  }
+}
+
 export interface UtilitiesAccordions extends Struct.ComponentSchema {
   collectionName: "components_utilities_accordions"
   info: {
@@ -341,9 +470,11 @@ export interface UtilitiesText extends Struct.ComponentSchema {
 declare module "@strapi/strapi" {
   export module Public {
     export interface ComponentSchemas {
+      "downloads.downloadlink": DownloadsDownloadlink
       "elements.footer-item": ElementsFooterItem
       "forms.contact-form": FormsContactForm
       "forms.newsletter-form": FormsNewsletterForm
+      "media.gallery": MediaGallery
       "sections.animated-logo-row": SectionsAnimatedLogoRow
       "sections.carousel": SectionsCarousel
       "sections.faq": SectionsFaq
@@ -356,6 +487,11 @@ declare module "@strapi/strapi" {
       "seo-utilities.seo-og": SeoUtilitiesSeoOg
       "seo-utilities.seo-twitter": SeoUtilitiesSeoTwitter
       "seo-utilities.social-icons": SeoUtilitiesSocialIcons
+      "seo.seo": SeoSeo
+      "shared.open-graph": SharedOpenGraph
+      "shared.seo": SharedSeo
+      "shared.socials": SharedSocials
+      "system.requirements": SystemRequirements
       "utilities.accordions": UtilitiesAccordions
       "utilities.basic-image": UtilitiesBasicImage
       "utilities.ck-editor-content": UtilitiesCkEditorContent

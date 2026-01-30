@@ -1,0 +1,10 @@
+{
+  "collectionName": "components_seo_seos",
+  "info": { "displayName": "Seo", "description": "SEO fields" },
+  "attributes": {
+    "metaTitle": { "type": "string" },
+    "metaDescription": { "type": "text" },
+    "metaImage": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "keywords": { "type": "string" }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "collectionName": "components_system_requirements",
+  "info": { "displayName": "Requirements", "description": "System requirements component" },
+  "attributes": {
+    "os": { "type": "string" },
+    "processor": { "type": "string" },
+    "ram": { "type": "string" },
+    "graphics": { "type": "string" },
+    "storage": { "type": "string" }
+  }
+}

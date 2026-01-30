@@ -26,6 +26,36 @@
       "locale": null
     },
     {
+      "action": "api::game.game.find",
+      "documentId": "game_find_public_001",
+      "locale": null
+    },
+    {
+      "action": "api::game.game.findOne",
+      "documentId": "game_findone_public_001",
+      "locale": null
+    },
+    {
+      "action": "api::genre.genre.find",
+      "documentId": "genre_find_public_001",
+      "locale": null
+    },
+    {
+      "action": "api::genre.genre.findOne",
+      "documentId": "genre_findone_public_001",
+      "locale": null
+    },
+    {
+      "action": "api::platform.platform.find",
+      "documentId": "platform_find_public_001",
+      "locale": null
+    },
+    {
+      "action": "api::platform.platform.findOne",
+      "documentId": "platform_findone_public_001",
+      "locale": null
+    },
+    {
       "action": "plugin::users-permissions.auth.callback",
       "documentId": "tr6d6pxzwqnkhmmf8qhrgvt7",
       "locale": null
