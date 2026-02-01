@@ -7,6 +7,7 @@ import { Locale } from "next-intl"
 import type { NextMetadataTwitterCard, SocialMetadata } from "@/types/general"
 import type { Data } from "@repo/strapi-types"
 import type { Metadata } from "next"
+import { StrapiLocalization } from "@/types/api"
 
 import { metaRobots } from "@/lib/metadata/constants"
 import { routing } from "@/lib/navigation"
@@ -76,19 +77,19 @@ export const getMetaAlternates = ({
   seo,
   fullPath,
   locale,
-  indexable = true,
+  indexable,
   localizations,
 }: {
   seo: Data.Component<"seo-utilities.seo"> | null | undefined
   fullPath: string | null
   locale: Locale
   indexable: boolean
-  localizations?: Array<{ locale: string; fullPath?: string; slug?: string }>
+  localizations?: StrapiLocalization[]
 }) => {
   // If not indexable, no alternates should be added
-  // if (!indexable) {
-  //   return undefined
-  // }
+  if (!indexable) {
+    return undefined
+  }
 
   const canonicalUrl = seo?.canonicalUrl ?? fullPath ?? ""
   const localizationLanguages = localizations?.map((item) => {

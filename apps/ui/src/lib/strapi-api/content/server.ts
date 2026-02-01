@@ -86,11 +86,8 @@ export async function fetchSeo(
             twitter: { populate: { images: true } },
           },
         },
-        localizations: {
-          fields: ["locale", "fullPath", "slug"],
-        },
+        localizations: true,
       },
-      fields: [],
     })
   } catch (e: any) {
     logNonBlockingError({
