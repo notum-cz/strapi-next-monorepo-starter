@@ -71,10 +71,6 @@ export const Typography = ({
   const selectedTextColor = textColorVariants[textColor]
   const selectedFontWeight = fontWeightVariants[fontWeight]
 
-  if (!Tag) {
-    return null
-  }
-
   return (
     <Tag
       id={id}
