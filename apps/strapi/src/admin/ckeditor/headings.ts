@@ -1,6 +1,7 @@
 export const typoClassNone = "typo-none"
 // Keep label in sync with typography styles on Frontend
 const styleVariants = [
+  { label: "Default", class: typoClassNone },
   { label: "Heading 1", class: "typo-h1" },
   { label: "Heading 2", class: "typo-h2" },
   { label: "Heading 3", class: "typo-h3" },
@@ -10,7 +11,6 @@ const styleVariants = [
   { label: "Paragraph Small", class: "typo-p-small" },
   { label: "Paragraph Medium", class: "typo-p-medium" },
   { label: "Paragraph Large", class: "typo-p-large" },
-  { label: "Default", class: typoClassNone },
 ] as const
 
 // These are the HTML elements we want to support and models are for CKEditor internal use
