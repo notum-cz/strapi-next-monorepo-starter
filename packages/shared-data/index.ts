@@ -47,3 +47,44 @@ export const normalizePageFullPath = (
 
   return fullPath
 }
+
+/**
+ * Maps frontend locale codes (used in URLs and Next.js i18n) to Strapi locale codes (used by the CMS and API).
+ * This ensures consistent locale handling between the frontend and Strapi especially for SEO hreflang.
+ */
+export const feLocaleToStrapiLocaleMap: Record<string, string> = {
+  en: "en", // Default international (English)
+  cs: "cs-CZ", // Czechia (Czech)
+} as const
+export const strapiLocaleToFeLocaleMap: Record<string, string> = {
+  en: "en", // Default international (English)
+  "cs-CZ": "cs", // Czechia (Czech)
+} as const
+
+/**
+ * Derived types (single source of truth)
+ */
+export type FeLocale = keyof typeof feLocaleToStrapiLocaleMap
+export type StrapiLocale = keyof typeof strapiLocaleToFeLocaleMap
+
+/**
+ * Returns Strapi Locale from Frontend App Locale.
+ * @param feLocale locale on the frontend
+ * @returns strapiLocale
+ * @example getStrapiLocaleFromFeLocale("cs") => "cs-CZ"
+ */
+export const getStrapiLocaleFromFeLocale = (
+  feLocale?: FeLocale
+): StrapiLocale | undefined =>
+  feLocale ? feLocaleToStrapiLocaleMap[feLocale] : undefined
+
+/**
+ * Returns Frontend App Locale from Strapi Locale.
+ * @param strapiLocale locale in Strapi
+ * @returns feLocale
+ * @example getFeLocaleFromStrapiLocale("cs-CZ") => "cs"
+ */
+export const getFeLocaleFromStrapiLocale = (
+  strapiLocale?: StrapiLocale
+): FeLocale | undefined =>
+  strapiLocale ? strapiLocaleToFeLocaleMap[strapiLocale] : undefined

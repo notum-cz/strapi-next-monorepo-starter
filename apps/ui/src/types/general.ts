@@ -1,7 +1,8 @@
+import { Metadata } from "next"
+
 // Use type safe message keys with `next-intl`
 type Messages = typeof import("../../locales/en.json")
 
-// eslint-disable-next-line no-unused-vars
 export interface IntlMessages extends Messages {}
 
 export interface CustomFetchOptions {
@@ -30,3 +31,8 @@ export type NextMetadataTwitterCard =
   | "summary_large_image"
   | "player"
   | "app"
+
+export type SocialMetadata = {
+  twitter: Metadata["twitter"]
+  openGraph: Metadata["openGraph"]
+}

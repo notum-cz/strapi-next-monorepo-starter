@@ -140,40 +140,16 @@ export interface SectionsImageWithCtaButton extends Struct.ComponentSchema {
   }
 }
 
-export interface SeoUtilitiesMetaSocial extends Struct.ComponentSchema {
-  collectionName: "components_seo_utilities_meta_socials"
-  info: {
-    displayName: "metaSocial"
-    icon: "project-diagram"
-  }
-  attributes: {
-    description: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 65
-      }>
-    image: Schema.Attribute.Media<"images" | "files" | "videos">
-    socialNetwork: Schema.Attribute.Enumeration<["Facebook", "Twitter"]> &
-      Schema.Attribute.Required
-    title: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 60
-      }>
-  }
-}
-
 export interface SeoUtilitiesSeo extends Struct.ComponentSchema {
   collectionName: "components_seo_utilities_seos"
   info: {
     description: ""
-    displayName: "seo"
+    displayName: "Seo"
     icon: "search"
   }
   attributes: {
     applicationName: Schema.Attribute.String
     canonicalUrl: Schema.Attribute.String
-    email: Schema.Attribute.String
     keywords: Schema.Attribute.Text
     metaDescription: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
@@ -200,7 +176,6 @@ export interface SeoUtilitiesSeo extends Struct.ComponentSchema {
         maxLength: 60
       }>
     og: Schema.Attribute.Component<"seo-utilities.seo-og", false>
-    siteName: Schema.Attribute.String
     structuredData: Schema.Attribute.JSON
     twitter: Schema.Attribute.Component<"seo-utilities.seo-twitter", false>
   }
@@ -215,6 +190,7 @@ export interface SeoUtilitiesSeoOg extends Struct.ComponentSchema {
   attributes: {
     description: Schema.Attribute.String
     image: Schema.Attribute.Media<"images">
+    siteName: Schema.Attribute.String
     title: Schema.Attribute.String
     type: Schema.Attribute.Enumeration<["website", "article"]> &
       Schema.Attribute.DefaultTo<"website">
@@ -351,7 +327,6 @@ declare module "@strapi/strapi" {
       "sections.hero": SectionsHero
       "sections.horizontal-images": SectionsHorizontalImages
       "sections.image-with-cta-button": SectionsImageWithCtaButton
-      "seo-utilities.meta-social": SeoUtilitiesMetaSocial
       "seo-utilities.seo": SeoUtilitiesSeo
       "seo-utilities.seo-og": SeoUtilitiesSeoOg
       "seo-utilities.seo-twitter": SeoUtilitiesSeoTwitter

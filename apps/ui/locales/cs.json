@@ -2,12 +2,17 @@
   "seo": {
     "metaTitle": "DEV-TEMPLATE-SEO",
     "metaDescription": "DEV-TEMPLATE-SEO",
-    "metaImageUrl": "DEV-TEMPLATE-SEO",
-    "keywords": "DEV-TEMPLATE-SEO",
+    "metaImage": "DEV-TEMPLATE-SEO",
     "metaRobots": "DEV-TEMPLATE-SEO",
+    "keywords": "DEV-TEMPLATE-SEO",
     "applicationName": "DEV-TEMPLATE-SEO",
-    "siteName": "DEV-TEMPLATE-SEO",
-    "email": "DEV-TEMPLATE-SEO",
+    "og": {
+      "title": "DEV-TEMPLATE-SEO",
+      "description": "DEV-TEMPLATE-SEO",
+      "url": "DEV-TEMPLATE-SEO",
+      "siteName": "DEV-TEMPLATE-SEO",
+      "image": "DEV-TEMPLATE-SEO"
+    },
     "twitter": {
       "card": "DEV-TEMPLATE-SEO",
       "title": "DEV-TEMPLATE-SEO",

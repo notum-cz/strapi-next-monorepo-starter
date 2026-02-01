@@ -17,13 +17,21 @@
     },
     "type": {
       "type": "enumeration",
-      "enum": ["website", "article"],
-      "default": "website"
+      "default": "website",
+      "enum": [
+        "website",
+        "article"
+      ]
     },
     "image": {
-      "allowedTypes": ["images"],
       "type": "media",
-      "multiple": false
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "siteName": {
+      "type": "string"
     }
   }
 }

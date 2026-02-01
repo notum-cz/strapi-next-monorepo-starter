@@ -23,18 +23,6 @@ export function getDefaultMetadata(
       icon: "favicon.ico",
     },
 
-    alternates: {
-      canonical: siteUrl,
-      languages: routing.locales.reduce(
-        (acc, locale) => {
-          acc[locale] = `${siteUrl}/${locale}`
-
-          return acc
-        },
-        {} as Record<Locale, string>
-      ),
-    },
-
     metadataBase: new URL(siteUrl),
 
     ...customMetadata,
@@ -49,12 +37,11 @@ export function getDefaultOgMeta(
   return {
     type: "website",
     locale: locale,
-    siteName: t("siteName"),
-    title: t("metaTitle"),
-    description: t("metaDescription"),
-    emails: [t("email")],
-    images: [t("metaImageUrl")],
-    url: `/${locale}${fullPath ?? ""}`,
+    siteName: t("og.siteName"),
+    title: t("og.title"),
+    description: t("og.description"),
+    images: [t("og.image")],
+    url: `/${routing.defaultLocale !== locale ? locale : ""}${fullPath ?? ""}`,
   }
 }
 
