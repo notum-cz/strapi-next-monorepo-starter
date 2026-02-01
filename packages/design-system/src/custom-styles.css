@@ -68,6 +68,16 @@
 }
 
 .ck-editor__main p,
-.typo-p {
+.typo-p-large {
   @apply text-2xl mb-0.5;
+}
+
+.ck-editor__main p,
+.typo-p-medium {
+  @apply text-xl mb-0.5;
+}
+
+.ck-editor__main p,
+.typo-p-small {
+  @apply text-lg mb-0.5;
 }

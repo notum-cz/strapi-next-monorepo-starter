@@ -27,7 +27,9 @@ const variantStyles = {
   heading4: "typo-h4",
   heading5: "typo-h5",
   heading6: "typo-h6",
-  base: "text-base leading-[25px]",
+  small: "typo-p-small",
+  medium: "typo-p-medium",
+  large: "typo-p-large",
 }
 
 const defaultStyles: Record<TypographyTag, Variant> = {
@@ -37,7 +39,7 @@ const defaultStyles: Record<TypographyTag, Variant> = {
   h4: "heading4",
   h5: "heading5",
   h6: "heading6",
-  p: "base",
+  p: "medium",
 }
 
 type Variant = keyof typeof variantStyles
