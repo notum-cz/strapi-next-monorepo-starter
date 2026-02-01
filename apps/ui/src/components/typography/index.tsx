@@ -60,7 +60,7 @@ export const Typography = ({
   className,
   variant,
   textColor = "black",
-  fontWeight = "semiBold",
+  fontWeight = "normal",
   tag: Tag = "p",
   id,
 }: TypographyProps) => {
