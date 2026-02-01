@@ -1,4 +1,4 @@
-import { Metadata } from "next"
+import type { Metadata } from "next"
 
 // Use type safe message keys with `next-intl`
 type Messages = typeof import("../../locales/en.json")

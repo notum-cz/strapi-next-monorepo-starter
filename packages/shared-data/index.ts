@@ -52,11 +52,11 @@ export const normalizePageFullPath = (
  * Maps frontend locale codes (used in URLs and Next.js i18n) to Strapi locale codes (used by the CMS and API).
  * This ensures consistent locale handling between the frontend and Strapi especially for SEO hreflang.
  */
-export const feLocaleToStrapiLocaleMap: Record<string, string> = {
+export const feLocaleToStrapiLocaleMap = {
   en: "en", // Default international (English)
   cs: "cs-CZ", // Czechia (Czech)
 } as const
-export const strapiLocaleToFeLocaleMap: Record<string, string> = {
+export const strapiLocaleToFeLocaleMap = {
   en: "en", // Default international (English)
   "cs-CZ": "cs", // Czechia (Czech)
 } as const

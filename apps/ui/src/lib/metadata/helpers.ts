@@ -1,4 +1,3 @@
-import { Metadata } from "next"
 import {
   getFeLocaleFromStrapiLocale,
   normalizePageFullPath,
@@ -7,8 +6,9 @@ import { Locale } from "next-intl"
 
 import type { NextMetadataTwitterCard, SocialMetadata } from "@/types/general"
 import type { Data } from "@repo/strapi-types"
+import type { Metadata } from "next"
 
-import { metaRobots } from "@/lib/metadata/contants"
+import { metaRobots } from "@/lib/metadata/constants"
 import { routing } from "@/lib/navigation"
 
 export const preprocessSocialMetadata = (
@@ -24,7 +24,8 @@ export const preprocessSocialMetadata = (
     : "summary"
 
   const ogImage = ogSeo?.image ?? seo?.metaImage
-  const twitterImages = twitterSeo?.images ?? [seo?.metaImage]
+  const twitterImages =
+    twitterSeo?.images ?? (seo?.metaImage ? [seo?.metaImage] : undefined)
   return {
     twitter: {
       card,
@@ -33,7 +34,7 @@ export const preprocessSocialMetadata = (
       siteId: twitterSeo?.siteId ?? undefined,
       creator: twitterSeo?.creator ?? undefined,
       creatorId: twitterSeo?.creatorId ?? undefined,
-      images: twitterImages?.map((img) => img?.url) ?? undefined,
+      images: twitterImages?.map((img) => img?.url),
     },
     openGraph: {
       siteName: ogSeo?.siteName ?? undefined,
@@ -85,9 +86,9 @@ export const getMetaAlternates = ({
   localizations?: Array<{ locale: string; fullPath?: string; slug?: string }>
 }) => {
   // If not indexable, no alternates should be added
-  if (!indexable) {
-    return undefined
-  }
+  // if (!indexable) {
+  //   return undefined
+  // }
 
   const canonicalUrl = seo?.canonicalUrl ?? fullPath ?? ""
   const localizationLanguages = localizations?.map((item) => {
