@@ -3,7 +3,9 @@ import React from "react"
 import { cn } from "@/lib/styles"
 
 export const variantStyles = {
-  base: "text-base leading-[25px]",
+  small: "typo-p-small",
+  medium: "typo-p-medium",
+  large: "typo-p-large",
   // more variants will be added here
 }
 
@@ -19,7 +21,7 @@ type TextColor = keyof typeof textColorVariants
 export const Paragraph = ({
   children,
   className,
-  variant = "base",
+  variant = "medium",
   textColor = "black",
 }: {
   className?: string
