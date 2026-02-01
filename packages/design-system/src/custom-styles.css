@@ -87,7 +87,7 @@
 
 /* Default paragraph style */
 .ck-editor-rich-text-page p,
-.ck-editor-rich-text-page .typo-p,
+.ck-editor-rich-text-page .typo-p-medium,
 .ck-editor__main .ck-content p,
 .ck-editor__main .ck-content .typo-p-medium,
 .typo-p-medium {
@@ -106,7 +106,7 @@
   @apply text-xs mb-0.5;
 }
 
-/* We needed to rewrite default Strapi ck editor styling, thats why we used important */
+/* We needed to rewrite default Strapi ck editor styling, that's why we used important */
 .ck-style-grid .ck-disabled {
   display: none !important;
 }
