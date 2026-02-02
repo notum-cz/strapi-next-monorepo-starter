@@ -1,8 +1,12 @@
 import React from "react"
+import Image from "next/image"
 import { Data } from "@repo/strapi-types"
+import { get } from "lodash"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import { getStrapiLinkHref } from "@/lib/navigation"
 import AppLink from "@/components/elementary/AppLink"
+import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
 
 export interface StrapiLinkProps {
   readonly component: Data.Component<"utilities.link"> | undefined | null
@@ -23,17 +27,41 @@ export function StrapiLink({
     return null
   }
 
-  if (component?.href == null) {
-    return children ?? component?.label ?? null
+  const { newTab = false, label, decorations } = component ?? {}
+
+  const {
+    variant = "link",
+    size = "default",
+    leftIcon,
+    rightIcon,
+    hasIcons = false,
+  } = decorations ?? {}
+
+  const linkHref = getStrapiLinkHref(component)
+
+  if (!linkHref) {
+    return children ?? label ?? null
   }
 
   return (
     <AppLink
-      href={component.href}
-      openExternalInNewTab={component.newTab ?? false}
+      href={linkHref}
+      openInNewTab={newTab ?? false}
       className={className}
+      startAdornment={
+        hasIcons && leftIcon ? (
+          <StrapiBasicImage component={leftIcon} fill />
+        ) : undefined
+      }
+      endAdornment={
+        hasIcons && rightIcon ? (
+          <StrapiBasicImage component={rightIcon} fill />
+        ) : undefined
+      }
+      variant={variant}
+      size={size}
     >
-      {children ?? component.label}
+      {children ?? label}
     </AppLink>
   )
 }

@@ -73,7 +73,7 @@ export function ContactForm({
           <div className="mt-5 flex flex-col items-center sm:flex-row">
             <p>{t("gdpr")}</p>
             <AppLink
-              openExternalInNewTab={gdpr.newTab}
+              openInNewTab={gdpr.newTab}
               className="p-0 pl-1 font-medium"
               href={gdpr?.href}
             >

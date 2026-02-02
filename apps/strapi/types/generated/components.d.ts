@@ -311,9 +311,40 @@ export interface UtilitiesLink extends Struct.ComponentSchema {
     displayName: "Link"
   }
   attributes: {
+    decorations: Schema.Attribute.Component<"utilities.link-decorations", false>
     href: Schema.Attribute.String & Schema.Attribute.Required
     label: Schema.Attribute.String & Schema.Attribute.Required
-    newTab: Schema.Attribute.Boolean
+    newTab: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>
+    page: Schema.Attribute.Relation<"oneToOne", "api::page.page">
+    type: Schema.Attribute.Enumeration<["external", "page"]> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<"page">
+  }
+}
+
+export interface UtilitiesLinkDecorations extends Struct.ComponentSchema {
+  collectionName: "components_utilities_link_decorations"
+  info: {
+    displayName: "LinkDecorations"
+  }
+  attributes: {
+    hasIcons: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>
+    leftIcon: Schema.Attribute.Component<"utilities.basic-image", false>
+    rightIcon: Schema.Attribute.Component<"utilities.basic-image", false>
+    size: Schema.Attribute.Enumeration<
+      ["default", "xs", "sm", "lg", "icon", "icon-xs", "icon-sm", "icon-lg"]
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<"default">
+    variant: Schema.Attribute.Enumeration<
+      ["default", "destructive", "outline", "secondary", "ghost", "link"]
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<"link">
   }
 }
 
@@ -361,6 +392,7 @@ declare module "@strapi/strapi" {
       "utilities.ck-editor-content": UtilitiesCkEditorContent
       "utilities.image-with-link": UtilitiesImageWithLink
       "utilities.link": UtilitiesLink
+      "utilities.link-decorations": UtilitiesLinkDecorations
       "utilities.links-with-title": UtilitiesLinksWithTitle
       "utilities.text": UtilitiesText
     }
