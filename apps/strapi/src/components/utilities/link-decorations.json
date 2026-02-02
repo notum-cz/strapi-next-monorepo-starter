@@ -40,11 +40,31 @@
     },
     "leftIcon": {
       "type": "component",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "hasIcons"
+            },
+            true
+          ]
+        }
+      },
       "component": "utilities.basic-image",
       "repeatable": false
     },
     "rightIcon": {
       "type": "component",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "hasIcons"
+            },
+            true
+          ]
+        }
+      },
       "component": "utilities.basic-image",
       "repeatable": false
     }
