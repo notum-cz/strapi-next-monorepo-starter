@@ -1,0 +1,23 @@
+# CODEOWNERS Template
+#
+# Users referenced in this file will automatically be requested as reviewers
+# for PRs that modify the given paths.
+# See https://help.github.com/articles/about-code-owners/
+#
+# INSTRUCTIONS:
+# Replace the placeholder values below with your organization's actual GitHub usernames or teams.
+# Format: <path-pattern> <@github-username-or-team>
+#
+# Examples:
+# * @your-github-username                          # Single owner for everything
+# * @your-org/docs-team                            # Team ownership
+# /docs/ @your-org/documentation-team              # Specific path ownership
+# *.md @your-org/docs-team                         # File pattern ownership
+#
+# Default owner for everything in the repo:
+* @tocosastalo
+
+# Specific path examples (uncomment and customize as needed):
+# /docs/ @your-org/docs-team
+# /.github/ @your-org/devops-team
+# /docs/_config.yml @your-github-username
