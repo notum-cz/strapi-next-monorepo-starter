@@ -77,11 +77,9 @@ export const Typography = ({
     <Tag
       id={id}
       className={cn(
-        `typo-${Tag}`,
         selectedVariant,
         selectedTextColor,
         selectedFontWeight,
-
         className
       )}
     >
