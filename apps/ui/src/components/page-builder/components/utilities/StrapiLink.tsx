@@ -1,7 +1,5 @@
 import React from "react"
-import Image from "next/image"
 import { Data } from "@repo/strapi-types"
-import { get } from "lodash"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { getStrapiLinkHref } from "@/lib/navigation"
