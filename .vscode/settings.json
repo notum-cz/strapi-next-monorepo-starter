@@ -1,5 +1,8 @@
 {
-  "eslint.workingDirectories": ["./apps/ui", "./apps/strapi"],
+  "eslint.workingDirectories": [
+    "./apps/ui",
+    "./apps/strapi"
+  ],
   "tailwindCSS.classAttributes": [
     "class",
     "className",
@@ -26,7 +29,12 @@
   // },
   "prettier.requireConfig": true,
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": ["plaiceholder", "Strapi", "unoptimized"],
+  "cSpell.words": [
+    "plaiceholder",
+    "Strapi",
+    "unoptimized"
+  ],
   "typescript.preferences.importModuleSpecifier": "non-relative",
-  "javascript.preferences.importModuleSpecifier": "non-relative"
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "markdown.extension.toc.levels": "2..3"
 }
