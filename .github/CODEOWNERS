@@ -21,3 +21,15 @@
 # /docs/ @your-org/docs-team
 # /.github/ @your-org/devops-team
 # /docs/_config.yml @your-github-username
+
+# Strapi app
+/apps/strapi/ @dominik-juriga
+
+# UI app
+/apps/ui/ @dominik-juriga @vcicmanecntm
+
+# Packages
+/packages/ @dominik-juriga
+
+# QA tests
+/qa/ @mCesnarik
