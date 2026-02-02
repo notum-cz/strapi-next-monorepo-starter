@@ -39,7 +39,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
    git checkout v3.0.0
    ```
 
-   Or click [![Use this template](https://github.com/button)](https://github.com/notum-cz/strapi-next-monorepo-starter/generate) to create a new repository based on this template.
+   Or click [Use this template](https://github.com/notum-cz/strapi-next-monorepo-starter/generate) to create a new repository based on this template.
 
 2. Install dependencies
 
