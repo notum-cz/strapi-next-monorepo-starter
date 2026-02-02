@@ -40,7 +40,7 @@ export async function getMetadataFromStrapi({
     return null
   }
 
-  const defaultMeta: Metadata = getDefaultMetadata(customMetadata, siteUrl, t)
+  const defaultMeta: Metadata = getDefaultMetadata(siteUrl, t)
   const defaultOgMeta: Metadata["openGraph"] = getDefaultOgMeta(
     locale,
     fullPath,
@@ -64,6 +64,7 @@ export async function getMetadataFromStrapi({
       defaultMeta,
       defaultOgMeta,
       defaultTwitterMeta,
+      customMetadata,
       uid
     )
   } catch (e: unknown) {
@@ -85,6 +86,7 @@ async function fetchAndMapStrapiMetadata(
   defaultMeta: Metadata,
   defaultOgMeta: Metadata["openGraph"],
   defaultTwitterMeta: Metadata["twitter"],
+  customMetadata?: Metadata,
   uid: Extract<UID.ContentType, "api::page.page"> = "api::page.page"
 ) {
   const forbidIndexing = !isProduction()
@@ -125,5 +127,6 @@ async function fetchAndMapStrapiMetadata(
     ),
     robots,
     alternates,
+    ...customMetadata,
   }
 }

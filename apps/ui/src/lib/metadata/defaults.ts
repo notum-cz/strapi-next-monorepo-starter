@@ -7,11 +7,7 @@ import { routing } from "@/lib/navigation"
 
 type TranslateFn = Awaited<ReturnType<typeof getTranslations>>
 
-export function getDefaultMetadata(
-  customMetadata: Metadata | undefined,
-  siteUrl: string,
-  t: TranslateFn
-) {
+export function getDefaultMetadata(siteUrl: string, t: TranslateFn) {
   return {
     title: t("metaTitle"),
     description: t("metaDescription"),
@@ -24,8 +20,6 @@ export function getDefaultMetadata(
     },
 
     metadataBase: new URL(siteUrl),
-
-    ...customMetadata,
   } as Metadata
 }
 
