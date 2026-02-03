@@ -2,7 +2,6 @@ import React from "react"
 import { Data } from "@repo/strapi-types"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { getStrapiLinkHref } from "@/lib/navigation"
 import AppLink from "@/components/elementary/AppLink"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
 
@@ -11,6 +10,20 @@ export interface StrapiLinkProps {
   readonly children?: React.ReactNode
   readonly className?: string
   readonly hideWhenMissing?: boolean
+}
+
+const getStrapiLinkHref = (
+  component?: Data.Component<"utilities.link"> | null
+) => {
+  // Add more when needed
+  switch (component?.type) {
+    case "external":
+      return component.href
+    case "page":
+      return component.page?.fullPath ?? "#"
+    default:
+      return undefined
+  }
 }
 
 export function StrapiLink({
@@ -36,10 +49,6 @@ export function StrapiLink({
   } = decorations ?? {}
 
   const linkHref = getStrapiLinkHref(component)
-
-  if (!linkHref) {
-    return children ?? label ?? null
-  }
 
   return (
     <AppLink

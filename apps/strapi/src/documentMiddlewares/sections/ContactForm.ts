@@ -1,1 +1,1 @@
-export const contactFormPopulate = { populate: { gdpr: true } }
+export const contactFormPopulate = { populate: { gdpr: true } } as const

@@ -65,17 +65,3 @@ export const formatHref = (href: string | undefined | null): string => {
 
   return href
 }
-
-export const getStrapiLinkHref = (
-  component?: Data.Component<"utilities.link"> | null
-) => {
-  // Add more when needed
-  switch (component?.type) {
-    case "external":
-      return component.href
-    case "page":
-      return component.page?.fullPath ?? "#"
-    default:
-      return undefined
-  }
-}

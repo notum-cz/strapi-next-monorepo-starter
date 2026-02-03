@@ -1,1 +1,1 @@
-export const newsletterFormPopulate = { populate: { gdpr: true } }
+export const newsletterFormPopulate = { populate: { gdpr: true } } as const

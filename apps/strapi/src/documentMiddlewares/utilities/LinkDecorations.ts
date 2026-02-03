@@ -5,4 +5,4 @@ export const linkDecorationsPopulate = {
     leftIcon: basicImagePopulate,
     rightIcon: basicImagePopulate,
   },
-}
+} as const

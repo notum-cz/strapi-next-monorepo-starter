@@ -4,4 +4,4 @@ export const seoPopulate = {
     twitter: { populate: { images: true } },
     og: { populate: { image: true } },
   },
-}
+} as const

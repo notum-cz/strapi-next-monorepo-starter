@@ -7,4 +7,4 @@ export const horizontalImagesPopulate = {
       populate: { image: basicImagePopulate, link: linkPopulate },
     },
   },
-}
+} as const

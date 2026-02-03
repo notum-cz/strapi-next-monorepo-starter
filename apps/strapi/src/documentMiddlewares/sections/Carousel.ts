@@ -7,4 +7,4 @@ export const carouselPopulate = {
       populate: { image: basicImagePopulate, link: linkPopulate },
     },
   },
-}
+} as const

@@ -7,4 +7,4 @@ export const heroPopulate = {
     image: basicImagePopulate,
     steps: true,
   },
-}
+} as const
