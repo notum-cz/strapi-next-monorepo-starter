@@ -31,10 +31,9 @@ export default abstract class BaseStrapiClient {
   ) {
     const strapiLocale = getStrapiLocaleFromFeLocale(params.locale)
     if (!strapiLocale && params.locale) {
-      console.error(
+      throw new Error(
         `[BaseStrapiClient] Unknown locale mapping for locale '${params.locale}', cannot perform request to Strapi API. It is recommended to check the locale mappings in 'shared-data' package.`
       )
-      throw new Error("Unknown locale mapping")
     }
     const { url, headers } = await this.prepareRequest(
       path,
