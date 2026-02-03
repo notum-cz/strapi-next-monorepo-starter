@@ -11,10 +11,6 @@ export default ({ env }) => {
       config: awsS3Config ?? localUploadConfig,
     },
 
-    seo: {
-      enabled: true,
-    },
-
     "config-sync": {
       enabled: true,
     },

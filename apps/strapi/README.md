@@ -14,7 +14,6 @@ This is a [Strapi v5](https://strapi.io/) project.
 - @strapi/plugin-color-picker
 - @strapi/plugin-i18n
 - @strapi/plugin-sentry
-- @strapi/plugin-seo
 - @strapi/plugin-users-permissions
 - @strapi/provider-email-mailgun
 - @strapi/provider-email-nodemailer
