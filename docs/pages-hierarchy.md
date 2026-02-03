@@ -86,3 +86,7 @@ We want to change the slug of a page from `page-a` to `page-b` in `en` locale. T
 - Try to avoid having many pending jobs at the same time. Process them as soon as possible to avoid confusion.
 
 - You can't change `/` slug from admin panel. The change requires update on the code level.
+
+## Related Documentation
+
+- [Page Builder](./page-builder.md) — Page Builder specific documentation
