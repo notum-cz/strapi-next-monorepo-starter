@@ -5,8 +5,7 @@ import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
-import Heading from "@/components/typography/Heading"
-import { Paragraph } from "@/components/typography/Paragraph"
+import { Typography } from "@/components/typography"
 
 export function StrapiHero({
   component,
@@ -23,28 +22,26 @@ export function StrapiHero({
             component.image?.media ? "md:w-1/2" : "md:w-full"
           }`}
         >
-          <Heading
+          <Typography
             tag="h1"
-            variant="heading1"
             className="mb-4 max-w-2xl text-center text-3xl sm:text-4xl lg:text-start"
           >
             {component.title}
-          </Heading>
+          </Typography>
           {component.subTitle && (
-            <Heading
+            <Typography
               tag="h2"
-              variant="heading2"
               className="mb-6 max-w-2xl text-center lg:text-start"
             >
               {component.subTitle}
-            </Heading>
+            </Typography>
           )}
           {component?.steps &&
             component?.steps?.length > 0 &&
             component.steps.map((step) => (
               <div key={step.id} className="flex items-center gap-1 py-2">
                 <Check className="text-primary-500" />
-                <Paragraph>{step.text}</Paragraph>
+                <Typography>{step.text}</Typography>
               </div>
             ))}
 

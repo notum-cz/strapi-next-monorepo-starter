@@ -185,7 +185,7 @@ Not all predefined components or routes are needed in the final app, so unnecess
   - `/src/components/forms` – Components related to forms, such as wrappers and field types
   - `/src/components/page-builder` – Components for the Strapi page builder, [more info here](#page-builder)
   - `/src/components/providers` – Global wrapper components (e.g. context providers)
-  - `/src/components/typography` – Components like Heading, Paragraph, etc.
+  - `/src/components/typography` – Component handling h1, h2, h3, p, etc.
   - `/src/components/ui` – Tailwind wrappers around Radix UI components from the `shadcn/ui` library. This directory is **controlled** by shadcn. You can edit individual files (e.g. to adjust design or fix issues), but do not rename the folder or component files. [More info here](#shadcn)
 - `/src/hooks` – Custom React hooks
 - `/src/lib` – Shared utilities, helpers, and functions for auth, theme, i18n, dates, navigation, reCAPTCHA, styles, etc.
