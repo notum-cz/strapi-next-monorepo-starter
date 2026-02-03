@@ -50,6 +50,10 @@ export function StrapiLink({
 
   const linkHref = getStrapiLinkHref(component)
 
+  if (!linkHref) {
+    return children ?? label ?? null
+  }
+
   return (
     <AppLink
       href={linkHref}
