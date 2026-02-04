@@ -39,6 +39,8 @@
 
 .ck-editor-rich-text-page h1,
 .ck-editor-rich-text-page .typo-h1,
+.ck-editor-rich-text-blog h1,
+.ck-editor-rich-text-blog .typo-h1,
 .ck-editor__main .ck-content h1,
 .ck-editor__main .ck-content .typo-h1,
 .typo-h1 {
@@ -47,6 +49,8 @@
 
 .ck-editor-rich-text-page h2,
 .ck-editor-rich-text-page .typo-h2,
+.ck-editor-rich-text-blog h2,
+.ck-editor-rich-text-blog .typo-h2,
 .ck-editor__main .ck-content h2,
 .ck-editor__main .ck-content .typo-h2,
 .typo-h2 {
@@ -55,6 +59,8 @@
 
 .ck-editor-rich-text-page h3,
 .ck-editor-rich-text-page .typo-h3,
+.ck-editor-rich-text-blog h3,
+.ck-editor-rich-text-blog .typo-h3,
 .ck-editor__main .ck-content h3,
 .ck-editor__main .ck-content .typo-h3,
 .typo-h3 {
@@ -63,6 +69,8 @@
 
 .ck-editor-rich-text-page h4,
 .ck-editor-rich-text-page .typo-h4,
+.ck-editor-rich-text-blog h4,
+.ck-editor-rich-text-blog .typo-h4,
 .ck-editor__main .ck-content h4,
 .ck-editor__main .ck-content .typo-h4,
 .typo-h4 {
@@ -71,6 +79,8 @@
 
 .ck-editor-rich-text-page h5,
 .ck-editor-rich-text-page .typo-h5,
+.ck-editor-rich-text-blog h5,
+.ck-editor-rich-text-blog .typo-h5,
 .ck-editor__main .ck-content h5,
 .ck-editor__main .ck-content .typo-h5,
 .typo-h5 {
@@ -79,6 +89,8 @@
 
 .ck-editor-rich-text-page h6,
 .ck-editor-rich-text-page .typo-h6,
+.ck-editor-rich-text-blog h6,
+.ck-editor-rich-text-blog .typo-h6,
 .ck-editor__main .ck-content h6,
 .ck-editor__main .ck-content .typo-h6,
 .typo-h6 {
@@ -88,6 +100,8 @@
 /* Default paragraph style */
 .ck-editor-rich-text-page p,
 .ck-editor-rich-text-page .typo-p-medium,
+.ck-editor-rich-text-blog p,
+.ck-editor-rich-text-blog .typo-p-medium,
 .ck-editor__main .ck-content p,
 .ck-editor__main .ck-content .typo-p-medium,
 .typo-p-medium {
@@ -95,12 +109,14 @@
 }
 
 .ck-editor-rich-text-page .typo-p-large,
+.ck-editor-rich-text-blog .typo-p-large,
 .ck-editor__main .ck-content .typo-p-large,
 .typo-p-large {
   @apply text-lg mb-0.5;
 }
 
 .ck-editor-rich-text-page .typo-p-small,
+.ck-editor-rich-text-blog .typo-p-small,
 .ck-editor__main .ck-content .typo-p-small,
 .typo-p-small {
   @apply text-xs mb-0.5;
