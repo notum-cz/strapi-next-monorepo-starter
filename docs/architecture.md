@@ -33,9 +33,9 @@ See [Page Builder](./page-builder.md) for details.
 
 Two client classes handle content fetching:
 
-| Client | Auth | Use Case |
-|--------|------|----------|
-| `PublicStrapiClient` | API key | Read-only content |
+| Client                | Auth     | Use Case                |
+| --------------------- | -------- | ----------------------- |
+| `PublicStrapiClient`  | API key  | Read-only content       |
 | `PrivateStrapiClient` | User JWT | Authenticated endpoints |
 
 Client-side requests use proxy routes (`/api/public-proxy`, `/api/private-proxy`) to hide Strapi URL.
@@ -52,10 +52,10 @@ See [Strapi API Client](./strapi-api-client.md) for details.
 
 Dual i18n system:
 
-| System | Purpose | Location |
-|--------|---------|----------|
-| next-intl | UI strings | `src/locales/{locale}.json` |
-| Strapi i18n | Content | `locale` query parameter |
+| System      | Purpose    | Location                    |
+| ----------- | ---------- | --------------------------- |
+| next-intl   | UI strings | `src/locales/{locale}.json` |
+| Strapi i18n | Content    | `locale` query parameter    |
 
 ## Authentication
 

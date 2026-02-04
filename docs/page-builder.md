@@ -24,7 +24,7 @@ The page builder enables content editors to compose pages from reusable componen
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                            Next.js Frontend                                 │
 │  ┌─────────────────────────────────────────────────────────────────────┐    │
-│  │ PageContentRenderer                                                 │    │
+│  │ StrapiPage (page.tsx)                                                │    │
 │  │  └─ maps __component UID → React component                          │    │
 │  │       ├─ sections.hero      → StrapiHero                            │    │
 │  │       ├─ sections.faq       → StrapiFaq                             │    │
@@ -38,7 +38,7 @@ The page builder enables content editors to compose pages from reusable componen
 
 1. Editor adds components to page's `content` dynamic zone in Strapi admin
 2. Page is fetched via REST API with deep population (handled by middleware)
-3. `PageContentRenderer` iterates over `content` array
+3. `StrapiPage` iterates over `content` array
 4. Each item's `__component` UID is matched against `PageContentComponents` registry
 5. Matching React component renders with full component data as props
 
@@ -72,13 +72,13 @@ Components are grouped by category (matching Strapi's component folder structure
 
 ## Naming Conventions
 
-| Element | Pattern | Example |
-|---------|---------|---------|
-| Strapi UID | `category.kebab-case` | `sections.hero` |
-| Strapi schema file | `{name}.json` | `apps/strapi/src/components/sections/hero.json` |
-| Strapi collectionName | `components_{category}_{name_underscored}` | `components_sections_hero` |
-| React component | `Strapi{PascalCase}` | `StrapiHero` |
-| React file | `Strapi{PascalCase}.tsx` | `apps/ui/src/components/page-builder/components/sections/StrapiHero.tsx` |
+| Element               | Pattern                                    | Example                                                                  |
+| --------------------- | ------------------------------------------ | ------------------------------------------------------------------------ |
+| Strapi UID            | `category.kebab-case`                      | `sections.hero`                                                          |
+| Strapi schema file    | `{name}.json`                              | `apps/strapi/src/components/sections/hero.json`                          |
+| Strapi collectionName | `components_{category}_{name_underscored}` | `components_sections_hero`                                               |
+| React component       | `Strapi{PascalCase}`                       | `StrapiHero`                                                             |
+| React file            | `Strapi{PascalCase}.tsx`                   | `apps/ui/src/components/page-builder/components/sections/StrapiHero.tsx` |
 
 ## Props Typing
 
@@ -136,7 +136,9 @@ const pagePopulateObject = {
           content: {
             on: {
               // recursive population for nested dynamic zones
-              "sections.hero": { /* ... */ },
+              "sections.hero": {
+                /* ... */
+              },
             },
           },
         },
@@ -174,42 +176,58 @@ await PublicStrapiClient.fetchOneByFullPath("api::page.page", fullPath, {
 })
 ```
 
-## PageContentRenderer
+## Page Rendering
 
-The renderer component handles the mapping and rendering loop:
+The rendering logic lives inline in the `StrapiPage` component:
 
-**`apps/ui/src/components/page-builder/PageContentRenderer.tsx`**
+**`apps/ui/src/app/[locale]/[[...rest]]/page.tsx`**
 
 ```typescript
-export function PageContentRenderer({
-  content,
-  className,
-  itemClassName,
-}: PageContentRendererProps) {
+export default function StrapiPage(props: PageProps<"/[locale]/[[...rest]]">) {
+  const params = use(props.params)
+  const locale = params.locale as Locale
+
+  const fullPath = ROOT_PAGE_PATH + (params.rest ?? []).join("/")
+  const response = use(fetchPage(fullPath, locale))
+  const data = response?.data
+
+  if (data?.content == null) {
+    notFound()
+  }
+
+  const { content, ...restPageData } = data
+
   return (
-    <div className={className}>
-      {content.filter(Boolean).map((comp) => {
-        const Component = PageContentComponents[comp.__component]
+    <>
+      <StrapiStructuredData structuredData={data?.seo?.structuredData} />
+      <main>
+        {content
+          .filter((comp) => comp != null)
+          .map((comp) => {
+            const Component = PageContentComponents[comp.__component]
 
-        if (!Component) {
-          console.warn(`Unknown component "${comp.__component}"`)
-          return <div>Component not implemented</div>
-        }
+            if (Component == null) {
+              console.warn(`Unknown component "${comp.__component}"`)
+              return <div>Component not implemented</div>
+            }
 
-        return (
-          <ErrorBoundary key={`${comp.__component}-${comp.id}`}>
-            <div className={itemClassName}>
-              <Component component={comp} />
-            </div>
-          </ErrorBoundary>
-        )
-      })}
-    </div>
+            return (
+              <ErrorBoundary key={`${comp.__component}-${comp.id}`}>
+                <Component
+                  component={comp}
+                  pageParams={params}
+                  page={restPageData}
+                />
+              </ErrorBoundary>
+            )
+          })}
+      </main>
+    </>
   )
 }
 ```
 
-Each component is wrapped in an `ErrorBoundary` to prevent a single component error from breaking the entire page.
+Each component is wrapped in an `ErrorBoundary` to prevent a single component error from breaking the entire page. Components also receive `pageParams` and `page` props in addition to the `component` data.
 
 ## Adding New Components
 

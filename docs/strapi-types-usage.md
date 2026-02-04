@@ -20,18 +20,18 @@ Types are generated in Strapi and symlinked to the package for monorepo-wide imp
 ## Key Type Utilities
 
 ```typescript
-import { Data, UID, Result, FindFirst, FindMany } from "@repo/strapi-types"
+import { Data, FindFirst, FindMany, Result, UID } from "@repo/strapi-types"
 ```
 
-| Type | Purpose | Example |
-|------|---------|---------|
-| `UID.ContentType` | Union of all content type UIDs | `"api::page.page"` |
-| `UID.Component` | Union of all component UIDs | `"sections.hero"` |
-| `Data.ContentType<"uid">` | Full content type data | `Data.ContentType<"api::page.page">` |
-| `Data.Component<"uid">` | Full component data | `Data.Component<"sections.hero">` |
-| `Result<"uid", params>` | Response shape after population | `Result<"api::page.page", { populate: { content: true } }>` |
-| `FindFirst<uid>` | Query params for single doc | `FindFirst<"api::page.page">` |
-| `FindMany<uid>` | Query params for multiple docs | `FindMany<"api::page.page">` |
+| Type                      | Purpose                         | Example                                                     |
+| ------------------------- | ------------------------------- | ----------------------------------------------------------- |
+| `UID.ContentType`         | Union of all content type UIDs  | `"api::page.page"`                                          |
+| `UID.Component`           | Union of all component UIDs     | `"sections.hero"`                                           |
+| `Data.ContentType<"uid">` | Full content type data          | `Data.ContentType<"api::page.page">`                        |
+| `Data.Component<"uid">`   | Full component data             | `Data.Component<"sections.hero">`                           |
+| `Result<"uid", params>`   | Response shape after population | `Result<"api::page.page", { populate: { content: true } }>` |
+| `FindFirst<uid>`          | Query params for single doc     | `FindFirst<"api::page.page">`                               |
+| `FindMany<uid>`           | Query params for multiple docs  | `FindMany<"api::page.page">`                                |
 
 ## Usage in Page Builder Components
 
@@ -56,7 +56,8 @@ export function StrapiHero({ component }: StrapiHeroProps) {
 ## Usage in API Calls
 
 ```typescript
-import { UID, FindMany, Result } from "@repo/strapi-types"
+import { FindMany, Result, UID } from "@repo/strapi-types"
+
 import { PublicStrapiClient } from "@/lib/strapi-api"
 
 // Type-safe query params
@@ -112,11 +113,13 @@ function renderComponent(item: DynamicZoneItem) {
 ## When Types Are Stale
 
 Symptoms of forgetting to regenerate:
+
 - TypeScript errors about missing properties
 - Runtime undefined values for fields that exist in Strapi
 - IDE autocomplete missing new fields
 
 Always regenerate when:
+
 - Adding/removing content types
 - Adding/removing components
 - Changing component attributes

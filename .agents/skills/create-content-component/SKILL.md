@@ -6,9 +6,11 @@ description: "Creates a new page builder content component for both Strapi and t
 # Add Page Builder
 
 Add a new page builder (component) to both Strapi and the Next.js frontend.
+
 ## Input Validation
 
 Before proceeding, validate inputs:
+
 - **Name**: must be kebab-case, lowercase only (e.g. `pricing-table`). Reject PascalCase/camelCase like `MyComponent` or `pricingTable` — ask user to correct.
 - **Category**: must be lowercase, no spaces (e.g. `sections`, `forms`). Reject invalid formats.
 
@@ -17,6 +19,7 @@ If invalid format provided, ask user to correct before proceeding.
 ## Inputs
 
 Ask the user for:
+
 - **Name**: kebab-case component name (e.g. `testimonials`, `pricing-table`)
 - **Category**: one of `sections`, `forms`, `utilities`, `seo-utilities`, `elements` (default: `sections`), or any custom category.
 - **Attributes**: what fields the component needs (e.g. title, description, image, items list)
@@ -32,6 +35,7 @@ Before proceeding, first check if the component or similar one already exists in
 ## Naming Convention
 
 Given category `sections` and name `testimonials`:
+
 - Strapi UID: `sections.testimonials`
 - Strapi file: `apps/strapi/src/components/sections/testimonials.json`
 - `collectionName`: `components_sections_testimonials` (format: `components_{category}_{name_underscored}`)
@@ -62,6 +66,7 @@ Create `apps/strapi/src/components/{category}/{name}.json`:
 ```
 
 Populate `attributes` based on user requirements. Common attribute patterns:
+
 - Text: `{ "type": "string" }` or `{ "type": "text" }` (multiline) or `{ "type": "richtext" }`
 - Required: add `"required": true`
 - Nested component: `{ "type": "component", "repeatable": false, "component": "utilities.link" }`
@@ -71,6 +76,7 @@ Populate `attributes` based on user requirements. Common attribute patterns:
 - Boolean: `{ "type": "boolean", "default": false }`
 
 **Additional attribute options** (add as needed):
+
 - `description`: admin UI hint (e.g. `"description": "Displayed below the section title"`)
 - `default`: default value (e.g. `"default": "Click here"`)
 - `minLength`/`maxLength`: string length constraints (e.g. `"minLength": 3, "maxLength": 100`)
@@ -143,6 +149,7 @@ export default Strapi{PascalCaseName}
 ```
 
 Key patterns:
+
 - Named export + default export
 - Props typed with `Data.Component<"{category}.{name}">` from `@repo/strapi-types`
 - `removeThisWhenYouNeedMe` call — starter template placeholder, keep it for new components
@@ -155,11 +162,13 @@ Key patterns:
 Edit `apps/ui/src/components/page-builder/index.tsx`:
 
 1. Add import at top (alphabetical within category group):
+
 ```typescript
 import Strapi{PascalCaseName} from "@/components/page-builder/components/{category}/Strapi{PascalCaseName}"
 ```
 
 2. Add mapping entry in `PageContentComponents` under the matching category comment:
+
 ```typescript
 "{category}.{name}": Strapi{PascalCaseName},
 ```
@@ -167,6 +176,7 @@ import Strapi{PascalCaseName} from "@/components/page-builder/components/{catego
 ### 6. Generate types
 
 Run:
+
 ```bash
 cd apps/strapi && pnpm generate:types
 ```

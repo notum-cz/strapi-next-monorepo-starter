@@ -35,12 +35,12 @@ Full workflow: [Page Builder docs](../../docs/page-builder.md)
 ## Strapi API Clients
 
 ```typescript
-import { PublicStrapiClient, PrivateStrapiClient } from "@/lib/strapi-api"
+import { PrivateStrapiClient, PublicStrapiClient } from "@/lib/strapi-api"
 ```
 
-| Client | Auth | Use Case |
-|--------|------|----------|
-| `PublicStrapiClient` | API key | Read-only content |
+| Client                | Auth     | Use Case               |
+| --------------------- | -------- | ---------------------- |
+| `PublicStrapiClient`  | API key  | Read-only content      |
 | `PrivateStrapiClient` | User JWT | Authenticated requests |
 
 **Client-side:** Use `useProxy: true` option.
@@ -49,10 +49,10 @@ Full reference: [Strapi API Client docs](../../docs/strapi-api-client.md)
 
 ## Internationalization
 
-| System | Purpose | Location |
-|--------|---------|----------|
-| next-intl | UI strings | `locales/{locale}.json` |
-| Strapi i18n | Content | `locale` query param (auto-added) |
+| System      | Purpose    | Location                          |
+| ----------- | ---------- | --------------------------------- |
+| next-intl   | UI strings | `locales/{locale}.json`           |
+| Strapi i18n | Content    | `locale` query param (auto-added) |
 
 ## Authentication
 
@@ -77,7 +77,6 @@ Use skill: `/create-content-component`, or do it manually
 2. Generate types (see root AGENTS.md)
 3. Create component: `components/page-builder/components/{category}/Strapi{Name}.tsx`
 4. Register in `PageContentComponents`
-
 
 ## Related Documentation
 

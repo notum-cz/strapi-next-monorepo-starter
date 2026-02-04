@@ -6,11 +6,11 @@ Strapi v5 CMS with PostgreSQL. Handles content management, page hierarchy, and A
 
 Pattern: `category.kebab-case`
 
-| Element | Pattern | Example |
-|---------|---------|---------|
-| Strapi UID | `category.kebab-case` | `sections.hero` |
-| Schema file | `src/components/{category}/{name}.json` | `src/components/sections/hero.json` |
-| collectionName | `components_{category}_{name_underscored}` | `components_sections_hero` |
+| Element        | Pattern                                    | Example                             |
+| -------------- | ------------------------------------------ | ----------------------------------- |
+| Strapi UID     | `category.kebab-case`                      | `sections.hero`                     |
+| Schema file    | `src/components/{category}/{name}.json`    | `src/components/sections/hero.json` |
+| collectionName | `components_{category}_{name_underscored}` | `components_sections_hero`          |
 
 The UID must match in: schema location, page dynamiczone, middleware population, frontend registry.
 
@@ -62,12 +62,12 @@ Pages use parent-child relations. `fullPath` is auto-generated via internal jobs
 
 **Key files:**
 
-| File | Purpose |
-|------|---------|
-| `src/api/page/content-types/page/lifecycles.ts` | Triggers on publish |
-| `src/utils/hierarchy/index.ts` | Job processing logic |
-| `src/api/internal-job/services/internal-job.ts` | Job queue service |
-| `src/utils/constants.ts` | `PAGES_HIERARCHY_ENABLED` toggle |
+| File                                            | Purpose                          |
+| ----------------------------------------------- | -------------------------------- |
+| `src/api/page/content-types/page/lifecycles.ts` | Triggers on publish              |
+| `src/utils/hierarchy/index.ts`                  | Job processing logic             |
+| `src/api/internal-job/services/internal-job.ts` | Job queue service                |
+| `src/utils/constants.ts`                        | `PAGES_HIERARCHY_ENABLED` toggle |
 
 **Admin endpoints:**
 

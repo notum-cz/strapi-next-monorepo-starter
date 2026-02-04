@@ -68,7 +68,7 @@ For authenticated operations using user JWT tokens.
 Pre-instantiated clients are exported from `apps/ui/src/lib/strapi-api/index.ts`:
 
 ```typescript
-import { PublicStrapiClient, PrivateStrapiClient } from "@/lib/strapi-api"
+import { PrivateStrapiClient, PublicStrapiClient } from "@/lib/strapi-api"
 ```
 
 ## Authentication Flow
@@ -103,8 +103,8 @@ Utility that automatically selects the correct auth strategy:
 
 ```typescript
 const authHeader = await createStrapiAuthHeader({
-  isReadOnly: true,   // use readonly API key
-  isPrivate: false,   // use API key (not user JWT)
+  isReadOnly: true, // use readonly API key
+  isPrivate: false, // use API key (not user JWT)
 })
 // Returns: { Authorization: "Bearer <token>" }
 ```
@@ -169,11 +169,10 @@ const navbar = await PublicStrapiClient.fetchOne(
 )
 
 // Collection type (with ID)
-const page = await PublicStrapiClient.fetchOne(
-  "api::page.page",
-  documentId,
-  { locale, populate: { content: true } }
-)
+const page = await PublicStrapiClient.fetchOne("api::page.page", documentId, {
+  locale,
+  populate: { content: true },
+})
 ```
 
 ### fetchMany()
@@ -181,14 +180,11 @@ const page = await PublicStrapiClient.fetchOne(
 Fetch multiple documents with optional filters and pagination.
 
 ```typescript
-const pages = await PublicStrapiClient.fetchMany(
-  "api::page.page",
-  {
-    locale,
-    filters: { slug: { $startsWith: "blog" } },
-    pagination: { page: 1, pageSize: 10 },
-  }
-)
+const pages = await PublicStrapiClient.fetchMany("api::page.page", {
+  locale,
+  filters: { slug: { $startsWith: "blog" } },
+  pagination: { page: 1, pageSize: 10 },
+})
 ```
 
 ### fetchAll()
@@ -196,10 +192,10 @@ const pages = await PublicStrapiClient.fetchMany(
 Fetch all documents, automatically handling pagination.
 
 ```typescript
-const allPages = await PublicStrapiClient.fetchAll(
-  "api::page.page",
-  { locale, fields: ["fullPath", "slug"] }
-)
+const allPages = await PublicStrapiClient.fetchAll("api::page.page", {
+  locale,
+  fields: ["fullPath", "slug"],
+})
 ```
 
 Internally fetches pages of 100 items and aggregates results.
@@ -236,16 +232,16 @@ const page = await PublicStrapiClient.fetchOneByFullPath(
 
 Configured in `BaseStrapiClient.fetchAPI()`:
 
-| Environment | Behavior |
-|-------------|----------|
-| Development | `revalidate: 0` (no cache) |
-| Production | `revalidate: 60` (60 second default) |
+| Environment | Behavior                             |
+| ----------- | ------------------------------------ |
+| Development | `revalidate: 0` (no cache)           |
+| Production  | `revalidate: 60` (60 second default) |
 
 Override per-request:
 
 ```typescript
 await PublicStrapiClient.fetchOne(uid, id, params, {
-  next: { revalidate: 0 },  // disable cache
+  next: { revalidate: 0 }, // disable cache
 })
 ```
 
@@ -303,7 +299,7 @@ async function fetchData() {
     "api::page.page",
     { locale: "en" },
     undefined,
-    { useProxy: true }  // required for client-side
+    { useProxy: true } // required for client-side
   )
   return data
 }
@@ -315,11 +311,9 @@ async function fetchData() {
 import { PrivateStrapiClient } from "@/lib/strapi-api"
 
 // User JWT is automatically retrieved from Better Auth session
-const userData = await PrivateStrapiClient.fetchOne(
-  "api::user.user",
-  userId,
-  { locale }
-)
+const userData = await PrivateStrapiClient.fetchOne("api::user.user", userId, {
+  locale,
+})
 ```
 
 ## Adding New Endpoints
@@ -331,7 +325,7 @@ const userData = await PrivateStrapiClient.fetchOne(
 export const API_ENDPOINTS: { [key in UID.ContentType]?: string } = {
   "api::page.page": "/pages",
   "api::footer.footer": "/footer",
-  "api::your-new-type.your-new-type": "/your-new-types",  // add here
+  "api::your-new-type.your-new-type": "/your-new-types", // add here
 }
 ```
 
@@ -341,7 +335,7 @@ export const API_ENDPOINTS: { [key in UID.ContentType]?: string } = {
 // apps/ui/src/lib/strapi-api/request-auth.ts
 const ALLOWED_STRAPI_ENDPOINTS = {
   GET: [
-    "api/your-new-types",  // add here
+    "api/your-new-types", // add here
   ],
 }
 ```

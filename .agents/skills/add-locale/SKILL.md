@@ -8,6 +8,7 @@ Add a new language/locale to the application. Involves Strapi admin config, Next
 ## Input Validation
 
 Before proceeding, validate inputs:
+
 - **Locale code**: must be valid ISO 639-1 (2 letters, lowercase, e.g. `de`, `fr`, `sk`). Reject uppercase or invalid codes.
 - **Locale name**: capitalized, no special characters (e.g. `German`, `French`, `Slovak`).
 
@@ -16,6 +17,7 @@ If invalid format provided, ask user to correct before proceeding.
 ## Inputs
 
 Ask the user for:
+
 - **Locale code**: ISO 639-1 code (e.g. `de`, `fr`, `sk`)
 - **Locale name**: human-readable name (e.g. `German`, `French`, `Slovak`)
 

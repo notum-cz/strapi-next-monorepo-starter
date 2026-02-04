@@ -6,13 +6,14 @@ Guidelines for creating and managing Strapi content type and component schemas.
 
 Pattern: `{category}.{kebab-case-name}`
 
-| Element | Pattern | Example |
-|---------|---------|---------|
-| Strapi UID | `category.kebab-case` | `sections.hero` |
-| Schema file | `{name}.json` | `src/components/sections/hero.json` |
-| collectionName | `components_{category}_{name_underscored}` | `components_sections_hero` |
+| Element        | Pattern                                    | Example                             |
+| -------------- | ------------------------------------------ | ----------------------------------- |
+| Strapi UID     | `category.kebab-case`                      | `sections.hero`                     |
+| Schema file    | `{name}.json`                              | `src/components/sections/hero.json` |
+| collectionName | `components_{category}_{name_underscored}` | `components_sections_hero`          |
 
 The UID must match exactly in:
+
 1. Schema file location
 2. Page's dynamiczone components array
 3. Document middleware population rules
@@ -125,7 +126,7 @@ Fields without `i18n.localized: true` share the same value across all locales.
 Database event handlers in `apps/strapi/src/lifeCycles/`:
 
 ```typescript
-// src/lifeCycles/users.ts
+// src/lifeCycles/user.ts
 export default {
   register({ strapi }) {
     strapi.db.lifecycles.subscribe({
@@ -146,6 +147,7 @@ export default {
 ```
 
 Available events:
+
 - `beforeCreate`, `afterCreate`
 - `beforeUpdate`, `afterUpdate`
 - `beforeDelete`, `afterDelete`
@@ -169,7 +171,7 @@ const middleware = (strapi) => ({
         content: {
           on: {
             "sections.hero": {
-              populate: { links: true, image: { populate: { media: true } } }
+              populate: { links: true, image: { populate: { media: true } } },
             },
             "utilities.ck-editor-content": true,
           },

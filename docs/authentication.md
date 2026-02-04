@@ -34,12 +34,12 @@ The application uses a dual authentication system: Better Auth for session manag
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `apps/ui/src/lib/auth.ts` | Better Auth server config + Strapi plugins |
-| `apps/ui/src/lib/auth-client.ts` | Better Auth client hooks |
-| `apps/ui/src/types/better-auth.ts` | TypeScript interfaces for sessions |
-| `apps/ui/src/lib/strapi-api/request-auth.ts` | Auth header utilities |
+| File                                         | Purpose                                    |
+| -------------------------------------------- | ------------------------------------------ |
+| `apps/ui/src/lib/auth.ts`                    | Better Auth server config + Strapi plugins |
+| `apps/ui/src/lib/auth-client.ts`             | Better Auth client hooks                   |
+| `apps/ui/src/types/better-auth.ts`           | TypeScript interfaces for sessions         |
+| `apps/ui/src/lib/strapi-api/request-auth.ts` | Auth header utilities                      |
 
 ## Better Auth Plugins
 
@@ -71,7 +71,7 @@ Validates Strapi JWT on every session access:
 Syncs OAuth logins with Strapi:
 
 ```typescript
-POST /api/auth/sync-oauth-strapi  // After OAuth success, create Strapi user
+POST / api / auth / sync - oauth - strapi // After OAuth success, create Strapi user
 ```
 
 ## Session Data
@@ -83,9 +83,9 @@ interface BetterAuthUserWithStrapi {
   id: string
   email: string
   name: string
-  strapiJWT: string      // Strapi access token
-  blocked: boolean       // Strapi block status
-  provider: string       // "credentials" | "github" | "google" | etc.
+  strapiJWT: string // Strapi access token
+  blocked: boolean // Strapi block status
+  provider: string // "credentials" | "github" | "google" | etc.
   emailVerified: boolean
 }
 ```
@@ -95,8 +95,9 @@ interface BetterAuthUserWithStrapi {
 ### Server-Side (RSC, Server Actions, API Routes)
 
 ```typescript
-import { getSessionSSR } from "@/lib/auth"
 import { headers } from "next/headers"
+
+import { getSessionSSR } from "@/lib/auth"
 
 const session = await getSessionSSR(await headers())
 

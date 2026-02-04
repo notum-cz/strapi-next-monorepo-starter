@@ -5,15 +5,15 @@ Auto-generated TypeScript types from Strapi schemas for type-safe content handli
 ## Key Types
 
 ```typescript
-import { Data, UID, Result, FindFirst, FindMany } from "@repo/strapi-types"
+import { Data, FindFirst, FindMany, Result, UID } from "@repo/strapi-types"
 ```
 
-| Type | Purpose |
-|------|---------|
-| `UID.ContentType` | Union of content type UIDs |
-| `UID.Component` | Union of component UIDs |
-| `Data.Component<"uid">` | Typed component data |
-| `Result<"uid", params>` | Response after population |
+| Type                    | Purpose                    |
+| ----------------------- | -------------------------- |
+| `UID.ContentType`       | Union of content type UIDs |
+| `UID.Component`         | Union of component UIDs    |
+| `Data.Component<"uid">` | Typed component data       |
+| `Result<"uid", params>` | Response after population  |
 
 ## Structure
 
