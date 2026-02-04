@@ -43,3 +43,5 @@ yarn-error.log*
 
 .strapi-updater.json
 next-env.d.ts
+
+.claude/settings.local.json
