@@ -3,7 +3,7 @@ import { Data } from "@repo/strapi-types"
 import CkEditorRenderer from "@/components/elementary/ck-editor"
 import { Container } from "@/components/elementary/Container"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
-import Heading from "@/components/typography/Heading"
+import { Typography } from "@/components/typography"
 
 export function StrapiHero({
   component,
@@ -20,9 +20,9 @@ export function StrapiHero({
               <CkEditorRenderer htmlContent={tag} />
             </div>
           )}
-          <Heading tag="h1" variant="heading1" className="text-center">
+          <Typography tag="h1" variant="heading1" className="text-center">
             {title}
-          </Heading>
+          </Typography>
           {description && <CkEditorRenderer htmlContent={description} />}
           {links && (
             <div className="flex flex-col gap-2 pt-4 lg:flex-row lg:gap-4">

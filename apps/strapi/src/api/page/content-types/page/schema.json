@@ -73,7 +73,8 @@
         "utilities.ck-editor-content",
         "sections.statistics",
         "sections.features-list",
-        "sections.cta-banner"
+        "sections.cta-banner",
+        "utilities.ck-editor-text"
       ]
     },
     "children": {

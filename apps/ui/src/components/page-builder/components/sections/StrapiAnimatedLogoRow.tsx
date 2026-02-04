@@ -3,7 +3,7 @@ import { Data } from "@repo/strapi-types"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
-import Heading from "@/components/typography/Heading"
+import { Typography } from "@/components/typography"
 
 export function StrapiAnimatedLogoRow({
   component,
@@ -28,9 +28,9 @@ export function StrapiAnimatedLogoRow({
   return (
     <section className="w-full py-10">
       <div className="flex flex-col items-center gap-[30px]">
-        <Heading tag="h3" variant="heading4" fontWeight="normal">
+        <Typography tag="h3" variant="heading4" fontWeight="normal">
           {component.text}
-        </Heading>
+        </Typography>
 
         <div className={cn("group relative flex items-center overflow-hidden")}>
           {repeatedRows.map((row, rowIndex) => {

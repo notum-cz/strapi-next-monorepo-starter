@@ -1,21 +1,26 @@
 {
   "seo": {
-    "metaTitle": "DEV-TEMPLATE-SEO",
-    "metaDescription": "DEV-TEMPLATE-SEO",
-    "metaImageUrl": "DEV-TEMPLATE-SEO",
-    "keywords": "DEV-TEMPLATE-SEO",
-    "metaRobots": "DEV-TEMPLATE-SEO",
-    "applicationName": "DEV-TEMPLATE-SEO",
-    "siteName": "DEV-TEMPLATE-SEO",
-    "email": "DEV-TEMPLATE-SEO",
+    "metaTitle": "SEO-TITLE",
+    "metaDescription": "SEO-DESCRIPTION",
+    "metaImage": "SEO-IMAGE",
+    "metaRobots": "SEO-ROBOTS",
+    "keywords": "SEO-KEYWORDS",
+    "applicationName": "SEO-APPLICATION-NAME",
+    "og": {
+      "title": "SEO-OG-TITLE",
+      "description": "SEO-OG-DESCRIPTION",
+      "url": "SEO-OG-URL",
+      "siteName": "SEO-OG-SITE-NAME",
+      "image": "SEO-OG-IMAGE"
+    },
     "twitter": {
-      "card": "DEV-TEMPLATE-SEO",
-      "title": "DEV-TEMPLATE-SEO",
-      "description": "DEV-TEMPLATE-SEO",
-      "siteId": "DEV-TEMPLATE-SEO",
-      "creator": "DEV-TEMPLATE-SEO",
-      "creatorId": "DEV-TEMPLATE-SEO",
-      "imageUrl": "DEV-TEMPLATE-SEO"
+      "card": "SEO-TWITTER-CARD",
+      "title": "SEO-TWITTER-TITLE",
+      "description": "SEO-TWITTER-DESCRIPTION",
+      "siteId": "SEO-TWITTER-SITE-ID",
+      "creator": "SEO-TWITTER-CREATOR",
+      "creatorId": "SEO-TWITTER-CREATOR-ID",
+      "imageUrl": "SEO-TWITTER-IMAGE-URL"
     }
   },
 

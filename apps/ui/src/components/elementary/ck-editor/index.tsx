@@ -2,7 +2,6 @@ import { Locale, useLocale } from "next-intl"
 
 import { cn } from "@/lib/styles"
 import {
-  addTypoClassesToHtmlContent,
   processLinksInHtmlContent,
   removeEmptyImagesFromContent,
 } from "@/components/elementary/ck-editor/utils"
@@ -27,7 +26,6 @@ const CkEditorRenderer = ({
     const transformers = [
       (h: string) => processLinksInHtmlContent(h, locale),
       removeEmptyImagesFromContent,
-      addTypoClassesToHtmlContent,
     ]
     return transformers.reduce((result, transform) => transform(result), html)
   }

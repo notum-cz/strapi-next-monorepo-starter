@@ -14,7 +14,6 @@ This is a [Strapi v5](https://strapi.io/) project.
 - @strapi/plugin-color-picker
 - @strapi/plugin-i18n
 - @strapi/plugin-sentry
-- @strapi/plugin-seo
 - @strapi/plugin-users-permissions
 - @strapi/provider-email-mailgun
 - @strapi/provider-email-nodemailer
@@ -154,6 +153,16 @@ docker run -it --rm --name starter-strapi -p 1337:1337 --env-file apps/strapi/.e
 ### Pages hierarchy
 
 Documentation is in [/docs/pages-hierarchy.md](../../docs/pages-hierarchy.md)
+
+#### Link
+
+The `utilities.link` component is used as the `StrapiLink` component within the frontend page builder.
+
+It provides a unified abstraction for handling both internal and external links while maintaining consistency with the design system.
+
+- Supports icons, sizes, and visual variants based on **shadcn/ui**
+- Handles external links via a simple text (URL) field
+- Handles internal links as relations to Strapi collection types, ensuring link stability when a page `fullPath` changes and preventing broken links
 
 ### Plugins
 

@@ -2,7 +2,7 @@ import { Data } from "@repo/strapi-types"
 
 import CkEditorRenderer from "@/components/elementary/ck-editor"
 import { Container } from "@/components/elementary/Container"
-import Heading from "@/components/typography/Heading"
+import Typography from "@/components/typography"
 
 export function StrapiStatistics({
   component,
@@ -28,11 +28,11 @@ function StrapiFigure({
   const { number, prefix, suffix, description } = component
   return (
     <div className="flex flex-col items-center">
-      <Heading className="text-center">
+      <Typography tag="h3" className="text-center">
         {prefix}
         {number}
         {suffix}
-      </Heading>
+      </Typography>
       <CkEditorRenderer htmlContent={description} />
     </div>
   )

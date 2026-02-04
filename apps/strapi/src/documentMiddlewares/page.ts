@@ -1,6 +1,18 @@
 import { Modules } from "@strapi/strapi"
 
-import { basicImagePopulate } from "./utilities/Basicimage"
+import { animatedLogoRowPopulate } from "./sections/AnimatedLogoRow"
+import { carouselPopulate } from "./sections/Carousel"
+import { contactFormPopulate } from "./sections/ContactForm"
+import { ctaBannerPopulate } from "./sections/CTABanner"
+import { faqPopulate } from "./sections/Faq"
+import { featuresListPopulate } from "./sections/FeaturesList"
+import { headingWithCtaButtonPopulate } from "./sections/HeadingWithCtaButton"
+import { heroPopulate } from "./sections/Hero"
+import { horizontalImagesPopulate } from "./sections/HorizontalImages"
+import { imageWithCtaButtonPopulate } from "./sections/ImageWithCtaButton"
+import { newsletterFormPopulate } from "./sections/NewsletterForm"
+import { statisticsPopulate } from "./sections/Statistics"
+import { seoPopulate } from "./seo-utilities/Seo"
 
 const pageTypes = ["api::page.page"]
 const pageActions = ["findMany"] // We're using findMany to find the pages, but this could be adjusted to findOne per your needs
@@ -52,56 +64,20 @@ const pagePopulateObject: Modules.Documents.ServiceParams<"api::page.page">["fin
   {
     content: {
       on: {
-        "sections.image-with-cta-button": {
-          populate: { image: basicImagePopulate, link: true },
-        },
-        "sections.horizontal-images": {
-          populate: {
-            images: {
-              populate: { image: basicImagePopulate, link: true },
-            },
-          },
-        },
-        "sections.hero": {
-          populate: {
-            links: true,
-          },
-        },
-        "sections.statistics": { populate: { figures: true } },
-        "sections.heading-with-cta-button": { populate: { cta: true } },
-        "sections.faq": { populate: { accordions: true } },
-        "sections.carousel": {
-          populate: {
-            images: {
-              populate: { image: basicImagePopulate, link: true },
-            },
-          },
-        },
-        "sections.animated-logo-row": {
-          populate: { logos: basicImagePopulate },
-        },
-        "forms.newsletter-form": { populate: { gdpr: true } },
-        "forms.contact-form": { populate: { gdpr: true } },
+        "sections.image-with-cta-button": imageWithCtaButtonPopulate,
+        "sections.horizontal-images": horizontalImagesPopulate,
+        "sections.hero": heroPopulate,
+        "sections.heading-with-cta-button": headingWithCtaButtonPopulate,
+        "sections.faq": faqPopulate,
+        "sections.carousel": carouselPopulate,
+        "sections.animated-logo-row": animatedLogoRowPopulate,
+        "forms.newsletter-form": newsletterFormPopulate,
+        "forms.contact-form": contactFormPopulate,
         "utilities.ck-editor-content": true,
-        "sections.features-list": {
-          populate: {
-            features: { populate: { image: basicImagePopulate } },
-            image: { populate: { image: basicImagePopulate } },
-          },
-        },
-        "sections.cta-banner": {
-          populate: {
-            links: true,
-            features: { populate: { image: basicImagePopulate } },
-          },
-        },
+        "sections.statistics": statisticsPopulate,
+        "sections.features-list": featuresListPopulate,
+        "sections.cta-banner": ctaBannerPopulate,
       },
     },
-    seo: {
-      populate: {
-        metaImage: true,
-        twitter: { populate: { images: true } },
-        og: { populate: { image: true } },
-      },
-    },
+    seo: seoPopulate,
   }
