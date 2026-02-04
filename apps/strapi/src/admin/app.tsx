@@ -6,7 +6,7 @@ import { cs } from "./cs"
 
 import "@repo/design-system/styles.css"
 
-import { defaultCkEditorConfig } from "./ckeditor/configs"
+import { defaultCkEditorConfig, simpleCkEditorConfig } from "./ckeditor/configs"
 import InternalJobs from "./extensions/InternalJobs"
 
 export default {
@@ -68,6 +68,6 @@ export default {
     }
   },
   register() {
-    setPluginConfig({ presets: [defaultCkEditorConfig] })
+    setPluginConfig({ presets: [defaultCkEditorConfig, simpleCkEditorConfig] })
   },
 }
