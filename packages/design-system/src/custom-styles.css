@@ -39,7 +39,7 @@
 
 .ck-editor__main h1,
 .typo-h1 {
-  @apply text-10xl mb-2;
+  @apply text-7xl mb-2;
 }
 
 .ck-editor__main h2,

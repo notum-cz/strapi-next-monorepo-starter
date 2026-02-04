@@ -1,5 +1,7 @@
 import { Modules } from "@strapi/strapi"
 
+import { basicImagePopulate } from "./utilities/Basicimage"
+
 const pageTypes = ["api::page.page"]
 const pageActions = ["findMany"] // We're using findMany to find the pages, but this could be adjusted to findOne per your needs
 
@@ -51,37 +53,48 @@ const pagePopulateObject: Modules.Documents.ServiceParams<"api::page.page">["fin
     content: {
       on: {
         "sections.image-with-cta-button": {
-          populate: { image: { populate: { media: true } }, link: true },
+          populate: { image: basicImagePopulate, link: true },
         },
         "sections.horizontal-images": {
           populate: {
             images: {
-              populate: { image: { populate: { media: true } }, link: true },
+              populate: { image: basicImagePopulate, link: true },
             },
           },
         },
         "sections.hero": {
           populate: {
             links: true,
-            image: { populate: { media: true } },
-            steps: true,
           },
         },
+        "sections.statistics": { populate: { figures: true } },
         "sections.heading-with-cta-button": { populate: { cta: true } },
         "sections.faq": { populate: { accordions: true } },
         "sections.carousel": {
           populate: {
             images: {
-              populate: { image: { populate: { media: true } }, link: true },
+              populate: { image: basicImagePopulate, link: true },
             },
           },
         },
         "sections.animated-logo-row": {
-          populate: { logos: { populate: { media: true } } },
+          populate: { logos: basicImagePopulate },
         },
         "forms.newsletter-form": { populate: { gdpr: true } },
         "forms.contact-form": { populate: { gdpr: true } },
         "utilities.ck-editor-content": true,
+        "sections.features-list": {
+          populate: {
+            features: { populate: { image: basicImagePopulate } },
+            image: { populate: { image: basicImagePopulate } },
+          },
+        },
+        "sections.cta-banner": {
+          populate: {
+            links: true,
+            features: { populate: { image: basicImagePopulate } },
+          },
+        },
       },
     },
     seo: {

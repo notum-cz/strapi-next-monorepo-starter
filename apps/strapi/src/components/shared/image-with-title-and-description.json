@@ -1,0 +1,29 @@
+{
+  "collectionName": "components_shared_image_with_title_and_descriptions",
+  "info": {
+    "displayName": "ImageWithTitleAndDescription"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultCkEditor"
+      }
+    },
+    "description": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultCkEditor"
+      }
+    },
+    "image": {
+      "type": "component",
+      "component": "utilities.basic-image",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

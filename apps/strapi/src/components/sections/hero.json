@@ -10,28 +10,36 @@
       "type": "string",
       "required": true
     },
-    "subTitle": {
-      "type": "string"
-    },
     "links": {
       "type": "component",
-      "repeatable": true,
-      "component": "utilities.link"
-    },
-    "image": {
-      "type": "component",
-      "repeatable": false,
-      "component": "utilities.basic-image"
+      "component": "utilities.link",
+      "repeatable": true
     },
     "bgColor": {
       "type": "customField",
-      "regex": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
-      "customField": "plugin::color-picker.color"
+      "customField": "plugin::color-picker.color",
+      "regex": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
     },
-    "steps": {
-      "type": "component",
-      "repeatable": true,
-      "component": "utilities.text"
+    "description": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultCkEditor"
+      }
+    },
+    "tag": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultCkEditor"
+      }
+    },
+    "note": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultCkEditor"
+      }
     }
   }
 }

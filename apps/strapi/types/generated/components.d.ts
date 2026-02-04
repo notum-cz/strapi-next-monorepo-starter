@@ -12,6 +12,14 @@ export interface ElementsFooterItem extends Struct.ComponentSchema {
   }
 }
 
+export interface EnumsPosition extends Struct.ComponentSchema {
+  collectionName: "components_enums_positions"
+  info: {
+    displayName: "Position"
+  }
+  attributes: {}
+}
+
 export interface FormsContactForm extends Struct.ComponentSchema {
   collectionName: "components_forms_contact_forms"
   info: {
@@ -60,6 +68,34 @@ export interface SectionsCarousel extends Struct.ComponentSchema {
   }
 }
 
+export interface SectionsCtaBanner extends Struct.ComponentSchema {
+  collectionName: "components_sections_cta_banners"
+  info: {
+    displayName: "CTABanner"
+  }
+  attributes: {
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
+    features: Schema.Attribute.Component<
+      "shared.image-with-title-and-description",
+      true
+    >
+    links: Schema.Attribute.Component<"utilities.link", true>
+    title: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
+  }
+}
+
 export interface SectionsFaq extends Struct.ComponentSchema {
   collectionName: "components_sections_faqs"
   info: {
@@ -70,6 +106,36 @@ export interface SectionsFaq extends Struct.ComponentSchema {
     accordions: Schema.Attribute.Component<"utilities.accordions", true>
     subTitle: Schema.Attribute.String
     title: Schema.Attribute.String & Schema.Attribute.Required
+  }
+}
+
+export interface SectionsFeaturesList extends Struct.ComponentSchema {
+  collectionName: "components_sections_features_lists"
+  info: {
+    displayName: "FeaturesList"
+  }
+  attributes: {
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
+    features: Schema.Attribute.Component<
+      "shared.image-with-title-and-description",
+      true
+    >
+    image: Schema.Attribute.Component<"shared.image-with-config", false>
+    listStyle: Schema.Attribute.Enumeration<["boxGrid", "grid", "list"]> &
+      Schema.Attribute.DefaultTo<"list">
+    title: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
   }
 }
 
@@ -95,10 +161,28 @@ export interface SectionsHero extends Struct.ComponentSchema {
   attributes: {
     bgColor: Schema.Attribute.String &
       Schema.Attribute.CustomField<"plugin::color-picker.color">
-    image: Schema.Attribute.Component<"utilities.basic-image", false>
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
     links: Schema.Attribute.Component<"utilities.link", true>
-    steps: Schema.Attribute.Component<"utilities.text", true>
-    subTitle: Schema.Attribute.String
+    note: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
+    tag: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
     title: Schema.Attribute.String & Schema.Attribute.Required
   }
 }
@@ -137,6 +221,16 @@ export interface SectionsImageWithCtaButton extends Struct.ComponentSchema {
     link: Schema.Attribute.Component<"utilities.link", false>
     subText: Schema.Attribute.String
     title: Schema.Attribute.String & Schema.Attribute.Required
+  }
+}
+
+export interface SectionsStatistics extends Struct.ComponentSchema {
+  collectionName: "components_sections_statistics"
+  info: {
+    displayName: "Statistics"
+  }
+  attributes: {
+    figures: Schema.Attribute.Component<"shared.figure", true>
   }
 }
 
@@ -250,6 +344,61 @@ export interface SeoUtilitiesSocialIcons extends Struct.ComponentSchema {
   }
 }
 
+export interface SharedFigure extends Struct.ComponentSchema {
+  collectionName: "components_shared_figures"
+  info: {
+    displayName: "Figure"
+  }
+  attributes: {
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
+    number: Schema.Attribute.BigInteger
+    prefix: Schema.Attribute.String
+    suffix: Schema.Attribute.String
+  }
+}
+
+export interface SharedImageWithConfig extends Struct.ComponentSchema {
+  collectionName: "components_shared_image_with_configs"
+  info: {
+    displayName: "ImageWithConfig"
+  }
+  attributes: {
+    image: Schema.Attribute.Component<"utilities.basic-image", false>
+    position: Schema.Attribute.Enumeration<["left", "right"]>
+  }
+}
+
+export interface SharedImageWithTitleAndDescription
+  extends Struct.ComponentSchema {
+  collectionName: "components_shared_image_with_title_and_descriptions"
+  info: {
+    displayName: "ImageWithTitleAndDescription"
+  }
+  attributes: {
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
+    image: Schema.Attribute.Component<"utilities.basic-image", false>
+    title: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
+  }
+}
+
 export interface UtilitiesAccordions extends Struct.ComponentSchema {
   collectionName: "components_utilities_accordions"
   info: {
@@ -342,20 +491,27 @@ declare module "@strapi/strapi" {
   export module Public {
     export interface ComponentSchemas {
       "elements.footer-item": ElementsFooterItem
+      "enums.position": EnumsPosition
       "forms.contact-form": FormsContactForm
       "forms.newsletter-form": FormsNewsletterForm
       "sections.animated-logo-row": SectionsAnimatedLogoRow
       "sections.carousel": SectionsCarousel
+      "sections.cta-banner": SectionsCtaBanner
       "sections.faq": SectionsFaq
+      "sections.features-list": SectionsFeaturesList
       "sections.heading-with-cta-button": SectionsHeadingWithCtaButton
       "sections.hero": SectionsHero
       "sections.horizontal-images": SectionsHorizontalImages
       "sections.image-with-cta-button": SectionsImageWithCtaButton
+      "sections.statistics": SectionsStatistics
       "seo-utilities.meta-social": SeoUtilitiesMetaSocial
       "seo-utilities.seo": SeoUtilitiesSeo
       "seo-utilities.seo-og": SeoUtilitiesSeoOg
       "seo-utilities.seo-twitter": SeoUtilitiesSeoTwitter
       "seo-utilities.social-icons": SeoUtilitiesSocialIcons
+      "shared.figure": SharedFigure
+      "shared.image-with-config": SharedImageWithConfig
+      "shared.image-with-title-and-description": SharedImageWithTitleAndDescription
       "utilities.accordions": UtilitiesAccordions
       "utilities.basic-image": UtilitiesBasicImage
       "utilities.ck-editor-content": UtilitiesCkEditorContent

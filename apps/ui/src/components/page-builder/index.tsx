@@ -4,7 +4,10 @@ import StrapiContactForm from "@/components/page-builder/components/forms/Strapi
 import StrapiNewsletterForm from "@/components/page-builder/components/forms/StrapiNewsletterForm"
 import StrapiAnimatedLogoRow from "@/components/page-builder/components/sections/StrapiAnimatedLogoRow"
 import StrapiCarousel from "@/components/page-builder/components/sections/StrapiCarousel"
+import StrapiCTABanner from "@/components/page-builder/components/sections/StrapiCTABanner"
 import StrapiFaq from "@/components/page-builder/components/sections/StrapiFaq"
+import { StrapiFeaturesList } from "@/components/page-builder/components/sections/StrapiFeaturesList"
+import { StrapiStatistics } from "@/components/page-builder/components/sections/StrapiFigures"
 import StrapiHeadingWithCTAButton from "@/components/page-builder/components/sections/StrapiHeadingWithCTAButton"
 import StrapiHero from "@/components/page-builder/components/sections/StrapiHero"
 import StrapiHorizontalImages from "@/components/page-builder/components/sections/StrapiHorizontalImages"
@@ -32,6 +35,9 @@ export const PageContentComponents: {
   "sections.hero": StrapiHero,
   "sections.horizontal-images": StrapiHorizontalImages,
   "sections.image-with-cta-button": StrapiImageWithCTAButton,
+  "sections.statistics": StrapiStatistics,
+  "sections.features-list": StrapiFeaturesList,
+  "sections.cta-banner": StrapiCTABanner,
 
   // Forms
   "forms.contact-form": StrapiContactForm,

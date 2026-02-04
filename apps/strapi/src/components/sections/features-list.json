@@ -1,0 +1,43 @@
+{
+  "collectionName": "components_sections_features_lists",
+  "info": {
+    "displayName": "FeaturesList"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultCkEditor"
+      }
+    },
+    "description": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultCkEditor"
+      }
+    },
+    "listStyle": {
+      "type": "enumeration",
+      "default": "list",
+      "enum": [
+        "boxGrid",
+        "grid",
+        "list"
+      ]
+    },
+    "features": {
+      "type": "component",
+      "component": "shared.image-with-title-and-description",
+      "repeatable": true
+    },
+    "image": {
+      "type": "component",
+      "component": "shared.image-with-config",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

@@ -18,41 +18,41 @@
   "attributes": {
     "sections": {
       "type": "component",
-      "repeatable": true,
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "component": "elements.footer-item"
+      "component": "elements.footer-item",
+      "repeatable": true
     },
     "links": {
       "type": "component",
-      "repeatable": true,
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "component": "utilities.link"
+      "component": "utilities.link",
+      "repeatable": true
     },
     "copyRight": {
+      "type": "string",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
-      },
-      "type": "string"
+      }
     },
     "logoImage": {
       "type": "component",
-      "repeatable": false,
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "component": "utilities.image-with-link"
+      "component": "utilities.image-with-link",
+      "repeatable": false
     }
   }
 }

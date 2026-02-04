@@ -14,7 +14,16 @@ export function StrapiAnimatedLogoRow({
 
   if (!component.logos) return null
 
-  const sliderImages = [...component.logos, ...component.logos]
+  const imagesInViewport = 6
+  const repeatCount =
+    component.logos && component.logos.length > 0
+      ? Math.max(2, Math.ceil(imagesInViewport / component.logos.length))
+      : 2
+
+  const repeatedRows = Array.from({ length: repeatCount }).map((_, i) => ({
+    key: `slideshow-group-${i}`,
+    logos: Array.isArray(component.logos) ? component.logos : [],
+  }))
 
   return (
     <section className="w-full py-10">
@@ -23,28 +32,36 @@ export function StrapiAnimatedLogoRow({
           {component.text}
         </Heading>
 
-        <div className="relative mt-4 w-full">
-          <div className="infinite-scroll-container-horizontal w-full">
-            <div
-              className={cn(
-                "infinite-scroll-horizontal flex gap-14 overflow-hidden",
-                component.logos?.length > 10 && "justify-center"
-              )}
-            >
-              {sliderImages.map((logo, index) => (
-                <div key={String(logo.id) + index} className="grayscale">
-                  <StrapiBasicImage
-                    component={logo}
-                    forcedSizes={{ width: 200 }}
-                    priority={index < 10}
-                    loading="eager"
-                    className="z-10 max-h-10 w-full object-contain"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="bg-gradient-slider absolute top-0 left-0 size-full opacity-80" />
+        <div className={cn("group relative flex items-center overflow-hidden")}>
+          {repeatedRows.map((row, rowIndex) => {
+            const ulAriaHidden =
+              row.logos?.length > imagesInViewport && rowIndex > 0
+            return (
+              <ul
+                key={row.key}
+                className="flex shrink-0 items-center ltr:animate-[marquee_linear_infinite] rtl:animate-[marqueeReverse_linear_infinite]"
+                style={{
+                  animationDuration: `${(row.logos?.length ?? 1) * 2}s`,
+                }}
+                aria-hidden={ulAriaHidden}
+              >
+                {row.logos?.map((logo, logoIndex) => (
+                  <li
+                    key={`slideshow-logo-${logo.id}`}
+                    className="w-auto shrink-0 list-none px-5"
+                    aria-hidden={logoIndex > imagesInViewport || ulAriaHidden}
+                  >
+                    <StrapiBasicImage
+                      component={logo}
+                      loading="eager"
+                      className="object-contain"
+                      height={40}
+                    />
+                  </li>
+                ))}
+              </ul>
+            )
+          })}
         </div>
       </div>
     </section>
