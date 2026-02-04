@@ -1,0 +1,73 @@
+{
+  "collectionName": "components_utilities_link_decorations",
+  "info": {
+    "displayName": "LinkDecorations"
+  },
+  "options": {},
+  "attributes": {
+    "variant": {
+      "type": "enumeration",
+      "required": true,
+      "default": "link",
+      "enum": [
+        "default",
+        "destructive",
+        "outline",
+        "secondary",
+        "ghost",
+        "link"
+      ]
+    },
+    "size": {
+      "type": "enumeration",
+      "required": true,
+      "default": "default",
+      "enum": [
+        "default",
+        "xs",
+        "sm",
+        "lg",
+        "icon",
+        "icon-xs",
+        "icon-sm",
+        "icon-lg"
+      ]
+    },
+    "hasIcons": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
+    "leftIcon": {
+      "type": "component",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "hasIcons"
+            },
+            true
+          ]
+        }
+      },
+      "component": "utilities.basic-image",
+      "repeatable": false
+    },
+    "rightIcon": {
+      "type": "component",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "hasIcons"
+            },
+            true
+          ]
+        }
+      },
+      "component": "utilities.basic-image",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

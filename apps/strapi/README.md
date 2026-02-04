@@ -154,6 +154,16 @@ docker run -it --rm --name starter-strapi -p 1337:1337 --env-file apps/strapi/.e
 
 Documentation is in [/docs/pages-hierarchy.md](../../docs/pages-hierarchy.md)
 
+#### Link
+
+The `utilities.link` component is used as the `StrapiLink` component within the frontend page builder.
+
+It provides a unified abstraction for handling both internal and external links while maintaining consistency with the design system.
+
+- Supports icons, sizes, and visual variants based on **shadcn/ui**
+- Handles external links via a simple text (URL) field
+- Handles internal links as relations to Strapi collection types, ensuring link stability when a page `fullPath` changes and preventing broken links
+
 ### Plugins
 
 All plugins are configured in [config/plugins.ts](config/plugins.ts) file. Some of them may require additional setting of API keys or different ENV variables. User-permissions, seo and config-sync plugins are enabled by default and don't require additional configuration.

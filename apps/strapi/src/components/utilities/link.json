@@ -5,16 +5,57 @@
   },
   "options": {},
   "attributes": {
+    "type": {
+      "type": "enumeration",
+      "required": true,
+      "default": "page",
+      "enum": [
+        "external",
+        "page"
+      ]
+    },
     "label": {
       "type": "string",
       "required": true
     },
+    "newTab": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
     "href": {
       "type": "string",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "type"
+            },
+            "external"
+          ]
+        }
+      },
       "required": true
     },
-    "newTab": {
-      "type": "boolean"
+    "page": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::page.page",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "type"
+            },
+            "page"
+          ]
+        }
+      }
+    },
+    "decorations": {
+      "type": "component",
+      "component": "utilities.link-decorations",
+      "repeatable": false
     }
   }
 }
