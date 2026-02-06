@@ -61,16 +61,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup pnpm with cache
-        uses: ./.github/actions/setup-pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Install Playwright Browsers
         run: pnpm -F @repo/tests-playwright exec playwright install --with-deps
@@ -106,16 +107,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup pnpm with cache
-        uses: ./.github/actions/setup-pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Install Playwright Browsers
         run: pnpm -F @repo/tests-playwright exec playwright install --with-deps
@@ -199,8 +201,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup pnpm with cache
-        uses: ./.github/actions/setup-pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v6.2.0
@@ -210,7 +212,7 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
+      
       - name: Run LHCI Performance tests
         env:
           BASE_URL: ${{ inputs.base_url }}
