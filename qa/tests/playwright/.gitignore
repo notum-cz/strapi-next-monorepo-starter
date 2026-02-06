@@ -7,4 +7,5 @@ node_modules/
 /playwright/.cache/
 .env
 /axe/reports/
+/perfo/.lighthouseci/
 /visual/visual.spec.ts-snapshots

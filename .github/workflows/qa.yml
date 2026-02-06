@@ -147,7 +147,7 @@ jobs:
           path: axe-reports-${{ github.run_id }}.tgz
           retention-days: 7
           if-no-files-found: warn
-          
+
   seo: 
     if: ${{ inputs.run_seo }}
     name: Playwright SEO tests
@@ -225,7 +225,7 @@ jobs:
       - name: Run LHCI Performance tests
         env:
           BASE_URL: ${{ inputs.base_url }}
-        run: pnpm test:lhci:perfo  
+        run: pnpm tests:lhci:perfo  
       
       - name: Pack LHCI reports
         if: always()
