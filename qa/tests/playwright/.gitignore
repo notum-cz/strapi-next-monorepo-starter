@@ -7,3 +7,4 @@ node_modules/
 /playwright/.cache/
 .env
 /axe/reports/
+/visual/visual.spec.ts-snapshots

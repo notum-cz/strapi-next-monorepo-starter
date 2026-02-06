@@ -2,11 +2,15 @@ import fs from "fs"
 import path from "path"
 
 import AxeBuilder from "@axe-core/playwright"
-import { chromium } from "playwright"
+import { chromium } from "@playwright/test"
+import dotenv from "dotenv"
+import urls from "helpers/urls.json"
 
 import type { AxeResults, NodeResult, Result } from "axe-core"
 
-import { fetchSitemap } from "../helpers/get-sitemap-links"
+dotenv.config({ path: path.resolve(__dirname, "../.env"), override: true })
+
+// import { fetchSitemap } from "../helpers/get-sitemap-links"
 
 // Rule IDs that should be treated as warnings instead of errors
 const WARNING_RULE_IDS = new Set<string>()
@@ -54,15 +58,20 @@ function formatViolationsSection(
     process.exit(1)
   }
 
-  await fetchSitemap(baseUrl + "/sitemap.xml", "--json")
+  // If the sitemap is available, we can fetch pages directly from there
+  // await fetchSitemap(baseUrl + "/sitemap.xml", "--json")
+  // const sitesPath = path.join(__dirname, "../helpers/sites.json")
+  // const sites: string[] = JSON.parse(fs.readFileSync(sitesPath, "utf-8"))
 
-  const sitesPath = path.join(__dirname, "../helpers/sites.json")
-  const sites: string[] = JSON.parse(fs.readFileSync(sitesPath, "utf-8"))
+  const PATHS = [...urls]
 
-  if (!Array.isArray(sites) || sites.length === 0) {
+  if (!Array.isArray(urls) || urls.length === 0) {
     console.error("No sites found in sites.json")
     process.exit(1)
   }
+
+  // For now, we use the URLs defined in helpers/urls.json
+  const sites: string[] = PATHS.map((p) => new URL(p, baseUrl).toString())
 
   const runTimestamp = new Date()
     .toISOString()
