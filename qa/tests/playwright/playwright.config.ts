@@ -12,7 +12,7 @@ if (fs.existsSync(envPath)) {
 const mobileViewportsEnabled =
   process.env.MOBILE_VIEWPORTS_TESTING_ENABLED === "true"
 
-const projects = [
+const projects: any[] = [
   {
     name: "chromium",
     use: { ...devices["Desktop Chrome"] },
@@ -42,12 +42,24 @@ if (mobileViewportsEnabled) {
   )
 }
 
+projects.push({
+  name: "seo",
+  testMatch: ["seo/**/*.spec.ts"],
+  retries: 0,
+  use: {
+    ...devices["Desktop Chrome"],
+    trace: "off",
+    screenshot: "off",
+    video: "off",
+  },
+})
+
 export default defineConfig({
-  testDir: "./e2e",
+  testDir: ".",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 3 : undefined,
   reporter: "html",
 
   use: {
