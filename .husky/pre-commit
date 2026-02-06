@@ -3,6 +3,6 @@ echo '🏗️👷 Styling your changes before committing 👷‍♂️🏗️'
 # Load nvm if available and use Node.js version from .nvmrc
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -f .nvmrc ] && nvm use
+[ -f .nvmrc ] && command -v nvm > /dev/null 2>&1 && nvm use
 
 git rev-parse -q --no-revs --verify MERGE_HEAD || npx lint-staged --verbose --concurrent false
