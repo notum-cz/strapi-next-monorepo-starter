@@ -97,6 +97,14 @@ jobs:
           retention-days: 7
           if-no-files-found: warn
 
+      - uses: actions/upload-artifact@v4.6.2
+        if: failure()
+        with:
+          name: playwright-traces
+          path: qa/tests/playwright/test-results/**/trace.zip
+          retention-days: 7
+          if-no-files-found: warn
+
   axe:
     if: ${{ inputs.run_axe }}
     name: Playwright AXE tests
