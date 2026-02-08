@@ -1,4 +1,3 @@
-import { Data } from "@repo/strapi-types"
 import { createNavigation } from "next-intl/navigation"
 import { defineRouting } from "next-intl/routing"
 

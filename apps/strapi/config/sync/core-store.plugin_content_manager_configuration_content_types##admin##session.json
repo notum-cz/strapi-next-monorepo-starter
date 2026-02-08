@@ -1,0 +1,276 @@
+{
+  "key": "plugin_content_manager_configuration_content_types::admin::session",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "mainField": "userId",
+      "defaultSortBy": "userId",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "userId": {
+        "edit": {
+          "label": "userId",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "userId",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "sessionId": {
+        "edit": {
+          "label": "sessionId",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "sessionId",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "childId": {
+        "edit": {
+          "label": "childId",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "childId",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "deviceId": {
+        "edit": {
+          "label": "deviceId",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "deviceId",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "origin": {
+        "edit": {
+          "label": "origin",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "origin",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "expiresAt": {
+        "edit": {
+          "label": "expiresAt",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "expiresAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "absoluteExpiresAt": {
+        "edit": {
+          "label": "absoluteExpiresAt",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "absoluteExpiresAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "status": {
+        "edit": {
+          "label": "status",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "status",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "type": {
+        "edit": {
+          "label": "type",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "type",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "createdAt": {
+        "edit": {
+          "label": "createdAt",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "createdAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "updatedAt": {
+        "edit": {
+          "label": "updatedAt",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true
+        },
+        "list": {
+          "label": "updatedAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "createdBy": {
+        "edit": {
+          "label": "createdBy",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true,
+          "mainField": "firstname"
+        },
+        "list": {
+          "label": "createdBy",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "updatedBy": {
+        "edit": {
+          "label": "updatedBy",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true,
+          "mainField": "firstname"
+        },
+        "list": {
+          "label": "updatedBy",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "userId",
+        "sessionId",
+        "childId"
+      ],
+      "edit": [
+        [
+          {
+            "name": "userId",
+            "size": 6
+          },
+          {
+            "name": "sessionId",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "childId",
+            "size": 6
+          },
+          {
+            "name": "deviceId",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "origin",
+            "size": 6
+          },
+          {
+            "name": "expiresAt",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "absoluteExpiresAt",
+            "size": 6
+          },
+          {
+            "name": "status",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "type",
+            "size": 6
+          }
+        ]
+      ]
+    },
+    "uid": "admin::session"
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

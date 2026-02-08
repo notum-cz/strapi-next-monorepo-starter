@@ -1,7 +1,4 @@
-import {
-  getFeLocaleFromStrapiLocale,
-  normalizePageFullPath,
-} from "@repo/shared-data"
+import { normalizePageFullPath } from "@repo/shared-data"
 import { Locale } from "next-intl"
 
 import type { NextMetadataTwitterCard, SocialMetadata } from "@/types/general"
@@ -13,7 +10,8 @@ import { metaRobots } from "@/lib/metadata/constants"
 import { routing } from "@/lib/navigation"
 
 export const preprocessSocialMetadata = (
-  seo: Data.Component<"seo-utilities.seo"> | null | undefined
+  seo: Data.Component<"seo-utilities.seo"> | null | undefined,
+  canonicalUrl?: string
 ): SocialMetadata => {
   const twitterSeo = seo?.twitter
   const ogSeo = seo?.og
@@ -41,7 +39,7 @@ export const preprocessSocialMetadata = (
       siteName: ogSeo?.siteName ?? undefined,
       title: ogSeo?.title ?? seo?.metaTitle ?? undefined,
       description: ogSeo?.description ?? seo?.metaDescription ?? undefined,
-      url: ogSeo?.url ?? undefined,
+      url: ogSeo?.url ?? canonicalUrl ?? undefined,
       images: ogImage
         ? [
             {
@@ -77,25 +75,20 @@ export const getMetaAlternates = ({
   seo,
   fullPath,
   locale,
-  indexable,
   localizations,
 }: {
   seo: Data.Component<"seo-utilities.seo"> | null | undefined
   fullPath: string | null
   locale: Locale
-  indexable: boolean
   localizations?: StrapiLocalization[]
 }) => {
-  // If not indexable, no alternates should be added
-  if (!indexable) {
-    return undefined
-  }
-
   const canonicalUrl = seo?.canonicalUrl ?? fullPath ?? ""
+
+  // This logic is needed to create the mapping between strapi locales and frontend locales, in case they differ while using regionalized locales. If they are the same, it will just create a mapping with the same values, so it is safe to use in both cases.
   const localizationLanguages = localizations?.map((item) => {
     return {
       strapiLocale: item.locale,
-      feLocale: getFeLocaleFromStrapiLocale(item.locale),
+      feLocale: locale,
     }
   })
 

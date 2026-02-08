@@ -1,4 +1,3 @@
-import { StrapiLocale } from "@repo/shared-data"
 import { Locale } from "next-intl"
 
 export interface APIResponseCollectionPagination {
@@ -88,7 +87,7 @@ export type StrapiLocalization = {
   id: number
   documentId: string
   fullPath: string
-  locale: StrapiLocale
+  locale: Locale
 }
 
 export type PageLocalization = {
