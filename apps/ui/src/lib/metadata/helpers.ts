@@ -88,7 +88,7 @@ export const getMetaAlternates = ({
   const localizationLanguages = localizations?.map((item) => {
     return {
       strapiLocale: item.locale,
-      feLocale: locale,
+      feLocale: item.locale,
     }
   })
 
