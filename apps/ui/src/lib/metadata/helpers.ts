@@ -84,27 +84,16 @@ export const getMetaAlternates = ({
 }) => {
   const canonicalUrl = seo?.canonicalUrl ?? fullPath ?? ""
 
-  // This logic is needed to create the mapping between strapi locales and frontend locales, in case they differ while using regionalized locales. If they are the same, it will just create a mapping with the same values, so it is safe to use in both cases.
-  const localizationLanguages = localizations?.map((item) => {
-    return {
-      strapiLocale: item.locale,
-      feLocale: item.locale,
-    }
-  })
-
   const languages = Array.isArray(localizations)
     ? {
         // Only available languages should be added as alternates
-        ...localizationLanguages?.reduce((acc, curr) => {
-          if (!curr.feLocale) {
+        ...localizations?.reduce((acc, curr) => {
+          if (!curr.locale) {
             return acc
           }
           return {
             ...acc,
-            [curr.strapiLocale]: normalizePageFullPath(
-              [canonicalUrl],
-              curr.feLocale
-            ),
+            [curr.locale]: normalizePageFullPath([canonicalUrl], curr.locale),
           }
         }, {}),
         // If you are on defaultLocale, it should point to the en version too
