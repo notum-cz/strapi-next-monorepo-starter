@@ -1,0 +1,84 @@
+{
+  "version": "1.0.1",
+  "keywords": [],
+  "type": "commonjs",
+  "exports": {
+    "./package.json": "./package.json",
+    "./strapi-admin": {
+      "types": "./dist/admin/src/index.d.ts",
+      "source": "./admin/src/index.ts",
+      "import": "./dist/admin/index.mjs",
+      "require": "./dist/admin/index.js",
+      "default": "./dist/admin/index.js"
+    },
+    "./strapi-server": {
+      "types": "./dist/server/src/index.d.ts",
+      "source": "./server/src/index.ts",
+      "import": "./dist/server/index.mjs",
+      "require": "./dist/server/index.js",
+      "default": "./dist/server/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "strapi-plugin build",
+    "watch": "strapi-plugin watch",
+    "watch:link": "strapi-plugin watch:link",
+    "verify": "strapi-plugin verify",
+    "test:ts:front": "run -T tsc -p admin/tsconfig.json",
+    "test:ts:back": "run -T tsc -p server/tsconfig.json"
+  },
+  "dependencies": {
+    "@strapi/design-system": "^2.0.0-rc.29",
+    "@strapi/icons": "^2.0.0-rc.29",
+    "@tiptap/core": "^3.19.0",
+    "@tiptap/extension-document": "^3.19.0",
+    "@tiptap/extension-heading": "^3.19.0",
+    "@tiptap/extension-paragraph": "^3.19.0",
+    "@tiptap/extension-subscript": "^3.19.0",
+    "@tiptap/extension-superscript": "^3.19.0",
+    "@tiptap/extension-table": "^3.19.0",
+    "@tiptap/extension-text": "^3.19.0",
+    "@tiptap/extension-text-align": "^3.19.0",
+    "@tiptap/extensions": "^3.19.0",
+    "@tiptap/pm": "^3.19.0",
+    "@tiptap/react": "^3.19.0",
+    "@tiptap/starter-kit": "^3.19.0",
+    "@strapi/typescript-utils": "5.33.3",
+    "@strapi/strapi": "5.33.3",
+    "react-intl": "^8.1.3"
+  },
+  "devDependencies": {
+    "@strapi/sdk-plugin": "^5.4.0",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "prettier": "^3.8.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.3",
+    "styled-components": "^6.3.9",
+    "typescript": "^5.9.3"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.3",
+    "styled-components": "^6.3.9"
+  },
+  "strapi": {
+    "kind": "plugin",
+    "name": "strapi-plugin-tiptap-editor",
+    "displayName": "Tiptap Editor",
+    "description": "Customizable Tip Tap Editor"
+  },
+  "name": "@repo/strapi-plugin-tiptap-editor",
+  "description": "Customizable Tip Tap Editor",
+  "license": "MIT",
+  "author": "Notum Technologies s.r.o. <sales@notum.cz> (https://notum.tech)",
+  "maintainers": [
+    "Notum Technologies s.r.o. <sales@notum.cz>",
+    "Dominik Juriga <dominik.juriga@notum.cz>"
+  ]
+}

@@ -35,6 +35,11 @@ export default ({ env }) => {
     email: {
       config: prepareEmailConfig(env),
     },
+
+    "strapi-plugin-tiptap-editor": {
+      enabled: true,
+      resolve: "../../packages/strapi-plugin-tiptap-editor",
+    },
   }
 }
 

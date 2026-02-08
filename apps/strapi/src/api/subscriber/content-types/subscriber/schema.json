@@ -22,7 +22,7 @@
     },
     "content": {
       "type": "customField",
-      "customField": "plugin::tiptap-editor.RichText"
+      "customField": "plugin::strapi-plugin-tiptap-editor.RichText"
     }
   }
 }

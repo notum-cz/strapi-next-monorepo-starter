@@ -691,7 +691,7 @@ export interface ApiSubscriberSubscriber extends Struct.CollectionTypeSchema {
   }
   attributes: {
     content: Schema.Attribute.Text &
-      Schema.Attribute.CustomField<"plugin::tiptap-editor.RichText">
+      Schema.Attribute.CustomField<"plugin::strapi-plugin-tiptap-editor.RichText">
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private

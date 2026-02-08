@@ -37,7 +37,11 @@
       "cache": false
     },
     "dev": {
-      "dependsOn": ["@repo/shared-data#build", "@repo/design-system#build"],
+      "dependsOn": [
+        "@repo/shared-data#build",
+        "@repo/design-system#build",
+        "@repo/strapi-plugin-tiptap-editor#build"
+      ],
       "cache": false,
       "persistent": true
     },
