@@ -1,4 +1,4 @@
-import { JSX, ReactNode } from "react"
+import { ReactNode } from "react"
 import { JSONContent } from "@tiptap/core"
 import Subscript from "@tiptap/extension-subscript"
 import Superscript from "@tiptap/extension-superscript"
