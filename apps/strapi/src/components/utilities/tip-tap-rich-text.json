@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_utilities_tip_tap_rich_texts",
+  "info": {
+    "displayName": "TipTapRichText",
+    "icon": "layer"
+  },
+  "options": {},
+  "attributes": {
+    "content": {
+      "type": "customField",
+      "customField": "plugin::tiptap-editor.RichText"
+    }
+  },
+  "config": {}
+}

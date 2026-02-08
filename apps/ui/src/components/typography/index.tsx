@@ -1,14 +1,20 @@
 import React from "react"
 
 import { cn } from "@/lib/styles"
+import {
+  FontWeight,
+  TextColor,
+  TypographyTag,
+  Variant,
+} from "@/components/typography/types"
 
-const textColorVariants = {
+export const textColorVariants = {
   black: "text-black",
   white: "text-white",
   // more variants will be added here
 }
 
-const fontWeightVariants = {
+export const fontWeightVariants = {
   black: "font-black",
   extraBold: "font-extrabold",
   bold: "font-bold",
@@ -20,7 +26,7 @@ const fontWeightVariants = {
   thin: "font-thin",
 }
 
-const variantStyles = {
+export const variantStyles = {
   heading1: "typo-h1",
   heading2: "typo-h2",
   heading3: "typo-h3",
@@ -32,7 +38,7 @@ const variantStyles = {
   large: "typo-p-large",
 }
 
-const defaultStyles: Record<TypographyTag, Variant> = {
+export const defaultStyles: Record<TypographyTag, Variant> = {
   h1: "heading1",
   h2: "heading2",
   h3: "heading3",
@@ -40,12 +46,10 @@ const defaultStyles: Record<TypographyTag, Variant> = {
   h5: "heading5",
   h6: "heading6",
   p: "medium",
+  blockquote: "medium",
+  ol: "medium",
+  ul: "medium",
 }
-
-type Variant = keyof typeof variantStyles
-type TextColor = keyof typeof textColorVariants
-type TypographyTag = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p"
-type FontWeight = keyof typeof fontWeightVariants
 
 interface TypographyProps {
   children: React.ReactNode
