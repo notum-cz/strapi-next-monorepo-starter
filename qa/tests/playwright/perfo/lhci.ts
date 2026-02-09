@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process"
 import fs from "node:fs"
 import path from "node:path"
 
-import urls from "../helpers/urls.json" with { type: "json" }
+import urls from "../helpers/urls.json"
 
 const BASE_URL = process.env.BASE_URL
 
