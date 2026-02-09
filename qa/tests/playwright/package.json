@@ -19,6 +19,7 @@
     "get-sitemap-links": "^1.1.0"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.53.2",
     "@types/node": "^22",
     "dotenv": "17.2.3",
