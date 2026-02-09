@@ -175,7 +175,7 @@ To overcome this issue, this project uses a document middleware. This allows you
 **How it works:**
 
 - The middleware is registered in `apps/strapi/src/index.ts`.
-- The middleware interceptor is implemented in `apps/strapi/src/documentMiddlewares/page.ts`.
+- The middleware interceptor is implemented in `apps/strapi/src/document-middlewares/page.ts`.
 - It intercepts document queries for the `api::page.page` content type, specifically for the `findMany` action.
 - To trigger custom population, your request must include the following in the query parameters:
   - Pagination: `{ page: 1, pageSize: 1 }`, which gets updated to `{start: 0, limit: 1}` during the request resolution (before reaching document middleware)

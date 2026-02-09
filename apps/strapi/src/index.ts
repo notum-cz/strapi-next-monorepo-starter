@@ -1,6 +1,6 @@
 import type { Core } from "@strapi/strapi"
 
-import { registerPopulatePageMiddleware } from "./documentMiddlewares/page"
+import { registerPopulatePageMiddleware } from "./document-middlewares/page"
 import { registerAdminUserSubscriber } from "./lifeCycles/adminUser"
 import { registerUserSubscriber } from "./lifeCycles/user"
 
@@ -11,7 +11,7 @@ export default {
    *
    * This gives you an opportunity to extend code.
    */
-  register(/*{ strapi }*/) {},
+  register(/*{ strapi }*/) { },
 
   /**
    * An asynchronous bootstrap function that runs before

@@ -44,7 +44,7 @@ export default abstract class BaseStrapiClient {
       next: {
         ...requestInit?.next,
         // if revalidate is set to a number since 0 implies cache: 'no-store' and a positive value implies cache: 'force-cache'.
-        revalidate: isDevelopment() ? 0 : requestInit?.next?.revalidate ?? 60,
+        revalidate: isDevelopment() ? 0 : (requestInit?.next?.revalidate ?? 60),
       },
       headers: {
         ...requestInit?.headers,

@@ -1,4 +1,3 @@
-import { Modules } from "@strapi/strapi"
 import { errors } from "@strapi/utils"
 import { pick } from "lodash/fp"
 
