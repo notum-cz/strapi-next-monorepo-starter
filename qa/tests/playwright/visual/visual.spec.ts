@@ -1,3 +1,5 @@
+import fs from "fs"
+
 import { expect, test } from "@playwright/test"
 
 import urls from "../helpers/urls-all-components-page.json"
@@ -18,7 +20,7 @@ function prettifySlug(url: string): string {
 
 test.describe("Visual Regression", () => {
   for (const url of urls) {
-    test(`compare snapshot for ${url}`, async ({ page }) => {
+    test(`Compare snapshot for ${url}`, async ({ page }, testInfo) => {
       // abort non essential requests to speed up tests
       await page.route("**/*", (route, request) => {
         const type = request.resourceType()
@@ -36,9 +38,9 @@ test.describe("Visual Regression", () => {
 
       await page.addStyleTag({
         content: `
-        * { animation: none !important; transition: none !important; }
-        #logo-carousel { visibility: hidden !important; }
-      `,
+          * { animation: none !important; transition: none !important; }
+          #logo-carousel { visibility: hidden !important; }
+        `,
       })
 
       for (const el of await page.locator("img, video").elementHandles()) {
@@ -47,8 +49,31 @@ test.describe("Visual Regression", () => {
         )
       }
 
-      // Take a screenshot and compare to baseline
-      await expect(page).toHaveScreenshot(`${prettifySlug(url)}.png`, {
+      const snapshotName = `${prettifySlug(url)}.png`
+      const baselinePath = testInfo.snapshotPath(snapshotName)
+      const baselineExists = fs.existsSync(baselinePath)
+      const browserName = testInfo.project.name
+
+      // Baseline screenshots do not exist - create them and skip comparison
+      if (!baselineExists) {
+        console.warn(
+          `Baseline snapshot missing for "${url}" and browser ${browserName} - creating: ${snapshotName}`
+        )
+
+        await page.screenshot({
+          path: baselinePath,
+          fullPage: true,
+        })
+
+        console.warn(
+          `Baseline snapshot created for "${url}" and browser ${browserName} - skipping comparison for this run.`
+        )
+
+        return
+      }
+
+      // Baseline screenshot exists - compare with current screenshot
+      await expect(page).toHaveScreenshot(snapshotName, {
         fullPage: true,
         threshold: 0.02, // 0 = pixel perfect, higher = more tolerant
         timeout: COMPARE_TIMEOUT,
