@@ -31,20 +31,31 @@
         "out/**"
       ]
     },
-    "lint": { "dependsOn": ["^lint"] },
-    "sync-types": { "cache": false },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "sync-types": {
+      "cache": false
+    },
     "dev": {
       "dependsOn": ["@repo/shared-data#build", "@repo/design-system#build"],
       "cache": false,
       "persistent": true
     },
-    "start": { "dependsOn": ["^build"], "cache": false, "persistent": true },
+    "start": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
     "axe-test": {
       "dependsOn": ["^build"],
       "cache": false,
       "persistent": false
     },
-    "playwright-interactive-mode": { "cache": false, "persistent": false },
+    "playwright-interactive-mode": {
+      "cache": false,
+      "persistent": false
+    },
     "playwright-e2e-tests": {
       "dependsOn": ["^build"],
       "cache": false,
@@ -60,7 +71,10 @@
       "cache": false,
       "persistent": false
     },
-    "playwright-visual-tests": { "cache": false, "persistent": false }
+    "playwright-visual-tests": {
+      "cache": false,
+      "persistent": false
+    }
   },
   "ui": "tui"
 }
