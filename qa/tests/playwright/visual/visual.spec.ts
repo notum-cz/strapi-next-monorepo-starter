@@ -57,17 +57,13 @@ test.describe("Visual Regression", () => {
       // Baseline screenshots do not exist - create them and skip comparison
       if (!baselineExists) {
         console.warn(
-          `Baseline snapshot missing for "${url}" and browser ${browserName} - creating: ${snapshotName}`
+          `Baseline snapshot missing for "${url}" and browser ${browserName} - creating: ${snapshotName} and skipping comparison for this run.`
         )
 
         await page.screenshot({
           path: baselinePath,
           fullPage: true,
         })
-
-        console.warn(
-          `Baseline snapshot created for "${url}" and browser ${browserName} - skipping comparison for this run.`
-        )
 
         return
       }
