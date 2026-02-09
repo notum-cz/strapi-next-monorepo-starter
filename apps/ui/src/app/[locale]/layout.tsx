@@ -1,10 +1,11 @@
 import "@/styles/globals.css"
 
-import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import Script from "next/script"
 import { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
+
+import type { Metadata } from "next"
 
 import { debugStaticParams } from "@/lib/build"
 import { fontRoboto } from "@/lib/fonts"

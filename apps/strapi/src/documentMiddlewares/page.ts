@@ -1,5 +1,16 @@
 import { Modules } from "@strapi/strapi"
 
+import { animatedLogoRowPopulate } from "./sections/AnimatedLogoRow"
+import { carouselPopulate } from "./sections/Carousel"
+import { contactFormPopulate } from "./sections/ContactForm"
+import { faqPopulate } from "./sections/Faq"
+import { headingWithCtaButtonPopulate } from "./sections/HeadingWithCtaButton"
+import { heroPopulate } from "./sections/Hero"
+import { horizontalImagesPopulate } from "./sections/HorizontalImages"
+import { imageWithCtaButtonPopulate } from "./sections/ImageWithCtaButton"
+import { newsletterFormPopulate } from "./sections/NewsletterForm"
+import { seoPopulate } from "./seo-utilities/Seo"
+
 const pageTypes = ["api::page.page"]
 const pageActions = ["findMany"] // We're using findMany to find the pages, but this could be adjusted to findOne per your needs
 
@@ -50,45 +61,17 @@ const pagePopulateObject: Modules.Documents.ServiceParams<"api::page.page">["fin
   {
     content: {
       on: {
-        "sections.image-with-cta-button": {
-          populate: { image: { populate: { media: true } }, link: true },
-        },
-        "sections.horizontal-images": {
-          populate: {
-            images: {
-              populate: { image: { populate: { media: true } }, link: true },
-            },
-          },
-        },
-        "sections.hero": {
-          populate: {
-            links: true,
-            image: { populate: { media: true } },
-            steps: true,
-          },
-        },
-        "sections.heading-with-cta-button": { populate: { cta: true } },
-        "sections.faq": { populate: { accordions: true } },
-        "sections.carousel": {
-          populate: {
-            images: {
-              populate: { image: { populate: { media: true } }, link: true },
-            },
-          },
-        },
-        "sections.animated-logo-row": {
-          populate: { logos: { populate: { media: true } } },
-        },
-        "forms.newsletter-form": { populate: { gdpr: true } },
-        "forms.contact-form": { populate: { gdpr: true } },
+        "sections.image-with-cta-button": imageWithCtaButtonPopulate,
+        "sections.horizontal-images": horizontalImagesPopulate,
+        "sections.hero": heroPopulate,
+        "sections.heading-with-cta-button": headingWithCtaButtonPopulate,
+        "sections.faq": faqPopulate,
+        "sections.carousel": carouselPopulate,
+        "sections.animated-logo-row": animatedLogoRowPopulate,
+        "forms.newsletter-form": newsletterFormPopulate,
+        "forms.contact-form": contactFormPopulate,
         "utilities.ck-editor-content": true,
       },
     },
-    seo: {
-      populate: {
-        metaImage: true,
-        twitter: { populate: { images: true } },
-        og: { populate: { image: true } },
-      },
-    },
+    seo: seoPopulate,
   }

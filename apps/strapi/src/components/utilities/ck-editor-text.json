@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_utilities_ck_editor_texts",
+  "info": {
+    "displayName": "CkEditorText"
+  },
+  "options": {},
+  "attributes": {
+    "content": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "simpleCkEditor"
+      }
+    }
+  },
+  "config": {}
+}

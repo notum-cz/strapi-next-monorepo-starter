@@ -25,7 +25,7 @@ export function StrapiNewsletterForm({
             <div className="mt-2 flex items-center">
               {component.gdpr?.href && (
                 <AppLink
-                  openExternalInNewTab={Boolean(component.gdpr.newTab)}
+                  openInNewTab={Boolean(component.gdpr.newTab)}
                   className="text-blue-700 underline"
                   href={component.gdpr.href}
                 >
