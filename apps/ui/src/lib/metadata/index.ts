@@ -102,16 +102,17 @@ async function fetchAndMapStrapiMetadata(
     applicationName: seo?.applicationName,
   }
 
-  const strapiSocialMeta: SocialMetadata = preprocessSocialMetadata(seo)
-
   const robots = getMetaRobots(seo?.metaRobots, forbidIndexing)
   const alternates = getMetaAlternates({
     seo,
     fullPath,
     locale,
-    indexable: !!robots?.index,
     localizations,
   })
+  const strapiSocialMeta: SocialMetadata = preprocessSocialMetadata(
+    seo,
+    alternates?.canonical
+  )
 
   return {
     ...mergeWith(defaultMeta, strapiMeta, seoMergeCustomizer),

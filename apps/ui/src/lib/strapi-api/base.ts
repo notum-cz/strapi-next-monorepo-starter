@@ -1,5 +1,3 @@
-import { getStrapiLocaleFromFeLocale } from "@repo/shared-data"
-
 import type {
   APIResponse,
   APIResponseCollection,
@@ -29,17 +27,13 @@ export default abstract class BaseStrapiClient {
     requestInit?: RequestInit,
     options?: CustomFetchOptions
   ) {
-    const strapiLocale = getStrapiLocaleFromFeLocale(params.locale)
-    if (!strapiLocale && params.locale) {
-      throw new Error(
-        `[BaseStrapiClient] Unknown locale mapping for locale '${params.locale}', cannot perform request to Strapi API. It is recommended to check the locale mappings in 'shared-data' package.`
-      )
-    }
     const { url, headers } = await this.prepareRequest(
       path,
       {
         ...params,
-        ...(options?.doNotAddLocaleQueryParams ? {} : { locale: strapiLocale }),
+        ...(options?.doNotAddLocaleQueryParams
+          ? {}
+          : { locale: params.locale }),
       },
       requestInit,
       options
