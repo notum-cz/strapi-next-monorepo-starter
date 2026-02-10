@@ -50,6 +50,10 @@
     "typecheck": {
       "dependsOn": ["^typecheck"]
     },
+    "test": {
+      "dependsOn": ["^build"],
+      "cache": true
+    },
     "axe-test": {
       "cache": false,
       "persistent": false

@@ -19,7 +19,7 @@ env:
 
 jobs:
   build_and_verify:
-    name: Install, Lint, and Build
+    name: Install, Lint, Test and Build
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -39,6 +39,9 @@ jobs:
 
       - name: Run linter
         run: pnpm lint
+
+      - name: Run unit tests
+        run: pnpm test:ci
 
       - name: Build UI
         run: |
