@@ -20,7 +20,8 @@
     "start": "strapi start",
     "strapi": "strapi",
     "test": "jest --forceExit --detectOpenHandles",
-    "transfer": "strapi transfer"
+    "transfer": "strapi transfer",
+    "typecheck": "tsc --noEmit"
   },
   "jest": {
     "testEnvironment": "node",

@@ -206,13 +206,64 @@ See [README](./qa/tests/README.md) for available test suites and commands.
 
 Install extensions listed in the [.vscode/extensions.json](.vscode/extensions.json) file and have a better development experience.
 
-## 🔱 Husky tasks
+## 🔱 Git Hooks & Conventions
 
-Husky is installed by default and configured to run following tasks:
+Husky is installed by default and configured to enforce code quality and consistent naming conventions.
 
-1. `lint` (eslint) and `format` (prettier) on every commit (`pre-commit` hook). To do that, [lint-staged](https://www.npmjs.com/package/lint-staged) library is used. The `format` task is configured in root `.lintstagedrc.js` and run globally for whole monorepo. The `lint` task is configured in each app individually and Strapi is skipped by default.
+### Pre-commit Hook
 
-2. `commitlint` on every commit message (`commit-msg` hook). It checks if commit messages meet [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) format.
+The [pre-commit hook](.husky/pre-commit) runs the following checks before each commit:
+
+1. **Branch name validation** — Ensures branch names follow the convention (skipped during merges):
+
+   ```
+   <type>/STAR-<number>-<description>
+   ```
+
+   **Examples:**
+   - `feat/STAR-1582-repo-config`
+   - `fix/STAR-42-null-pointer-on-login`
+
+   **Exempt branches:** `main`, `master`, `develop`, `dev`, `release/*`, `hotfix/*`
+
+   > [!TIP]
+   > To rename an existing branch: `git branch -m <old-name> <new-name>`
+
+2. **Lint-staged** — Runs `eslint` and `prettier` on staged files. Configuration is in [.lintstagedrc.js](./.lintstagedrc.js). Strapi is skipped by default.
+
+### Commit Message Hook
+
+The [commit-msg hook](.husky/commit-msg) validates commit messages using [commitlint](https://commitlint.js.org/):
+
+**Conventional commits** — Messages must follow [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) format, e.g.:
+
+```bash
+feat(ui): add dark mode toggle
+fix(strapi): resolve null pointer on login
+chore: update dependencies
+```
+
+> Use `pnpm run commit` for an interactive commit message generator.
+
+### Environment Variables in Commits
+
+When introducing new environment variables, mention them in commit messages using `env.VARIABLE_NAME` or `VARIABLE_NAME` (CONSTANT_CASE). The [auto-pr workflow](.github/workflows/auto-pr.yml) extracts these from commit messages and lists them in the PR description under "Required Environment Variables".
+
+**Example commit:**
+
+```
+feat(ui): add sentry integration
+
+Added error tracking with Sentry.
+
+New environment variables:
+- env.SENTRY_DSN
+- env.SENTRY_AUTH_TOKEN
+```
+
+## 📝 Pull Request Template
+
+The [PR template](.github/PULL_REQUEST_TEMPLATE.md) enforces a consistent structure for all pull requests.
 
 ## ♾️ Deployment
 
@@ -222,6 +273,7 @@ We are using GitHub Actions for validation of builds and running tests. There ar
 
 1. [ci.yml](.github/workflows/ci.yml) - runs on every push and pull request to `main` branch. It verifies if code builds.
 2. [qa.yml](.github/workflows/qa.yml) - manually triggered workflow that runs the QA tests from `qa/tests` directory. Ideally it should be run against deployed frontend (by setting `BASE_URL` env variable and passing to [playwright.config.ts](./qa/tests/playwright/playwright.config.ts)).
+3. [auto-pr.yml](.github/workflows/auto-pr.yml) - automatically creates/updates a PR from `dev` to `main` when changes are pushed. Extracts environment variables from commit messages (see [Environment Variables in Commits](#environment-variables-in-commits)).
 
 ### Heroku
 

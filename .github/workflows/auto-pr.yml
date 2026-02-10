@@ -1,0 +1,193 @@
+name: Auto Create Pull Requests
+
+on:
+  push:
+    branches: [dev]
+  schedule:
+    # Run daily at 9 AM UTC to check for differences
+    - cron: "0 9 * * *"
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  auto-pr-dev-to-main:
+    if: github.ref == 'refs/heads/dev' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Check if main branch exists
+        id: check-main
+        run: |
+          if git show-ref --verify --quiet refs/remotes/origin/main; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "ERROR: main branch does not exist!"
+            exit 1
+          fi
+
+      - name: Check for differences between dev and main
+        id: check-diff
+        run: |
+          git fetch origin main
+          if git diff --quiet origin/dev origin/main; then
+            echo "has-changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has-changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check if PR already exists
+        id: check-pr
+        if: steps.check-diff.outputs.has-changes == 'true'
+        run: |
+          PR_NUMBER=$(gh pr list --head dev --base main --state open --json number --jq '.[0].number // empty')
+          if [ -n "$PR_NUMBER" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "number=" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract environment variables from commit messages
+        id: extract-env-vars
+        if: steps.check-diff.outputs.has-changes == 'true'
+        run: |
+          # Extract environment variables from commit bodies between main and dev
+          # Uses %b (body only) to skip subject line which may contain false positives
+          # Look for patterns like env.VARIABLE_NAME or VARIABLE_NAME (CONSTANT_CASE)
+          git log origin/main..origin/dev --format="%b" --no-merges | \
+            grep -oE '(env\.)?[A-Z_][A-Z0-9_]{2,}' | \
+            sed -E 's/^env\.//' | \
+            grep -E '^[A-Z_][A-Z0-9_]{2,}$' | \
+            sed 's/^/- `env./' | \
+            sed 's/$/`/' | \
+            sort -u > env_vars_list.txt
+          
+          # If no vars found, create empty file to avoid errors
+          if [ ! -s env_vars_list.txt ]; then
+            echo "" > env_vars_list.txt
+          fi
+
+      - name: Create Pull Request dev → main
+        if: steps.check-diff.outputs.has-changes == 'true' && steps.check-pr.outputs.exists == 'false'
+        run: |
+          COMMITS=$(git log origin/main..origin/dev --pretty=format:"%h - %s (%an, %ar)" --no-merges | head -10)
+          FILES_CHANGED=$(git diff --name-only origin/main origin/dev | head -20)
+
+          cat > pr_body.md << 'EOF'
+          ## Development to Production Sync
+
+          **Auto-generated PR**: Syncing latest development changes to production environment.
+
+          ### Recent Commits
+          ```
+          EOF
+          echo "$COMMITS" >> pr_body.md
+          cat >> pr_body.md << 'EOF'
+          ```
+
+          ### Files Modified
+          EOF
+          echo "$FILES_CHANGED" | sed 's/^/- `/' | sed 's/$/`/' >> pr_body.md
+          # Only add env vars section if variables were found
+          if [ -s env_vars_list.txt ]; then
+            cat >> pr_body.md << 'EOF'
+
+          ### Required Environment Variables
+          EOF
+            cat env_vars_list.txt >> pr_body.md
+          fi
+          cat >> pr_body.md << 'EOF'
+
+          ### Pre-Merge Checklist
+          - [ ] All CI/CD checks are passing
+          - [ ] Test environment testing completed
+          - [ ] Breaking changes documented (if any)
+          - [ ] All Jira issues are linked and moved to specific column in Jira
+          - [ ] All collections required to backup are set in the repository variables
+
+          ### Merge Instructions
+          - **IMPORTANT: Use "Create a merge commit" when merging**
+          - Do NOT use squash or rebase merge
+
+          ---
+          *This PR was created automatically by GitHub Actions*
+          EOF
+
+          gh pr create \
+            --title "Sync: dev → main" \
+            --body-file pr_body.md \
+            --head dev \
+            --base main \
+            --label "auto-generated" \
+            --assignee "${{ github.actor }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update existing Pull Request dev → main
+        if: steps.check-diff.outputs.has-changes == 'true' && steps.check-pr.outputs.exists == 'true'
+        run: |
+          COMMITS=$(git log origin/main..origin/dev --pretty=format:"%h - %s (%an, %ar)" --no-merges | head -10)
+          FILES_CHANGED=$(git diff --name-only origin/main origin/dev | head -20)
+
+          cat > pr_body.md << 'EOF'
+          ## Development to Production Sync
+
+          **Auto-generated PR**: Syncing latest development changes to production environment.
+
+          ### Recent Commits
+          ```
+          EOF
+          echo "$COMMITS" >> pr_body.md
+          cat >> pr_body.md << 'EOF'
+          ```
+
+          ### Files Modified
+          EOF
+          echo "$FILES_CHANGED" | sed 's/^/- `/' | sed 's/$/`/' >> pr_body.md
+          # Only add env vars section if variables were found
+          if [ -s env_vars_list.txt ]; then
+            cat >> pr_body.md << 'EOF'
+
+          ### Required Environment Variables
+          EOF
+            cat env_vars_list.txt >> pr_body.md
+          fi
+          cat >> pr_body.md << 'EOF'
+
+          ### Pre-Merge Checklist
+          - [ ] All CI/CD checks are passing
+          - [ ] Test environment testing completed
+          - [ ] Breaking changes documented (if any)
+          - [ ] All Jira issues are linked and moved to specific column in Jira
+          - [ ] All collections required to backup are set in the repository variables
+
+          ### Merge Instructions
+          - **IMPORTANT: Use "Create a merge commit" when merging**
+          - Do NOT use squash or rebase merge
+
+          ---
+          *This PR was created automatically by GitHub Actions*
+          EOF
+
+          gh pr edit ${{ steps.check-pr.outputs.number }} \
+            --body-file pr_body.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
