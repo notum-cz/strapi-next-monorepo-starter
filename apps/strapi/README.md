@@ -19,6 +19,8 @@ This is a [Strapi v5](https://strapi.io/) project.
 - @strapi/provider-email-nodemailer
 - @strapi/provider-upload-aws-s3
 - strapi-plugin-config-sync
+- @notum-cz/strapi-plugin-tiptap-editor (TipTap rich text editor)
+- @_sh/strapi-plugin-ckeditor (CKEditor rich text editor)
 - qs
 - lodash
 - pg
@@ -163,6 +165,69 @@ It provides a unified abstraction for handling both internal and external links 
 - Supports icons, sizes, and visual variants based on **shadcn/ui**
 - Handles external links via a simple text (URL) field
 - Handles internal links as relations to Strapi collection types, ensuring link stability when a page `fullPath` changes and preventing broken links
+
+### Rich Text Editors: TipTap vs CKEditor
+
+This starter includes **two rich text editor options** for content creation in Strapi:
+
+- **TipTap Editor** (`@notum-cz/strapi-plugin-tiptap-editor`) - Modern, headless editor
+- **CKEditor** (`@_sh/strapi-plugin-ckeditor`) - Traditional WYSIWYG editor
+
+Both editors are pre-installed and available as component options in your content types.
+
+#### When to Use TipTap
+
+**Recommended for:**
+- Modern, headless content workflows
+- Precise control over frontend rendering
+- Projects requiring custom styling and typography control
+- Better performance with large documents
+- Structured content with semantic meaning
+
+**Benefits:**
+- Stores content as structured JSON (ProseMirror format)
+- Full control over frontend rendering via React components
+- Lighter weight and faster performance
+- Better integration with design systems
+- Type-safe content rendering
+- Custom node and mark extensions support
+
+**Available as component:** `utilities.tip-tap-rich-text`
+
+**Frontend renderer:** `apps/ui/src/components/elementary/tiptap-editor`
+
+#### When to Use CKEditor
+
+**Recommended for:**
+- Content editors familiar with traditional word processors
+- Quick setup with minimal frontend customization
+- Projects requiring classic WYSIWYG experience
+- Legacy content migration from other CMS platforms
+
+**Benefits:**
+- Familiar Microsoft Word-like interface
+- Stores content as HTML
+- Extensive plugin ecosystem
+- Mature and battle-tested
+
+**Available as components:** `utilities.ck-editor-content`, `utilities.ck-editor-text`
+
+**Frontend renderer:** `apps/ui/src/components/elementary/ck-editor`
+
+#### Choosing Between Them
+
+| Feature | TipTap | CKEditor |
+|---------|---------|----------|
+| **Storage Format** | Structured JSON | HTML |
+| **Frontend Control** | Full customization via React components | Limited by HTML output |
+| **Editor Experience** | Clean, modern UI | Classic WYSIWYG |
+| **Performance** | Better with large content | Good |
+| **Learning Curve** | Moderate (for developers) | Low (for editors) |
+| **Styling Control** | Complete control | Limited to CSS |
+
+**Our recommendation:** Use **TipTap** for new projects to leverage its modern architecture, better performance, and superior integration with the design system. Use **CKEditor** if you need a traditional editing experience or are migrating from another CMS.
+
+Both editors share color configurations from the `@repo/design-system` package to ensure consistent branding across your content.
 
 ### Plugins
 
