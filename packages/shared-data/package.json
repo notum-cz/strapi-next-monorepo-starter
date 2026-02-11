@@ -13,7 +13,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "typescript": "^5"
