@@ -1,18 +1,14 @@
-import type { Modules } from "@strapi/strapi"
+import { errors } from "@strapi/utils"
 
-import { animatedLogoRowPopulate } from "./sections/AnimatedLogoRow"
-import { carouselPopulate } from "./sections/Carousel"
-import { contactFormPopulate } from "./sections/ContactForm"
-import { faqPopulate } from "./sections/Faq"
-import { headingWithCtaButtonPopulate } from "./sections/HeadingWithCtaButton"
-import { heroPopulate } from "./sections/Hero"
-import { horizontalImagesPopulate } from "./sections/HorizontalImages"
-import { imageWithCtaButtonPopulate } from "./sections/ImageWithCtaButton"
-import { newsletterFormPopulate } from "./sections/NewsletterForm"
-import { seoPopulate } from "./seo-utilities/Seo"
+import {
+  extractComponentsToPopulate,
+  getComponentsConfigForDynamicZones,
+  normalizeDynamicZonePopulate,
+  prefetchDataToPopulate,
+} from "./helpers"
 
-const pageTypes = new Set(["api::page.page"])
-const pageActions = new Set(["findMany"]) // We're using findMany to find the pages, but this could be adjusted to findOne per your needs
+// We're using findMany to find the pages, but this could be adjusted to findOne per your needs
+const pageActions = new Set(["findMany", "findOne", "findFirst"])
 
 /**
  * Registers a middleware to customize the population of related fields for page documents during Strapi queries.
@@ -24,53 +20,56 @@ const pageActions = new Set(["findMany"]) // We're using findMany to find the pa
  * The request must contain 'middlewarePopulate' (array of string keys) in the 'params' object, which is going to be mapped to 'pagePopulateObject' attributes.
  *
  */
+
 export const registerPopulatePageMiddleware = ({ strapi }) => {
-  strapi.documents.use((context, next) => {
-    if (pageTypes.has(context.uid) && pageActions.has(context.action)) {
-      const requestParams: {
-        start?: number
-        limit?: number
-        middlewarePopulate?: string[]
-      } = context.params
-      if (
-        // This is added by Strapi regardless of whether you use pagination or start & limit attributes
-        // This condition will be met if the request contains {pagination: {page: 1, pageSize: 1}}
-        requestParams?.start === 0 &&
-        requestParams?.limit === 1 &&
-        Array.isArray(requestParams?.middlewarePopulate)
-      ) {
-        requestParams.middlewarePopulate
-          .filter((populateAttr) =>
-            Object.keys(pagePopulateObject).includes(populateAttr)
-          )
-          .forEach((populateAttr) => {
-            context.params.populate[populateAttr] =
-              pagePopulateObject[populateAttr]
-          })
-      }
+  strapi.documents.use(async (context, next) => {
+    if (!pageActions.has(context.action)) {
+      return next()
+    }
+
+    const isSmartPopulateEnabled =
+      normalizeDynamicZonePopulate(context.params.populateDynamicZone).length >
+      0
+
+    if (!isSmartPopulateEnabled) {
+      return next()
+    }
+
+    const dynamicZonePopulate = normalizeDynamicZonePopulate(
+      context.params.populateDynamicZone
+    )
+
+    const attributesNotExists = dynamicZonePopulate.filter(
+      (populateAttr) =>
+        context.contentType.attributes[populateAttr] === undefined
+    )
+
+    if (attributesNotExists.length > 0) {
+      throw new errors.ValidationError(
+        `Attributes '${attributesNotExists.join(", ")}' do not exist`
+      )
+    }
+
+    delete context.params.populateDynamicZone
+
+    const prefetchedDataToPopulate = await prefetchDataToPopulate(
+      dynamicZonePopulate,
+      context
+    )
+
+    const componentsToPopulate = extractComponentsToPopulate(
+      prefetchedDataToPopulate,
+      dynamicZonePopulate
+    )
+
+    const dynamicZonesPopulateObject =
+      getComponentsConfigForDynamicZones(componentsToPopulate)
+
+    context.params.populate = {
+      ...context.params.populate,
+      ...dynamicZonesPopulateObject,
     }
 
     return next()
   })
 }
-
-const pagePopulateObject: Modules.Documents.ServiceParams<"api::page.page">["findOne"]["populate"] =
-  {
-    content: {
-      on: {
-        "sections.image-with-cta-button": imageWithCtaButtonPopulate,
-        "sections.horizontal-images": horizontalImagesPopulate,
-        "sections.hero": heroPopulate,
-        "sections.heading-with-cta-button": headingWithCtaButtonPopulate,
-        "sections.faq": faqPopulate,
-        "sections.carousel": carouselPopulate,
-        "sections.animated-logo-row": animatedLogoRowPopulate,
-        "forms.newsletter-form": newsletterFormPopulate,
-        "forms.contact-form": contactFormPopulate,
-        "utilities.ck-editor-content": true,
-        "utilities.ck-editor-text": true,
-        "utilities.tip-tap-rich-text": true,
-      },
-    },
-    seo: seoPopulate,
-  }

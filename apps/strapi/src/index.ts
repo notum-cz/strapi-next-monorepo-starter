@@ -23,7 +23,6 @@ export default {
   bootstrap({ strapi }: { strapi: Core.Strapi }) {
     registerAdminUserSubscriber({ strapi })
     registerUserSubscriber({ strapi })
-
     registerPopulatePageMiddleware({ strapi })
   },
 }

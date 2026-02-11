@@ -75,7 +75,7 @@ export type AppLocalizedParams<T> = T & {
   // Locale is meant to be frontend locale, that is mapped to the Strapi locale
   // before firing the request
   locale?: Locale
-  middlewarePopulate?: string[]
+  populateDynamicZone?: T extends { populate?: infer P } ? P : never
 }
 
 export type BreadCrumb = {
@@ -93,3 +93,9 @@ export type StrapiLocalization = {
 export type PageLocalization = {
   localizations: StrapiLocalization[]
 } | null
+
+export type DynamicZonePopulateParams<T> = {
+  populate: (T extends { populate?: infer P } ? P : {}) & {
+    [K in keyof (T extends { populateDynamicZone?: infer DZ } ? DZ : {})]: true
+  }
+}
