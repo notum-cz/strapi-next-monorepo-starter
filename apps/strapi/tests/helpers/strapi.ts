@@ -23,7 +23,10 @@ export const setupStrapi = async () => {
     tmpDir = await fs.mkdtemp(path.join(systemTempDir, "strapi-test-"))
     tmpDbFile = resolve(tmpDir, "test.db")
 
-    process.env.DATABASE_FILENAME = tmpDbFile
+    // Use SQLite for testing
+    // First, add "better-sqlite3" to deps, then set client:
+    // process.env.DATABASE_CLIENT = "sqlite"
+    // process.env.DATABASE_FILENAME = tmpDbFile
     const options = {
       appDir: process.cwd(),
       distDir: resolve(process.cwd(), "dist"),
@@ -50,9 +53,7 @@ export const teardownStrapi = async () => {
       jobs[name].cancel(true) // Force cancel
       delete jobs[name]
     })
-    schedule.gracefulShutdown?.()
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    schedule.destroy()
+    await schedule.gracefulShutdown?.()
   } catch (_e) {
     /* noop */
   }
@@ -82,9 +83,9 @@ export const teardownStrapi = async () => {
       await instance.db.destroy()
     }
 
-    // 5. Clean up temp files
-    if (existsSync(tmpDbFile)) {
-      await fs.unlink(tmpDbFile)
+    // 5. Clean up temp files and directory
+    if (tmpDir && existsSync(tmpDir)) {
+      await fs.rm(tmpDir, { recursive: true, force: true })
     }
 
     // 6. Clear instance reference
