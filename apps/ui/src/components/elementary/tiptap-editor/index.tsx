@@ -24,7 +24,7 @@ export type TiptapRichTextProps = {
   content?: string | null
 
   /** Default variant to be used for text nodes that are not marked with a specific style.
-   * If not provided, defaults to "body".
+   * If not provided, defaults to "medium".
    */
   defaultVariant?: Variant
 
@@ -73,6 +73,11 @@ export function TiptapRichText({
   }
 
   const jsonContent = safeJSONParse(content) as JSONContent
+
+  if (!jsonContent?.type) {
+    console.warn("TiptapRichText: content is not valid:", content)
+    return null
+  }
 
   return renderToReactElement({
     extensions: [
