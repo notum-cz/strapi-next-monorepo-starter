@@ -23,6 +23,7 @@ export const PageContentComponents: {
   // They are usually rendered or used deep inside other components or handlers
   // Add them here if they can be used on Page content level
   "utilities.ck-editor-content": StrapiCkEditorContent,
+  "utilities.ck-editor-text": StrapiCkEditorContent,
 
   // Sections
   "sections.animated-logo-row": StrapiAnimatedLogoRow,
