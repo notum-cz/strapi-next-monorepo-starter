@@ -1,7 +1,4 @@
-import {
-  getFeLocaleFromStrapiLocale,
-  normalizePageFullPath,
-} from "@repo/shared-data"
+import { normalizePageFullPath } from "@repo/shared-data"
 import { Locale } from "next-intl"
 
 import type { NextMetadataTwitterCard, SocialMetadata } from "@/types/general"
@@ -13,7 +10,8 @@ import { metaRobots } from "@/lib/metadata/constants"
 import { routing } from "@/lib/navigation"
 
 export const preprocessSocialMetadata = (
-  seo: Data.Component<"seo-utilities.seo"> | null | undefined
+  seo: Data.Component<"seo-utilities.seo"> | null | undefined,
+  canonicalUrl?: string
 ): SocialMetadata => {
   const twitterSeo = seo?.twitter
   const ogSeo = seo?.og
@@ -41,7 +39,7 @@ export const preprocessSocialMetadata = (
       siteName: ogSeo?.siteName ?? undefined,
       title: ogSeo?.title ?? seo?.metaTitle ?? undefined,
       description: ogSeo?.description ?? seo?.metaDescription ?? undefined,
-      url: ogSeo?.url ?? undefined,
+      url: ogSeo?.url ?? canonicalUrl ?? undefined,
       images: ogImage
         ? [
             {
@@ -77,41 +75,25 @@ export const getMetaAlternates = ({
   seo,
   fullPath,
   locale,
-  indexable,
   localizations,
 }: {
   seo: Data.Component<"seo-utilities.seo"> | null | undefined
   fullPath: string | null
   locale: Locale
-  indexable: boolean
   localizations?: StrapiLocalization[]
 }) => {
-  // If not indexable, no alternates should be added
-  if (!indexable) {
-    return undefined
-  }
-
   const canonicalUrl = seo?.canonicalUrl ?? fullPath ?? ""
-  const localizationLanguages = localizations?.map((item) => {
-    return {
-      strapiLocale: item.locale,
-      feLocale: getFeLocaleFromStrapiLocale(item.locale),
-    }
-  })
 
   const languages = Array.isArray(localizations)
     ? {
         // Only available languages should be added as alternates
-        ...localizationLanguages?.reduce((acc, curr) => {
-          if (!curr.feLocale) {
+        ...localizations?.reduce((acc, curr) => {
+          if (!curr.locale) {
             return acc
           }
           return {
             ...acc,
-            [curr.strapiLocale]: normalizePageFullPath(
-              [canonicalUrl],
-              curr.feLocale
-            ),
+            [curr.locale]: normalizePageFullPath([canonicalUrl], curr.locale),
           }
         }, {}),
         // If you are on defaultLocale, it should point to the en version too

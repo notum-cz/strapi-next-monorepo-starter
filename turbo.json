@@ -13,7 +13,8 @@
     "SENTRY_PROJECT",
     "SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING",
     "CI",
-    "MOBILE_VIEWPORTS_TESTING_ENABLED"
+    "MOBILE_VIEWPORTS_TESTING_ENABLED",
+    "BASE_URL"
   ],
   "tasks": {
     "build": {
@@ -47,7 +48,6 @@
       "persistent": true
     },
     "axe-test": {
-      "dependsOn": ["^build"],
       "cache": false,
       "persistent": false
     },
@@ -56,7 +56,18 @@
       "persistent": false
     },
     "playwright-e2e-tests": {
-      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-seo-tests": {
+      "cache": false,
+      "persistent": false
+    },
+    "lhci-perfo-check": {
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-visual-tests": {
       "cache": false,
       "persistent": false
     }
