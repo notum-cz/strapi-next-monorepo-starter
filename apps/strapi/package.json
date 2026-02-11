@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@_sh/strapi-plugin-ckeditor": "^6.0.2",
+    "@notum-cz/strapi-plugin-tiptap-editor": "^1.0.1",
     "@repo/design-system": "workspace:*",
     "@repo/shared-data": "workspace:*",
     "@strapi/database": "5.33.3",

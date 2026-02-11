@@ -92,7 +92,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 - **UI library**: 20+ pre-installed components, beautifully designed by [Shadcn/ui](https://ui.shadcn.com/)
 - **UI components**: Ready to use components for common use cases (forms, images, tables, navbar and much more)
 - **TailwindCSS**: [TailwindCSS v4](https://tailwindcss.com/) setup with configuration and theme, [CVA](https://cva.style/docs), [tailwind-merge](https://www.npmjs.com/package/tailwind-merge) and [tailwindcss-animate](https://www.npmjs.com/package/tailwindcss-animate)
-- **CkEditor**: Pre-configured [CkEditor v5](https://ckeditor.com/) WYSIWYG editor with shared styles and colors
+- **Rich text editors**: Pre-configured [CkEditor v5](https://ckeditor.com/) and [Tip tap](https://tiptap.dev/) WYSIWYG editors with shared styles and colors
 - **Utils**: Useful utils, hooks and helper functions included
 - **Auth**: JWT authentication with [Strapi Users & Permissions feature](https://docs.strapi.io/cms/features/users-permissions) and [Better Auth](https://www.better-auth.com), auth middleware and protected routes
 - **Auth providers**: Ready to plug-in providers like Google, Facebook etc.

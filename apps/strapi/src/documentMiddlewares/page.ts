@@ -72,6 +72,7 @@ const pagePopulateObject: Modules.Documents.ServiceParams<"api::page.page">["fin
         "forms.contact-form": contactFormPopulate,
         "utilities.ck-editor-content": true,
         "utilities.ck-editor-text": true,
+        "utilities.tip-tap-rich-text": true,
       },
     },
     seo: seoPopulate,

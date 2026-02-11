@@ -10,6 +10,7 @@ import StrapiHero from "@/components/page-builder/components/sections/StrapiHero
 import StrapiHorizontalImages from "@/components/page-builder/components/sections/StrapiHorizontalImages"
 import StrapiImageWithCTAButton from "@/components/page-builder/components/sections/StrapiImageWithCTAButton"
 import StrapiCkEditorContent from "@/components/page-builder/components/utilities/StrapiCkEditorContent"
+import StrapiTipTapEditorContent from "@/components/page-builder/components/utilities/StrapiTipTapEditorContent"
 
 /**
  * Mapping of Strapi Component UID to React Component
@@ -24,6 +25,7 @@ export const PageContentComponents: {
   // Add them here if they can be used on Page content level
   "utilities.ck-editor-content": StrapiCkEditorContent,
   "utilities.ck-editor-text": StrapiCkEditorContent,
+  "utilities.tip-tap-rich-text": StrapiTipTapEditorContent,
 
   // Sections
   "sections.animated-logo-row": StrapiAnimatedLogoRow,

@@ -164,6 +164,56 @@ It provides a unified abstraction for handling both internal and external links 
 - Handles external links via a simple text (URL) field
 - Handles internal links as relations to Strapi collection types, ensuring link stability when a page `fullPath` changes and preventing broken links
 
+### Rich text editors
+
+There are two integrated rich text editor options for Strapi content. Choose one based on your project needs — both have corresponding frontend renderers ready to use.
+
+#### CKEditor (`@_sh/strapi-plugin-ckeditor`)
+
+A classic HTML-based rich text editor. Content is stored as HTML and rendered on the frontend using `dangerouslySetInnerHTML` with built-in link processing and sanitization.
+
+**Strapi component:** `utilities.ck-editor-content` or `utilities.ck-editor-text` (the difference is in the allowed toolbar options and styles, rendering is the same)
+
+**Frontend usage:**
+
+```tsx
+import CkEditorRenderer from "@/components/elementary/ck-editor"
+
+return (
+  <CkEditorRenderer
+    htmlContent={component.content}
+    className="mx-auto w-full max-w-[1296px] px-4 py-8"
+    variant="page" // "page" | "blog"
+  />
+)
+```
+
+Custom CKEditor plugins and heading styles are configured in `src/admin/ckeditor/`.
+
+#### Tiptap editor (`@notum-cz/strapi-plugin-tiptap-editor`)
+
+A JSON-based rich text editor. Content is stored as structured JSON (ProseMirror format) and rendered on the frontend using `tiptap-react-renderer` with full control over node/mark mapping.
+
+> [!WARNING]
+> We've just released the Tip tap editor plugin and it's still in early stages. The editor is stable and works well for basic use cases, but it may require some adjustments and improvements in the future. If you want to use it in production, please test it thoroughly with your content and report any issues you find in the [Github repository](https://github.com/notum-cz/strapi-plugin-tiptap-editor/issues). We are actively working on improving the plugin and adding new features, so your feedback is very valuable.
+
+**Strapi component:** `utilities.tip-tap-rich-text`
+
+**Frontend usage:**
+
+```tsx
+import { TiptapRichText } from "@/components/elementary/tiptap-editor"
+
+return (
+  <TiptapRichText
+    content={component.content}
+    defaultVariant="medium" // typography variant for text nodes
+    defaultWeight="normal" // font weight for text nodes
+    accentCursive="accent-cursive" // "accent-cursive" | "only-cursive" | "no-accent"
+  />
+)
+```
+
 ### Plugins
 
 All plugins are configured in [config/plugins.ts](config/plugins.ts) file. Some of them may require additional setting of API keys or different ENV variables. User-permissions, seo and config-sync plugins are enabled by default and don't require additional configuration.

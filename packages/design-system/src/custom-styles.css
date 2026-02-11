@@ -43,7 +43,8 @@
 .ck-editor-rich-text-blog .typo-h1,
 .ck-editor__main .ck-content h1,
 .ck-editor__main .ck-content .typo-h1,
-.typo-h1 {
+.typo-h1,
+.tip-tap-editor-wrapper h1 {
   @apply text-6xl mb-2;
 }
 
@@ -53,7 +54,8 @@
 .ck-editor-rich-text-blog .typo-h2,
 .ck-editor__main .ck-content h2,
 .ck-editor__main .ck-content .typo-h2,
-.typo-h2 {
+.typo-h2,
+.tip-tap-editor-wrapper h2 {
   @apply text-5xl mb-1.5;
 }
 
@@ -63,7 +65,8 @@
 .ck-editor-rich-text-blog .typo-h3,
 .ck-editor__main .ck-content h3,
 .ck-editor__main .ck-content .typo-h3,
-.typo-h3 {
+.typo-h3,
+.tip-tap-editor-wrapper h3 {
   @apply text-4xl mb-1;
 }
 
@@ -73,7 +76,8 @@
 .ck-editor-rich-text-blog .typo-h4,
 .ck-editor__main .ck-content h4,
 .ck-editor__main .ck-content .typo-h4,
-.typo-h4 {
+.typo-h4,
+.tip-tap-editor-wrapper h4 {
   @apply text-3xl mb-1;
 }
 
@@ -83,7 +87,8 @@
 .ck-editor-rich-text-blog .typo-h5,
 .ck-editor__main .ck-content h5,
 .ck-editor__main .ck-content .typo-h5,
-.typo-h5 {
+.typo-h5,
+.tip-tap-editor-wrapper h5 {
   @apply text-2xl mb-1;
 }
 
@@ -93,7 +98,8 @@
 .ck-editor-rich-text-blog .typo-h6,
 .ck-editor__main .ck-content h6,
 .ck-editor__main .ck-content .typo-h6,
-.typo-h6 {
+.typo-h6,
+.tip-tap-editor-wrapper h6 {
   @apply text-xl mb-1;
 }
 
@@ -104,21 +110,24 @@
 .ck-editor-rich-text-blog .typo-p-medium,
 .ck-editor__main .ck-content p,
 .ck-editor__main .ck-content .typo-p-medium,
-.typo-p-medium {
+.typo-p-medium,
+.tip-tap-editor-wrapper p {
   @apply text-sm mb-0.5;
 }
 
 .ck-editor-rich-text-page .typo-p-large,
 .ck-editor-rich-text-blog .typo-p-large,
 .ck-editor__main .ck-content .typo-p-large,
-.typo-p-large {
+.typo-p-large,
+.tip-tap-editor-wrapper .typo-p-large {
   @apply text-lg mb-0.5;
 }
 
 .ck-editor-rich-text-page .typo-p-small,
 .ck-editor-rich-text-blog .typo-p-small,
 .ck-editor__main .ck-content .typo-p-small,
-.typo-p-small {
+.typo-p-small,
+.tip-tap-editor-wrapper .typo-p-small {
   @apply text-xs mb-0.5;
 }
 

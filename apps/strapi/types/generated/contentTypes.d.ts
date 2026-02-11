@@ -228,6 +228,7 @@ export interface AdminSession extends Struct.CollectionTypeSchema {
   }
   attributes: {
     absoluteExpiresAt: Schema.Attribute.DateTime & Schema.Attribute.Private
+    childId: Schema.Attribute.String & Schema.Attribute.Private
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
@@ -237,7 +238,6 @@ export interface AdminSession extends Struct.CollectionTypeSchema {
     expiresAt: Schema.Attribute.DateTime &
       Schema.Attribute.Required &
       Schema.Attribute.Private
-    childId: Schema.Attribute.String & Schema.Attribute.Private
     locale: Schema.Attribute.String & Schema.Attribute.Private
     localizations: Schema.Attribute.Relation<"oneToMany", "admin::session"> &
       Schema.Attribute.Private
@@ -587,6 +587,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
           localized: true
         }
       }>
+    children: Schema.Attribute.Relation<"oneToMany", "api::page.page">
     content: Schema.Attribute.DynamicZone<
       [
         "sections.image-with-cta-button",
@@ -600,6 +601,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         "forms.contact-form",
         "utilities.ck-editor-content",
         "utilities.ck-editor-text",
+        "utilities.tip-tap-rich-text",
       ]
     > &
       Schema.Attribute.SetPluginOptions<{
@@ -617,7 +619,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
           localized: true
         }
       }>
-    children: Schema.Attribute.Relation<"oneToMany", "api::page.page">
     locale: Schema.Attribute.String
     localizations: Schema.Attribute.Relation<"oneToMany", "api::page.page">
     parent: Schema.Attribute.Relation<"manyToOne", "api::page.page">
@@ -689,6 +690,8 @@ export interface ApiSubscriberSubscriber extends Struct.CollectionTypeSchema {
     draftAndPublish: false
   }
   attributes: {
+    content: Schema.Attribute.Text &
+      Schema.Attribute.CustomField<"plugin::tiptap-editor.RichText">
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
@@ -1023,11 +1026,11 @@ export interface PluginUploadFolder extends Struct.CollectionTypeSchema {
     }
   }
   attributes: {
+    children: Schema.Attribute.Relation<"oneToMany", "plugin::upload.folder">
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
     files: Schema.Attribute.Relation<"oneToMany", "plugin::upload.file">
-    children: Schema.Attribute.Relation<"oneToMany", "plugin::upload.folder">
     locale: Schema.Attribute.String & Schema.Attribute.Private
     localizations: Schema.Attribute.Relation<
       "oneToMany",

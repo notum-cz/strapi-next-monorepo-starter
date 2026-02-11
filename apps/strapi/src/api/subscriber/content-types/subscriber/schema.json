@@ -9,6 +9,7 @@
   "options": {
     "draftAndPublish": false
   },
+  "pluginOptions": {},
   "attributes": {
     "name": {
       "type": "string"
@@ -18,6 +19,10 @@
     },
     "message": {
       "type": "text"
+    },
+    "content": {
+      "type": "customField",
+      "customField": "plugin::tiptap-editor.RichText"
     }
   }
 }
