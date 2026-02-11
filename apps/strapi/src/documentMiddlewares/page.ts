@@ -71,6 +71,7 @@ const pagePopulateObject: Modules.Documents.ServiceParams<"api::page.page">["fin
         "forms.newsletter-form": newsletterFormPopulate,
         "forms.contact-form": contactFormPopulate,
         "utilities.ck-editor-content": true,
+        "utilities.ck-editor-text": true,
       },
     },
     seo: seoPopulate,
