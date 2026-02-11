@@ -79,11 +79,6 @@ jobs:
             sed 's/^/- `env./' | \
             sed 's/$/`/' | \
             sort -u > env_vars_list.txt
-          
-          # If no vars found, create empty file to avoid errors
-          if [ ! -s env_vars_list.txt ]; then
-            echo "" > env_vars_list.txt
-          fi
 
       - name: Create Pull Request dev → main
         if: steps.check-diff.outputs.has-changes == 'true' && steps.check-pr.outputs.exists == 'false'
