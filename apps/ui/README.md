@@ -566,6 +566,10 @@ export function ContactUsForm() {
 }
 ```
 
+### Health check endpoint
+
+A simple health check endpoint is available at `/api/health`, e.g. [http://localhost:3000/api/health](http://localhost:3000/api/health). This can be used for monitoring and uptime checks.
+
 ## Configure log verbosity
 
 There are a few configuration flags which can help you reduce chatter in the console. Enabling them is done by setting the respective environment variable to `true` in your environment configuration (e.g. `.env.local` file). By default, all of them are disabled.
