@@ -9,6 +9,8 @@ import { NodeProps } from "@tiptap/static-renderer"
 import { renderToReactElement } from "@tiptap/static-renderer/pm/react"
 import { Node as TiptapNode } from "prosemirror-model"
 
+import type { FontWeight, Variant } from "@/components/typography"
+
 import { safeJSONParse } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
 import AppLink from "@/components/elementary/AppLink"
@@ -18,7 +20,6 @@ import {
 } from "@/components/elementary/tiptap-editor/extensions"
 import { textAlignClassName } from "@/components/elementary/tiptap-editor/utils"
 import Typography from "@/components/typography"
-import { FontWeight, Variant } from "@/components/typography/types"
 
 export type TiptapRichTextProps = {
   content?: string | null
