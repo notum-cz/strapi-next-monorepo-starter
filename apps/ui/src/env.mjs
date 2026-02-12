@@ -34,6 +34,10 @@ export const env = createEnv({
     SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING: z.string().optional(),
 
     RECAPTCHA_SECRET_KEY: z.string().optional(),
+
+    BASIC_AUTH_ENABLED: optionalZodBoolean(),
+    BASIC_AUTH_USERNAME: z.string().optional(),
+    BASIC_AUTH_PASSWORD: z.string().optional(),
   },
 
   /*
@@ -85,6 +89,10 @@ export const env = createEnv({
       process.env.SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING,
 
     RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY,
+
+    BASIC_AUTH_ENABLED: process.env.BASIC_AUTH_ENABLED,
+    BASIC_AUTH_USERNAME: process.env.BASIC_AUTH_USERNAME,
+    BASIC_AUTH_PASSWORD: process.env.BASIC_AUTH_PASSWORD,
 
     // client
     // @dominik-juriga - find out if these are specific per environment
