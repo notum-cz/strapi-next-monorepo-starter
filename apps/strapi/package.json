@@ -19,17 +19,10 @@
     "run:db": "docker compose up -d db",
     "start": "strapi start",
     "strapi": "strapi",
-    "test": "jest --forceExit --detectOpenHandles",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "transfer": "strapi transfer",
     "typecheck": "tsc --noEmit"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      ".tmp",
-      ".cache"
-    ]
   },
   "dependencies": {
     "@_sh/strapi-plugin-ckeditor": "^6.0.2",
@@ -56,7 +49,8 @@
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
     "strapi-plugin-config-sync": "2.1.0",
-    "styled-components": "^6.0.0"
+    "styled-components": "^6.0.0",
+    "vitest": "^4.0.18"
   },
   "devDependencies": {
     "@types/node": "^22",
