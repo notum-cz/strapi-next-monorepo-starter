@@ -636,18 +636,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
           localized: true
         }
       }>
-    test: Schema.Attribute.DynamicZone<
-      [
-        "utilities.ck-editor-content",
-        "sections.image-with-cta-button",
-        "sections.heading-with-cta-button",
-      ]
-    > &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true
-        }
-      }>
     title: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
