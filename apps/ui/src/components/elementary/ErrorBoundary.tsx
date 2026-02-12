@@ -18,7 +18,7 @@ function ErrorBoundaryFallback({
   hideReset,
   showErrorMessage,
 }: {
-  readonly error: Error
+  readonly error: Error & { digest?: string }
   readonly resetErrorBoundary: () => void
   readonly customErrorTitle?: string
   readonly hideReset?: boolean
@@ -92,15 +92,20 @@ export function ErrorBoundary({
   readonly showErrorMessage?: boolean
   readonly onReset?: () => void
   readonly onError?: (
-    error: Error,
+    error: Error & { digest?: string },
 
     info: { componentStack?: string | null }
   ) => void
 }) {
   const handleError = (
-    error: Error,
+    error: Error & { digest?: string },
     info: { componentStack?: string | null; digest?: string | null }
   ) => {
+    const digest = error.digest ?? info.digest
+    if (digest === "NEXT_NOT_FOUND" || digest?.includes("404")) {
+      throw error
+    }
+
     if (onError) {
       onError(error, info)
     }
