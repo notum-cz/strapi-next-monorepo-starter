@@ -1,8 +1,8 @@
-import React from "react"
+import type React from "react"
 
 import { cn } from "@/lib/styles"
 
-export const Container = ({
+export function Container({
   children,
   className,
   hideDefaultPadding,
@@ -10,7 +10,7 @@ export const Container = ({
   readonly children: React.ReactNode
   readonly className?: string
   readonly hideDefaultPadding?: boolean
-}) => {
+}) {
   return (
     <div
       className={cn(

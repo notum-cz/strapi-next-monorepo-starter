@@ -23,8 +23,6 @@
     "dev": "turbo dev",
     "dev:strapi": "turbo run dev --filter=@repo/strapi",
     "dev:ui": "turbo run dev --filter=@repo/ui",
-    "format": "prettier --write --cache --ignore-unknown \"**/*.{js,jsx,ts,tsx,md,css,scss}\"",
-    "format:check": "prettier --check --cache --ignore-unknown \"**/*.{js,jsx,ts,tsx,md,css,scss}\"",
     "preinstall": "npx only-allow pnpm",
     "postinstall": "pnpm run setup:apps",
     "lint": "turbo lint",
@@ -39,18 +37,15 @@
     "tests:playwright:seo": "pnpm -F @repo/tests-playwright exec playwright test --project=seo",
     "tests:playwright:visual": "turbo run playwright-visual-tests --filter=@repo/tests-playwright"
   },
-  "prettier": "@repo/prettier-config",
   "devDependencies": {
     "@commitlint/cli": "19.3.0",
     "@commitlint/config-conventional": "19.8.1",
     "@repo/eslint-config": "workspace:*",
-    "@repo/prettier-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "commitizen": "4.3.1",
     "cz-conventional-changelog": "3.3.0",
     "husky": "9.1.7",
     "lint-staged": "15.2.7",
-    "prettier": "3.8.1",
     "turbo": "2.7.6"
   },
   "packageManager": "pnpm@10.28.1",

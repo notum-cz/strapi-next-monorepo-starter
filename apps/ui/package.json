@@ -82,9 +82,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "16.1.5",
     "@repo/eslint-config": "workspace:*",
-    "@repo/prettier-config": "workspace:*",
     "@repo/strapi-types": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@tailwindcss/postcss": "^4.0.9",
@@ -93,9 +91,9 @@
     "@types/qs": "^6",
     "@types/react": "19.2.9",
     "@types/react-dom": "19.2.3",
-    "eslint": "^9.39.2",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "postcss": "^8.4.47",
+    "prettier-plugin-packagejson": "^3.0.0",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.0.9",
     "typescript": "^5"
