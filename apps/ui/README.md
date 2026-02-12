@@ -341,6 +341,22 @@ Another important aspect is the mapping between Strapi components and frontend c
 > Not all Strapi components should be rendered at the page level. Some components are intended to be used as subcomponents within other components (e.g. elements, utilities).
 > Single types (e.g. Navbar, Footer) are not rendered in the page builder, but are fetched and rendered separately. They are not included in the `PageContentComponents` mapping.
 
+#### Page Builder Overview (Developer Tooling)
+
+The frontend includes an internal page builder overview designed to improve orientation and understanding of how components are used across the project.
+
+##### `/dev/components-overview`
+
+Displays a list of all frontend page builder components and **which pages use each component**.
+→ Helps quickly evaluate the impact of component changes.
+
+##### `/dev/pages-overview`
+
+Displays a list of all pages and **which components they contain**.
+→ Makes it easy to understand a page structure without manually navigating the Strapi.
+
+This is a developer-only tool and is not intended for production use.
+
 ### Metadata, sitemap.xml and robots.txt
 
 To generate **metadata** for each Page Builder page, the `generateMetadata()` function is used. It is called in the main [page builder page](./src/app/[locale]/[[...rest]]/page.tsx) and generates metadata based on the Strapi page's `seo` attribute. It creates standard page metadata, as well as Open Graph and Twitter tags, with fallbacks from locale files. See [getMetadataFromStrapi function](./src/lib/metadata/index.ts) for more details. To add structured data (LD-JSON), use the [StrapiStructuredData](./src/components/page-builder/components/seo-utilities/StrapiStructuredData.tsx) component, which is included by default.
