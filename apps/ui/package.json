@@ -93,8 +93,6 @@
     "@types/react-dom": "19.2.3",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "postcss": "^8.4.47",
-    "prettier-plugin-packagejson": "^3.0.0",
-    "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.0.9",
     "typescript": "^5"
   },

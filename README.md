@@ -100,7 +100,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 - **SEO**: Pre-configured SEO Strapi component and integrated with frontend SEO best practices like metadata, canonical etc.
 - **Turborepo**: Pre-configured, apps and packages connected and controlled by Turbo CLI
 - **Dockerized**: Ready to build in Docker containers for production
-- **Code quality**: Out-of-the-box ESLint, Prettier, and TypeScript configurations in shareable packages
+- **Code quality**: Out-of-the-box ESLint (with integrated Prettier formatting) and TypeScript configurations in shareable packages
 - **Husky**: Pre-commit hooks for linting, formatting and commit message validation
 - **Commitizen**: Commitizen for conventional commits and their generation
 - **Heroku ready**: Ready to deploy to Heroku in a few steps
@@ -115,8 +115,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 ### Packages
 
-- `packages/eslint-config`: [ESLint](https://eslint.org/) configurations for client side applications
-- `packages/prettier-config`: [Prettier](https://prettier.io/) configuration with import sort plugin and tailwind plugin included
+- `packages/eslint-config`: [ESLint](https://eslint.org/) configurations with integrated [Prettier](https://prettier.io/) formatting, import ordering, and Tailwind plugin
 - `packages/typescript-config`: tsconfig JSONs used throughout the monorepo (not compatible with Strapi app now)
 - `packages/design-system`: shared styles, primarily for sharing CkEditor color configurations
 - `packages/shared-data`: package that stores common values across frontend and backend
@@ -161,9 +160,6 @@ In root [package.json](./package.json) file, there are some useful tasks wrapped
 ```bash
 # interactive commit message generator - stage files first, then run this in terminal
 pnpm run commit
-
-# format code using prettier in whole monorepo
-pnpm run format
 ```
 
 > [!TIP]
@@ -178,7 +174,7 @@ pnpm -F @repo/shared-data build
 
 # run a script from root package.json in different directory
 cd apps/ui
-pnpm -w run format
+pnpm -w run lint
 ```
 
 ### Bash scripts
@@ -210,7 +206,7 @@ Install extensions listed in the [.vscode/extensions.json](.vscode/extensions.js
 
 Husky is installed by default and configured to run following tasks:
 
-1. `lint` (eslint) and `format` (prettier) on every commit (`pre-commit` hook). To do that, [lint-staged](https://www.npmjs.com/package/lint-staged) library is used. The `format` task is configured in root `.lintstagedrc.js` and run globally for whole monorepo. The `lint` task is configured in each app individually and Strapi is skipped by default.
+1. `lint` and `format` on every commit (`pre-commit` hook) via [lint-staged](https://www.npmjs.com/package/lint-staged). ESLint handles JS/TS linting and formatting (via integrated Prettier), while Prettier runs directly on CSS/MD/SCSS files. Configuration is in root `.lintstagedrc.js` and per-app `.lintstagedrc.js` files.
 
 2. `commitlint` on every commit message (`commit-msg` hook). It checks if commit messages meet [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) format.
 
