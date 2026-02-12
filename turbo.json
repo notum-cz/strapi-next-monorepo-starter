@@ -47,6 +47,9 @@
       "cache": false,
       "persistent": true
     },
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
+    },
     "axe-test": {
       "cache": false,
       "persistent": false

@@ -37,20 +37,24 @@
     "tests:playwright:e2e:test": "turbo run playwright-e2e-tests --filter=@repo/tests-playwright",
     "tests:playwright:e2e:test:interactive": "turbo run playwright-interactive-mode --filter=@repo/tests-playwright",
     "tests:playwright:seo": "pnpm -F @repo/tests-playwright exec playwright test --project=seo",
-    "tests:playwright:visual": "turbo run playwright-visual-tests --filter=@repo/tests-playwright"
+    "tests:playwright:visual": "turbo run playwright-visual-tests --filter=@repo/tests-playwright",
+    "typecheck": "turbo run typecheck"
   },
   "prettier": "@repo/prettier-config",
   "devDependencies": {
     "@commitlint/cli": "19.3.0",
     "@commitlint/config-conventional": "19.8.1",
+    "@commitlint/config-pnpm-scopes": "20.1.0",
     "@repo/eslint-config": "workspace:*",
     "@repo/prettier-config": "workspace:*",
+    "@repo/semantic-release-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "commitizen": "4.3.1",
     "cz-conventional-changelog": "3.3.0",
     "husky": "9.1.7",
     "lint-staged": "15.2.7",
     "prettier": "3.8.1",
+    "semantic-release": "24.2.0",
     "turbo": "2.7.6"
   },
   "packageManager": "pnpm@10.28.1",
