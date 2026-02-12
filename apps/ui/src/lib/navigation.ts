@@ -1,3 +1,4 @@
+import { normalizePageFullPath } from "@repo/shared-data"
 import { createNavigation } from "next-intl/navigation"
 import { defineRouting } from "next-intl/routing"
 
@@ -40,6 +41,26 @@ export const isAppLink = (link: string): boolean => {
   } catch {
     return false
   }
+}
+
+/**
+ * Creates a full public URL for a given path and locale.
+ * Omits the locale prefix for the default locale (as-needed strategy).
+ */
+export const createPublicFullPath = (
+  fullPath: string,
+  locale: string
+): string => {
+  const baseUrl = getEnvVar("APP_PUBLIC_URL", true)!
+  const isDefaultLocale = locale === routing.defaultLocale
+
+  const path = normalizePageFullPath(
+    [fullPath],
+    isDefaultLocale ? null : locale
+  )
+
+  // new URL("/", baseUrl) always adds a trailing slash for root paths — strip it
+  return new URL(path, baseUrl).toString().replace(/\/$/, "")
 }
 
 export const formatHref = (href: string | undefined | null): string => {
