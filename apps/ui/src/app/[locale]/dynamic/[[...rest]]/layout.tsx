@@ -5,7 +5,7 @@ import { setRequestLocale } from "next-intl/server"
 export default function Layout({
   children,
   params,
-}: LayoutProps<"/[locale]/[[...rest]]">) {
+}: LayoutProps<"/[locale]/dynamic/[[...rest]]">) {
   const { locale } = use(params) as { locale: Locale }
 
   setRequestLocale(locale)

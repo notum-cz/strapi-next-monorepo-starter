@@ -17,7 +17,10 @@ export const dynamicRewrite = (
 ): NextResponse | null => {
   const { pathname, search } = req.nextUrl
 
-  if (pathname === `/${dynamicPrefix}`) {
+  const dynamicPathRegex = new RegExp(
+    `^/(?:${routing.locales.join("|")}/)?${dynamicPrefix}$`
+  )
+  if (dynamicPathRegex.test(pathname)) {
     return NextResponse.rewrite(new URL("/not-found", req.url))
   }
 

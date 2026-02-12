@@ -16,7 +16,7 @@ export const httpsRedirect = (req: NextRequest): NextResponse | null => {
     (xForwardedProto === null || !xForwardedProto.includes("https"))
   ) {
     return NextResponse.redirect(
-      `https://${req.headers.get("host")}${req.nextUrl.pathname}`,
+      `https://${req.headers.get("host")}${req.nextUrl.pathname}${req.nextUrl.search}`,
       301
     )
   }
