@@ -6,10 +6,8 @@ import { setRequestLocale } from "next-intl/server"
 import { isProduction } from "@/lib/general-helpers"
 import { logNonBlockingError } from "@/lib/logging"
 import { PublicStrapiClient } from "@/lib/strapi-api"
-import { Container } from "@/components/elementary/Container"
 import Typography from "@/components/typography"
 import ComponentsList from "@/app/[locale]/dev/components-overview/components/ComponentsList"
-import DevNavbar from "@/app/[locale]/dev/components/DevNavbar"
 
 async function fetchAllPages(locale: Locale) {
   try {
@@ -51,11 +49,8 @@ export default async function ComponentsOverviewPage({
 
   return (
     <>
-      <DevNavbar />
-      <Container className="py-20">
-        <Typography tag="h1">All Components ({components?.length})</Typography>
-        <ComponentsList components={components} pages={pages} />
-      </Container>
+      <Typography tag="h1">All Components ({components?.length})</Typography>
+      <ComponentsList components={components} pages={pages} />
     </>
   )
 }

@@ -325,6 +325,48 @@ export async function StrapiNavbar({ locale }: { readonly locale: Locale }) {
 }
 ```
 
+**Client side example:**
+
+```tsx
+// Client component
+"use client"
+import { useAllPages } from "@/hooks/usePages"
+
+export default function PagesCatalog() {
+  const query = useAllPages()
+  return (...)
+}
+
+// useQuery hook
+// src/hooks/usePages
+"use client"
+
+import { useQuery } from "@tanstack/react-query"
+import { useLocale } from "next-intl"
+
+import { PublicStrapiClient } from "@/lib/strapi-api"
+
+export function useAllPages() {
+  const locale = useLocale()
+
+  return useQuery({
+    queryKey: ["pages", locale],
+    queryFn: async () =>
+      PublicStrapiClient.fetchAll(
+        "api::page.page",
+        {
+          locale,
+          status: "published",
+        },
+        undefined,
+        // This is a client-side query, so we use the proxy to transform the request
+        // to the Strapi API URL
+        { useProxy: true }
+      ),
+  })
+}
+```
+
 ### Page builder
 
 Page builder landing page is rendered inside the main [dynamic route](src/app/[locale]/[[...rest]]/page.tsx). It is an optional catch-all segment that captures every segment — in our case, the `fullPath` attribute of pages (e.g. `/page-1-full-path`) from Strapi. All published pages are rendered as nested URLs.

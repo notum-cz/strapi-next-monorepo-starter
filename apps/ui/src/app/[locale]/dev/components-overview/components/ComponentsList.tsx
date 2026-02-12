@@ -35,7 +35,7 @@ export default function ComponentsList({
               <div className="pl-4">
                 {pages
                   .filter((page) =>
-                    page.content.some(
+                    page.content?.some(
                       (block: any) => block.__component === component
                     )
                   )

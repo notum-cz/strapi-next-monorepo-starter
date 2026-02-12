@@ -1,4 +1,3 @@
-import { headers } from "next/headers"
 import { notFound } from "next/navigation"
 import { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
@@ -6,9 +5,7 @@ import { setRequestLocale } from "next-intl/server"
 import { isProduction } from "@/lib/general-helpers"
 import { logNonBlockingError } from "@/lib/logging"
 import { PublicStrapiClient } from "@/lib/strapi-api"
-import { Container } from "@/components/elementary/Container"
 import Typography from "@/components/typography"
-import DevNavbar from "@/app/[locale]/dev/components/DevNavbar"
 import PageList from "@/app/[locale]/dev/pages-overview/components/PageList"
 
 async function fetchAllPages(locale: Locale) {
@@ -45,11 +42,8 @@ export default async function PagesOverviewPage({
 
   return (
     <>
-      <DevNavbar />
-      <Container className="py-20">
-        <Typography tag="h1">All Pages ({pages?.length})</Typography>
-        <PageList pages={pages} />
-      </Container>
+      <Typography tag="h1">All Pages ({pages?.length})</Typography>
+      <PageList pages={pages} />
     </>
   )
 }
