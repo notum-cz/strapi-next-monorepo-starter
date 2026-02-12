@@ -228,8 +228,6 @@ The [pre-commit hook](.husky/pre-commit) runs the following checks before each c
 2. **Lint-staged** — `lint` and `format` on every commit (`pre-commit` hook) via [lint-staged](https://www.npmjs.com/package/lint-staged).
    ESLint handles JS/TS linting and formatting (via integrated Prettier), while Prettier runs directly on CSS/MD/SCSS files. Configuration is in root `.lintstagedrc.js` and per-app `.lintstagedrc.js` files.
 
-3. `lint` and `format` on every commit (`pre-commit` hook) via [lint-staged](https://www.npmjs.com/package/lint-staged). ESLint handles JS/TS linting and formatting (via integrated Prettier), while Prettier runs directly on CSS/MD/SCSS files. Configuration is in root `.lintstagedrc.js` and per-app `.lintstagedrc.js` files.
-
 ### Commit Message Hook
 
 The [commit-msg hook](.husky/commit-msg) validates commit messages using [commitlint](https://commitlint.js.org/):
