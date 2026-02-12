@@ -325,6 +325,48 @@ export async function StrapiNavbar({ locale }: { readonly locale: Locale }) {
 }
 ```
 
+**Client side example:**
+
+```tsx
+// Client component
+"use client"
+import { useAllPages } from "@/hooks/usePages"
+
+export default function PagesCatalog() {
+  const query = useAllPages()
+  return (...)
+}
+
+// useQuery hook
+// src/hooks/usePages
+"use client"
+
+import { useQuery } from "@tanstack/react-query"
+import { useLocale } from "next-intl"
+
+import { PublicStrapiClient } from "@/lib/strapi-api"
+
+export function useAllPages() {
+  const locale = useLocale()
+
+  return useQuery({
+    queryKey: ["pages", locale],
+    queryFn: async () =>
+      PublicStrapiClient.fetchAll(
+        "api::page.page",
+        {
+          locale,
+          status: "published",
+        },
+        undefined,
+        // This is a client-side query, so we use the proxy to transform the request
+        // to the Strapi API URL
+        { useProxy: true }
+      ),
+  })
+}
+```
+
 ### Page builder
 
 Page builder landing page is rendered inside the main [dynamic route](src/app/[locale]/[[...rest]]/page.tsx). It is an optional catch-all segment that captures every segment — in our case, the `fullPath` attribute of pages (e.g. `/page-1-full-path`) from Strapi. All published pages are rendered as nested URLs.
@@ -340,6 +382,22 @@ Another important aspect is the mapping between Strapi components and frontend c
 > [!TIP]
 > Not all Strapi components should be rendered at the page level. Some components are intended to be used as subcomponents within other components (e.g. elements, utilities).
 > Single types (e.g. Navbar, Footer) are not rendered in the page builder, but are fetched and rendered separately. They are not included in the `PageContentComponents` mapping.
+
+#### Page Builder Overview (Developer Tooling)
+
+The frontend includes an internal page builder overview designed to improve orientation and understanding of how components are used across the project.
+
+##### `/dev/components-overview`
+
+Displays a list of all frontend page builder components and **which pages use each component**.
+→ Helps quickly evaluate the impact of component changes.
+
+##### `/dev/pages-overview`
+
+Displays a list of all pages and **which components they contain**.
+→ Makes it easy to understand a page structure without manually navigating the Strapi.
+
+This is a developer-only tool and is not intended for production use.
 
 ### Metadata, sitemap.xml and robots.txt
 
