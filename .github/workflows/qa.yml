@@ -14,7 +14,6 @@ run-name: >-
     (inputs.run_e2e || inputs.run_axe || inputs.run_seo) && inputs.run_lhci_perfo && ', Perfo' || ''
   }}] QA – ${{ inputs.base_url }}
 
-
 on:
   workflow_dispatch:
     inputs:
@@ -61,17 +60,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Setup pnpm with cache
+        uses: ./.github/actions/setup-pnpm
 
       - name: Cache Playwright browsers
         uses: actions/cache@v4
@@ -115,17 +105,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Setup pnpm with cache
+        uses: ./.github/actions/setup-pnpm
 
       - name: Cache Playwright browsers
         uses: actions/cache@v4
@@ -156,7 +137,7 @@ jobs:
           retention-days: 7
           if-no-files-found: warn
 
-  seo: 
+  seo:
     if: ${{ inputs.run_seo }}
     name: Playwright SEO tests
     runs-on: ubuntu-latest
@@ -166,18 +147,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4.2.0
+      - name: Setup pnpm with cache
+        uses: ./.github/actions/setup-pnpm
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6.2.0
-        with:
-          node-version: 22
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      
       - name: Cache Playwright browsers
         uses: actions/cache@v5.0.2
         with:
@@ -218,23 +190,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
+      - name: Setup pnpm with cache
+        uses: ./.github/actions/setup-pnpm
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6.2.0
-        with:
-          node-version: 22
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      
       - name: Run LHCI Performance tests
         env:
           BASE_URL: ${{ inputs.base_url }}
-        run: pnpm tests:lhci:perfo  
-      
+        run: pnpm tests:lhci:perfo
+
       - name: Pack LHCI reports
         if: always()
         run: |
@@ -247,4 +210,4 @@ jobs:
           name: perfo-report
           path: lhci-perfo-reports-${{ github.run_id }}.tgz
           retention-days: 7
-          if-no-files-found: warn  
+          if-no-files-found: warn
