@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next"
 import type { Locale } from "next-intl"
 
+import { getEnvVar } from "@/lib/env-vars"
 import { isDevelopment, isProduction } from "@/lib/general-helpers"
 import { createPublicFullPath, routing } from "@/lib/navigation"
 import { fetchAllPages } from "@/lib/strapi-api/content/server"
@@ -14,6 +15,10 @@ export const dynamic = "force-dynamic"
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (!isProduction() && !isDevelopment()) {
     // Deployment environments other than production should not generate sitemap
+    return []
+  }
+
+  if (!getEnvVar("APP_PUBLIC_URL")) {
     return []
   }
 
