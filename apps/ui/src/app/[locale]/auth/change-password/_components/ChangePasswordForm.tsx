@@ -6,9 +6,6 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import * as z from "zod"
 
-import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
-import { useRouter } from "@/lib/navigation"
-import { useUserMutations } from "@/hooks/useUserMutations"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button } from "@/components/ui/button"
@@ -20,6 +17,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { useUserMutations } from "@/hooks/useUserMutations"
+import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
+import { useRouter } from "@/lib/navigation"
 
 export function ChangePasswordForm() {
   const t = useTranslations("auth.changePassword")

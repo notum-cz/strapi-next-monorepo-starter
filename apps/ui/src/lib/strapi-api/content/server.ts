@@ -1,13 +1,12 @@
 import "server-only"
 
+import type { UID } from "@repo/strapi-types"
 import { draftMode } from "next/headers"
-import { UID } from "@repo/strapi-types"
-import { Locale } from "next-intl"
-
-import type { CustomFetchOptions } from "@/types/general"
+import type { Locale } from "next-intl"
 
 import { logNonBlockingError } from "@/lib/logging"
 import { PublicStrapiClient } from "@/lib/strapi-api"
+import type { CustomFetchOptions } from "@/types/general"
 
 // ------ Page fetching functions
 
@@ -65,6 +64,7 @@ export async function fetchAllPages(
         stack: e?.stack,
       },
     })
+
     return { data: [] }
   }
 }

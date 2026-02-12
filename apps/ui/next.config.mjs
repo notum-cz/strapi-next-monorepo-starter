@@ -98,6 +98,7 @@ const withConfig = (() => {
     // Automatically tree-shake Sentry logger statements to reduce bundle size
     disableLogger: true,
   })
+
   return config
 })()
 

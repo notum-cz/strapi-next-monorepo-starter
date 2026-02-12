@@ -1,4 +1,4 @@
-import { Locale } from "next-intl"
+import type { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
 export default async function Layout({

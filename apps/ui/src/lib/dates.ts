@@ -35,7 +35,8 @@ export function formatDateRange(
   if (!end.isSame(start, "year")) {
     return `${start.format(format)}–${end.format(format)}`
   }
-  return undefined
+
+  return
 }
 
 export function formatDate(
@@ -52,5 +53,6 @@ export function getToday(format = DATE_FORMAT): string {
 export function getDiffInDays(startDate: string, endDate: string): number {
   const start = dayjs(startDate)
   const end = dayjs(endDate)
+
   return end.diff(start, "day")
 }

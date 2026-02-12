@@ -1,9 +1,9 @@
-import { Locale } from "next-intl"
+import type { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
-import { cn } from "@/lib/styles"
 import { Container } from "@/components/elementary/Container"
 import PagesCatalog from "@/components/elementary/PagesCatalog"
+import { cn } from "@/lib/styles"
 
 export default async function ClientPage({
   params,

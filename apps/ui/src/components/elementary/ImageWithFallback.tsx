@@ -1,23 +1,21 @@
-/* eslint-disable jsx-a11y/alt-text */
 "use client"
 
-import { SyntheticEvent, useEffect, useState } from "react"
 import Image from "next/image"
-
-import { ImageExtendedProps } from "@/types/next"
+import { type SyntheticEvent, useEffect, useState } from "react"
 
 import { FALLBACK_IMAGE_PATH } from "@/lib/constants"
+import type { ImageExtendedProps } from "@/types/next"
 
 import { ImageWithBlur } from "./ImageWithBlur"
 
 const invalidSrc = "/invalid-src.jpg"
 
-export const ImageWithFallback = ({
+export function ImageWithFallback({
   fallbackSrc,
   src: originalSrc,
   blurOff,
   ...imgProps
-}: ImageExtendedProps & { blurOff?: boolean }) => {
+}: ImageExtendedProps & { blurOff?: boolean }) {
   const [src, setSrc] = useState(originalSrc ?? fallbackSrc ?? invalidSrc)
 
   useEffect(() => {

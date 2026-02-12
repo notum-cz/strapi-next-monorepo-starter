@@ -1,12 +1,14 @@
 "use client"
 
-import { createContext, useContext, useMemo, useState } from "react"
 import { useTranslations } from "next-intl"
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react"
 
-import type { ReactNode } from "react"
-
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { cn } from "@/lib/styles"
 import {
   Dialog,
   DialogContent,
@@ -16,6 +18,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import { cn } from "@/lib/styles"
 
 interface Props {
   readonly Props: ReactNode
@@ -32,7 +36,7 @@ interface Props {
 
 const DialogContext = createContext({
   closeModal: () => {},
-  // eslint-disable-next-line no-unused-vars
+
   setConfirmDialogClose: (_: boolean) => {},
   confirmClose: false,
 })

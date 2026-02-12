@@ -1,7 +1,7 @@
 "use client"
 
-import { useAllPages } from "@/hooks/usePages"
 import { Button } from "@/components/ui/button"
+import { useAllPages } from "@/hooks/usePages"
 
 /**
  * An example of a client-side component that fetches and displays a catalog of pages

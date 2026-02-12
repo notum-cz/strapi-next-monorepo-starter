@@ -1,14 +1,13 @@
-import React from "react"
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import CKEditorRenderer from "@/components/elementary/ck-editor"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
-export const StrapiCkEditorContent = ({
+export function StrapiCkEditorContent({
   component,
 }: {
   readonly component: Data.Component<"utilities.ck-editor-content">
-}) => {
+}) {
   removeThisWhenYouNeedMe("StrapiCkEditorContent")
 
   return (

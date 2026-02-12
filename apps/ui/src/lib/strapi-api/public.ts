@@ -1,10 +1,9 @@
 import qs from "qs"
 
-import { CustomFetchOptions } from "@/types/general"
-
 import { getEnvVar } from "@/lib/env-vars"
 import BaseStrapiClient from "@/lib/strapi-api/base"
 import { createStrapiAuthHeader } from "@/lib/strapi-api/request-auth"
+import type { CustomFetchOptions } from "@/types/general"
 
 export class PublicClient extends BaseStrapiClient {
   protected async prepareRequest(

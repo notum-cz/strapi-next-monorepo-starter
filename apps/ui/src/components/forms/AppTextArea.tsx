@@ -1,9 +1,8 @@
 "use client"
 
-import React from "react"
+import type React from "react"
 import { useFormContext } from "react-hook-form"
 
-import { cn } from "@/lib/styles"
 import { AppFormDescription } from "@/components/forms/AppFormDescription"
 import { AppFormLabel } from "@/components/forms/AppFormLabel"
 import {
@@ -13,6 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
+import { cn } from "@/lib/styles"
 
 type Props = {
   readonly name: string

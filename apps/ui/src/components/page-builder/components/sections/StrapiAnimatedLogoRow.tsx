@@ -1,9 +1,9 @@
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { cn } from "@/lib/styles"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
 import { Typography } from "@/components/typography"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import { cn } from "@/lib/styles"
 
 export function StrapiAnimatedLogoRow({
   component,

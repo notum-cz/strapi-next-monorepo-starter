@@ -1,11 +1,11 @@
 "use client"
 
-import { BaseSyntheticEvent } from "react"
+import type { BaseSyntheticEvent } from "react"
 import {
-  FieldValues,
+  type FieldValues,
+  type SubmitErrorHandler,
+  type UseFormReturn,
   FormProvider,
-  SubmitErrorHandler,
-  UseFormReturn,
 } from "react-hook-form"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
@@ -13,9 +13,8 @@ import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 interface Props<T extends FieldValues = FieldValues> {
   readonly form: UseFormReturn<T>
   readonly onSubmit: (
-    // eslint-disable-next-line no-unused-vars
     values: T,
-    // eslint-disable-next-line no-unused-vars
+
     e?: BaseSyntheticEvent<object, unknown, unknown> | undefined
   ) => void
   readonly onError?: SubmitErrorHandler<T>

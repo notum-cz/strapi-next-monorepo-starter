@@ -10,6 +10,7 @@ export function textAlignClassName(
       return "text-right"
     case "justify":
       return "text-justify"
+
     default:
       return ""
   }

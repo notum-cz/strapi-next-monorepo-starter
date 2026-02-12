@@ -1,13 +1,12 @@
 import { normalizePageFullPath } from "@repo/shared-data"
-import { Locale } from "next-intl"
-
-import type { NextMetadataTwitterCard, SocialMetadata } from "@/types/general"
 import type { Data } from "@repo/strapi-types"
 import type { Metadata } from "next"
-import { StrapiLocalization } from "@/types/api"
+import type { Locale } from "next-intl"
 
 import { metaRobots } from "@/lib/metadata/constants"
 import { routing } from "@/lib/navigation"
+import type { StrapiLocalization } from "@/types/api"
+import type { NextMetadataTwitterCard, SocialMetadata } from "@/types/general"
 
 export const preprocessSocialMetadata = (
   seo: Data.Component<"seo-utilities.seo"> | null | undefined,
@@ -25,6 +24,7 @@ export const preprocessSocialMetadata = (
   const ogImage = ogSeo?.image ?? seo?.metaImage
   const twitterImages =
     twitterSeo?.images ?? (seo?.metaImage ? [seo?.metaImage] : undefined)
+
   return {
     twitter: {
       card,
@@ -66,6 +66,7 @@ export const getMetaRobots = (
   if (forbidIndexing) {
     return { index: false, follow: false }
   }
+
   return typeof robotsString === "string"
     ? metaRobots[robotsString.replaceAll(" ", "")]
     : robotsString
@@ -91,6 +92,7 @@ export const getMetaAlternates = ({
           if (!curr.locale) {
             return acc
           }
+
           return {
             ...acc,
             [curr.locale]: normalizePageFullPath([canonicalUrl], curr.locale),

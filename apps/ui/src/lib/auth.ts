@@ -1,6 +1,5 @@
-import { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers"
-import { Result } from "@repo/strapi-types"
-import { betterAuth } from "better-auth"
+import type { Result } from "@repo/strapi-types"
+import { betterAuth, type BetterAuthPlugin } from "better-auth"
 import {
   APIError,
   createAuthEndpoint,
@@ -8,17 +7,16 @@ import {
 } from "better-auth/api"
 import { deleteSessionCookie, setSessionCookie } from "better-auth/cookies"
 import { customSession } from "better-auth/plugins"
+import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers"
 import { z } from "zod"
-
-import type { BetterAuthPlugin } from "better-auth"
-import {
-  BetterAuthSessionWithStrapi,
-  BetterAuthUserWithStrapi,
-} from "@/types/better-auth"
 
 import { getEnvVar } from "@/lib/env-vars"
 import { safeJSONParse } from "@/lib/general-helpers"
 import { PrivateStrapiClient } from "@/lib/strapi-api"
+import type {
+  BetterAuthSessionWithStrapi,
+  BetterAuthUserWithStrapi,
+} from "@/types/better-auth"
 
 export const strapiAuthPlugin = {
   id: "strapi-auth",
@@ -314,7 +312,7 @@ export const strapiSessionPlugin = customSession(
       }
 
       return { user: updatedUser, session }
-    } catch (error) {
+    } catch {
       // invalid/expired Strapi JWT -> clear Better Auth session cookie
       deleteSessionCookie(ctx)
 
@@ -434,7 +432,7 @@ export const getSessionSSR = async (
 const throwBetterAuthError = (
   strapiError: unknown,
   fallbackMessage: string,
-  fallbackStatus: number = 500
+  fallbackStatus = 500
 ) => {
   if (strapiError instanceof APIError) {
     throw strapiError

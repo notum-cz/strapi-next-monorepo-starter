@@ -1,10 +1,10 @@
 import type { Data } from "@repo/strapi-types"
 
-export const StrapiStructuredData = ({
+export function StrapiStructuredData({
   structuredData,
 }: {
   structuredData: Data.Component<"seo-utilities.seo">["structuredData"]
-}) => {
+}) {
   if (structuredData) {
     // we need to use a plain `script` tag instead of the `Script` component
     // `Script` component is optimized by Next, which works against us in this case

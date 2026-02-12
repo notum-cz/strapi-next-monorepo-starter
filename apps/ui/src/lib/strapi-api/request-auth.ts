@@ -48,6 +48,7 @@ export const createStrapiAuthHeader = async ({
 }) => {
   if (isPrivate) {
     const userToken = await getStrapiUserTokenFromBetterAuth()
+
     return formatStrapiAuthorizationHeader(userToken)
   }
 
@@ -74,18 +75,20 @@ export const formatStrapiAuthorizationHeader = (token?: string) => {
  * Uses `typeof window === "undefined"` to detect server vs client environment.
  */
 const getStrapiUserTokenFromBetterAuth = async () => {
-  const isRSC = typeof window === "undefined"
+  const isRSC = globalThis.window === undefined
 
   if (isRSC) {
     // Server side: Read session directly from cookies (no HTTP request)
     const { headers } = await import("next/headers")
     const { getSessionSSR } = await import("@/lib/auth")
     const session = await getSessionSSR(await headers())
+
     return session?.user?.strapiJWT
   }
 
   // Client side: Make HTTP request to /api/auth/session
   const { getSessionCSR } = await import("@/lib/auth-client")
   const { data: session } = await getSessionCSR()
+
   return session?.user?.strapiJWT
 }

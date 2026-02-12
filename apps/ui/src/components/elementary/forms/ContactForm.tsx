@@ -6,12 +6,12 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import * as z from "zod"
 
-import { useContactForm } from "@/hooks/useAppForm"
 import AppLink from "@/components/elementary/AppLink"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { AppTextArea } from "@/components/forms/AppTextArea"
 import { Button } from "@/components/ui/button"
+import { useContactForm } from "@/hooks/useAppForm"
 
 export function ContactForm({
   gdpr,

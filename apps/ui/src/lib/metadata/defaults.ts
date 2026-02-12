@@ -1,6 +1,5 @@
-import { Locale } from "next-intl"
-
 import type { Metadata } from "next"
+import type { Locale } from "next-intl"
 import type { getTranslations } from "next-intl/server"
 
 import { routing } from "@/lib/navigation"
@@ -35,7 +34,7 @@ export function getDefaultOgMeta(
     title: t("og.title"),
     description: t("og.description"),
     images: [t("og.image")],
-    url: [routing.defaultLocale !== locale ? locale : null, fullPath ?? ""]
+    url: [routing.defaultLocale === locale ? null : locale, fullPath ?? ""]
       .filter(Boolean)
       .join("/"),
   }

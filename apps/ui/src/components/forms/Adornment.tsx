@@ -2,7 +2,7 @@ import { CheckIcon, CrossIcon } from "lucide-react"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
-export const AdornmentSuccess = () => {
+export function AdornmentSuccess() {
   removeThisWhenYouNeedMe("AdornmentSuccess")
 
   return (
@@ -12,7 +12,7 @@ export const AdornmentSuccess = () => {
   )
 }
 
-export const AdornmentError = () => {
+export function AdornmentError() {
   removeThisWhenYouNeedMe("AdornmentError")
 
   return (

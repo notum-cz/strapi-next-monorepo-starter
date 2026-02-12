@@ -32,6 +32,7 @@ function StrapiPreviewWindowChangeListener({
     }
 
     window.addEventListener("message", handleMessage)
+
     return () => {
       window.removeEventListener("message", handleMessage)
     }

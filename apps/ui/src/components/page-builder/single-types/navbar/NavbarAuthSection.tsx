@@ -2,11 +2,10 @@
 
 import { useTranslations } from "next-intl"
 
-import { BetterAuthSessionWithStrapi } from "@/types/better-auth"
-
-import { authClient } from "@/lib/auth-client"
 import AppLink from "@/components/elementary/AppLink"
 import { LoggedUserMenu } from "@/components/page-builder/single-types/navbar/LoggedUserMenu"
+import { authClient } from "@/lib/auth-client"
+import type { BetterAuthSessionWithStrapi } from "@/types/better-auth"
 
 export function NavbarAuthSection({
   sessionSSR,

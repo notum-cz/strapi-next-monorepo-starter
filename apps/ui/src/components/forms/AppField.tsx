@@ -1,10 +1,8 @@
 "use client"
 
-import React from "react"
+import type React from "react"
 import { useFormContext } from "react-hook-form"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { cn } from "@/lib/styles"
 import {
   FormControl,
   FormField,
@@ -12,6 +10,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import { cn } from "@/lib/styles"
 
 import { AppFormDescription } from "./AppFormDescription"
 import { AppFormLabel } from "./AppFormLabel"
@@ -59,7 +59,7 @@ export function AppField({
                 onChange={(event) => {
                   const value = event.target.value
                   if (nativeProps.type === "number") {
-                    field.onChange(parseFloat(value))
+                    field.onChange(Number.parseFloat(value))
                   } else {
                     field.onChange(value)
                   }

@@ -17,15 +17,15 @@ export const formatStrapiMediaUrl = (
     return undefined
   }
 
-  if (typeof imageUrl === "string") {
-    if (!imageUrl.startsWith("http")) {
-      if (imageUrl.startsWith("/uploads")) {
-        // Local upload - add BE URL prefix
-        return typeof window === "undefined"
-          ? formatServerUrl(imageUrl)
-          : formatClientUrl(imageUrl)
-      }
-    }
+  if (
+    typeof imageUrl === "string" &&
+    !imageUrl.startsWith("http") &&
+    imageUrl.startsWith("/uploads")
+  ) {
+    // Local upload - add BE URL prefix
+    return globalThis.window === undefined
+      ? formatServerUrl(imageUrl)
+      : formatClientUrl(imageUrl)
   }
 
   // S3 upload or already formatted URL - return as is

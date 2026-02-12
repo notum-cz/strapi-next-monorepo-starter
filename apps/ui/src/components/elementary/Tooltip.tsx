@@ -1,10 +1,10 @@
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import {
   Tooltip as RadixTooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
 interface Props {
   readonly children: React.ReactNode

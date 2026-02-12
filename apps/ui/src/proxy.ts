@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
 import createMiddleware from "next-intl/middleware"
 
 import { getSessionSSR } from "./lib/auth"
@@ -31,7 +31,7 @@ export default async function proxy(req: NextRequest) {
   }
 
   // Build regex for auth (non-public) pages
-  const authPathnameRegex = RegExp(
+  const authPathnameRegex = new RegExp(
     `^(/(${routing.locales.join("|")}))?(${authPages.join("|")})/?$`,
     "i"
   )
@@ -50,10 +50,11 @@ export default async function proxy(req: NextRequest) {
 
       // User is authenticated, proceed with internationalization middleware
       return intlProxy(req)
-    } catch (error) {
+    } catch {
       // Error checking session, redirect to sign in
       const signInUrl = new URL("/auth/signin", req.url)
       signInUrl.searchParams.set("callbackUrl", req.nextUrl.pathname)
+
       return NextResponse.redirect(signInUrl)
     }
   }
@@ -72,6 +73,6 @@ export const config = {
     `/(cs|en)/:path*`,
 
     // Skip all paths that should not be internationalized
-    "/((?!_next|_vercel|api|robots.txt|favicon.ico|sitemap|.*\\..*).*)",
+    String.raw`/((?!_next|_vercel|api|robots.txt|favicon.ico|sitemap|.*\..*).*)`,
   ],
 }
