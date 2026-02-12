@@ -1,13 +1,13 @@
 import { uniq } from "lodash"
-import { notFound } from "next/navigation"
 import type { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
 import ComponentsList from "@/app/[locale]/dev/components-overview/components/ComponentsList"
 import Typography from "@/components/typography"
-import { isProduction } from "@/lib/general-helpers"
 import { logNonBlockingError } from "@/lib/logging"
 import { PublicStrapiClient } from "@/lib/strapi-api"
+
+export const dynamic = "force-dynamic"
 
 async function fetchAllPages(locale: Locale) {
   try {
@@ -32,10 +32,6 @@ async function fetchAllPages(locale: Locale) {
 export default async function ComponentsOverviewPage({
   params,
 }: PageProps<"/[locale]/dev/components-overview">) {
-  if (isProduction()) {
-    notFound()
-  }
-
   const { locale } = (await params) as { locale: Locale }
   setRequestLocale(locale)
 

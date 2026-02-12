@@ -1,17 +1,15 @@
-import type { Locale } from "next-intl"
-import { setRequestLocale } from "next-intl/server"
+import { notFound } from "next/navigation"
 
 import DevNavbar from "@/app/[locale]/dev/components/DevNavbar"
 import { Container } from "@/components/elementary/Container"
+import { isProduction } from "@/lib/general-helpers"
 
 export default async function Layout({
   children,
-  params,
 }: LayoutProps<"/[locale]/dev">) {
-  const { locale } = (await params) as { locale: Locale }
-
-  // Enable static rendering
-  setRequestLocale(locale)
+  if (isProduction()) {
+    notFound()
+  }
 
   return (
     <>
