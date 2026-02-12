@@ -1,10 +1,9 @@
 import { errors } from "@strapi/utils"
 
 import {
-  extractComponentsToPopulate,
-  getComponentsConfigForDynamicZones,
+  createComponentsPopulateObject,
+  getComponentsToPopulate,
   normalizeDynamicZonePopulate,
-  prefetchDataToPopulate,
 } from "./helpers"
 
 // We're using findMany to find the pages, but this could be adjusted to findOne per your needs
@@ -27,17 +26,15 @@ export const registerPopulatePageMiddleware = ({ strapi }) => {
       return next()
     }
 
-    const isDynamicZonePopulateEnabled =
-      normalizeDynamicZonePopulate(context.params?.populateDynamicZone).length >
-      0
+    const dynamicZonePopulate = normalizeDynamicZonePopulate(
+      context.params?.populateDynamicZone
+    )
+
+    const isDynamicZonePopulateEnabled = dynamicZonePopulate.length > 0
 
     if (!isDynamicZonePopulateEnabled) {
       return next()
     }
-
-    const dynamicZonePopulate = normalizeDynamicZonePopulate(
-      context.params.populateDynamicZone
-    )
 
     const attributesNotExists = dynamicZonePopulate.filter(
       (populateAttr) =>
@@ -52,22 +49,17 @@ export const registerPopulatePageMiddleware = ({ strapi }) => {
 
     delete context.params.populateDynamicZone
 
-    const prefetchedDataToPopulate = await prefetchDataToPopulate(
+    const componentsToPopulate = await getComponentsToPopulate(
       dynamicZonePopulate,
       context
     )
 
-    const componentsToPopulate = extractComponentsToPopulate(
-      prefetchedDataToPopulate,
-      dynamicZonePopulate
-    )
-
-    const dynamicZonesPopulateObject =
-      getComponentsConfigForDynamicZones(componentsToPopulate)
+    const componentsPopulateObject =
+      createComponentsPopulateObject(componentsToPopulate)
 
     context.params.populate = {
       ...context.params.populate,
-      ...dynamicZonesPopulateObject,
+      ...componentsPopulateObject,
     }
 
     return next()

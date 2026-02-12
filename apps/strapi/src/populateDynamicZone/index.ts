@@ -1,8 +1,6 @@
 import fs from "node:fs"
 import path from "node:path"
 
-import { Core } from "@strapi/strapi"
-
 const isRuntimeFile = (name: string) =>
   /\.(js|ts)$/.test(name) && !name.endsWith(".d.ts")
 
@@ -35,8 +33,11 @@ let cachedSchema: Record<string, unknown> | null = null
  * Prevents sending large populate queries from the frontend.
  * The frontend only requests a dynamic zone and the backend resolves the full populate object automatically.
  */
+export function getPopulateDynamicZoneConfig() {
+  if (cachedSchema) {
+    return cachedSchema
+  }
 
-export const generateDynamicZoneConfig = (): Record<string, unknown> => {
   cachedSchema = Object.fromEntries(
     fs
       .readdirSync(__dirname, { withFileTypes: true })
@@ -56,8 +57,6 @@ export const generateDynamicZoneConfig = (): Record<string, unknown> => {
   console.info(
     "Successfully generated dynamic zone populate configuration from filesystem."
   )
+
   return cachedSchema
 }
-
-export const getPopulateDynamicZoneConfig = (): Record<string, unknown> =>
-  cachedSchema || generateDynamicZoneConfig()
