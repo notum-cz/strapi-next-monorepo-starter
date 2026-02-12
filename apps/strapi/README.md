@@ -368,33 +368,28 @@ Any provider supported by Strapi's Users & Permissions plugin (GitHub, Google, F
 
 #### Relation population
 
-Strapi offers fine-grained control over population of data coming from the API. Our Strapi Client is fully typed and offers suggestions, but there are instances where you may want to avoid this. For example, the dynamic zone in `api::page.page` collection includes many components. Serializing the full population object for this DZ would yield an URL that's too long and may cause issues.
+Strapi offers fine-grained control over population of data coming from the API. Our Strapi Client is fully typed and offers suggestions, but there are instances where you may want to avoid this. For example, the dynamic zone in collection types includes many components. Serializing the full population object for this DZ would yield an URL that's too long and may cause issues.
 
 To overcome this issue, this project uses a document middleware. This allows you to control which relations are deeply populated on a per-request basis, optimizing data fetching for complex page structures.
 
 **How it works:**
 
 - The middleware is registered in `apps/strapi/src/index.ts`.
-- The middleware interceptor is implemented in `apps/strapi/src/documentMiddlewares/page.ts`.
-- It intercepts document queries for the `api::page.page` content type, specifically for the `findMany` action.
+- The middleware is implemented in `apps/strapi/src/documentMiddlewares/page.ts`.
+- Populate config is based on folders respecting Strapi structure and naming in `apps/strapi/src/populateDynamicZone`.
 - To trigger custom population, your request must include the following in the query parameters:
-  - Pagination: `{ page: 1, pageSize: 1 }`, which gets updated to `{start: 0, limit: 1}` during the request resolution (before reaching document middleware)
-  - `middlewarePopulate`: an array of string keys, each corresponding to a relation or field you want to populate (as defined in the middleware's `pagePopulateObject`).
+  - `populateDynamicZone`: object with dynamic zones to ensure proper typing, each corresponding to a relation or field you want to populate.
 
 **Example request:**
 
 ```js
 await PublicStrapiClient.fetchOneByFullPath("api::page.page", fullPath, {
   locale,
-  populate: {
-    content: true, // ensures typing is valid on the resulting object
-    seo: true, // ensures typing is valid on the resulting object
-  },
-  middlewarePopulate: ["content", "seo"], // ensures the middleware is triggered and the populate object is replaced
+  populateDynamicZone: { content: true }, // ensures the middleware is triggered and the populate object is replaced
 })
 ```
 
-- The middleware will map each key in `middlewarePopulate` to the corresponding population rules in `pagePopulateObject`, and apply them to the query.
+- The middleware will map each key from `populateDynamicZone` attribute to the corresponding population rules in populateDynamicZone config, and apply them to the query.
 - This enables fine-grained, dynamic control over which relations and nested fields are included in the response.
 
 **Other collections**
@@ -403,7 +398,7 @@ Feel free to create your own middlewares for collections where you may need deep
 **Pitfalls**
 This requires active maintenance, as any changes to collections (i.e. the DZ in Page collection) will need to be reflected in the populate middleware. There is an alternative of using a deep-populate middleware, however this is STRONGLY discouraged. That's also why we removed it, despite using it in this project initially.
 
-'middlewarePopulate' does not alter the types, so using it by itself will result in a type that does not include relations or dynamic zones. This is why we also include it in the populate object.
+'populateDynamicZone' does not alter the types, so using it by itself will result in a type that does not include relations or dynamic zones. This is why we also include it in the populate object.
 
 ### Typescript
 
