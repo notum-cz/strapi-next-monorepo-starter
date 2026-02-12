@@ -11,7 +11,10 @@ export const httpsRedirect = (req: NextRequest): NextResponse | null => {
   const host = req.headers.get("host") ?? ""
   const isDev = isDevelopment() || host.includes("localhost")
 
-  if (!isDev && (xForwardedProto === null || !xForwardedProto.includes("https"))) {
+  if (
+    !isDev &&
+    (xForwardedProto === null || !xForwardedProto.includes("https"))
+  ) {
     return NextResponse.redirect(
       `https://${req.headers.get("host")}${req.nextUrl.pathname}`,
       301

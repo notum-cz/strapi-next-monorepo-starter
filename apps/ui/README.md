@@ -555,11 +555,11 @@ export default function Page() {
 
 The Next.js [middleware](src/proxy.ts) is composed of standalone proxy functions, each handling a specific concern. They run in sequence — the first one to return a response short-circuits the chain.
 
-| Proxy | File | Description |
-|-------|------|-------------|
-| Basic Auth | [basicAuth.ts](src/lib/proxies/basicAuth.ts) | HTTP Basic Authentication, enabled via `BASIC_AUTH_ENABLED` env var |
-| HTTPS Redirect | [httpsRedirect.ts](src/lib/proxies/httpsRedirect.ts) | Redirects HTTP to HTTPS in production (e.g. Heroku) |
-| Auth Guard | [authGuard.ts](src/lib/proxies/authGuard.ts) | Protects private pages by requiring an active session |
+| Proxy           | File                                                   | Description                                                                     |
+| --------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| Basic Auth      | [basicAuth.ts](src/lib/proxies/basicAuth.ts)           | HTTP Basic Authentication, enabled via `BASIC_AUTH_ENABLED` env var             |
+| HTTPS Redirect  | [httpsRedirect.ts](src/lib/proxies/httpsRedirect.ts)   | Redirects HTTP to HTTPS in production (e.g. Heroku)                             |
+| Auth Guard      | [authGuard.ts](src/lib/proxies/authGuard.ts)           | Protects private pages by requiring an active session                           |
 | Dynamic Rewrite | [dynamicRewrite.ts](src/lib/proxies/dynamicRewrite.ts) | Rewrites requests with search params to the `/dynamic/` route for SSR rendering |
 
 ### Sentry logging
