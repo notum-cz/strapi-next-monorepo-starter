@@ -17,7 +17,7 @@ const stripExt = (name: string) => name.slice(0, name.lastIndexOf("."))
  *
  * @example
  * Directory structure:
- * populate/
+ * populateDynamicZone/
  *   blocks/hero.ts
  *   blocks/gallery.ts
  *
