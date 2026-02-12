@@ -1,3 +1,4 @@
+import { UID } from "@strapi/strapi"
 import { errors } from "@strapi/utils"
 
 import { getPopulateDynamicZoneConfig } from "../populateDynamicZone"
@@ -98,7 +99,15 @@ export const getComponentsConfigForDynamicZones = (
 }
 
 // Prefetch the dynamic zone components, to know what component objects we need to populate in the next step.
-export const prefetchDataToPopulate = async (dynamicZonePopulate, context) => {
+export const prefetchDataToPopulate = async (
+  dynamicZonePopulate: string[],
+  context: {
+    uid: UID.ContentType
+    action: string
+    documentId: string | number
+    locale?: string
+  }
+) => {
   const attributesToPrefetch = dynamicZonePopulate.reduce((acc, attr) => {
     return {
       ...acc,

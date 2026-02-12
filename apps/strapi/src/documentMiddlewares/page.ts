@@ -11,14 +11,14 @@ import {
 const pageActions = new Set(["findMany", "findOne", "findFirst"])
 
 /**
- * Registers a middleware to customize the population of related fields for page documents during Strapi queries.
+ * Strapi Documents API middleware that enables dynamic population of components inside dynamic zones via the `populateDynamicZone` request parameter.
  *
- * This middleware intercepts document queries for the "api::page.page" content type when the action is "findMany".
- * If the request parameters include pagination with { start: 0, limit: 1 } and a 'middlewarePopulate' array,
- * it selectively applies deep population rules for specified attributes, as defined in 'pagePopulateObject'.
+ * When `populateDynamicZone` is present, the middleware:
+ * - validates that requested attributes exist on the content type
+ * - prefetches data to detect which components are actually used
+ * - automatically builds an optimal `populate` configuration for those components
  *
- * The request must contain 'middlewarePopulate' (array of string keys) in the 'params' object, which is going to be mapped to 'pagePopulateObject' attributes.
- *
+ * This allows clients to request fully populated dynamic zone content without manually defining deep populate trees, while significantly improving performance.
  */
 
 export const registerPopulatePageMiddleware = ({ strapi }) => {
@@ -27,11 +27,11 @@ export const registerPopulatePageMiddleware = ({ strapi }) => {
       return next()
     }
 
-    const isSmartPopulateEnabled =
+    const isDynamicZonePopulateEnabled =
       normalizeDynamicZonePopulate(context.params?.populateDynamicZone).length >
       0
 
-    if (!isSmartPopulateEnabled) {
+    if (!isDynamicZonePopulateEnabled) {
       return next()
     }
 
