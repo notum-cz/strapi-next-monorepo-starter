@@ -26,7 +26,7 @@ export const getPopulateConfig = () => {
   const populateConfig = getPopulateDynamicZoneConfig()
   if (!populateConfig) {
     throw new errors.ValidationError(
-      `Populate config not found, please add it to the 'POPULATE_CONFIG' object in the 'populateDynamicZone' file`
+      `Populate config not found. Ensure the filesystem-based dynamic zone populate configuration exists in the structure expected by 'getPopulateDynamicZoneConfig()' and that it is correctly exported.`
     )
   }
   return populateConfig
@@ -77,7 +77,7 @@ export const extractComponentsToPopulate = (
  * }
  */
 export const getComponentsConfigForDynamicZones = (
-  componentsToPopulate
+  componentsToPopulate: Record<string, string[]>
 ): Record<string, { on: Record<string, unknown> }> => {
   const populateConfig = getPopulateConfig()
 

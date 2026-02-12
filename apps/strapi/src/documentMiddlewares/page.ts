@@ -28,7 +28,7 @@ export const registerPopulatePageMiddleware = ({ strapi }) => {
     }
 
     const isSmartPopulateEnabled =
-      normalizeDynamicZonePopulate(context.params.populateDynamicZone).length >
+      normalizeDynamicZonePopulate(context.params?.populateDynamicZone).length >
       0
 
     if (!isSmartPopulateEnabled) {
