@@ -103,7 +103,7 @@ Add the new UID to the `attributes.content.components` array:
 
 ### 3. Add population rules
 
-Add files to `apps/strapi/src/populateDynamicZone` folder..
+Add files to `apps/strapi/src/populateDynamicZone` folder.
 
 ```typescript
 import basicImagePopulate from "../utilities/basic-image"
