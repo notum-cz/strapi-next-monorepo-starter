@@ -4,17 +4,15 @@ import globals from "globals"
 export default [
   {
     ignores: [
+      "**/.*", // dotfiles like .env, .gitignore
+      "**/.*/**", // files inside dotfolders like .next/, .cache/
       "**/out/**",
-      "**/*.gen.ts",
       "**/node_modules/**",
-      "**/.next/**",
-      "**/.expo/**",
       "**/dist/**",
       "**/generated/**",
       "**/build/**",
       "**/docs/**",
       "**/storybook-static/**",
-      "**/.docusaurus/**",
       "**/coverage/**",
     ],
   },

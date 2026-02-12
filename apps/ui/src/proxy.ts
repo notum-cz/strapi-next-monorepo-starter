@@ -73,6 +73,7 @@ export const config = {
     `/(cs|en)/:path*`,
 
     // Skip all paths that should not be internationalized
-    String.raw`/((?!_next|_vercel|api|robots.txt|favicon.ico|sitemap|.*\..*).*)`,
+    // eslint-disable-next-line unicorn/prefer-string-raw
+    "/((?!_next|_vercel|api|robots.txt|favicon.ico|sitemap|.*\\..*).*)",
   ],
 }
