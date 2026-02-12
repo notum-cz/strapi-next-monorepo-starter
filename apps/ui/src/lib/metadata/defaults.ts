@@ -34,7 +34,7 @@ export function getDefaultOgMeta(
     title: t("og.title"),
     description: t("og.description"),
     images: [t("og.image")],
-    url: [routing.defaultLocale === locale ? null : locale, fullPath ?? ""]
+    url: [routing.defaultLocale !== locale ? locale : null, fullPath ?? ""]
       .filter(Boolean)
       .join("/"),
   }
