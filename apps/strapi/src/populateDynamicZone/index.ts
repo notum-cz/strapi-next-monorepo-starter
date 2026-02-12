@@ -1,10 +1,14 @@
 import fs from "node:fs"
 import path from "node:path"
 
+import { Core } from "@strapi/strapi"
+
 const isRuntimeFile = (name: string) =>
   /\.(js|ts)$/.test(name) && !name.endsWith(".d.ts")
 
 const stripExt = (name: string) => name.slice(0, name.lastIndexOf("."))
+
+let cachedSchema: Record<string, unknown> | null = null
 
 /**
  * Generates a Strapi dynamic zone populate map from filesystem structure.
@@ -31,8 +35,9 @@ const stripExt = (name: string) => name.slice(0, name.lastIndexOf("."))
  * Prevents sending large populate queries from the frontend.
  * The frontend only requests a dynamic zone and the backend resolves the full populate object automatically.
  */
-export const getPopulateDynamicZoneConfig = (): Record<string, unknown> =>
-  Object.fromEntries(
+
+export const generateDynamicZoneConfig = (): Record<string, unknown> => {
+  cachedSchema = Object.fromEntries(
     fs
       .readdirSync(__dirname, { withFileTypes: true })
       .filter((dir) => dir.isDirectory())
@@ -47,3 +52,12 @@ export const getPopulateDynamicZoneConfig = (): Record<string, unknown> =>
           })
       })
   )
+
+  console.info(
+    "Successfully generated dynamic zone populate configuration from filesystem."
+  )
+  return cachedSchema
+}
+
+export const getPopulateDynamicZoneConfig = (): Record<string, unknown> =>
+  cachedSchema || generateDynamicZoneConfig()
