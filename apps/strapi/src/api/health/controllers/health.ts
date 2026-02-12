@@ -3,7 +3,7 @@
  */
 
 export default {
-  find: async (ctx, next) => {
-    return await strapi.service("api::health.health").liveness(ctx, next)
+  find: async (ctx) => {
+    ctx.body = { status: "OK" }
   },
 }
