@@ -1,9 +1,9 @@
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { cn } from "@/lib/styles"
 import { Container } from "@/components/elementary/Container"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import { cn } from "@/lib/styles"
 
 export function StrapiHorizontalImages({
   component,

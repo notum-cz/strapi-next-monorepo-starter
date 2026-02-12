@@ -1,11 +1,11 @@
-import { Data } from "@strapi/strapi"
-import { errors } from "@strapi/utils"
 import { normalizePageFullPath, ROOT_PAGE_PATH } from "@repo/shared-data"
+import type { Data } from "@strapi/strapi"
+import { errors } from "@strapi/utils"
 
-import { LifecycleEventType } from "../../../types/internals"
+import type { LifecycleEventType } from "../../../types/internals"
 import { PAGES_HIERARCHY_ENABLED } from "../constants"
 import { getOldPublishedDocument } from "./helpers"
-import { CreateRedirectPayload, HierarchicalDocumentType } from "./types"
+import type { CreateRedirectPayload, HierarchicalDocumentType } from "./types"
 
 const { ValidationError } = errors
 

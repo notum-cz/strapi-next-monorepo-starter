@@ -1,25 +1,26 @@
-import { ReactNode } from "react"
-import { JSONContent } from "@tiptap/core"
+import type { JSONContent } from "@tiptap/core"
 import Subscript from "@tiptap/extension-subscript"
 import Superscript from "@tiptap/extension-superscript"
 import { TableKit } from "@tiptap/extension-table"
 import TextAlign from "@tiptap/extension-text-align"
 import StarterKit from "@tiptap/starter-kit"
-import { NodeProps } from "@tiptap/static-renderer"
+import type { NodeProps } from "@tiptap/static-renderer"
 import { renderToReactElement } from "@tiptap/static-renderer/pm/react"
-import { Node as TiptapNode } from "prosemirror-model"
+import type { Node as TiptapNode } from "prosemirror-model"
+import type { ReactNode } from "react"
 
-import type { FontWeight, Variant } from "@/components/typography"
-
-import { safeJSONParse } from "@/lib/general-helpers"
-import { cn } from "@/lib/styles"
 import AppLink from "@/components/elementary/AppLink"
 import {
   HeadingWithSEOTag,
   OnlyCursive,
 } from "@/components/elementary/tiptap-editor/extensions"
 import { textAlignClassName } from "@/components/elementary/tiptap-editor/utils"
-import Typography from "@/components/typography"
+import Typography, {
+  type FontWeight,
+  type Variant,
+} from "@/components/typography"
+import { safeJSONParse } from "@/lib/general-helpers"
+import { cn } from "@/lib/styles"
 
 export type TiptapRichTextProps = {
   content?: string | null
@@ -77,6 +78,7 @@ export function TiptapRichText({
 
   if (!jsonContent?.type) {
     console.warn("TiptapRichText: content is not valid:", content)
+
     return null
   }
 
@@ -113,6 +115,7 @@ export function TiptapRichText({
           let className = "text-accent-dark italic"
           if (accentCursive === "only-cursive") className = "italic"
           if (accentCursive === "no-accent") className = ""
+
           return <span className={className}>{children}</span>
         },
         onlyCursive({ children }) {
@@ -126,6 +129,7 @@ export function TiptapRichText({
           const chosenTag = node.attrs?.tag || `h${level}`
           const variant = `heading-${level}` as Variant
           const Tag = chosenTag
+
           return (
             <Typography
               variant={variant}
@@ -216,6 +220,7 @@ function renderTableCell(ctx: NodeProps<TiptapNode, ReactNode | ReactNode[]>) {
     width: node.attrs.colwidth && node.attrs.colwidth + "px",
     verticalAlign: "text-top",
   }
+
   return (
     <td className="p-2" style={style} {...node.attrs}>
       {children}

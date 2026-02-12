@@ -1,19 +1,19 @@
-import { use } from "react"
-import { notFound } from "next/navigation"
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
-import { Locale } from "next-intl"
+import { notFound } from "next/navigation"
+import type { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
+import { use } from "react"
 
-import { createFallbackPath, debugStaticParams } from "@/lib/build"
-import { isDevelopment } from "@/lib/general-helpers"
-import { getMetadataFromStrapi } from "@/lib/metadata"
-import { fetchAllPages, fetchPage } from "@/lib/strapi-api/content/server"
-import { cn } from "@/lib/styles"
 import { Breadcrumbs } from "@/components/elementary/Breadcrumbs"
 import { Container } from "@/components/elementary/Container"
 import { ErrorBoundary } from "@/components/elementary/ErrorBoundary"
 import { PageContentComponents } from "@/components/page-builder"
 import StrapiStructuredData from "@/components/page-builder/components/seo-utilities/StrapiStructuredData"
+import { createFallbackPath, debugStaticParams } from "@/lib/build"
+import { isDevelopment } from "@/lib/general-helpers"
+import { getMetadataFromStrapi } from "@/lib/metadata"
+import { fetchAllPages, fetchPage } from "@/lib/strapi-api/content/server"
+import { cn } from "@/lib/styles"
 
 // Allow this dynamic route to behave like a static/ISR page
 // even if slugs are unknown at build time or STRAPI_URL is not defined
@@ -35,6 +35,7 @@ export async function generateStaticParams({
 }) {
   if (isDevelopment()) {
     debugStaticParams([], "[[...rest]]", { isDevelopment: true })
+
     // do not prefetch all locales when developing
     return [
       {

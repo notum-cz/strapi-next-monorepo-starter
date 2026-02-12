@@ -35,8 +35,9 @@ export const isAppLink = (link: string): boolean => {
   try {
     const baseUrl = getEnvVar("APP_PUBLIC_URL", true) as string
     const url = new URL(link, baseUrl)
+
     return url.hostname === new URL(baseUrl).hostname
-  } catch (error) {
+  } catch {
     return false
   }
 }

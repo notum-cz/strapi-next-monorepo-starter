@@ -1,4 +1,4 @@
-import React from "react"
+import type React from "react"
 
 import { cn } from "@/lib/styles"
 
@@ -69,7 +69,7 @@ interface TypographyProps {
   id?: string
 }
 
-export const Typography = ({
+export function Typography({
   children,
   className,
   variant,
@@ -77,7 +77,7 @@ export const Typography = ({
   fontWeight = "normal",
   tag: Tag = "p",
   id,
-}: TypographyProps) => {
+}: TypographyProps) {
   const selectedVariant = variant
     ? variantStyles[variant]
     : variantStyles[defaultStyles[Tag]]

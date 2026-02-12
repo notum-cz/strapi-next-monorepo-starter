@@ -1,5 +1,5 @@
-import React from "react"
 import { NextIntlClientProvider } from "next-intl"
+import type React from "react"
 
 import { setupLibraries } from "@/lib/general-helpers"
 

@@ -1,3 +1,7 @@
+import type { FindFirst, FindMany, ID, Result, UID } from "@repo/strapi-types"
+
+import { getEnvVar } from "@/lib/env-vars"
+import { isDevelopment } from "@/lib/general-helpers"
 import type {
   APIResponse,
   APIResponseCollection,
@@ -6,14 +10,10 @@ import type {
   PageLocalization,
 } from "@/types/api"
 import type { AppError, CustomFetchOptions } from "@/types/general"
-import type { FindFirst, FindMany, ID, Result, UID } from "@repo/strapi-types"
-
-import { getEnvVar } from "@/lib/env-vars"
-import { isDevelopment } from "@/lib/general-helpers"
 
 // Add endpoints here that are queried from the frontend.
 // Mapping of Strapi content type UIDs to API endpoint paths.
-export const API_ENDPOINTS: { [key in UID.ContentType]?: string } = {
+export const API_ENDPOINTS: Partial<Record<UID.ContentType, string>> = {
   "api::page.page": "/pages",
   "api::footer.footer": "/footer",
   "api::navbar.navbar": "/navbar",
@@ -61,7 +61,7 @@ export default abstract class BaseStrapiClient {
         status: response.status,
         details: { url },
       }
-      console.error("[BaseStrapiClient] Strapi API request error: ", appError)
+      console.error("[BaseStrapiClient] Strapi API request error:", appError)
       throw new Error(JSON.stringify(appError))
     }
 
@@ -76,7 +76,7 @@ export default abstract class BaseStrapiClient {
         status: response.status ?? error?.status,
       }
       if (getEnvVar("DEBUG_STRAPI_CLIENT_API_CALLS")) {
-        console.error("[BaseStrapiClient] Strapi API request error: ", appError)
+        console.error("[BaseStrapiClient] Strapi API request error:", appError)
       }
       throw new Error(JSON.stringify(appError))
     }
@@ -99,7 +99,8 @@ export default abstract class BaseStrapiClient {
   ): Promise<APIResponse<Result<TContentTypeUID, TParams>>> {
     const path = this.getStrapiApiPathByUId(uid)
     const url = `${path}${documentId ? `/${documentId}` : ""}`
-    return await this.fetchAPI(url, params, requestInit, options)
+
+    return this.fetchAPI(url, params, requestInit, options)
   }
 
   /**
@@ -115,7 +116,8 @@ export default abstract class BaseStrapiClient {
     options?: CustomFetchOptions
   ): Promise<APIResponseCollection<Result<TContentTypeUID, TParams>>> {
     const path = this.getStrapiApiPathByUId(uid)
-    return await this.fetchAPI(path, params, requestInit, options)
+
+    return this.fetchAPI(path, params, requestInit, options)
   }
 
   /**

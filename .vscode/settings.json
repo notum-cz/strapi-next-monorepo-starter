@@ -11,6 +11,7 @@
     ".*ClassName*"
   ],
   "npm.packageManager": "pnpm",
+  "eslint.useFlatConfig": true,
   "editor.formatOnSave": true,
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

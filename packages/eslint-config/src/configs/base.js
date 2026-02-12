@@ -10,6 +10,7 @@ export default [
       "**/.next/**",
       "**/.expo/**",
       "**/dist/**",
+      "**/generated/**",
       "**/build/**",
       "**/docs/**",
       "**/storybook-static/**",

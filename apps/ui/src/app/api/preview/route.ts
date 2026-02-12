@@ -1,5 +1,5 @@
-import { cookies, draftMode } from "next/headers"
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
+import { cookies, draftMode } from "next/headers"
 import { hasLocale } from "next-intl"
 
 import { getEnvVar } from "@/lib/env-vars"
@@ -11,6 +11,7 @@ export async function GET(request: Request) {
     console.log(
       "[STRAPI_PREVIEW]: Preview request received, but [STRAPI_PREVIEW_SECRET] has not been configured. Status: 404."
     )
+
     return new Response("Invalid Configuration", { status: 404 })
   }
   const { searchParams } = new URL(request.url)
@@ -20,18 +21,19 @@ export async function GET(request: Request) {
     console.log(
       "[STRAPI_PREVIEW]: Preview request received, but [secret] does not match [STRAPI_PREVIEW_SECRET]. Status: 401."
     )
+
     return new Response("Invalid token", { status: 401 })
   }
   // Validate the URL begins with ROOT_PAGE_PATH (e.g. index, with optional / for nested pages)
   const urlParam = String(searchParams.get("url"))
-  const url = urlParam.match(validPageUrlRegex) ? urlParam : undefined
+  const url = validPageUrlRegex.test(urlParam) ? urlParam : undefined
   if (!url) {
     return new Response("Invalid URL", { status: 404 })
   }
 
   // Check if the status in the request is configured correctly
   const statusParam = String(searchParams.get("status"))
-  const status = validPageStatusKeys.includes(statusParam)
+  const status = validPageStatusKeys.has(statusParam)
     ? statusParam
     : "published"
   const dm = await draftMode()
@@ -80,7 +82,7 @@ export async function GET(request: Request) {
   // Redirect to the path from the fetched post
   redirect({ href: `${url}`, locale })
 }
-const validPageStatusKeys = ["draft", "published"]
+const validPageStatusKeys = new Set(["draft", "published"])
 const draftModePrerenderCookieKey = "__prerender_bypass"
 
 const validPageUrlRegex = new RegExp(

@@ -85,8 +85,6 @@ const prepareAwsS3Config = (env) => {
       },
     }
   }
-
-  return undefined
 }
 
 const prepareEmailConfig = (env) => {
@@ -116,7 +114,7 @@ const prepareEmailConfig = (env) => {
       provider: "nodemailer",
       providerOptions: {
         host: env("MAILTRAP_HOST", "sandbox.smtp.mailtrap.io"),
-        port: parseInt(env("MAILTRAP_PORT", "2525"), 10),
+        port: Number.parseInt(env("MAILTRAP_PORT", "2525"), 10),
         auth: {
           user: env("MAILTRAP_USER"),
           pass: env("MAILTRAP_PASS"),

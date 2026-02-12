@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import {
   flexRender,
   getCoreRowModel,
@@ -8,17 +7,13 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  type ColumnDef,
+  type HeaderGroup,
+  type SortingState,
 } from "@tanstack/react-table"
 import { useTranslations } from "next-intl"
+import { useState, type ReactNode } from "react"
 
-import type {
-  ColumnDef,
-  HeaderGroup,
-  SortingState,
-} from "@tanstack/react-table"
-import type { ReactNode } from "react"
-
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
@@ -29,6 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
 import { DataTablePagination } from "./DataTablePagination"
 
@@ -152,11 +148,11 @@ export function DataTable<TData, TValue>({
   )
 }
 
-const DataTableSkeleton = <TData,>({
+function DataTableSkeleton<TData>({
   headerGroup,
 }: {
   headerGroup: HeaderGroup<TData>
-}) => {
+}) {
   return (
     <>
       {Array.from({ length: 2 }).map((_, i) => (
@@ -166,11 +162,11 @@ const DataTableSkeleton = <TData,>({
   )
 }
 
-const SkeletonLine = <TData,>({
+function SkeletonLine<TData>({
   headerGroup,
 }: {
   headerGroup: HeaderGroup<TData>
-}) => {
+}) {
   return (
     <TableBody>
       <TableRow>

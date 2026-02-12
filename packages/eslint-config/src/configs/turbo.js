@@ -1,4 +1,4 @@
-import turboPlugin from 'eslint-plugin-turbo';
+import turboPlugin from "eslint-plugin-turbo"
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -7,7 +7,7 @@ export default [
       turbo: turboPlugin,
     },
     rules: {
-      'turbo/no-undeclared-env-vars': 'warn',
+      "turbo/no-undeclared-env-vars": "warn",
     },
   },
-];
+]

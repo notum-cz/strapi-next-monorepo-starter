@@ -1,9 +1,9 @@
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import AppLink from "@/components/elementary/AppLink"
 import { Container } from "@/components/elementary/Container"
 import { NewsletterForm } from "@/components/elementary/forms/NewsletterForm"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
 export function StrapiNewsletterForm({
   component,

@@ -1,13 +1,13 @@
 "use client"
 
-import { useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { useTranslations } from "next-intl"
+import { useState } from "react"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { UseSearchParamsWrapper } from "@/components/helpers/UseSearchParamsWrapper"
 import { Alert } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
 import { SetPasswordForm } from "./_components/SetPasswordForm"
 
@@ -30,17 +30,17 @@ function ActivateAccount() {
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-12">
-      {code != null ? (
+      {code == null ? (
+        <div>
+          <Alert variant="destructive">{t("invalidLink")}</Alert>
+        </div>
+      ) : (
         <div>
           <h4 className="text-2xl">{title}!</h4>
           <p className="mb-4 text-base">{t("activateAccount", { email })}</p>
           <Button variant="default" onClick={() => setFormToggled(true)}>
             {t("activate")}
           </Button>
-        </div>
-      ) : (
-        <div>
-          <Alert variant="destructive">{t("invalidLink")}</Alert>
         </div>
       )}
     </div>

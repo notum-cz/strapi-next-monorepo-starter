@@ -1,6 +1,6 @@
-import React from "react"
 import { useTranslations } from "next-intl"
-import { z } from "zod"
+import React from "react"
+import type { z } from "zod"
 
 /**
  * Hook that translates zod validation errors.
@@ -74,14 +74,26 @@ export function useTranslatedZod(zod: typeof z) {
           message = "invalid_literal"
           break
         case "custom":
-          if (issue.params?.type === "passwordNumber") {
-            message = "custom.passwordWithNumber"
-          } else if (issue.params?.type === "phoneNumber") {
-            message = "custom.phoneNumber"
-          } else if (issue.params?.type === "checkPassword") {
-            message = "custom.password"
+          switch (issue.params?.type) {
+            case "passwordNumber":
+              message = "custom.passwordWithNumber"
+
+              break
+
+            case "phoneNumber":
+              message = "custom.phoneNumber"
+
+              break
+
+            case "checkPassword":
+              message = "custom.password"
+
+              break
+
+            // No default
           }
           break
+
         default:
           message = issue.code
       }

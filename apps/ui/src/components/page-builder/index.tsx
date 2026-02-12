@@ -1,4 +1,4 @@
-import { UID } from "@repo/strapi-types"
+import type { UID } from "@repo/strapi-types"
 
 import StrapiContactForm from "@/components/page-builder/components/forms/StrapiContactForm"
 import StrapiNewsletterForm from "@/components/page-builder/components/forms/StrapiNewsletterForm"
@@ -16,10 +16,9 @@ import StrapiTipTapEditorContent from "@/components/page-builder/components/util
  * Mapping of Strapi Component UID to React Component
  * TODO: Improve dynamic/lazy loading of these components to reduce bundle size
  */
-export const PageContentComponents: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [K in UID.Component]?: React.ComponentType<any>
-} = {
+export const PageContentComponents: Partial<
+  Record<UID.Component, React.ComponentType<any>>
+> = {
   // elements, seo-utilities, utilities
   // They are usually rendered or used deep inside other components or handlers
   // Add them here if they can be used on Page content level

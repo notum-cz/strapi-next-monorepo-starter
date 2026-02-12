@@ -1,16 +1,16 @@
 "use client"
 
-import { useRef, useState } from "react"
 import { Cross1Icon } from "@radix-ui/react-icons"
 import { PaperclipIcon } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { useRef, useState } from "react"
 import { toast } from "sonner"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { cn } from "@/lib/styles"
 import { Tooltip } from "@/components/elementary/Tooltip"
 import { AppFormLabel } from "@/components/forms/AppFormLabel"
 import { FormItem } from "@/components/ui/form"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import { cn } from "@/lib/styles"
 
 interface Props {
   readonly selectedFile: File | null

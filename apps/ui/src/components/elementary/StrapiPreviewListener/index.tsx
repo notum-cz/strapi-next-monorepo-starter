@@ -3,7 +3,7 @@ import { getEnvVar } from "@/lib/env-vars"
 
 import StrapiPreviewWindowChangeListener from "./StrapiPreviewListener"
 
-const StrapiPreviewListener = async () => {
+function StrapiPreviewListener() {
   const strapiUrl = getEnvVar("STRAPI_URL")
 
   if (!strapiUrl) {

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 
 export default function PageList({ pages }: { pages: any[] }) {
   const [show, setShow] = useState(true)
+
   return (
     <div className="flex flex-col gap-6">
       <div className="my-6">

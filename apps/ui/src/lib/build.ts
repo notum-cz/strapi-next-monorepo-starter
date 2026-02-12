@@ -1,4 +1,4 @@
-import { Locale } from "next-intl"
+import type { Locale } from "next-intl"
 
 import { getEnvVar } from "@/lib/env-vars"
 
@@ -8,7 +8,7 @@ import { getEnvVar } from "@/lib/env-vars"
  * @param segment optional segment name to add clarity
  */
 export const debugStaticParams = (
-  staticParams: Array<unknown>,
+  staticParams: unknown[],
   segment?: string,
   config?: { isDevelopment?: boolean }
 ) => {

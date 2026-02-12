@@ -1,8 +1,8 @@
-import { Locale } from "next-intl"
+import type { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
-import { Container } from "@/components/elementary/Container"
 import DevNavbar from "@/app/[locale]/dev/components/DevNavbar"
+import { Container } from "@/components/elementary/Container"
 
 export default async function Layout({
   children,

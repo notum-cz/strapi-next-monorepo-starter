@@ -10,7 +10,7 @@ export function StyleChangePlugin(editor: any) {
         )
 
         if (typoClasses.length > 1) {
-          const lastTypoClass = typoClasses[typoClasses.length - 1]
+          const lastTypoClass = typoClasses.at(-1)
 
           // Remove all other typo-* classes
           for (const cls of typoClasses) {

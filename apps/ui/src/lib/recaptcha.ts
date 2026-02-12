@@ -26,7 +26,7 @@ export const verifyRecaptcha = async (token?: string): Promise<boolean> => {
 
     // reCAPTCHA v3 returns a score (0.0 - 1.0), usually accept > 0.5
     return data.success && data.score >= 0.5
-  } catch (error) {
+  } catch {
     return false
   }
 }

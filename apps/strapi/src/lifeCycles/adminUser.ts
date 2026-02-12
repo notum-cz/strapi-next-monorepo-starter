@@ -1,5 +1,5 @@
-import { Event } from "@strapi/database/dist/lifecycles"
-import { Core } from "@strapi/strapi"
+import type { Event } from "@strapi/database/dist/lifecycles"
+import type { Core } from "@strapi/strapi"
 
 export const registerAdminUserSubscriber = async ({
   strapi,

@@ -1,13 +1,13 @@
-import { notFound } from "next/navigation"
 import { uniq } from "lodash"
-import { Locale } from "next-intl"
+import { notFound } from "next/navigation"
+import type { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
+import ComponentsList from "@/app/[locale]/dev/components-overview/components/ComponentsList"
+import Typography from "@/components/typography"
 import { isProduction } from "@/lib/general-helpers"
 import { logNonBlockingError } from "@/lib/logging"
 import { PublicStrapiClient } from "@/lib/strapi-api"
-import Typography from "@/components/typography"
-import ComponentsList from "@/app/[locale]/dev/components-overview/components/ComponentsList"
 
 async function fetchAllPages(locale: Locale) {
   try {
@@ -24,9 +24,11 @@ async function fetchAllPages(locale: Locale) {
         stack: e?.stack,
       },
     })
+
     return { data: [] }
   }
 }
+
 export default async function ComponentsOverviewPage({
   params,
 }: PageProps<"/[locale]/dev/components-overview">) {

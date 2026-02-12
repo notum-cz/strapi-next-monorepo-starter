@@ -45,7 +45,7 @@
 .ck-editor__main .ck-content .typo-h1,
 .typo-h1,
 .tip-tap-editor-wrapper h1 {
-  @apply text-6xl mb-2;
+  @apply mb-2 text-6xl;
 }
 
 .ck-editor-rich-text-page h2,
@@ -56,7 +56,7 @@
 .ck-editor__main .ck-content .typo-h2,
 .typo-h2,
 .tip-tap-editor-wrapper h2 {
-  @apply text-5xl mb-1.5;
+  @apply mb-1.5 text-5xl;
 }
 
 .ck-editor-rich-text-page h3,
@@ -67,7 +67,7 @@
 .ck-editor__main .ck-content .typo-h3,
 .typo-h3,
 .tip-tap-editor-wrapper h3 {
-  @apply text-4xl mb-1;
+  @apply mb-1 text-4xl;
 }
 
 .ck-editor-rich-text-page h4,
@@ -78,7 +78,7 @@
 .ck-editor__main .ck-content .typo-h4,
 .typo-h4,
 .tip-tap-editor-wrapper h4 {
-  @apply text-3xl mb-1;
+  @apply mb-1 text-3xl;
 }
 
 .ck-editor-rich-text-page h5,
@@ -89,7 +89,7 @@
 .ck-editor__main .ck-content .typo-h5,
 .typo-h5,
 .tip-tap-editor-wrapper h5 {
-  @apply text-2xl mb-1;
+  @apply mb-1 text-2xl;
 }
 
 .ck-editor-rich-text-page h6,
@@ -100,7 +100,7 @@
 .ck-editor__main .ck-content .typo-h6,
 .typo-h6,
 .tip-tap-editor-wrapper h6 {
-  @apply text-xl mb-1;
+  @apply mb-1 text-xl;
 }
 
 /* Default paragraph style */
@@ -112,7 +112,7 @@
 .ck-editor__main .ck-content .typo-p-medium,
 .typo-p-medium,
 .tip-tap-editor-wrapper p {
-  @apply text-sm mb-0.5;
+  @apply mb-0.5 text-sm;
 }
 
 .ck-editor-rich-text-page .typo-p-large,
@@ -120,7 +120,7 @@
 .ck-editor__main .ck-content .typo-p-large,
 .typo-p-large,
 .tip-tap-editor-wrapper .typo-p-large {
-  @apply text-lg mb-0.5;
+  @apply mb-0.5 text-lg;
 }
 
 .ck-editor-rich-text-page .typo-p-small,
@@ -128,7 +128,7 @@
 .ck-editor__main .ck-content .typo-p-small,
 .typo-p-small,
 .tip-tap-editor-wrapper .typo-p-small {
-  @apply text-xs mb-0.5;
+  @apply mb-0.5 text-xs;
 }
 
 /* We needed to rewrite default Strapi ck editor styling, that's why we used important */

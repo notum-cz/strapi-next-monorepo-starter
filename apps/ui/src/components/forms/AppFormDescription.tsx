@@ -1,7 +1,7 @@
-import React from "react"
+import type React from "react"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { FormDescription } from "@/components/ui/form"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
 type Props = {
   readonly description?: React.ReactNode

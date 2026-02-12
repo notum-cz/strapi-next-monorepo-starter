@@ -15,4 +15,4 @@ export default [
       ...pluginNext.configs["core-web-vitals"].rules,
     },
   },
-];
+]

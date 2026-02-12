@@ -1,5 +1,5 @@
-import { Data } from "@strapi/strapi"
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
+import type { Data } from "@strapi/strapi"
 
 type Document = Data.ContentType<"api::page.page">
 
@@ -83,5 +83,6 @@ export const getFullPathFromQuery = (ctx: any) => {
   const query: Record<string, any> = ctx.request.query
   const fullPathFilter = query?.filters?.fullPath
   const fullPath = fullPathFilter ? fullPathFilter["$eq"] : null
+
   return fullPath
 }
