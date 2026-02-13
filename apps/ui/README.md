@@ -551,6 +551,17 @@ export default function Page() {
 }
 ```
 
+### Middleware proxies
+
+The Next.js [middleware](src/proxy.ts) is composed of standalone proxy functions, each handling a specific concern. They run in sequence — the first one to return a response short-circuits the chain.
+
+| Proxy           | File                                                   | Description                                                                     |
+| --------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| Basic Auth      | [basicAuth.ts](src/lib/proxies/basicAuth.ts)           | HTTP Basic Authentication, enabled via `BASIC_AUTH_ENABLED` env var             |
+| HTTPS Redirect  | [httpsRedirect.ts](src/lib/proxies/httpsRedirect.ts)   | Redirects HTTP to HTTPS in production (e.g. Heroku)                             |
+| Auth Guard      | [authGuard.ts](src/lib/proxies/authGuard.ts)           | Protects private pages by requiring an active session                           |
+| Dynamic Rewrite | [dynamicRewrite.ts](src/lib/proxies/dynamicRewrite.ts) | Rewrites requests with search params to the `/dynamic/` route for SSR rendering |
+
 ### Sentry logging
 
 Errors passed through `<ErrorBoundary />` or `error.tsx` are automatically logged to Sentry. To turn Sentry on, set `NEXT_PUBLIC_SENTRY_DSN` to environment variables. `SENTRY_AUTH_TOKEN`, `SENTRY_ORG` and `SENTRY_PROJECT` are optional and serve for uploading source maps to Sentry during deployment. Uncaught errors are logged automatically.
