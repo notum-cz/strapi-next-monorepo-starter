@@ -43,10 +43,11 @@ export const dynamicRewrite = (
     [locale, dynamicPrefix, rest].filter(Boolean).join("/"),
     req.url
   )
-  rewriteUrl.search = req.nextUrl.search
+
+  rewriteUrl.search = search
 
   const rewriteResponse = NextResponse.rewrite(rewriteUrl, intlProxy(req))
-  rewriteResponse.headers.set("x-original-path", req.nextUrl.pathname)
+  rewriteResponse.headers.set("x-original-path", pathname)
 
   return rewriteResponse
 }
