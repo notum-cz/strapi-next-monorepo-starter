@@ -1,8 +1,5 @@
 {
-  "eslint.workingDirectories": [
-    "./apps/ui",
-    "./apps/strapi"
-  ],
+  "eslint.workingDirectories": [{ "mode": "auto" }],
   "tailwindCSS.classAttributes": [
     "class",
     "className",
@@ -12,6 +9,7 @@
   ],
   "npm.packageManager": "pnpm",
   "eslint.useFlatConfig": true,
+  "eslint.format.enable": true,
   "editor.formatOnSave": true,
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -30,11 +28,7 @@
   },
   "prettier.requireConfig": true,
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": [
-    "plaiceholder",
-    "Strapi",
-    "unoptimized"
-  ],
+  "cSpell.words": ["Strapi", "unoptimized"],
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "javascript.preferences.importModuleSpecifier": "non-relative"
 }
