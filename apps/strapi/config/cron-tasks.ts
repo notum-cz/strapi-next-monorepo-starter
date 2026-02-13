@@ -3,7 +3,7 @@
 const sayHelloJob = {
   task: ({ strapi }) => {
     // Add your own logic here (e.g. send a queue of email, create a database backup, etc.).
-    console.log("A beautiful start to the week!")
+    console.warn("A beautiful start to the week!")
   },
   /**
    * Simple example.

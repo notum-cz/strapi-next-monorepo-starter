@@ -79,9 +79,14 @@ export const generateBreadcrumbs = async (
   return breadcrumbs
 }
 
-export const getFullPathFromQuery = (ctx: any) => {
-  const query: Record<string, any> = ctx.request.query
-  const fullPathFilter = query?.filters?.fullPath
+export const getFullPathFromQuery = (ctx: {
+  request: { query?: Record<string, unknown> }
+}) => {
+  const query = ctx.request.query
+  const filters = query?.filters as
+    | Record<string, Record<string, unknown>>
+    | undefined
+  const fullPathFilter = filters?.fullPath
   const fullPath = fullPathFilter ? fullPathFilter["$eq"] : null
 
   return fullPath

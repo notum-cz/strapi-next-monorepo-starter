@@ -104,6 +104,6 @@ export const strapi = new Proxy({} as Core.Strapi, {
       throw new Error("Strapi not initialized. Call setupStrapi() first.")
     }
 
-    return (instance as any)[prop]
+    return (instance as unknown as Record<string, unknown>)[prop as string]
   },
 })

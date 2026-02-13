@@ -12,7 +12,9 @@ const validateAdminToken = (strapi, headers) => {
     return { valid: false, error: "No token provided" }
   }
 
-  const decoded: any = jwt.verify(token, strapi.config.get("admin.auth.secret"))
+  const decoded = jwt.verify(token, strapi.config.get("admin.auth.secret")) as {
+    userId?: string
+  }
   if (!decoded?.userId) {
     return { valid: false, error: "Invalid token" }
   }

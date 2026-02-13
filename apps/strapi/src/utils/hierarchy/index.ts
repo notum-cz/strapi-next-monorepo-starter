@@ -127,7 +127,8 @@ export const processRecalculateFullPathJob = async (
     })
 
     // Create RECALCULATE_FULLPATH jobs for all children
-    const children = (document as any).children ?? []
+    const children =
+      (document as unknown as { children?: (typeof document)[] }).children ?? []
     for (const child of children) {
       await strapi
         .service("api::internal-job.internal-job")

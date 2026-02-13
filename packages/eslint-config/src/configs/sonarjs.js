@@ -33,4 +33,17 @@ export default [
       "sonarjs/no-duplicate-string": "off",
     },
   },
+  {
+    files: [
+      "**/translations/**",
+      "**/locales/**",
+      "**/i18n/**",
+      "**/cs.ts",
+      "**/en.ts",
+    ],
+    rules: {
+      "sonarjs/no-hardcoded-passwords": "off", // eslint-disable-line sonarjs/no-hardcoded-passwords
+      "sonarjs/no-hardcoded-secrets": "off",
+    },
+  },
 ]

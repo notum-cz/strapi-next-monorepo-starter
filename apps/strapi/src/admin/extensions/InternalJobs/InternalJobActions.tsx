@@ -50,7 +50,7 @@ function InternalJobsActions() {
       }
     }
     fetchCount()
-  }, [])
+  }, [get, uid])
 
   const runJob = async (jobType: string) => {
     if (runningJob) return

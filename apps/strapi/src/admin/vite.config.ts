@@ -1,3 +1,5 @@
+// @ts-expect-error vite is provided by Strapi internally
+// eslint-disable-next-line import-x/no-unresolved
 import { mergeConfig, type UserConfig } from "vite"
 
 export default (config: UserConfig) => {

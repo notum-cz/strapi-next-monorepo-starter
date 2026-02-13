@@ -30,7 +30,7 @@ const sendEmail = async (strapi: Core.Strapi, event: Event) => {
 
   if (confirmed) {
     // do not send email if the user is already confirmed
-    console.log(`User ${email} is already confirmed. Skipping email.`)
+    console.warn(`User ${email} is already confirmed. Skipping email.`)
 
     return
   }
@@ -68,7 +68,6 @@ const sendEmail = async (strapi: Core.Strapi, event: Event) => {
       html,
     })
   } catch (err) {
-    // TODO: handle error
-    console.log(err)
+    console.error("Failed to send user activation email:", err)
   }
 }

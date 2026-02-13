@@ -1,7 +1,7 @@
 export default ({ env }) => {
   const awsS3Config = prepareAwsS3Config(env)
   if (!awsS3Config) {
-    console.info(
+    console.warn(
       "AWS S3 upload configuration is not complete. Local file storage will be used."
     )
   }
@@ -38,7 +38,7 @@ export default ({ env }) => {
   }
 }
 
-const localUploadConfig: any = {
+const localUploadConfig: Record<string, unknown> = {
   // Local provider setup
   // https://docs.strapi.io/dev-docs/plugins/upload
   sizeLimit: 250 * 1024 * 1024, // 256mb in bytes,

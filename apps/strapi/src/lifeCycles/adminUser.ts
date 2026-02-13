@@ -35,8 +35,7 @@ const sendEmail = async (strapi: Core.Strapi, event: Event) => {
         html,
       })
     } catch (e) {
-      // TODO: handle error
-      console.log(e)
+      console.error("Failed to send admin invitation email:", e)
     }
   }
 }
