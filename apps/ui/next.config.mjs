@@ -12,7 +12,7 @@ const nextConfig = {
   devIndicators: {
     position: "bottom-right",
   },
-  // FIXME: Enable it in second step while caching will be introduced
+  // Enable cacheComponents when caching strategy is introduced
   // cacheComponents: true,
   experimental: {
     turbopackFileSystemCacheForDev: true,
@@ -98,6 +98,7 @@ const withConfig = (() => {
     // Automatically tree-shake Sentry logger statements to reduce bundle size
     disableLogger: true,
   })
+
   return config
 })()
 

@@ -13,6 +13,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc",
+    "lint": "eslint -c ../../eslint.config.mjs './**/*.{js,ts,jsx,tsx,cjs,mjs}'",
+    "lint:fix": "pnpm lint --fix",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

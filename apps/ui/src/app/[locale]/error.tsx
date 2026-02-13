@@ -1,19 +1,19 @@
 "use client"
 
 // Error boundaries must be Client Components - https://nextjs.org/docs/app/api-reference/file-conventions/error#error
-import { useEffect } from "react"
 import * as Sentry from "@sentry/nextjs"
 import { useTranslations } from "next-intl"
+import { useEffect } from "react"
 
-import { isDevelopment } from "@/lib/general-helpers"
 import { Button } from "@/components/ui/button"
+import { isDevelopment } from "@/lib/general-helpers"
 
 interface Props {
   readonly error: Error
   readonly reset: () => void
 }
 
-export default function Error({ error, reset }: Props) {
+export default function ErrorPage({ error, reset }: Props) {
   const t = useTranslations("errors.global")
 
   useEffect(() => {

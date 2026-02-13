@@ -1,4 +1,4 @@
-import { Modules } from "@strapi/strapi"
+import type { Modules } from "@strapi/strapi"
 
 import { animatedLogoRowPopulate } from "./sections/AnimatedLogoRow"
 import { carouselPopulate } from "./sections/Carousel"
@@ -11,8 +11,8 @@ import { imageWithCtaButtonPopulate } from "./sections/ImageWithCtaButton"
 import { newsletterFormPopulate } from "./sections/NewsletterForm"
 import { seoPopulate } from "./seo-utilities/Seo"
 
-const pageTypes = ["api::page.page"]
-const pageActions = ["findMany"] // We're using findMany to find the pages, but this could be adjusted to findOne per your needs
+const pageTypes = new Set(["api::page.page"])
+const pageActions = new Set(["findMany"]) // We're using findMany to find the pages, but this could be adjusted to findOne per your needs
 
 /**
  * Registers a middleware to customize the population of related fields for page documents during Strapi queries.
@@ -26,14 +26,11 @@ const pageActions = ["findMany"] // We're using findMany to find the pages, but 
  */
 export const registerPopulatePageMiddleware = ({ strapi }) => {
   strapi.documents.use((context, next) => {
-    if (
-      pageTypes.includes(context.uid) &&
-      pageActions.includes(context.action)
-    ) {
+    if (pageTypes.has(context.uid) && pageActions.has(context.action)) {
       const requestParams: {
         start?: number
         limit?: number
-        middlewarePopulate?: Array<string>
+        middlewarePopulate?: string[]
       } = context.params
       if (
         // This is added by Strapi regardless of whether you use pagination or start & limit attributes

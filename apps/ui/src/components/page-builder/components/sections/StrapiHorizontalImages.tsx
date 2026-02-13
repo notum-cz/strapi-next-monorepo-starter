@@ -1,9 +1,9 @@
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { cn } from "@/lib/styles"
 import { Container } from "@/components/elementary/Container"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import { cn } from "@/lib/styles"
 
 export function StrapiHorizontalImages({
   component,
@@ -26,10 +26,10 @@ export function StrapiHorizontalImages({
               `space-x-${component.spacing ?? 4}`
             )}
           >
-            {component.images?.map((x, i) => (
+            {component.images?.map((x) => (
               <StrapiImageWithLink
                 component={x}
-                key={String(x.id) + i}
+                key={x.id}
                 imageProps={{
                   className: cn({
                     [`rounded-${component.imageRadius}`]: Boolean(

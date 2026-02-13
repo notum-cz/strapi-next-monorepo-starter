@@ -1,9 +1,9 @@
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { cn } from "@/lib/styles"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
 import { Typography } from "@/components/typography"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import { cn } from "@/lib/styles"
 
 export function StrapiAnimatedLogoRow({
   component,
@@ -32,6 +32,7 @@ export function StrapiAnimatedLogoRow({
               )}
             >
               {sliderImages.map((logo, index) => (
+                // eslint-disable-next-line react/no-array-index-key -- items are duplicated for infinite scroll
                 <div key={String(logo.id) + index} className="grayscale">
                   <StrapiBasicImage
                     component={logo}

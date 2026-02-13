@@ -1,8 +1,8 @@
 "use client"
 
-import { usePathname } from "@/lib/navigation"
 import AppLink from "@/components/elementary/AppLink"
 import { Container } from "@/components/elementary/Container"
+import { usePathname } from "@/lib/navigation"
 
 export default function DevNavbar() {
   const pathname = usePathname()
@@ -16,6 +16,7 @@ export default function DevNavbar() {
       label: "Components overview",
     },
   ]
+
   return (
     <div className="bg-gray-300">
       <Container>

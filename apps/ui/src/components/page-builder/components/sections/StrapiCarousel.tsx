@@ -1,6 +1,5 @@
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
 import {
@@ -10,6 +9,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
 export function StrapiCarousel({
   component,
@@ -23,9 +23,9 @@ export function StrapiCarousel({
       <Container className="flex justify-center px-4 py-8">
         <Carousel className="w-full">
           <CarouselContent className="-ml-1">
-            {component.images?.map((item, index) => (
+            {component.images?.map((item) => (
               <CarouselItem
-                key={String(item.id) + index}
+                key={item.id}
                 className="px-2 pl-1 md:basis-1/2 lg:basis-1/3"
               >
                 <div className="relative h-96 w-full lg:w-96">

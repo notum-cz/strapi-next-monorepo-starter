@@ -1,16 +1,16 @@
 "use client"
 
-import { useRef, useState } from "react"
 import { Cross1Icon } from "@radix-ui/react-icons"
 import { PaperclipIcon } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { useRef, useState } from "react"
 import { toast } from "sonner"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { cn } from "@/lib/styles"
 import { Tooltip } from "@/components/elementary/Tooltip"
 import { AppFormLabel } from "@/components/forms/AppFormLabel"
 import { FormItem } from "@/components/ui/form"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import { cn } from "@/lib/styles"
 
 interface Props {
   readonly selectedFile: File | null
@@ -24,8 +24,8 @@ interface Props {
   readonly required?: boolean
 }
 
-// TODO: refactor this to react-hook-form field with Zod validation
-// eg.: https://claritydev.net/blog/react-hook-form-multipart-form-data-file-uploads
+// Consider refactoring to react-hook-form field with Zod validation
+// Reference: https://claritydev.net/blog/react-hook-form-multipart-form-data-file-uploads
 
 export function AppFilePicker({
   selectedFile,

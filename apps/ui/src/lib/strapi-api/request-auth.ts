@@ -48,6 +48,7 @@ export const createStrapiAuthHeader = async ({
 }) => {
   if (isPrivate) {
     const userToken = await getStrapiUserTokenFromBetterAuth()
+
     return formatStrapiAuthorizationHeader(userToken)
   }
 
@@ -81,11 +82,13 @@ const getStrapiUserTokenFromBetterAuth = async () => {
     const { headers } = await import("next/headers")
     const { getSessionSSR } = await import("@/lib/auth")
     const session = await getSessionSSR(await headers())
+
     return session?.user?.strapiJWT
   }
 
   // Client side: Make HTTP request to /api/auth/session
   const { getSessionCSR } = await import("@/lib/auth-client")
   const { data: session } = await getSessionCSR()
+
   return session?.user?.strapiJWT
 }

@@ -1,4 +1,4 @@
-import { Locale } from "next-intl"
+import type { Locale } from "next-intl"
 
 export interface APIResponseCollectionPagination {
   page: number

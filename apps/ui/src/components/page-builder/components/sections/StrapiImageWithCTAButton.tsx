@@ -1,15 +1,15 @@
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
-export const StrapiImageWithCTAButton = ({
+export function StrapiImageWithCTAButton({
   component,
 }: {
   readonly component: Data.Component<"sections.image-with-cta-button">
-}) => {
+}) {
   removeThisWhenYouNeedMe("StrapiImageWithCTAButton")
 
   return (

@@ -11,7 +11,7 @@ export default {
    *
    * This gives you an opportunity to extend code.
    */
-  register(/*{ strapi }*/) {},
+  register() {},
 
   /**
    * An asynchronous bootstrap function that runs before

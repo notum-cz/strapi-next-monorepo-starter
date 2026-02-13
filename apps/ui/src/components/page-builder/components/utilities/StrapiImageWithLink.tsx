@@ -1,9 +1,9 @@
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
 
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
-import { BasicImageProps, StrapiBasicImage } from "./StrapiBasicImage"
-import { StrapiLink, StrapiLinkProps } from "./StrapiLink"
+import { type BasicImageProps, StrapiBasicImage } from "./StrapiBasicImage"
+import { type StrapiLinkProps, StrapiLink } from "./StrapiLink"
 
 interface Props {
   readonly component:

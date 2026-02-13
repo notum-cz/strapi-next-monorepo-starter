@@ -1,9 +1,9 @@
-import { use } from "react"
-import { Locale } from "next-intl"
+import type { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
+import { use } from "react"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { SetPasswordForm } from "@/app/[locale]/auth/activate/_components/SetPasswordForm"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
 export default function ResetPasswordPage({
   params,

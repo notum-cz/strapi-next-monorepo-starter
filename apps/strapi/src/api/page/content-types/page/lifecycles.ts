@@ -1,4 +1,4 @@
-import { LifecycleEventType } from "../../../../../types/internals"
+import type { LifecycleEventType } from "../../../../../types/internals"
 import { handleHierarchyBeforeCreate } from "../../../../utils/hierarchy"
 
 export default {

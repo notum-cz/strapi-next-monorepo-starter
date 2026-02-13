@@ -1,10 +1,8 @@
-import { mergeWith } from "lodash"
-import { Locale } from "next-intl"
-import { getTranslations } from "next-intl/server"
-
-import type { SocialMetadata } from "@/types/general"
 import type { UID } from "@repo/strapi-types"
+import { mergeWith } from "lodash"
 import type { Metadata } from "next"
+import type { Locale } from "next-intl"
+import { getTranslations } from "next-intl/server"
 
 import { getEnvVar } from "@/lib/env-vars"
 import { isProduction } from "@/lib/general-helpers"
@@ -20,6 +18,7 @@ import {
   seoMergeCustomizer,
 } from "@/lib/metadata/helpers"
 import { fetchSeo } from "@/lib/strapi-api/content/server"
+import type { SocialMetadata } from "@/types/general"
 
 export async function getMetadataFromStrapi({
   fullPath,
@@ -37,6 +36,7 @@ export async function getMetadataFromStrapi({
   const siteUrl = getEnvVar("APP_PUBLIC_URL")
   if (!siteUrl) {
     console.warn("APP_PUBLIC_URL is not defined, cannot generate metadata")
+
     return null
   }
 
@@ -69,9 +69,10 @@ export async function getMetadataFromStrapi({
     )
   } catch (e: unknown) {
     console.warn(
-      `SEO for ${uid} content type ("${fullPath}") wasn't fetched: `,
+      `SEO for ${uid} content type ("${fullPath}") wasn't fetched:`,
       (e as Error)?.message
     )
+
     return {
       ...defaultMeta,
       openGraph: defaultOgMeta,

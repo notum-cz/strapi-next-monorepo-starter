@@ -1,11 +1,10 @@
+import type { Data } from "@repo/strapi-types"
 import Image from "next/image"
 
+import { ImageWithFallback } from "@/components/elementary/ImageWithFallback"
+import { formatStrapiMediaUrl } from "@/lib/strapi-helpers"
 import type { StrapiImageMedia } from "@/types/api"
 import type { ImageExtendedProps } from "@/types/next"
-import type { Data } from "@repo/strapi-types"
-
-import { formatStrapiMediaUrl } from "@/lib/strapi-helpers"
-import { ImageWithFallback } from "@/components/elementary/ImageWithFallback"
 
 export interface BasicImageProps extends Omit<
   ImageExtendedProps,
@@ -18,6 +17,7 @@ export interface BasicImageProps extends Omit<
   readonly fallbackSizes?: { width?: number | null; height?: number | null }
   readonly forcedSizes?: { width?: number | null; height?: number | null }
   readonly format?: "large" | "small" | "medium" | "thumbnail"
+  readonly autoHeight?: boolean
 }
 
 export function StrapiBasicImage({
@@ -28,12 +28,13 @@ export function StrapiBasicImage({
   forcedSizes,
   format,
   useNativeNextImageOnly,
+  autoHeight,
   ...imgProps
 }: BasicImageProps) {
   const media: StrapiImageMedia = component?.media
   const selectedFormat = format ? media?.formats?.[format] : undefined
 
-  const url = selectedFormat?.url ?? media?.url
+  const url = selectedFormat?.url ?? media?.url ?? component?.fallbackSrc
 
   if (url == null && hideWhenMissing) {
     return null
@@ -60,7 +61,6 @@ export function StrapiBasicImage({
   }
 
   const src = formatStrapiMediaUrl(url)
-  const fallbackSrc = formatStrapiMediaUrl(component?.fallbackSrc)
 
   if (imgProps.fill) {
     // Fill has priority over sizes
@@ -79,10 +79,13 @@ export function StrapiBasicImage({
 
   return (
     <ImageComp
-      style={{ ...sizes, ...imgProps.style }}
+      style={{
+        width: sizes.width,
+        height: autoHeight && !imgProps.fill ? "auto" : sizes.height,
+        ...imgProps.style,
+      }}
       className={className}
-      src={src}
-      fallbackSrc={fallbackSrc}
+      src={src as string}
       alt={component?.alt ?? media?.caption ?? media?.alternativeText ?? ""}
       {...sizes}
       {...imgProps}

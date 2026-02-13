@@ -1,6 +1,6 @@
-import { Modules } from "@strapi/strapi"
+import type { Modules } from "@strapi/strapi"
 
-import { HierarchicalDocumentType } from "./types"
+import type { HierarchicalDocumentType } from "./types"
 
 /**
  * Retrieves the old (currently) published version of document by its documentId.
@@ -9,8 +9,9 @@ export const getOldPublishedDocument = (
   documentType: HierarchicalDocumentType,
   documentId: Modules.Documents.ID
 ) => {
+  // eslint-disable-next-line sonarjs/no-small-switch
   switch (documentType) {
-    case "api::page.page": {
+    case "api::page.page":
       return (
         strapi.db
           // Here we need use `connection` and `knex` to get the old published data
@@ -27,6 +28,5 @@ export const getOldPublishedDocument = (
           .whereNotNull("pages.published_at")
           .first()
       )
-    }
   }
 }

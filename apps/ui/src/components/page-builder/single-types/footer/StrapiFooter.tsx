@@ -1,11 +1,11 @@
+import type { Locale } from "next-intl"
 import { Fragment, use } from "react"
-import { Locale } from "next-intl"
 
-import { fetchFooter } from "@/lib/strapi-api/content/server"
-import { cn } from "@/lib/styles"
 import { Container } from "@/components/elementary/Container"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
+import { fetchFooter } from "@/lib/strapi-api/content/server"
+import { cn } from "@/lib/styles"
 
 export function StrapiFooter({ locale }: { readonly locale: Locale }) {
   const response = use(fetchFooter(locale))
@@ -31,9 +31,9 @@ export function StrapiFooter({ locale }: { readonly locale: Locale }) {
               <div className="flex flex-col" key={section.id}>
                 <h3 className="pb-2 text-lg font-bold">{section.title}</h3>
 
-                {section.links?.map((link, i) => (
+                {section.links?.map((link) => (
                   <StrapiLink
-                    key={String(link.id) + i}
+                    key={link.id}
                     component={link}
                     className="text-primary w-fit text-sm hover:underline"
                   />
@@ -57,7 +57,7 @@ export function StrapiFooter({ locale }: { readonly locale: Locale }) {
 
           <div className="flex flex-col items-end sm:flex-row sm:items-center sm:space-x-4">
             {component.links?.map((link, i) => (
-              <Fragment key={String(link.id) + i}>
+              <Fragment key={link.id}>
                 <StrapiLink
                   component={link}
                   className="text-primary relative w-fit text-sm hover:underline"

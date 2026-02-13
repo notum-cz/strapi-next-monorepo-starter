@@ -1,6 +1,6 @@
-import React from "react"
 import { useTranslations } from "next-intl"
-import { z } from "zod"
+import React from "react"
+import type { z } from "zod"
 
 /**
  * Hook that translates zod validation errors.
@@ -9,16 +9,55 @@ import { z } from "zod"
  * In case there are any missing keys and they will be used in validation, this will throw many errors in the console.
  */
 
+function resolveSizeMessage(
+  prefix: "too_small" | "too_big",
+  issue: { origin: string; inclusive?: boolean; exact?: boolean }
+) {
+  const sizeKey = issue.inclusive === true ? "inclusive" : "not_inclusive"
+
+  if (issue.origin === "string") {
+    return issue.exact === true
+      ? `${prefix}.string.exact`
+      : `${prefix}.string.${sizeKey}`
+  }
+
+  if (
+    issue.origin === "number" ||
+    issue.origin === "int" ||
+    issue.origin === "bigint"
+  ) {
+    return issue.exact === true
+      ? `${prefix}.number.exact`
+      : `${prefix}.number.${sizeKey}`
+  }
+
+  return "invalid_type"
+}
+
+function resolveCustomMessage(params?: { type?: string }) {
+  switch (params?.type) {
+    case "passwordNumber":
+      return "custom.passwordWithNumber"
+    case "phoneNumber":
+      return "custom.phoneNumber"
+    case "checkPassword":
+      return "custom.password"
+
+    default:
+      return
+  }
+}
+
 export function useTranslatedZod(zod: typeof z) {
   const t = useTranslations("errors.zodValidation")
 
   const errorMap: z.core.$ZodErrorMap = React.useCallback(
     (issue) => {
-      let message
+      let message: string | undefined
       const { code, message: _message, ...values } = issue
       const normalizedValues: Record<string, unknown> = { ...values }
 
-      switch (issue.code) {
+      switch (code) {
         case "invalid_type": {
           const received = zod.util.parsedType(issue.input)
           normalizedValues.received = received
@@ -28,44 +67,12 @@ export function useTranslatedZod(zod: typeof z) {
               : "invalid_type"
           break
         }
-        case "too_small": {
-          const sizeKey = issue.inclusive ? "inclusive" : "not_inclusive"
-          if (issue.origin === "string") {
-            message = issue.exact
-              ? "too_small.string.exact"
-              : `too_small.string.${sizeKey}`
-          } else if (
-            issue.origin === "number" ||
-            issue.origin === "int" ||
-            issue.origin === "bigint"
-          ) {
-            message = issue.exact
-              ? "too_small.number.exact"
-              : `too_small.number.${sizeKey}`
-          } else {
-            message = "invalid_type"
-          }
+        case "too_small":
+          message = resolveSizeMessage("too_small", issue)
           break
-        }
-        case "too_big": {
-          const sizeKey = issue.inclusive ? "inclusive" : "not_inclusive"
-          if (issue.origin === "string") {
-            message = issue.exact
-              ? "too_big.string.exact"
-              : `too_big.string.${sizeKey}`
-          } else if (
-            issue.origin === "number" ||
-            issue.origin === "int" ||
-            issue.origin === "bigint"
-          ) {
-            message = issue.exact
-              ? "too_big.number.exact"
-              : `too_big.number.${sizeKey}`
-          } else {
-            message = "invalid_type"
-          }
+        case "too_big":
+          message = resolveSizeMessage("too_big", issue)
           break
-        }
         case "invalid_format":
           message = "invalid_string.regex"
           break
@@ -74,18 +81,14 @@ export function useTranslatedZod(zod: typeof z) {
           message = "invalid_literal"
           break
         case "custom":
-          if (issue.params?.type === "passwordNumber") {
-            message = "custom.passwordWithNumber"
-          } else if (issue.params?.type === "phoneNumber") {
-            message = "custom.phoneNumber"
-          } else if (issue.params?.type === "checkPassword") {
-            message = "custom.password"
-          }
+          message = resolveCustomMessage(issue.params)
           break
+
         default:
-          message = issue.code
+          message = code
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- dynamic translation keys from zod error codes
       return { message: t(message as any, normalizedValues as any) }
     },
     [t, zod]
