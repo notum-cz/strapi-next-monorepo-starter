@@ -426,6 +426,10 @@ Data can be easily transferred between environments in multiple ways. Check out 
 
 Edit `config/cron-tasks.ts` to add cron jobs. Enable them by setting `CRON_ENABLED=true` in `.env` file.
 
+### Health check endpoint
+
+A simple health check endpoint is available at `/api/health`, e.g. [http://localhost:1337/api/health](http://localhost:1337/api/health). This can be used for monitoring and uptime checks.
+
 ### Strapi Live Previews
 
 This starter supports Strapi's new feature: [Previews](https://docs.strapi.io/cms/features/preview). It works by embedding an iframe of the frontend application directly inside the editor.
