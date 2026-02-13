@@ -8,6 +8,16 @@ import { logNonBlockingError } from "@/lib/logging"
 import { PublicStrapiClient } from "@/lib/strapi-api"
 import type { CustomFetchOptions } from "@/types/general"
 
+// ------ SEO populate object
+
+const seoPopulate = {
+  populate: {
+    metaImage: true,
+    twitter: { populate: { images: true } },
+    og: { populate: { image: true } },
+  },
+}
+
 // ------ Page fetching functions
 
 export async function fetchPage(
@@ -25,7 +35,7 @@ export async function fetchPage(
       {
         locale,
         status: dm.isEnabled ? "draft" : "published",
-        populate: { seo: true },
+        populate: { seo: seoPopulate },
         populateDynamicZone: { content: true },
       },
       requestInit,
@@ -68,14 +78,6 @@ export async function fetchAllPages(
 }
 
 // ------ SEO fetching functions
-
-const seoPopulate = {
-  populate: {
-    metaImage: true,
-    twitter: { populate: { images: true } },
-    og: { populate: { image: true } },
-  },
-}
 
 export async function fetchSeo(
   // eslint-disable-next-line @typescript-eslint/default-param-last
