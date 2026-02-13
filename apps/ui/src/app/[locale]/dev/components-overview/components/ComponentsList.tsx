@@ -11,11 +11,8 @@ export default function ComponentsList({
   pages,
 }: {
   components: string[]
-  pages: {
-    documentId: string
-    fullPath: string
-    content?: { __component: string }[]
-  }[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  pages: any[]
 }) {
   const [show, setShow] = useState(true)
 
@@ -41,7 +38,8 @@ export default function ComponentsList({
                 {pages
                   .filter((page) =>
                     page.content?.some(
-                      (block) => block.__component === component
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      (block: any) => block.__component === component
                     )
                   )
                   .map((page) => (

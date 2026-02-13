@@ -1,5 +1,3 @@
-import type { StaticImport } from "next/dist/shared/lib/get-img-props"
-
 import { getEnvVar } from "@/lib/env-vars"
 
 /**
@@ -10,8 +8,8 @@ import { getEnvVar } from "@/lib/env-vars"
  *
  */
 export const formatStrapiMediaUrl = (
-  imageUrl: string | StaticImport | undefined | null
-): string | StaticImport | undefined => {
+  imageUrl: string | undefined | null
+): string | undefined => {
   if (!imageUrl) {
     return undefined
   }
