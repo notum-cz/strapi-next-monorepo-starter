@@ -9,7 +9,7 @@ export default [
       "no-console": [
         "warn",
         {
-          allow: ["warn", "error"],
+          allow: ["warn", "error", "debug", "dir"],
         },
       ],
       curly: ["error", "all"],
