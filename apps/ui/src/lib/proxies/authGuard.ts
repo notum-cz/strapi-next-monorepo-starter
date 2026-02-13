@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
 
 import { getSessionSSR } from "@/lib/auth"
 import { routing } from "@/lib/navigation"
 
 const authPages = ["/auth/change-password", "/auth"]
 
-const authPathnameRegex = RegExp(
+const authPathnameRegex = new RegExp(
   `^(/(${routing.locales.join("|")}))?(${authPages.join("|")})/?$`,
   "i"
 )
@@ -34,6 +34,7 @@ export const authGuard = async (
   } catch {
     const signInUrl = new URL("/auth/signin", req.url)
     signInUrl.searchParams.set("callbackUrl", req.nextUrl.pathname)
+
     return NextResponse.redirect(signInUrl)
   }
 }

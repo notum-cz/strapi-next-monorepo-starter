@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server"
-import { Locale } from "next-intl"
+import { type NextRequest, NextResponse } from "next/server"
+import type { Locale } from "next-intl"
 
 import { routing } from "@/lib/navigation"
 

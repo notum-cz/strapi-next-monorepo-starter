@@ -1,9 +1,9 @@
-import { use } from "react"
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
-import { type Locale } from "next-intl"
+import type { Locale } from "next-intl"
+import { use } from "react"
 
-import { getMetadataFromStrapi } from "@/lib/metadata"
 import StrapiPageView from "@/components/layouts/StrapiPageView"
+import { getMetadataFromStrapi } from "@/lib/metadata"
 
 // Force dynamic rendering (SSR) for this route
 export const dynamic = "force-dynamic"

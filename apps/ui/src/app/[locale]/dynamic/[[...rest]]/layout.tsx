@@ -1,6 +1,6 @@
-import { use } from "react"
-import { type Locale } from "next-intl"
+import type { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
+import { use } from "react"
 
 export default function Layout({
   children,
