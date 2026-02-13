@@ -103,18 +103,26 @@ Add the new UID to the `attributes.content.components` array:
 
 ### 3. Add population rules
 
-Edit `apps/strapi/src/documentMiddlewares/page.ts`.
-
-Add an entry to the `content.on` object inside `pagePopulateObject`:
+Add files to `apps/strapi/src/populateDynamicZone` folder.
 
 ```typescript
-"{category}.{name}": { populate: { /* nested relations */ } },
+import basicImagePopulate from "../utilities/basic-image"
+import linkPopulate from "../utilities/link"
+
+export default {
+  populate: {
+    links: linkPopulate,
+    image: basicImagePopulate,
+    steps: true,
+  },
+}
 ```
 
 - Use `true` if the component has no nested relations/components (like `"utilities.ck-editor-content": true`)
 - Use `{ populate: { fieldName: true } }` for simple nested components
 - Use `{ populate: { fieldName: { populate: { media: true } } } }` for deeply nested media
 - Match the pattern of existing entries — only populate relations and components, not scalar fields
+- When component has different component inside in Strapi, always import its population config and reuse it.
 
 ### 4. Create React component
 

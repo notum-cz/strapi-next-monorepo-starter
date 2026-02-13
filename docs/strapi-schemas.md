@@ -160,30 +160,6 @@ Intercept and modify queries. Used for deep population of dynamic zones.
 
 **`apps/strapi/src/documentMiddlewares/page.ts`**
 
-```typescript
-const middleware = (strapi) => ({
-  async findMany(event) {
-    const { params } = event
-
-    if (params.middlewarePopulate?.includes("content")) {
-      params.populate = {
-        ...params.populate,
-        content: {
-          on: {
-            "sections.hero": {
-              populate: { links: true, image: { populate: { media: true } } },
-            },
-            "utilities.ck-editor-content": true,
-          },
-        },
-      }
-    }
-
-    return event.next()
-  },
-})
-```
-
 See [Page Builder](./page-builder.md) for population patterns.
 
 ## Adding New Components

@@ -8,6 +8,16 @@ import { logNonBlockingError } from "@/lib/logging"
 import { PublicStrapiClient } from "@/lib/strapi-api"
 import type { CustomFetchOptions } from "@/types/general"
 
+// ------ SEO populate object
+
+const seoPopulate = {
+  populate: {
+    metaImage: true,
+    twitter: { populate: { images: true } },
+    og: { populate: { image: true } },
+  },
+}
+
 // ------ Page fetching functions
 
 export async function fetchPage(
@@ -25,11 +35,8 @@ export async function fetchPage(
       {
         locale,
         status: dm.isEnabled ? "draft" : "published",
-        populate: {
-          content: true, // ensures typing is valid on the resulting object
-          seo: true,
-        },
-        middlewarePopulate: ["content", "seo"], // ensures the middleware is triggered and the populate object is replaced
+        populate: { seo: seoPopulate },
+        populateDynamicZone: { content: true },
       },
       requestInit,
       options
@@ -82,12 +89,7 @@ export async function fetchSeo(
     return await PublicStrapiClient.fetchOneByFullPath(uid, fullPath, {
       locale,
       populate: {
-        seo: {
-          populate: {
-            metaImage: true,
-            twitter: { populate: { images: true } },
-          },
-        },
+        seo: seoPopulate,
         localizations: true,
       },
     })

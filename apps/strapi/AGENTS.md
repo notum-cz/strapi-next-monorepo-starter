@@ -16,14 +16,13 @@ The UID must match in: schema location, page dynamiczone, middleware population,
 
 ## Document Middleware
 
-**`src/documentMiddlewares/page.ts`** intercepts queries and applies deep population.
+**`src/documentMiddlewares/page.ts`** applies deep population.
 
-Frontend triggers via `middlewarePopulate` parameter:
+Frontend triggers via `populateDynamicZone` parameter:
 
 ```typescript
 await client.fetchOneByFullPath("api::page.page", fullPath, {
-  populate: { content: true },
-  middlewarePopulate: ["content"],
+  populateDynamicZone: { content: true },
 })
 ```
 
@@ -50,7 +49,7 @@ Or manually:
 
 1. Create schema: `src/components/{category}/{name}.json`
 2. Register in page dynamiczone: `src/api/page/content-types/page/schema.json`
-3. Add population rules: `src/documentMiddlewares/page.ts`
+3. Add population files: `src/populateDynamicZone`
 4. Generate types: `pnpm generate:types`
 5. Create React component in `apps/ui` — see [apps/ui/AGENTS.md](../ui/AGENTS.md)
 
