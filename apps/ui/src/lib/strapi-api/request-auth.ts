@@ -75,7 +75,7 @@ export const formatStrapiAuthorizationHeader = (token?: string) => {
  * Uses `typeof window === "undefined"` to detect server vs client environment.
  */
 const getStrapiUserTokenFromBetterAuth = async () => {
-  const isRSC = globalThis.window === undefined
+  const isRSC = typeof window === "undefined"
 
   if (isRSC) {
     // Server side: Read session directly from cookies (no HTTP request)

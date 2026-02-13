@@ -24,7 +24,7 @@ export const getEnvVar = <K extends keyof typeof env>(
   } catch (e: unknown) {
     // try to get the variable from global CSR_CONFIG object on the client side
     // @ts-expect-error - CSR_CONFIG is dynamically injected
-    if (globalThis.window !== undefined && globalThis.CSR_CONFIG?.[varName]) {
+    if (typeof window !== "undefined" && globalThis.CSR_CONFIG?.[varName]) {
       // @ts-expect-error - CSR_CONFIG
       return globalThis.CSR_CONFIG?.[varName]
     }

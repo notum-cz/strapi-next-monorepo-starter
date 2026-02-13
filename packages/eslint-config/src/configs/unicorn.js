@@ -9,6 +9,7 @@ export default [
       ...unicorn.configs.recommended.rules,
       "unicorn/filename-case": "off",
       "unicorn/no-array-callback-reference": "off",
+      "unicorn/prefer-global-this": "off",
       "unicorn/no-array-for-each": "off",
       "unicorn/no-negated-condition": "off",
       "unicorn/no-array-reduce": "off",

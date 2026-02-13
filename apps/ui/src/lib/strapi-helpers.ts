@@ -23,7 +23,7 @@ export const formatStrapiMediaUrl = (
     imageUrl.startsWith("/uploads")
   ) {
     // Local upload - add BE URL prefix
-    return globalThis.window === undefined
+    return typeof window === "undefined"
       ? formatServerUrl(imageUrl)
       : formatClientUrl(imageUrl)
   }
