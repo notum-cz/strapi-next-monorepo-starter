@@ -55,7 +55,7 @@ export type TiptapRichTextProps = {
         mark,
         children,
       }: {
-        mark: any
+        mark: { attrs?: Record<string, unknown> }
         children: ReactNode | ReactNode[]
       }) => ReactNode
     >

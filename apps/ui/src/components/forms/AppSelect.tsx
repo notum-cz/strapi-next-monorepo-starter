@@ -60,8 +60,8 @@ export function AppSelect({
           <SelectComponent
             {...field}
             {...nativeProps}
-            dir={(nativeProps.dir ?? "ltr") as any}
-            onValueChange={field.onChange}
+            dir={(nativeProps.dir ?? "ltr") as "ltr" | "rtl"}
+            onValueChange={field.onChange} // eslint-disable-line react/jsx-handler-names -- react-hook-form API
             defaultValue={field.value}
           >
             <FormControl>
@@ -72,7 +72,7 @@ export function AppSelect({
                   fieldClassName
                 )}
                 tabIndex={nativeProps.tabIndex}
-                onBlur={field.onBlur}
+                onBlur={field.onBlur} // eslint-disable-line react/jsx-handler-names -- react-hook-form API
               >
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>

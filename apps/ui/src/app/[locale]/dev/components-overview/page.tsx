@@ -16,12 +16,12 @@ async function fetchAllPages(locale: Locale) {
       populate: { content: true },
       status: "published",
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching all pages for locale '${locale}'`,
       error: {
-        error: e?.message,
-        stack: e?.stack,
+        error: e instanceof Error ? e.message : String(e),
+        stack: e instanceof Error ? e.stack : undefined,
       },
     })
 
@@ -45,7 +45,10 @@ export default async function ComponentsOverviewPage({
 
   const components = uniq(
     pages.flatMap(
-      (page) => page.content?.map((block: any) => block.__component) ?? []
+      (page) =>
+        page.content?.map(
+          (block: { __component: string }) => block.__component
+        ) ?? []
     )
   ).sort((a, b) => a.localeCompare(b))
 

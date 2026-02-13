@@ -34,12 +34,12 @@ export async function fetchPage(
       requestInit,
       options
     )
-  } catch (e: any) {
+  } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching page '${fullPath}' for locale '${locale}'`,
       error: {
-        error: e?.message,
-        stack: e?.stack,
+        error: e instanceof Error ? e.message : String(e),
+        stack: e instanceof Error ? e.stack : undefined,
       },
     })
   }
@@ -57,12 +57,12 @@ export async function fetchAllPages(
       populate: {},
       status: "published",
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching all pages for locale '${locale}'`,
       error: {
-        error: e?.message,
-        stack: e?.stack,
+        error: e instanceof Error ? e.message : String(e),
+        stack: e instanceof Error ? e.stack : undefined,
       },
     })
 
@@ -91,12 +91,12 @@ export async function fetchSeo(
         localizations: true,
       },
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching SEO for '${uid}' with fullPath '${fullPath}' for locale '${locale}'`,
       error: {
-        error: e?.message,
-        stack: e?.stack,
+        error: e instanceof Error ? e.message : String(e),
+        stack: e instanceof Error ? e.stack : undefined,
       },
     })
   }
@@ -113,12 +113,12 @@ export async function fetchNavbar(locale: Locale) {
         logoImage: { populate: { image: true, link: true } },
       },
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching navbar for locale '${locale}'`,
       error: {
-        error: e?.message,
-        stack: e?.stack,
+        error: e instanceof Error ? e.message : String(e),
+        stack: e instanceof Error ? e.stack : undefined,
       },
     })
   }
@@ -136,12 +136,12 @@ export async function fetchFooter(locale: Locale) {
         links: true,
       },
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching footer for locale '${locale}'`,
       error: {
-        error: e?.message,
-        stack: e?.stack,
+        error: e instanceof Error ? e.message : String(e),
+        stack: e instanceof Error ? e.stack : undefined,
       },
     })
   }

@@ -17,7 +17,7 @@ function StrapiPreviewWindowChangeListener({
   const router = useRouter()
 
   useEffect(() => {
-    const handleMessage = async (message: MessageEvent<any>) => {
+    const handleMessage = async (message: MessageEvent) => {
       if (
         /**
          * Filters events emitted through the postMessage() API

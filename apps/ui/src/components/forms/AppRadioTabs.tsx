@@ -51,6 +51,7 @@ export function AppRadioTabs({
       render={({ field, fieldState }) => (
         <FormItem className={cn(containerClassName)}>
           <FormControl>
+            {/* eslint-disable-next-line react/jsx-handler-names -- react-hook-form API */}
             <Tabs onValueChange={field.onChange} value={field.value}>
               <div className="flex w-full items-center justify-between">
                 <AppFormLabel

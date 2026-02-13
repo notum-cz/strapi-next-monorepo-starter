@@ -11,7 +11,11 @@ export default function ComponentsList({
   pages,
 }: {
   components: string[]
-  pages: any[]
+  pages: {
+    documentId: string
+    fullPath: string
+    content?: { __component: string }[]
+  }[]
 }) {
   const [show, setShow] = useState(true)
 
@@ -37,7 +41,7 @@ export default function ComponentsList({
                 {pages
                   .filter((page) =>
                     page.content?.some(
-                      (block: any) => block.__component === component
+                      (block) => block.__component === component
                     )
                   )
                   .map((page) => (

@@ -276,7 +276,9 @@ export const strapiAuthPlugin = {
 export const strapiSessionPlugin = customSession(
   async ({ user, session }, ctx) => {
     // if no strapiJWT, return as-is (unauthenticated request)
-    const strapiJWT = (user as any)?.strapiJWT
+    const strapiJWT = (user as Record<string, unknown>)?.strapiJWT as
+      | string
+      | undefined
     if (!strapiJWT) {
       return { user, session }
     }
@@ -302,7 +304,7 @@ export const strapiSessionPlugin = customSession(
       const provider =
         strapiProvider === "local"
           ? "credentials"
-          : (strapiProvider ?? (user as any).provider)
+          : (strapiProvider ?? (user as Record<string, unknown>).provider)
 
       const updatedUser = {
         ...user,

@@ -49,7 +49,7 @@ export function AppTextArea({
               <Textarea
                 {...field}
                 value={field.value ?? ""}
-                onChange={field.onChange}
+                onChange={field.onChange} // eslint-disable-line react/jsx-handler-names -- react-hook-form API
                 className={cn(
                   "border-input w-full ease-in-out",
                   {

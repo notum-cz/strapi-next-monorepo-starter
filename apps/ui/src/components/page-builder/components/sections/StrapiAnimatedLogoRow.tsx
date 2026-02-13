@@ -32,6 +32,7 @@ export function StrapiAnimatedLogoRow({
               )}
             >
               {sliderImages.map((logo, index) => (
+                // eslint-disable-next-line react/no-array-index-key -- items are duplicated for infinite scroll
                 <div key={String(logo.id) + index} className="grayscale">
                   <StrapiBasicImage
                     component={logo}

@@ -47,9 +47,9 @@ export function StrapiHero({
 
           {component.links && (
             <div className="flex flex-col gap-2 pt-4 lg:flex-row lg:gap-4">
-              {component.links.map((link, i) => (
+              {component.links.map((link) => (
                 <StrapiLink
-                  key={i}
+                  key={link.id}
                   component={link}
                   className="inline-flex w-full items-center justify-center rounded-lg bg-neutral-900 px-5 py-3 text-base font-medium text-white transition-colors hover:bg-neutral-800 focus:ring-2 focus:ring-neutral-400 focus:outline-none lg:w-fit"
                 />

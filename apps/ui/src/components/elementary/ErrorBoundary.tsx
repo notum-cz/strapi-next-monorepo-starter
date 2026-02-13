@@ -18,7 +18,7 @@ function ErrorBoundaryFallback({
   hideReset,
   showErrorMessage,
 }: {
-  readonly error: any
+  readonly error: Error
   readonly resetErrorBoundary: () => void
   readonly customErrorTitle?: string
   readonly hideReset?: boolean

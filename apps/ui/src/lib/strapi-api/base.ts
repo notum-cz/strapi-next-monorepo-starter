@@ -23,7 +23,7 @@ export const API_ENDPOINTS: Partial<Record<UID.ContentType, string>> = {
 export default abstract class BaseStrapiClient {
   public async fetchAPI(
     path: string,
-    params: AppLocalizedParams<Record<string, any>> = {},
+    params: AppLocalizedParams<Record<string, unknown>> = {},
     requestInit?: RequestInit,
     options?: CustomFetchOptions
   ) {
@@ -245,7 +245,8 @@ export default abstract class BaseStrapiClient {
 
     // return last published entry
     return {
-      // @ts-expect-error localizations TODO @dominik-juriga
+      // @ts-expect-error localizations field is not in the response type
+      // @dominik-juriga
       data: response.data.pop() ?? null,
       meta: response.meta,
     }

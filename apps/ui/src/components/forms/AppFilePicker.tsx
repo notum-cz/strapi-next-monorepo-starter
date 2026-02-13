@@ -24,8 +24,8 @@ interface Props {
   readonly required?: boolean
 }
 
-// TODO: refactor this to react-hook-form field with Zod validation
-// eg.: https://claritydev.net/blog/react-hook-form-multipart-form-data-file-uploads
+// Consider refactoring to react-hook-form field with Zod validation
+// Reference: https://claritydev.net/blog/react-hook-form-multipart-form-data-file-uploads
 
 export function AppFilePicker({
   selectedFile,

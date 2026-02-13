@@ -15,12 +15,12 @@ async function fetchAllPages(locale: Locale) {
       populate: { content: true },
       status: "published",
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching all pages for locale '${locale}'`,
       error: {
-        error: e?.message,
-        stack: e?.stack,
+        error: e instanceof Error ? e.message : String(e),
+        stack: e instanceof Error ? e.stack : undefined,
       },
     })
 

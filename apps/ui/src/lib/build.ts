@@ -15,11 +15,11 @@ export const debugStaticParams = (
   const { isDevelopment } = config ?? {}
 
   if (getEnvVar("DEBUG_STATIC_PARAMS_GENERATION")) {
-    console.log(`generateStaticParams output <${segment}>`)
+    console.debug(`generateStaticParams output <${segment}>`)
     if (isDevelopment === true) {
-      console.log(" L (skipped in development mode)")
+      console.debug(" L (skipped in development mode)")
     } else {
-      console.dir(staticParams, { depth: null, maxArrayLength: null })
+      console.dir(staticParams)
     }
   }
 }

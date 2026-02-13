@@ -26,10 +26,10 @@ export function StrapiHorizontalImages({
               `space-x-${component.spacing ?? 4}`
             )}
           >
-            {component.images?.map((x, i) => (
+            {component.images?.map((x) => (
               <StrapiImageWithLink
                 component={x}
-                key={String(x.id) + i}
+                key={x.id}
                 imageProps={{
                   className: cn({
                     [`rounded-${component.imageRadius}`]: Boolean(

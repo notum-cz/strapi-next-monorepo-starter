@@ -8,11 +8,10 @@ import { getEnvVar } from "@/lib/env-vars"
  * - local upload - in this case, the URL starts with /uploads and we need to add API url prefix
  * (this happens in route handler for Strapi assets)
  *
- * TODO: make this generic - return same type as argument has
  */
 export const formatStrapiMediaUrl = (
   imageUrl: string | StaticImport | undefined | null
-): any => {
+): string | StaticImport | undefined => {
   if (!imageUrl) {
     return undefined
   }

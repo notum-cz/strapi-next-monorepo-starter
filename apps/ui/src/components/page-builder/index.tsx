@@ -14,9 +14,11 @@ import StrapiTipTapEditorContent from "@/components/page-builder/components/util
 
 /**
  * Mapping of Strapi Component UID to React Component
- * TODO: Improve dynamic/lazy loading of these components to reduce bundle size
+ *
+ * Consider improving dynamic/lazy loading of these components to reduce bundle size.
  */
 export const PageContentComponents: Partial<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- generic component map requires any for varying prop types
   Record<UID.Component, React.ComponentType<any>>
 > = {
   // elements, seo-utilities, utilities

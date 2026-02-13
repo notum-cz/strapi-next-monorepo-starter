@@ -51,9 +51,9 @@ export function AppCheckbox({
             <FormControl>
               <CheckboxComponent
                 {...field}
-                {...(nativeProps as any)}
+                {...(nativeProps as Record<string, unknown>)}
                 checked={field.value}
-                onCheckedChange={field.onChange}
+                onCheckedChange={field.onChange} // eslint-disable-line react/jsx-handler-names -- react-hook-form API
                 className={fieldClassName}
               />
             </FormControl>
