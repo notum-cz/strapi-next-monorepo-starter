@@ -44,6 +44,7 @@ export default function StrapiPageView({ params, searchParams }: Props) {
           <Breadcrumbs
             breadcrumbs={response?.meta?.breadcrumbs}
             className="mt-6 mb-6"
+            locale={locale}
           />
         </Container>
 
