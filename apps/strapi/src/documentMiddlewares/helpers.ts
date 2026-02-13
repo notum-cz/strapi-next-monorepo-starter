@@ -1,4 +1,4 @@
-import { UID } from "@strapi/strapi"
+import type { UID } from "@strapi/strapi"
 import { errors } from "@strapi/utils"
 
 import { getPopulateDynamicZoneConfig } from "../populateDynamicZone"

@@ -374,7 +374,7 @@ export interface UtilitiesTipTapRichText extends Struct.ComponentSchema {
 }
 
 declare module "@strapi/strapi" {
-  export namespace Public {
+  export module Public {
     export interface ComponentSchemas {
       "elements.footer-item": ElementsFooterItem
       "forms.contact-form": FormsContactForm

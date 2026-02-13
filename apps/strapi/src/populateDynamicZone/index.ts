@@ -1,4 +1,5 @@
 import fs from "node:fs"
+import { createRequire } from "node:module"
 import path from "node:path"
 
 const isRuntimeFile = (name: string) =>
@@ -7,6 +8,7 @@ const isRuntimeFile = (name: string) =>
 const stripExt = (name: string) => name.slice(0, name.lastIndexOf("."))
 
 let cachedSchema: Record<string, unknown> | null = null
+const requireModule = createRequire(__filename)
 
 /**
  * Generates a Strapi dynamic zone populate map from filesystem structure.
@@ -44,17 +46,19 @@ export function getPopulateDynamicZoneConfig() {
       .filter((dir) => dir.isDirectory())
       .flatMap((dir) => {
         const dirPath = path.join(__dirname, dir.name)
+
         return fs
           .readdirSync(dirPath)
           .filter(isRuntimeFile)
           .map((file) => {
-            const mod = require(path.join(dirPath, file))
+            const mod = requireModule(path.join(dirPath, file))
+
             return [`${dir.name}.${stripExt(file)}`, mod.default] as const
           })
       })
   )
 
-  console.info(
+  console.debug(
     "Successfully generated dynamic zone populate configuration from filesystem."
   )
 
