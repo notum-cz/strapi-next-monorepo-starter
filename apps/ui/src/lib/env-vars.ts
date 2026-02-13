@@ -8,7 +8,7 @@ import { env } from "@/env.mjs"
 export const getEnvVar = <K extends keyof typeof env>(
   varName: K,
   throwIfMissing = false
-): (typeof env)[K] => {
+): (typeof env)[K] | undefined => {
   try {
     // @/env.mjs validates server vs client access and throws if there is a violation
     const value = env[varName]

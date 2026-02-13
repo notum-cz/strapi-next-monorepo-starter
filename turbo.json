@@ -31,7 +31,10 @@
     "RECAPTCHA_SECRET_KEY",
     "NODE_ENV",
     "APP_ENV",
-    "NEXT_RUNTIME"
+    "NEXT_RUNTIME",
+    "BASIC_AUTH_ENABLED",
+    "BASIC_AUTH_USERNAME",
+    "BASIC_AUTH_PASSWORD"
   ],
   "tasks": {
     "build": {
