@@ -17,8 +17,8 @@
  *   - styles-strapi.json: String of CSS to apply all variables to the .ck class, plus the full custom styles CSS.
  *
  */
-const path = require("path")
-const fs = require("fs")
+const fs = require("node:fs")
+const path = require("node:path")
 
 const customStylesInputPath = path.resolve(__dirname, "../dist/styles.css")
 let customStylesCssContent = fs.readFileSync(customStylesInputPath, "utf8")
@@ -34,6 +34,7 @@ const fontSizeOutputJsonPath = path.resolve(
 
 // First collect all CSS variables
 const allVars = []
+// eslint-disable-next-line sonarjs/slow-regex
 const allVarRegex = /(--[\w-]+)\s*:\s*([^;]+);/g
 
 let match
@@ -47,12 +48,13 @@ const colorVars = allVars
   .filter((v) => v.name.startsWith("--color-"))
   .map((v) => ({
     color: `var(${v.name})`,
-    label: v.name.replaceAll(/--/g, ""),
+    label: v.name.replaceAll("--", ""),
   }))
 
 const fontSizeVars = allVars
+  // eslint-disable-next-line sonarjs/slow-regex
   .filter((v) => /^--text-\w+(?!.*--)$/.test(v.name))
-  .map((v) => ({ model: `${v.value}`, title: v.name.replaceAll(/--/g, "") }))
+  .map((v) => ({ model: `${v.value}`, title: v.name.replaceAll("--", "") }))
 
 // Write output files
 fs.writeFileSync(

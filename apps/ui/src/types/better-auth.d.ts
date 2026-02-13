@@ -5,8 +5,6 @@
 // the types are automatically inferred from the data we return in endpoints.
 // This file provides type helpers for when we need explicit types.
 
-export {}
-
 // Type helper for Better Auth User with Strapi fields
 export type BetterAuthUserWithStrapi = {
   id: string

@@ -1,15 +1,15 @@
 "use client"
 
-import { useState } from "react"
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
 import * as Sentry from "@sentry/nextjs"
 import { XIcon } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { useState } from "react"
 import { ErrorBoundary as ErrorBoundaryComp } from "react-error-boundary"
 
-import { isDevelopment } from "@/lib/general-helpers"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
+import { isDevelopment } from "@/lib/general-helpers"
 
 function ErrorBoundaryFallback({
   error,
@@ -18,7 +18,7 @@ function ErrorBoundaryFallback({
   hideReset,
   showErrorMessage,
 }: {
-  readonly error: any
+  readonly error: Error
   readonly resetErrorBoundary: () => void
   readonly customErrorTitle?: string
   readonly hideReset?: boolean
@@ -92,9 +92,8 @@ export function ErrorBoundary({
   readonly showErrorMessage?: boolean
   readonly onReset?: () => void
   readonly onError?: (
-    // eslint-disable-next-line no-unused-vars
     error: Error,
-    // eslint-disable-next-line no-unused-vars
+
     info: { componentStack?: string | null }
   ) => void
 }) {

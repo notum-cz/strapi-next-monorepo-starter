@@ -1,15 +1,14 @@
-import React from "react"
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
 import { TiptapRichText } from "@/components/elementary/tiptap-editor"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
-const StrapiTipTapEditorContent = ({
+function StrapiTipTapEditorContent({
   component,
 }: {
   component: Data.Component<"utilities.tip-tap-rich-text">
-}) => {
+}) {
   removeThisWhenYouNeedMe("StrapiTipTapEditorContent")
 
   return (

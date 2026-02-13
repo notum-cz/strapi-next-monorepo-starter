@@ -6,8 +6,14 @@ import AppLink from "@/components/elementary/AppLink"
 import Typography from "@/components/typography"
 import { Button } from "@/components/ui/button"
 
-export default function PageList({ pages }: { pages: any[] }) {
+export default function PageList({
+  pages,
+}: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  pages: any[]
+}) {
   const [show, setShow] = useState(true)
+
   return (
     <div className="flex flex-col gap-6">
       <div className="my-6">
@@ -33,11 +39,17 @@ export default function PageList({ pages }: { pages: any[] }) {
             </AppLink>
             {show && (
               <div className="pl-4">
-                {page?.content?.map((block: any, index: number) => (
-                  <Typography key={block.id || index}>
-                    {block.__component}
-                  </Typography>
-                ))}
+                {page?.content?.map(
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  (block: any, i: number) => (
+                    <Typography
+                      // eslint-disable-next-line react/no-array-index-key
+                      key={`${block.id ?? block.__component}-${i}`}
+                    >
+                      {block.__component}
+                    </Typography>
+                  )
+                )}
               </div>
             )}
           </div>

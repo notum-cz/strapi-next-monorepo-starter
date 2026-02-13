@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 
-import { ImageExtendedProps } from "@/types/next"
+import type { ImageExtendedProps } from "@/types/next"
 
 const keyStr =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
@@ -21,12 +21,12 @@ const rgbDataURL = (r: number, g: number, b: number) =>
 // More info about the blurEffect check
 // https://png-pixel.com
 
-export const ImageWithBlur = ({
+export function ImageWithBlur({
   blurRgb = [255, 255, 255],
   ...imgProps
 }: ImageExtendedProps & {
   blurRgb?: [number, number, number]
-}) => {
+}) {
   return (
     <Image
       placeholder="blur"

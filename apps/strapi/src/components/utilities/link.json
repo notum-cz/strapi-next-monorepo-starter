@@ -9,10 +9,7 @@
       "type": "enumeration",
       "required": true,
       "default": "page",
-      "enum": [
-        "external",
-        "page"
-      ]
+      "enum": ["external", "page"]
     },
     "label": {
       "type": "string",

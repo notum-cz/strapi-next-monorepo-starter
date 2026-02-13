@@ -1,7 +1,6 @@
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
-import { Locale } from "next-intl"
-
 import type { MetadataRoute } from "next"
+import type { Locale } from "next-intl"
 
 import { getEnvVar } from "@/lib/env-vars"
 import { isDevelopment, isProduction } from "@/lib/general-helpers"
@@ -24,6 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   if (!baseUrl) {
     console.error("Sitemap generation aborted: APP_PUBLIC_URL is not defined")
+
     return []
   }
 
@@ -36,6 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((result) => result.status === "fulfilled")
     .reduce((acc, curr) => {
       acc.push(...curr.value)
+
       return acc
     }, [] as MetadataRoute.Sitemap)
 }
@@ -82,6 +83,7 @@ async function generateLocalizedSitemap(
         })
       }
     })
+
     return acc
   }, [] as MetadataRoute.Sitemap)
 }

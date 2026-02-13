@@ -3,16 +3,16 @@ import fs from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 
-import { compileStrapi, createStrapi } from "@strapi/strapi"
-
-import type { Core } from "@strapi/strapi"
+import { compileStrapi, createStrapi, type Core } from "@strapi/strapi"
 
 let instance: Core.Strapi = null!
 let tmpDir: string
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
 let tmpDbFile: string
 
 const resolve = (basePath: string, ...paths: string[]) => {
   const pathStr = path.join(...paths)
+
   return path.resolve(basePath.replace(pathStr, ""), pathStr)
 }
 
@@ -47,6 +47,7 @@ export const teardownStrapi = async () => {
 
   // 0. Cancel ALL node-schedule jobs aggressively
   try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const schedule = require("node-schedule")
     const jobs = schedule.scheduledJobs
     Object.keys(jobs).forEach((name) => {
@@ -54,7 +55,7 @@ export const teardownStrapi = async () => {
       delete jobs[name]
     })
     await schedule.gracefulShutdown?.()
-  } catch (_e) {
+  } catch {
     /* noop */
   }
 
@@ -90,7 +91,7 @@ export const teardownStrapi = async () => {
 
     // 6. Clear instance reference
     instance = null!
-  } catch (_error) {
+  } catch {
     // Still clear the instance to prevent reuse
     instance = null!
   }
@@ -102,6 +103,7 @@ export const strapi = new Proxy({} as Core.Strapi, {
     if (!instance) {
       throw new Error("Strapi not initialized. Call setupStrapi() first.")
     }
-    return (instance as any)[prop]
+
+    return (instance as unknown as Record<string, unknown>)[prop as string]
   },
 })

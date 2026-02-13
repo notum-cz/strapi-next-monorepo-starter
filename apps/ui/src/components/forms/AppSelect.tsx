@@ -1,10 +1,8 @@
 "use client"
 
-import React from "react"
+import type React from "react"
 import { useFormContext } from "react-hook-form"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { cn } from "@/lib/styles"
 import { AppFormDescription } from "@/components/forms/AppFormDescription"
 import { AppFormLabel } from "@/components/forms/AppFormLabel"
 import {
@@ -20,6 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import { cn } from "@/lib/styles"
 
 type Props = {
   readonly name: string
@@ -60,8 +60,8 @@ export function AppSelect({
           <SelectComponent
             {...field}
             {...nativeProps}
-            dir={(nativeProps.dir ?? "ltr") as any}
-            onValueChange={field.onChange}
+            dir={(nativeProps.dir ?? "ltr") as "ltr" | "rtl"}
+            onValueChange={field.onChange} // eslint-disable-line react/jsx-handler-names -- react-hook-form API
             defaultValue={field.value}
           >
             <FormControl>
@@ -72,7 +72,7 @@ export function AppSelect({
                   fieldClassName
                 )}
                 tabIndex={nativeProps.tabIndex}
-                onBlur={field.onBlur}
+                onBlur={field.onBlur} // eslint-disable-line react/jsx-handler-names -- react-hook-form API
               >
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>

@@ -34,11 +34,11 @@ jobs:
           cp apps/strapi/.env.example apps/strapi/.env
           cp apps/ui/.env.local.example apps/ui/.env.local
 
-      - name: Check code formatting
-        run: pnpm format:check
-
       - name: Run linter
         run: pnpm lint
+
+      - name: Check css/md formatting
+        run: pnpm format:check
 
       - name: Run unit tests
         run: pnpm test:ci

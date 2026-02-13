@@ -1,10 +1,8 @@
 "use client"
 
-import React from "react"
+import type React from "react"
 import { useFormContext } from "react-hook-form"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { cn } from "@/lib/styles"
 import { AppFormDescription } from "@/components/forms/AppFormDescription"
 import { AppFormLabel } from "@/components/forms/AppFormLabel"
 import {
@@ -14,15 +12,17 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import { cn } from "@/lib/styles"
 
 type Props = {
   readonly name: string
-  readonly tabsContent: Array<{ value: string; content: React.ReactNode }>
-  readonly tabTriggers: Array<{
+  readonly tabsContent: { value: string; content: React.ReactNode }[]
+  readonly tabTriggers: {
     value: string
     title: string
     tabIndex?: number
-  }>
+  }[]
   readonly label?: React.ReactNode
   readonly containerClassName?: string
   readonly description?: React.ReactNode
@@ -51,6 +51,7 @@ export function AppRadioTabs({
       render={({ field, fieldState }) => (
         <FormItem className={cn(containerClassName)}>
           <FormControl>
+            {/* eslint-disable-next-line react/jsx-handler-names -- react-hook-form API */}
             <Tabs onValueChange={field.onChange} value={field.value}>
               <div className="flex w-full items-center justify-between">
                 <AppFormLabel

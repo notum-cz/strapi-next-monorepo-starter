@@ -1,13 +1,13 @@
-import { notFound } from "next/navigation"
 import { uniq } from "lodash"
-import { Locale } from "next-intl"
+import { notFound } from "next/navigation"
+import type { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
+import ComponentsList from "@/app/[locale]/dev/components-overview/components/ComponentsList"
+import Typography from "@/components/typography"
 import { isProduction } from "@/lib/general-helpers"
 import { logNonBlockingError } from "@/lib/logging"
 import { PublicStrapiClient } from "@/lib/strapi-api"
-import Typography from "@/components/typography"
-import ComponentsList from "@/app/[locale]/dev/components-overview/components/ComponentsList"
 
 async function fetchAllPages(locale: Locale) {
   try {
@@ -16,17 +16,19 @@ async function fetchAllPages(locale: Locale) {
       populate: { content: true },
       status: "published",
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching all pages for locale '${locale}'`,
       error: {
-        error: e?.message,
-        stack: e?.stack,
+        error: e instanceof Error ? e.message : String(e),
+        stack: e instanceof Error ? e.stack : undefined,
       },
     })
+
     return { data: [] }
   }
 }
+
 export default async function ComponentsOverviewPage({
   params,
 }: PageProps<"/[locale]/dev/components-overview">) {
@@ -43,7 +45,10 @@ export default async function ComponentsOverviewPage({
 
   const components = uniq(
     pages.flatMap(
-      (page) => page.content?.map((block: any) => block.__component) ?? []
+      (page) =>
+        page.content?.map(
+          (block: { __component: string }) => block.__component
+        ) ?? []
     )
   ).sort((a, b) => a.localeCompare(b))
 

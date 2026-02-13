@@ -1,11 +1,11 @@
-import { Data } from "@strapi/strapi"
-import { errors } from "@strapi/utils"
 import { normalizePageFullPath, ROOT_PAGE_PATH } from "@repo/shared-data"
+import type { Data } from "@strapi/strapi"
+import { errors } from "@strapi/utils"
 
-import { LifecycleEventType } from "../../../types/internals"
+import type { LifecycleEventType } from "../../../types/internals"
 import { PAGES_HIERARCHY_ENABLED } from "../constants"
 import { getOldPublishedDocument } from "./helpers"
-import { CreateRedirectPayload, HierarchicalDocumentType } from "./types"
+import type { CreateRedirectPayload, HierarchicalDocumentType } from "./types"
 
 const { ValidationError } = errors
 
@@ -127,7 +127,8 @@ export const processRecalculateFullPathJob = async (
     })
 
     // Create RECALCULATE_FULLPATH jobs for all children
-    const children = (document as any).children ?? []
+    const children =
+      (document as unknown as { children?: (typeof document)[] }).children ?? []
     for (const child of children) {
       await strapi
         .service("api::internal-job.internal-job")

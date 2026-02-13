@@ -23,11 +23,12 @@
     "dev": "turbo dev",
     "dev:strapi": "turbo run dev --filter=@repo/strapi",
     "dev:ui": "turbo run dev --filter=@repo/ui",
-    "format": "prettier --write --cache --ignore-unknown \"**/*.{js,jsx,ts,tsx,md,css,scss}\"",
-    "format:check": "prettier --check --cache --ignore-unknown \"**/*.{js,jsx,ts,tsx,md,css,scss}\"",
+    "format": "prettier --write --cache --ignore-unknown \"**/(*.{md,css,scss}|*.package.json)\"",
+    "format:check": "prettier --check --cache --ignore-unknown \"**/(*.{md,css,scss}|*.package.json)\"",
     "preinstall": "npx only-allow pnpm",
     "postinstall": "pnpm run setup:apps",
     "lint": "turbo lint",
+    "lint:fix": "turbo lint:fix",
     "prepare": "husky",
     "setup:apps": "find . -name '*.example' -exec sh -c 'cp -n \"$1\" \"${1%.example}\"' _ {} \\;",
     "start:strapi": "turbo run start --filter=@repo/strapi",
@@ -44,17 +45,16 @@
     "tests:playwright:visual": "turbo run playwright-visual-tests --filter=@repo/tests-playwright",
     "typecheck": "turbo run typecheck"
   },
-  "prettier": "@repo/prettier-config",
   "devDependencies": {
     "@commitlint/cli": "19.3.0",
     "@commitlint/config-conventional": "19.8.1",
     "@commitlint/config-pnpm-scopes": "20.1.0",
     "@repo/eslint-config": "workspace:*",
-    "@repo/prettier-config": "workspace:*",
     "@repo/semantic-release-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "commitizen": "4.3.1",
     "cz-conventional-changelog": "3.3.0",
+    "eslint": "^9.39.2",
     "husky": "9.1.7",
     "lint-staged": "15.2.7",
     "prettier": "3.8.1",
@@ -69,6 +69,13 @@
     "overrides": {
       "@types/react": "19.2.9",
       "@types/react-dom": "19.2.3"
+    },
+    "packageExtensions": {
+      "@hookform/resolvers": {
+        "peerDependencies": {
+          "zod": "*"
+        }
+      }
     }
   }
 }

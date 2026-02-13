@@ -1,11 +1,10 @@
+import type { BetterAuthClientPlugin } from "better-auth/client"
 import { createAuthClient } from "better-auth/react"
 
-import type { BetterAuthClientPlugin } from "better-auth/client"
-import { BetterAuthSessionWithStrapi } from "@/types/better-auth"
-
 import { getEnvVar } from "@/lib/env-vars"
+import type { BetterAuthSessionWithStrapi } from "@/types/better-auth"
 
-import { strapiAuthPlugin, strapiOAuthPlugin } from "./auth"
+import type { strapiAuthPlugin, strapiOAuthPlugin } from "./auth"
 
 const strapiAuthClientPlugin = {
   id: "strapi-auth",

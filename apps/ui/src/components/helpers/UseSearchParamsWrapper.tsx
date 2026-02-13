@@ -1,8 +1,6 @@
 "use client"
 
-import { Suspense } from "react"
-
-import type { ReactNode, SuspenseProps } from "react"
+import { Suspense, type ReactNode, type SuspenseProps } from "react"
 
 type UseSearchParamsWrapperProps = {
   children: ReactNode
@@ -29,9 +27,9 @@ type UseSearchParamsWrapperProps = {
  * @param {ReactNode} props.children - The component to wrap. This component can use `useSearchParams`.
  * @param {Omit<SuspenseProps, "children">} [props.suspenseProps] - Props to pass to the underlying `<Suspense>` component, like `fallback`.
  */
-export const UseSearchParamsWrapper = ({
+export function UseSearchParamsWrapper({
   children,
   suspenseProps,
-}: UseSearchParamsWrapperProps) => {
+}: UseSearchParamsWrapperProps) {
   return <Suspense {...suspenseProps}>{children}</Suspense>
 }

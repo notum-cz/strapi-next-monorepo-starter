@@ -1,7 +1,6 @@
-import { BreadCrumb } from "@/types/api"
-
-import { cn } from "@/lib/styles"
 import AppLink from "@/components/elementary/AppLink"
+import { cn } from "@/lib/styles"
+import type { BreadCrumb } from "@/types/api"
 
 interface Props {
   readonly breadcrumbs?: BreadCrumb[]
@@ -22,17 +21,7 @@ export function Breadcrumbs({ breadcrumbs, className }: Props) {
               <span className={cn("mx-2 inline-block text-black")}>/</span>
             )}
 
-            {index !== breadcrumbs.length - 1 ? (
-              <AppLink href={breadcrumb.fullPath} className="p-0">
-                <span
-                  className={cn(
-                    "tracking-sm inline-block text-xs leading-[18px] text-black md:text-sm md:leading-[21px]"
-                  )}
-                >
-                  {breadcrumb.title}
-                </span>
-              </AppLink>
-            ) : (
+            {index === breadcrumbs.length - 1 ? (
               <span
                 className={cn(
                   "tracking-sm inline-block text-xs leading-[18px] break-words text-black md:text-sm md:leading-[21px]"
@@ -45,6 +34,16 @@ export function Breadcrumbs({ breadcrumbs, className }: Props) {
               >
                 {breadcrumb.title}
               </span>
+            ) : (
+              <AppLink href={breadcrumb.fullPath} className="p-0">
+                <span
+                  className={cn(
+                    "tracking-sm inline-block text-xs leading-[18px] text-black md:text-sm md:leading-[21px]"
+                  )}
+                >
+                  {breadcrumb.title}
+                </span>
+              </AppLink>
             )}
           </span>
         ))}

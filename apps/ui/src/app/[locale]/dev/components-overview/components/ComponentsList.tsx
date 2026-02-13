@@ -11,9 +11,11 @@ export default function ComponentsList({
   pages,
 }: {
   components: string[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pages: any[]
 }) {
   const [show, setShow] = useState(true)
+
   return (
     <div className="flex flex-col gap-6">
       <div className="my-6">
@@ -36,6 +38,7 @@ export default function ComponentsList({
                 {pages
                   .filter((page) =>
                     page.content?.some(
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       (block: any) => block.__component === component
                     )
                   )
