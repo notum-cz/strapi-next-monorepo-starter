@@ -6,10 +6,6 @@
   },
   "options": {},
   "attributes": {
-    "title": {
-      "type": "string",
-      "required": true
-    },
     "links": {
       "type": "component",
       "component": "utilities.link",
@@ -35,6 +31,13 @@
       }
     },
     "note": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultCkEditor"
+      }
+    },
+    "title": {
       "type": "customField",
       "customField": "plugin::ckeditor5.CKEditor",
       "options": {

@@ -6,14 +6,17 @@
   },
   "options": {},
   "attributes": {
-    "text": {
-      "type": "string",
-      "required": true
-    },
     "logos": {
       "type": "component",
-      "repeatable": true,
-      "component": "utilities.basic-image"
+      "component": "utilities.basic-image",
+      "repeatable": true
+    },
+    "title": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultCkEditor"
+      }
     }
   }
 }

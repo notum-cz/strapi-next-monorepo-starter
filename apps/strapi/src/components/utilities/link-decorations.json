@@ -67,6 +67,9 @@
       },
       "component": "utilities.basic-image",
       "repeatable": false
+    },
+    "disableAnimations": {
+      "type": "boolean"
     }
   },
   "config": {}

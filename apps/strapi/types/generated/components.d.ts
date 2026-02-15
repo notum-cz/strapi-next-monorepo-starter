@@ -44,6 +44,19 @@ export interface FormsNewsletterForm extends Struct.ComponentSchema {
   }
 }
 
+export interface LayoutNavbarItem extends Struct.ComponentSchema {
+  collectionName: "components_layout_navbar_items"
+  info: {
+    displayName: "NavbarItem"
+  }
+  attributes: {
+    categoryItems: Schema.Attribute.Component<"utilities.link", true>
+    isCategoryLink: Schema.Attribute.Boolean
+    label: Schema.Attribute.String
+    link: Schema.Attribute.Component<"utilities.link", false>
+  }
+}
+
 export interface SectionsAnimatedLogoRow extends Struct.ComponentSchema {
   collectionName: "components_sections_animated_logo_rows"
   info: {
@@ -52,7 +65,13 @@ export interface SectionsAnimatedLogoRow extends Struct.ComponentSchema {
   }
   attributes: {
     logos: Schema.Attribute.Component<"utilities.basic-image", true>
-    text: Schema.Attribute.String & Schema.Attribute.Required
+    title: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
   }
 }
 
@@ -183,7 +202,13 @@ export interface SectionsHero extends Struct.ComponentSchema {
           preset: "defaultCkEditor"
         }
       >
-    title: Schema.Attribute.String & Schema.Attribute.Required
+    title: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
   }
 }
 
@@ -471,6 +496,7 @@ export interface UtilitiesLinkDecorations extends Struct.ComponentSchema {
     displayName: "LinkDecorations"
   }
   attributes: {
+    disableAnimations: Schema.Attribute.Boolean
     hasIcons: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>
@@ -517,6 +543,7 @@ declare module "@strapi/strapi" {
       "enums.position": EnumsPosition
       "forms.contact-form": FormsContactForm
       "forms.newsletter-form": FormsNewsletterForm
+      "layout.navbar-item": LayoutNavbarItem
       "sections.animated-logo-row": SectionsAnimatedLogoRow
       "sections.carousel": SectionsCarousel
       "sections.cta-banner": SectionsCtaBanner

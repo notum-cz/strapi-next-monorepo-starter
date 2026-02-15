@@ -1,0 +1,46 @@
+{
+  "collectionName": "components_layout_navbar_items",
+  "info": {
+    "displayName": "NavbarItem"
+  },
+  "options": {},
+  "attributes": {
+    "isCategoryLink": {
+      "type": "boolean"
+    },
+    "link": {
+      "type": "component",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "isCategoryLink"
+            },
+            true
+          ]
+        }
+      },
+      "component": "utilities.link",
+      "repeatable": false
+    },
+    "categoryItems": {
+      "type": "component",
+      "component": "utilities.link",
+      "repeatable": true
+    },
+    "label": {
+      "type": "string",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "isCategoryLink"
+            },
+            false
+          ]
+        }
+      }
+    }
+  },
+  "config": {}
+}

@@ -28,7 +28,7 @@ function StrapiFigure({
   const { number, prefix, suffix, description } = component
   return (
     <div className="flex flex-col items-center">
-      <Typography tag="h3" className="text-center">
+      <Typography tag="h2" className="text-center font-bold">
         {prefix}
         {number}
         {suffix}

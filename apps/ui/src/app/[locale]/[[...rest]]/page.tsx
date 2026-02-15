@@ -123,7 +123,7 @@ export default function StrapiPage(props: PageProps<"/[locale]/[[...rest]]">) {
 
             return (
               <ErrorBoundary key={key}>
-                <div className={cn("mb-4 md:mb-12 lg:mb-16")}>
+                <div className={cn("mb-10 md:mb-16 lg:mb-20")}>
                   <Component
                     component={comp}
                     pageParams={params}

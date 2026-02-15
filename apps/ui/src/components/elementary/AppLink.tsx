@@ -14,6 +14,7 @@ export interface AppLinkProps
   readonly openInNewTab?: boolean
   readonly startAdornment?: React.ReactNode
   readonly endAdornment?: React.ReactNode
+  readonly disableAnimations?: boolean
 }
 
 export const AppLink = ({
@@ -25,6 +26,7 @@ export const AppLink = ({
   openInNewTab = false,
   variant = "link",
   size = "default",
+  disableAnimations = false,
   ...props
 }: AppLinkProps) => {
   const combinedClassName = cn(
@@ -38,13 +40,25 @@ export const AppLink = ({
   const AppLinkInner = (
     <>
       {startAdornment && (
-        <span className="relative size-4 transition-transform duration-200 ease-in group-hover:-translate-x-2">
+        <span
+          className={cn(
+            "relative size-4",
+            !disableAnimations &&
+              "transition-transform duration-200 ease-in group-hover:-translate-x-2"
+          )}
+        >
           {startAdornment}
         </span>
       )}
       {children}
       {endAdornment && (
-        <span className="relative size-4 transition-transform duration-200 ease-in group-hover:translate-x-2">
+        <span
+          className={cn(
+            "relative size-4",
+            !disableAnimations &&
+              "transition-transform duration-200 ease-in group-hover:translate-x-2"
+          )}
+        >
           {endAdornment}
         </span>
       )}

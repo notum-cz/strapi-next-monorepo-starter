@@ -33,7 +33,7 @@ export function StrapiFeaturesList({
           <CkEditorRenderer htmlContent={description} />
           <div
             className={cn(
-              "mt-16",
+              "mt-8",
               isLastChildCentered && "lg:[&>*:last-child]:col-start-2",
               listContainerClassNames,
               !isBoxGrid && !image && "mx-auto max-w-[720px]"

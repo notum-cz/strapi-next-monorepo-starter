@@ -14,15 +14,15 @@ export function StrapiCTABanner({
 }) {
   removeThisWhenYouNeedMe("StrapiCTABanner")
 
-  console.log("Rendering StrapiCTABanner with component:", component)
+  console.log("Rendering StrapiCTABanner with component:", component.links)
   const { title, description, links, features } = component
   const isThereFeatures = features && features.length > 0
   return (
-    <section>
+    <section className="px-6 2xl:px-0">
       <Container className="relative isolate flex flex-col justify-center gap-6 overflow-hidden bg-[#ff8e8e]/5 px-6 py-24 shadow-sm sm:rounded-3xl sm:px-16 lg:flex-row lg:gap-16">
         <div
           className={cn(
-            "flex w-1/2 flex-col gap-6",
+            "flex flex-col gap-6 lg:w-1/2",
             !isThereFeatures && "mx-auto"
           )}
         >
@@ -35,7 +35,7 @@ export function StrapiCTABanner({
           </div>
         </div>
         {isThereFeatures && (
-          <div className="flex w-1/2 flex-col gap-6 lg:flex-row">
+          <div className="flex flex-col gap-6 lg:w-1/2 lg:flex-row">
             {features?.map(({ id, title, description, image }) => (
               <div key={id} className="flex cursor-default gap-4">
                 <div className="flex flex-col gap-4">

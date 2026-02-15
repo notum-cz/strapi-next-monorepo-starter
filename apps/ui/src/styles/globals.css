@@ -52,7 +52,7 @@
     @apply border-gray-300;
   }
   body {
-    @apply bg-gray-100 text-blue-900;
+    @apply text-blue-900;
   }
 }
 
@@ -88,8 +88,12 @@
     @apply border-gray-300 outline-purple-500/50;
   }
   body {
-    @apply bg-gray-100 text-gray-900;
+    @apply text-gray-900;
   }
+}
+
+p {
+  @apply text-gray-600;
 }
 
 @keyframes marquee {
