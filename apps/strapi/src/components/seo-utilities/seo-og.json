@@ -18,17 +18,12 @@
     "type": {
       "type": "enumeration",
       "default": "website",
-      "enum": [
-        "website",
-        "article"
-      ]
+      "enum": ["website", "article"]
     },
     "image": {
       "type": "media",
       "multiple": false,
-      "allowedTypes": [
-        "images"
-      ]
+      "allowedTypes": ["images"]
     },
     "siteName": {
       "type": "string"

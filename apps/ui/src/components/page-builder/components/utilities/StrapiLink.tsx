@@ -1,9 +1,9 @@
-import React from "react"
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
+import type React from "react"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import AppLink from "@/components/elementary/AppLink"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
 export interface StrapiLinkProps {
   readonly component: Data.Component<"utilities.link"> | undefined | null
@@ -21,8 +21,9 @@ const getStrapiLinkHref = (
       return component.href
     case "page":
       return component.page?.fullPath ?? "#"
+
     default:
-      return undefined
+      return
   }
 }
 

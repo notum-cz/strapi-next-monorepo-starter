@@ -1,21 +1,20 @@
-import { getStrapiLocaleFromFeLocale } from "@repo/shared-data"
+import type { FindFirst, FindMany, ID, Result, UID } from "@repo/strapi-types"
 
+import { getEnvVar } from "@/lib/env-vars"
+import { isDevelopment } from "@/lib/general-helpers"
 import type {
   APIResponse,
   APIResponseCollection,
   APIResponseWithBreadcrumbs,
   AppLocalizedParams,
+  DynamicZonePopulateParams,
   PageLocalization,
 } from "@/types/api"
 import type { AppError, CustomFetchOptions } from "@/types/general"
-import type { FindFirst, FindMany, ID, Result, UID } from "@repo/strapi-types"
-
-import { getEnvVar } from "@/lib/env-vars"
-import { isDevelopment } from "@/lib/general-helpers"
 
 // Add endpoints here that are queried from the frontend.
 // Mapping of Strapi content type UIDs to API endpoint paths.
-export const API_ENDPOINTS: { [key in UID.ContentType]?: string } = {
+export const API_ENDPOINTS: Partial<Record<UID.ContentType, string>> = {
   "api::page.page": "/pages",
   "api::footer.footer": "/footer",
   "api::navbar.navbar": "/navbar",
@@ -25,21 +24,17 @@ export const API_ENDPOINTS: { [key in UID.ContentType]?: string } = {
 export default abstract class BaseStrapiClient {
   public async fetchAPI(
     path: string,
-    params: AppLocalizedParams<Record<string, any>> = {},
+    params: AppLocalizedParams<Record<string, unknown>> = {},
     requestInit?: RequestInit,
     options?: CustomFetchOptions
   ) {
-    const strapiLocale = getStrapiLocaleFromFeLocale(params.locale)
-    if (!strapiLocale && params.locale) {
-      throw new Error(
-        `[BaseStrapiClient] Unknown locale mapping for locale '${params.locale}', cannot perform request to Strapi API. It is recommended to check the locale mappings in 'shared-data' package.`
-      )
-    }
     const { url, headers } = await this.prepareRequest(
       path,
       {
         ...params,
-        ...(options?.doNotAddLocaleQueryParams ? {} : { locale: strapiLocale }),
+        ...(options?.doNotAddLocaleQueryParams
+          ? {}
+          : { locale: params.locale }),
       },
       requestInit,
       options
@@ -67,7 +62,7 @@ export default abstract class BaseStrapiClient {
         status: response.status,
         details: { url },
       }
-      console.error("[BaseStrapiClient] Strapi API request error: ", appError)
+      console.error("[BaseStrapiClient] Strapi API request error:", appError)
       throw new Error(JSON.stringify(appError))
     }
 
@@ -82,7 +77,7 @@ export default abstract class BaseStrapiClient {
         status: response.status ?? error?.status,
       }
       if (getEnvVar("DEBUG_STRAPI_CLIENT_API_CALLS")) {
-        console.error("[BaseStrapiClient] Strapi API request error: ", appError)
+        console.error("[BaseStrapiClient] Strapi API request error:", appError)
       }
       throw new Error(JSON.stringify(appError))
     }
@@ -102,10 +97,13 @@ export default abstract class BaseStrapiClient {
     params?: TParams,
     requestInit?: RequestInit,
     options?: CustomFetchOptions
-  ): Promise<APIResponse<Result<TContentTypeUID, TParams>>> {
+  ): Promise<
+    APIResponse<Result<TContentTypeUID, DynamicZonePopulateParams<TParams>>>
+  > {
     const path = this.getStrapiApiPathByUId(uid)
     const url = `${path}${documentId ? `/${documentId}` : ""}`
-    return await this.fetchAPI(url, params, requestInit, options)
+
+    return this.fetchAPI(url, params, requestInit, options)
   }
 
   /**
@@ -119,9 +117,14 @@ export default abstract class BaseStrapiClient {
     params?: TParams,
     requestInit?: RequestInit,
     options?: CustomFetchOptions
-  ): Promise<APIResponseCollection<Result<TContentTypeUID, TParams>>> {
+  ): Promise<
+    APIResponseCollection<
+      Result<TContentTypeUID, DynamicZonePopulateParams<TParams>>
+    >
+  > {
     const path = this.getStrapiApiPathByUId(uid)
-    return await this.fetchAPI(path, params, requestInit, options)
+
+    return this.fetchAPI(path, params, requestInit, options)
   }
 
   /**
@@ -196,7 +199,9 @@ export default abstract class BaseStrapiClient {
     params?: TParams,
     requestInit?: RequestInit,
     options?: CustomFetchOptions
-  ): Promise<APIResponse<Result<TContentTypeUID, TParams>>> {
+  ): Promise<
+    APIResponse<Result<TContentTypeUID, DynamicZonePopulateParams<TParams>>>
+  > {
     const slugFilter = slug && slug.length > 0 ? { $eq: slug } : { $null: true }
     const mergedParams = {
       ...params,
@@ -204,8 +209,9 @@ export default abstract class BaseStrapiClient {
       filters: { ...params?.filters, slug: slugFilter },
     }
     const path = this.getStrapiApiPathByUId(uid)
-    const response: APIResponseCollection<Result<TContentTypeUID, TParams>> =
-      await this.fetchAPI(path, mergedParams, requestInit, options)
+    const response: APIResponseCollection<
+      Result<TContentTypeUID, DynamicZonePopulateParams<TParams>>
+    > = await this.fetchAPI(path, mergedParams, requestInit, options)
 
     // return last published entry
     return {
@@ -228,7 +234,8 @@ export default abstract class BaseStrapiClient {
     options?: CustomFetchOptions
   ): Promise<
     APIResponseWithBreadcrumbs<
-      Result<TContentTypeUID, TParams> & PageLocalization
+      Result<TContentTypeUID, DynamicZonePopulateParams<TParams>> &
+        PageLocalization
     >
   > {
     const slugFilter =
@@ -249,7 +256,8 @@ export default abstract class BaseStrapiClient {
 
     // return last published entry
     return {
-      // @ts-expect-error localizations TODO @dominik-juriga
+      // @ts-expect-error localizations field is not in the response type
+      // @dominik-juriga
       data: response.data.pop() ?? null,
       meta: response.meta,
     }

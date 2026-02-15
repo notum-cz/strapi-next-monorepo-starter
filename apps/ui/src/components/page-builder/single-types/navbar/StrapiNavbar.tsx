@@ -1,10 +1,10 @@
-import { use } from "react"
 import { headers } from "next/headers"
-import { Locale } from "next-intl"
+import type { Locale } from "next-intl"
+import { use } from "react"
 
+import NavbarInner from "@/components/page-builder/single-types/navbar/NavbarInner"
 import { getSessionSSR } from "@/lib/auth"
 import { fetchNavbar } from "@/lib/strapi-api/content/server"
-import NavbarInner from "@/components/page-builder/single-types/navbar/NavbarInner"
 
 export function StrapiNavbar({ locale }: { readonly locale: Locale }) {
   const response = use(fetchNavbar(locale))
@@ -13,8 +13,6 @@ export function StrapiNavbar({ locale }: { readonly locale: Locale }) {
   if (navbar == null) {
     return null
   }
-
-  console.log("Navbar data:", navbar)
 
   const session = use(getSessionSSR(use(headers())))
 

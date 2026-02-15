@@ -1,5 +1,5 @@
-import { Event } from "@strapi/database/dist/lifecycles"
-import { Core } from "@strapi/strapi"
+import type { Event } from "@strapi/database/dist/lifecycles"
+import type { Core } from "@strapi/strapi"
 
 export const registerAdminUserSubscriber = async ({
   strapi,
@@ -35,8 +35,7 @@ const sendEmail = async (strapi: Core.Strapi, event: Event) => {
         html,
       })
     } catch (e) {
-      // TODO: handle error
-      console.log(e)
+      console.error("Failed to send admin invitation email:", e)
     }
   }
 }

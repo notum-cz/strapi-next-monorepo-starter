@@ -8,7 +8,7 @@ import { env } from "@/env.mjs"
 export const getEnvVar = <K extends keyof typeof env>(
   varName: K,
   throwIfMissing = false
-): (typeof env)[K] => {
+): (typeof env)[K] | undefined => {
   try {
     // @/env.mjs validates server vs client access and throws if there is a violation
     const value = env[varName]
@@ -19,13 +19,14 @@ export const getEnvVar = <K extends keyof typeof env>(
         `Environment variable ${varName} is not defined or is empty.`
       )
     }
+
     return value
   } catch (e: unknown) {
     // try to get the variable from global CSR_CONFIG object on the client side
     // @ts-expect-error - CSR_CONFIG is dynamically injected
-    if (typeof window !== "undefined" && window.CSR_CONFIG?.[varName]) {
+    if (typeof window !== "undefined" && globalThis.CSR_CONFIG?.[varName]) {
       // @ts-expect-error - CSR_CONFIG
-      return window.CSR_CONFIG?.[varName]
+      return globalThis.CSR_CONFIG?.[varName]
     }
 
     if (throwIfMissing) {

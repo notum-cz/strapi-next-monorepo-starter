@@ -1,11 +1,11 @@
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { cn } from "@/lib/styles"
 import CkEditorRenderer from "@/components/elementary/ck-editor"
 import { Container } from "@/components/elementary/Container"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import { cn } from "@/lib/styles"
 
 export function StrapiCTABanner({
   component,
@@ -17,6 +17,7 @@ export function StrapiCTABanner({
   console.log("Rendering StrapiCTABanner with component:", component.links)
   const { title, description, links, features } = component
   const isThereFeatures = features && features.length > 0
+
   return (
     <section className="px-6 2xl:px-0">
       <Container className="relative isolate flex flex-col justify-center gap-6 overflow-hidden bg-[#ff8e8e]/5 px-6 py-24 shadow-sm sm:rounded-3xl sm:px-16 lg:flex-row lg:gap-16">

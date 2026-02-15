@@ -536,6 +536,18 @@ export interface UtilitiesText extends Struct.ComponentSchema {
   }
 }
 
+export interface UtilitiesTipTapRichText extends Struct.ComponentSchema {
+  collectionName: "components_utilities_tip_tap_rich_texts"
+  info: {
+    displayName: "TipTapRichText"
+    icon: "layer"
+  }
+  attributes: {
+    content: Schema.Attribute.Text &
+      Schema.Attribute.CustomField<"plugin::tiptap-editor.RichText">
+  }
+}
+
 declare module "@strapi/strapi" {
   export module Public {
     export interface ComponentSchemas {
@@ -570,6 +582,7 @@ declare module "@strapi/strapi" {
       "utilities.link-decorations": UtilitiesLinkDecorations
       "utilities.links-with-title": UtilitiesLinksWithTitle
       "utilities.text": UtilitiesText
+      "utilities.tip-tap-rich-text": UtilitiesTipTapRichText
     }
   }
 }

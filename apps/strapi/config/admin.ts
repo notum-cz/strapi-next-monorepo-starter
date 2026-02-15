@@ -1,6 +1,6 @@
-import { UID } from "@strapi/strapi"
+import type { UID } from "@strapi/strapi"
 
-import { StrapiPreviewConfig } from "../types/internals"
+import type { StrapiPreviewConfig } from "../types/internals"
 
 export default ({ env }) => {
   const strapiPreviewConfig: StrapiPreviewConfig = {
@@ -9,6 +9,7 @@ export default ({ env }) => {
     clientUrl: env("CLIENT_URL"),
     enabledContentTypeUids: ["api::page.page"],
   }
+
   return {
     auth: {
       secret: env("ADMIN_JWT_SECRET"),
@@ -52,6 +53,7 @@ export default ({ env }) => {
             secret: strapiPreviewConfig.previewSecret,
             status,
           })
+
           return `${strapiPreviewConfig.clientUrl}/api/preview?${urlSearchParams}`
         },
       },

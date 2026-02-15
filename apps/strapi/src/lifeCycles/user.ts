@@ -1,7 +1,8 @@
-import { Event } from "@strapi/database/dist/lifecycles"
-import { Core } from "@strapi/strapi"
+import type { Event } from "@strapi/database/dist/lifecycles"
+import type { Core } from "@strapi/strapi"
 
-const crypto = require("crypto")
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const crypto = require("node:crypto")
 
 export const registerUserSubscriber = async ({
   strapi,
@@ -29,7 +30,8 @@ const sendEmail = async (strapi: Core.Strapi, event: Event) => {
 
   if (confirmed) {
     // do not send email if the user is already confirmed
-    console.log(`User ${email} is already confirmed. Skipping email.`)
+    console.warn(`User ${email} is already confirmed. Skipping email.`)
+
     return
   }
 
@@ -42,6 +44,7 @@ const sendEmail = async (strapi: Core.Strapi, event: Event) => {
     console.warn(
       "CLIENT_ACCOUNT_ACTIVATION_URL is not set. After creation email will not be sent."
     )
+
     return
   }
 
@@ -65,7 +68,6 @@ const sendEmail = async (strapi: Core.Strapi, event: Event) => {
       html,
     })
   } catch (err) {
-    // TODO: handle error
-    console.log(err)
+    console.error("Failed to send user activation email:", err)
   }
 }

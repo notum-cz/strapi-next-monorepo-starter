@@ -1,14 +1,36 @@
 name: QA (manual)
 
+run-name: >-
+  [${{
+    inputs.run_e2e && 'E2E' ||
+    inputs.run_axe && 'AXE' ||
+    inputs.run_seo && 'SEO' ||
+    inputs.run_lhci_perfo && 'Perfo'
+  }}${{
+    inputs.run_e2e && inputs.run_axe && ', AXE' || ''
+  }}${{
+    (inputs.run_e2e || inputs.run_axe) && inputs.run_seo && ', SEO' || ''
+  }}${{
+    (inputs.run_e2e || inputs.run_axe || inputs.run_seo) && inputs.run_lhci_perfo && ', Perfo' || ''
+  }}] QA – ${{ inputs.base_url }}
+
 on:
   workflow_dispatch:
     inputs:
       run_e2e:
-        description: Run Playwright E2E
+        description: E2E tests
         type: boolean
         default: false
       run_axe:
-        description: Run Axe accessibility checks
+        description: AXE tests
+        type: boolean
+        default: false
+      run_seo:
+        description: SEO tests
+        type: boolean
+        default: false
+      run_lhci_perfo:
+        description: LHCI Performance tests
         type: boolean
         default: false
       base_url:
@@ -30,7 +52,7 @@ env:
 jobs:
   e2e:
     if: ${{ inputs.run_e2e }}
-    name: Playwright E2E
+    name: Playwright E2E tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -38,17 +60,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Setup pnpm with cache
+        uses: ./.github/actions/setup-pnpm
 
       - name: Cache Playwright browsers
         uses: actions/cache@v4
@@ -84,7 +97,7 @@ jobs:
 
   axe:
     if: ${{ inputs.run_axe }}
-    name: Axe accessibility
+    name: Playwright AXE tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -92,17 +105,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Setup pnpm with cache
+        uses: ./.github/actions/setup-pnpm
 
       - name: Cache Playwright browsers
         uses: actions/cache@v4
@@ -130,5 +134,80 @@ jobs:
         with:
           name: axe-report
           path: axe-reports-${{ github.run_id }}.tgz
+          retention-days: 7
+          if-no-files-found: warn
+
+  seo:
+    if: ${{ inputs.run_seo }}
+    name: Playwright SEO tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm with cache
+        uses: ./.github/actions/setup-pnpm
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v5.0.2
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright Browsers
+        run: pnpm -F @repo/tests-playwright exec playwright install --with-deps
+
+      - name: Run Playwright SEO tests
+        env:
+          BASE_URL: ${{ inputs.base_url }}
+        run: pnpm tests:playwright:seo --project=seo
+
+      - name: Pack SEO reports
+        if: always()
+        run: |
+          tar -czf seo-reports-${{ github.run_id }}.tgz \
+            -C qa/tests/playwright \
+            playwright-report test-results
+
+      - uses: actions/upload-artifact@v4.6.2
+        if: failure()
+        with:
+          name: seo-report
+          path: seo-reports-${{ github.run_id }}.tgz
+          retention-days: 7
+          if-no-files-found: warn
+
+  lhci_perfo:
+    if: ${{ inputs.run_lhci_perfo }}
+    name: LHCI Performance tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm with cache
+        uses: ./.github/actions/setup-pnpm
+
+      - name: Run LHCI Performance tests
+        env:
+          BASE_URL: ${{ inputs.base_url }}
+        run: pnpm tests:lhci:perfo
+
+      - name: Pack LHCI reports
+        if: always()
+        run: |
+          tar -czf lhci-perfo-reports-${{ github.run_id }}.tgz \
+            -C qa/tests/playwright/perfo/.lighthouseci .
+
+      - uses: actions/upload-artifact@v4.6.2
+        if: always()
+        with:
+          name: perfo-report
+          path: lhci-perfo-reports-${{ github.run_id }}.tgz
           retention-days: 7
           if-no-files-found: warn

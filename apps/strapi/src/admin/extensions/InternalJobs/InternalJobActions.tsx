@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react"
 import { Button, Flex } from "@strapi/design-system"
 import {
   getFetchClient,
   unstable_useContentManagerContext,
   useNotification,
 } from "@strapi/strapi/admin"
+import { useEffect, useState } from "react"
 
 const JOBS = [
   {
@@ -23,7 +23,7 @@ const JOBS = [
   },
 ]
 
-const InternalJobsActions = () => {
+function InternalJobsActions() {
   const [runningJob, setRunningJob] = useState<string | null>(null)
   const [hasAnyRows, setHasAnyRows] = useState<boolean | null>(null) // null = loading
   const { toggleNotification } = useNotification()
@@ -50,7 +50,7 @@ const InternalJobsActions = () => {
       }
     }
     fetchCount()
-  }, [])
+  }, [get, uid])
 
   const runJob = async (jobType: string) => {
     if (runningJob) return
@@ -66,10 +66,10 @@ const InternalJobsActions = () => {
     try {
       await post(job.endpoint)
       toggleNotification({ message: job.successMessage, type: "success" })
-      setTimeout(() => window.location.reload(), 1500)
+      setTimeout(() => globalThis.location.reload(), 1500)
     } catch (error) {
       toggleNotification({ message: job.errorMessage, type: "danger" })
-      console.error("An error occurred during job execution: ", job, error)
+      console.error("An error occurred during job execution:", job, error)
     } finally {
       setRunningJob(null)
     }

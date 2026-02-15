@@ -2,8 +2,8 @@
 
 import { Menu, X } from "lucide-react"
 
-import { cn } from "@/lib/styles"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/styles"
 
 export function MobileMenuToggle({
   open,

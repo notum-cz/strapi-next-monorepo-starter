@@ -610,6 +610,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         "sections.features-list",
         "sections.cta-banner",
         "utilities.ck-editor-text",
+        "utilities.tip-tap-rich-text",
       ]
     > &
       Schema.Attribute.SetPluginOptions<{
@@ -698,6 +699,8 @@ export interface ApiSubscriberSubscriber extends Struct.CollectionTypeSchema {
     draftAndPublish: false
   }
   attributes: {
+    content: Schema.Attribute.Text &
+      Schema.Attribute.CustomField<"plugin::tiptap-editor.RichText">
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private

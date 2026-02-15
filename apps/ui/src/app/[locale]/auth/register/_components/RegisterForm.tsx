@@ -6,10 +6,6 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import * as z from "zod"
 
-import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
-import { Link } from "@/lib/navigation"
-import { cn } from "@/lib/styles"
-import { useUserMutations } from "@/hooks/useUserMutations"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -21,6 +17,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { useUserMutations } from "@/hooks/useUserMutations"
+import { PASSWORD_MIN_LENGTH } from "@/lib/constants"
+import { Link } from "@/lib/navigation"
+import { cn } from "@/lib/styles"
 
 // To enable email confirmation, Strapi Users-Permissions plugin must be configured (e.g. email provider, redirect URL)
 // http://localhost:1337/admin/settings/users-permissions/advanced-settings
@@ -53,7 +53,7 @@ export function RegisterForm() {
 
           if (!ENABLE_EMAIL_CONFIRMATION) {
             // Use full page navigation to ensure session is reloaded
-            window.location.href = "/"
+            globalThis.location.href = "/"
           }
         },
         onError: (error) => {

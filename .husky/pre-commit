@@ -1,8 +1,15 @@
-echo '🏗️👷 Styling your changes before committing 👷‍♂️🏗️'
+echo '🏗️👷 Styling and validating your changes before committing 👷‍♂️🏗️'
 
 # Load nvm if available and use Node.js version from .nvmrc
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -f .nvmrc ] && nvm use
+[ -f .nvmrc ] && command -v nvm > /dev/null 2>&1 && nvm use
 
-git rev-parse -q --no-revs --verify MERGE_HEAD || npx lint-staged --verbose --concurrent false
+# Enable corepack to make pnpm available for the active node version
+if command -v corepack >/dev/null 2>&1; then
+  corepack enable >/dev/null 2>&1
+fi
+
+git rev-parse -q --no-revs --verify MERGE_HEAD || sh ./scripts/validate-branch-name.sh
+
+git rev-parse -q --no-revs --verify MERGE_HEAD || pnpm exec lint-staged --verbose --concurrent false

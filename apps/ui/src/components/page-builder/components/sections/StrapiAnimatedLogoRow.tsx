@@ -1,10 +1,10 @@
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { cn } from "@/lib/styles"
 import CkEditorRenderer from "@/components/elementary/ck-editor"
 import { Container } from "@/components/elementary/Container"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import { cn } from "@/lib/styles"
 
 export function StrapiAnimatedLogoRow({
   component,
@@ -35,6 +35,7 @@ export function StrapiAnimatedLogoRow({
           {repeatedRows.map((row, rowIndex) => {
             const ulAriaHidden =
               row.logos?.length > imagesInViewport && rowIndex > 0
+
             return (
               <ul
                 key={row.key}

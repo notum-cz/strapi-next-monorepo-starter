@@ -74,7 +74,8 @@
         "sections.statistics",
         "sections.features-list",
         "sections.cta-banner",
-        "utilities.ck-editor-text"
+        "utilities.ck-editor-text",
+        "utilities.tip-tap-rich-text"
       ]
     },
     "children": {

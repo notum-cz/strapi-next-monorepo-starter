@@ -1,14 +1,15 @@
-import React from "react"
+import type React from "react"
 
 import { cn } from "@/lib/styles"
 
-const textColorVariants = {
+export const textColorVariants = {
   black: "text-black",
   white: "text-white",
   // more variants will be added here
 }
+export type TextColor = keyof typeof textColorVariants
 
-const fontWeightVariants = {
+export const fontWeightVariants = {
   black: "font-black",
   extraBold: "font-extrabold",
   bold: "font-bold",
@@ -19,8 +20,9 @@ const fontWeightVariants = {
   extraLight: "font-extraLight",
   thin: "font-thin",
 }
+export type FontWeight = keyof typeof fontWeightVariants
 
-const variantStyles = {
+export const variantStyles = {
   heading1: "typo-h1",
   heading2: "typo-h2",
   heading3: "typo-h3",
@@ -31,8 +33,9 @@ const variantStyles = {
   medium: "typo-p-medium",
   large: "typo-p-large",
 }
+export type Variant = keyof typeof variantStyles
 
-const defaultStyles: Record<TypographyTag, Variant> = {
+export const defaultStyles: Record<TypographyTag, Variant> = {
   h1: "heading1",
   h2: "heading2",
   h3: "heading3",
@@ -40,12 +43,21 @@ const defaultStyles: Record<TypographyTag, Variant> = {
   h5: "heading5",
   h6: "heading6",
   p: "medium",
+  blockquote: "medium",
+  ol: "medium",
+  ul: "medium",
 }
-
-type Variant = keyof typeof variantStyles
-type TextColor = keyof typeof textColorVariants
-type TypographyTag = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p"
-type FontWeight = keyof typeof fontWeightVariants
+export type TypographyTag =
+  | "h1"
+  | "h2"
+  | "h3"
+  | "h4"
+  | "h5"
+  | "h6"
+  | "p"
+  | "ol"
+  | "ul"
+  | "blockquote"
 
 interface TypographyProps {
   children: React.ReactNode
@@ -57,7 +69,7 @@ interface TypographyProps {
   id?: string
 }
 
-export const Typography = ({
+export function Typography({
   children,
   className,
   variant,
@@ -65,7 +77,7 @@ export const Typography = ({
   fontWeight = "normal",
   tag: Tag = "p",
   id,
-}: TypographyProps) => {
+}: TypographyProps) {
   const selectedVariant = variant
     ? variantStyles[variant]
     : variantStyles[defaultStyles[Tag]]

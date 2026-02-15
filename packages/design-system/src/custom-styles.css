@@ -39,71 +39,96 @@
 
 .ck-editor-rich-text-page h1,
 .ck-editor-rich-text-page .typo-h1,
+.ck-editor-rich-text-blog h1,
+.ck-editor-rich-text-blog .typo-h1,
 .ck-editor__main .ck-content h1,
 .ck-editor__main .ck-content .typo-h1,
-.typo-h1 {
-  @apply text-6xl mb-2;
+.typo-h1,
+.tip-tap-editor-wrapper h1 {
+  @apply mb-2 text-6xl;
 }
 
 .ck-editor-rich-text-page h2,
 .ck-editor-rich-text-page .typo-h2,
+.ck-editor-rich-text-blog h2,
+.ck-editor-rich-text-blog .typo-h2,
 .ck-editor__main .ck-content h2,
 .ck-editor__main .ck-content .typo-h2,
-.typo-h2 {
-  @apply text-5xl mb-1.5;
+.typo-h2,
+.tip-tap-editor-wrapper h2 {
+  @apply mb-1.5 text-5xl;
 }
 
 .ck-editor-rich-text-page h3,
 .ck-editor-rich-text-page .typo-h3,
+.ck-editor-rich-text-blog h3,
+.ck-editor-rich-text-blog .typo-h3,
 .ck-editor__main .ck-content h3,
 .ck-editor__main .ck-content .typo-h3,
-.typo-h3 {
-  @apply text-4xl mb-1;
+.typo-h3,
+.tip-tap-editor-wrapper h3 {
+  @apply mb-1 text-4xl;
 }
 
 .ck-editor-rich-text-page h4,
 .ck-editor-rich-text-page .typo-h4,
+.ck-editor-rich-text-blog h4,
+.ck-editor-rich-text-blog .typo-h4,
 .ck-editor__main .ck-content h4,
 .ck-editor__main .ck-content .typo-h4,
-.typo-h4 {
-  @apply text-3xl mb-1;
+.typo-h4,
+.tip-tap-editor-wrapper h4 {
+  @apply mb-1 text-3xl;
 }
 
 .ck-editor-rich-text-page h5,
 .ck-editor-rich-text-page .typo-h5,
+.ck-editor-rich-text-blog h5,
+.ck-editor-rich-text-blog .typo-h5,
 .ck-editor__main .ck-content h5,
 .ck-editor__main .ck-content .typo-h5,
-.typo-h5 {
-  @apply text-2xl mb-1;
+.typo-h5,
+.tip-tap-editor-wrapper h5 {
+  @apply mb-1 text-2xl;
 }
 
 .ck-editor-rich-text-page h6,
 .ck-editor-rich-text-page .typo-h6,
+.ck-editor-rich-text-blog h6,
+.ck-editor-rich-text-blog .typo-h6,
 .ck-editor__main .ck-content h6,
 .ck-editor__main .ck-content .typo-h6,
-.typo-h6 {
-  @apply text-xl mb-1;
+.typo-h6,
+.tip-tap-editor-wrapper h6 {
+  @apply mb-1 text-xl;
 }
 
 /* Default paragraph style */
 .ck-editor-rich-text-page p,
 .ck-editor-rich-text-page .typo-p-medium,
+.ck-editor-rich-text-blog p,
+.ck-editor-rich-text-blog .typo-p-medium,
 .ck-editor__main .ck-content p,
 .ck-editor__main .ck-content .typo-p-medium,
-.typo-p-medium {
-  @apply text-sm mb-0.5;
+.typo-p-medium,
+.tip-tap-editor-wrapper p {
+  @apply mb-0.5 text-sm;
 }
 
 .ck-editor-rich-text-page .typo-p-large,
+.ck-editor-rich-text-blog .typo-p-large,
 .ck-editor__main .ck-content .typo-p-large,
-.typo-p-large {
-  @apply text-lg mb-0.5;
+.typo-p-large,
+.tip-tap-editor-wrapper .typo-p-large {
+  @apply mb-0.5 text-lg;
 }
 
 .ck-editor-rich-text-page .typo-p-small,
+.ck-editor-rich-text-blog .typo-p-small,
 .ck-editor__main .ck-content .typo-p-small,
-.typo-p-small {
-  @apply text-xs mb-0.5;
+.typo-p-small,
+.tip-tap-editor-wrapper .typo-p-small {
+  @apply mb-0.5 text-xs;
 }
 
 /* We needed to rewrite default Strapi ck editor styling, that's why we used important */

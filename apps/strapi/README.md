@@ -164,6 +164,56 @@ It provides a unified abstraction for handling both internal and external links 
 - Handles external links via a simple text (URL) field
 - Handles internal links as relations to Strapi collection types, ensuring link stability when a page `fullPath` changes and preventing broken links
 
+### Rich text editors
+
+There are two integrated rich text editor options for Strapi content. Choose one based on your project needs — both have corresponding frontend renderers ready to use.
+
+#### CKEditor (`@_sh/strapi-plugin-ckeditor`)
+
+A classic HTML-based rich text editor. Content is stored as HTML and rendered on the frontend using `dangerouslySetInnerHTML` with built-in link processing and sanitization.
+
+**Strapi component:** `utilities.ck-editor-content` or `utilities.ck-editor-text` (the difference is in the allowed toolbar options and styles, rendering is the same)
+
+**Frontend usage:**
+
+```tsx
+import CkEditorRenderer from "@/components/elementary/ck-editor"
+
+return (
+  <CkEditorRenderer
+    htmlContent={component.content}
+    className="mx-auto w-full max-w-[1296px] px-4 py-8"
+    variant="page" // "page" | "blog"
+  />
+)
+```
+
+Custom CKEditor plugins and heading styles are configured in `src/admin/ckeditor/`.
+
+#### Tiptap editor (`@notum-cz/strapi-plugin-tiptap-editor`)
+
+A JSON-based rich text editor. Content is stored as structured JSON (ProseMirror format) and rendered on the frontend using `tiptap-react-renderer` with full control over node/mark mapping.
+
+> [!WARNING]
+> We've just released the Tip tap editor plugin and it's still in early stages. The editor is stable and works well for basic use cases, but it may require some adjustments and improvements in the future. If you want to use it in production, please test it thoroughly with your content and report any issues you find in the [Github repository](https://github.com/notum-cz/strapi-plugin-tiptap-editor/issues). We are actively working on improving the plugin and adding new features, so your feedback is very valuable.
+
+**Strapi component:** `utilities.tip-tap-rich-text`
+
+**Frontend usage:**
+
+```tsx
+import { TiptapRichText } from "@/components/elementary/tiptap-editor"
+
+return (
+  <TiptapRichText
+    content={component.content}
+    defaultVariant="medium" // typography variant for text nodes
+    defaultWeight="normal" // font weight for text nodes
+    accentCursive="accent-cursive" // "accent-cursive" | "only-cursive" | "no-accent"
+  />
+)
+```
+
 ### Plugins
 
 All plugins are configured in [config/plugins.ts](config/plugins.ts) file. Some of them may require additional setting of API keys or different ENV variables. User-permissions, seo and config-sync plugins are enabled by default and don't require additional configuration.
@@ -318,33 +368,28 @@ Any provider supported by Strapi's Users & Permissions plugin (GitHub, Google, F
 
 #### Relation population
 
-Strapi offers fine-grained control over population of data coming from the API. Our Strapi Client is fully typed and offers suggestions, but there are instances where you may want to avoid this. For example, the dynamic zone in `api::page.page` collection includes many components. Serializing the full population object for this DZ would yield an URL that's too long and may cause issues.
+Strapi offers fine-grained control over population of data coming from the API. Our Strapi Client is fully typed and offers suggestions, but there are instances where you may want to avoid this. For example, the dynamic zone in collection types includes many components. Serializing the full population object for this DZ would yield an URL that's too long and may cause issues.
 
 To overcome this issue, this project uses a document middleware. This allows you to control which relations are deeply populated on a per-request basis, optimizing data fetching for complex page structures.
 
 **How it works:**
 
 - The middleware is registered in `apps/strapi/src/index.ts`.
-- The middleware interceptor is implemented in `apps/strapi/src/documentMiddlewares/page.ts`.
-- It intercepts document queries for the `api::page.page` content type, specifically for the `findMany` action.
+- The middleware is implemented in `apps/strapi/src/documentMiddlewares/page.ts`.
+- Populate config is based on folders respecting Strapi structure and naming in `apps/strapi/src/populateDynamicZone`.
 - To trigger custom population, your request must include the following in the query parameters:
-  - Pagination: `{ page: 1, pageSize: 1 }`, which gets updated to `{start: 0, limit: 1}` during the request resolution (before reaching document middleware)
-  - `middlewarePopulate`: an array of string keys, each corresponding to a relation or field you want to populate (as defined in the middleware's `pagePopulateObject`).
+  - `populateDynamicZone`: object with dynamic zones to ensure proper typing, each corresponding to a relation or field you want to populate.
 
 **Example request:**
 
 ```js
 await PublicStrapiClient.fetchOneByFullPath("api::page.page", fullPath, {
   locale,
-  populate: {
-    content: true, // ensures typing is valid on the resulting object
-    seo: true, // ensures typing is valid on the resulting object
-  },
-  middlewarePopulate: ["content", "seo"], // ensures the middleware is triggered and the populate object is replaced
+  populateDynamicZone: { content: true }, // ensures the middleware is triggered and the populate object is replaced
 })
 ```
 
-- The middleware will map each key in `middlewarePopulate` to the corresponding population rules in `pagePopulateObject`, and apply them to the query.
+- The middleware will map each key from `populateDynamicZone` attribute to the corresponding population rules in populateDynamicZone config, and apply them to the query.
 - This enables fine-grained, dynamic control over which relations and nested fields are included in the response.
 
 **Other collections**
@@ -353,7 +398,7 @@ Feel free to create your own middlewares for collections where you may need deep
 **Pitfalls**
 This requires active maintenance, as any changes to collections (i.e. the DZ in Page collection) will need to be reflected in the populate middleware. There is an alternative of using a deep-populate middleware, however this is STRONGLY discouraged. That's also why we removed it, despite using it in this project initially.
 
-'middlewarePopulate' does not alter the types, so using it by itself will result in a type that does not include relations or dynamic zones. This is why we also include it in the populate object.
+'populateDynamicZone' does not alter the types, so using it by itself will result in a type that does not include relations or dynamic zones. This is why we also include it in the populate object.
 
 ### Typescript
 
@@ -375,6 +420,10 @@ Data can be easily transferred between environments in multiple ways. Check out 
 ### Cron jobs
 
 Edit `config/cron-tasks.ts` to add cron jobs. Enable them by setting `CRON_ENABLED=true` in `.env` file.
+
+### Health check endpoint
+
+A simple health check endpoint is available at `/api/health`, e.g. [http://localhost:1337/api/health](http://localhost:1337/api/health). This can be used for monitoring and uptime checks.
 
 ### Strapi Live Previews
 

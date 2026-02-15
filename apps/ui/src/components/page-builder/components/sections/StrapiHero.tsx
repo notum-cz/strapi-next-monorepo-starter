@@ -1,4 +1,4 @@
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
 
 import CkEditorRenderer from "@/components/elementary/ck-editor"
 import { Container } from "@/components/elementary/Container"
@@ -10,6 +10,7 @@ export function StrapiHero({
   readonly component: Data.Component<"sections.hero">
 }) {
   const { title, description, bgColor, links, tag, note } = component
+
   return (
     <section style={{ backgroundColor: bgColor ?? "transparent" }}>
       <Container className="flex flex-col gap-6 px-4 py-8 md:flex-row lg:py-12 xl:gap-0">

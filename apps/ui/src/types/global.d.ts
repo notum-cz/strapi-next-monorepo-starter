@@ -1,11 +1,10 @@
 // Use type safe message keys with `next-intl`
-import { routing } from "@/lib/navigation"
+import type { routing } from "@/lib/navigation"
 
-import messages from "../../locales/en.json"
+import type messages from "../../locales/en.json"
 
 // https://next-intl.dev/docs/workflows/typescript
 declare module "next-intl" {
-  // eslint-disable-next-line no-unused-vars
   interface AppConfig {
     Locale: (typeof routing.locales)[number]
     Messages: typeof messages

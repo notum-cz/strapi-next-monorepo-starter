@@ -2,7 +2,7 @@
  * internal-job service
  */
 
-import { Data, factories } from "@strapi/strapi"
+import { type Data, factories } from "@strapi/strapi"
 
 import {
   processCreateRedirectJob,

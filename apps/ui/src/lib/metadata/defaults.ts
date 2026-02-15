@@ -1,6 +1,5 @@
-import { Locale } from "next-intl"
-
 import type { Metadata } from "next"
+import type { Locale } from "next-intl"
 import type { getTranslations } from "next-intl/server"
 
 import { routing } from "@/lib/navigation"

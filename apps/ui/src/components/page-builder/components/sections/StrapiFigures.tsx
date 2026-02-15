@@ -1,4 +1,4 @@
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
 
 import CkEditorRenderer from "@/components/elementary/ck-editor"
 import { Container } from "@/components/elementary/Container"
@@ -26,6 +26,7 @@ function StrapiFigure({
   readonly component: Data.Component<"shared.figure">
 }) {
   const { number, prefix, suffix, description } = component
+
   return (
     <div className="flex flex-col items-center">
       <Typography tag="h2" className="text-center font-bold">

@@ -1,9 +1,9 @@
-import React from "react"
-import { VariantProps } from "class-variance-authority"
+import type { VariantProps } from "class-variance-authority"
+import type React from "react"
 
+import { buttonVariants } from "@/components/ui/button"
 import { formatHref, isAppLink, Link } from "@/lib/navigation"
 import { cn } from "@/lib/styles"
-import { buttonVariants } from "@/components/ui/button"
 
 export interface AppLinkProps
   extends
@@ -17,7 +17,7 @@ export interface AppLinkProps
   readonly disableAnimations?: boolean
 }
 
-export const AppLink = ({
+export function AppLink({
   href,
   className,
   children,
@@ -28,7 +28,7 @@ export const AppLink = ({
   size = "default",
   disableAnimations = false,
   ...props
-}: AppLinkProps) => {
+}: AppLinkProps) {
   const combinedClassName = cn(
     "group flex flex-row items-center gap-2",
     buttonVariants({ variant, size }),

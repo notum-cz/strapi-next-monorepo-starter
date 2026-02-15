@@ -1,10 +1,9 @@
 "use client"
 
-import React, { useTransition } from "react"
 import { useSearchParams } from "next/navigation"
-import { Locale } from "next-intl"
+import type { Locale } from "next-intl"
+import React, { useTransition } from "react"
 
-import { routing, usePathname, useRouter } from "@/lib/navigation"
 import { UseSearchParamsWrapper } from "@/components/helpers/UseSearchParamsWrapper"
 import {
   Select,
@@ -14,20 +13,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { routing, usePathname, useRouter } from "@/lib/navigation"
 
 const localeTranslation = {
   cs: "Czech",
   en: "English",
 }
 
-const LocaleSwitcher = ({ locale }: { locale: Locale }) => {
+function LocaleSwitcher({ locale }: { locale: Locale }) {
   return (
     <UseSearchParamsWrapper>
       <SuspensedLocaleSwitcher locale={locale} />
     </UseSearchParamsWrapper>
   )
 }
-const SuspensedLocaleSwitcher = ({ locale }: { locale: Locale }) => {
+function SuspensedLocaleSwitcher({ locale }: { locale: Locale }) {
   // prevent the locale switch from blocking the UI thread
   const [, startTransition] = useTransition()
 

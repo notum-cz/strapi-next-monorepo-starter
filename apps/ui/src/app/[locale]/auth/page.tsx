@@ -1,9 +1,7 @@
 import { headers } from "next/headers"
-import { Locale } from "next-intl"
+import type { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
-import { getSessionSSR } from "@/lib/auth"
-import { Link } from "@/lib/navigation"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -13,6 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { getSessionSSR } from "@/lib/auth"
+import { Link } from "@/lib/navigation"
 
 export default async function AuthPage({
   params,

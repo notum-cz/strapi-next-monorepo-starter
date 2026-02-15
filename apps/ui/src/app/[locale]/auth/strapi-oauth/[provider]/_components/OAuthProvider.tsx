@@ -1,8 +1,8 @@
 "use client"
 
-import { useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { useLocale, useTranslations } from "next-intl"
+import { useEffect } from "react"
 import { toast } from "sonner"
 
 import { useUserMutations } from "@/hooks/useUserMutations"
@@ -23,7 +23,7 @@ export function OAuthProvider({
       {
         onSuccess: () => {
           // Redirect on success
-          window.location.href = `/${locale}`
+          globalThis.location.href = `/${locale}`
         },
         onError: (error) => {
           const errorMessage = error?.message
@@ -40,10 +40,10 @@ export function OAuthProvider({
     const accessToken = searchParams.get("access_token")
     const provider = params?.provider || "github"
 
-    if (!accessToken) {
-      toast.error("Missing access_token from Strapi redirect")
-    } else {
+    if (accessToken) {
       handleSync(accessToken, provider)
+    } else {
+      toast.error("Missing access_token from Strapi redirect")
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

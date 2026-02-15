@@ -16,22 +16,19 @@
     "generate": "strapi generate",
     "generate:types": "strapi ts:generate-types",
     "import": "strapi import -f strapi-export.tar.gz",
+    "lint": "eslint -c ../../eslint.config.mjs './**/*.{js,ts,jsx,tsx,cjs,mjs}'",
+    "lint:fix": "pnpm lint --fix",
     "run:db": "docker compose up -d db",
     "start": "strapi start",
     "strapi": "strapi",
-    "test": "jest --forceExit --detectOpenHandles",
-    "transfer": "strapi transfer"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      ".tmp",
-      ".cache"
-    ]
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "transfer": "strapi transfer",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@_sh/strapi-plugin-ckeditor": "^6.0.2",
+    "@notum-cz/strapi-plugin-tiptap-editor": "^1.0.1",
     "@repo/design-system": "workspace:*",
     "@repo/shared-data": "workspace:*",
     "@strapi/database": "5.33.3",
@@ -54,7 +51,8 @@
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
     "strapi-plugin-config-sync": "2.1.0",
-    "styled-components": "^6.0.0"
+    "styled-components": "^6.0.0",
+    "vitest": "^4.0.18"
   },
   "devDependencies": {
     "@types/node": "^22",

@@ -1,15 +1,14 @@
 "use client"
 
-import { useState } from "react"
-import { ChevronLeft, ChevronRight, X } from "lucide-react"
-import { Locale } from "next-intl"
-
 import type { Data } from "@repo/strapi-types"
+import { ChevronLeft, ChevronRight, X } from "lucide-react"
+import type { Locale } from "next-intl"
+import { useState } from "react"
 
-import { cn } from "@/lib/styles"
 import LocaleSwitcher from "@/components/elementary/LocaleSwitcher"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 import { NavbarAuthSection } from "@/components/page-builder/single-types/navbar/NavbarAuthSection"
+import { cn } from "@/lib/styles"
 
 interface MobileNavigationProps {
   navbarItems?: Data.ContentType<"api::navbar.navbar">["navbarItems"]
@@ -19,6 +18,7 @@ interface MobileNavigationProps {
   session?: any
   locale?: Locale
 }
+
 export function MobileNavigation({
   navbarItems,
   primaryButtons,

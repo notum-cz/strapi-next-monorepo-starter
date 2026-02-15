@@ -1,8 +1,8 @@
 "use client"
 
+import type { Data } from "@repo/strapi-types"
+import type { Locale } from "next-intl"
 import { useState } from "react"
-import { Data } from "@repo/strapi-types"
-import { Locale } from "next-intl"
 
 import { Container } from "@/components/elementary/Container"
 import LocaleSwitcher from "@/components/elementary/LocaleSwitcher"
@@ -11,6 +11,7 @@ import StrapiLink from "@/components/page-builder/components/utilities/StrapiLin
 import { MobileMenuToggle } from "@/components/page-builder/single-types/navbar/MobileMenuToggle"
 import { MobileNavigation } from "@/components/page-builder/single-types/navbar/MobileNavigation"
 import { NavbarAuthSection } from "@/components/page-builder/single-types/navbar/NavbarAuthSection"
+import type { BetterAuthSessionWithStrapi } from "@/types/better-auth"
 
 import { DesktopNavigation } from "./DesktopNavigation"
 
@@ -21,9 +22,10 @@ export function NavbarInner({
 }: {
   readonly locale: Locale
   readonly navbarData?: Data.ContentType<"api::navbar.navbar">
-  readonly session?: any
+  readonly session?: BetterAuthSessionWithStrapi | null
 }) {
   const [mobileOpen, setMobileOpen] = useState(false)
+
   return (
     <>
       <header className="sticky top-0 z-50 h-16 w-full border-b bg-white/60 shadow-sm backdrop-blur-md transition-colors duration-300">
@@ -40,33 +42,6 @@ export function NavbarInner({
                   className="flex shrink-0 object-contain"
                 />
               ) : null}
-
-              {/* {navbar.logoImage?.image?.media ? (
-            navbar.logoImage.link ? (
-              <StrapiLink
-                component={navbar.logoImage.link}
-                className="flex items-center"
-              >
-                <StrapiBasicImage
-                  component={navbar.logoImage.image.media}
-                  forcedSizes={{
-                    width: navbar.logoImage.image.media.width ?? 82,
-                    height: navbar.logoImage.image.media.height ?? 23,
-                  }}
-                  className="object-contain"
-                />
-              </StrapiLink>
-            ) : (
-              <StrapiBasicImage
-                component={navbar.logoImage.image.media}
-                forcedSizes={{
-                  width: navbar.logoImage.image.media.width ?? 82,
-                  height: navbar.logoImage.image.media.height ?? 23,
-                }}
-                className="object-contain"
-              />
-            )
-          ) : null} */}
 
               {/* NAVBAR ITEMS */}
 

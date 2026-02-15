@@ -1,6 +1,5 @@
 import type { Data } from "@repo/strapi-types"
 
-import { cn } from "@/lib/styles"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 import {
   NavigationMenu,
@@ -10,6 +9,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
+import { cn } from "@/lib/styles"
 
 interface DesktopNavigationProps {
   navbarItems?: Data.ContentType<"api::navbar.navbar">["navbarItems"]

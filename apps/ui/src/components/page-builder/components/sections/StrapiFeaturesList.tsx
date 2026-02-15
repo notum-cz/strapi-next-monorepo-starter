@@ -1,9 +1,9 @@
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
 
-import { cn } from "@/lib/styles"
 import CkEditorRenderer from "@/components/elementary/ck-editor"
 import { Container } from "@/components/elementary/Container"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
+import { cn } from "@/lib/styles"
 
 export function StrapiFeaturesList({
   component,
@@ -70,6 +70,7 @@ const getListContainerClassNames = (
       return "grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 "
     case "grid":
       return "grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16"
+
     default:
       return " flex flex-col gap-y-9"
   }
@@ -84,6 +85,7 @@ function FeatureItem({
 }) {
   const { title, description, image } = item
   const isBoxGrid = listStyle === "boxGrid"
+
   return (
     <div
       className={cn(
