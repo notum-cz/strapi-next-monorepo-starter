@@ -2,8 +2,7 @@ import Script from "next/script"
 
 import { isDevelopment } from "@/lib/general-helpers"
 
-// eslint-disable-next-line no-unused-vars
-const TrackingScriptWrapper = ({
+export function TrackingScriptWrapper({
   id,
   scriptContent,
   scriptOptions,
@@ -16,7 +15,7 @@ const TrackingScriptWrapper = ({
     "id" | "dangerouslySetInnerHTML"
   >
   ignoreInDevelopment?: boolean
-}) => {
+}) {
   if (ignoreInDevelopment && isDevelopment()) {
     return null
   }
@@ -30,7 +29,7 @@ const TrackingScriptWrapper = ({
   )
 }
 
-const TrackingScripts = () => {
+function TrackingScripts() {
   return <>{/* Tracking Scrips here */}</>
 }
 

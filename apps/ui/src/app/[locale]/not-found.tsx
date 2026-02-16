@@ -5,6 +5,7 @@ import { Link } from "@/lib/navigation"
 
 export default async function NotFound() {
   const t = await getTranslations("errors.notFound")
+
   return (
     <div className="flex min-h-[calc(100vh-5rem)] flex-col items-center justify-center gap-2">
       <LinkBreak2Icon className="size-8" />

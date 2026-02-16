@@ -1,15 +1,11 @@
 import "@/styles/globals.css"
 
-import { Metadata } from "next"
+import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import Script from "next/script"
-import { Locale } from "next-intl"
+import type { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
-import { debugStaticParams } from "@/lib/build"
-import { fontRoboto } from "@/lib/fonts"
-import { routing } from "@/lib/navigation"
-import { cn } from "@/lib/styles"
 import { ErrorBoundary } from "@/components/elementary/ErrorBoundary"
 import StrapiPreviewListener from "@/components/elementary/StrapiPreviewListener"
 import { TailwindIndicator } from "@/components/elementary/TailwindIndicator"
@@ -19,10 +15,15 @@ import { ClientProviders } from "@/components/providers/ClientProviders"
 import { ServerProviders } from "@/components/providers/ServerProviders"
 import TrackingScripts from "@/components/providers/TrackingScripts"
 import { Toaster } from "@/components/ui/sonner"
+import { debugStaticParams } from "@/lib/build"
+import { fontRoboto } from "@/lib/fonts"
+import { routing } from "@/lib/navigation"
+import { cn } from "@/lib/styles"
 
 export function generateStaticParams() {
   const locales = routing.locales.map((locale) => ({ locale }))
   debugStaticParams(locales, "[locale]")
+
   return locales
 }
 
@@ -76,6 +77,7 @@ export default async function RootLayout({
            ...CSR_ENVs.reduce(
              (acc, curr) => {
                acc[curr] = process.env?.[curr]
+
                return acc
              },
              {} as Record<string, string | undefined>

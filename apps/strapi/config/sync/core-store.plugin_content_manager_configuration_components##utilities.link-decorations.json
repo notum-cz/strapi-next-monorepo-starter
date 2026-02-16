@@ -1,0 +1,147 @@
+{
+  "key": "plugin_content_manager_configuration_components::utilities.link-decorations",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "mainField": "documentId",
+      "defaultSortBy": "documentId",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "variant": {
+        "edit": {
+          "label": "variant",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "variant",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "size": {
+        "edit": {
+          "label": "size",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "size",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "hasIcons": {
+        "edit": {
+          "label": "hasIcons",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "hasIcons",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "leftIcon": {
+        "edit": {
+          "label": "leftIcon",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "alt"
+        },
+        "list": {
+          "label": "leftIcon",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "rightIcon": {
+        "edit": {
+          "label": "rightIcon",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "alt"
+        },
+        "list": {
+          "label": "rightIcon",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "edit": [
+        [
+          {
+            "name": "variant",
+            "size": 6
+          },
+          {
+            "name": "size",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "hasIcons",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "leftIcon",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "rightIcon",
+            "size": 12
+          }
+        ]
+      ],
+      "list": [
+        "id",
+        "variant",
+        "size",
+        "hasIcons"
+      ]
+    },
+    "uid": "utilities.link-decorations",
+    "isComponent": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

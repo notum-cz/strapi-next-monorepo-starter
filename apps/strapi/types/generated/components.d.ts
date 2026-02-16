@@ -140,40 +140,16 @@ export interface SectionsImageWithCtaButton extends Struct.ComponentSchema {
   }
 }
 
-export interface SeoUtilitiesMetaSocial extends Struct.ComponentSchema {
-  collectionName: "components_seo_utilities_meta_socials"
-  info: {
-    displayName: "metaSocial"
-    icon: "project-diagram"
-  }
-  attributes: {
-    description: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 65
-      }>
-    image: Schema.Attribute.Media<"images" | "files" | "videos">
-    socialNetwork: Schema.Attribute.Enumeration<["Facebook", "Twitter"]> &
-      Schema.Attribute.Required
-    title: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 60
-      }>
-  }
-}
-
 export interface SeoUtilitiesSeo extends Struct.ComponentSchema {
   collectionName: "components_seo_utilities_seos"
   info: {
     description: ""
-    displayName: "seo"
+    displayName: "Seo"
     icon: "search"
   }
   attributes: {
     applicationName: Schema.Attribute.String
     canonicalUrl: Schema.Attribute.String
-    email: Schema.Attribute.String
     keywords: Schema.Attribute.Text
     metaDescription: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
@@ -200,7 +176,6 @@ export interface SeoUtilitiesSeo extends Struct.ComponentSchema {
         maxLength: 60
       }>
     og: Schema.Attribute.Component<"seo-utilities.seo-og", false>
-    siteName: Schema.Attribute.String
     structuredData: Schema.Attribute.JSON
     twitter: Schema.Attribute.Component<"seo-utilities.seo-twitter", false>
   }
@@ -215,6 +190,7 @@ export interface SeoUtilitiesSeoOg extends Struct.ComponentSchema {
   attributes: {
     description: Schema.Attribute.String
     image: Schema.Attribute.Media<"images">
+    siteName: Schema.Attribute.String
     title: Schema.Attribute.String
     type: Schema.Attribute.Enumeration<["website", "article"]> &
       Schema.Attribute.DefaultTo<"website">
@@ -293,6 +269,22 @@ export interface UtilitiesCkEditorContent extends Struct.ComponentSchema {
   }
 }
 
+export interface UtilitiesCkEditorText extends Struct.ComponentSchema {
+  collectionName: "components_utilities_ck_editor_texts"
+  info: {
+    displayName: "CkEditorText"
+  }
+  attributes: {
+    content: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "simpleCkEditor"
+        }
+      >
+  }
+}
+
 export interface UtilitiesImageWithLink extends Struct.ComponentSchema {
   collectionName: "components_utilities_image_with_links"
   info: {
@@ -311,9 +303,40 @@ export interface UtilitiesLink extends Struct.ComponentSchema {
     displayName: "Link"
   }
   attributes: {
+    decorations: Schema.Attribute.Component<"utilities.link-decorations", false>
     href: Schema.Attribute.String & Schema.Attribute.Required
     label: Schema.Attribute.String & Schema.Attribute.Required
-    newTab: Schema.Attribute.Boolean
+    newTab: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>
+    page: Schema.Attribute.Relation<"oneToOne", "api::page.page">
+    type: Schema.Attribute.Enumeration<["external", "page"]> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<"page">
+  }
+}
+
+export interface UtilitiesLinkDecorations extends Struct.ComponentSchema {
+  collectionName: "components_utilities_link_decorations"
+  info: {
+    displayName: "LinkDecorations"
+  }
+  attributes: {
+    hasIcons: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>
+    leftIcon: Schema.Attribute.Component<"utilities.basic-image", false>
+    rightIcon: Schema.Attribute.Component<"utilities.basic-image", false>
+    size: Schema.Attribute.Enumeration<
+      ["default", "xs", "sm", "lg", "icon", "icon-xs", "icon-sm", "icon-lg"]
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<"default">
+    variant: Schema.Attribute.Enumeration<
+      ["default", "destructive", "outline", "secondary", "ghost", "link"]
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<"link">
   }
 }
 
@@ -338,6 +361,18 @@ export interface UtilitiesText extends Struct.ComponentSchema {
   }
 }
 
+export interface UtilitiesTipTapRichText extends Struct.ComponentSchema {
+  collectionName: "components_utilities_tip_tap_rich_texts"
+  info: {
+    displayName: "TipTapRichText"
+    icon: "layer"
+  }
+  attributes: {
+    content: Schema.Attribute.Text &
+      Schema.Attribute.CustomField<"plugin::tiptap-editor.RichText">
+  }
+}
+
 declare module "@strapi/strapi" {
   export module Public {
     export interface ComponentSchemas {
@@ -351,7 +386,6 @@ declare module "@strapi/strapi" {
       "sections.hero": SectionsHero
       "sections.horizontal-images": SectionsHorizontalImages
       "sections.image-with-cta-button": SectionsImageWithCtaButton
-      "seo-utilities.meta-social": SeoUtilitiesMetaSocial
       "seo-utilities.seo": SeoUtilitiesSeo
       "seo-utilities.seo-og": SeoUtilitiesSeoOg
       "seo-utilities.seo-twitter": SeoUtilitiesSeoTwitter
@@ -359,10 +393,13 @@ declare module "@strapi/strapi" {
       "utilities.accordions": UtilitiesAccordions
       "utilities.basic-image": UtilitiesBasicImage
       "utilities.ck-editor-content": UtilitiesCkEditorContent
+      "utilities.ck-editor-text": UtilitiesCkEditorText
       "utilities.image-with-link": UtilitiesImageWithLink
       "utilities.link": UtilitiesLink
+      "utilities.link-decorations": UtilitiesLinkDecorations
       "utilities.links-with-title": UtilitiesLinksWithTitle
       "utilities.text": UtilitiesText
+      "utilities.tip-tap-rich-text": UtilitiesTipTapRichText
     }
   }
 }

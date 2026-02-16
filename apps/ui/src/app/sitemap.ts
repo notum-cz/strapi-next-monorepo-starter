@@ -1,11 +1,9 @@
-import { ROOT_PAGE_PATH } from "@repo/shared-data"
-import { Locale } from "next-intl"
-
 import type { MetadataRoute } from "next"
+import type { Locale } from "next-intl"
 
 import { getEnvVar } from "@/lib/env-vars"
 import { isDevelopment, isProduction } from "@/lib/general-helpers"
-import { routing } from "@/lib/navigation"
+import { createPublicFullPath, routing } from "@/lib/navigation"
 import { fetchAllPages } from "@/lib/strapi-api/content/server"
 
 // This should be static or dynamic based on build/runtime needs
@@ -20,15 +18,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return []
   }
 
-  const baseUrl = getEnvVar("APP_PUBLIC_URL")
-
-  if (!baseUrl) {
-    console.error("Sitemap generation aborted: APP_PUBLIC_URL is not defined")
+  if (!getEnvVar("APP_PUBLIC_URL")) {
     return []
   }
 
   const promises = routing.locales.map((locale) =>
-    generateLocalizedSitemap(locale, baseUrl)
+    generateLocalizedSitemap(locale)
   )
   const results = await Promise.allSettled(promises)
 
@@ -36,6 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((result) => result.status === "fulfilled")
     .reduce((acc, curr) => {
       acc.push(...curr.value)
+
       return acc
     }, [] as MetadataRoute.Sitemap)
 }
@@ -47,8 +43,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
  * @returns Sitemap entries for a single locale
  */
 async function generateLocalizedSitemap(
-  locale: Locale,
-  baseUrl: string
+  locale: Locale
 ): Promise<MetadataRoute.Sitemap> {
   const pageEntities: Partial<
     Record<PageEntityUID, Awaited<ReturnType<typeof fetchAllPages>>["data"]>
@@ -71,44 +66,16 @@ async function generateLocalizedSitemap(
     pages.forEach((page) => {
       if (page.fullPath) {
         acc.push({
-          url: generateSitemapEntryUrl(
-            baseUrl,
-            page.fullPath,
-            String(page.locale)
-          ),
+          url: createPublicFullPath(page.fullPath, String(page.locale)),
           lastModified: page.updatedAt ?? page.createdAt ?? undefined,
           changeFrequency:
             entityChangeFrequency[uid as PageEntityUID] ?? "monthly",
         })
       }
     })
+
     return acc
   }, [] as MetadataRoute.Sitemap)
-}
-
-const generateSitemapEntryUrl = (
-  baseUrl: string,
-  fullPath: string,
-  locale: string
-) => {
-  const isDefaultLocale = locale === routing.defaultLocale
-  let url
-  if (fullPath === ROOT_PAGE_PATH) {
-    // If this is the default locale, return baseAppUrl
-    // otherwise return the localized landing page
-    url = isDefaultLocale ? baseUrl : new URL(locale, baseUrl)
-  } else {
-    url = new URL(
-      [isDefaultLocale ? null : ["/", locale], fullPath]
-        .flat()
-        .filter(Boolean)
-        .join(""),
-
-      baseUrl
-    )
-  }
-
-  return url.toString()
 }
 
 // Should you have multiple "pageable" collections, add them to this array

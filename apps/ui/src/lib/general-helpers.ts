@@ -30,6 +30,7 @@ export const safeJSONParse = <T>(json: string): T => {
     return JSON.parse(json) as T
   } catch (e) {
     console.error("Error parsing JSON", e)
+
     return {} as T
   }
 }

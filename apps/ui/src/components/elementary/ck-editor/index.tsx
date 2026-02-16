@@ -1,15 +1,14 @@
-import { Locale, useLocale } from "next-intl"
+import { type Locale, useLocale } from "next-intl"
 
-import { cn } from "@/lib/styles"
 import {
-  addTypoClassesToHtmlContent,
   processLinksInHtmlContent,
   removeEmptyImagesFromContent,
 } from "@/components/elementary/ck-editor/utils"
+import { cn } from "@/lib/styles"
 
 import "@/styles/CkEditorDefaultStyles.css"
 
-const CkEditorRenderer = ({
+function CkEditorRenderer({
   htmlContent,
   className,
   locale: passedLocale,
@@ -19,7 +18,7 @@ const CkEditorRenderer = ({
   className?: string
   locale?: Locale
   variant?: "page" | "blog"
-}) => {
+}) {
   const currentLocale = useLocale()
   const locale = passedLocale ?? currentLocale
 
@@ -27,8 +26,8 @@ const CkEditorRenderer = ({
     const transformers = [
       (h: string) => processLinksInHtmlContent(h, locale),
       removeEmptyImagesFromContent,
-      addTypoClassesToHtmlContent,
     ]
+
     return transformers.reduce((result, transform) => transform(result), html)
   }
 

@@ -1,7 +1,9 @@
+import type { Metadata } from "next"
+
 // Use type safe message keys with `next-intl`
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 type Messages = typeof import("../../locales/en.json")
 
-// eslint-disable-next-line no-unused-vars
 export interface IntlMessages extends Messages {}
 
 export interface CustomFetchOptions {
@@ -22,7 +24,7 @@ export interface AppError {
   message: string | number
   status: number
   name?: string
-  details?: Record<string, any>
+  details?: Record<string, unknown>
 }
 
 export type NextMetadataTwitterCard =
@@ -30,3 +32,8 @@ export type NextMetadataTwitterCard =
   | "summary_large_image"
   | "player"
   | "app"
+
+export type SocialMetadata = {
+  twitter: Metadata["twitter"]
+  openGraph: Metadata["openGraph"]
+}

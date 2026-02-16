@@ -1,10 +1,9 @@
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Container } from "@/components/elementary/Container"
 import { ContactForm } from "@/components/elementary/forms/ContactForm"
-import Heading from "@/components/typography/Heading"
-import Paragraph from "@/components/typography/Paragraph"
+import { Typography } from "@/components/typography"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
 export function StrapiContactForm({
   component,
@@ -19,12 +18,10 @@ export function StrapiContactForm({
         <div className="flex flex-1">
           <div className="flex max-w-[400px] flex-col gap-10">
             {component.title && (
-              <Heading variant="heading3" tag="h3">
-                {component.title}
-              </Heading>
+              <Typography tag="h3">{component.title}</Typography>
             )}
             {component.description && (
-              <Paragraph>{component.description}</Paragraph>
+              <Typography>{component.description}</Typography>
             )}
           </div>
         </div>

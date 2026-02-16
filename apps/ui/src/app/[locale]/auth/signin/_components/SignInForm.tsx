@@ -1,14 +1,13 @@
 "use client"
 
-import { useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useSearchParams } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import * as z from "zod"
 
-import { Link } from "@/lib/navigation"
-import { useUserMutations } from "@/hooks/useUserMutations"
+import { SocialButtons } from "@/app/[locale]/auth/signin/_components/SocialButtons"
 import { AppField } from "@/components/forms/AppField"
 import { AppForm } from "@/components/forms/AppForm"
 import { UseSearchParamsWrapper } from "@/components/helpers/UseSearchParamsWrapper"
@@ -21,7 +20,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { SocialButtons } from "@/app/[locale]/auth/signin/_components/SocialButtons"
+import { useUserMutations } from "@/hooks/useUserMutations"
+import { Link } from "@/lib/navigation"
 
 export function SignInForm({ strapiUrl }: { strapiUrl?: string }) {
   return (
@@ -49,7 +49,7 @@ function SuspensedSignInForm({ strapiUrl }: { strapiUrl?: string }) {
       onSuccess: () => {
         // Use full page navigation to ensure session is reloaded
         // This is more reliable than client-side navigation for session updates
-        window.location.href = callbackUrl
+        globalThis.location.href = callbackUrl
       },
       onError: (error) => {
         const errorMessage = error?.message

@@ -8,19 +8,22 @@
   "main": "index.js",
   "scripts": {
     "axe-test": "tsx axe/axe-test.ts",
+    "lhci-perfo-check": "tsx perfo/lhci.ts",
     "playwright-e2e-tests": "playwright test e2e",
-    "playwright-interactive-mode": "playwright test e2e --ui"
+    "playwright-interactive-mode": "playwright test e2e --ui",
+    "playwright-seo-tests": "playwright test seo/seo.spec.ts",
+    "playwright-visual-tests": "playwright test visual/visual.spec.ts"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.10.2",
     "get-sitemap-links": "^1.1.0"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.53.2",
     "@types/node": "^22",
     "dotenv": "17.2.3",
     "eslint-plugin-playwright": "^2.2.0",
-    "prettier": "^3.6.2",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }

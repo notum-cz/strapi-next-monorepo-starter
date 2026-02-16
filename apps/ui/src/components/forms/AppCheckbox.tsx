@@ -1,10 +1,8 @@
 "use client"
 
-import React from "react"
+import type React from "react"
 import { useFormContext } from "react-hook-form"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { cn } from "@/lib/styles"
 import { Checkbox as CheckboxComponent } from "@/components/ui/checkbox"
 import {
   FormControl,
@@ -12,6 +10,8 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import { cn } from "@/lib/styles"
 
 import { AppFormDescription } from "./AppFormDescription"
 import { AppFormLabel } from "./AppFormLabel"
@@ -51,9 +51,9 @@ export function AppCheckbox({
             <FormControl>
               <CheckboxComponent
                 {...field}
-                {...(nativeProps as any)}
+                {...(nativeProps as Record<string, unknown>)}
                 checked={field.value}
-                onCheckedChange={field.onChange}
+                onCheckedChange={field.onChange} // eslint-disable-line react/jsx-handler-names -- react-hook-form API
                 className={fieldClassName}
               />
             </FormControl>

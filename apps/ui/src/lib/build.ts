@@ -1,4 +1,4 @@
-import { Locale } from "next-intl"
+import type { Locale } from "next-intl"
 
 import { getEnvVar } from "@/lib/env-vars"
 
@@ -8,18 +8,18 @@ import { getEnvVar } from "@/lib/env-vars"
  * @param segment optional segment name to add clarity
  */
 export const debugStaticParams = (
-  staticParams: Array<unknown>,
+  staticParams: unknown[],
   segment?: string,
   config?: { isDevelopment?: boolean }
 ) => {
   const { isDevelopment } = config ?? {}
 
   if (getEnvVar("DEBUG_STATIC_PARAMS_GENERATION")) {
-    console.log(`generateStaticParams output <${segment}>`)
+    console.debug(`generateStaticParams output <${segment}>`)
     if (isDevelopment === true) {
-      console.log(" L (skipped in development mode)")
+      console.debug(" L (skipped in development mode)")
     } else {
-      console.dir(staticParams, { depth: null, maxArrayLength: null })
+      console.dir(staticParams)
     }
   }
 }

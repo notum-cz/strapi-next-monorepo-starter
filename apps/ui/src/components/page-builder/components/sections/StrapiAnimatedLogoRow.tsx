@@ -1,9 +1,9 @@
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
 
+import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
+import { Typography } from "@/components/typography"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
-import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
-import Heading from "@/components/typography/Heading"
 
 export function StrapiAnimatedLogoRow({
   component,
@@ -19,9 +19,9 @@ export function StrapiAnimatedLogoRow({
   return (
     <section className="w-full py-10">
       <div className="flex flex-col items-center gap-[30px]">
-        <Heading tag="h3" variant="heading4" fontWeight="normal">
+        <Typography tag="h3" variant="heading4" fontWeight="normal">
           {component.text}
-        </Heading>
+        </Typography>
 
         <div className="relative mt-4 w-full">
           <div className="infinite-scroll-container-horizontal w-full">
@@ -32,6 +32,7 @@ export function StrapiAnimatedLogoRow({
               )}
             >
               {sliderImages.map((logo, index) => (
+                // eslint-disable-next-line react/no-array-index-key -- items are duplicated for infinite scroll
                 <div key={String(logo.id) + index} className="grayscale">
                   <StrapiBasicImage
                     component={logo}

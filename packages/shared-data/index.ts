@@ -29,19 +29,20 @@ export const ROOT_PAGE_PATH = "/"
  *   ["/en/parent", "slug"], "en"           -> "/en/parent/slug"
  */
 export const normalizePageFullPath = (
-  paths: Array<string | undefined | null>,
+  paths: (string | undefined | null)[],
   locale?: string | null
 ) => {
   const filteredPaths = paths.filter(Boolean) as string[]
   const fullPath = [ROOT_PAGE_PATH, ...filteredPaths]
     .join("/")
-    .replace(/\/+/g, "/")
+    .replaceAll(/\/+/g, "/")
 
   if (locale) {
     // make sure not to add same locale twice
     if (fullPath.startsWith(`/${locale}/`) || fullPath === `/${locale}`) {
       return fullPath
     }
+
     return `/${locale}${fullPath === "/" ? "" : fullPath}`
   }
 

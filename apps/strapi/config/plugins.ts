@@ -1,7 +1,7 @@
 export default ({ env }) => {
   const awsS3Config = prepareAwsS3Config(env)
   if (!awsS3Config) {
-    console.info(
+    console.warn(
       "AWS S3 upload configuration is not complete. Local file storage will be used."
     )
   }
@@ -9,10 +9,6 @@ export default ({ env }) => {
   return {
     upload: {
       config: awsS3Config ?? localUploadConfig,
-    },
-
-    seo: {
-      enabled: true,
     },
 
     "config-sync": {
@@ -42,7 +38,7 @@ export default ({ env }) => {
   }
 }
 
-const localUploadConfig: any = {
+const localUploadConfig: Record<string, unknown> = {
   // Local provider setup
   // https://docs.strapi.io/dev-docs/plugins/upload
   sizeLimit: 250 * 1024 * 1024, // 256mb in bytes,
@@ -89,8 +85,6 @@ const prepareAwsS3Config = (env) => {
       },
     }
   }
-
-  return undefined
 }
 
 const prepareEmailConfig = (env) => {
@@ -120,7 +114,7 @@ const prepareEmailConfig = (env) => {
       provider: "nodemailer",
       providerOptions: {
         host: env("MAILTRAP_HOST", "sandbox.smtp.mailtrap.io"),
-        port: parseInt(env("MAILTRAP_PORT", "2525"), 10),
+        port: Number.parseInt(env("MAILTRAP_PORT", "2525"), 10),
         auth: {
           user: env("MAILTRAP_USER"),
           pass: env("MAILTRAP_PASS"),
