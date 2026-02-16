@@ -30,6 +30,16 @@
     list-style-type: decimal;
     list-style-position: inside;
   }
+
+  /* TiptapRichText renders list items with a wrapping <p> tag but we want the bullet/number and the item text on one line */
+  .tiptap-list > li > p:first-child {
+    display: inline;
+    margin: 0;
+  }
+
+  .tiptap-unordered-list > li::marker {
+    color: black;
+  }
 }
 
 @utility no-scrollbar {

@@ -17,44 +17,49 @@
   },
   "attributes": {
     "title": {
+      "type": "string",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "type": "string",
       "required": true
     },
     "breadcrumbTitle": {
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "type": "string"
-    },
-    "slug": {
       "type": "string",
-      "required": true,
-      "regex": "^[a-z0-9/-]+$",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       }
     },
-    "fullPath": {
+    "slug": {
+      "type": "string",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
+      "required": true,
+      "regex": "^[a-z0-9/-]+$"
+    },
+    "fullPath": {
       "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "required": false,
       "unique": true
     },
     "content": {
       "type": "dynamiczone",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "components": [
         "sections.image-with-cta-button",
         "sections.horizontal-images",
@@ -65,13 +70,10 @@
         "sections.animated-logo-row",
         "forms.newsletter-form",
         "forms.contact-form",
-        "utilities.ck-editor-content"
-      ],
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+        "utilities.ck-editor-content",
+        "utilities.ck-editor-text",
+        "utilities.tip-tap-rich-text"
+      ]
     },
     "children": {
       "type": "relation",
@@ -87,13 +89,13 @@
     },
     "seo": {
       "type": "component",
-      "repeatable": false,
-      "component": "seo-utilities.seo",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
-      }
+      },
+      "component": "seo-utilities.seo",
+      "repeatable": false
     }
   }
 }

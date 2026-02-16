@@ -5,12 +5,10 @@ import {
   ArrowUpIcon,
   CaretSortIcon,
 } from "@radix-ui/react-icons"
-import { Column } from "@tanstack/react-table"
+import type { Column } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
-import { cn } from "@/lib/styles"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -18,6 +16,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import { cn } from "@/lib/styles"
 
 interface Props<TData, TValue> extends React.HTMLAttributes<HTMLDivElement> {
   readonly column: Column<TData, TValue>

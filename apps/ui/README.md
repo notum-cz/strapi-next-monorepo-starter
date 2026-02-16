@@ -185,7 +185,7 @@ Not all predefined components or routes are needed in the final app, so unnecess
   - `/src/components/forms` – Components related to forms, such as wrappers and field types
   - `/src/components/page-builder` – Components for the Strapi page builder, [more info here](#page-builder)
   - `/src/components/providers` – Global wrapper components (e.g. context providers)
-  - `/src/components/typography` – Components like Heading, Paragraph, etc.
+  - `/src/components/typography` – Component handling h1, h2, h3, p, etc.
   - `/src/components/ui` – Tailwind wrappers around Radix UI components from the `shadcn/ui` library. This directory is **controlled** by shadcn. You can edit individual files (e.g. to adjust design or fix issues), but do not rename the folder or component files. [More info here](#shadcn)
 - `/src/hooks` – Custom React hooks
 - `/src/lib` – Shared utilities, helpers, and functions for auth, theme, i18n, dates, navigation, reCAPTCHA, styles, etc.
@@ -325,6 +325,48 @@ export async function StrapiNavbar({ locale }: { readonly locale: Locale }) {
 }
 ```
 
+**Client side example:**
+
+```tsx
+// Client component
+"use client"
+import { useAllPages } from "@/hooks/usePages"
+
+export default function PagesCatalog() {
+  const query = useAllPages()
+  return (...)
+}
+
+// useQuery hook
+// src/hooks/usePages
+"use client"
+
+import { useQuery } from "@tanstack/react-query"
+import { useLocale } from "next-intl"
+
+import { PublicStrapiClient } from "@/lib/strapi-api"
+
+export function useAllPages() {
+  const locale = useLocale()
+
+  return useQuery({
+    queryKey: ["pages", locale],
+    queryFn: async () =>
+      PublicStrapiClient.fetchAll(
+        "api::page.page",
+        {
+          locale,
+          status: "published",
+        },
+        undefined,
+        // This is a client-side query, so we use the proxy to transform the request
+        // to the Strapi API URL
+        { useProxy: true }
+      ),
+  })
+}
+```
+
 ### Page builder
 
 Page builder landing page is rendered inside the main [dynamic route](src/app/[locale]/[[...rest]]/page.tsx). It is an optional catch-all segment that captures every segment — in our case, the `fullPath` attribute of pages (e.g. `/page-1-full-path`) from Strapi. All published pages are rendered as nested URLs.
@@ -340,6 +382,22 @@ Another important aspect is the mapping between Strapi components and frontend c
 > [!TIP]
 > Not all Strapi components should be rendered at the page level. Some components are intended to be used as subcomponents within other components (e.g. elements, utilities).
 > Single types (e.g. Navbar, Footer) are not rendered in the page builder, but are fetched and rendered separately. They are not included in the `PageContentComponents` mapping.
+
+#### Page Builder Overview (Developer Tooling)
+
+The frontend includes an internal page builder overview designed to improve orientation and understanding of how components are used across the project.
+
+##### `/dev/components-overview`
+
+Displays a list of all frontend page builder components and **which pages use each component**.
+→ Helps quickly evaluate the impact of component changes.
+
+##### `/dev/pages-overview`
+
+Displays a list of all pages and **which components they contain**.
+→ Makes it easy to understand a page structure without manually navigating the Strapi.
+
+This is a developer-only tool and is not intended for production use.
 
 ### Metadata, sitemap.xml and robots.txt
 
@@ -493,6 +551,17 @@ export default function Page() {
 }
 ```
 
+### Middleware proxies
+
+The Next.js [middleware](src/proxy.ts) is composed of standalone proxy functions, each handling a specific concern. They run in sequence — the first one to return a response short-circuits the chain.
+
+| Proxy           | File                                                   | Description                                                                     |
+| --------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| Basic Auth      | [basicAuth.ts](src/lib/proxies/basicAuth.ts)           | HTTP Basic Authentication, enabled via `BASIC_AUTH_ENABLED` env var             |
+| HTTPS Redirect  | [httpsRedirect.ts](src/lib/proxies/httpsRedirect.ts)   | Redirects HTTP to HTTPS in production (e.g. Heroku)                             |
+| Auth Guard      | [authGuard.ts](src/lib/proxies/authGuard.ts)           | Protects private pages by requiring an active session                           |
+| Dynamic Rewrite | [dynamicRewrite.ts](src/lib/proxies/dynamicRewrite.ts) | Rewrites requests with search params to the `/dynamic/` route for SSR rendering |
+
 ### Sentry logging
 
 Errors passed through `<ErrorBoundary />` or `error.tsx` are automatically logged to Sentry. To turn Sentry on, set `NEXT_PUBLIC_SENTRY_DSN` to environment variables. `SENTRY_AUTH_TOKEN`, `SENTRY_ORG` and `SENTRY_PROJECT` are optional and serve for uploading source maps to Sentry during deployment. Uncaught errors are logged automatically.
@@ -565,6 +634,10 @@ export function ContactUsForm() {
   return <form onSubmit={onSubmit}>{/* ... */}</form>
 }
 ```
+
+### Health check endpoint
+
+A simple health check endpoint is available at `/api/health`, e.g. [http://localhost:3000/api/health](http://localhost:3000/api/health). This can be used for monitoring and uptime checks.
 
 ## Configure log verbosity
 

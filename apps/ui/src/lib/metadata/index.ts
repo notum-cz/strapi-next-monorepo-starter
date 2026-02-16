@@ -1,18 +1,24 @@
+import type { UID } from "@repo/strapi-types"
 import { mergeWith } from "lodash"
-import { Locale } from "next-intl"
+import type { Metadata } from "next"
+import type { Locale } from "next-intl"
 import { getTranslations } from "next-intl/server"
 
-import type { NextMetadataTwitterCard } from "@/types/general"
-import type { Data, UID } from "@repo/strapi-types"
-import type { Metadata } from "next"
-
 import { getEnvVar } from "@/lib/env-vars"
+import { isProduction } from "@/lib/general-helpers"
 import {
   getDefaultMetadata,
   getDefaultOgMeta,
   getDefaultTwitterMeta,
 } from "@/lib/metadata/defaults"
+import {
+  getMetaAlternates,
+  getMetaRobots,
+  preprocessSocialMetadata,
+  seoMergeCustomizer,
+} from "@/lib/metadata/helpers"
 import { fetchSeo } from "@/lib/strapi-api/content/server"
+import type { SocialMetadata } from "@/types/general"
 
 export async function getMetadataFromStrapi({
   fullPath,
@@ -30,10 +36,11 @@ export async function getMetadataFromStrapi({
   const siteUrl = getEnvVar("APP_PUBLIC_URL")
   if (!siteUrl) {
     console.warn("APP_PUBLIC_URL is not defined, cannot generate metadata")
+
     return null
   }
 
-  const defaultMeta: Metadata = getDefaultMetadata(customMetadata, siteUrl, t)
+  const defaultMeta: Metadata = getDefaultMetadata(siteUrl, t)
   const defaultOgMeta: Metadata["openGraph"] = getDefaultOgMeta(
     locale,
     fullPath,
@@ -57,13 +64,15 @@ export async function getMetadataFromStrapi({
       defaultMeta,
       defaultOgMeta,
       defaultTwitterMeta,
+      customMetadata,
       uid
     )
   } catch (e: unknown) {
     console.warn(
-      `SEO for ${uid} content type ("${fullPath}") wasn't fetched: `,
+      `SEO for ${uid} content type ("${fullPath}") wasn't fetched:`,
       (e as Error)?.message
     )
+
     return {
       ...defaultMeta,
       openGraph: defaultOgMeta,
@@ -78,10 +87,13 @@ async function fetchAndMapStrapiMetadata(
   defaultMeta: Metadata,
   defaultOgMeta: Metadata["openGraph"],
   defaultTwitterMeta: Metadata["twitter"],
+  customMetadata?: Metadata,
   uid: Extract<UID.ContentType, "api::page.page"> = "api::page.page"
 ) {
+  const forbidIndexing = !isProduction()
   const res = await fetchSeo(uid, fullPath, locale)
-  const seo = res?.data?.seo
+
+  const { seo, localizations } = res?.data || {}
 
   const strapiMeta: Metadata = {
     title: seo?.metaTitle,
@@ -91,62 +103,32 @@ async function fetchAndMapStrapiMetadata(
     applicationName: seo?.applicationName,
   }
 
-  const strapiOgMeta: Metadata["openGraph"] = {
-    siteName: seo?.siteName ?? undefined,
-    title: seo?.metaTitle ?? undefined,
-    description: seo?.metaDescription ?? undefined,
-    emails: seo?.email ?? undefined,
-    images: seo?.metaImage
-      ? [
-          {
-            url: seo.metaImage.url,
-            width: seo.metaImage.width,
-            height: seo.metaImage.height,
-            alt: seo.metaImage.alternativeText,
-          },
-        ]
-      : undefined,
-  }
-
-  const twitterSeo = seo?.twitter
-
-  const strapiTwitterMeta: Metadata["twitter"] = twitterSeo
-    ? preprocessTwitterMetadata(twitterSeo)
-    : undefined
+  const robots = getMetaRobots(seo?.metaRobots, forbidIndexing)
+  const alternates = getMetaAlternates({
+    seo,
+    fullPath,
+    locale,
+    localizations,
+  })
+  const strapiSocialMeta: SocialMetadata = preprocessSocialMetadata(
+    seo,
+    alternates?.canonical
+  )
 
   return {
     ...mergeWith(defaultMeta, strapiMeta, seoMergeCustomizer),
-    openGraph: mergeWith(defaultOgMeta, strapiOgMeta, seoMergeCustomizer),
-    twitter: mergeWith(
-      defaultTwitterMeta,
-      strapiTwitterMeta,
+    openGraph: mergeWith(
+      defaultOgMeta,
+      strapiSocialMeta.openGraph,
       seoMergeCustomizer
     ),
+    twitter: mergeWith(
+      defaultTwitterMeta,
+      strapiSocialMeta.twitter,
+      seoMergeCustomizer
+    ),
+    robots,
+    alternates,
+    ...customMetadata,
   }
 }
-
-const preprocessTwitterMetadata = (
-  twitterSeo: Data.Component<"seo-utilities.seo-twitter">
-): Metadata["twitter"] => {
-  const card = ["summary", "summary_large_image", "player", "app"].includes(
-    String(twitterSeo?.card)
-  )
-    ? (String(twitterSeo?.card) as NextMetadataTwitterCard)
-    : "summary"
-
-  return {
-    card,
-    title: twitterSeo.title ?? undefined,
-    description: twitterSeo.description ?? undefined,
-    siteId: twitterSeo.siteId ?? undefined,
-    creator: twitterSeo.creator ?? undefined,
-    creatorId: twitterSeo.creatorId ?? undefined,
-    images:
-      twitterSeo.images != null
-        ? twitterSeo.images.map((image) => image.url)
-        : [],
-  }
-}
-
-const seoMergeCustomizer = (defaultValue: unknown, strapiValue: unknown) =>
-  strapiValue ?? defaultValue

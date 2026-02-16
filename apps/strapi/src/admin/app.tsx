@@ -1,12 +1,12 @@
 import { setPluginConfig } from "@_sh/strapi-plugin-ckeditor"
-
 import type { StrapiApp } from "@strapi/strapi/admin"
 
+// eslint-disable-next-line import-x/order
 import { cs } from "./cs"
-
 import "@repo/design-system/styles.css"
 
-import { defaultCkEditorConfig } from "./ckeditor/configs"
+// eslint-disable-next-line import-x/order
+import { defaultCkEditorConfig, simpleCkEditorConfig } from "./ckeditor/configs"
 import InternalJobs from "./extensions/InternalJobs"
 
 export default {
@@ -40,14 +40,12 @@ export default {
         const configData = await configRequest.json()
 
         // Set the variable to the window object so it can be accessed globally
-        // @ts-ignore
-        window.ADMIN_PANEL_CONFIG = configData
+        // @ts-expect-error untyped global
+        globalThis.ADMIN_PANEL_CONFIG = configData
 
         // Set data-theme attribute on document element so that we can potentially include CSS themes
-        document.documentElement.setAttribute(
-          "data-theme",
+        document.documentElement.dataset.theme =
           configData.APP_BRAND.toLowerCase()
-        )
 
         const colors =
           configData.APP_BRAND === "BRAND_A"
@@ -68,6 +66,6 @@ export default {
     }
   },
   register() {
-    setPluginConfig({ presets: [defaultCkEditorConfig] })
+    setPluginConfig({ presets: [defaultCkEditorConfig, simpleCkEditorConfig] })
   },
 }

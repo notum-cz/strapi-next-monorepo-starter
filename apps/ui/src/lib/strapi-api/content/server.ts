@@ -1,13 +1,22 @@
 import "server-only"
 
+import type { UID } from "@repo/strapi-types"
 import { draftMode } from "next/headers"
-import { UID } from "@repo/strapi-types"
-import { Locale } from "next-intl"
-
-import type { CustomFetchOptions } from "@/types/general"
+import type { Locale } from "next-intl"
 
 import { logNonBlockingError } from "@/lib/logging"
 import { PublicStrapiClient } from "@/lib/strapi-api"
+import type { CustomFetchOptions } from "@/types/general"
+
+// ------ SEO populate object
+
+const seoPopulate = {
+  populate: {
+    metaImage: true,
+    twitter: { populate: { images: true } },
+    og: { populate: { image: true } },
+  },
+}
 
 // ------ Page fetching functions
 
@@ -26,27 +35,25 @@ export async function fetchPage(
       {
         locale,
         status: dm.isEnabled ? "draft" : "published",
-        populate: {
-          content: true, // ensures typing is valid on the resulting object
-          seo: true,
-        },
-        middlewarePopulate: ["content", "seo"], // ensures the middleware is triggered and the populate object is replaced
+        populate: { seo: seoPopulate },
+        populateDynamicZone: { content: true },
       },
       requestInit,
       options
     )
-  } catch (e: any) {
+  } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching page '${fullPath}' for locale '${locale}'`,
       error: {
-        error: e?.message,
-        stack: e?.stack,
+        error: e instanceof Error ? e.message : String(e),
+        stack: e instanceof Error ? e.stack : undefined,
       },
     })
   }
 }
 
 export async function fetchAllPages(
+  // eslint-disable-next-line @typescript-eslint/default-param-last
   uid: Extract<UID.ContentType, "api::page.page"> = "api::page.page",
   locale: Locale
 ) {
@@ -57,14 +64,15 @@ export async function fetchAllPages(
       populate: {},
       status: "published",
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching all pages for locale '${locale}'`,
       error: {
-        error: e?.message,
-        stack: e?.stack,
+        error: e instanceof Error ? e.message : String(e),
+        stack: e instanceof Error ? e.stack : undefined,
       },
     })
+
     return { data: [] }
   }
 }
@@ -72,6 +80,7 @@ export async function fetchAllPages(
 // ------ SEO fetching functions
 
 export async function fetchSeo(
+  // eslint-disable-next-line @typescript-eslint/default-param-last
   uid: Extract<UID.ContentType, "api::page.page"> = "api::page.page",
   fullPath: string | null,
   locale: Locale
@@ -80,21 +89,16 @@ export async function fetchSeo(
     return await PublicStrapiClient.fetchOneByFullPath(uid, fullPath, {
       locale,
       populate: {
-        seo: {
-          populate: {
-            metaImage: true,
-            twitter: { populate: { images: true } },
-          },
-        },
+        seo: seoPopulate,
+        localizations: true,
       },
-      fields: [],
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching SEO for '${uid}' with fullPath '${fullPath}' for locale '${locale}'`,
       error: {
-        error: e?.message,
-        stack: e?.stack,
+        error: e instanceof Error ? e.message : String(e),
+        stack: e instanceof Error ? e.stack : undefined,
       },
     })
   }
@@ -111,12 +115,12 @@ export async function fetchNavbar(locale: Locale) {
         logoImage: { populate: { image: true, link: true } },
       },
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching navbar for locale '${locale}'`,
       error: {
-        error: e?.message,
-        stack: e?.stack,
+        error: e instanceof Error ? e.message : String(e),
+        stack: e instanceof Error ? e.stack : undefined,
       },
     })
   }
@@ -134,12 +138,12 @@ export async function fetchFooter(locale: Locale) {
         links: true,
       },
     })
-  } catch (e: any) {
+  } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching footer for locale '${locale}'`,
       error: {
-        error: e?.message,
-        stack: e?.stack,
+        error: e instanceof Error ? e.message : String(e),
+        stack: e instanceof Error ? e.stack : undefined,
       },
     })
   }

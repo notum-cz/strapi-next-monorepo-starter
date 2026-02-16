@@ -1,14 +1,30 @@
-import React from "react"
-import { Data } from "@repo/strapi-types"
+import type { Data } from "@repo/strapi-types"
+import type React from "react"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import AppLink from "@/components/elementary/AppLink"
+import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
 export interface StrapiLinkProps {
   readonly component: Data.Component<"utilities.link"> | undefined | null
   readonly children?: React.ReactNode
   readonly className?: string
   readonly hideWhenMissing?: boolean
+}
+
+const getStrapiLinkHref = (
+  component?: Data.Component<"utilities.link"> | null
+) => {
+  // Add more when needed
+  switch (component?.type) {
+    case "external":
+      return component.href
+    case "page":
+      return component.page?.fullPath ?? "#"
+
+    default:
+      return
+  }
 }
 
 export function StrapiLink({
@@ -23,17 +39,41 @@ export function StrapiLink({
     return null
   }
 
-  if (component?.href == null) {
-    return children ?? component?.label ?? null
+  const { newTab = false, label, decorations } = component ?? {}
+
+  const {
+    variant = "link",
+    size = "default",
+    leftIcon,
+    rightIcon,
+    hasIcons = false,
+  } = decorations ?? {}
+
+  const linkHref = getStrapiLinkHref(component)
+
+  if (!linkHref) {
+    return children ?? label ?? null
   }
 
   return (
     <AppLink
-      href={component.href}
-      openExternalInNewTab={component.newTab ?? false}
+      href={linkHref}
+      openInNewTab={newTab ?? false}
       className={className}
+      startAdornment={
+        hasIcons && leftIcon ? (
+          <StrapiBasicImage component={leftIcon} fill />
+        ) : undefined
+      }
+      endAdornment={
+        hasIcons && rightIcon ? (
+          <StrapiBasicImage component={rightIcon} fill />
+        ) : undefined
+      }
+      variant={variant}
+      size={size}
     >
-      {children ?? component.label}
+      {children ?? label}
     </AppLink>
   )
 }

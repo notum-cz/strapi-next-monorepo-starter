@@ -4,8 +4,8 @@ import { Moon, SunMedium } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useTheme } from "next-themes"
 
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { Button } from "@/components/ui/button"
+import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
 export function ThemeToggle() {
   removeThisWhenYouNeedMe("ThemeToggle")

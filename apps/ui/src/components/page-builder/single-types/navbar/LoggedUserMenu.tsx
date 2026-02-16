@@ -1,9 +1,6 @@
 import { LogOutIcon, User, UserRoundCogIcon } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { BetterAuthUserWithStrapi } from "@/types/better-auth"
-
-import { Link } from "@/lib/navigation"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -13,6 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Link } from "@/lib/navigation"
+import type { BetterAuthUserWithStrapi } from "@/types/better-auth"
 
 export function LoggedUserMenu({
   user,

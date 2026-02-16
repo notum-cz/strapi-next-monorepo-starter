@@ -9,6 +9,8 @@ It can include different testing frameworks and tools depending on project needs
 - **End-to-End (E2E) Tests** with tools like [Playwright](https://playwright.dev/) or [Cypress](https://www.cypress.io/)
 - **Accessibility Tests** using [AXE-Core](https://classic.yarnpkg.com/en/package/@axe-core/playwright)
 - **SEO Tests** for automated validation of search engine optimizations
+- **Visual Tests** for automated visual validation
+- **Performance Tests** using [LighthouseCI](https://github.com/GoogleChrome/lighthouse-ci/tree/main)
 
 ---
 
@@ -17,10 +19,12 @@ It can include different testing frameworks and tools depending on project needs
 ```bash
 qa/
 ├── tests/
-│   ├── cypress/                          ← Cypress-based tests
 │   └── playwright/                       ← Playwright-based tests (workspace package)
-│       ├── axe/                          ← Accessibility tests
 │       ├── e2e/                          ← End-to-End tests
+│       ├── axe/                          ← Accessibility tests
+│       ├── seo/                          ← SEO tests
+│       ├── visual/                       ← Visual tests
+│       ├── perfo/                        ← Performance tests using LighthouseCI
 │       ├── helpers/                      ← Shared test utilities/helpers
 │       ├── .env.example                  ← Example environment variables file
 │       ├── package.json                  ← Test dependencies & scripts for this package
@@ -81,6 +85,39 @@ All test commands are run from the **project root**, not from inside the `qa/` f
   ```
 
 - **Playwright - Run AXE tests**
+
   ```bash
   pnpm run tests:playwright:axe
   ```
+
+- **Playwright - Run SEO tests**
+
+  ```bash
+  pnpm run tests:playwright:seo
+  ```
+
+- **Playwright - Run Visual tests**
+
+  ```bash
+  pnpm tests:playwright:visual
+  ```
+
+- **LighthouseCI - Run Perfo tests**
+  ```bash
+  pnpm tests:lhci:perfo
+  ```
+
+#### Additional info for visual tests
+
+**Playwright – Running visual regression tests**
+
+1. **Initial run (baseline creation)**  
+   Run the visual tests for the first time.  
+   This initial run will generate the **baseline (golden) screenshots**, which serve as the reference for future comparisons.
+
+2. **Deploy the application**  
+   Deploy the application version you want to validate visually.
+
+3. **Comparison run**  
+   Run the visual tests again.  
+   Playwright will generate new screenshots and **compare them against the previously created baseline** to detect visual changes or regressions.

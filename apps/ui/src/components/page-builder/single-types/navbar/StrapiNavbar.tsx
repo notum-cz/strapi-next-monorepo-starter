@@ -1,17 +1,17 @@
-import { use } from "react"
+import type { Data } from "@repo/strapi-types"
 import { headers } from "next/headers"
 import Image from "next/image"
-import { Data } from "@repo/strapi-types"
-import { Locale } from "next-intl"
+import type { Locale } from "next-intl"
+import { use } from "react"
 
-import { getSessionSSR } from "@/lib/auth"
-import { fetchNavbar } from "@/lib/strapi-api/content/server"
-import { cn } from "@/lib/styles"
 import AppLink from "@/components/elementary/AppLink"
 import LocaleSwitcher from "@/components/elementary/LocaleSwitcher"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 import { NavbarAuthSection } from "@/components/page-builder/single-types/navbar/NavbarAuthSection"
+import { getSessionSSR } from "@/lib/auth"
+import { fetchNavbar } from "@/lib/strapi-api/content/server"
+import { cn } from "@/lib/styles"
 
 const hardcodedLinks: NonNullable<
   Data.ContentType<"api::navbar.navbar">["links"]

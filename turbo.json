@@ -13,7 +13,28 @@
     "SENTRY_PROJECT",
     "SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING",
     "CI",
-    "MOBILE_VIEWPORTS_TESTING_ENABLED"
+    "MOBILE_VIEWPORTS_TESTING_ENABLED",
+    "BASE_URL",
+    "ADMIN_PANEL_CONFIG_API_AUTH_TOKEN",
+    "APP_BRAND",
+    "APP_URL",
+    "CLIENT_ACCOUNT_ACTIVATION_URL",
+    "STRAPI_TELEMETRY_DISABLED",
+    "RUNNER_TEMP",
+    "DEBUG_STATIC_PARAMS_GENERATION",
+    "DEBUG_STRAPI_CLIENT_API_CALLS",
+    "SHOW_NON_BLOCKING_ERRORS",
+    "STRAPI_REST_CUSTOM_API_KEY",
+    "STRAPI_PREVIEW_SECRET",
+    "BETTER_AUTH_URL",
+    "BETTER_AUTH_SECRET",
+    "RECAPTCHA_SECRET_KEY",
+    "NODE_ENV",
+    "APP_ENV",
+    "NEXT_RUNTIME",
+    "BASIC_AUTH_ENABLED",
+    "BASIC_AUTH_USERNAME",
+    "BASIC_AUTH_PASSWORD"
   ],
   "tasks": {
     "build": {
@@ -33,6 +54,9 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
+    "lint:fix": {
+      "dependsOn": ["^lint:fix"]
+    },
     "sync-types": {
       "cache": false
     },
@@ -46,8 +70,14 @@
       "cache": false,
       "persistent": true
     },
-    "axe-test": {
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
+    },
+    "test": {
       "dependsOn": ["^build"],
+      "cache": true
+    },
+    "axe-test": {
       "cache": false,
       "persistent": false
     },
@@ -56,7 +86,18 @@
       "persistent": false
     },
     "playwright-e2e-tests": {
-      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-seo-tests": {
+      "cache": false,
+      "persistent": false
+    },
+    "lhci-perfo-check": {
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-visual-tests": {
       "cache": false,
       "persistent": false
     }

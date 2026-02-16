@@ -17,9 +17,11 @@
   "scripts": {
     "build": "echo 'Types-only package, no build needed'",
     "dev": "echo 'Types-only package, no dev needed'",
+    "lint": "eslint -c ../../eslint.config.mjs './**/*.{js,ts,jsx,tsx,cjs,mjs}'",
+    "lint:fix": "pnpm lint --fix",
     "sync-types": "cp -r ../../apps/strapi/types/generated ./generated"
   },
   "devDependencies": {
-    "@strapi/strapi": "5.33.3"
+    "@strapi/strapi": "5.36.0"
   }
 }

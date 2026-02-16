@@ -1,9 +1,9 @@
-import React from "react"
-import { VariantProps } from "class-variance-authority"
+import type { VariantProps } from "class-variance-authority"
+import type React from "react"
 
+import { buttonVariants } from "@/components/ui/button"
 import { formatHref, isAppLink, Link } from "@/lib/navigation"
 import { cn } from "@/lib/styles"
-import { buttonVariants } from "@/components/ui/button"
 
 export interface AppLinkProps
   extends
@@ -11,20 +11,22 @@ export interface AppLinkProps
     VariantProps<typeof buttonVariants> {
   readonly href: string
   readonly children?: React.ReactNode
-  readonly openExternalInNewTab?: boolean
+  readonly openInNewTab?: boolean
+  readonly startAdornment?: React.ReactNode
   readonly endAdornment?: React.ReactNode
 }
 
-export const AppLink = ({
+export function AppLink({
   href,
   className,
   children,
   endAdornment,
-  openExternalInNewTab = false,
+  startAdornment,
+  openInNewTab = false,
   variant = "link",
   size = "default",
   ...props
-}: AppLinkProps) => {
+}: AppLinkProps) {
   const combinedClassName = cn(
     "group flex flex-row items-center gap-2",
     buttonVariants({ variant, size }),
@@ -33,15 +35,32 @@ export const AppLink = ({
 
   const formattedHref = formatHref(href)
 
+  const AppLinkInner = (
+    <>
+      {startAdornment && (
+        <span className="relative size-4 transition-transform duration-200 ease-in group-hover:-translate-x-2">
+          {startAdornment}
+        </span>
+      )}
+      {children}
+      {endAdornment && (
+        <span className="relative size-4 transition-transform duration-200 ease-in group-hover:translate-x-2">
+          {endAdornment}
+        </span>
+      )}
+    </>
+  )
+
   if (isAppLink(formattedHref)) {
     return (
-      <Link href={formattedHref} {...props} className={combinedClassName}>
-        {children}
-        {endAdornment && (
-          <span className="transition-transform duration-200 ease-in group-hover:translate-x-2">
-            {endAdornment}
-          </span>
-        )}
+      <Link
+        href={formattedHref}
+        {...props}
+        target={openInNewTab ? "_blank" : ""}
+        rel={openInNewTab ? "noopener" : ""}
+        className={combinedClassName}
+      >
+        {AppLinkInner}
       </Link>
     )
   }
@@ -49,16 +68,11 @@ export const AppLink = ({
   return (
     <a
       href={formattedHref}
-      target={openExternalInNewTab ? "_blank" : ""}
-      rel={openExternalInNewTab ? "noopener noreferrer" : ""}
+      target={openInNewTab ? "_blank" : ""}
+      rel={openInNewTab ? "noopener noreferrer" : ""}
       className={combinedClassName}
     >
-      {children}
-      {endAdornment && (
-        <span className="transition-transform duration-200 ease-in group-hover:translate-x-2">
-          {endAdornment}
-        </span>
-      )}
+      {AppLinkInner}
     </a>
   )
 }

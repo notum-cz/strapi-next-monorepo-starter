@@ -1,8 +1,5 @@
 {
-  "eslint.workingDirectories": [
-    "./apps/ui",
-    "./apps/strapi"
-  ],
+  "eslint.workingDirectories": [{ "mode": "auto" }],
   "tailwindCSS.classAttributes": [
     "class",
     "className",
@@ -11,29 +8,27 @@
     ".*ClassName*"
   ],
   "npm.packageManager": "pnpm",
+  "eslint.useFlatConfig": true,
+  "eslint.format.enable": true,
   "editor.formatOnSave": true,
-  // "[json]": {
-  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
-  // },
-  // "[typescript]": {
-  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
-  // },
-  // "[typescriptreact]": {
-  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
-  // },
-  // "[javascript]": {
-  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
-  // },
-  // "[javascriptreact]": {
-  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
-  // },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
   "prettier.requireConfig": true,
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": [
-    "plaiceholder",
-    "Strapi",
-    "unoptimized"
-  ],
+  "cSpell.words": ["Strapi", "unoptimized"],
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "javascript.preferences.importModuleSpecifier": "non-relative",
   "markdown.extension.toc.levels": "2..3"

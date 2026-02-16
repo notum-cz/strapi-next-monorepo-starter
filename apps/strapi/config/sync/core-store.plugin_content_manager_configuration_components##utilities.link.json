@@ -19,6 +19,20 @@
           "sortable": false
         }
       },
+      "type": {
+        "edit": {
+          "label": "type",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "type",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "label": {
         "edit": {
           "label": "label",
@@ -29,6 +43,20 @@
         },
         "list": {
           "label": "label",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "newTab": {
+        "edit": {
+          "label": "newTab",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "newTab",
           "searchable": true,
           "sortable": true
         }
@@ -47,45 +75,85 @@
           "sortable": true
         }
       },
-      "newTab": {
+      "page": {
         "edit": {
-          "label": "newTab",
+          "label": "page",
           "description": "",
           "placeholder": "",
           "visible": true,
-          "editable": true
+          "editable": true,
+          "mainField": "title"
         },
         "list": {
-          "label": "newTab",
+          "label": "page",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "decorations": {
+        "edit": {
+          "label": "decorations",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "documentId"
+        },
+        "list": {
+          "label": "decorations",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
           "searchable": true,
           "sortable": true
         }
       }
     },
     "layouts": {
+      "edit": [
+        [
+          {
+            "name": "label",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "type",
+            "size": 6
+          },
+          {
+            "name": "newTab",
+            "size": 6
+          },
+          {
+            "name": "href",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "page",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "decorations",
+            "size": 12
+          }
+        ]
+      ],
       "list": [
         "id",
         "label",
         "href",
         "newTab"
-      ],
-      "edit": [
-        [
-          {
-            "name": "label",
-            "size": 6
-          },
-          {
-            "name": "href",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "newTab",
-            "size": 4
-          }
-        ]
       ]
     },
     "uid": "utilities.link",

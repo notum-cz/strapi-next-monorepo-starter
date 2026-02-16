@@ -600,6 +600,8 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         "forms.newsletter-form",
         "forms.contact-form",
         "utilities.ck-editor-content",
+        "utilities.ck-editor-text",
+        "utilities.tip-tap-rich-text",
       ]
     > &
       Schema.Attribute.SetPluginOptions<{
@@ -688,6 +690,8 @@ export interface ApiSubscriberSubscriber extends Struct.CollectionTypeSchema {
     draftAndPublish: false
   }
   attributes: {
+    content: Schema.Attribute.Text &
+      Schema.Attribute.CustomField<"plugin::tiptap-editor.RichText">
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
@@ -970,6 +974,7 @@ export interface PluginUploadFile extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
     ext: Schema.Attribute.String
+    focalPoint: Schema.Attribute.JSON
     folder: Schema.Attribute.Relation<"manyToOne", "plugin::upload.folder"> &
       Schema.Attribute.Private
     folderPath: Schema.Attribute.String &

@@ -35,9 +35,13 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
    ```sh
    git clone https://github.com/notum-cz/strapi-next-monorepo-starter
+   # checkout `main` branch (`dev` contains unreleased features and improvements)
+   git checkout main
    ```
 
-1. Install dependencies
+   Or click [Use this template](https://github.com/notum-cz/strapi-next-monorepo-starter/generate) to create a new repository based on this template.
+
+2. Install dependencies
 
    ```sh
    # in root
@@ -51,31 +55,27 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
    pnpm install
    ```
 
-1. Run apps
-
-   > [!WARNING]
-   > Before the first run, you need to retrieve [Strapi API token](https://docs.strapi.io/cms/features/api-tokens).
-   >
-   > ```sh
-   > pnpm run dev:strapi
-   > ```
-   >
-   > Go to Strapi admin URL and navigate to [Settings > API Tokens](http://localhost:1337/admin/settings/api-tokens).
-   >
-   > Select "Create new API token" and copy it's value to `STRAPI_REST_READONLY_API_KEY` in `/apps/ui/.env.local` file.
-   >
-   > Refer to the [UI README](apps/ui/README.md#environment-variables) for more details.
-
+3. Run apps
    ```sh
    # run all apps in dev mode (this triggers `pnpm dev` script in each app from `/apps` directory)
    pnpm run dev
    ```
 
-1. 🎉 Enjoy!
+> [!WARNING]
+> Before the first run, you need to retrieve [Strapi API token](https://docs.strapi.io/cms/features/api-tokens).
+>
+> ```sh
+> pnpm run dev:strapi
+> ```
+>
+> Go to Strapi admin URL and navigate to [Settings > API Tokens](http://localhost:1337/admin/settings/api-tokens). Select "Create new API token" and copy it's value to `STRAPI_REST_READONLY_API_KEY` in `/apps/ui/.env.local` file.
+> Refer to the [UI README](apps/ui/README.md#environment-variables) for more details.
+
+4. 🎉 Enjoy!
    - Open your browser and go to [http://localhost:3000](http://localhost:3000) to see the UI app in action.
    - Open your browser and go to [http://localhost:1337/admin](http://localhost:1337/admin) to see the Strapi app in action.
 
-1. Next steps?
+5. Next steps?
    - See [What's inside?](#-whats-inside) for more details about apps and packages.
    - You also probably want to customize naming in the project. See [Transform this template to a project](#-transform-this-template-to-a-project).
 
@@ -92,15 +92,15 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 - **UI library**: 20+ pre-installed components, beautifully designed by [Shadcn/ui](https://ui.shadcn.com/)
 - **UI components**: Ready to use components for common use cases (forms, images, tables, navbar and much more)
 - **TailwindCSS**: [TailwindCSS v4](https://tailwindcss.com/) setup with configuration and theme, [CVA](https://cva.style/docs), [tailwind-merge](https://www.npmjs.com/package/tailwind-merge) and [tailwindcss-animate](https://www.npmjs.com/package/tailwindcss-animate)
-- **CkEditor**: Pre-configured [CkEditor v5](https://ckeditor.com/) WYSIWYG editor with shared styles and colors
+- **Rich text editors**: Pre-configured [CkEditor v5](https://ckeditor.com/) and [Tip tap](https://tiptap.dev/) WYSIWYG editors with shared styles and colors
 - **Utils**: Useful utils, hooks and helper functions included
 - **Auth**: JWT authentication with [Strapi Users & Permissions feature](https://docs.strapi.io/cms/features/users-permissions) and [Better Auth](https://www.better-auth.com), auth middleware and protected routes
 - **Auth providers**: Ready to plug-in providers like Google, Facebook etc.
 - **Localization**: Multi-language support with [next-intl](https://next-intl-docs.vercel.app/) and [@strapi/plugin-i18n](https://www.npmjs.com/package/@strapi/plugin-i18n) packages
-- **SEO**: Pre-configured usage of [@strapi/plugin-seo](https://www.npmjs.com/package/@strapi/plugin-seo) and integrated with frontend SEO best practices like metadata, sitemap.xml or robots.txt
+- **SEO**: Pre-configured SEO Strapi component and integrated with frontend SEO best practices like metadata, canonical etc.
 - **Turborepo**: Pre-configured, apps and packages connected and controlled by Turbo CLI
 - **Dockerized**: Ready to build in Docker containers for production
-- **Code quality**: Out-of-the-box ESLint, Prettier, and TypeScript configurations in shareable packages
+- **Code quality**: Out-of-the-box ESLint (with integrated Prettier formatting) and TypeScript configurations in shareable packages
 - **Husky**: Pre-commit hooks for linting, formatting and commit message validation
 - **Commitizen**: Commitizen for conventional commits and their generation
 - **Heroku ready**: Ready to deploy to Heroku in a few steps
@@ -115,8 +115,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 ### Packages
 
-- `packages/eslint-config`: [ESLint](https://eslint.org/) configurations for client side applications
-- `packages/prettier-config`: [Prettier](https://prettier.io/) configuration with import sort plugin and tailwind plugin included
+- `packages/eslint-config`: [ESLint](https://eslint.org/) configurations with integrated [Prettier](https://prettier.io/) formatting, import ordering, and Tailwind plugin
 - `packages/typescript-config`: tsconfig JSONs used throughout the monorepo (not compatible with Strapi app now)
 - `packages/design-system`: shared styles, primarily for sharing CkEditor color configurations
 - `packages/shared-data`: package that stores common values across frontend and backend
@@ -153,9 +152,6 @@ In root [package.json](./package.json) file, there are some useful tasks wrapped
 ```bash
 # interactive commit message generator - stage files first, then run this in terminal
 pnpm run commit
-
-# format code using prettier in whole monorepo
-pnpm run format
 ```
 
 > [!TIP]
@@ -170,7 +166,7 @@ pnpm -F @repo/shared-data build
 
 # run a script from root package.json in different directory
 cd apps/ui
-pnpm -w run format
+pnpm -w run lint
 ```
 
 ### Bash scripts
@@ -198,13 +194,65 @@ See [README](./qa/tests/README.md) for available test suites and commands.
 
 Install extensions listed in the [.vscode/extensions.json](.vscode/extensions.json) file and have a better development experience.
 
-## 🔱 Husky tasks
+## 🔱 Git Hooks & Conventions
 
-Husky is installed by default and configured to run following tasks:
+Husky is installed by default and configured to enforce code quality and consistent naming conventions.
 
-1. `lint` (eslint) and `format` (prettier) on every commit (`pre-commit` hook). To do that, [lint-staged](https://www.npmjs.com/package/lint-staged) library is used. The `format` task is configured in root `.lintstagedrc.js` and run globally for whole monorepo. The `lint` task is configured in each app individually and Strapi is skipped by default.
+### Pre-commit Hook
 
-2. `commitlint` on every commit message (`commit-msg` hook). It checks if commit messages meet [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) format.
+The [pre-commit hook](.husky/pre-commit) runs the following checks before each commit:
+
+1. **Branch name validation** — Ensures branch names follow the convention (skipped during merges):
+
+   ```
+   <type>/STAR-<number>-<description>
+   ```
+
+   **Examples:**
+   - `feat/STAR-1582-repo-config`
+   - `fix/STAR-42-null-pointer-on-login`
+
+   **Exempt branches:** `main`, `master`, `develop`, `dev`, `release/*`, `hotfix/*`
+
+   > [!TIP]
+   > To rename an existing branch: `git branch -m <old-name> <new-name>`
+
+2. **Lint-staged** — `lint` and `format` on every commit (`pre-commit` hook) via [lint-staged](https://www.npmjs.com/package/lint-staged).
+   ESLint handles JS/TS linting and formatting (via integrated Prettier), while Prettier runs directly on CSS/MD/SCSS files. Configuration is in root `.lintstagedrc.js` and per-app `.lintstagedrc.js` files.
+
+### Commit Message Hook
+
+The [commit-msg hook](.husky/commit-msg) validates commit messages using [commitlint](https://commitlint.js.org/):
+
+**Conventional commits** — Messages must follow [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) format, e.g.:
+
+```bash
+feat(ui): add dark mode toggle
+fix(strapi): resolve null pointer on login
+chore: update dependencies
+```
+
+> Use `pnpm run commit` for an interactive commit message generator.
+
+### Environment Variables in Commits
+
+When introducing new environment variables, mention them in commit messages using `env.VARIABLE_NAME` or `VARIABLE_NAME` (CONSTANT_CASE). The [auto-pr workflow](.github/workflows/auto-pr.yml) extracts these from commit messages and lists them in the PR description under "Required Environment Variables".
+
+**Example commit:**
+
+```
+feat(ui): add sentry integration
+
+Added error tracking with Sentry.
+
+New environment variables:
+- env.SENTRY_DSN
+- env.SENTRY_AUTH_TOKEN
+```
+
+## 📝 Pull Request Template
+
+The [PR template](.github/PULL_REQUEST_TEMPLATE.md) enforces a consistent structure for all pull requests.
 
 ## ♾️ Deployment
 
@@ -214,6 +262,7 @@ We are using GitHub Actions for validation of builds and running tests. There ar
 
 1. [ci.yml](.github/workflows/ci.yml) - runs on every push and pull request to `main` branch. It verifies if code builds.
 2. [qa.yml](.github/workflows/qa.yml) - manually triggered workflow that runs the QA tests from `qa/tests` directory. Ideally it should be run against deployed frontend (by setting `BASE_URL` env variable and passing to [playwright.config.ts](./qa/tests/playwright/playwright.config.ts)).
+3. [auto-pr.yml](.github/workflows/auto-pr.yml) - automatically creates/updates a PR from `dev` to `main` when changes are pushed. Extracts environment variables from commit messages (see [Environment Variables in Commits](#environment-variables-in-commits)).
 
 ### Heroku
 

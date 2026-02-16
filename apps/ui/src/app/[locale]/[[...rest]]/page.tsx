@@ -1,31 +1,34 @@
-import { use } from "react"
-import { notFound } from "next/navigation"
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
-import { Locale } from "next-intl"
-import { setRequestLocale } from "next-intl/server"
+import type { Locale } from "next-intl"
+import { use } from "react"
 
+import StrapiPageView from "@/components/layouts/StrapiPageView"
 import { createFallbackPath, debugStaticParams } from "@/lib/build"
 import { isDevelopment } from "@/lib/general-helpers"
 import { getMetadataFromStrapi } from "@/lib/metadata"
-import { fetchAllPages, fetchPage } from "@/lib/strapi-api/content/server"
-import { cn } from "@/lib/styles"
-import { Breadcrumbs } from "@/components/elementary/Breadcrumbs"
-import { Container } from "@/components/elementary/Container"
-import { ErrorBoundary } from "@/components/elementary/ErrorBoundary"
-import { PageContentComponents } from "@/components/page-builder"
-import StrapiStructuredData from "@/components/page-builder/components/seo-utilities/StrapiStructuredData"
+import { fetchAllPages } from "@/lib/strapi-api/content/server"
 
-// Allow this dynamic route to behave like a static/ISR page
-// even if slugs are unknown at build time or STRAPI_URL is not defined
-// or fetching fails
-// export const dynamic = "force-static"
+// Static/ISR page — no access to headers(), cookies(), or searchParams.
+// Use /[locale]/dynamic/[[...rest]] for pages that need runtime context.
+//
+// "error"        — throws if any dynamic API is used (strict static enforcement)
+//                  **Currently fails** because StrapiNavbar in root layout.tsx calls headers()
+// "force-static" — silently ignores dynamic APIs (e.g. headers() returns empty,
+//                  so server-side auth in navbar will always return null)
+//
+// To fix: use PPR (experimental) to stream auth dynamically within a static shell,
+// move navbar session detection strictly to a client component with a skeleton to avoid layout jump,
+// or use "force-dynamic" to SSR every request (no caching, but auth always works).
+//
+// export const dynamic = "error"
+export const dynamic = "force-static"
 
 // Set ISR revalidation interval: regenerate the page every 5 minutes (300s)
-// export const revalidate = 300
+export const revalidate = 300
 
-// Enable static/ISR generation for pages not returned by generateStaticParams
+// Enable ISR generation for pages not returned by generateStaticParams
 // First request will SSR the page, then cache it for future requests
-// export const dynamicParams = true
+export const dynamicParams = true
 
 export async function generateStaticParams({
   params: { locale },
@@ -35,6 +38,7 @@ export async function generateStaticParams({
 }) {
   if (isDevelopment()) {
     debugStaticParams([], "[[...rest]]", { isDevelopment: true })
+
     // do not prefetch all locales when developing
     return [
       {
@@ -74,66 +78,13 @@ export async function generateMetadata(
   return getMetadataFromStrapi({ fullPath, locale })
 }
 
-export default function StrapiPage(props: PageProps<"/[locale]/[[...rest]]">) {
+export default function StaticStrapiPage(
+  props: PageProps<"/[locale]/[[...rest]]">
+) {
   const params = use(props.params)
-  const locale = params.locale as Locale
 
-  setRequestLocale(locale)
+  // `props.searchParams`` can't be accessed here because this is statically generated page
+  // and searchParams are not available during build time
 
-  const fullPath = ROOT_PAGE_PATH + (params.rest ?? []).join("/")
-  const response = use(fetchPage(fullPath, locale))
-
-  const data = response?.data
-
-  if (data?.content == null) {
-    notFound()
-  }
-
-  const { content, ...restPageData } = data
-
-  return (
-    <>
-      <StrapiStructuredData structuredData={data?.seo?.structuredData} />
-
-      <main className={cn("flex w-full flex-col overflow-hidden")}>
-        <Container>
-          <Breadcrumbs
-            breadcrumbs={response?.meta?.breadcrumbs}
-            className="mt-6 mb-6"
-          />
-        </Container>
-
-        {content
-          .filter((comp) => comp != null)
-          .map((comp) => {
-            const name = comp.__component
-            const id = comp.id
-            const key = `${name}-${id}`
-            const Component = PageContentComponents[name]
-            if (Component == null) {
-              console.warn(`Unknown component "${name}" with id "${id}".`)
-
-              return (
-                <div key={key} className="font-medium text-red-500">
-                  Component &quot;{key}&quot; is not implemented on the
-                  frontend.
-                </div>
-              )
-            }
-
-            return (
-              <ErrorBoundary key={key}>
-                <div className={cn("mb-4 md:mb-12 lg:mb-16")}>
-                  <Component
-                    component={comp}
-                    pageParams={params}
-                    page={restPageData}
-                  />
-                </div>
-              </ErrorBoundary>
-            )
-          })}
-      </main>
-    </>
-  )
+  return <StrapiPageView params={params} />
 }
