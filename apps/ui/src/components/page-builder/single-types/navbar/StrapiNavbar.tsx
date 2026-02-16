@@ -22,8 +22,6 @@ export function StrapiNavbar({ locale }: { readonly locale: Locale }) {
 
   const session = use(getSessionSSR(use(headers())))
 
-  const links = (navbar.links ?? []).filter((link) => link.href)
-
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-white/90 shadow-sm backdrop-blur transition-colors duration-300">
       <div className="flex h-16 items-center space-x-6 px-6 sm:space-x-0">
@@ -43,12 +41,12 @@ export function StrapiNavbar({ locale }: { readonly locale: Locale }) {
             </AppLink>
           )}
 
-          {links.length > 0 ? (
+          {navbar.links && navbar.links.length > 0 ? (
             <nav className="flex">
-              {links.map((link) => (
+              {navbar.links.map((link) => (
                 <StrapiLink
                   component={link}
-                  key={link.href}
+                  key={link.page?.fullPath ?? link.href ?? link.id}
                   className={cn(
                     "flex items-center text-sm font-medium hover:text-red-600"
                   )}
