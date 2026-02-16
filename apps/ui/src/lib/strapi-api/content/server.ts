@@ -27,6 +27,9 @@ const linkPopulate = {
   },
 }
 
+// Populate object for "utilities.basic-image" component
+const basicImagePopulate = { populate: { media: true } }
+
 // ------ Page fetching functions
 
 export async function fetchPage(
@@ -121,7 +124,12 @@ export async function fetchNavbar(locale: Locale) {
       locale,
       populate: {
         links: linkPopulate,
-        logoImage: { populate: { image: true, link: linkPopulate } },
+        logoImage: {
+          populate: {
+            image: basicImagePopulate,
+            link: linkPopulate,
+          },
+        },
       },
     })
   } catch (e: unknown) {
@@ -143,7 +151,9 @@ export async function fetchFooter(locale: Locale) {
       locale,
       populate: {
         sections: { populate: { links: linkPopulate } },
-        logoImage: { populate: { image: true, link: linkPopulate } },
+        logoImage: {
+          populate: { image: basicImagePopulate, link: linkPopulate },
+        },
         links: linkPopulate,
       },
     })
