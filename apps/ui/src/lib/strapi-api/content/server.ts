@@ -8,13 +8,22 @@ import { logNonBlockingError } from "@/lib/logging"
 import { PublicStrapiClient } from "@/lib/strapi-api"
 import type { CustomFetchOptions } from "@/types/general"
 
-// ------ SEO populate object
+// ------ Common populate objects
 
+// Populate object for "seo-utilities.seo.json" component
 const seoPopulate = {
   populate: {
     metaImage: true,
     twitter: { populate: { images: true } },
     og: { populate: { image: true } },
+  },
+}
+
+// Populate object for "utilities.link" component
+const linkPopulate = {
+  populate: {
+    page: { fields: ["fullPath"] as ["fullPath"] },
+    decorations: { populate: { leftIcon: true, rightIcon: true } },
   },
 }
 
@@ -111,8 +120,8 @@ export async function fetchNavbar(locale: Locale) {
     return await PublicStrapiClient.fetchOne("api::navbar.navbar", undefined, {
       locale,
       populate: {
-        links: true,
-        logoImage: { populate: { image: true, link: true } },
+        links: linkPopulate,
+        logoImage: { populate: { image: true, link: linkPopulate } },
       },
     })
   } catch (e: unknown) {
@@ -133,9 +142,9 @@ export async function fetchFooter(locale: Locale) {
     return await PublicStrapiClient.fetchOne("api::footer.footer", undefined, {
       locale,
       populate: {
-        sections: { populate: { links: true } },
-        logoImage: { populate: { image: true, link: true } },
-        links: true,
+        sections: { populate: { links: linkPopulate } },
+        logoImage: { populate: { image: true, link: linkPopulate } },
+        links: linkPopulate,
       },
     })
   } catch (e: unknown) {
