@@ -9,6 +9,8 @@
   "scripts": {
     "axe-test": "tsx axe/axe-test.ts",
     "lhci-perfo-check": "tsx perfo/lhci.ts",
+    "lint": "eslint -c ../../../eslint.config.mjs './**/*.{js,ts,jsx,tsx,cjs,mjs}'",
+    "lint:fix": "pnpm lint --fix",
     "playwright-e2e-tests": "playwright test e2e",
     "playwright-interactive-mode": "playwright test e2e --ui",
     "playwright-seo-tests": "playwright test seo/seo.spec.ts",
@@ -16,6 +18,7 @@
   },
   "dependencies": {
     "@axe-core/playwright": "^4.10.2",
+    "axe-core": "^4.11.1",
     "get-sitemap-links": "^1.1.0"
   },
   "devDependencies": {
