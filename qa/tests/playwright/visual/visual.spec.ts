@@ -1,4 +1,4 @@
-import fs from "fs"
+import fs from "node:fs"
 
 import { expect, test } from "@playwright/test"
 
@@ -15,7 +15,7 @@ function prettifySlug(url: string): string {
     .replace(/^\//, "")
     .replace(/\/$/, "")
     .replace(/\.html$/, "")
-    .replace(/\//g, "-")
+    .replaceAll("/", "-")
 }
 
 test.describe("Visual Regression", () => {

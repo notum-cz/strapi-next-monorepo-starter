@@ -1,13 +1,10 @@
-import { expect, test } from "@playwright/test"
+import { expect, test, type Page } from "@playwright/test"
+
 import urls from "helpers/urls.json"
 
 const PATHS = [...urls]
 
-async function expectAttrNonEmpty(
-  page: import("@playwright/test").Page,
-  selector: string,
-  attr: string
-) {
+async function expectAttrNonEmpty(page: Page, selector: string, attr: string) {
   const el = page.locator(selector)
   const count = await el.count()
 
@@ -139,7 +136,7 @@ for (const path of PATHS) {
           )
         }
 
-        const text = (await h1.first().innerText()).trim()
+        const text = (await h1.first().textContent()).trim()
 
         if (!text) {
           throw new Error(
@@ -166,8 +163,8 @@ for (const path of PATHS) {
           const heading = headings.nth(i)
 
           const tagName = await heading.evaluate((el) => el.tagName)
-          const level = parseInt(tagName[1], 10)
-          const text = (await heading.innerText()).trim()
+          const level = Number.parseInt(tagName[1], 10)
+          const text = (await heading.textContent()).trim()
 
           expect(
             level,
@@ -218,13 +215,11 @@ for (const path of PATHS) {
           )
         ).toBeGreaterThan(0)
 
-        for (let i = 0; i < contents.length; i++) {
-          const content = contents[i]
-
+        contents.forEach((content, i) => {
           try {
             JSON.parse(content)
           } catch (e) {
-            const snippet = content.trim().slice(0, 200).replace(/\s+/g, " ")
+            const snippet = content.trim().slice(0, 200).replaceAll(/\s+/g, " ")
             const message = e instanceof Error ? e.message : String(e)
 
             throw new Error(
@@ -237,7 +232,7 @@ for (const path of PATHS) {
               ].join("\n")
             )
           }
-        }
+        })
       })
     })
 

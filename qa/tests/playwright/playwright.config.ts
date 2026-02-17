@@ -1,7 +1,7 @@
 import fs from "node:fs"
 import path from "node:path"
 
-import { defineConfig, devices } from "@playwright/test"
+import { defineConfig, devices, type Project } from "@playwright/test"
 import dotenv from "dotenv"
 
 const envPath = path.resolve(__dirname, ".env")
@@ -12,7 +12,7 @@ if (fs.existsSync(envPath)) {
 const mobileViewportsEnabled =
   process.env.MOBILE_VIEWPORTS_TESTING_ENABLED === "true"
 
-const projects: any[] = [
+const projects: Project[] = [
   {
     name: "chromium",
     use: { ...devices["Desktop Chrome"] },
@@ -75,6 +75,5 @@ export default defineConfig({
     screenshot: "only-on-failure",
     video: "retain-on-failure",
   },
-
   projects,
 })

@@ -1,19 +1,20 @@
-import fs from "fs"
-import path from "path"
+/* eslint-disable no-console */
+import fs from "node:fs"
+import path from "node:path"
 
 import AxeBuilder from "@axe-core/playwright"
 import { chromium } from "@playwright/test"
-import dotenv from "dotenv"
-import urls from "helpers/urls.json"
-
 import type { AxeResults, NodeResult, Result } from "axe-core"
+import dotenv from "dotenv"
+
+import urls from "helpers/urls.json"
 
 dotenv.config({ path: path.resolve(__dirname, "../.env"), override: true })
 
 // import { fetchSitemap } from "../helpers/get-sitemap-links"
 
 // Rule IDs that should be treated as warnings instead of errors
-const WARNING_RULE_IDS = new Set<string>()
+const WARNING_RULE_IDS = new Set<string>([""])
 
 type SiteOutcome = {
   url: string
@@ -34,6 +35,7 @@ function formatViolationsSection(
       ? v.nodes
           .map((n: NodeResult, idx: number) => {
             const target = Array.isArray(n.target) ? n.target.join(", ") : ""
+
             return `  ${idx + 1}. ${n.html}\n     target: ${target}`
           })
           .join("\n")
@@ -51,11 +53,11 @@ function formatViolationsSection(
   return `${title}\n———\n${blocks.join("\n\n")}\n`
 }
 
+// eslint-disable-next-line unicorn/prefer-top-level-await
 ;(async () => {
   const baseUrl = process.env.BASE_URL
   if (!baseUrl) {
-    console.error("Missing BASE_URL environment variable")
-    process.exit(1)
+    throw new Error("Missing BASE_URL environment variable")
   }
 
   // If the sitemap is available, we can fetch pages directly from there
@@ -66,8 +68,7 @@ function formatViolationsSection(
   const PATHS = [...urls]
 
   if (!Array.isArray(urls) || urls.length === 0) {
-    console.error("No sites found in sites.json")
-    process.exit(1)
+    throw new Error("No sites found in sites.json")
   }
 
   // For now, we use the URLs defined in helpers/urls.json
@@ -75,7 +76,7 @@ function formatViolationsSection(
 
   const runTimestamp = new Date()
     .toISOString()
-    .replace(/[-:]/g, "")
+    .replaceAll(/[-:]/g, "")
     .replace(/\..+/, "")
 
   const reportDir = path.resolve("axe/reports", `axe_test_run_${runTimestamp}`)
@@ -213,7 +214,9 @@ function formatViolationsSection(
     analysisFailedSites.forEach(({ url }) => console.error(`- ${url}`))
   }
 
-  process.exit(
-    sitesWithErrors.length > 0 || analysisFailedSites.length > 0 ? 1 : 0
-  )
+  if (sitesWithErrors.length > 0 || analysisFailedSites.length > 0) {
+    throw new Error(
+      `Accessibility test failed: ${sitesWithErrors.length} site(s) with errors, ${analysisFailedSites.length} site(s) with analysis failures`
+    )
+  }
 })()
