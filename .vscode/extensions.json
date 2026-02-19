@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "streetsidesoftware.code-spell-checker",
+    "yzhang.markdown-all-in-one"
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode"
   ],
