@@ -65,10 +65,9 @@ COPY turbo.json turbo.json
 # Set Next.js to output standalone build recommended for Docker
 ENV NEXT_OUTPUT=standalone
 
-# NextAuth secret is required even during build for NextAuth to work properly (Error [MissingSecretError]: Please define a `secret` in production)
+# BetterAuth secret is required even during build for BetterAuth to work properly (Error [MissingSecretError]: Please define a `secret` in production)
 # We use dummy secret at build, real one at runtime
-# https://next-auth.js.org/errors#no_secret
-ENV NEXTAUTH_SECRET=dummy-build-secret
+ENV BETTER_AUTH_SECRET=dummy-build-secret
 
 # Optionally, pass all required information at build time to prebuild pages
 ARG APP_PUBLIC_URL
