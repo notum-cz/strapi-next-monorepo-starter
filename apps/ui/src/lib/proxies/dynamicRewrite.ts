@@ -6,6 +6,28 @@ import { routing } from "@/lib/navigation"
 const dynamicPrefix = "dynamic"
 
 /**
+ * Ignores requests to certain paths, allowing them to be handled by other middleware or routes.
+ */
+const ignoredPaths = ["/api", "/dev", "/auth"]
+
+/**
+ * Removes the locale prefix from the pathname if present, returning the path without the locale segment.
+ */
+const stripLocalePrefix = (pathname: string): string => {
+  const parts = pathname.split("/").filter(Boolean)
+  const hasLocale =
+    parts.length >= 1 && routing.locales.includes(parts[0] as Locale)
+
+  if (!hasLocale) {
+    return pathname
+  }
+
+  const rest = parts.slice(1).join("/")
+
+  return rest ? `/${rest}` : "/"
+}
+
+/**
  * Rewrites requests with search params to the /dynamic/ route segment,
  * enabling dynamic rendering for pages that need access to searchParams.
  * Also blocks direct access to the bare /dynamic path.
@@ -17,6 +39,8 @@ export const dynamicRewrite = (
 ): NextResponse | null => {
   const { pathname, search } = req.nextUrl
 
+  const pathWithoutLocale = stripLocalePrefix(pathname)
+
   const dynamicPathRegex = new RegExp(
     `^/(?:${routing.locales.join("|")}/)?${dynamicPrefix}$`
   )
@@ -24,7 +48,10 @@ export const dynamicRewrite = (
     return NextResponse.rewrite(new URL("/not-found", req.url))
   }
 
-  if (!search) {
+  if (
+    ignoredPaths.some((path) => pathWithoutLocale.startsWith(path)) ||
+    !search
+  ) {
     return null
   }
 
