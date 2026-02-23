@@ -24,8 +24,7 @@ export function LoggedUserMenu({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
-          <User className="mr-2 size-4" />
-          {user.email}
+          <User className="size-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">

@@ -1,14 +1,17 @@
+"server only"
+
 import type { Data } from "@repo/strapi-types"
 
 import CkEditorRenderer from "@/components/elementary/ck-editor"
 import { Container } from "@/components/elementary/Container"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
 import { cn } from "@/lib/styles"
+import type { PageBuilderComponentProps } from "@/types/general"
 
 export function StrapiFeaturesList({
   component,
-}: {
-  readonly component: Data.Component<"sections.features-list">
+}: PageBuilderComponentProps & {
+  component: Data.Component<"sections.features-list">
 }) {
   const { title, description, features, listStyle, image } = component
   const listContainerClassNames = getListContainerClassNames(listStyle)
@@ -36,7 +39,7 @@ export function StrapiFeaturesList({
               "mt-8",
               isLastChildCentered && "lg:[&>*:last-child]:col-start-2",
               listContainerClassNames,
-              !isBoxGrid && !image && "mx-auto max-w-[720px]"
+              !isBoxGrid && !image && "mx-auto max-w-180"
             )}
           >
             {features?.map((feature) => (
@@ -91,7 +94,7 @@ function FeatureItem({
       className={cn(
         "flex gap-4",
         isBoxGrid &&
-          "cursor-default rounded-[2rem] border bg-white p-8 shadow-sm transition-all duration-300 hover:translate-y-[-4px] hover:shadow-md"
+          "cursor-default rounded-4xl border bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
       )}
     >
       {image && !isBoxGrid ? (

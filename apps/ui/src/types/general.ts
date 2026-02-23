@@ -1,3 +1,4 @@
+import type { Data } from "@repo/strapi-types"
 import type { Metadata } from "next"
 
 // Use type safe message keys with `next-intl`
@@ -36,4 +37,13 @@ export type NextMetadataTwitterCard =
 export type SocialMetadata = {
   twitter: Metadata["twitter"]
   openGraph: Metadata["openGraph"]
+}
+
+export type PageBuilderComponentProps = {
+  readonly pageParams?: {
+    locale: string
+    rest?: string[]
+  }
+  readonly page?: Data.ContentType<"api::page.page"> | null
+  readonly searchParams?: Record<string, string | string[] | undefined>
 }

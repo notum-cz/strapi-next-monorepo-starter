@@ -1,3 +1,5 @@
+"server only"
+
 import type { Data } from "@repo/strapi-types"
 
 import { Container } from "@/components/elementary/Container"
@@ -8,12 +10,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import type { PageBuilderComponentProps } from "@/types/general"
 
 export function StrapiFaq({
   component,
-}: {
-  readonly component: Data.Component<"sections.faq">
-}) {
+}: PageBuilderComponentProps & { component: Data.Component<"sections.faq"> }) {
   removeThisWhenYouNeedMe("StrapiFaq")
 
   return (
@@ -30,7 +31,11 @@ export function StrapiFaq({
 
           {component.accordions && (
             <div className="w-full">
-              <Accordion type="single" collapsible className="w-full">
+              <Accordion
+                type="single"
+                collapsible
+                className="mx-auto w-full max-w-180"
+              >
                 {component.accordions.map((x) => (
                   <AccordionItem key={x.id} value={x.id.toString()}>
                     <AccordionTrigger>{x.question}</AccordionTrigger>

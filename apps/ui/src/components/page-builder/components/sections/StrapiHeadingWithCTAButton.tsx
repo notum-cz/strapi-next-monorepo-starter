@@ -1,13 +1,16 @@
+"server only"
+
 import type { Data } from "@repo/strapi-types"
 
 import { Container } from "@/components/elementary/Container"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import type { PageBuilderComponentProps } from "@/types/general"
 
 export function StrapiHeadingWithCTAButton({
   component,
-}: {
-  readonly component: Data.Component<"sections.heading-with-cta-button">
+}: PageBuilderComponentProps & {
+  component: Data.Component<"sections.heading-with-cta-button">
 }) {
   removeThisWhenYouNeedMe("StrapiHeadingWithCTAButton")
 

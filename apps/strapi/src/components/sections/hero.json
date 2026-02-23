@@ -11,11 +11,6 @@
       "component": "utilities.link",
       "repeatable": true
     },
-    "bgColor": {
-      "type": "customField",
-      "customField": "plugin::color-picker.color",
-      "regex": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
-    },
     "description": {
       "type": "customField",
       "customField": "plugin::ckeditor5.CKEditor",

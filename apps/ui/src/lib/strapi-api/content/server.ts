@@ -106,18 +106,6 @@ export async function fetchSeo(
 
 // ------ Navbar fetching functions
 
-const linkPopulate = {
-  populate: {
-    page: { fields: ["fullPath"] },
-    decorations: {
-      populate: {
-        leftIcon: { populate: { media: true } },
-        rightIcon: { populate: { media: true } },
-      },
-    },
-  },
-}
-
 export async function fetchNavbar(locale: Locale) {
   try {
     return await PublicStrapiClient.fetchOne("api::navbar.navbar", undefined, {
@@ -125,7 +113,10 @@ export async function fetchNavbar(locale: Locale) {
       /**  @ts-expect-error fields key is not allowed here by Strapi v5 TypeScript types because nested populate (components, dynamic zones, relations inside on) only supports officially documented parameters. Although the REST API accepts fields at runtime for performance reasons, the typings are intentionally conservative and do not model this behavior, so TypeScript rejects it. */
       populate: {
         logoImage: {
-          populate: { image: { populate: { media: true } }, link: true },
+          populate: {
+            image: { populate: { media: true } },
+            link: linkPopulate,
+          },
         },
 
         primaryButtons: linkPopulate,
@@ -153,7 +144,9 @@ export async function fetchFooter(locale: Locale) {
       locale,
       populate: {
         sections: { populate: { links: true } },
-        logoImage: { populate: { image: true, link: true } },
+        logoImage: {
+          populate: { image: { populate: { media: true } }, link: true },
+        },
         links: true,
       },
     })
@@ -166,4 +159,16 @@ export async function fetchFooter(locale: Locale) {
       },
     })
   }
+}
+
+const linkPopulate = {
+  populate: {
+    page: { fields: ["fullPath"] },
+    decorations: {
+      populate: {
+        leftIcon: { populate: { media: true } },
+        rightIcon: { populate: { media: true } },
+      },
+    },
+  },
 }

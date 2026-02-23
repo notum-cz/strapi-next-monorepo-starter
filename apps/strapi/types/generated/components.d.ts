@@ -51,7 +51,7 @@ export interface LayoutNavbarItem extends Struct.ComponentSchema {
   }
   attributes: {
     categoryItems: Schema.Attribute.Component<"utilities.link", true>
-    isCategoryLink: Schema.Attribute.Boolean
+    isCategoryLink: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>
     label: Schema.Attribute.String
     link: Schema.Attribute.Component<"utilities.link", false>
   }
@@ -178,8 +178,6 @@ export interface SectionsHero extends Struct.ComponentSchema {
     displayName: "Hero"
   }
   attributes: {
-    bgColor: Schema.Attribute.String &
-      Schema.Attribute.CustomField<"plugin::color-picker.color">
     description: Schema.Attribute.RichText &
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
@@ -496,7 +494,8 @@ export interface UtilitiesLinkDecorations extends Struct.ComponentSchema {
     displayName: "LinkDecorations"
   }
   attributes: {
-    disableAnimations: Schema.Attribute.Boolean
+    disableAnimations: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>
     hasIcons: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>

@@ -26,42 +26,30 @@ export function DesktopNavigation({ navbarItems }: DesktopNavigationProps) {
 
           return (
             <NavigationMenuItem key={item.id} className="relative">
-              {/* ===== Trigger / Link ===== */}
               {item.isCategoryLink && item?.link ? (
                 <StrapiLink
                   component={item.link}
-                  className={cn(
-                    navigationMenuTriggerStyle(),
-                    "hover:text-brand-salmon px-3 py-2 text-gray-800 transition-colors duration-200"
-                  )}
+                  className={cn(navigationMenuTriggerStyle())}
                 >
                   {item?.link?.label}
                 </StrapiLink>
               ) : hasSubItems ? (
                 <NavigationMenuTrigger
-                  className={cn(
-                    navigationMenuTriggerStyle(),
-                    "hover:text-brand-salmon px-3 py-2 text-gray-800 transition-colors duration-200"
-                  )}
+                  className={cn(navigationMenuTriggerStyle())}
                 >
                   {item.label}
                 </NavigationMenuTrigger>
               ) : (
-                <span className="hover:text-brand-salmon cursor-default px-3 py-2 font-medium text-gray-800 transition-colors duration-200">
-                  {item.label}
-                </span>
+                <span>{item.label}</span>
               )}
 
               {/* ===== Dropdown ===== */}
               {hasSubItems && (
                 <NavigationMenuContent className="z-50">
-                  <ul className="min-w-[220px] rounded-lg border border-gray-100 bg-white p-2 shadow-lg">
+                  <ul>
                     {item?.categoryItems?.map((subItem) => (
-                      <li key={subItem.id}>
-                        <StrapiLink
-                          component={subItem}
-                          className="block rounded-md px-4 py-2 text-sm text-gray-700 transition-colors duration-150 hover:bg-gray-100 hover:text-gray-900"
-                        />
+                      <li key={subItem.id} className="list-none">
+                        <StrapiLink component={subItem} />
                       </li>
                     ))}
                   </ul>

@@ -1,3 +1,5 @@
+"server only"
+
 import { headers } from "next/headers"
 import type { Locale } from "next-intl"
 import { use } from "react"

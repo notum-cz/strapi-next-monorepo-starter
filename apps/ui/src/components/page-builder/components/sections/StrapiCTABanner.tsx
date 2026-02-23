@@ -1,3 +1,5 @@
+"server only"
+
 import type { Data } from "@repo/strapi-types"
 
 import CkEditorRenderer from "@/components/elementary/ck-editor"
@@ -6,15 +8,15 @@ import { StrapiBasicImage } from "@/components/page-builder/components/utilities
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
+import type { PageBuilderComponentProps } from "@/types/general"
 
 export function StrapiCTABanner({
   component,
-}: {
-  readonly component: Data.Component<"sections.cta-banner">
+}: PageBuilderComponentProps & {
+  component: Data.Component<"sections.cta-banner">
 }) {
   removeThisWhenYouNeedMe("StrapiCTABanner")
 
-  console.log("Rendering StrapiCTABanner with component:", component.links)
   const { title, description, links, features } = component
   const isThereFeatures = features && features.length > 0
 
@@ -23,15 +25,26 @@ export function StrapiCTABanner({
       <Container className="relative isolate flex flex-col justify-center gap-6 overflow-hidden bg-[#ff8e8e]/5 px-6 py-24 shadow-sm sm:rounded-3xl sm:px-16 lg:flex-row lg:gap-16">
         <div
           className={cn(
-            "flex flex-col gap-6 lg:w-1/2",
+            "flex flex-col gap-6 lg:w-2/5",
             !isThereFeatures && "mx-auto"
           )}
         >
           <CkEditorRenderer htmlContent={title} />
           <CkEditorRenderer htmlContent={description} />
-          <div className="flex flex-col items-center justify-between gap-6 lg:flex-row">
+          <div
+            className={cn(
+              "flex flex-col gap-6 lg:flex-row",
+              links?.length === 1
+                ? "items-start justify-start"
+                : "items-center justify-center"
+            )}
+          >
             {links?.map((link) => (
-              <StrapiLink key={link.id} component={link} />
+              <StrapiLink
+                key={link.id}
+                component={link}
+                className="w-full md:w-fit"
+              />
             ))}
           </div>
         </div>

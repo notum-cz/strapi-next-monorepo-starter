@@ -1,14 +1,17 @@
+"server only"
+
 import type { Data } from "@repo/strapi-types"
 
 import { Container } from "@/components/elementary/Container"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
+import type { PageBuilderComponentProps } from "@/types/general"
 
 export function StrapiHorizontalImages({
   component,
-}: {
-  readonly component: Data.Component<"sections.horizontal-images">
+}: PageBuilderComponentProps & {
+  component: Data.Component<"sections.horizontal-images">
 }) {
   removeThisWhenYouNeedMe("StrapiHorizontalImages")
 

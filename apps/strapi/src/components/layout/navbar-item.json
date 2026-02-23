@@ -6,7 +6,8 @@
   "options": {},
   "attributes": {
     "isCategoryLink": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": false
     },
     "link": {
       "type": "component",

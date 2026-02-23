@@ -1,3 +1,5 @@
+"server only"
+
 import type { Data } from "@repo/strapi-types"
 
 import CkEditorRenderer from "@/components/elementary/ck-editor"
@@ -5,11 +7,12 @@ import { Container } from "@/components/elementary/Container"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
+import type { PageBuilderComponentProps } from "@/types/general"
 
 export function StrapiAnimatedLogoRow({
   component,
-}: {
-  readonly component: Data.Component<"sections.animated-logo-row">
+}: PageBuilderComponentProps & {
+  component: Data.Component<"sections.animated-logo-row">
 }) {
   removeThisWhenYouNeedMe("StrapiAnimatedLogoRow")
 
@@ -27,8 +30,8 @@ export function StrapiAnimatedLogoRow({
   }))
 
   return (
-    <section className="w-full py-10">
-      <Container className="flex flex-col items-center gap-[30px] overflow-hidden rounded-[2rem] bg-linear-to-r from-[#A54CE3]/10 to-[#ff8e8e]/10 py-10 shadow-sm">
+    <section className="w-full px-6 py-10">
+      <Container className="flex flex-col items-center gap-7.5 overflow-hidden rounded-4xl bg-linear-to-r from-[#A54CE3]/10 to-[#ff8e8e]/10 py-10 shadow-sm">
         <CkEditorRenderer htmlContent={component.title} />
 
         <div className={cn("group relative mt-12 flex w-full items-center")}>
@@ -54,7 +57,7 @@ export function StrapiAnimatedLogoRow({
                     <StrapiBasicImage
                       component={logo}
                       loading="eager"
-                      className="object-contain grayscale"
+                      className="object-contain"
                       height={40}
                     />
                   </li>

@@ -1,17 +1,20 @@
+"server only"
+
 import type { Data } from "@repo/strapi-types"
 
 import CkEditorRenderer from "@/components/elementary/ck-editor"
 import { Container } from "@/components/elementary/Container"
 import Typography from "@/components/typography"
+import type { PageBuilderComponentProps } from "@/types/general"
 
 export function StrapiStatistics({
   component,
-}: {
-  readonly component: Data.Component<"sections.statistics">
+}: PageBuilderComponentProps & {
+  component: Data.Component<"sections.statistics">
 }) {
   return (
     <section>
-      <Container className="flex flex-col justify-between gap-6 lg:flex-row">
+      <Container className="flex flex-col justify-between gap-6 md:w-2/3 lg:flex-row">
         {component.figures?.map((figure) => (
           <StrapiFigure key={figure.id} component={figure} />
         ))}

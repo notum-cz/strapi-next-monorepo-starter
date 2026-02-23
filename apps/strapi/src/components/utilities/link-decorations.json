@@ -69,7 +69,8 @@
       "repeatable": false
     },
     "disableAnimations": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": false
     }
   },
   "config": {}

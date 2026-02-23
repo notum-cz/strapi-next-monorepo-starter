@@ -7,6 +7,7 @@ import { useState } from "react"
 import { Container } from "@/components/elementary/Container"
 import LocaleSwitcher from "@/components/elementary/LocaleSwitcher"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
+import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 import { MobileMenuToggle } from "@/components/page-builder/single-types/navbar/MobileMenuToggle"
 import { MobileNavigation } from "@/components/page-builder/single-types/navbar/MobileNavigation"
@@ -34,7 +35,10 @@ export function NavbarInner({
             {/* LEFT SIDE */}
             <div className="flex items-center gap-2">
               {/* Logo */}
-              {navbarData?.logoImage?.image ? (
+              {navbarData?.logoImage?.image && navbarData.logoImage.link ? (
+                <StrapiImageWithLink component={navbarData?.logoImage} />
+              ) : null}
+              {navbarData?.logoImage?.image && !navbarData.logoImage.link ? (
                 <StrapiBasicImage
                   component={navbarData?.logoImage.image}
                   width={80}
@@ -42,19 +46,15 @@ export function NavbarInner({
                   className="flex shrink-0 object-contain"
                 />
               ) : null}
-
-              {/* NAVBAR ITEMS */}
-
               {/* Desktop Navigation */}
               <DesktopNavigation navbarItems={navbarData?.navbarItems} />
             </div>
 
             {/* RIGHT SIDE */}
-            <div className="hidden h-full items-center gap-2 lg:flex">
+            <div className="hidden h-full items-center gap-2 pl-4 lg:flex">
               <NavbarAuthSection sessionSSR={session} />
               <LocaleSwitcher locale={locale} />
               <div className="flex h-8 w-px flex-1 bg-black/70" />
-              {/* Primary buttons */}
               {navbarData?.primaryButtons?.map((button) => (
                 <StrapiLink key={button.id} component={button} />
               ))}
@@ -66,6 +66,7 @@ export function NavbarInner({
           </Container>
         </div>
       </header>
+      {/* Mobile Navigation */}
       <MobileNavigation
         navbarItems={navbarData?.navbarItems}
         primaryButtons={navbarData?.primaryButtons}

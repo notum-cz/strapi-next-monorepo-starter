@@ -91,7 +91,7 @@ export function RegisterForm() {
             href="/auth/signin"
             className={cn(
               buttonVariants({ variant: "default" }),
-              "h-[44px] w-full"
+              "h-11 w-full"
             )}
           >
             <p>{t("signInLink")}</p>
@@ -103,7 +103,7 @@ export function RegisterForm() {
 
   return (
     <div className="flex flex-col gap-5">
-      <Card className="m-auto w-[400px]">
+      <Card className="m-auto w-100">
         <CardHeader>
           <CardTitle>{t("header")}</CardTitle>
           <CardDescription>{t("description")}</CardDescription>
@@ -129,7 +129,6 @@ export function RegisterForm() {
           <Button
             type="submit"
             size="lg"
-            variant="outline"
             form={registerFormName}
             className="w-full cursor-pointer"
             disabled={registerMutation.isPending}
