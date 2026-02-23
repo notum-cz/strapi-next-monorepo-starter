@@ -3,7 +3,7 @@ import type { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
 import ComponentsList from "@/app/[locale]/dev/components-overview/components/ComponentsList"
-import Typography from "@/components/typography"
+import Typography from "@/components/html/components/Typography"
 import { logNonBlockingError } from "@/lib/logging"
 import { PublicStrapiClient } from "@/lib/strapi-api"
 

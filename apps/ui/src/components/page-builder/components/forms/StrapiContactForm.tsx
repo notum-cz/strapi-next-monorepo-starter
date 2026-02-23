@@ -2,7 +2,7 @@ import type { Data } from "@repo/strapi-types"
 
 import { Container } from "@/components/elementary/Container"
 import { ContactForm } from "@/components/elementary/forms/ContactForm"
-import { Typography } from "@/components/typography"
+import { Typography } from "@/components/html/components/Typography"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
 export function StrapiContactForm({

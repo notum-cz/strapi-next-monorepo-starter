@@ -1,7 +1,7 @@
 import type { Data } from "@repo/strapi-types"
 
+import { Typography } from "@/components/html/components/Typography"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
-import { Typography } from "@/components/typography"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
 

@@ -3,7 +3,7 @@
 import { useState } from "react"
 
 import AppLink from "@/components/elementary/AppLink"
-import Typography from "@/components/typography"
+import Typography from "@/components/html/components/Typography"
 import { Button } from "@/components/ui/button"
 
 export default function PageList({

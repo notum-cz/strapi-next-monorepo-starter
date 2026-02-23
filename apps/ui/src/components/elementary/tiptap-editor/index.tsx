@@ -15,10 +15,9 @@ import {
   OnlyCursive,
 } from "@/components/elementary/tiptap-editor/extensions"
 import { textAlignClassName } from "@/components/elementary/tiptap-editor/utils"
-import Typography, {
-  type FontWeight,
-  type Variant,
-} from "@/components/typography"
+import Element from "@/components/html/components/Element"
+import Typography from "@/components/html/components/Typography"
+import type { FontWeight, Variant } from "@/components/html/config"
 import { safeJSONParse } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
 
@@ -143,13 +142,13 @@ export function TiptapRichText({
         },
         blockquote({ children }) {
           return (
-            <Typography
-              variant="heading1"
+            <Element
               tag="blockquote"
-              className="border-l-2 border-l-black pl-[40px]"
+              variant="heading4"
+              className="border-l-2 border-l-black pl-8"
             >
               {children}
-            </Typography>
+            </Element>
           )
         },
         paragraph({ children, node }) {
@@ -169,26 +168,26 @@ export function TiptapRichText({
         },
         orderedList({ children }) {
           return (
-            <Typography
+            <Element
               variant={defaultVariant}
               fontWeight={defaultWeight}
               tag="ol"
               className="tiptap-list"
             >
               {children}
-            </Typography>
+            </Element>
           )
         },
         bulletList({ children }) {
           return (
-            <Typography
+            <Element
               variant={defaultVariant}
               fontWeight={defaultWeight}
               tag="ul"
               className="tiptap-list tiptap-unordered-list"
             >
               {children}
-            </Typography>
+            </Element>
           )
         },
         table({ children }) {
