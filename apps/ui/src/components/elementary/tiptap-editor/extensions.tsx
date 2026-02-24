@@ -12,4 +12,4 @@ export const HeadingWithSEOTag = Heading.extend({
       tag: { default: null },
     }
   },
-}).configure({ levels: [1, 2, 3, 4] })
+}).configure({ levels: [1, 2, 3, 4, 5, 6] })

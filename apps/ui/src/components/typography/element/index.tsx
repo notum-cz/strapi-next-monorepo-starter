@@ -1,32 +1,32 @@
 import type React from "react"
 
 import type {
-  TextColor,
-  TypographyTag,
+  ElementTag,
   FontWeight,
+  TextColor,
   Variant,
 } from "@/components/typography/config"
 import { resolveHtmlComponentClassName } from "@/components/typography/helpers"
 
-interface TypographyProps {
+interface ElementProps {
   readonly children: React.ReactNode
   readonly className?: string
   readonly variant?: Variant
   readonly textColor?: TextColor
   readonly fontWeight?: FontWeight
-  readonly tag?: TypographyTag
+  readonly tag: ElementTag
   readonly id?: string
 }
 
-export function Typography({
+export function Element({
   children,
   className,
   variant,
   textColor = "black",
   fontWeight = "normal",
-  tag: Tag = "p",
+  tag: Tag,
   id,
-}: TypographyProps) {
+}: ElementProps) {
   return (
     <Tag
       id={id}
@@ -43,6 +43,6 @@ export function Typography({
   )
 }
 
-Typography.displayName = "Typography"
+Element.displayName = "Element"
 
-export default Typography
+export default Element
