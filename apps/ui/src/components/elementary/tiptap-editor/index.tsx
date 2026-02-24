@@ -15,9 +15,9 @@ import {
   OnlyCursive,
 } from "@/components/elementary/tiptap-editor/extensions"
 import { textAlignClassName } from "@/components/elementary/tiptap-editor/utils"
-import Element from "@/components/html/components/Element"
-import Typography from "@/components/html/components/Typography"
-import type { FontWeight, Variant } from "@/components/html/config"
+import Typography from "@/components/typography"
+import type { FontWeight, Variant } from "@/components/typography/config"
+import Element from "@/components/typography/element"
 import { safeJSONParse } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
 

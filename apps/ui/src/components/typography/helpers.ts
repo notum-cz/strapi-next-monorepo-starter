@@ -8,7 +8,7 @@ import {
   fontWeightVariants,
   textColorVariants,
   variantStyles,
-} from "@/components/html/config"
+} from "@/components/typography/config"
 import { cn } from "@/lib/styles"
 
 type HtmlClassNameParams = {

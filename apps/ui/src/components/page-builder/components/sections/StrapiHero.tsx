@@ -2,9 +2,9 @@ import type { Data } from "@repo/strapi-types"
 import { Check } from "lucide-react"
 
 import { Container } from "@/components/elementary/Container"
-import { Typography } from "@/components/html/components/Typography"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
+import { Typography } from "@/components/typography"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
 export function StrapiHero({
