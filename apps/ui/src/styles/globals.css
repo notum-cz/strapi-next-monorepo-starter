@@ -57,14 +57,8 @@
   padding: 2rem;
 }
 
-@layer base {
-  * {
-    @apply border-gray-300;
-  }
-  body {
-    @apply text-blue-900;
-  }
-}
+/* this enabled the dark mode variant */
+@custom-variant dark (&:where(.dark, .dark *));
 
 @keyframes scrollHorizontal {
   to {
@@ -98,12 +92,8 @@
     @apply border-gray-300 outline-purple-500/50;
   }
   body {
-    @apply text-gray-900;
+    @apply text-black dark:text-white;
   }
-}
-
-p {
-  @apply text-gray-600;
 }
 
 @keyframes marquee {

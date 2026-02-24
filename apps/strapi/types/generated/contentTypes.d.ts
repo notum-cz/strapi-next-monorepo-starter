@@ -597,7 +597,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     content: Schema.Attribute.DynamicZone<
       [
         "sections.image-with-cta-button",
-        "sections.horizontal-images",
         "sections.hero",
         "sections.heading-with-cta-button",
         "sections.faq",

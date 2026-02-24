@@ -22,7 +22,7 @@ export function StrapiCTABanner({
 
   return (
     <section className="px-6 2xl:px-0">
-      <Container className="relative isolate flex flex-col justify-center gap-6 overflow-hidden bg-[#ff8e8e]/5 px-6 py-24 shadow-sm sm:rounded-3xl sm:px-16 lg:flex-row lg:gap-16">
+      <Container className="dark:bg-background/80 relative isolate flex flex-col justify-center gap-6 overflow-hidden bg-rose-100/40 px-6 py-24 shadow-sm sm:rounded-3xl sm:px-16 lg:flex-row lg:gap-16">
         <div
           className={cn(
             "flex flex-col gap-6 lg:w-2/5",

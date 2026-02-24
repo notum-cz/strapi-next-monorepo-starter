@@ -43,7 +43,6 @@ export function DesktopNavigation({ navbarItems }: DesktopNavigationProps) {
                 <span>{item.label}</span>
               )}
 
-              {/* ===== Dropdown ===== */}
               {hasSubItems && (
                 <NavigationMenuContent className="z-50">
                   <ul>

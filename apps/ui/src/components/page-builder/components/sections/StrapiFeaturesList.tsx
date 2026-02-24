@@ -23,7 +23,7 @@ export function StrapiFeaturesList({
     <section>
       <Container className="flex flex-col gap-6 md:gap-10 lg:flex-row">
         {image && image.position === "left" ? (
-          <div className="min-size-[500px] relative flex w-full flex-1 shrink-0 overflow-clip rounded-3xl">
+          <div className="relative flex w-full flex-1 shrink-0 overflow-clip rounded-3xl">
             <StrapiBasicImage
               component={image.image}
               fill
@@ -52,7 +52,7 @@ export function StrapiFeaturesList({
           </div>
         </div>
         {image && image.position === "right" ? (
-          <div className="min-size-[500px] relative flex w-full flex-1 shrink-0 overflow-clip rounded-3xl">
+          <div className="relative flex w-full flex-1 shrink-0 overflow-clip rounded-3xl">
             <StrapiBasicImage
               component={image.image}
               fill
@@ -94,14 +94,13 @@ function FeatureItem({
       className={cn(
         "flex gap-4",
         isBoxGrid &&
-          "cursor-default rounded-4xl border bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+          "bg-background cursor-default rounded-4xl border p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
       )}
     >
       {image && !isBoxGrid ? (
         <StrapiBasicImage
           component={image}
-          height={image.height ?? 40}
-          width={image.width ?? 40}
+          fallbackSizes={{ width: 40, height: 40 }}
           className="object-contain"
         />
       ) : null}

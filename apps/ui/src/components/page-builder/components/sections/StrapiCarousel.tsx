@@ -23,7 +23,7 @@ export function StrapiCarousel({
 
   return (
     <section>
-      <Container className="flex justify-center px-4 py-8">
+      <Container className="flex justify-center px-16 py-8">
         <Carousel className="w-full">
           <CarouselContent className="-ml-1">
             {component.images?.map((item) => (

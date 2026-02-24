@@ -3,8 +3,8 @@ import type React from "react"
 import { cn } from "@/lib/styles"
 
 export const textColorVariants = {
-  black: "text-black",
-  white: "text-white",
+  black: "text-black dark:text-white",
+  white: "text-white dark:text-black",
   // more variants will be added here
 }
 export type TextColor = keyof typeof textColorVariants

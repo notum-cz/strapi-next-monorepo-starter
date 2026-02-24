@@ -52,7 +52,7 @@ function SuspensedLocaleSwitcher({ locale }: { locale: Locale }) {
       <SelectTrigger className="w-18 font-bold uppercase">
         <SelectValue>{locale}</SelectValue>
       </SelectTrigger>
-      <SelectContent position="popper" className="bg-white">
+      <SelectContent position="popper">
         {routing.locales.map((locale, index) => (
           <React.Fragment key={locale}>
             <SelectItem key={locale} value={locale}>

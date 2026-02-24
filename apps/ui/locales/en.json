@@ -31,7 +31,8 @@
     "cancel": "Cancel",
     "close": "Close",
     "submitForm": "Submit",
-    "saveChanges": "Save changes"
+    "saveChanges": "Save changes",
+    "back": "Back"
   },
 
   "tables": {

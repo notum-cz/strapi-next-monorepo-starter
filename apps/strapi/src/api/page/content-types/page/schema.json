@@ -62,7 +62,6 @@
       },
       "components": [
         "sections.image-with-cta-button",
-        "sections.horizontal-images",
         "sections.hero",
         "sections.heading-with-cta-button",
         "sections.faq",

@@ -29,7 +29,7 @@ export function NavbarInner({
 
   return (
     <>
-      <header className="sticky top-0 z-50 h-16 w-full border-b bg-white/60 shadow-sm backdrop-blur-md transition-colors duration-300">
+      <header className="bg-background/60 sticky top-0 z-50 h-16 w-full border-b shadow-sm backdrop-blur-md transition-colors duration-300">
         <div className="flex h-16 items-center">
           <Container className="flex h-full items-center justify-between px-6">
             {/* LEFT SIDE */}

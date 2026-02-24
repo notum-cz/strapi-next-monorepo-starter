@@ -2,6 +2,7 @@ import type { Locale } from "next-intl"
 import { use } from "react"
 
 import { Container } from "@/components/elementary/Container"
+import { ThemeToggle } from "@/components/elementary/ThemeToggle"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
 import Typography from "@/components/typography"
@@ -16,12 +17,10 @@ export function StrapiFooter({ locale }: { readonly locale: Locale }) {
     return null
   }
 
-  console.log("Footer component:", component)
-
   return (
-    <div className="w-full border-t bg-gray-100 shadow-sm backdrop-blur transition-colors duration-300">
+    <div className="bg-primary/10 w-full border-t shadow-sm backdrop-blur transition-colors duration-300">
       <Container className="pt-8 pb-4">
-        <div className="grid grid-cols-1 gap-6 pb-4 sm:grid-cols-[30%_1fr]">
+        <div className="flex flex-col justify-between gap-10 lg:flex-row">
           <div className="flex flex-col items-center justify-center space-y-4 md:items-start md:justify-start">
             <StrapiImageWithLink
               component={component.logoImage}
@@ -51,6 +50,7 @@ export function StrapiFooter({ locale }: { readonly locale: Locale }) {
               </div>
             ))}
           </div>
+          <ThemeToggle className="absolute top-6 right-6 lg:flex" />
         </div>
 
         <div className="flex flex-col-reverse justify-between gap-4 lg:flex-row lg:items-center">
@@ -66,22 +66,6 @@ export function StrapiFooter({ locale }: { readonly locale: Locale }) {
           </div>
 
           <div className="flex flex-col items-center sm:flex-row md:space-x-4 lg:items-end">
-            {/* {component.links?.map((link, i) => (
-              <div key={link.id} className="flex gap-1 items-center justify-center">
-                {i < component.links!.length && (
-                  <span
-                    key={link.id + "_dot"}
-                    className="hidden md:flex"
-                  >
-                    •
-                  </span>
-                )}
-                <StrapiLink
-                  component={link}
-                  className="text-primary relative w-fit text-sm hover:underline"
-                />
-              </div>
-            ))} */}
             {component.links?.map((link) => (
               <StrapiLink
                 key={link.id}

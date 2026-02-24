@@ -12,14 +12,6 @@ export interface ElementsFooterItem extends Struct.ComponentSchema {
   }
 }
 
-export interface EnumsPosition extends Struct.ComponentSchema {
-  collectionName: "components_enums_positions"
-  info: {
-    displayName: "Position"
-  }
-  attributes: {}
-}
-
 export interface FormsContactForm extends Struct.ComponentSchema {
   collectionName: "components_forms_contact_forms"
   info: {
@@ -207,29 +199,6 @@ export interface SectionsHero extends Struct.ComponentSchema {
           preset: "defaultCkEditor"
         }
       >
-  }
-}
-
-export interface SectionsHorizontalImages extends Struct.ComponentSchema {
-  collectionName: "components_sections_horizontal_images"
-  info: {
-    description: ""
-    displayName: "HorizontalImages"
-  }
-  attributes: {
-    fixedImageHeight: Schema.Attribute.Integer
-    fixedImageWidth: Schema.Attribute.Integer
-    imageRadius: Schema.Attribute.Enumeration<["sm", "md", "lg", "xl", "full"]>
-    images: Schema.Attribute.Component<"utilities.image-with-link", true>
-    spacing: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          max: 20
-          min: 0
-        },
-        number
-      >
-    title: Schema.Attribute.String & Schema.Attribute.Required
   }
 }
 
@@ -551,7 +520,6 @@ declare module "@strapi/strapi" {
   export module Public {
     export interface ComponentSchemas {
       "elements.footer-item": ElementsFooterItem
-      "enums.position": EnumsPosition
       "forms.contact-form": FormsContactForm
       "forms.newsletter-form": FormsNewsletterForm
       "layout.navbar-item": LayoutNavbarItem
@@ -562,7 +530,6 @@ declare module "@strapi/strapi" {
       "sections.features-list": SectionsFeaturesList
       "sections.heading-with-cta-button": SectionsHeadingWithCtaButton
       "sections.hero": SectionsHero
-      "sections.horizontal-images": SectionsHorizontalImages
       "sections.image-with-cta-button": SectionsImageWithCtaButton
       "sections.statistics": SectionsStatistics
       "seo-utilities.seo": SeoUtilitiesSeo

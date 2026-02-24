@@ -11,6 +11,10 @@
   word-break: break-word;
 }
 
+p {
+  @apply text-gray-600 dark:text-gray-400;
+}
+
 .ck-editor__main h1,
 .ck-editor__main h2,
 .ck-editor__main h3,

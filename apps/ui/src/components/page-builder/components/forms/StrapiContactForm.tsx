@@ -16,7 +16,7 @@ export function StrapiContactForm({
   removeThisWhenYouNeedMe("StrapiContactForm")
 
   return (
-    <div className="bg-white" id="form-section">
+    <div id="form-section">
       <Container className="flex flex-col gap-10 lg:gap-20">
         <div className="flex flex-1">
           <div className="mx-auto flex max-w-100 flex-col gap-10 text-center">

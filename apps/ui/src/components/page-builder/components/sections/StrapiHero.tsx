@@ -17,7 +17,7 @@ export function StrapiHero({
       <Container className="flex flex-col gap-6 px-4 py-8 md:flex-row lg:py-12 xl:gap-0">
         <div className="mx-auto flex flex-col items-center justify-center gap-4 md:w-2/4">
           {tag && (
-            <div className="mb-4 flex items-center justify-center rounded-full border bg-white/30 px-3 py-1 shadow-sm backdrop-blur-md">
+            <div className="bg-background/30 mb-4 flex items-center justify-center rounded-full border px-3 py-1 shadow-sm backdrop-blur-md">
               <CkEditorRenderer htmlContent={tag} className="mb-0" />
             </div>
           )}
