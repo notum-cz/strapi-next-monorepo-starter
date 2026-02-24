@@ -137,9 +137,9 @@ export interface SectionsFeaturesList extends Struct.ComponentSchema {
       "shared.image-with-title-and-description",
       true
     >
-    image: Schema.Attribute.Component<"shared.image-with-config", false>
     listStyle: Schema.Attribute.Enumeration<["boxGrid", "grid", "list"]> &
       Schema.Attribute.DefaultTo<"list">
+    mainImage: Schema.Attribute.Component<"shared.image-with-config", false>
     title: Schema.Attribute.RichText &
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",

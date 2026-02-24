@@ -13,7 +13,7 @@ export function StrapiFeaturesList({
 }: PageBuilderComponentProps & {
   component: Data.Component<"sections.features-list">
 }) {
-  const { title, description, features, listStyle, image } = component
+  const { title, description, features, listStyle, mainImage } = component
   const listContainerClassNames = getListContainerClassNames(listStyle)
   const isBoxGrid = listStyle === "boxGrid"
   const isLastChildCentered =
@@ -22,10 +22,10 @@ export function StrapiFeaturesList({
   return (
     <section>
       <Container className="flex flex-col gap-6 md:gap-10 lg:flex-row">
-        {image && image.position === "left" ? (
+        {mainImage && mainImage.position === "left" ? (
           <div className="relative flex w-full flex-1 shrink-0 overflow-clip rounded-3xl">
             <StrapiBasicImage
-              component={image.image}
+              component={mainImage.image}
               fill
               className="object-cover object-top-left"
             />
@@ -39,7 +39,7 @@ export function StrapiFeaturesList({
               "mt-8",
               isLastChildCentered && "lg:[&>*:last-child]:col-start-2",
               listContainerClassNames,
-              !isBoxGrid && !image && "mx-auto max-w-180"
+              !isBoxGrid && !mainImage && "mx-auto max-w-180"
             )}
           >
             {features?.map((feature) => (
@@ -51,10 +51,10 @@ export function StrapiFeaturesList({
             ))}
           </div>
         </div>
-        {image && image.position === "right" ? (
+        {mainImage && mainImage.position === "right" ? (
           <div className="relative flex w-full flex-1 shrink-0 overflow-clip rounded-3xl">
             <StrapiBasicImage
-              component={image.image}
+              component={mainImage.image}
               fill
               className="object-cover object-top-left"
             />
@@ -75,7 +75,7 @@ const getListContainerClassNames = (
       return "grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16"
 
     default:
-      return " flex flex-col gap-y-9"
+      return "flex flex-col gap-y-9"
   }
 }
 
@@ -108,8 +108,7 @@ function FeatureItem({
         {image && isBoxGrid ? (
           <StrapiBasicImage
             component={image}
-            height={28}
-            width={28}
+            forcedSizes={{ width: 28, height: 28 }}
             className="object-contain"
           />
         ) : null}

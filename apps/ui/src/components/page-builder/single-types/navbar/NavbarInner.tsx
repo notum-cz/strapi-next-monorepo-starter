@@ -35,14 +35,16 @@ export function NavbarInner({
             {/* LEFT SIDE */}
             <div className="flex items-center gap-2">
               {/* Logo */}
-              {navbarData?.logoImage?.image && navbarData.logoImage.link ? (
+              {navbarData?.logoImage?.image && navbarData?.logoImage?.link ? (
                 <StrapiImageWithLink component={navbarData?.logoImage} />
               ) : null}
-              {navbarData?.logoImage?.image && !navbarData.logoImage.link ? (
+              {navbarData?.logoImage?.image && !navbarData?.logoImage?.link ? (
                 <StrapiBasicImage
-                  component={navbarData?.logoImage.image}
-                  width={80}
-                  height={30}
+                  component={navbarData.logoImage.image}
+                  forcedSizes={{
+                    width: 80,
+                    height: 30,
+                  }}
                   className="flex shrink-0 object-contain"
                 />
               ) : null}

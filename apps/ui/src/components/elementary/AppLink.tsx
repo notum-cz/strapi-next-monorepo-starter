@@ -36,15 +36,16 @@ export function AppLink({
   )
 
   const formattedHref = formatHref(href)
+  const sharedAdornmentClasses =
+    "relative size-4 transition-transform duration-200 ease-in"
 
   const AppLinkInner = (
     <>
       {startAdornment && (
         <span
           className={cn(
-            "relative size-4",
-            !disableAnimations &&
-              "transition-transform duration-200 ease-in group-hover:-translate-x-2"
+            sharedAdornmentClasses,
+            !disableAnimations && "group-hover:-translate-x-2"
           )}
         >
           {startAdornment}
@@ -54,9 +55,8 @@ export function AppLink({
       {endAdornment && (
         <span
           className={cn(
-            "relative size-4",
-            !disableAnimations &&
-              "transition-transform duration-200 ease-in group-hover:translate-x-2"
+            sharedAdornmentClasses,
+            !disableAnimations && "group-hover:translate-x-2"
           )}
         >
           {endAdornment}

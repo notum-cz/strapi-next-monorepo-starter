@@ -1,5 +1,6 @@
 import type { Data } from "@repo/strapi-types"
 import type { Metadata } from "next"
+import type { Locale } from "next-intl"
 
 // Use type safe message keys with `next-intl`
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
@@ -41,7 +42,7 @@ export type SocialMetadata = {
 
 export type PageBuilderComponentProps = {
   readonly pageParams?: {
-    locale: string
+    locale: Locale
     rest?: string[]
   }
   readonly page?: Data.ContentType<"api::page.page"> | null

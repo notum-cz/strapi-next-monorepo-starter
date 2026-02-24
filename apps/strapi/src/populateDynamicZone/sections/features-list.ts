@@ -5,6 +5,6 @@ export default {
     features: {
       populate: { image: basicImagePopulate },
     },
-    image: { populate: { image: { populate: { media: true } } } },
+    mainImage: { populate: { image: basicImagePopulate } },
   },
 }

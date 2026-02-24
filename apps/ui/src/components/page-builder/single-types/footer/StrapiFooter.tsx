@@ -11,9 +11,9 @@ import { cn } from "@/lib/styles"
 
 export function StrapiFooter({ locale }: { readonly locale: Locale }) {
   const response = use(fetchFooter(locale))
-  const component = response?.data
+  const footer = response?.data
 
-  if (component == null) {
+  if (footer == null) {
     return null
   }
 
@@ -23,7 +23,7 @@ export function StrapiFooter({ locale }: { readonly locale: Locale }) {
         <div className="flex flex-col justify-between gap-10 lg:flex-row">
           <div className="flex flex-col items-center justify-center space-y-4 md:items-start md:justify-start">
             <StrapiImageWithLink
-              component={component.logoImage}
+              component={footer.logoImage}
               imageProps={{ hideWhenMissing: true }}
             />
           </div>
@@ -33,7 +33,7 @@ export function StrapiFooter({ locale }: { readonly locale: Locale }) {
               "grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4"
             )}
           >
-            {component.sections?.map((section) => (
+            {footer.sections?.map((section) => (
               <div
                 className="flex flex-col items-center md:items-start"
                 key={section.id}
@@ -55,9 +55,9 @@ export function StrapiFooter({ locale }: { readonly locale: Locale }) {
 
         <div className="flex flex-col-reverse justify-between gap-4 lg:flex-row lg:items-center">
           <div>
-            {component.copyRight && (
+            {footer.copyRight && (
               <Typography className="mx-auto w-fit lg:mx-0">
-                {component.copyRight.replace(
+                {footer.copyRight.replace(
                   "{YEAR}",
                   new Date().getFullYear().toString()
                 )}
@@ -66,7 +66,7 @@ export function StrapiFooter({ locale }: { readonly locale: Locale }) {
           </div>
 
           <div className="flex flex-col items-center sm:flex-row md:space-x-4 lg:items-end">
-            {component.links?.map((link) => (
+            {footer.links?.map((link) => (
               <StrapiLink
                 key={link.id}
                 component={link}

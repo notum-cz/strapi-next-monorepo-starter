@@ -14,10 +14,10 @@ import { cn } from "@/lib/styles"
 import type { BetterAuthSessionWithStrapi } from "@/types/better-auth"
 
 interface MobileNavigationProps {
-  navbarItems?: Data.ContentType<"api::navbar.navbar">["navbarItems"]
-  primaryButtons?: Data.ContentType<"api::navbar.navbar">["primaryButtons"]
   isOpen: boolean
   setOpen: (open: boolean) => void
+  primaryButtons?: Data.ContentType<"api::navbar.navbar">["primaryButtons"]
+  navbarItems?: Data.ContentType<"api::navbar.navbar">["navbarItems"]
   session?: BetterAuthSessionWithStrapi | null
   locale?: Locale
 }

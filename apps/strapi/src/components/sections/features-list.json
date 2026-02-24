@@ -22,18 +22,14 @@
     "listStyle": {
       "type": "enumeration",
       "default": "list",
-      "enum": [
-        "boxGrid",
-        "grid",
-        "list"
-      ]
+      "enum": ["boxGrid", "grid", "list"]
     },
     "features": {
       "type": "component",
       "component": "shared.image-with-title-and-description",
       "repeatable": true
     },
-    "image": {
+    "mainImage": {
       "type": "component",
       "component": "shared.image-with-config",
       "repeatable": false
