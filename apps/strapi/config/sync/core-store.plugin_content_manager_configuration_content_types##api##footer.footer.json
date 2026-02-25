@@ -132,23 +132,32 @@
           "searchable": true,
           "sortable": true
         }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
       }
     },
     "layouts": {
       "list": [
         "id",
-        "logoImage"
+        "logoImage",
+        "documentId"
       ],
       "edit": [
         [
           {
-            "name": "sections",
+            "name": "logoImage",
             "size": 12
           }
         ],
         [
           {
-            "name": "links",
+            "name": "sections",
             "size": 12
           }
         ],
@@ -160,7 +169,7 @@
         ],
         [
           {
-            "name": "logoImage",
+            "name": "links",
             "size": 12
           }
         ]

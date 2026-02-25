@@ -1,13 +1,13 @@
 {
-  "key": "plugin_content_manager_configuration_components::sections.hero",
+  "key": "plugin_content_manager_configuration_components::shared.figure",
   "value": {
     "settings": {
       "bulkable": true,
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "documentId",
-      "defaultSortBy": "documentId",
+      "mainField": "prefix",
+      "defaultSortBy": "prefix",
       "defaultSortOrder": "ASC"
     },
     "metadatas": {
@@ -19,18 +19,46 @@
           "sortable": false
         }
       },
-      "links": {
+      "number": {
         "edit": {
-          "label": "links",
+          "label": "number",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "links",
-          "searchable": false,
-          "sortable": false
+          "label": "number",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "prefix": {
+        "edit": {
+          "label": "prefix",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "prefix",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "suffix": {
+        "edit": {
+          "label": "suffix",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "suffix",
+          "searchable": true,
+          "sortable": true
         }
       },
       "description": {
@@ -47,48 +75,6 @@
           "sortable": false
         }
       },
-      "tag": {
-        "edit": {
-          "label": "tag",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "tag",
-          "searchable": false,
-          "sortable": false
-        }
-      },
-      "note": {
-        "edit": {
-          "label": "note",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "note",
-          "searchable": false,
-          "sortable": false
-        }
-      },
-      "title": {
-        "edit": {
-          "label": "title",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "title",
-          "searchable": false,
-          "sortable": false
-        }
-      },
       "documentId": {
         "edit": {},
         "list": {
@@ -101,14 +87,25 @@
     "layouts": {
       "list": [
         "id",
-        "links",
-        "documentId"
+        "number",
+        "prefix",
+        "suffix"
       ],
       "edit": [
         [
           {
-            "name": "links",
-            "size": 12
+            "name": "number",
+            "size": 4
+          },
+          {
+            "name": "prefix",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "suffix",
+            "size": 6
           }
         ],
         [
@@ -116,28 +113,10 @@
             "name": "description",
             "size": 12
           }
-        ],
-        [
-          {
-            "name": "tag",
-            "size": 12
-          }
-        ],
-        [
-          {
-            "name": "note",
-            "size": 12
-          }
-        ],
-        [
-          {
-            "name": "title",
-            "size": 12
-          }
         ]
       ]
     },
-    "uid": "sections.hero",
+    "uid": "shared.figure",
     "isComponent": true
   },
   "type": "object",

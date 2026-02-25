@@ -1,5 +1,5 @@
 {
-  "key": "plugin_content_manager_configuration_components::sections.hero",
+  "key": "plugin_content_manager_configuration_components::shared.image-with-title-and-description",
   "value": {
     "settings": {
       "bulkable": true,
@@ -19,16 +19,16 @@
           "sortable": false
         }
       },
-      "links": {
+      "title": {
         "edit": {
-          "label": "links",
+          "label": "title",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "links",
+          "label": "title",
           "searchable": false,
           "sortable": false
         }
@@ -47,44 +47,16 @@
           "sortable": false
         }
       },
-      "tag": {
+      "image": {
         "edit": {
-          "label": "tag",
+          "label": "image",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "tag",
-          "searchable": false,
-          "sortable": false
-        }
-      },
-      "note": {
-        "edit": {
-          "label": "note",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "note",
-          "searchable": false,
-          "sortable": false
-        }
-      },
-      "title": {
-        "edit": {
-          "label": "title",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "title",
+          "label": "image",
           "searchable": false,
           "sortable": false
         }
@@ -101,13 +73,12 @@
     "layouts": {
       "list": [
         "id",
-        "links",
-        "documentId"
+        "image"
       ],
       "edit": [
         [
           {
-            "name": "links",
+            "name": "title",
             "size": 12
           }
         ],
@@ -119,25 +90,13 @@
         ],
         [
           {
-            "name": "tag",
-            "size": 12
-          }
-        ],
-        [
-          {
-            "name": "note",
-            "size": 12
-          }
-        ],
-        [
-          {
-            "name": "title",
+            "name": "image",
             "size": 12
           }
         ]
       ]
     },
-    "uid": "sections.hero",
+    "uid": "shared.image-with-title-and-description",
     "isComponent": true
   },
   "type": "object",

@@ -1,5 +1,5 @@
 {
-  "key": "plugin_content_manager_configuration_components::sections.hero",
+  "key": "plugin_content_manager_configuration_components::sections.features-list",
   "value": {
     "settings": {
       "bulkable": true,
@@ -19,16 +19,16 @@
           "sortable": false
         }
       },
-      "links": {
+      "title": {
         "edit": {
-          "label": "links",
+          "label": "title",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "links",
+          "label": "title",
           "searchable": false,
           "sortable": false
         }
@@ -47,44 +47,44 @@
           "sortable": false
         }
       },
-      "tag": {
+      "listStyle": {
         "edit": {
-          "label": "tag",
+          "label": "listStyle",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "tag",
+          "label": "listStyle",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "features": {
+        "edit": {
+          "label": "features",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "features",
           "searchable": false,
           "sortable": false
         }
       },
-      "note": {
+      "mainImage": {
         "edit": {
-          "label": "note",
+          "label": "mainImage",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "note",
-          "searchable": false,
-          "sortable": false
-        }
-      },
-      "title": {
-        "edit": {
-          "label": "title",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "title",
+          "label": "mainImage",
           "searchable": false,
           "sortable": false
         }
@@ -101,13 +101,14 @@
     "layouts": {
       "list": [
         "id",
-        "links",
-        "documentId"
+        "listStyle",
+        "features",
+        "mainImage"
       ],
       "edit": [
         [
           {
-            "name": "links",
+            "name": "title",
             "size": 12
           }
         ],
@@ -119,25 +120,25 @@
         ],
         [
           {
-            "name": "tag",
+            "name": "listStyle",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "features",
             "size": 12
           }
         ],
         [
           {
-            "name": "note",
-            "size": 12
-          }
-        ],
-        [
-          {
-            "name": "title",
+            "name": "mainImage",
             "size": 12
           }
         ]
       ]
     },
-    "uid": "sections.hero",
+    "uid": "sections.features-list",
     "isComponent": true
   },
   "type": "object",
