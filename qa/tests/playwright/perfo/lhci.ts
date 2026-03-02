@@ -9,13 +9,11 @@ import urls from "../helpers/urls.json"
 const BASE_URL = process.env.BASE_URL
 
 if (!BASE_URL) {
-  console.error("Missing BASE_URL environment variable")
-  process.exit(1)
+  throw new Error("Missing BASE_URL environment variable")
 }
 
 if (!Array.isArray(urls) || urls.length === 0) {
-  console.error("No sites found in sites.json")
-  process.exit(1)
+  throw new Error("No sites found in sites.json")
 }
 
 const fullUrls = urls.map((p) => `${BASE_URL}${p}`)
@@ -31,9 +29,12 @@ const args = [
   "--numberOfRuns=1",
 ]
 
+// eslint-disable-next-line sonarjs/no-os-command-from-path
 const result = spawnSync("pnpm", args, {
   stdio: "inherit",
   cwd: CWD,
 })
 
-process.exit(result.status ?? 1)
+if (result.status !== 0) {
+  throw new Error(`LHCI failed with status ${result.status ?? 1}`)
+}
