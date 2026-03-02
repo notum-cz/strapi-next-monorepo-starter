@@ -13,23 +13,18 @@
 # * @your-org/docs-team                            # Team ownership
 # /docs/ @your-org/documentation-team              # Specific path ownership
 # *.md @your-org/docs-team                         # File pattern ownership
-#
+
 # Default owner for everything in the repo:
 * @tocosastalo
 
-# Specific path examples (uncomment and customize as needed):
-# /docs/ @your-org/docs-team
-# /.github/ @your-org/devops-team
-# /docs/_config.yml @your-github-username
-
-# Strapi app
-/apps/strapi/ @dominik-juriga
-
-# UI app
-/apps/ui/ @dominik-juriga @vcicmanecntm
+# Apps
+/apps/ @dominik-juriga
 
 # Packages
 /packages/ @dominik-juriga
+
+# Docs
+/docs/ @dominik-juriga
 
 # QA tests
 /qa/ @mCesnarik
