@@ -1,4 +1,3 @@
-import type { Data } from "@repo/strapi-types"
 import { headers } from "next/headers"
 import Image from "next/image"
 import type { Locale } from "next-intl"
@@ -13,10 +12,6 @@ import { getSessionSSR } from "@/lib/auth"
 import { fetchNavbar } from "@/lib/strapi-api/content/server"
 import { cn } from "@/lib/styles"
 
-const hardcodedLinks: NonNullable<
-  Data.ContentType<"api::navbar.navbar">["links"]
-> = [{ id: "client-page", href: "/client-page", label: "Client Page" }]
-
 export function StrapiNavbar({ locale }: { readonly locale: Locale }) {
   const response = use(fetchNavbar(locale))
   const navbar = response?.data
@@ -26,10 +21,6 @@ export function StrapiNavbar({ locale }: { readonly locale: Locale }) {
   }
 
   const session = use(getSessionSSR(use(headers())))
-
-  const links = (navbar.links ?? [])
-    .filter((link) => link.href)
-    .concat(...hardcodedLinks)
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-white/90 shadow-sm backdrop-blur transition-colors duration-300">
@@ -50,12 +41,12 @@ export function StrapiNavbar({ locale }: { readonly locale: Locale }) {
             </AppLink>
           )}
 
-          {links.length > 0 ? (
+          {navbar.links && navbar.links.length > 0 ? (
             <nav className="flex">
-              {links.map((link) => (
+              {navbar.links.map((link) => (
                 <StrapiLink
                   component={link}
-                  key={link.href}
+                  key={link.page?.fullPath ?? link.href ?? link.id}
                   className={cn(
                     "flex items-center text-sm font-medium hover:text-red-600"
                   )}
