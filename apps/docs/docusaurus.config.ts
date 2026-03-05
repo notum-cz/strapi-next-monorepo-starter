@@ -6,6 +6,18 @@ const url = process.env.DOCUSAURUS_URL ?? "https://notum-cz.github.io"
 const baseUrl = process.env.DOCUSAURUS_BASE_URL ?? "/"
 
 const config: Config = {
+  plugins: [
+    [
+      require.resolve("@easyops-cn/docusaurus-search-local"),
+      {
+        hashed: true,
+        indexDocs: true,
+        indexBlog: false,
+        docsRouteBasePath: "/",
+      },
+    ],
+  ],
+
   title: "Strapi Next Monorepo Starter",
   tagline: "Enterprise-grade Strapi v5 + Next.js starter template",
   url,
