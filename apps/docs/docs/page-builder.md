@@ -48,7 +48,7 @@ The mapping between Strapi component UIDs and React components is defined in:
 
 **`apps/ui/src/components/page-builder/index.tsx`**
 
-```typescript
+```ts
 export const PageContentComponents: {
   [K in UID.Component]?: React.ComponentType<any>
 } = {
