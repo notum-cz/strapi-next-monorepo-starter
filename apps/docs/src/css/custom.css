@@ -1,25 +1,47 @@
 /**
  * Custom CSS overrides for the Strapi Next Monorepo Starter docs.
  * Docusaurus theme variables: https://docusaurus.io/docs/styling-layout
+ *
+ * Brand palette:
+ *   Dark:  #2B292D #3D3D3D #454545 #4F4F4F #5D5D5D #6D6D6D
+ *   Gray:  #888888 #B0B0B0 #D1D1D1 #E7E7E7 #F6F6F6
+ *   Blue:  #BACCEA #D4E1F5 #EBF1FB
  */
 
 :root {
-  --ifm-color-primary: #4945ff;
-  --ifm-color-primary-dark: #2d29ff;
-  --ifm-color-primary-darker: #1e1aff;
-  --ifm-color-primary-darkest: #0400e0;
-  --ifm-color-primary-light: #6562ff;
-  --ifm-color-primary-lighter: #7471ff;
-  --ifm-color-primary-lightest: #9e9cff;
+  /* Primary: dark charcoal — high contrast on white backgrounds */
+  --ifm-color-primary: #2b292d;
+  --ifm-color-primary-dark: #1e1c1f;
+  --ifm-color-primary-darker: #181619;
+  --ifm-color-primary-darkest: #0d0c0e;
+  --ifm-color-primary-light: #3d3d3d;
+  --ifm-color-primary-lighter: #4f4f4f;
+  --ifm-color-primary-lightest: #6d6d6d;
   --ifm-code-font-size: 95%;
 }
 
 [data-theme="dark"] {
-  --ifm-color-primary: #9e9cff;
-  --ifm-color-primary-dark: #7e7bff;
-  --ifm-color-primary-darker: #6e6aff;
-  --ifm-color-primary-darkest: #3e3aff;
-  --ifm-color-primary-light: #bebdff;
-  --ifm-color-primary-lighter: #cececff;
-  --ifm-color-primary-lightest: #eeeeff;
+  /* Primary: blue accent — visible on dark backgrounds */
+  --ifm-color-primary: #baccea;
+  --ifm-color-primary-dark: #9dbde0;
+  --ifm-color-primary-darker: #8bb3d9;
+  --ifm-color-primary-darkest: #639ec9;
+  --ifm-color-primary-light: #c8d8ee;
+  --ifm-color-primary-lighter: #d4e1f5;
+  --ifm-color-primary-lightest: #ebf1fb;
+
+  /* Dark backgrounds from brand palette */
+  --ifm-background-color: #2b292d;
+  --ifm-background-surface-color: #3d3d3d;
+  --ifm-navbar-background-color: #2b292d;
+  --ifm-footer-background-color: #1e1c1f;
+  --ifm-toc-border-color: #454545;
+  --ifm-color-emphasis-300: #454545;
+}
+
+.toc-edit-this-page {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ifm-toc-border-color);
+  font-size: 0.85rem;
 }
