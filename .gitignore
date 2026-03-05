@@ -13,6 +13,9 @@ coverage
 out/
 build
 
+# docusaurus
+.docusaurus
+
 # other
 dist/
 

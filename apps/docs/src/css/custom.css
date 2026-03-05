@@ -1,0 +1,25 @@
+/**
+ * Custom CSS overrides for the Strapi Next Monorepo Starter docs.
+ * Docusaurus theme variables: https://docusaurus.io/docs/styling-layout
+ */
+
+:root {
+  --ifm-color-primary: #4945ff;
+  --ifm-color-primary-dark: #2d29ff;
+  --ifm-color-primary-darker: #1e1aff;
+  --ifm-color-primary-darkest: #0400e0;
+  --ifm-color-primary-light: #6562ff;
+  --ifm-color-primary-lighter: #7471ff;
+  --ifm-color-primary-lightest: #9e9cff;
+  --ifm-code-font-size: 95%;
+}
+
+[data-theme="dark"] {
+  --ifm-color-primary: #9e9cff;
+  --ifm-color-primary-dark: #7e7bff;
+  --ifm-color-primary-darker: #6e6aff;
+  --ifm-color-primary-darkest: #3e3aff;
+  --ifm-color-primary-light: #bebdff;
+  --ifm-color-primary-lighter: #cececff;
+  --ifm-color-primary-lightest: #eeeeff;
+}
