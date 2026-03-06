@@ -46,7 +46,7 @@ export function StrapiNavbar({ locale }: { readonly locale: Locale }) {
               {navbar.links.map((link) => (
                 <StrapiLink
                   component={link}
-                  key={link.page?.fullPath ?? link.href ?? link.id}
+                  key={link.id ?? link.page?.fullPath ?? link.href}
                   className={cn(
                     "flex items-center text-sm font-medium hover:text-red-600"
                   )}
