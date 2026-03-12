@@ -30,5 +30,6 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "cSpell.words": ["Strapi", "unoptimized"],
   "typescript.preferences.importModuleSpecifier": "non-relative",
-  "javascript.preferences.importModuleSpecifier": "non-relative"
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "markdown.extension.toc.levels": "2..3"
 }
