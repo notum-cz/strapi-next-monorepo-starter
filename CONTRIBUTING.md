@@ -18,7 +18,6 @@ All types of contributions are encouraged and valued. See the [Table of Contents
   - [Reporting Bugs](#reporting-bugs)
   - [Suggesting Enhancements](#suggesting-enhancements)
   - [Your First Code Contribution](#your-first-code-contribution)
-- [Style guide](#style-guide)
 - [Attribution](#attribution)
 
 ## I Have a Question
@@ -60,20 +59,17 @@ A good bug report shouldn't leave others needing to chase you up for more inform
 
 #### How Do I Submit a Good Bug Report?
 
-> You must never report security related issues, vulnerabilities or bugs including sensitive information to the issue tracker, or elsewhere in public. Instead sensitive bugs must be sent by email to devs@notum.cz.
+> You must never report security related issues, vulnerabilities or bugs including sensitive information to the issue tracker, or elsewhere in public. Instead sensitive bugs must follow the [security guidelines](./SECURITY.md).
 
 We use GitHub issues to track bugs and errors. If you run into an issue with the project:
 
-- Open an [Issue](https://github.com/notum-cz/strapi-next-monorepo-starter/issues/new). (Since we can't be sure at this point whether it is a bug or not, we ask you not to talk about a bug yet and not to label the issue.)
-- Explain the behavior you would expect and the actual behavior.
-- Please provide as much context as possible and describe the _reproduction steps_ that someone else can follow to recreate the issue on their own. This usually includes your code. For good bug reports you should isolate the problem and create a reduced test case.
-- Provide the information you collected in the previous section.
+- Open an [Bug type issue](https://github.com/notum-cz/strapi-next-monorepo-starter/issues/new?template=BUG_REPORT.yml).
+- Explain the behavior you would expect and the actual behavior based on the issue structure.
+- Please provide as much context as possible and fill the _Steps to reproduce_ that someone else can follow to recreate the issue on their own. This usually includes your code. For good bug reports you should isolate the problem and create a reduced test case.
 
 Once it's filed:
 
-- The project team will label the issue accordingly.
-- A team member will try to reproduce the issue with your provided steps. If there are no reproduction steps or no obvious way to reproduce the issue, the team will ask you for those steps and mark the issue as `needs-repro`. Bugs with the `needs-repro` tag will not be addressed until they are reproduced.
-- If the team is able to reproduce the issue, it will be marked `needs-fix`, as well as possibly other tags (such as `critical`), and the issue will be left to be [implemented by someone](#your-first-code-contribution).
+- A team member will try to reproduce the issue with your provided steps. If there are no reproduction steps or no obvious way to reproduce the issue, the team will ask you for those steps or any additional information.
 
 ### Suggesting Enhancements
 
@@ -88,7 +84,7 @@ This section guides you through submitting an enhancement suggestion for Strapi 
 
 #### How Do I Submit a Good Enhancement Suggestion?
 
-Enhancement suggestions are tracked as [GitHub issues](https://github.com/notum-cz/strapi-next-monorepo-starter/issues).
+Enhancement suggestions are tracked as [Feature request GitHub issues](https://github.com/notum-cz/strapi-next-monorepo-starter/issues/new?template=FEATURE_REQUEST.yml).
 
 - Use a **clear and descriptive title** for the issue to identify the suggestion.
 - Provide a **step-by-step description of the suggested enhancement** in as many details as possible.
@@ -98,11 +94,11 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/notum-
 
 ### Your First Code Contribution
 
-Check out [Getting started](./README.md#-getting-started)
-
-## Style guide
-
-See [Git Hooks and conventions](./README.md#-git-hooks--conventions).
+- Set up your environment — check the [Getting started](./README.md#-getting-started) section for prerequisites and setup instructions.
+- Pick an issue — look for [issues labeled `good first issue` or `help-required`](https://github.com/notum-cz/strapi-next-monorepo-starter/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22%20label%3Ahelp-required).
+- Fork and branch — [fork the repository](https://github.com/notum-cz/strapi-next-monorepo-starter/fork) and create a branch from `main` branch (not `dev`).
+- Follow conventions — check the for [commit message format](https://github.com/notum-cz/strapi-next-monorepo-starter?tab=readme-ov-file#commit-message-hook) and coding standards.
+- Open a PR — push your branch and open a pull request. Fill in the PR description based on the template and link the related issue (using `#ISSUE_NUMBER` format).
 
 ## Attribution
 
