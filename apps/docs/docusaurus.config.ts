@@ -19,7 +19,6 @@ const config: Config = {
   ],
   organizationName: "notum-cz",
   projectName: "strapi-next-monorepo-starter",
-  deploymentBranch: "main",
   title: "Strapi Next Monorepo Starter",
   tagline: "Enterprise-grade Strapi v5 + Next.js starter template",
   url,
