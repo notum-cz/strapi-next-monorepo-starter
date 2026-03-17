@@ -1,8 +1,11 @@
 import type { JSONContent } from "@tiptap/core"
+import Color from "@tiptap/extension-color"
+import Highlight from "@tiptap/extension-highlight"
 import Subscript from "@tiptap/extension-subscript"
 import Superscript from "@tiptap/extension-superscript"
 import { TableKit } from "@tiptap/extension-table"
 import TextAlign from "@tiptap/extension-text-align"
+import { TextStyle } from "@tiptap/extension-text-style"
 import StarterKit from "@tiptap/starter-kit"
 import type { NodeProps } from "@tiptap/static-renderer"
 import { renderToReactElement } from "@tiptap/static-renderer/pm/react"
@@ -13,12 +16,17 @@ import AppLink from "@/components/elementary/AppLink"
 import {
   HeadingWithSEOTag,
   OnlyCursive,
+  StrapiImage,
 } from "@/components/elementary/tiptap-editor/extensions"
-import { textAlignClassName } from "@/components/elementary/tiptap-editor/utils"
+import {
+  imageAlignClassName,
+  textAlignClassName,
+} from "@/components/elementary/tiptap-editor/utils"
 import Typography from "@/components/typography"
 import type { FontWeight, Variant } from "@/components/typography/config"
 import Element from "@/components/typography/element"
 import { safeJSONParse } from "@/lib/general-helpers"
+import { formatStrapiMediaUrl } from "@/lib/strapi-helpers"
 import { cn } from "@/lib/styles"
 
 export type TiptapRichTextProps = {
@@ -92,6 +100,10 @@ export function TiptapRichText({
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
+      TextStyle,
+      Color,
+      Highlight.configure({ multicolor: true }),
+      StrapiImage,
     ],
     content: jsonContent,
     options: {
@@ -119,6 +131,27 @@ export function TiptapRichText({
         },
         onlyCursive({ children }) {
           return <span className="italic">{children}</span>
+        },
+        underline({ children }) {
+          return <u>{children}</u>
+        },
+        textStyle({ mark, children }) {
+          const color = mark.attrs?.color as string | undefined
+
+          if (!color) {
+            return <>{children}</>
+          }
+
+          return <span style={{ color }}>{children}</span>
+        },
+        highlight({ mark, children }) {
+          const color = mark.attrs?.color as string | undefined
+
+          return (
+            <mark style={color ? { backgroundColor: color } : undefined}>
+              {children}
+            </mark>
+          )
         },
         ...markMapping,
       },
@@ -200,6 +233,36 @@ export function TiptapRichText({
                 {children}
               </table>
             </div>
+          )
+        },
+        image({ node }) {
+          const src = formatStrapiMediaUrl(
+            node.attrs?.src as string | undefined
+          )
+          const alt = (node.attrs?.alt as string) ?? ""
+          const title = node.attrs?.title as string | undefined
+          const width = node.attrs?.width as number | undefined
+          const height = node.attrs?.height as number | undefined
+          const align = node.attrs?.["data-align"] as
+            | "left"
+            | "center"
+            | "right"
+            | null
+            | undefined
+
+          if (!src) {
+            return null
+          }
+
+          return (
+            <img
+              src={src}
+              alt={alt}
+              title={title ?? undefined}
+              width={width ?? undefined}
+              height={height ?? undefined}
+              className={cn("max-w-full", imageAlignClassName(align))}
+            />
           )
         },
         tableHeader: renderTableCell,
