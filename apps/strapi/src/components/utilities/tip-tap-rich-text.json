@@ -8,7 +8,10 @@
   "attributes": {
     "content": {
       "type": "customField",
-      "customField": "plugin::tiptap-editor.RichText"
+      "customField": "plugin::tiptap-editor.RichText",
+      "options": {
+        "preset": "everything"
+      }
     }
   },
   "config": {}
