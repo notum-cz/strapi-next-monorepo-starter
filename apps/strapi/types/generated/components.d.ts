@@ -369,7 +369,12 @@ export interface UtilitiesTipTapRichText extends Struct.ComponentSchema {
   }
   attributes: {
     content: Schema.Attribute.Text &
-      Schema.Attribute.CustomField<"plugin::tiptap-editor.RichText">
+      Schema.Attribute.CustomField<
+        "plugin::tiptap-editor.RichText",
+        {
+          preset: "everything"
+        }
+      >
   }
 }
 

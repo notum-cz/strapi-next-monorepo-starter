@@ -8,6 +8,8 @@
   "exports": {
     "./theme.css": "./src/theme.css",
     "./styles.css": "./dist/styles.css",
+    "./tiptap-color-config.json": "./dist/tiptap-color-config.json",
+    "./tiptap-theme.css": "./dist/tiptap-theme.css",
     "./styles-strapi.json": "./dist/styles-strapi.json",
     "./custom-styles.css": "./src/custom-styles.css",
     "./ck-color-config.json": "./dist/ckeditor-color-config.json",
@@ -17,7 +19,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tailwindcss -i ./src/styles.css -o ./dist/styles.css && node ./src/build-ck-config.js",
+    "build": "tailwindcss -i ./src/styles.css -o ./dist/styles.css && node ./src/build-ck-config.js && node ./src/build-tiptap-config.js",
     "dev": "tailwindcss -i ./src/styles.css -o ./dist/styles.css --watch",
     "lint": "eslint -c ../../eslint.config.mjs './**/*.{js,ts,jsx,tsx,cjs,mjs}'",
     "lint:fix": "pnpm lint --fix"
