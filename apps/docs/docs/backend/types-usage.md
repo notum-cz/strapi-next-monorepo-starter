@@ -134,5 +134,5 @@ Always regenerate when:
 
 ## Related Documentation
 
-- [Page Builder](./page-builder.md) — Component registry using these types
-- [Strapi API Client](./strapi-api-client.md) — API calls with type-safe params
+- [Page Builder](../architecture/page-builder.md) — Component registry using these types
+- [Strapi API Client](../frontend/api-client.md) — API calls with type-safe params

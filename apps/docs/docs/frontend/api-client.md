@@ -348,5 +348,5 @@ const ALLOWED_STRAPI_ENDPOINTS = {
 
 ## Related Documentation
 
-- [Page Builder](./page-builder.md) — how fetched content is rendered
-- [Pages Hierarchy](./pages-hierarchy.md) — URL structure and fullPath generation
+- [Page Builder](../architecture/page-builder.md) — how fetched content is rendered
+- [Pages Hierarchy](../backend/pages-hierarchy.md) — URL structure and fullPath generation

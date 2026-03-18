@@ -46,7 +46,7 @@ Two client classes handle content fetching:
 
 Client-side requests use proxy routes (`/api/public-proxy`, `/api/private-proxy`) to hide Strapi URL.
 
-See [Strapi API Client](./strapi-api-client.md) for details.
+See [Strapi API Client](../frontend/api-client.md) for details.
 
 ## Routing
 
@@ -78,4 +78,4 @@ Files bootstrapped from `.example` files on `pnpm install`.
 
 Pages use parent-child relations for URL structure. `fullPath` auto-generated from slug chain.
 
-See [Pages Hierarchy](./pages-hierarchy.md) for workflow.
+See [Pages Hierarchy](../backend/pages-hierarchy.md) for workflow.

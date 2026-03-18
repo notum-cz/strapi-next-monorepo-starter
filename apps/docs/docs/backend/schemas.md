@@ -166,7 +166,7 @@ Intercept and modify queries. Used for deep population of dynamic zones.
 
 **`apps/strapi/src/documentMiddlewares/page.ts`**
 
-See [Page Builder](./page-builder.md) for population patterns.
+See [Page Builder](../architecture/page-builder.md) for population patterns.
 
 ## Adding New Components
 
@@ -176,9 +176,9 @@ Use the skill for automated creation:
 /create-content-component
 ```
 
-Or follow manual steps in [Page Builder](./page-builder.md#adding-new-components).
+Or follow manual steps in [Page Builder](../architecture/page-builder.md#adding-new-components).
 
 ## Related Documentation
 
-- [Page Builder](./page-builder.md) — Component registry and rendering
+- [Page Builder](../architecture/page-builder.md) — Component registry and rendering
 - [Pages Hierarchy](./pages-hierarchy.md) — URL structure and redirects

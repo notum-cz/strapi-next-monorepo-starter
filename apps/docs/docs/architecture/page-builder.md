@@ -249,5 +249,5 @@ Or follow these manual steps:
 
 ## Related Documentation
 
-- [Pages Hierarchy](./pages-hierarchy.md) — URL structure and slug management
-- [Strapi API Client](./strapi-api-client.md) — fetching content from Strapi
+- [Pages Hierarchy](../backend/pages-hierarchy.md) — URL structure and slug management
+- [Strapi API Client](../frontend/api-client.md) — fetching content from Strapi

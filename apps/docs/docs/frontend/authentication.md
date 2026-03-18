@@ -172,4 +172,4 @@ APP_PUBLIC_URL=        # Base URL for auth callbacks
 
 ## Related Documentation
 
-- [Strapi API Client](./strapi-api-client.md) — How the clients handle auth headers
+- [Strapi API Client](./api-client.md) — How the clients handle auth headers

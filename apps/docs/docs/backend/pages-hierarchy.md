@@ -95,4 +95,4 @@ We want to change the slug of a page from `page-a` to `page-b` in `en` locale. T
 
 ## Related Documentation
 
-- [Page Builder](./page-builder.md) — Page Builder specific documentation
+- [Page Builder](../architecture/page-builder.md) — Page Builder specific documentation
