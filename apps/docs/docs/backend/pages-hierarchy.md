@@ -1,3 +1,9 @@
+---
+sidebar_position: 2
+sidebar_label: "Pages Hierarchy"
+description: "How Strapi pages form a parent-child hierarchy with computed full paths and breadcrumbs."
+---
+
 # Pages hierarchy
 
 **This document describes how the page hierarchy is structured in Strapi - how pages are organized, how their URLs are generated and how to manage changes in the hierarchy.**

@@ -1,3 +1,9 @@
+---
+sidebar_position: 1
+sidebar_label: "Architecture Overview"
+description: "High-level system architecture showing how Strapi CMS connects to the Next.js frontend."
+---
+
 # Architecture
 
 ## Overview

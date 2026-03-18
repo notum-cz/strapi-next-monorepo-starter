@@ -1,3 +1,9 @@
+---
+sidebar_position: 3
+sidebar_label: "Strapi Types Usage"
+description: "How to use auto-generated Strapi TypeScript types in the frontend application."
+---
+
 # Strapi Types
 
 The `@repo/strapi-types` package provides auto-generated TypeScript types from Strapi schemas for type-safe content handling across the monorepo.

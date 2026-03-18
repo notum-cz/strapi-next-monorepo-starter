@@ -1,3 +1,9 @@
+---
+sidebar_position: 2
+sidebar_label: "Authentication"
+description: "Authentication flow using Better Auth with Strapi credential validation and JWT management."
+---
+
 # Authentication
 
 The application uses a dual authentication system: Better Auth for session management and Strapi JWT for API access.

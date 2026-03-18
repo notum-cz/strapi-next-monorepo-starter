@@ -1,3 +1,9 @@
+---
+sidebar_position: 1
+sidebar_label: "Strapi Schemas"
+description: "Content type schemas and component definitions in the Strapi backend."
+---
+
 # Strapi Schemas
 
 Guidelines for creating and managing Strapi content type and component schemas.

@@ -1,3 +1,9 @@
+---
+sidebar_position: 1
+sidebar_label: "Commands Reference"
+description: "Available pnpm commands for development, building, testing, and deployment."
+---
+
 # Commands Reference
 
 All commands use pnpm and can be run from the repository root unless noted otherwise.

@@ -1,3 +1,9 @@
+---
+sidebar_position: 1
+sidebar_label: "Strapi API Client"
+description: "Public and private API clients for communicating with the Strapi backend."
+---
+
 # Strapi API Client
 
 The Strapi API client provides a type-safe interface for fetching content from Strapi CMS. It implements a dual-client pattern with proxy routes for security.

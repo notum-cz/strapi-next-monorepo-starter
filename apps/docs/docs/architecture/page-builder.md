@@ -1,3 +1,9 @@
+---
+sidebar_position: 2
+sidebar_label: "Page Builder"
+description: "How the dynamic zone page builder works across Strapi components and React renderers."
+---
+
 # Page Builder
 
 The page builder enables content editors to compose pages from reusable components in Strapi, which are automatically rendered by the Next.js frontend.
