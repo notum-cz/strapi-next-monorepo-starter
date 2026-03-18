@@ -12,13 +12,13 @@ In Strapi admin, go to **Content Manager** > **Pages** > **Create new entry**.
 
 ## 2. Fill required fields
 
-| Field      | Required | Description                                                 |
-| ---------- | -------- | ----------------------------------------------------------- |
-| `title`    | Yes      | Page title (used in metadata and headings)                  |
-| `slug`     | Yes      | URL-safe identifier for the page                            |
-| `fullPath` | Auto     | Computed from parent-child hierarchy -- do not set manually |
+| Field      | Required | Description                                                                                 |
+| ---------- | -------- | ------------------------------------------------------------------------------------------- |
+| `title`    | Yes      | Page title (used in metadata and headings)                                                  |
+| `slug`     | Yes      | URL-safe identifier for the page                                                            |
+| `fullPath` | Jobs     | Computed via [internal jobs](../backend/internal-jobs.md) — trigger manually in admin panel |
 
-Pages support a parent-child hierarchy. Setting a `parent` page causes `fullPath` to be auto-generated from the ancestry chain (e.g., parent slug `services` + child slug `consulting` produces `/services/consulting`).
+Pages support a parent-child hierarchy. Setting a `parent` page determines URL ancestry (e.g., parent slug `services` + child slug `consulting` produces `/services/consulting`). The `fullPath` is **not** recalculated automatically — after changing a slug or parent, trigger the "Recalculate all fullpaths" action in the [Internal Jobs](../backend/internal-jobs.md) admin panel.
 
 ## 3. Add components to the dynamic zone
 

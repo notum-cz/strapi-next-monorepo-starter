@@ -39,6 +39,22 @@
   --ifm-color-emphasis-300: #454545;
 }
 
+/* Underline all content links for clear distinction */
+.markdown a,
+.theme-doc-markdown a {
+  text-decoration: underline;
+}
+
+/* Keep sidebar and navbar links clean */
+.menu__link,
+.navbar__link,
+.pagination-nav__link,
+.table-of-contents__link,
+.breadcrumbs__link,
+.footer__link-item {
+  text-decoration: none;
+}
+
 .toc-edit-this-page {
   margin-top: 1rem;
   padding-top: 1rem;

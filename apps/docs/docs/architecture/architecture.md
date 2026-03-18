@@ -233,6 +233,6 @@ Files bootstrapped from `.example` files on `pnpm install`.
 
 ## Pages Hierarchy
 
-Pages use parent-child relations for URL structure. `fullPath` auto-generated from slug chain via lifecycle hooks in `apps/strapi/src/utils/hierarchy/`.
+Pages use parent-child relations for URL structure. `fullPath` is computed by the [internal jobs system](../backend/internal-jobs.md) — after changing a page's slug or parent, you must manually trigger recalculation from the Strapi admin panel. See `apps/strapi/src/utils/hierarchy/` for the computation logic.
 
 See [Pages Hierarchy](../backend/pages-hierarchy.md) for workflow.

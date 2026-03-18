@@ -25,20 +25,20 @@ Six content types grouped by purpose. Use this reference to understand fields, l
 
 ### Page
 
-Primary CMS content type. Each page is a node in a URL hierarchy (e.g., `/about/team`). The `fullPath` is computed automatically by the internal jobs system when the slug or parent changes.
+Primary CMS content type. Each page is a node in a URL hierarchy (e.g., `/about/team`). The `fullPath` is computed by the [internal jobs system](../backend/internal-jobs.md) — it is **not** recalculated automatically. After changing a page's slug or parent, you must manually trigger the recalculation from the Strapi admin panel.
 
 **Schema:** `apps/strapi/src/api/page/content-types/page/schema.json`
 
-| Field             | Type                            | Notes                                                   |
-| ----------------- | ------------------------------- | ------------------------------------------------------- |
-| `title`           | string                          | Required. Localized.                                    |
-| `slug`            | string                          | Required. Localized. Regex: `^[a-z0-9/-]+$`.            |
-| `fullPath`        | string                          | Localized. Unique. Auto-computed — do not set manually. |
-| `breadcrumbTitle` | string                          | Localized. Short label for breadcrumb nav.              |
-| `content`         | dynamiczone                     | Localized. Accepts 12 section and form components.      |
-| `seo`             | component (`seo-utilities.seo`) | Localized. SEO metadata.                                |
-| `parent`          | relation (manyToOne → Page)     | Inverse of `children`.                                  |
-| `children`        | relation (oneToMany → Page)     | Inverse of `parent`.                                    |
+| Field             | Type                            | Notes                                                                                               |
+| ----------------- | ------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `title`           | string                          | Required. Localized.                                                                                |
+| `slug`            | string                          | Required. Localized. Regex: `^[a-z0-9/-]+$`.                                                        |
+| `fullPath`        | string                          | Localized. Unique. Computed via [internal jobs](../backend/internal-jobs.md) — do not set manually. |
+| `breadcrumbTitle` | string                          | Localized. Short label for breadcrumb nav.                                                          |
+| `content`         | dynamiczone                     | Localized. Accepts 12 section and form components.                                                  |
+| `seo`             | component (`seo-utilities.seo`) | Localized. SEO metadata.                                                                            |
+| `parent`          | relation (manyToOne → Page)     | Inverse of `children`.                                                                              |
+| `children`        | relation (oneToMany → Page)     | Inverse of `parent`.                                                                                |
 
 **Self-referencing hierarchy:** A page's `parent` determines its URL ancestry. For example, a page with slug `team` whose parent has `fullPath` `/about` gets `fullPath` `/about/team`. See [Pages Hierarchy](../backend/pages-hierarchy.md) for the full recalculation logic.
 
@@ -80,7 +80,7 @@ These three types are not localized. They are infrastructure types, not CMS cont
 
 ### Redirect
 
-URL redirect entries. Created automatically by the internal jobs system when a page's `fullPath` changes. Can also be created manually.
+URL redirect entries. Created by the [internal jobs system](../backend/internal-jobs.md) when a page's `fullPath` changes — requires manually triggering the "Create all redirects" action in the admin panel. Can also be created manually.
 
 **Schema:** `apps/strapi/src/api/redirect/content-types/redirect/schema.json`
 
