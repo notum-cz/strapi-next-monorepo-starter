@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Getting Started and Foundation** - Onboarding guide, project structure, improved architecture overview, env vars reference, improved commands reference *(completed 2026-03-18)*
 - [x] **Phase 3: Architecture Deep-Dives** - Rendering modes, SSR/CSR composition patterns, and communication between layers docs *(completed 2026-03-18)*
 - [x] **Phase 4: Frontend and Backend Subsystems** - Middleware, proxy, i18n, error handling, content model, internal jobs, and preview/draft mode docs (completed 2026-03-18)
-- [ ] **Phase 5: Packages and Infrastructure** - Shared packages overview, deployment guide, and testing/QA guide
+- [x] **Phase 5: Packages and Infrastructure** - Shared packages overview, deployment guide, and testing/QA guide *(completed 2026-03-18)*
 - [ ] **Phase 6: How-To Guides** - Step-by-step task recipes for adding components, content types, locales, and auth pages
 
 ## Phase Details
@@ -105,11 +105,11 @@ Plans:
   2. A developer can add a new content type end-to-end (API directory, endpoints, fetcher, types) by following the guide
   3. A developer can add a new locale (next-intl config, Strapi i18n, translation files) by following the guide
   4. A developer can add a new auth page (route, auth guard, components) by following the guide
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
+- [ ] 06-01-PLAN.md — Add locale and add auth page guides (GUIDE-03, GUIDE-04)
+- [ ] 06-02-PLAN.md — Add content type and add page builder component guides (GUIDE-02, GUIDE-01)
 
 ## Progress
 
@@ -122,5 +122,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 2. Getting Started and Foundation | 3/3 | Complete    | 2026-03-18 |
 | 3. Architecture Deep-Dives | 1/1 | Complete    | 2026-03-18 |
 | 4. Frontend and Backend Subsystems | 3/3 | Complete   | 2026-03-18 |
-| 5. Packages and Infrastructure | 0/2 | Not started | - |
+| 5. Packages and Infrastructure | 2/2 | Complete    | 2026-03-18 |
 | 6. How-To Guides | 0/2 | Not started | - |
