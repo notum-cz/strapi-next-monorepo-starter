@@ -1,0 +1,10 @@
+{
+  "label": "Packages",
+  "position": 5,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Packages",
+    "description": "Shared packages for types, design tokens, and tooling configuration."
+  }
+}

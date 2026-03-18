@@ -1,0 +1,10 @@
+{
+  "label": "Infrastructure",
+  "position": 6,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Infrastructure",
+    "description": "Commands, deployment, environment variables, and CI/CD."
+  }
+}

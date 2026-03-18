@@ -1,0 +1,10 @@
+{
+  "label": "Backend",
+  "position": 4,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Backend",
+    "description": "Strapi CMS content types, schemas, and backend systems."
+  }
+}

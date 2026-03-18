@@ -1,0 +1,10 @@
+{
+  "label": "Architecture",
+  "position": 2,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Architecture",
+    "description": "System architecture, data flows, and component boundaries."
+  }
+}

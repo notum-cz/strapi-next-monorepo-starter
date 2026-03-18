@@ -1,0 +1,10 @@
+{
+  "label": "Guides",
+  "position": 7,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Guides",
+    "description": "Step-by-step how-to guides for common development tasks."
+  }
+}

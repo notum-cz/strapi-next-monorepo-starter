@@ -1,0 +1,10 @@
+{
+  "label": "Frontend",
+  "position": 3,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Frontend",
+    "description": "Next.js frontend patterns, middleware, proxies, and client-side features."
+  }
+}
