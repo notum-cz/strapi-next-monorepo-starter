@@ -90,11 +90,11 @@ Plans:
   1. A developer can find documentation for every shared package (design-system, shared-data, strapi-types, eslint-config, prettier-config, typescript-config, semantic-release-config) with its purpose, exports, and how to extend it
   2. A developer can deploy both apps using Docker by following the deployment guide, including standalone output mode, CI/CD pipeline configuration, and GitHub Actions workflows
   3. A developer can run every test suite (Vitest unit, Playwright E2E, visual regression, SEO, accessibility, performance) and knows how to add new tests to each suite
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
+- [ ] 05-01-PLAN.md — Workspace packages reference doc with tiered depth (full sections for 3 app packages, summary table for tooling configs)
+- [ ] 05-02-PLAN.md — Deployment guide (Docker + CI/CD) and Testing & QA guide (all 7 test suites)
 
 ### Phase 6: How-To Guides
 **Goal**: Developers can perform the four most common extension tasks by following step-by-step guides
