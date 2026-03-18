@@ -1,0 +1,10 @@
+{
+  "label": "Template",
+  "position": 3,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Template",
+    "description": "Starter template patterns: content model, i18n, and preview mode."
+  }
+}
