@@ -40,21 +40,21 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Packages
 
-- [ ] **PKG-01**: Shared packages page covers design system, shared-data, strapi-types, and tooling configs in one doc with sections
+- [x] **PKG-01**: Shared packages page covers design system, shared-data, strapi-types, and tooling configs in one doc with sections
 
 ### Infrastructure
 
 - [x] **INFRA-01**: Environment variables reference in table format per app with required/optional, purpose, and examples
-- [ ] **INFRA-02**: Deployment guide covers Docker setup for both apps, standalone output, CI/CD pipeline, and GitHub Actions
+- [x] **INFRA-02**: Deployment guide covers Docker setup for both apps, standalone output, CI/CD pipeline, and GitHub Actions
 - [x] **INFRA-03**: Commands reference improved with workflow grouping, explanations, and troubleshooting tips
-- [ ] **INFRA-04**: Testing & QA guide covers Vitest, Playwright E2E/visual/SEO/accessibility/perf suites
+- [x] **INFRA-04**: Testing & QA guide covers Vitest, Playwright E2E/visual/SEO/accessibility/perf suites
 
 ### How-To Guides
 
 - [ ] **GUIDE-01**: How to add a page builder component (Strapi schema + populate config + React component + registry entry)
 - [ ] **GUIDE-02**: How to add a new content type (API directory + endpoints + fetcher + types)
-- [ ] **GUIDE-03**: How to add a new locale (next-intl config + Strapi i18n + translation files)
-- [ ] **GUIDE-04**: How to add a new auth page (route + auth guard + components)
+- [x] **GUIDE-03**: How to add a new locale (next-intl config + Strapi i18n + translation files)
+- [x] **GUIDE-04**: How to add a new auth page (route + auth guard + components)
 
 ## v2 Requirements
 
@@ -101,15 +101,15 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BACK-01 | Phase 4 | Complete |
 | BACK-02 | Phase 4 | Complete |
 | BACK-03 | Phase 4 | Complete |
-| PKG-01 | Phase 5 | Pending |
+| PKG-01 | Phase 5 | Complete |
 | INFRA-01 | Phase 2 | Complete |
-| INFRA-02 | Phase 5 | Pending |
+| INFRA-02 | Phase 5 | Complete |
 | INFRA-03 | Phase 2 | Complete |
-| INFRA-04 | Phase 5 | Pending |
+| INFRA-04 | Phase 5 | Complete |
 | GUIDE-01 | Phase 6 | Pending |
 | GUIDE-02 | Phase 6 | Pending |
-| GUIDE-03 | Phase 6 | Pending |
-| GUIDE-04 | Phase 6 | Pending |
+| GUIDE-03 | Phase 6 | Complete |
+| GUIDE-04 | Phase 6 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total

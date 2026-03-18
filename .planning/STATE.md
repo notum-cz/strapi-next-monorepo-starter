@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 04-03-PLAN.md
-last_updated: "2026-03-18T13:06:23.000Z"
-last_activity: 2026-03-18 -- Completed Plan 04-03 template section docs (content-model, i18n, preview-draft)
+stopped_at: Completed 06-01-PLAN.md
+last_updated: "2026-03-18T14:10:53.106Z"
+last_activity: 2026-03-18 -- Completed Plan 06-01 simple how-to guides (add-locale, add-auth-page)
 progress:
   total_phases: 6
-  completed_phases: 4
-  total_plans: 9
-  completed_plans: 9
+  completed_phases: 6
+  total_plans: 13
+  completed_plans: 13
   percent: 100
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-17)
 
 **Core value:** Every part of the monorepo has clear, navigable documentation with real code examples so that a developer can understand any subsystem without reading source code.
-**Current focus:** Phase 4 - Frontend and Backend Subsystems
+**Current focus:** Phase 6 - How-To Guides
 
 ## Current Position
 
-Phase: 4 of 6 (Frontend and Backend Subsystems)
-Plan: 3 of 3 in current phase
-Status: Phase 4 Complete — All 3 plans done
-Last activity: 2026-03-18 -- Completed Plan 04-03 template section docs (content-model, i18n, preview-draft)
+Phase: 6 of 6 (How-To Guides)
+Plan: 1 of 2 in current phase
+Status: Plan 06-01 complete -- 1 of 2 plans done
+Last activity: 2026-03-18 -- Completed Plan 06-01 simple how-to guides (add-locale, add-auth-page)
 
 Progress: [██████████] 100%
 
@@ -58,6 +58,9 @@ Progress: [██████████] 100%
 | Phase 04 P02 | 3min | 1 tasks | 1 files |
 | Phase 04 P01 | 4min | 2 tasks | 8 files |
 | Phase 04 P03 | 9min | 2 tasks | 3 files |
+| Phase 05 P01 | 2min | 1 tasks | 1 files |
+| Phase 05 P02 | 3min | 2 tasks | 2 files |
+| Phase 06 P01 | 2min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -90,6 +93,12 @@ Recent decisions affecting current work:
 - [Phase 04-03]: No blog/author content types documented — only 6 actual schema.json types exist
 - [Phase 04-03]: Cookie workaround documented with warning admonition citing private key dependency
 - [Phase 04-03]: Sequence diagram pattern for multi-party flows (Strapi admin -> Next.js -> page)
+- [Phase 05]: Used docs scope for commitlint (consistent with prior phases)
+- [Phase 05-02]: Dockerfile stage walkthrough uses H3 per stage for scannable format
+- [Phase 05-02]: axe and Lighthouse documented as standalone tsx scripts with warning admonitions
+- [Phase 05-02]: Visual regression references urls-all-components-page.json, not urls.json
+- [Phase 06]: Used docs scope for commitlint (consistent with all prior phases)
+- [Phase 06]: Guide format: H2 numbered steps with no trailing checklist, matching locked decisions from CONTEXT.md
 
 ### Pending Todos
 
@@ -102,6 +111,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T13:06:23.000Z
-Stopped at: Completed 04-03-PLAN.md
+Last session: 2026-03-18T14:10:53.104Z
+Stopped at: Completed 06-01-PLAN.md
 Resume file: None
