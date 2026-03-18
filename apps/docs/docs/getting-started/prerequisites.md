@@ -6,12 +6,11 @@ description: "Required tools and versions before cloning the monorepo."
 
 # Prerequisites
 
-| Tool           | Version       | Purpose                                  | Install                                                       |
-| -------------- | ------------- | ---------------------------------------- | ------------------------------------------------------------- |
-| Node.js        | 22+ (LTS)     | Runtime for all apps                     | [nodejs.org](https://nodejs.org/)                             |
-| pnpm           | Latest (10.x) | Package manager, workspace orchestration | [pnpm.io/installation](https://pnpm.io/installation)          |
-| Docker Desktop | Latest        | Local PostgreSQL for Strapi              | [docker.com](https://www.docker.com/products/docker-desktop/) |
-| Git            | Latest        | Source control                           | [git-scm.com](https://git-scm.com/)                           |
+| Tool           | Version                     | Purpose                                  |
+| -------------- | --------------------------- | ---------------------------------------- |
+| Node.js        | >=20, 22+ (LTS) Recommended | Runtime for all apps                     |
+| pnpm           | Latest (10.x)               | Package manager, workspace orchestration |
+| Docker Desktop | Latest                      | Local PostgreSQL for Strapi              |
 
 :::tip
 The repo includes `.nvmrc` pinned to Node 22. If you use nvm:

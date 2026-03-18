@@ -9,7 +9,7 @@ description: "Clone, install dependencies, and configure environment variables."
 ## 1. Clone the repository
 
 ```bash
-git clone https://github.com/AnotherDevBoy/strapi-next-monorepo-starter.git
+git clone https://github.com/notum-cz/strapi-next-monorepo-starter.git
 cd strapi-next-monorepo-starter
 ```
 
