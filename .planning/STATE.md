@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-stopped_at: Completed 06-01-PLAN.md
-last_updated: "2026-03-18T14:10:53.106Z"
-last_activity: 2026-03-18 -- Completed Plan 06-01 simple how-to guides (add-locale, add-auth-page)
+stopped_at: Completed 06-02-PLAN.md
+last_updated: "2026-03-18T14:09:26Z"
+last_activity: 2026-03-18 -- Completed Plan 06-02 content type and page builder component guides
 progress:
   total_phases: 6
   completed_phases: 6
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-03-17)
 ## Current Position
 
 Phase: 6 of 6 (How-To Guides)
-Plan: 1 of 2 in current phase
-Status: Plan 06-01 complete -- 1 of 2 plans done
-Last activity: 2026-03-18 -- Completed Plan 06-01 simple how-to guides (add-locale, add-auth-page)
+Plan: 2 of 2 in current phase
+Status: Phase 6 Complete -- All 2 plans done
+Last activity: 2026-03-18 -- Completed Plan 06-02 content type and page builder component guides
 
 Progress: [██████████] 100%
 
@@ -61,6 +61,7 @@ Progress: [██████████] 100%
 | Phase 05 P01 | 2min | 1 tasks | 1 files |
 | Phase 05 P02 | 3min | 2 tasks | 2 files |
 | Phase 06 P01 | 2min | 2 tasks | 2 files |
+| Phase 06 P02 | 3min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -99,6 +100,9 @@ Recent decisions affecting current work:
 - [Phase 05-02]: Visual regression references urls-all-components-page.json, not urls.json
 - [Phase 06]: Used docs scope for commitlint (consistent with all prior phases)
 - [Phase 06]: Guide format: H2 numbered steps with no trailing checklist, matching locked decisions from CONTEXT.md
+- [Phase 06-02]: Used Event collection type as GUIDE-02 example (common extension task)
+- [Phase 06-02]: Used Testimonials section as GUIDE-01 example (matches skill naming, no existing collision)
+- [Phase 06-02]: Highlight-next-line markers for key additions in code blocks
 
 ### Pending Todos
 
@@ -111,6 +115,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T14:10:53.104Z
-Stopped at: Completed 06-01-PLAN.md
-Resume file: None
+Last session: 2026-03-18T14:09:26Z
+Stopped at: Completed 06-02-PLAN.md
+Resume file: .planning/phases/06-how-to-guides/06-02-SUMMARY.md

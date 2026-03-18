@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Architecture Deep-Dives** - Rendering modes, SSR/CSR composition patterns, and communication between layers docs *(completed 2026-03-18)*
 - [x] **Phase 4: Frontend and Backend Subsystems** - Middleware, proxy, i18n, error handling, content model, internal jobs, and preview/draft mode docs (completed 2026-03-18)
 - [x] **Phase 5: Packages and Infrastructure** - Shared packages overview, deployment guide, and testing/QA guide *(completed 2026-03-18)*
-- [ ] **Phase 6: How-To Guides** - Step-by-step task recipes for adding components, content types, locales, and auth pages
+- [x] **Phase 6: How-To Guides** - Step-by-step task recipes for adding components, content types, locales, and auth pages (completed 2026-03-18)
 
 ## Phase Details
 
@@ -105,7 +105,7 @@ Plans:
   2. A developer can add a new content type end-to-end (API directory, endpoints, fetcher, types) by following the guide
   3. A developer can add a new locale (next-intl config, Strapi i18n, translation files) by following the guide
   4. A developer can add a new auth page (route, auth guard, components) by following the guide
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 
 Plans:
 - [ ] 06-01-PLAN.md — Add locale and add auth page guides (GUIDE-03, GUIDE-04)
@@ -123,4 +123,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Architecture Deep-Dives | 1/1 | Complete    | 2026-03-18 |
 | 4. Frontend and Backend Subsystems | 3/3 | Complete   | 2026-03-18 |
 | 5. Packages and Infrastructure | 2/2 | Complete    | 2026-03-18 |
-| 6. How-To Guides | 0/2 | Not started | - |
+| 6. How-To Guides | 2/2 | Complete   | 2026-03-18 |

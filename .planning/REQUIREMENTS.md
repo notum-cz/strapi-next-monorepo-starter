@@ -51,8 +51,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### How-To Guides
 
-- [ ] **GUIDE-01**: How to add a page builder component (Strapi schema + populate config + React component + registry entry)
-- [ ] **GUIDE-02**: How to add a new content type (API directory + endpoints + fetcher + types)
+- [x] **GUIDE-01**: How to add a page builder component (Strapi schema + populate config + React component + registry entry)
+- [x] **GUIDE-02**: How to add a new content type (API directory + endpoints + fetcher + types)
 - [x] **GUIDE-03**: How to add a new locale (next-intl config + Strapi i18n + translation files)
 - [x] **GUIDE-04**: How to add a new auth page (route + auth guard + components)
 
@@ -106,8 +106,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFRA-02 | Phase 5 | Complete |
 | INFRA-03 | Phase 2 | Complete |
 | INFRA-04 | Phase 5 | Complete |
-| GUIDE-01 | Phase 6 | Pending |
-| GUIDE-02 | Phase 6 | Pending |
+| GUIDE-01 | Phase 6 | Complete |
+| GUIDE-02 | Phase 6 | Complete |
 | GUIDE-03 | Phase 6 | Complete |
 | GUIDE-04 | Phase 6 | Complete |
 
