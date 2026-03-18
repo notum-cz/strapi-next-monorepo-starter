@@ -83,7 +83,7 @@ const data = await PublicStrapiClient.fetchMany(
 )
 ```
 
-CSR is used for interactive features (forms, auth UI, search results) where data depends on user input or session state. The proxy system is covered in depth in [Communication Between Layers](pathname://./communication.md).
+CSR is used for interactive features (forms, auth UI, search results) where data depends on user input or session state. The proxy system is covered in depth in [Communication Between Layers](./communication.md).
 
 ## The dynamicRewrite Trick
 
@@ -274,7 +274,7 @@ export async function fetchPage(
 Importing from `content/server.ts` in a client component causes a build error. This prevents API keys from leaking to the browser.
 :::
 
-Full proxy and token details are in [Communication Between Layers](pathname://./communication.md). API client usage is in [Strapi API Client](../frontend/api-client.md).
+Full proxy and token details are in [Communication Between Layers](./communication.md). API client usage is in [Strapi API Client](../frontend/api-client.md).
 
 ## Provider Hierarchy
 
