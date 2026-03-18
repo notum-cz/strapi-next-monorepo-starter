@@ -17,17 +17,19 @@ const config: Config = {
       },
     ],
   ],
+  themes: ["@docusaurus/theme-mermaid"],
   organizationName: "notum-cz",
   projectName: "strapi-next-monorepo-starter",
   title: "Strapi Next Monorepo Starter",
   tagline: "Enterprise-grade Strapi v5 + Next.js starter template",
   url,
   baseUrl,
-  onBrokenLinks: "warn",
+  onBrokenLinks: "throw",
   favicon: undefined,
   markdown: {
+    mermaid: true,
     hooks: {
-      onBrokenMarkdownLinks: "warn",
+      onBrokenMarkdownLinks: "throw",
     },
   },
 
@@ -44,17 +46,7 @@ const config: Config = {
           sidebarPath: "./sidebars.ts",
           editUrl:
             "https://github.com/notum-cz/strapi-next-monorepo-starter/edit/main/apps/docs/",
-          lastVersion: "3.1.1",
-          versions: {
-            current: {
-              label: "Current",
-              path: "latest",
-            },
-            "3.1.1": {
-              label: "3.1.1",
-              path: "",
-            },
-          },
+          showLastUpdateTime: true,
         },
         blog: false,
         theme: {
@@ -73,10 +65,6 @@ const config: Config = {
           sidebarId: "docs",
           position: "left",
           label: "Docs",
-        },
-        {
-          type: "docsVersionDropdown",
-          position: "right",
         },
       ],
     },

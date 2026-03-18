@@ -48,3 +48,6 @@ yarn-error.log*
 next-env.d.ts
 
 .claude/settings.local.json
+
+# GSD planning docs (local-only)
+.planning/
