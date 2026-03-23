@@ -31,10 +31,19 @@ export function SignInForm({ strapiUrl }: { strapiUrl?: string }) {
   )
 }
 
+const validateCallbackUrl = (url: string | null): string => {
+  const fallback = "/dashboard"
+  if (!url) return fallback
+  // Allow only relative paths (no protocol, no host)
+  if (url.startsWith("/") && !url.startsWith("//")) return url
+
+  return fallback
+}
+
 function SuspensedSignInForm({ strapiUrl }: { strapiUrl?: string }) {
   const t = useTranslations("auth.signIn")
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/"
+  const callbackUrl = validateCallbackUrl(searchParams.get("callbackUrl"))
   const { signInMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({

@@ -53,7 +53,7 @@ export async function generateStaticParams({
   const params =
     results?.data.map((page) => ({
       locale: page.locale as Locale,
-      rest: [page.slug],
+      rest: [page.slug?.replace(/^\//, "")], // remove leading slash if present
     })) ?? []
 
   debugStaticParams(params, "[[...rest]]")
