@@ -32,10 +32,16 @@ export function SignInForm({ strapiUrl }: { strapiUrl?: string }) {
 }
 
 const validateCallbackUrl = (url: string | null): string => {
-  const fallback = "/dashboard"
+  const fallback = "/"
   if (!url) return fallback
-  // Allow only relative paths (no protocol, no host)
-  if (url.startsWith("/") && !url.startsWith("//")) return url
+  try {
+    const resolved = new URL(url, window.location.origin)
+    if (resolved.origin === window.location.origin) {
+      return resolved.pathname + resolved.search + resolved.hash
+    }
+  } catch {
+    // invalid URL
+  }
 
   return fallback
 }
