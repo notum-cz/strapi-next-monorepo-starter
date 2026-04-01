@@ -23,7 +23,11 @@ const projects: Project[] = [
   },
   {
     name: "webkit",
-    use: { ...devices["Desktop Safari"] },
+    use: {
+      ...devices["Desktop Safari"],
+      // Desktop Safari defaults to deviceScaleFactor: 2, overriding to match Chromium/Firefox
+      deviceScaleFactor: 1,
+    },
   },
 ]
 
