@@ -1,4 +1,5 @@
 import { normalizePageFullPath } from "@repo/shared-data"
+import { type Locale, hasLocale } from "next-intl"
 import { createNavigation } from "next-intl/navigation"
 import { defineRouting } from "next-intl/routing"
 
@@ -85,4 +86,14 @@ export const formatHref = (href: string | undefined | null): string => {
   }
 
   return href
+}
+
+/**
+ * Checks if a given locale is valid.
+ *
+ * @param locale
+ * @returns true if the locale is valid, false otherwise
+ */
+export const isValidLocale = (locale: string): locale is Locale => {
+  return hasLocale(routing.locales, locale)
 }
