@@ -430,6 +430,199 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   }
 }
 
+export interface ApiConnectFormConnectForm extends Struct.CollectionTypeSchema {
+  collectionName: "connect_forms"
+  info: {
+    description: "Contact form submissions with dynamic fields"
+    displayName: "Connect Form"
+    pluralName: "connect-forms"
+    singularName: "connect-form"
+  }
+  options: {
+    draftAndPublish: false
+  }
+  attributes: {
+    agreePrivacy: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>
+    agreeTerms: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>
+    category: Schema.Attribute.Enumeration<
+      ["general", "sales", "support", "partnership", "feedback", "other"]
+    >
+    comments: Schema.Attribute.Text
+    company: Schema.Attribute.String
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    description: Schema.Attribute.Text
+    document: Schema.Attribute.Media<"files" | "images" | "videos", true>
+    email: Schema.Attribute.Email & Schema.Attribute.Required
+    interests: Schema.Attribute.JSON & Schema.Attribute.DefaultTo<[]>
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::connect-form.connect-form"
+    > &
+      Schema.Attribute.Private
+    message: Schema.Attribute.Text
+    name: Schema.Attribute.String & Schema.Attribute.Required
+    phone: Schema.Attribute.String & Schema.Attribute.Required
+    preferredDate: Schema.Attribute.DateTime
+    priority: Schema.Attribute.Enumeration<["low", "medium", "high", "urgent"]>
+    publishedAt: Schema.Attribute.DateTime
+    status: Schema.Attribute.Enumeration<
+      ["new", "in_progress", "resolved", "closed"]
+    > &
+      Schema.Attribute.DefaultTo<"new">
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+  }
+}
+
+export interface ApiEventEvent extends Struct.CollectionTypeSchema {
+  collectionName: "events"
+  info: {
+    description: "Event management for your website"
+    displayName: "Event"
+    pluralName: "events"
+    singularName: "event"
+  }
+  options: {
+    draftAndPublish: true
+  }
+  pluginOptions: {
+    i18n: {
+      localized: true
+    }
+  }
+  attributes: {
+    capacity: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1
+        },
+        number
+      >
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    ctaLink: Schema.Attribute.Component<"utilities.link", false>
+    date: Schema.Attribute.Date &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false
+        }
+      }>
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    eventType: Schema.Attribute.Enumeration<
+      [
+        "Conference",
+        "Workshop",
+        "Webinar",
+        "Meetup",
+        "Training",
+        "Consultation",
+        "Roundtable",
+        "Other",
+      ]
+    >
+    featured: Schema.Attribute.Boolean &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false
+        }
+      }> &
+      Schema.Attribute.DefaultTo<false>
+    image: Schema.Attribute.Media<"images" | "videos"> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false
+        }
+      }>
+    locale: Schema.Attribute.String
+    localizations: Schema.Attribute.Relation<"oneToMany", "api::event.event">
+    location: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    organizers: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    participationOptions: Schema.Attribute.Text &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    price: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0
+        },
+        number
+      >
+    publishedAt: Schema.Attribute.DateTime
+    registrationLink: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false
+        }
+      }>
+    registrationRequired: Schema.Attribute.Boolean &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false
+        }
+      }> &
+      Schema.Attribute.DefaultTo<false>
+    roundtableSessions: Schema.Attribute.Component<
+      "elements.event-session",
+      true
+    >
+    slug: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false
+        }
+      }>
+    subtitle: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    tags: Schema.Attribute.Component<"utilities.text", true>
+    time: Schema.Attribute.Time &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false
+        }
+      }>
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+  }
+}
+
 export interface ApiFooterFooter extends Struct.SingleTypeSchema {
   collectionName: "footers"
   info: {
@@ -477,6 +670,53 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
           localized: true
         }
       }>
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+  }
+}
+
+export interface ApiFormSubmissionFormSubmission
+  extends Struct.CollectionTypeSchema {
+  collectionName: "form_submissions"
+  info: {
+    displayName: "Form Submission"
+    pluralName: "form-submissions"
+    singularName: "form-submission"
+  }
+  options: {
+    draftAndPublish: false
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    dynamicSections: Schema.Attribute.Component<"forms.dynamic-sections", false>
+    email: Schema.Attribute.Email & Schema.Attribute.Required
+    formType: Schema.Attribute.Enumeration<
+      [
+        "contact",
+        "newsletter",
+        "internship",
+        "event",
+        "job_application",
+        "quote_request",
+        "feedback",
+        "booking",
+        "product_inquiry",
+        "partner_registration",
+      ]
+    > &
+      Schema.Attribute.Required
+    fullName: Schema.Attribute.String & Schema.Attribute.Required
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::form-submission.form-submission"
+    > &
+      Schema.Attribute.Private
+    phone: Schema.Attribute.String & Schema.Attribute.Required
+    publishedAt: Schema.Attribute.DateTime
     updatedAt: Schema.Attribute.DateTime
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
@@ -1223,7 +1463,10 @@ declare module "@strapi/strapi" {
       "admin::transfer-token": AdminTransferToken
       "admin::transfer-token-permission": AdminTransferTokenPermission
       "admin::user": AdminUser
+      "api::connect-form.connect-form": ApiConnectFormConnectForm
+      "api::event.event": ApiEventEvent
       "api::footer.footer": ApiFooterFooter
+      "api::form-submission.form-submission": ApiFormSubmissionFormSubmission
       "api::internal-job.internal-job": ApiInternalJobInternalJob
       "api::navbar.navbar": ApiNavbarNavbar
       "api::page.page": ApiPagePage
