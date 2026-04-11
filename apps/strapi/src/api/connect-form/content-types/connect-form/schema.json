@@ -1,0 +1,81 @@
+{
+  "kind": "collectionType",
+  "collectionName": "connect_forms",
+  "info": {
+    "singularName": "connect-form",
+    "pluralName": "connect-forms",
+    "displayName": "Connect Form",
+    "description": "Contact form submissions with dynamic fields"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "phone": {
+      "type": "string",
+      "required": true
+    },
+    "company": {
+      "type": "string"
+    },
+    "message": {
+      "type": "text"
+    },
+    "description": {
+      "type": "text"
+    },
+    "comments": {
+      "type": "text"
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "general",
+        "sales",
+        "support",
+        "partnership",
+        "feedback",
+        "other"
+      ]
+    },
+    "priority": {
+      "type": "enumeration",
+      "enum": ["low", "medium", "high", "urgent"]
+    },
+    "interests": {
+      "type": "json",
+      "default": []
+    },
+    "agreeTerms": {
+      "type": "boolean",
+      "default": false
+    },
+    "agreePrivacy": {
+      "type": "boolean",
+      "default": false
+    },
+    "preferredDate": {
+      "type": "datetime"
+    },
+    "document": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": ["files", "images", "videos"]
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["new", "in_progress", "resolved", "closed"],
+      "default": "new"
+    }
+  }
+}

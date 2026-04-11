@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "form_submissions",
+  "info": {
+    "singularName": "form-submission",
+    "pluralName": "form-submissions",
+    "displayName": "Form Submission"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "fullName": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "phone": {
+      "type": "string",
+      "required": true
+    },
+    "formType": {
+      "type": "enumeration",
+      "enum": [
+        "contact",
+        "newsletter",
+        "internship",
+        "event",
+        "job_application",
+        "quote_request",
+        "feedback",
+        "booking",
+        "product_inquiry",
+        "partner_registration"
+      ],
+      "required": true
+    },
+    "dynamicSections": {
+      "type": "component",
+      "repeatable": false,
+      "component": "forms.dynamic-sections"
+    }
+  }
+}

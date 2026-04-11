@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_forms_event_details",
+  "info": {
+    "displayName": "EventDetails",
+    "description": "Conditional section for event form type"
+  },
+  "options": {},
+  "attributes": {
+    "eventName": {
+      "type": "string"
+    },
+    "numberOfAttendees": {
+      "type": "integer"
+    },
+    "dietaryRestrictions": {
+      "type": "text"
+    },
+    "specialRequirements": {
+      "type": "text"
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "collectionName": "components_elements_event_items",
+  "info": {
+    "displayName": "Event Item",
+    "description": "Individual event with date, title, description, and optional image"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "date": {
+      "type": "date",
+      "required": true
+    },
+    "time": {
+      "type": "time"
+    },
+    "location": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "description": {
+      "type": "richtext",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "image": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utilities.basic-image"
+    },
+    "ctaLink": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utilities.link"
+    },
+    "tags": {
+      "type": "component",
+      "repeatable": true,
+      "component": "utilities.text"
+    }
+  }
+}

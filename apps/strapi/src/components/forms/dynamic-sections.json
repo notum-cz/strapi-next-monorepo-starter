@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_forms_dynamic_sections",
+  "info": {
+    "displayName": "DynamicSections",
+    "description": "Container for conditional form sections based on form_type"
+  },
+  "options": {},
+  "attributes": {
+    "internshipDetails": {
+      "type": "component",
+      "repeatable": false,
+      "component": "forms.internship-details"
+    },
+    "eventDetails": {
+      "type": "component",
+      "repeatable": false,
+      "component": "forms.event-details"
+    },
+    "jobApplicationDetails": {
+      "type": "component",
+      "repeatable": false,
+      "component": "forms.job-application-details"
+    },
+    "generalMessage": {
+      "type": "component",
+      "repeatable": false,
+      "component": "forms.general-message"
+    }
+  }
+}

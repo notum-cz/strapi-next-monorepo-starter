@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_forms_internship_details",
+  "info": {
+    "displayName": "InternshipDetails",
+    "description": "Conditional section for internship form type"
+  },
+  "options": {},
+  "attributes": {
+    "collegeName": {
+      "type": "string"
+    },
+    "degree": {
+      "type": "string"
+    },
+    "yearOfStudy": {
+      "type": "string"
+    },
+    "skills": {
+      "type": "text"
+    },
+    "resume": {
+      "allowedTypes": ["files"],
+      "type": "media",
+      "multiple": false
+    }
+  }
+}

@@ -1,5 +1,39 @@
 import type { Schema, Struct } from "@strapi/strapi"
 
+export interface ElementsEventItem extends Struct.ComponentSchema {
+  collectionName: "components_elements_event_items"
+  info: {
+    description: "Individual event with date, title, description, and optional image"
+    displayName: "Event Item"
+  }
+  attributes: {
+    ctaLink: Schema.Attribute.Component<"utilities.link", false>
+    date: Schema.Attribute.Date & Schema.Attribute.Required
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    image: Schema.Attribute.Component<"utilities.basic-image", false>
+    location: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    tags: Schema.Attribute.Component<"utilities.text", true>
+    time: Schema.Attribute.Time
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+  }
+}
+
 export interface ElementsFooterItem extends Struct.ComponentSchema {
   collectionName: "components_elements_footer_items"
   info: {
@@ -57,6 +91,65 @@ export interface SectionsCarousel extends Struct.ComponentSchema {
   attributes: {
     images: Schema.Attribute.Component<"utilities.image-with-link", true>
     radius: Schema.Attribute.Enumeration<["sm", "md", "lg", "xl", "full"]>
+  }
+}
+
+export interface SectionsEvents extends Struct.ComponentSchema {
+  collectionName: "components_sections_events"
+  info: {
+    description: "Display a list of events with date, title, description, and optional image"
+    displayName: "Events"
+  }
+  attributes: {
+    bgColor: Schema.Attribute.String &
+      Schema.Attribute.CustomField<"plugin::color-picker.color">
+    columns: Schema.Attribute.Integer &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }> &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 4
+          min: 1
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<3>
+    events: Schema.Attribute.Component<"elements.event-item", true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    layout: Schema.Attribute.Enumeration<["grid", "list"]> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }> &
+      Schema.Attribute.DefaultTo<"grid">
+    showFilters: Schema.Attribute.Boolean &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }> &
+      Schema.Attribute.DefaultTo<true>
+    subtitle: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
   }
 }
 
@@ -376,11 +469,13 @@ export interface UtilitiesTipTapRichText extends Struct.ComponentSchema {
 declare module "@strapi/strapi" {
   export module Public {
     export interface ComponentSchemas {
+      "elements.event-item": ElementsEventItem
       "elements.footer-item": ElementsFooterItem
       "forms.contact-form": FormsContactForm
       "forms.newsletter-form": FormsNewsletterForm
       "sections.animated-logo-row": SectionsAnimatedLogoRow
       "sections.carousel": SectionsCarousel
+      "sections.events": SectionsEvents
       "sections.faq": SectionsFaq
       "sections.heading-with-cta-button": SectionsHeadingWithCtaButton
       "sections.hero": SectionsHero

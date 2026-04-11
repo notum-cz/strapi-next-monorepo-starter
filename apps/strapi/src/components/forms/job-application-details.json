@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_forms_job_application_details",
+  "info": {
+    "displayName": "JobApplicationDetails",
+    "description": "Conditional section for job application form type"
+  },
+  "options": {},
+  "attributes": {
+    "positionTitle": {
+      "type": "string"
+    },
+    "resume": {
+      "allowedTypes": ["files"],
+      "type": "media",
+      "multiple": false
+    },
+    "coverLetter": {
+      "type": "text"
+    },
+    "yearsOfExperience": {
+      "type": "integer"
+    }
+  }
+}

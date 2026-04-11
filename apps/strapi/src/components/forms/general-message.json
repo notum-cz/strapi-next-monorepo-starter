@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_forms_general_message",
+  "info": {
+    "displayName": "GeneralMessage",
+    "description": "Conditional section for general contact/message form type"
+  },
+  "options": {},
+  "attributes": {
+    "subject": {
+      "type": "string"
+    },
+    "message": {
+      "type": "text"
+    }
+  }
+}
