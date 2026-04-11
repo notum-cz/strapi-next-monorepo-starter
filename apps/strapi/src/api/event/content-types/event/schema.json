@@ -1,0 +1,161 @@
+{
+  "kind": "collectionType",
+  "collectionName": "events",
+  "info": {
+    "singularName": "event",
+    "pluralName": "events",
+    "displayName": "Event",
+    "description": "Event management for your website"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "required": true
+    },
+    "slug": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      },
+      "required": true,
+      "unique": true,
+      "regex": "^[a-z0-9/-]+$"
+    },
+    "subtitle": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "date": {
+      "type": "date",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      },
+      "required": true
+    },
+    "time": {
+      "type": "time",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "location": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "description": {
+      "type": "richtext",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images", "videos"],
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "organizers": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "registrationRequired": {
+      "type": "boolean",
+      "default": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "registrationLink": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "ctaLink": {
+      "type": "component",
+      "repeatable": false,
+      "component": "utilities.link"
+    },
+    "tags": {
+      "type": "component",
+      "repeatable": true,
+      "component": "utilities.text"
+    },
+    "eventType": {
+      "type": "enumeration",
+      "enum": ["Conference", "Workshop", "Webinar", "Meetup", "Training", "Consultation", "Roundtable", "Other"]
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "capacity": {
+      "type": "integer",
+      "min": 1
+    },
+    "price": {
+      "type": "decimal",
+      "min": 0
+    },
+    "roundtableSessions": {
+      "type": "component",
+      "repeatable": true,
+      "component": "elements.event-session"
+    },
+    "participationOptions": {
+      "type": "text",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    }
+  }
+}

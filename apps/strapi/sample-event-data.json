@@ -1,0 +1,33 @@
+{
+  "event": {
+    "title": "From Code to Creativity – A stakeholder consultation event on responsible AI development and governance in India",
+    "slug": "from-code-to-creativity-stakeholder-consultation-2026",
+    "subtitle": "Understanding Trust and Safety in AI",
+    "date": "2026-01-31",
+    "time": "09:30:00",
+    "location": "IIIT Hyderabad",
+    "description": "VISWAM.AI, SFLC.in, FOSS United, and The Linux Foundation are jointly organising this in-person stakeholder consultation event.\n\nThe event brings together policymakers, industry leaders, open-source practitioners, creators, and civil society to examine how trust, safety, and accountability can be embedded into AI systems from the stage of design and training. Two closed-door roundtable discussions will focus on critical governance questions shaping India's AI ecosystem.",
+    "organizers": "VISWAM.AI, SFLC.in, FOSS United, and The Linux Foundation",
+    "registrationRequired": true,
+    "registrationLink": "https://forms.example.com/register",
+    "eventType": "Consultation",
+    "featured": true,
+    "participationOptions": "Available both in-person at IIIT Hyderabad and online",
+    "roundtableSessions": [
+      {
+        "title": "Harnessing Open Source AI",
+        "description": "Examining the role of open-source AI in building transparent, accountable, and inclusive AI systems. Critically exploring what \"open\" means in the context of AI models, data, licensing, safety, and governance."
+      },
+      {
+        "title": "Balancing AI Innovation and Copyright",
+        "description": "Deliberating on the DPIIT Working Paper on Generative AI and Copyright, including the proposed hybrid licensing model and its implications for AI developers, creators, and India's AI ecosystem."
+      }
+    ],
+    "tags": [
+      { "text": "AI Governance" },
+      { "text": "Trust & Safety" },
+      { "text": "Open Source" },
+      { "text": "India" }
+    ]
+  }
+}
