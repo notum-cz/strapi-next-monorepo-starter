@@ -1,6 +1,7 @@
 import type { Core } from "@strapi/strapi"
 
 import { registerPopulatePageMiddleware } from "./documentMiddlewares/page"
+import { registerAutoRevalidateMiddleware } from "./documentMiddlewares/revalidate"
 import { registerAdminUserSubscriber } from "./lifeCycles/adminUser"
 import { registerUserSubscriber } from "./lifeCycles/user"
 import { getPopulateDynamicZoneConfig } from "./populateDynamicZone"
@@ -30,5 +31,8 @@ export default {
 
     // Register Documents API middleware for dynamic zone population
     registerPopulatePageMiddleware({ strapi })
+
+    // Register automatic frontend revalidation middleware for content changes
+    registerAutoRevalidateMiddleware({ strapi })
   },
 }

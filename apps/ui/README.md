@@ -143,7 +143,9 @@ Next.js has three `output` modes:
 
 This approach allows static content to be updated without rebuilding the entire site. Data revalidation does not work in plain static `export` output mode, as the app is fully static and lacks a server to handle revalidation. Incremental Static Regeneration (ISR) improves performance and reduces server load.
 
-In this starter, ISR with time-based revalidation is used by default. Revalidation is applied globally to all fetch requests, but it can also be controlled individually via parameters in the fetch functions (see [BaseStrapiClient](src/lib/strapi-api/base.ts)). The requests revalidation interval is set to `0` (no caching) during development and `60` seconds in production by default.
+Detailed backend-to-frontend flow (Strapi endpoint, Next.js endpoint, env setup, tags, and internal jobs integration): [Frontend Cache Revalidation](../../docs/frontend-cache-revalidation.md).
+
+In this starter, ISR with time-based revalidation is configured at route/fetch level (for example, pages and shared single types like navbar/footer), and can be overridden per request in fetch functions (see [BaseStrapiClient](src/lib/strapi-api/base.ts)).
 
 #### Runtime static generation for unknown dynamic routes
 

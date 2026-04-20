@@ -46,14 +46,17 @@ async function generateLocalizedSitemap(
   locale: Locale
 ): Promise<MetadataRoute.Sitemap> {
   const pageEntities: Partial<
-    Record<PageEntityUID, Awaited<ReturnType<typeof fetchAllPages>>["data"]>
+    Record<
+      PageEntityUID,
+      NonNullable<Awaited<ReturnType<typeof fetchAllPages>>>["data"]
+    >
   > = {}
 
   // Fetch all records for each entity individually
   for (const entityUid of pageEntityUids) {
     const entityResponse = await fetchAllPages(entityUid, locale)
 
-    if (entityResponse.data.length > 0) {
+    if (entityResponse && entityResponse.data.length > 0) {
       pageEntities[entityUid] = entityResponse.data
     }
   }

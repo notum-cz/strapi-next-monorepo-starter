@@ -36,7 +36,7 @@ export const debugStaticParams = (
  */
 export const createFallbackPath = (
   locale: Locale,
-  params: Record<string, string | string[]>
+  params: Record<string, string | string[] | undefined>
 ) => ({
   locale,
   rest: [], // to satisfy type checking for [[...rest]], but can be overridden via `params`

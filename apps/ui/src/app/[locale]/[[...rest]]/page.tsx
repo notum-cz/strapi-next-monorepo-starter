@@ -5,6 +5,7 @@ import { use } from "react"
 
 import StrapiPageView from "@/components/layouts/StrapiPageView"
 import { createFallbackPath, debugStaticParams } from "@/lib/build"
+import { getEnvVar } from "@/lib/env-vars"
 import { isDevelopment } from "@/lib/general-helpers"
 import { getMetadataFromStrapi } from "@/lib/metadata"
 import { isValidLocale } from "@/lib/navigation"
@@ -14,16 +15,9 @@ import { fetchAllPages } from "@/lib/strapi-api/content/server"
 // Use /[locale]/dynamic/[[...rest]] for pages that need runtime context.
 //
 // "error"        — throws if any dynamic API is used (strict static enforcement)
-//                  **Currently fails** because StrapiNavbar in root layout.tsx calls headers()
 // "force-static" — silently ignores dynamic APIs (e.g. headers() returns empty,
 //                  so server-side auth in navbar will always return null)
-//
-// To fix: use PPR (experimental) to stream auth dynamically within a static shell,
-// move navbar session detection strictly to a client component with a skeleton to avoid layout jump,
-// or use "force-dynamic" to SSR every request (no caching, but auth always works).
-//
-// export const dynamic = "error"
-export const dynamic = "force-static"
+export const dynamic = "error"
 
 // Set ISR revalidation interval: regenerate the page every 5 minutes (300s)
 export const revalidate = 300
@@ -42,23 +36,30 @@ export async function generateStaticParams({
     debugStaticParams([], "[[...rest]]", { isDevelopment: true })
 
     // do not prefetch all locales when developing
-    return [
-      {
-        locale: "en",
-        rest: [""],
-      },
-    ]
+    return [{ locale: "en" }]
   }
 
   const results = await fetchAllPages("api::page.page", locale as Locale)
 
   const params =
     results?.data.map((page) => ({
-      locale: page.locale as Locale,
-      rest: [page.slug],
+      locale: (page.locale ?? locale) as Locale,
+      rest:
+        page.fullPath === ROOT_PAGE_PATH
+          ? []
+          : (page.fullPath?.split("/").filter(Boolean) ?? []),
     })) ?? []
 
   debugStaticParams(params, "[[...rest]]")
+
+  if (params.length > 0) {
+    return params
+  }
+
+  const isStaticExport = getEnvVar("NEXT_OUTPUT") === "export"
+  if (!isStaticExport) {
+    return []
+  }
 
   // statically generated applications with output: 'export' require at least one entry (even invalid)
   // within the dynamic segment to avoid build errors
@@ -66,7 +67,7 @@ export async function generateStaticParams({
     rest: ["fallback"],
   })
 
-  return params.length > 0 ? params : [fallbackPath]
+  return [fallbackPath]
 }
 
 export async function generateMetadata(

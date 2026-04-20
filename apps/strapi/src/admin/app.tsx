@@ -7,6 +7,7 @@ import "@repo/design-system/styles.css"
 
 // eslint-disable-next-line import-x/order
 import { defaultCkEditorConfig, simpleCkEditorConfig } from "./ckeditor/configs"
+import DataRevalidate from "./extensions/DataRevalidate"
 import InternalJobs from "./extensions/InternalJobs"
 
 export default {
@@ -21,6 +22,12 @@ export default {
       name: "InternalJobs",
       Component: InternalJobs,
     })
+    app
+      .getPlugin("content-manager")
+      .injectComponent("editView", "right-links", {
+        name: "DataRevalidate",
+        Component: DataRevalidate,
+      })
 
     const adminPanelConfigEnv = process.env.ADMIN_PANEL_CONFIG_API_AUTH_TOKEN
     if (adminPanelConfigEnv) {
