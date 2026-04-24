@@ -77,12 +77,21 @@ export async function fetchAllPages(
   locale: Locale
 ) {
   try {
-    return await PublicStrapiClient.fetchAll(uid, {
-      locale,
-      fields: ["fullPath", "locale", "updatedAt", "createdAt", "slug"],
-      populate: {},
-      status: "published",
-    })
+    return await PublicStrapiClient.fetchAll(
+      uid,
+      {
+        locale,
+        fields: ["fullPath", "locale", "updatedAt", "createdAt", "slug"],
+        populate: {},
+        status: "published",
+      },
+      {
+        next: {
+          revalidate: 300,
+          tags: ["strapi:api::page.page"],
+        },
+      }
+    )
   } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching all pages for locale '${locale}'`,
@@ -142,7 +151,7 @@ export async function fetchNavbar(locale: Locale) {
       },
       {
         next: {
-          revalidate: 600, // 10 minutes
+          revalidate: 300, // 5 minutes
           tags: ["strapi:api::navbar.navbar"],
         },
       }
@@ -177,7 +186,7 @@ export async function fetchFooter(locale: Locale) {
       },
       {
         next: {
-          revalidate: 600, // 10 minutes
+          revalidate: 300, // 5 minutes
           tags: ["strapi:api::footer.footer"],
         },
       }

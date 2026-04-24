@@ -107,43 +107,6 @@ export interface AdminApiTokenPermission extends Struct.CollectionTypeSchema {
   }
 }
 
-export interface AdminAuditLog extends Struct.CollectionTypeSchema {
-  collectionName: "strapi_audit_logs"
-  info: {
-    displayName: "Audit Log"
-    pluralName: "audit-logs"
-    singularName: "audit-log"
-  }
-  options: {
-    draftAndPublish: false
-    timestamps: false
-  }
-  pluginOptions: {
-    "content-manager": {
-      visible: false
-    }
-    "content-type-builder": {
-      visible: false
-    }
-  }
-  attributes: {
-    action: Schema.Attribute.String & Schema.Attribute.Required
-    createdAt: Schema.Attribute.DateTime
-    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
-      Schema.Attribute.Private
-    date: Schema.Attribute.DateTime & Schema.Attribute.Required
-    locale: Schema.Attribute.String & Schema.Attribute.Private
-    localizations: Schema.Attribute.Relation<"oneToMany", "admin::audit-log"> &
-      Schema.Attribute.Private
-    payload: Schema.Attribute.JSON
-    publishedAt: Schema.Attribute.DateTime
-    updatedAt: Schema.Attribute.DateTime
-    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
-      Schema.Attribute.Private
-    user: Schema.Attribute.Relation<"oneToOne", "admin::user">
-  }
-}
-
 export interface AdminPermission extends Struct.CollectionTypeSchema {
   collectionName: "admin_permissions"
   info: {
@@ -265,6 +228,7 @@ export interface AdminSession extends Struct.CollectionTypeSchema {
   }
   attributes: {
     absoluteExpiresAt: Schema.Attribute.DateTime & Schema.Attribute.Private
+    childId: Schema.Attribute.String & Schema.Attribute.Private
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
@@ -274,7 +238,6 @@ export interface AdminSession extends Struct.CollectionTypeSchema {
     expiresAt: Schema.Attribute.DateTime &
       Schema.Attribute.Required &
       Schema.Attribute.Private
-    childId: Schema.Attribute.String & Schema.Attribute.Private
     locale: Schema.Attribute.String & Schema.Attribute.Private
     localizations: Schema.Attribute.Relation<"oneToMany", "admin::session"> &
       Schema.Attribute.Private
@@ -553,11 +516,6 @@ export interface ApiInternalJobInternalJob extends Struct.CollectionTypeSchema {
     state: Schema.Attribute.Enumeration<["pending", "completed", "failed"]> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<"pending">
-    strapi_assignee: Schema.Attribute.Relation<"oneToOne", "admin::user">
-    strapi_stage: Schema.Attribute.Relation<
-      "oneToOne",
-      "plugin::review-workflows.workflow-stage"
-    >
     targetLocale: Schema.Attribute.String
     updatedAt: Schema.Attribute.DateTime
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
@@ -600,11 +558,6 @@ export interface ApiNavbarNavbar extends Struct.SingleTypeSchema {
         }
       }>
     publishedAt: Schema.Attribute.DateTime
-    strapi_assignee: Schema.Attribute.Relation<"oneToOne", "admin::user">
-    strapi_stage: Schema.Attribute.Relation<
-      "oneToOne",
-      "plugin::review-workflows.workflow-stage"
-    >
     updatedAt: Schema.Attribute.DateTime
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
@@ -634,6 +587,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
           localized: true
         }
       }>
+    children: Schema.Attribute.Relation<"oneToMany", "api::page.page">
     content: Schema.Attribute.DynamicZone<
       [
         "sections.image-with-cta-button",
@@ -665,7 +619,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
           localized: true
         }
       }>
-    children: Schema.Attribute.Relation<"oneToMany", "api::page.page">
     locale: Schema.Attribute.String
     localizations: Schema.Attribute.Relation<"oneToMany", "api::page.page">
     parent: Schema.Attribute.Relation<"manyToOne", "api::page.page">
@@ -720,11 +673,6 @@ export interface ApiRedirectRedirect extends Struct.CollectionTypeSchema {
     permanent: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>
     publishedAt: Schema.Attribute.DateTime
     source: Schema.Attribute.String & Schema.Attribute.Required
-    strapi_assignee: Schema.Attribute.Relation<"oneToOne", "admin::user">
-    strapi_stage: Schema.Attribute.Relation<
-      "oneToOne",
-      "plugin::review-workflows.workflow-stage"
-    >
     updatedAt: Schema.Attribute.DateTime
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
@@ -757,11 +705,6 @@ export interface ApiSubscriberSubscriber extends Struct.CollectionTypeSchema {
     message: Schema.Attribute.Text
     name: Schema.Attribute.String
     publishedAt: Schema.Attribute.DateTime
-    strapi_assignee: Schema.Attribute.Relation<"oneToOne", "admin::user">
-    strapi_stage: Schema.Attribute.Relation<
-      "oneToOne",
-      "plugin::review-workflows.workflow-stage"
-    >
     updatedAt: Schema.Attribute.DateTime
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
@@ -1084,11 +1027,11 @@ export interface PluginUploadFolder extends Struct.CollectionTypeSchema {
     }
   }
   attributes: {
+    children: Schema.Attribute.Relation<"oneToMany", "plugin::upload.folder">
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
     files: Schema.Attribute.Relation<"oneToMany", "plugin::upload.file">
-    children: Schema.Attribute.Relation<"oneToMany", "plugin::upload.folder">
     locale: Schema.Attribute.String & Schema.Attribute.Private
     localizations: Schema.Attribute.Relation<
       "oneToMany",
@@ -1273,7 +1216,6 @@ declare module "@strapi/strapi" {
     export interface ContentTypeSchemas {
       "admin::api-token": AdminApiToken
       "admin::api-token-permission": AdminApiTokenPermission
-      "admin::audit-log": AdminAuditLog
       "admin::permission": AdminPermission
       "admin::role": AdminRole
       "admin::session": AdminSession

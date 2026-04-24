@@ -11,13 +11,19 @@ import { getMetadataFromStrapi } from "@/lib/metadata"
 import { isValidLocale } from "@/lib/navigation"
 import { fetchAllPages } from "@/lib/strapi-api/content/server"
 
-// Static/ISR page — no access to headers(), cookies(), or searchParams.
 // Use /[locale]/dynamic/[[...rest]] for pages that need runtime context.
 //
 // "error"        — throws if any dynamic API is used (strict static enforcement)
+//                  **Currently fails** because StrapiNavbar in root layout.tsx calls headers()
 // "force-static" — silently ignores dynamic APIs (e.g. headers() returns empty,
 //                  so server-side auth in navbar will always return null)
-export const dynamic = "error"
+//
+// To fix: use PPR (experimental) to stream auth dynamically within a static shell,
+// move navbar session detection strictly to a client component with a skeleton to avoid layout jump,
+// or use "force-dynamic" to SSR every request (no caching, but auth always works).
+//
+// export const dynamic = "error"
+export const dynamic = "force-static"
 
 // Set ISR revalidation interval: regenerate the page every 5 minutes (300s)
 export const revalidate = 300

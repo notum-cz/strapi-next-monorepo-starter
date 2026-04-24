@@ -19,20 +19,6 @@ const REVALIDATE_COLLECTIONS: RevalidateCollectionConfig[] = [
   },
   { uid: "api::navbar.navbar", mode: "tag-revalidate" },
   { uid: "api::footer.footer", mode: "tag-revalidate" },
-  { uid: "api::cookie-banner.cookie-banner", mode: "tag-revalidate" },
-  { uid: "api::greenhouse.greenhouse", mode: "tag-revalidate" },
-  { uid: "api::prospect-page.prospect-page", mode: "tag-revalidate" },
-  {
-    uid: "api::application-pages-layout.application-pages-layout",
-    mode: "tag-revalidate",
-  },
-  {
-    uid: "api::application-setting.application-setting",
-    mode: "tag-revalidate",
-  },
-  { uid: "api::not-found-page.not-found-page", mode: "tag-revalidate" },
-  { uid: "api::team-member.team-member", mode: "tag-revalidate" },
-  { uid: "api::committee.committee", mode: "tag-revalidate" },
   // Future examples:
   // { uid: "api::blog-page.blog-page", mode: "path-revalidate", pathField: "fullPath" },
   // { uid: "api::blog-article.blog-article", mode: "path-revalidate", pathField: "fullPath" },

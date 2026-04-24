@@ -2,6 +2,7 @@ import { normalizePageFullPath } from "@repo/shared-data"
 import { revalidatePath, revalidateTag } from "next/cache"
 import { z } from "zod"
 
+import { purgeCDNCache } from "@/lib/cdn"
 import { getEnvVar } from "@/lib/env-vars"
 import { routing } from "@/lib/navigation"
 
@@ -69,13 +70,18 @@ export async function POST(request: Request) {
     `[revalidate] Completed for uid="${uid}" paths=${JSON.stringify([...pathsToRevalidate])} tags=${JSON.stringify([...tagsToRevalidate])}`
   )
 
-  // TODO: Purge pages cache from CDN (FrontDoor)
+  // TODO: Implement CDN cache purging logic.
+  // Paths can be purged individually
+  // Tags either need to purge all content (changes in global single types like navbar, footer)
+  // or we need to track usage of tags per page to purge selectively
+  const purged = await purgeCDNCache([...pathsToRevalidate])
 
   return Response.json({
     uid,
     revalidated: true,
     fullPaths: [...pathsToRevalidate],
     tags: [...tagsToRevalidate],
+    cdnPurged: purged,
     at: new Date().toISOString(),
   })
 }
