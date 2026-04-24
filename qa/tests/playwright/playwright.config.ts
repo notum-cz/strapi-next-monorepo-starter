@@ -49,7 +49,19 @@ if (mobileViewportsEnabled) {
 projects.push({
   name: "seo",
   testMatch: ["seo/**/*.spec.ts"],
-  retries: 0,
+  retries: 1,
+  use: {
+    ...devices["Desktop Chrome"],
+    trace: "off",
+    screenshot: "off",
+    video: "off",
+  },
+})
+
+projects.push({
+  name: "axe",
+  testMatch: ["axe/**/*.spec.ts"],
+  retries: 1,
   use: {
     ...devices["Desktop Chrome"],
     trace: "off",
