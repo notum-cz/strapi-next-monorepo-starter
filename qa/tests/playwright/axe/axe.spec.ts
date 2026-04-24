@@ -3,16 +3,25 @@ import path from "node:path"
 
 import AxeBuilder from "@axe-core/playwright"
 import { expect, test } from "@playwright/test"
+import type { AxeResults, NodeResult, Result } from "axe-core"
 import urlsAllComponentsPage from "helpers/urls-all-components-page.json"
 import urls from "helpers/urls.json"
 
-import type { AxeResults, NodeResult, Result } from "axe-core"
+function createWarningRuleIds(...ruleIds: string[]): ReadonlySet<string> {
+  return new Set(ruleIds)
+}
+
+function createWarningRuleIdsByPath(
+  entries: readonly (readonly [string, ReadonlySet<string>])[] = []
+): ReadonlyMap<string, ReadonlySet<string>> {
+  return new Map(entries)
+}
 
 // Rule IDs that should be treated as warnings instead of errors.
-const WARNING_RULE_IDS = new Set<string>()
+const WARNING_RULE_IDS = createWarningRuleIds()
 
 // Specific paths that should have certain rule IDs treated as warnings instead of errors.
-const WARNING_RULE_IDS_BY_PATH = new Map<string, Set<string>>()
+const WARNING_RULE_IDS_BY_PATH = createWarningRuleIdsByPath()
 
 type SiteOutcome = {
   url: string
@@ -21,9 +30,7 @@ type SiteOutcome = {
   analysisFailed: boolean
 }
 
-const PATHS = Array.from(
-  new Set<string>([...urls, ...urlsAllComponentsPage])
-)
+const PATHS = Array.from(new Set<string>([...urls, ...urlsAllComponentsPage]))
 
 // Component-only pages are informational for AXE checks, so findings there
 // should not fail the run. URLs that are also regular site pages still fail.
@@ -33,7 +40,7 @@ const WARNING_ONLY_PATHS = new Set<string>(
 
 const runTimestamp = new Date()
   .toISOString()
-  .replace(/[-:.]/g, "")
+  .replaceAll(/[-:.]/g, "")
   .replace(/\..+/, "")
 const reportDir = path.resolve(
   __dirname,
@@ -134,7 +141,7 @@ test.describe("AXE accessibility", () => {
 
         const warningOnlySite = WARNING_ONLY_PATHS.has(pathname)
         const pageSpecificWarningRuleIds =
-          WARNING_RULE_IDS_BY_PATH.get(pathname) ?? new Set<string>()
+          WARNING_RULE_IDS_BY_PATH.get(pathname) ?? createWarningRuleIds()
 
         warningViolations = warningOnlySite
           ? allViolations
