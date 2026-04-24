@@ -11,6 +11,7 @@ import { getMetadataFromStrapi } from "@/lib/metadata"
 import { isValidLocale } from "@/lib/navigation"
 import { fetchAllPages } from "@/lib/strapi-api/content/server"
 
+// Static/ISR page — no access to headers(), cookies(), or searchParams.
 // Use /[locale]/dynamic/[[...rest]] for pages that need runtime context.
 //
 // "error"        — throws if any dynamic API is used (strict static enforcement)
