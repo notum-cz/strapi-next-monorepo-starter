@@ -4,7 +4,6 @@ import path from "node:path"
 import AxeBuilder from "@axe-core/playwright"
 import { expect, test } from "@playwright/test"
 import type { AxeResults, NodeResult, Result } from "axe-core"
-
 import urlsAllComponentsPage from "helpers/urls-all-components-page.json"
 import urls from "helpers/urls.json"
 
@@ -41,8 +40,8 @@ const WARNING_ONLY_PATHS = new Set<string>(
 
 const runTimestamp = new Date()
   .toISOString()
+  .split(".")[0]
   .replaceAll(/[-:.]/g, "")
-  .replace(/\..+/, "")
 const reportDir = path.resolve(
   __dirname,
   "reports",
@@ -87,6 +86,12 @@ function appendReport(lines: string[]): void {
   fs.appendFileSync(reportFilePath, `${lines.join("\n")}\n`)
 }
 
+function ensureReport(): void {
+  if (!fs.existsSync(reportFilePath)) {
+    initializeReport()
+  }
+}
+
 function initializeReport(): void {
   fs.mkdirSync(reportDir, { recursive: true })
   fs.writeFileSync(
@@ -111,11 +116,7 @@ test.describe("AXE accessibility", () => {
 
   for (const pathname of PATHS) {
     test(`Check ${pathname}`, async ({ page, baseURL }, testInfo) => {
-      const shouldWriteReport = testInfo.retry === 0
-
-      if (shouldWriteReport && !fs.existsSync(reportFilePath)) {
-        initializeReport()
-      }
+      const hasRetriesRemaining = testInfo.retry < testInfo.project.retries
 
       const resolvedBaseUrl = baseURL ?? process.env.BASE_URL
 
@@ -162,7 +163,8 @@ test.describe("AXE accessibility", () => {
         const message = error instanceof Error ? error.message : String(error)
 
         console.error(`Error checking ${site}: ${message}`)
-        if (shouldWriteReport) {
+        if (!hasRetriesRemaining) {
+          ensureReport()
           appendReport([
             `Page: ${site}`,
             `ERROR running analysis: ${message}`,
@@ -193,7 +195,12 @@ test.describe("AXE accessibility", () => {
         console.log(`✅ No violations for ${site}`)
       }
 
-      if (shouldWriteReport) {
+      const hasErrors = errorViolations.length > 0
+      const hasWarnings = warningViolations.length > 0
+      const shouldFinalizeReport = !hasErrors || !hasRetriesRemaining
+
+      if (shouldFinalizeReport) {
+        ensureReport()
         appendReport([
           `Page: ${site}`,
           `Total: ${allViolations.length} | Errors: ${errorViolations.length} | Warnings: ${warningViolations.length}`,
@@ -209,8 +216,8 @@ test.describe("AXE accessibility", () => {
 
         siteOutcomes.set(site, {
           url: site,
-          hasErrors: errorViolations.length > 0,
-          hasWarnings: warningViolations.length > 0,
+          hasErrors,
+          hasWarnings,
           analysisFailed: false,
         })
       }

@@ -61,6 +61,7 @@ projects.push(
   {
     name: "axe",
     testMatch: ["axe/**/*.spec.ts"],
+    workers: 1,
     retries: 1,
     use: {
       ...devices["Desktop Chrome"],
