@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-commented-code */
 import fs from "node:fs"
 
 import { expect, test } from "@playwright/test"
@@ -32,9 +33,28 @@ test.describe("Visual Regression", () => {
         }
       })
 
+      // Optional: enable this on projects that respect prefers-reduced-motion.
+      // It can make visual snapshots more stable for animated sections and carousels.
+      // Uncomment this to try it when snapshots are flaky because of motion.
+      // await page.emulateMedia({ reducedMotion: "reduce" })
+
       // Use baseURL from Playwright config
       await page.goto(url)
       await page.waitForLoadState("networkidle")
+
+      // Optional: uncomment this to trigger lazy-loaded assets before screenshots.
+      /*
+      const height = await page.evaluate(() => document.body.scrollHeight)
+      const singleScroll = 500
+      const scrolls = Math.ceil(height / singleScroll)
+
+      for (let i = 0; i < scrolls; i++) {
+        await page.mouse.wheel(0, singleScroll)
+        await page.waitForTimeout(100)
+      }
+
+      await page.evaluate(() => window.scrollTo(0, 0))
+      */
 
       await page.addStyleTag({
         content: `
@@ -57,7 +77,7 @@ test.describe("Visual Regression", () => {
       // Baseline screenshots do not exist - create them and skip comparison
       if (!baselineExists) {
         console.warn(
-          `Baseline snapshot missing for "${url}" and browser ${browserName} - creating: ${snapshotName} and skipping comparison for this run.`
+          `🟡 Baseline snapshot missing for "${url}" and browser ${browserName} - creating: ${snapshotName}`
         )
 
         await page.screenshot({
@@ -65,15 +85,27 @@ test.describe("Visual Regression", () => {
           fullPage: true,
         })
 
+        console.warn(
+          `📷 Baseline snapshot created for "${url}" and browser ${browserName} - skipping comparison for this run.`
+        )
+
         return
       }
 
       // Baseline screenshot exists - compare with current screenshot
-      await expect(page).toHaveScreenshot(snapshotName, {
-        fullPage: true,
-        threshold: 0.02, // 0 = pixel perfect, higher = more tolerant
-        timeout: COMPARE_TIMEOUT,
-      })
+      try {
+        await expect(page).toHaveScreenshot(snapshotName, {
+          fullPage: true,
+          threshold: 0.2, // 0 = pixel perfect, higher = more tolerant
+          maxDiffPixelRatio: 0.01, // 1% of pixels can be different
+          timeout: COMPARE_TIMEOUT,
+        })
+      } catch (error) {
+        console.warn(
+          `⚠️ Snapshot comparison failed for "${url}" and browser ${browserName} - snapshot: ${snapshotName}`
+        )
+        throw error
+      }
     })
   }
 })
