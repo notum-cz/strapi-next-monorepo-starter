@@ -16,11 +16,13 @@
   ],
   "scripts": {
     "build": "turbo build --cache-dir=.turbo",
+    "build:docs": "turbo run build --filter=@repo/docs",
     "build:strapi": "turbo run build --filter=@repo/strapi",
     "build:ui": "turbo run build --filter=@repo/ui",
     "build:ui:static": "NODE_OPTIONS=--max-old-space-size=2048 turbo run build:static --filter=@repo/ui",
     "commit": "git-cz",
     "dev": "turbo dev",
+    "dev:docs": "turbo run start --filter=@repo/docs",
     "dev:strapi": "turbo run dev --filter=@repo/strapi",
     "dev:ui": "turbo run dev --filter=@repo/ui",
     "format": "prettier --write --cache --ignore-unknown \"**/(*.{md,css,scss}|*.package.json)\"",
@@ -43,6 +45,7 @@
     "tests:playwright:e2e:test:interactive": "turbo run playwright-interactive-mode --filter=@repo/tests-playwright",
     "tests:playwright:seo": "pnpm -F @repo/tests-playwright exec playwright test --project=seo",
     "tests:playwright:visual": "turbo run playwright-visual-tests --filter=@repo/tests-playwright",
+    "tests:playwright:visual:update": "turbo run playwright-visual-tests --filter=@repo/tests-playwright -- --update-snapshots",
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {

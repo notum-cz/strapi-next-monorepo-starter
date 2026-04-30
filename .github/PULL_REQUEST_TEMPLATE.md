@@ -38,7 +38,7 @@ If your PR introduces new environment variables, please list them here along wit
 
 - [ ] **PR is approved**
 - [ ] **All conversations are resolved**
-- [ ] Pipelines are not failing 
+- [ ] Pipelines are not failing
 
 ### Checklist - reviewer
 

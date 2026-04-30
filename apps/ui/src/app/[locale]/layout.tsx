@@ -3,7 +3,6 @@ import "@/styles/globals.css"
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import Script from "next/script"
-import type { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
 import { ErrorBoundary } from "@/components/elementary/ErrorBoundary"
@@ -17,7 +16,7 @@ import TrackingScripts from "@/components/providers/TrackingScripts"
 import { Toaster } from "@/components/ui/sonner"
 import { debugStaticParams } from "@/lib/build"
 import { fontRoboto } from "@/lib/fonts"
-import { routing } from "@/lib/navigation"
+import { isValidLocale, routing } from "@/lib/navigation"
 import { cn } from "@/lib/styles"
 
 export function generateStaticParams() {
@@ -38,15 +37,14 @@ export default async function RootLayout({
   children,
   params,
 }: LayoutProps<"/[locale]">) {
-  const { locale } = (await params) as { locale: Locale }
+  const { locale } = await params
 
+  if (!isValidLocale(locale)) {
+    notFound()
+  }
   // Enable static rendering
   // https://next-intl-docs.vercel.app/docs/getting-started/app-router/with-i18n-routing#static-rendering
   setRequestLocale(locale)
-
-  if (!routing.locales.includes(locale)) {
-    notFound()
-  }
 
   /**
    * This allows you to make following env variables RUNTIME.

@@ -86,6 +86,5 @@ const validPageStatusKeys = new Set(["draft", "published"])
 const draftModePrerenderCookieKey = "__prerender_bypass"
 
 const validPageUrlRegex = new RegExp(
-  String.raw`^(${ROOT_PAGE_PATH}[a-zA-Z0-9-%]*)+$`,
-  "g"
+  String.raw`^(${ROOT_PAGE_PATH}[a-zA-Z0-9-%]*)+$`
 )
