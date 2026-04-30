@@ -39,7 +39,7 @@ export function MobileNavigation({
   return (
     <nav
       className={cn(
-        "bg-background fixed inset-0 z-50 flex size-full flex-col",
+        "bg-background fixed inset-0 z-50 flex size-full flex-1 flex-col",
         "transition-transform duration-300 lg:hidden",
         isOpen ? "translate-x-0" : "translate-x-full"
       )}

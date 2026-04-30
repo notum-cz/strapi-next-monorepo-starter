@@ -1,4 +1,4 @@
-"server only"
+import "server-only"
 
 import { headers } from "next/headers"
 import type { Locale } from "next-intl"
