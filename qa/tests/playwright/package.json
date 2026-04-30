@@ -7,7 +7,7 @@
   "author": "",
   "main": "index.js",
   "scripts": {
-    "axe-test": "tsx axe/axe-test.ts",
+    "axe-test": "playwright test --project=axe",
     "lhci-perfo-check": "tsx perfo/lhci.ts",
     "lint": "eslint -c ../../../eslint.config.mjs './**/*.{js,ts,jsx,tsx,cjs,mjs}'",
     "lint:fix": "pnpm lint --fix",
