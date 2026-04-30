@@ -1,0 +1,34 @@
+{
+  "collectionName": "components_sections_cta_banners",
+  "info": {
+    "displayName": "CTABanner"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultCkEditor"
+      }
+    },
+    "description": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultCkEditor"
+      }
+    },
+    "links": {
+      "type": "component",
+      "component": "utilities.link",
+      "repeatable": true
+    },
+    "features": {
+      "type": "component",
+      "component": "shared.image-with-title-and-description",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

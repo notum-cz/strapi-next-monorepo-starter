@@ -15,7 +15,7 @@ export function Container({
     <div
       className={cn(
         "mx-auto w-full",
-        hideDefaultPadding ? "max-w-screen-default" : "max-w-[1296px] px-6",
+        hideDefaultPadding ? "max-w-312" : "max-w-308 px-6",
         className
       )}
     >

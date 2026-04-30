@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_sections_statistics",
+  "info": {
+    "displayName": "Statistics"
+  },
+  "options": {},
+  "attributes": {
+    "figures": {
+      "type": "component",
+      "component": "shared.figure",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}
