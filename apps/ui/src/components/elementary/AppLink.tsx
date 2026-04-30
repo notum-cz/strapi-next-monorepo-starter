@@ -14,6 +14,7 @@ export interface AppLinkProps
   readonly openInNewTab?: boolean
   readonly startAdornment?: React.ReactNode
   readonly endAdornment?: React.ReactNode
+  readonly disableAnimations?: boolean
 }
 
 export function AppLink({
@@ -25,6 +26,7 @@ export function AppLink({
   openInNewTab = false,
   variant = "link",
   size = "default",
+  disableAnimations = false,
   ...props
 }: AppLinkProps) {
   const combinedClassName = cn(
@@ -34,17 +36,29 @@ export function AppLink({
   )
 
   const formattedHref = formatHref(href)
+  const sharedAdornmentClasses =
+    "relative size-4 transition-transform duration-200 ease-in"
 
   const AppLinkInner = (
     <>
       {startAdornment && (
-        <span className="relative size-4 transition-transform duration-200 ease-in group-hover:-translate-x-2">
+        <span
+          className={cn(
+            sharedAdornmentClasses,
+            !disableAnimations && "group-hover:-translate-x-2"
+          )}
+        >
           {startAdornment}
         </span>
       )}
       {children}
       {endAdornment && (
-        <span className="relative size-4 transition-transform duration-200 ease-in group-hover:translate-x-2">
+        <span
+          className={cn(
+            sharedAdornmentClasses,
+            !disableAnimations && "group-hover:translate-x-2"
+          )}
+        >
           {endAdornment}
         </span>
       )}

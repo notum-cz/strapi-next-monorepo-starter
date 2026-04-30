@@ -7,7 +7,7 @@ import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
-export function ThemeToggle() {
+export function ThemeToggle({ className }: { className?: string }) {
   removeThisWhenYouNeedMe("ThemeToggle")
 
   const { setTheme, theme } = useTheme()
@@ -17,6 +17,7 @@ export function ThemeToggle() {
     <Button
       variant="ghost"
       size="sm"
+      className={className}
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
     >
       <SunMedium className="scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />

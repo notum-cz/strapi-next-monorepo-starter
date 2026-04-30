@@ -31,7 +31,8 @@
     "cancel": "Zrušit",
     "close": "Zavřít",
     "submitForm": "Odeslat",
-    "saveChanges": "Uložit změny"
+    "saveChanges": "Uložit změny",
+    "back": "Zpět"
   },
 
   "tables": {

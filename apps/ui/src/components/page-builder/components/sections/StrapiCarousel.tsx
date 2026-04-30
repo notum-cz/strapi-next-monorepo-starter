@@ -1,3 +1,5 @@
+import "server-only"
+
 import type { Data } from "@repo/strapi-types"
 
 import { Container } from "@/components/elementary/Container"
@@ -10,17 +12,18 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import type { PageBuilderComponentProps } from "@/types/general"
 
 export function StrapiCarousel({
   component,
-}: {
-  readonly component: Data.Component<"sections.carousel">
+}: PageBuilderComponentProps & {
+  component: Data.Component<"sections.carousel">
 }) {
   removeThisWhenYouNeedMe("StrapiCarousel")
 
   return (
     <section>
-      <Container className="flex justify-center px-4 py-8">
+      <Container className="flex justify-center px-16 py-8">
         <Carousel className="w-full">
           <CarouselContent className="-ml-1">
             {component.images?.map((item) => (

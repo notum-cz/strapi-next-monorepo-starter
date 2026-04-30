@@ -10,8 +10,8 @@ export interface StrapiLinkProps {
   readonly children?: React.ReactNode
   readonly className?: string
   readonly hideWhenMissing?: boolean
+  readonly onClick?: () => void
 }
-
 const getStrapiLinkHref = (
   component?: Data.Component<"utilities.link"> | null
 ) => {
@@ -32,6 +32,7 @@ export function StrapiLink({
   children,
   className,
   hideWhenMissing,
+  onClick,
 }: StrapiLinkProps) {
   removeThisWhenYouNeedMe("StrapiLink")
 
@@ -47,6 +48,7 @@ export function StrapiLink({
     leftIcon,
     rightIcon,
     hasIcons = false,
+    disableAnimations = false,
   } = decorations ?? {}
 
   const linkHref = getStrapiLinkHref(component)
@@ -59,15 +61,25 @@ export function StrapiLink({
     <AppLink
       href={linkHref}
       openInNewTab={newTab ?? false}
+      disableAnimations={disableAnimations ?? false}
       className={className}
+      onClick={onClick}
       startAdornment={
         hasIcons && leftIcon ? (
-          <StrapiBasicImage component={leftIcon} fill />
+          <StrapiBasicImage
+            component={leftIcon}
+            fill
+            className="size-full object-contain"
+          />
         ) : undefined
       }
       endAdornment={
         hasIcons && rightIcon ? (
-          <StrapiBasicImage component={rightIcon} fill />
+          <StrapiBasicImage
+            component={rightIcon}
+            fill
+            className="size-full object-contain"
+          />
         ) : undefined
       }
       variant={variant}

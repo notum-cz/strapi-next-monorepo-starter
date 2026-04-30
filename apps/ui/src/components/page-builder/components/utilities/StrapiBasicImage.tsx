@@ -18,6 +18,7 @@ export interface BasicImageProps extends Omit<
   readonly forcedSizes?: { width?: number | null; height?: number | null }
   readonly format?: "large" | "small" | "medium" | "thumbnail"
   readonly autoHeight?: boolean
+  readonly autoWidth?: boolean
 }
 
 export function StrapiBasicImage({
@@ -29,6 +30,7 @@ export function StrapiBasicImage({
   format,
   useNativeNextImageOnly,
   autoHeight,
+  autoWidth,
   ...imgProps
 }: BasicImageProps) {
   const media: StrapiImageMedia = component?.media
@@ -80,7 +82,7 @@ export function StrapiBasicImage({
   return (
     <ImageComp
       style={{
-        width: sizes.width,
+        width: autoWidth && !imgProps.fill ? "auto" : sizes.width,
         height: autoHeight && !imgProps.fill ? "auto" : sizes.height,
         ...imgProps.style,
       }}

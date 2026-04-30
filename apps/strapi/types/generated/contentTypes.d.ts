@@ -543,15 +543,21 @@ export interface ApiNavbarNavbar extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
-    links: Schema.Attribute.Component<"utilities.link", true> &
+    locale: Schema.Attribute.String
+    localizations: Schema.Attribute.Relation<"oneToMany", "api::navbar.navbar">
+    logoImage: Schema.Attribute.Component<"utilities.image-with-link", false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true
         }
       }>
-    locale: Schema.Attribute.String
-    localizations: Schema.Attribute.Relation<"oneToMany", "api::navbar.navbar">
-    logoImage: Schema.Attribute.Component<"utilities.image-with-link", false> &
+    navbarItems: Schema.Attribute.Component<"layout.navbar-item", true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true
+        }
+      }>
+    primaryButtons: Schema.Attribute.Component<"utilities.link", true> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true
@@ -591,7 +597,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     content: Schema.Attribute.DynamicZone<
       [
         "sections.image-with-cta-button",
-        "sections.horizontal-images",
         "sections.hero",
         "sections.heading-with-cta-button",
         "sections.faq",
@@ -600,6 +605,9 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         "forms.newsletter-form",
         "forms.contact-form",
         "utilities.ck-editor-content",
+        "sections.statistics",
+        "sections.features-list",
+        "sections.cta-banner",
         "utilities.ck-editor-text",
         "utilities.tip-tap-rich-text",
       ]

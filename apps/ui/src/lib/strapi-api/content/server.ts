@@ -19,19 +19,23 @@ const seoPopulate = {
   },
 }
 
-// Populate object for "utilities.link" component
-const linkPopulate = {
-  populate: {
-    page: { fields: ["fullPath"] as ["fullPath"] },
-    decorations: { populate: { leftIcon: true, rightIcon: true } },
-  },
-}
-
 // Populate object for "utilities.basic-image" component
 const basicImagePopulate = { populate: { media: true } }
 
-// ------ Page fetching functions
+// Populate object for "utilities.link" component
+const linkPopulate = {
+  populate: {
+    page: {
+      /** Fields key is not allowed here by Strapi v5 TypeScript types because nested populate (components, dynamic zones, relations inside on) only supports officially documented parameters. Although the REST API accepts fields at runtime for performance reasons, the typings are intentionally conservative and do not model this behavior, so TypeScript rejects it. Thats why we needed to use "as". */
+      fields: ["fullPath"] as ["fullPath"],
+    },
+    decorations: {
+      populate: { leftIcon: basicImagePopulate, rightIcon: basicImagePopulate },
+    },
+  },
+}
 
+// ------ Page fetching functions
 export async function fetchPage(
   fullPath: string,
   locale: Locale,
@@ -123,12 +127,16 @@ export async function fetchNavbar(locale: Locale) {
     return await PublicStrapiClient.fetchOne("api::navbar.navbar", undefined, {
       locale,
       populate: {
-        links: linkPopulate,
         logoImage: {
           populate: {
             image: basicImagePopulate,
             link: linkPopulate,
           },
+        },
+
+        primaryButtons: linkPopulate,
+        navbarItems: {
+          populate: { link: linkPopulate, categoryItems: linkPopulate },
         },
       },
     })
