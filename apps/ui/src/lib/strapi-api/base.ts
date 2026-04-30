@@ -1,7 +1,6 @@
 import type { FindFirst, FindMany, ID, Result, UID } from "@repo/strapi-types"
 
 import { getEnvVar } from "@/lib/env-vars"
-import { isDevelopment } from "@/lib/general-helpers"
 import type {
   APIResponse,
   APIResponseCollection,
@@ -44,8 +43,10 @@ export default abstract class BaseStrapiClient {
       ...requestInit,
       next: {
         ...requestInit?.next,
-        // if revalidate is set to a number since 0 implies cache: 'no-store' and a positive value implies cache: 'force-cache'.
-        revalidate: isDevelopment() ? 0 : (requestInit?.next?.revalidate ?? 60),
+        // If `revalidate` is set to a number since 0 implies cache: 'no-store' and
+        // a positive value implies cache: 'force-cache'.
+        // In `next dev`, Next intentionally behaves as mostly uncached ('no-store') for fast feedback.
+        revalidate: requestInit?.next?.revalidate,
       },
       headers: {
         ...requestInit?.headers,

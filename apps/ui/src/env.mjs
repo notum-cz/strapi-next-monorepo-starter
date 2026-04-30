@@ -22,6 +22,7 @@ export const env = createEnv({
     STRAPI_REST_READONLY_API_KEY: z.string().optional(),
     STRAPI_REST_CUSTOM_API_KEY: z.string().optional(),
     STRAPI_PREVIEW_SECRET: z.string().optional(),
+    STRAPI_REVALIDATE_SECRET: z.string().optional(),
 
     NEXT_OUTPUT: z.string().optional(),
 
@@ -75,6 +76,7 @@ export const env = createEnv({
     STRAPI_REST_READONLY_API_KEY: process.env.STRAPI_REST_READONLY_API_KEY,
     STRAPI_REST_CUSTOM_API_KEY: process.env.STRAPI_REST_CUSTOM_API_KEY,
     STRAPI_PREVIEW_SECRET: process.env.STRAPI_PREVIEW_SECRET,
+    STRAPI_REVALIDATE_SECRET: process.env.STRAPI_REVALIDATE_SECRET,
 
     NEXT_OUTPUT: process.env.NEXT_OUTPUT,
 

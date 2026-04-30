@@ -50,7 +50,14 @@ export async function fetchPage(
         populate: { seo: seoPopulate },
         populateDynamicZone: { content: true },
       },
-      requestInit,
+      {
+        ...requestInit,
+        next: {
+          ...requestInit?.next,
+          // value is synced with `[locale]/[[...rest]]/page.tsx` revalidate time (5 minutes)
+          revalidate: requestInit?.next?.revalidate ?? 300,
+        },
+      },
       options
     )
   } catch (e: unknown) {
@@ -70,12 +77,21 @@ export async function fetchAllPages(
   locale: Locale
 ) {
   try {
-    return await PublicStrapiClient.fetchAll(uid, {
-      locale,
-      fields: ["fullPath", "locale", "updatedAt", "createdAt", "slug"],
-      populate: {},
-      status: "published",
-    })
+    return await PublicStrapiClient.fetchAll(
+      uid,
+      {
+        locale,
+        fields: ["fullPath", "locale", "updatedAt", "createdAt", "slug"],
+        populate: {},
+        status: "published",
+      },
+      {
+        next: {
+          revalidate: 300,
+          tags: ["strapi:api::page.page"],
+        },
+      }
+    )
   } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching all pages for locale '${locale}'`,
@@ -84,8 +100,6 @@ export async function fetchAllPages(
         stack: e instanceof Error ? e.stack : undefined,
       },
     })
-
-    return { data: [] }
   }
 }
 
@@ -120,18 +134,28 @@ export async function fetchSeo(
 
 export async function fetchNavbar(locale: Locale) {
   try {
-    return await PublicStrapiClient.fetchOne("api::navbar.navbar", undefined, {
-      locale,
-      populate: {
-        links: linkPopulate,
-        logoImage: {
-          populate: {
-            image: basicImagePopulate,
-            link: linkPopulate,
+    return await PublicStrapiClient.fetchOne(
+      "api::navbar.navbar",
+      undefined,
+      {
+        locale,
+        populate: {
+          links: linkPopulate,
+          logoImage: {
+            populate: {
+              image: basicImagePopulate,
+              link: linkPopulate,
+            },
           },
         },
       },
-    })
+      {
+        next: {
+          revalidate: 300, // 5 minutes
+          tags: ["strapi:api::navbar.navbar"],
+        },
+      }
+    )
   } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching navbar for locale '${locale}'`,
@@ -147,16 +171,26 @@ export async function fetchNavbar(locale: Locale) {
 
 export async function fetchFooter(locale: Locale) {
   try {
-    return await PublicStrapiClient.fetchOne("api::footer.footer", undefined, {
-      locale,
-      populate: {
-        sections: { populate: { links: linkPopulate } },
-        logoImage: {
-          populate: { image: basicImagePopulate, link: linkPopulate },
+    return await PublicStrapiClient.fetchOne(
+      "api::footer.footer",
+      undefined,
+      {
+        locale,
+        populate: {
+          sections: { populate: { links: linkPopulate } },
+          logoImage: {
+            populate: { image: basicImagePopulate, link: linkPopulate },
+          },
+          links: linkPopulate,
         },
-        links: linkPopulate,
       },
-    })
+      {
+        next: {
+          revalidate: 300, // 5 minutes
+          tags: ["strapi:api::footer.footer"],
+        },
+      }
+    )
   } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching footer for locale '${locale}'`,

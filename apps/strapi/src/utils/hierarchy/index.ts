@@ -9,6 +9,12 @@ import type { CreateRedirectPayload, HierarchicalDocumentType } from "./types"
 
 const { ValidationError } = errors
 
+export type RecalculateFullPathResult = {
+  documentType: string
+  targetLocale: string
+  touchedPaths: string[]
+}
+
 /**
  * Lifecycle handler for `beforeCreate` event of hierarchical document types.
  *
@@ -84,7 +90,7 @@ export async function handleHierarchyBeforeCreate(
  */
 export const processRecalculateFullPathJob = async (
   job: Data.ContentType<"api::internal-job.internal-job">
-) => {
+): Promise<RecalculateFullPathResult | undefined> => {
   const { relatedDocumentId, documentType, targetLocale, jobType } = job
 
   if (jobType !== "RECALCULATE_FULLPATH") {
@@ -107,6 +113,7 @@ export const processRecalculateFullPathJob = async (
   }
 
   let oldFullPath = document.fullPath
+  const touchedPaths = new Set<string>()
   const newFullPath = normalizePageFullPath([
     document.parent?.fullPath,
     document.slug,
@@ -125,6 +132,12 @@ export const processRecalculateFullPathJob = async (
       locale: targetLocale,
       status: "published",
     })
+
+    // Save the paths for cache invalidation in the frontend
+    if (oldFullPath) {
+      touchedPaths.add(oldFullPath)
+    }
+    touchedPaths.add(newFullPath)
 
     // Create RECALCULATE_FULLPATH jobs for all children
     const children =
@@ -195,6 +208,12 @@ export const processRecalculateFullPathJob = async (
       documentId: existingRedirectJob.documentId,
     })
   }
+
+  return {
+    documentType,
+    targetLocale,
+    touchedPaths: [...touchedPaths],
+  }
 }
 
 /**
@@ -214,7 +233,7 @@ export const processCreateRedirectJob = async (
     return
   }
 
-  await strapi.documents("api::redirect.redirect").create({
+  return strapi.documents("api::redirect.redirect").create({
     data: {
       source: payload.oldPath,
       destination: payload.newPath,
