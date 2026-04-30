@@ -1,4 +1,5 @@
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
+import { notFound } from "next/navigation"
 import type { Locale } from "next-intl"
 import { use } from "react"
 
@@ -6,6 +7,7 @@ import StrapiPageView from "@/components/layouts/StrapiPageView"
 import { createFallbackPath, debugStaticParams } from "@/lib/build"
 import { isDevelopment } from "@/lib/general-helpers"
 import { getMetadataFromStrapi } from "@/lib/metadata"
+import { isValidLocale } from "@/lib/navigation"
 import { fetchAllPages } from "@/lib/strapi-api/content/server"
 
 // Static/ISR page — no access to headers(), cookies(), or searchParams.
@@ -71,7 +73,10 @@ export async function generateMetadata(
   props: PageProps<"/[locale]/[[...rest]]">
 ) {
   const params = await props.params
-  const locale = params.locale as Locale
+  const locale = params.locale
+  if (!isValidLocale(locale)) {
+    return null
+  }
 
   const fullPath = ROOT_PAGE_PATH + (params.rest ?? []).join("/")
 
@@ -82,6 +87,9 @@ export default function StaticStrapiPage(
   props: PageProps<"/[locale]/[[...rest]]">
 ) {
   const params = use(props.params)
+  if (!isValidLocale(params.locale)) {
+    notFound()
+  }
 
   // `props.searchParams`` can't be accessed here because this is statically generated page
   // and searchParams are not available during build time
