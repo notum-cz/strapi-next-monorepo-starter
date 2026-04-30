@@ -35,7 +35,7 @@ export function NewsletterForm() {
             type="text"
             autoComplete="email"
             required
-            fieldClassName="h-14 bg-white"
+            fieldClassName="h-14 bg-background"
             aria-label="email"
           />
           <Button

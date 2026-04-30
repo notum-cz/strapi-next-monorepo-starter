@@ -1,34 +1,43 @@
 import type { Locale } from "next-intl"
-import { Fragment, use } from "react"
+import { use } from "react"
 
 import { Container } from "@/components/elementary/Container"
+import { ThemeToggle } from "@/components/elementary/ThemeToggle"
 import StrapiImageWithLink from "@/components/page-builder/components/utilities/StrapiImageWithLink"
 import StrapiLink from "@/components/page-builder/components/utilities/StrapiLink"
+import Typography from "@/components/typography"
 import { fetchFooter } from "@/lib/strapi-api/content/server"
 import { cn } from "@/lib/styles"
 
 export function StrapiFooter({ locale }: { readonly locale: Locale }) {
   const response = use(fetchFooter(locale))
-  const component = response?.data
+  const footer = response?.data
 
-  if (component == null) {
+  if (footer == null) {
     return null
   }
 
   return (
-    <div className="w-full border-t bg-white/10 shadow-sm backdrop-blur transition-colors duration-300">
+    <div className="bg-primary/10 w-full border-t shadow-sm backdrop-blur transition-colors duration-300">
       <Container className="pt-8 pb-4">
-        <div className="grid grid-cols-1 gap-6 pb-4 sm:grid-cols-[30%_1fr]">
-          <div className="flex flex-col space-y-4">
+        <div className="flex flex-col justify-between gap-10 lg:flex-row">
+          <div className="flex flex-col items-center justify-center space-y-4 md:items-start md:justify-start">
             <StrapiImageWithLink
-              component={component.logoImage}
+              component={footer.logoImage}
               imageProps={{ hideWhenMissing: true }}
             />
           </div>
 
-          <div className={cn("grid gap-8")}>
-            {component.sections?.map((section) => (
-              <div className="flex flex-col" key={section.id}>
+          <div
+            className={cn(
+              "grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4"
+            )}
+          >
+            {footer.sections?.map((section) => (
+              <div
+                className="flex flex-col items-center md:items-start"
+                key={section.id}
+              >
                 <h3 className="pb-2 text-lg font-bold">{section.title}</h3>
 
                 {section.links?.map((link) => (
@@ -41,37 +50,28 @@ export function StrapiFooter({ locale }: { readonly locale: Locale }) {
               </div>
             ))}
           </div>
+          <ThemeToggle className="absolute top-6 right-6 lg:flex" />
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col-reverse justify-between gap-4 lg:flex-row lg:items-center">
           <div>
-            {component.copyRight && (
-              <p className="">
-                {component.copyRight.replace(
+            {footer.copyRight && (
+              <Typography className="mx-auto w-fit lg:mx-0">
+                {footer.copyRight.replace(
                   "{YEAR}",
                   new Date().getFullYear().toString()
                 )}
-              </p>
+              </Typography>
             )}
           </div>
 
-          <div className="flex flex-col items-end sm:flex-row sm:items-center sm:space-x-4">
-            {component.links?.map((link, i) => (
-              <Fragment key={link.id}>
-                <StrapiLink
-                  component={link}
-                  className="text-primary relative w-fit text-sm hover:underline"
-                />
-
-                {i < component.links!.length - 1 && (
-                  <span
-                    key={link.id + "_dot"}
-                    className="mx-2 hidden pt-0.5 sm:inline-block"
-                  >
-                    •
-                  </span>
-                )}
-              </Fragment>
+          <div className="flex flex-col items-center sm:flex-row md:space-x-4 lg:items-end">
+            {footer.links?.map((link) => (
+              <StrapiLink
+                key={link.id}
+                component={link}
+                className="w-full md:w-fit"
+              />
             ))}
           </div>
         </div>
