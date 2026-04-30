@@ -1,4 +1,4 @@
-"server only"
+import "server-only"
 
 import type { Data } from "@repo/strapi-types"
 
