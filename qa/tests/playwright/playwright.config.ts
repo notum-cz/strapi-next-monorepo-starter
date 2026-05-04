@@ -46,17 +46,31 @@ if (mobileViewportsEnabled) {
   )
 }
 
-projects.push({
-  name: "seo",
-  testMatch: ["seo/**/*.spec.ts"],
-  retries: 0,
-  use: {
-    ...devices["Desktop Chrome"],
-    trace: "off",
-    screenshot: "off",
-    video: "off",
+projects.push(
+  {
+    name: "seo",
+    testMatch: ["seo/**/*.spec.ts"],
+    retries: 1,
+    use: {
+      ...devices["Desktop Chrome"],
+      trace: "off",
+      screenshot: "off",
+      video: "off",
+    },
   },
-})
+  {
+    name: "axe",
+    testMatch: ["axe/**/*.spec.ts"],
+    workers: 1,
+    retries: 1,
+    use: {
+      ...devices["Desktop Chrome"],
+      trace: "off",
+      screenshot: "off",
+      video: "off",
+    },
+  }
+)
 
 export default defineConfig({
   testDir: ".",

@@ -1,11 +1,15 @@
 import { getEnvVar } from "@/lib/env-vars"
+import { isDevelopment } from "@/lib/general-helpers"
 
 /**
- * Function to format Strapi media URLs. There are 2 types of upload:
- * - S3 bucket - in this case, the URL is already correct and starts with https
- * - local upload - in this case, the URL starts with /uploads and we need to add API url prefix
- * (this happens in route handler for Strapi assets)
+ * Formats a Strapi media URL for use in the UI.
  *
+ * In production Strapi stores absolute https:// URLs — returned as-is.
+ *
+ * In local development (local storage fallback), Strapi stores relative /uploads paths.
+ * These are resolved by prepending the Strapi base URL:
+ * - Server-side: uses the private STRAPI_URL env var.
+ * - Client-side: hardcoded to http://127.0.0.1:1337 (dev only, never reached in production).
  */
 export const formatStrapiMediaUrl = (
   imageUrl: string | undefined | null
@@ -14,25 +18,22 @@ export const formatStrapiMediaUrl = (
     return undefined
   }
 
-  if (
-    typeof imageUrl === "string" &&
-    !imageUrl.startsWith("http") &&
-    imageUrl.startsWith("/uploads")
-  ) {
-    // Local upload - add BE URL prefix
-    return typeof window === "undefined"
-      ? formatServerUrl(imageUrl)
-      : formatClientUrl(imageUrl)
+  if (!imageUrl.startsWith("http") && imageUrl.startsWith("/uploads")) {
+    // Local storage (dev only) — prepend Strapi base URL
+    if (typeof window === "undefined") {
+      return `${getEnvVar("STRAPI_URL")}${imageUrl}`
+    }
+
+    // On client side AND in development:
+    // we assume Strapi is running locally and use the hardcoded URL.
+    // In production this branch is never reached because all media URLs are absolute.
+    if (isDevelopment()) {
+      return `http://127.0.0.1:1337${imageUrl}`
+    }
+
+    return imageUrl
   }
 
-  // S3 upload or already formatted URL - return as is
+  // Already absolute URL starting with http — return as-is
   return imageUrl
-}
-
-const formatClientUrl = (imageUrl: string): string => {
-  return `/api/asset${imageUrl}`
-}
-
-const formatServerUrl = (imageUrl: string): string => {
-  return `${getEnvVar("STRAPI_URL")}${imageUrl}`
 }

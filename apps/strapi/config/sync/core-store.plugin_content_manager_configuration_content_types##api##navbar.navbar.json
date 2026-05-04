@@ -19,20 +19,6 @@
           "sortable": true
         }
       },
-      "links": {
-        "edit": {
-          "label": "links",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "links",
-          "searchable": false,
-          "sortable": false
-        }
-      },
       "logoImage": {
         "edit": {
           "label": "logoImage",
@@ -43,6 +29,34 @@
         },
         "list": {
           "label": "logoImage",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "navbarItems": {
+        "edit": {
+          "label": "navbarItems",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "navbarItems",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "primaryButtons": {
+        "edit": {
+          "label": "primaryButtons",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "primaryButtons",
           "searchable": false,
           "sortable": false
         }
@@ -104,24 +118,39 @@
           "searchable": true,
           "sortable": true
         }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
       }
     },
     "layouts": {
       "list": [
         "id",
-        "links",
-        "logoImage"
+        "logoImage",
+        "documentId",
+        "navbarItems"
       ],
       "edit": [
         [
           {
-            "name": "links",
+            "name": "logoImage",
             "size": 12
           }
         ],
         [
           {
-            "name": "logoImage",
+            "name": "navbarItems",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "primaryButtons",
             "size": 12
           }
         ]

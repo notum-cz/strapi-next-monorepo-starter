@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_shared_image_with_configs",
+  "info": {
+    "displayName": "ImageWithConfig"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "component",
+      "component": "utilities.basic-image",
+      "repeatable": false
+    },
+    "position": {
+      "type": "enumeration",
+      "enum": [
+        "left",
+        "right"
+      ]
+    }
+  },
+  "config": {}
+}

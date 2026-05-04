@@ -40,7 +40,7 @@ export default function StrapiPageView({ params, searchParams }: Props) {
       <StrapiStructuredData structuredData={data?.seo?.structuredData} />
 
       <main className={cn("flex w-full flex-col overflow-hidden")}>
-        <Container>
+        <Container className="mb-10 md:mb-20">
           <Breadcrumbs
             breadcrumbs={response?.meta?.breadcrumbs}
             className="mt-6 mb-6"
@@ -68,7 +68,7 @@ export default function StrapiPageView({ params, searchParams }: Props) {
 
             return (
               <ErrorBoundary key={key}>
-                <div className={cn("mb-4 md:mb-12 lg:mb-16")}>
+                <div className={cn("mb-20 md:mb-32 lg:mb-40")}>
                   <Component
                     component={comp}
                     pageParams={params}

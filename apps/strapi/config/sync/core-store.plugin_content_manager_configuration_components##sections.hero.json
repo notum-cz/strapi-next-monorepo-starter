@@ -6,8 +6,8 @@
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "title",
-      "defaultSortBy": "title",
+      "mainField": "documentId",
+      "defaultSortBy": "documentId",
       "defaultSortOrder": "ASC"
     },
     "metadatas": {
@@ -17,34 +17,6 @@
           "label": "id",
           "searchable": false,
           "sortable": false
-        }
-      },
-      "title": {
-        "edit": {
-          "label": "title",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "title",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "subTitle": {
-        "edit": {
-          "label": "subTitle",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "subTitle",
-          "searchable": true,
-          "sortable": true
         }
       },
       "links": {
@@ -61,79 +33,78 @@
           "sortable": false
         }
       },
-      "image": {
+      "description": {
         "edit": {
-          "label": "image",
+          "label": "description",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "image",
+          "label": "description",
           "searchable": false,
           "sortable": false
         }
       },
-      "bgColor": {
+      "tag": {
         "edit": {
-          "label": "bgColor",
+          "label": "tag",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "bgColor",
+          "label": "tag",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "note": {
+        "edit": {
+          "label": "note",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "note",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "title": {
+        "edit": {
+          "label": "title",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "title",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
           "searchable": true,
           "sortable": true
-        }
-      },
-      "steps": {
-        "edit": {
-          "label": "steps",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "steps",
-          "searchable": false,
-          "sortable": false
         }
       }
     },
     "layouts": {
       "list": [
         "id",
-        "title",
-        "subTitle",
-        "links"
+        "links",
+        "documentId"
       ],
       "edit": [
-        [
-          {
-            "name": "title",
-            "size": 6
-          },
-          {
-            "name": "subTitle",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "image",
-            "size": 12
-          }
-        ],
-        [
-          {
-            "name": "bgColor",
-            "size": 6
-          }
-        ],
         [
           {
             "name": "links",
@@ -142,7 +113,25 @@
         ],
         [
           {
-            "name": "steps",
+            "name": "description",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "tag",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "note",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "title",
             "size": 12
           }
         ]

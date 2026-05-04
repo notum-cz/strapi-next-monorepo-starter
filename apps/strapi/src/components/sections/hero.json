@@ -6,32 +6,38 @@
   },
   "options": {},
   "attributes": {
-    "title": {
-      "type": "string",
-      "required": true
-    },
-    "subTitle": {
-      "type": "string"
-    },
     "links": {
       "type": "component",
-      "repeatable": true,
-      "component": "utilities.link"
+      "component": "utilities.link",
+      "repeatable": true
     },
-    "image": {
-      "type": "component",
-      "repeatable": false,
-      "component": "utilities.basic-image"
-    },
-    "bgColor": {
+    "description": {
       "type": "customField",
-      "regex": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
-      "customField": "plugin::color-picker.color"
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultCkEditor"
+      }
     },
-    "steps": {
-      "type": "component",
-      "repeatable": true,
-      "component": "utilities.text"
+    "tag": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultCkEditor"
+      }
+    },
+    "note": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultCkEditor"
+      }
+    },
+    "title": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultCkEditor"
+      }
     }
   }
 }

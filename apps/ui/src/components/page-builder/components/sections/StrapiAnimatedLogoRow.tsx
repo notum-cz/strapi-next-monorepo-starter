@@ -1,53 +1,73 @@
+import "server-only"
+
 import type { Data } from "@repo/strapi-types"
 
+import CkEditorRenderer from "@/components/elementary/ck-editor"
+import { Container } from "@/components/elementary/Container"
 import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
-import { Typography } from "@/components/typography"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
+import type { PageBuilderComponentProps } from "@/types/general"
 
 export function StrapiAnimatedLogoRow({
   component,
-}: {
-  readonly component: Data.Component<"sections.animated-logo-row">
+}: PageBuilderComponentProps & {
+  component: Data.Component<"sections.animated-logo-row">
 }) {
   removeThisWhenYouNeedMe("StrapiAnimatedLogoRow")
 
   if (!component.logos) return null
 
-  const sliderImages = [...component.logos, ...component.logos]
+  const imagesInViewport = 16
+  const repeatCount =
+    component.logos && component.logos.length > 0
+      ? Math.max(2, Math.ceil(imagesInViewport / component.logos.length))
+      : 2
+
+  const repeatedRows = Array.from({ length: repeatCount }).map((_, i) => ({
+    key: `slideshow-group-${i}`,
+    logos: Array.isArray(component.logos) ? component.logos : [],
+  }))
 
   return (
-    <section className="w-full py-10">
-      <div className="flex flex-col items-center gap-[30px]">
-        <Typography tag="h3" variant="heading4" fontWeight="normal">
-          {component.text}
-        </Typography>
+    <section className="w-full px-6 py-10">
+      <Container className="flex flex-col items-center gap-7.5 overflow-hidden rounded-4xl bg-linear-to-r from-purple-500/10 to-rose-300/10 py-10 shadow-sm dark:from-purple-400/20 dark:to-rose-400/20">
+        <CkEditorRenderer htmlContent={component.title} />
 
-        <div className="relative mt-4 w-full">
-          <div className="infinite-scroll-container-horizontal w-full">
-            <div
-              className={cn(
-                "infinite-scroll-horizontal flex gap-14 overflow-hidden",
-                component.logos?.length > 10 && "justify-center"
-              )}
-            >
-              {sliderImages.map((logo, index) => (
-                // eslint-disable-next-line react/no-array-index-key -- items are duplicated for infinite scroll
-                <div key={String(logo.id) + index} className="grayscale">
-                  <StrapiBasicImage
-                    component={logo}
-                    forcedSizes={{ width: 200 }}
-                    priority={index < 10}
-                    loading="eager"
-                    className="z-10 max-h-10 w-full object-contain"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="bg-gradient-slider absolute top-0 left-0 size-full opacity-80" />
+        <div className={cn("group relative mt-12 flex w-full items-center")}>
+          {repeatedRows.map((row, rowIndex) => {
+            const ulAriaHidden =
+              row.logos?.length > imagesInViewport && rowIndex > 0
+
+            return (
+              <ul
+                key={row.key}
+                className="flex shrink-0 items-center ltr:animate-[marquee_linear_infinite] rtl:animate-[marqueeReverse_linear_infinite]"
+                style={{
+                  animationDuration: `${(row.logos?.length ?? 1) * 2}s`,
+                }}
+                aria-hidden={ulAriaHidden}
+              >
+                {row.logos?.map((logo, logoIndex) => (
+                  <li
+                    key={`slideshow-logo-${logo.id}`}
+                    className="w-auto shrink-0 list-none px-10"
+                    aria-hidden={logoIndex > imagesInViewport || ulAriaHidden}
+                  >
+                    <StrapiBasicImage
+                      component={logo}
+                      loading="eager"
+                      className="object-contain"
+                      forcedSizes={{ height: 40 }}
+                      autoWidth
+                    />
+                  </li>
+                ))}
+              </ul>
+            )
+          })}
         </div>
-      </div>
+      </Container>
     </section>
   )
 }
