@@ -62,7 +62,7 @@
     "dayjs": "^1.11.19",
     "embla-carousel-react": "^8.6.0",
     "jwt-decode": "^4.0.0",
-    "lodash": "^4.17.23",
+    "lodash": "^4.18.1",
     "lucide-react": "^0.563.0",
     "next": "16.2.3",
     "next-intl": "4.7.0",
