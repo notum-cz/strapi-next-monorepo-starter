@@ -309,7 +309,7 @@ _[After this preparation is done, delete this section from README]_
 
 ## 📖 Documentation
 
-There is a plenty of documentation in README files in individual apps and packages. Make sure to check them out. In addition, there are some more in the [/docs](./docs) directory. We want to [improve the documentation over time](https://github.com/notum-cz/strapi-next-monorepo-starter/issues/113), so stay tuned.
+There is plenty of documentation in README files in individual apps and packages. Make sure to check them out. In addition, there is more in the [/apps/docs](./apps/docs) directory. We want to [improve the documentation over time](https://github.com/notum-cz/strapi-next-monorepo-starter/issues/113), so stay tuned.
 
 ## 💙 Feedback
 
