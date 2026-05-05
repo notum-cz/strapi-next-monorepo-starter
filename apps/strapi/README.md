@@ -11,7 +11,6 @@ This is a [Strapi v5](https://strapi.io/) project.
 
 ## 📦 Included plugins and packages
 
-- @strapi/plugin-color-picker
 - @strapi/plugin-i18n
 - @strapi/plugin-sentry
 - @strapi/plugin-users-permissions

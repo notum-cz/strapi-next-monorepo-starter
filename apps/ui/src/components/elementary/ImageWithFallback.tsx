@@ -2,14 +2,12 @@
 "use client"
 
 import Image from "next/image"
-import { type SyntheticEvent, useEffect, useState } from "react"
+import { type SyntheticEvent, useState } from "react"
 
 import { FALLBACK_IMAGE_PATH } from "@/lib/constants"
 import type { ImageExtendedProps } from "@/types/next"
 
 import { ImageWithBlur } from "./ImageWithBlur"
-
-const invalidSrc = "/invalid-src.jpg"
 
 export function ImageWithFallback({
   fallbackSrc,
@@ -17,23 +15,20 @@ export function ImageWithFallback({
   blurOff,
   ...imgProps
 }: ImageExtendedProps & { blurOff?: boolean }) {
-  const [src, setSrc] = useState(originalSrc ?? fallbackSrc ?? invalidSrc)
+  const [src, setSrc] = useState(
+    originalSrc ?? fallbackSrc ?? FALLBACK_IMAGE_PATH
+  )
+  const [prevOriginalSrc, setPrevOriginalSrc] = useState(originalSrc)
 
-  useEffect(() => {
-    setSrc(originalSrc ?? fallbackSrc ?? invalidSrc)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [originalSrc])
+  if (originalSrc !== prevOriginalSrc) {
+    setPrevOriginalSrc(originalSrc)
+    setSrc(originalSrc ?? fallbackSrc ?? FALLBACK_IMAGE_PATH)
+  }
 
   const handleLoadError = (e: SyntheticEvent<HTMLImageElement, Event>) => {
     console.error(`Error loading image from ${src}:`, e)
-
-    if (fallbackSrc) {
-      setSrc(fallbackSrc)
-    } else {
-      setSrc(FALLBACK_IMAGE_PATH)
-    }
-
-    imgProps?.onError?.(e)
+    setSrc(fallbackSrc ?? FALLBACK_IMAGE_PATH)
+    imgProps.onError?.(e)
   }
 
   if (blurOff) {

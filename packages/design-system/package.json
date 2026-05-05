@@ -25,13 +25,16 @@
     "lint:fix": "pnpm lint --fix"
   },
   "dependencies": {
-    "@tailwindcss/cli": "^4.1.4",
-    "@tailwindcss/postcss": "^4.1.4",
-    "class-variance-authority": "^0.7.1",
-    "postcss": "^8.5.10",
-    "tailwindcss": "^4.1.4"
+    "@tailwindcss/cli": "4.2.4",
+    "@tailwindcss/postcss": "4.2.4",
+    "class-variance-authority": "0.7.1",
+    "postcss": "8.5.14",
+    "tailwindcss": "4.2.4"
   },
   "devDependencies": {
-    "postcss-modules-values": "^4.0.0"
+    "postcss-modules-values": "4.0.0"
+  },
+  "engines": {
+    "node": "^24.0.0"
   }
 }
