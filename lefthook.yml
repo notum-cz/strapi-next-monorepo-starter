@@ -1,0 +1,30 @@
+colors: false
+no_tty: true
+output:
+  - execution_out
+
+pre-commit:
+  jobs:
+    - name: validate branch name
+      skip:
+        - merge
+      run: sh ./scripts/validate-branch-name.sh
+
+    - name: lint staged files
+      skip:
+        - merge
+      run: |
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+        [ -f .nvmrc ] && command -v nvm >/dev/null 2>&1 && nvm use --silent
+        if command -v corepack >/dev/null 2>&1; then
+          corepack enable >/dev/null 2>&1
+        fi
+        pnpm exec lint-staged --verbose --concurrent false
+
+commit-msg:
+  jobs:
+    - name: validate commit message
+      skip:
+        - merge
+      run: sh ./scripts/commitlint-readable.sh {1}

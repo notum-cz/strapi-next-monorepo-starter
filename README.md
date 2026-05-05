@@ -101,7 +101,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 - **Turborepo**: Pre-configured, apps and packages connected and controlled by Turbo CLI
 - **Dockerized**: Ready to build in Docker containers for production
 - **Code quality**: Out-of-the-box ESLint (with integrated Prettier formatting) and TypeScript configurations in shareable packages
-- **Husky**: Pre-commit hooks for linting, formatting and commit message validation
+- **Lefthook**: Git hooks for linting, formatting and commit message validation
 - **Commitizen**: Commitizen for conventional commits and their generation
 - **Heroku ready**: Ready to deploy to Heroku in a few steps
 - ... and much more is waiting for you to discover!
@@ -196,11 +196,11 @@ Install extensions listed in the [.vscode/extensions.json](.vscode/extensions.js
 
 ## 🔱 Git Hooks & Conventions
 
-Husky is installed by default and configured to enforce code quality and consistent naming conventions.
+Lefthook is installed by default and configured to enforce code quality and consistent naming conventions.
 
 ### Pre-commit Hook
 
-The [pre-commit hook](.husky/pre-commit) runs the following checks before each commit:
+The [`pre-commit` hook](lefthook.yml) runs the following checks before each commit:
 
 1. **Branch name validation** — Ensures branch names follow the convention (skipped during merges):
 
@@ -222,7 +222,7 @@ The [pre-commit hook](.husky/pre-commit) runs the following checks before each c
 
 ### Commit Message Hook
 
-The [commit-msg hook](.husky/commit-msg) validates commit messages using [commitlint](https://commitlint.js.org/):
+The [`commit-msg` hook](lefthook.yml) validates commit messages using [commitlint](https://commitlint.js.org/):
 
 **Conventional commits** — Messages must follow [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) format, e.g.:
 

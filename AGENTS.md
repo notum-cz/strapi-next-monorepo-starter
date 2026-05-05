@@ -47,7 +47,7 @@ This updates `@repo/strapi-types`. Forgetting causes silent type mismatches betw
 
 ## Commits
 
-Uses conventional commits enforced by Husky + commitlint.
+Uses conventional commits enforced by Lefthook + commitlint.
 
 ```bash
 pnpm commit    # Interactive Commitizen flow
