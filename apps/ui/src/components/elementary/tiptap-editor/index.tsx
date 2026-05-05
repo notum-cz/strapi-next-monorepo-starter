@@ -1,6 +1,7 @@
+import type { ID } from "@repo/strapi-types"
 import type { JSONContent } from "@tiptap/core"
-import Color from "@tiptap/extension-color"
-import Highlight from "@tiptap/extension-highlight"
+import ColorExtension from "@tiptap/extension-color"
+import HighlightExtension from "@tiptap/extension-highlight"
 import Subscript from "@tiptap/extension-subscript"
 import Superscript from "@tiptap/extension-superscript"
 import { TableKit } from "@tiptap/extension-table"
@@ -15,7 +16,6 @@ import type { ReactNode } from "react"
 import AppLink from "@/components/elementary/AppLink"
 import {
   HeadingWithSEOTag,
-  OnlyCursive,
   StrapiImage,
 } from "@/components/elementary/tiptap-editor/extensions"
 import {
@@ -23,14 +23,25 @@ import {
   textAlignClassName,
 } from "@/components/elementary/tiptap-editor/utils"
 import Typography from "@/components/typography"
-import type { FontWeight, Variant } from "@/components/typography/config"
+import type {
+  FontWeight,
+  TextColor,
+  Variant,
+} from "@/components/typography/config"
 import Element from "@/components/typography/element"
 import { safeJSONParse } from "@/lib/general-helpers"
 import { formatStrapiMediaUrl } from "@/lib/strapi-helpers"
 import { cn } from "@/lib/styles"
 
 export type TiptapRichTextProps = {
-  content?: string | null
+  content?:
+    | string
+    | JSONContent
+    | {
+        id?: ID
+        content?: string | JSONContent | null
+      }
+    | null
 
   /** Default variant to be used for text nodes that are not marked with a specific style.
    * If not provided, defaults to "medium".
@@ -41,14 +52,6 @@ export type TiptapRichTextProps = {
    * If not provided, defaults to "light".
    */
   defaultWeight?: FontWeight
-
-  /** How text marked as AccentCursive in Tiptap should be styled.
-   * - "accent-cursive": applies italic and text-accent-dark color
-   * - "only-cursive": applies only italic
-   * - "no-accent": no accent color and no italic applied
-   * Default is `accent-cursive`.
-   */
-  accentCursive?: "accent-cursive" | "only-cursive" | "no-accent"
 
   nodeMapping?: Record<
     string,
@@ -67,21 +70,28 @@ export type TiptapRichTextProps = {
       }) => ReactNode
     >
   >
+  className?: string
+  textColor?: TextColor
+  id?: ID
+  linksTarget?: "_blank" | "_self"
 }
 
 export function TiptapRichText({
   content,
-  accentCursive,
   defaultVariant = "medium",
   defaultWeight = "normal",
   nodeMapping = {},
   markMapping = {},
+  className,
+  textColor,
+  id,
+  linksTarget = "_self",
 }: TiptapRichTextProps) {
   if (!content) {
     return null
   }
 
-  const jsonContent = safeJSONParse(content) as JSONContent
+  const jsonContent = normalizeContent(content)
 
   if (!jsonContent?.type) {
     console.warn("TiptapRichText: content is not valid:", content)
@@ -93,7 +103,6 @@ export function TiptapRichText({
     extensions: [
       StarterKit.configure({ heading: false }),
       HeadingWithSEOTag,
-      OnlyCursive,
       Superscript,
       Subscript,
       TableKit,
@@ -101,8 +110,8 @@ export function TiptapRichText({
         types: ["heading", "paragraph"],
       }),
       TextStyle,
-      Color,
-      Highlight.configure({ multicolor: true }),
+      ColorExtension,
+      HighlightExtension.configure({ multicolor: true }),
       StrapiImage,
     ],
     content: jsonContent,
@@ -110,27 +119,24 @@ export function TiptapRichText({
       markMapping: {
         code({ children }) {
           return (
-            <code className="bg-gray-100 px-2 py-1 font-mono">{children}</code>
+            <code id={id} className="bg-gray-100 px-2 py-1 font-mono">
+              {children}
+            </code>
           )
         },
         link({ mark, children }) {
           const href = mark.attrs?.href || ""
 
           return (
-            <AppLink href={href} className="inline p-0 underline">
+            <AppLink
+              id={id}
+              href={href}
+              className={cn("inline p-0 underline", className)}
+              openInNewTab={linksTarget === "_blank"}
+            >
               {children}
             </AppLink>
           )
-        },
-        accentCursive({ children }) {
-          let className = "text-accent-dark italic"
-          if (accentCursive === "only-cursive") className = "italic"
-          if (accentCursive === "no-accent") className = ""
-
-          return <span className={className}>{children}</span>
-        },
-        onlyCursive({ children }) {
-          return <span className="italic">{children}</span>
         },
         underline({ children }) {
           return <u>{children}</u>
@@ -159,15 +165,26 @@ export function TiptapRichText({
         heading({ node, children }) {
           const level = node.attrs?.level ?? 1
           const chosenTag = node.attrs?.tag || `h${level}`
-          const variant = `heading-${level}` as Variant
+          // allow explicit visual variant to be stored on the node (so the rendered style can differ from the semantic tag.)
+
+          const variantFromNode = node.attrs?.variant as string | undefined
+
+          // normalize variants so they match keys in variantStyles (e.g. 'heading2')
+          const rawVariant = variantFromNode || `heading${level}`
+          const variant = String(rawVariant).replaceAll("-", "") as Variant
           const Tag = chosenTag
 
           return (
             <Typography
+              id={id}
               variant={variant}
               tag={Tag}
               fontWeight="normal"
-              className={textAlignClassName(node.attrs.textAlign)}
+              className={cn(
+                textAlignClassName(node.attrs.textAlign),
+                className
+              )}
+              textColor={textColor}
             >
               {children}
             </Typography>
@@ -176,6 +193,7 @@ export function TiptapRichText({
         blockquote({ children }) {
           return (
             <Element
+              id={id}
               tag="blockquote"
               variant="heading4"
               className="border-l-2 border-l-black pl-8"
@@ -187,13 +205,16 @@ export function TiptapRichText({
         paragraph({ children, node }) {
           return (
             <Typography
+              id={id}
               variant={defaultVariant}
               fontWeight={defaultWeight}
               tag="p"
               className={cn(
                 "mb-4 last:mb-0",
-                textAlignClassName(node.attrs.textAlign)
+                textAlignClassName(node.attrs.textAlign),
+                className
               )}
+              textColor={textColor}
             >
               {children}
             </Typography>
@@ -202,10 +223,12 @@ export function TiptapRichText({
         orderedList({ children }) {
           return (
             <Element
+              id={id}
               variant={defaultVariant}
               fontWeight={defaultWeight}
               tag="ol"
               className="tiptap-list"
+              textColor={textColor}
             >
               {children}
             </Element>
@@ -214,10 +237,12 @@ export function TiptapRichText({
         bulletList({ children }) {
           return (
             <Element
+              id={id}
               variant={defaultVariant}
               fontWeight={defaultWeight}
               tag="ul"
               className="tiptap-list tiptap-unordered-list"
+              textColor={textColor}
             >
               {children}
             </Element>
@@ -228,7 +253,10 @@ export function TiptapRichText({
           // Precise setting of table-fixed, w-max, etc. is needed to make sure
           // the table does not shrink too much and respects colwidth set on cells
           return (
-            <div className="overflow-x-auto lg:w-full lg:overflow-x-visible">
+            <div
+              id={id}
+              className="overflow-x-auto lg:w-full lg:overflow-x-visible"
+            >
               <table className="w-max min-w-full table-fixed lg:w-full lg:max-w-full lg:min-w-auto lg:table-auto">
                 {children}
               </table>
@@ -256,6 +284,7 @@ export function TiptapRichText({
 
           return (
             <img
+              id={id}
               src={src}
               alt={alt}
               title={title ?? undefined}
@@ -271,6 +300,33 @@ export function TiptapRichText({
       },
     },
   })
+}
+
+function normalizeContent(
+  content: NonNullable<TiptapRichTextProps["content"]>
+): JSONContent | undefined {
+  if (typeof content === "string") {
+    return safeJSONParse<JSONContent>(content)
+  }
+
+  if ("type" in content && typeof content.type === "string") {
+    return content
+  }
+
+  const nestedContent = content.content
+
+  if (typeof nestedContent === "string") {
+    return safeJSONParse<JSONContent>(nestedContent)
+  }
+
+  if (
+    nestedContent &&
+    typeof nestedContent === "object" &&
+    "type" in nestedContent &&
+    typeof nestedContent.type === "string"
+  ) {
+    return nestedContent
+  }
 }
 
 /* To simplify editor we do not distinguish between header and body cells.
