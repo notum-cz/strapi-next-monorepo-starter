@@ -16,7 +16,7 @@ FROM node:24-slim AS base
 # Install pnpm globally
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
+RUN corepack enable && corepack prepare pnpm@10.33.3 --activate
 
 # Set working directory
 WORKDIR /app
