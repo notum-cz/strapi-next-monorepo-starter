@@ -31,10 +31,25 @@ export function SignInForm({ strapiUrl }: { strapiUrl?: string }) {
   )
 }
 
+const validateCallbackUrl = (url: string | null): string => {
+  const fallback = "/"
+  if (!url) return fallback
+  try {
+    const resolved = new URL(url, window.location.origin)
+    if (resolved.origin === window.location.origin) {
+      return resolved.pathname + resolved.search + resolved.hash
+    }
+  } catch {
+    // invalid URL
+  }
+
+  return fallback
+}
+
 function SuspensedSignInForm({ strapiUrl }: { strapiUrl?: string }) {
   const t = useTranslations("auth.signIn")
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/"
+  const callbackUrl = validateCallbackUrl(searchParams.get("callbackUrl"))
   const { signInMutation } = useUserMutations()
 
   const form = useForm<z.infer<FormSchemaType>>({
