@@ -15,3 +15,17 @@ export function textAlignClassName(
       return ""
   }
 }
+
+export function imageAlignClassName(
+  alignment: "left" | "center" | "right" | null | undefined
+) {
+  switch (alignment) {
+    case "center":
+      return "mx-auto block"
+    case "right":
+      return "ml-auto block"
+
+    default:
+      return ""
+  }
+}
