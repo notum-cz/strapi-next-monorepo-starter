@@ -1,0 +1,125 @@
+{
+  "key": "plugin_content_manager_configuration_components::shared.figure",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "mainField": "prefix",
+      "defaultSortBy": "prefix",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "number": {
+        "edit": {
+          "label": "number",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "number",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "prefix": {
+        "edit": {
+          "label": "prefix",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "prefix",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "suffix": {
+        "edit": {
+          "label": "suffix",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "suffix",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "description": {
+        "edit": {
+          "label": "description",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "description",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "number",
+        "prefix",
+        "suffix"
+      ],
+      "edit": [
+        [
+          {
+            "name": "number",
+            "size": 4
+          },
+          {
+            "name": "prefix",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "suffix",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "description",
+            "size": 12
+          }
+        ]
+      ]
+    },
+    "uid": "shared.figure",
+    "isComponent": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

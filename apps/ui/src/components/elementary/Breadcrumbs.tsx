@@ -26,13 +26,13 @@ export function Breadcrumbs({ breadcrumbs, className, locale }: Props) {
         {breadcrumbs.map((breadcrumb, index) => (
           <span key={breadcrumb.fullPath}>
             {index !== 0 && (
-              <span className={cn("mx-2 inline-block text-black")}>/</span>
+              <span className={cn("text-primary mx-2 inline-block")}>/</span>
             )}
 
             {index === breadcrumbs.length - 1 ? (
               <span
                 className={cn(
-                  "tracking-sm inline-block text-xs leading-[18px] break-words text-black md:text-sm md:leading-[21px]"
+                  "tracking-sm text-primary inline-block text-xs leading-4.5 wrap-break-word md:text-sm md:leading-5.25"
                 )}
                 style={{
                   wordBreak: "break-word",
@@ -46,7 +46,7 @@ export function Breadcrumbs({ breadcrumbs, className, locale }: Props) {
               <AppLink href={breadcrumb.fullPath} className="p-0">
                 <span
                   className={cn(
-                    "tracking-sm inline-block text-xs leading-[18px] text-black md:text-sm md:leading-[21px]"
+                    "tracking-sm text-primary inline-block text-xs leading-4.5 md:text-sm md:leading-5.25"
                   )}
                 >
                   {breadcrumb.title}

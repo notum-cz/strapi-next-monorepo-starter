@@ -36,6 +36,19 @@ export interface FormsNewsletterForm extends Struct.ComponentSchema {
   }
 }
 
+export interface LayoutNavbarItem extends Struct.ComponentSchema {
+  collectionName: "components_layout_navbar_items"
+  info: {
+    displayName: "NavbarItem"
+  }
+  attributes: {
+    categoryItems: Schema.Attribute.Component<"utilities.link", true>
+    isCategoryLink: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>
+    label: Schema.Attribute.String
+    link: Schema.Attribute.Component<"utilities.link", false>
+  }
+}
+
 export interface SectionsAnimatedLogoRow extends Struct.ComponentSchema {
   collectionName: "components_sections_animated_logo_rows"
   info: {
@@ -44,7 +57,13 @@ export interface SectionsAnimatedLogoRow extends Struct.ComponentSchema {
   }
   attributes: {
     logos: Schema.Attribute.Component<"utilities.basic-image", true>
-    text: Schema.Attribute.String & Schema.Attribute.Required
+    title: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
   }
 }
 
@@ -60,6 +79,34 @@ export interface SectionsCarousel extends Struct.ComponentSchema {
   }
 }
 
+export interface SectionsCtaBanner extends Struct.ComponentSchema {
+  collectionName: "components_sections_cta_banners"
+  info: {
+    displayName: "CTABanner"
+  }
+  attributes: {
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
+    features: Schema.Attribute.Component<
+      "shared.image-with-title-and-description",
+      true
+    >
+    links: Schema.Attribute.Component<"utilities.link", true>
+    title: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
+  }
+}
+
 export interface SectionsFaq extends Struct.ComponentSchema {
   collectionName: "components_sections_faqs"
   info: {
@@ -70,6 +117,36 @@ export interface SectionsFaq extends Struct.ComponentSchema {
     accordions: Schema.Attribute.Component<"utilities.accordions", true>
     subTitle: Schema.Attribute.String
     title: Schema.Attribute.String & Schema.Attribute.Required
+  }
+}
+
+export interface SectionsFeaturesList extends Struct.ComponentSchema {
+  collectionName: "components_sections_features_lists"
+  info: {
+    displayName: "FeaturesList"
+  }
+  attributes: {
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
+    features: Schema.Attribute.Component<
+      "shared.image-with-title-and-description",
+      true
+    >
+    listStyle: Schema.Attribute.Enumeration<["boxGrid", "grid", "list"]> &
+      Schema.Attribute.DefaultTo<"list">
+    mainImage: Schema.Attribute.Component<"shared.image-with-config", false>
+    title: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
   }
 }
 
@@ -93,36 +170,35 @@ export interface SectionsHero extends Struct.ComponentSchema {
     displayName: "Hero"
   }
   attributes: {
-    bgColor: Schema.Attribute.String &
-      Schema.Attribute.CustomField<"plugin::color-picker.color">
-    image: Schema.Attribute.Component<"utilities.basic-image", false>
-    links: Schema.Attribute.Component<"utilities.link", true>
-    steps: Schema.Attribute.Component<"utilities.text", true>
-    subTitle: Schema.Attribute.String
-    title: Schema.Attribute.String & Schema.Attribute.Required
-  }
-}
-
-export interface SectionsHorizontalImages extends Struct.ComponentSchema {
-  collectionName: "components_sections_horizontal_images"
-  info: {
-    description: ""
-    displayName: "HorizontalImages"
-  }
-  attributes: {
-    fixedImageHeight: Schema.Attribute.Integer
-    fixedImageWidth: Schema.Attribute.Integer
-    imageRadius: Schema.Attribute.Enumeration<["sm", "md", "lg", "xl", "full"]>
-    images: Schema.Attribute.Component<"utilities.image-with-link", true>
-    spacing: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
         {
-          max: 20
-          min: 0
-        },
-        number
+          preset: "defaultCkEditor"
+        }
       >
-    title: Schema.Attribute.String & Schema.Attribute.Required
+    links: Schema.Attribute.Component<"utilities.link", true>
+    note: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
+    tag: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
+    title: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
   }
 }
 
@@ -137,6 +213,16 @@ export interface SectionsImageWithCtaButton extends Struct.ComponentSchema {
     link: Schema.Attribute.Component<"utilities.link", false>
     subText: Schema.Attribute.String
     title: Schema.Attribute.String & Schema.Attribute.Required
+  }
+}
+
+export interface SectionsStatistics extends Struct.ComponentSchema {
+  collectionName: "components_sections_statistics"
+  info: {
+    displayName: "Statistics"
+  }
+  attributes: {
+    figures: Schema.Attribute.Component<"shared.figure", true>
   }
 }
 
@@ -223,6 +309,61 @@ export interface SeoUtilitiesSocialIcons extends Struct.ComponentSchema {
   attributes: {
     socials: Schema.Attribute.Component<"utilities.image-with-link", true>
     title: Schema.Attribute.String
+  }
+}
+
+export interface SharedFigure extends Struct.ComponentSchema {
+  collectionName: "components_shared_figures"
+  info: {
+    displayName: "Figure"
+  }
+  attributes: {
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
+    number: Schema.Attribute.BigInteger
+    prefix: Schema.Attribute.String
+    suffix: Schema.Attribute.String
+  }
+}
+
+export interface SharedImageWithConfig extends Struct.ComponentSchema {
+  collectionName: "components_shared_image_with_configs"
+  info: {
+    displayName: "ImageWithConfig"
+  }
+  attributes: {
+    image: Schema.Attribute.Component<"utilities.basic-image", false>
+    position: Schema.Attribute.Enumeration<["left", "right"]>
+  }
+}
+
+export interface SharedImageWithTitleAndDescription
+  extends Struct.ComponentSchema {
+  collectionName: "components_shared_image_with_title_and_descriptions"
+  info: {
+    displayName: "ImageWithTitleAndDescription"
+  }
+  attributes: {
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
+    image: Schema.Attribute.Component<"utilities.basic-image", false>
+    title: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        "plugin::ckeditor5.CKEditor",
+        {
+          preset: "defaultCkEditor"
+        }
+      >
   }
 }
 
@@ -322,6 +463,8 @@ export interface UtilitiesLinkDecorations extends Struct.ComponentSchema {
     displayName: "LinkDecorations"
   }
   attributes: {
+    disableAnimations: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>
     hasIcons: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>
@@ -369,7 +512,12 @@ export interface UtilitiesTipTapRichText extends Struct.ComponentSchema {
   }
   attributes: {
     content: Schema.Attribute.Text &
-      Schema.Attribute.CustomField<"plugin::tiptap-editor.RichText">
+      Schema.Attribute.CustomField<
+        "plugin::tiptap-editor.RichText",
+        {
+          preset: "everything"
+        }
+      >
   }
 }
 
@@ -379,17 +527,23 @@ declare module "@strapi/strapi" {
       "elements.footer-item": ElementsFooterItem
       "forms.contact-form": FormsContactForm
       "forms.newsletter-form": FormsNewsletterForm
+      "layout.navbar-item": LayoutNavbarItem
       "sections.animated-logo-row": SectionsAnimatedLogoRow
       "sections.carousel": SectionsCarousel
+      "sections.cta-banner": SectionsCtaBanner
       "sections.faq": SectionsFaq
+      "sections.features-list": SectionsFeaturesList
       "sections.heading-with-cta-button": SectionsHeadingWithCtaButton
       "sections.hero": SectionsHero
-      "sections.horizontal-images": SectionsHorizontalImages
       "sections.image-with-cta-button": SectionsImageWithCtaButton
+      "sections.statistics": SectionsStatistics
       "seo-utilities.seo": SeoUtilitiesSeo
       "seo-utilities.seo-og": SeoUtilitiesSeoOg
       "seo-utilities.seo-twitter": SeoUtilitiesSeoTwitter
       "seo-utilities.social-icons": SeoUtilitiesSocialIcons
+      "shared.figure": SharedFigure
+      "shared.image-with-config": SharedImageWithConfig
+      "shared.image-with-title-and-description": SharedImageWithTitleAndDescription
       "utilities.accordions": UtilitiesAccordions
       "utilities.basic-image": UtilitiesBasicImage
       "utilities.ck-editor-content": UtilitiesCkEditorContent

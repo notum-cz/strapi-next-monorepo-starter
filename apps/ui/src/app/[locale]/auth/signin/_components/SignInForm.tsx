@@ -117,7 +117,6 @@ function SuspensedSignInForm({ strapiUrl }: { strapiUrl?: string }) {
         <Button
           type="submit"
           size="lg"
-          variant="outline"
           form={signInFormName}
           disabled={signInMutation.isPending}
           className="w-full cursor-pointer"

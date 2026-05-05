@@ -84,7 +84,7 @@ export function ContactForm({
 
         <Button
           type="submit"
-          className="mt-4 w-full"
+          className="mx-auto mt-4 w-full md:w-fit"
           size="lg"
           form={contactFormName}
         >

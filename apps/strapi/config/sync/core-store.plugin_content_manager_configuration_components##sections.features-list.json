@@ -1,0 +1,147 @@
+{
+  "key": "plugin_content_manager_configuration_components::sections.features-list",
+  "value": {
+    "settings": {
+      "bulkable": true,
+      "filterable": true,
+      "searchable": true,
+      "pageSize": 10,
+      "mainField": "documentId",
+      "defaultSortBy": "documentId",
+      "defaultSortOrder": "ASC"
+    },
+    "metadatas": {
+      "id": {
+        "edit": {},
+        "list": {
+          "label": "id",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "title": {
+        "edit": {
+          "label": "title",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "title",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "description": {
+        "edit": {
+          "label": "description",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "description",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "listStyle": {
+        "edit": {
+          "label": "listStyle",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "listStyle",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "features": {
+        "edit": {
+          "label": "features",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "features",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "mainImage": {
+        "edit": {
+          "label": "mainImage",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "mainImage",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
+      }
+    },
+    "layouts": {
+      "list": [
+        "id",
+        "listStyle",
+        "features",
+        "mainImage"
+      ],
+      "edit": [
+        [
+          {
+            "name": "title",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "description",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "listStyle",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "features",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "mainImage",
+            "size": 12
+          }
+        ]
+      ]
+    },
+    "uid": "sections.features-list",
+    "isComponent": true
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

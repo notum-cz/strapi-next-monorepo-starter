@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_shared_figures",
+  "info": {
+    "displayName": "Figure"
+  },
+  "options": {},
+  "attributes": {
+    "number": {
+      "type": "biginteger"
+    },
+    "prefix": {
+      "type": "string"
+    },
+    "suffix": {
+      "type": "string"
+    },
+    "description": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultCkEditor"
+      }
+    }
+  },
+  "config": {}
+}

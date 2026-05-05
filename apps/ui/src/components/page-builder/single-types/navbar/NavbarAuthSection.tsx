@@ -19,11 +19,9 @@ export function NavbarAuthSection({
   const session = error || data ? data : sessionSSR
 
   return (
-    <div className="hidden flex-1 items-center justify-end space-x-4 lg:flex">
+    <div className="flex flex-1 items-center justify-end space-x-4">
       {session?.user ? (
-        <nav className="flex items-center space-x-1">
-          <LoggedUserMenu user={session.user} />
-        </nav>
+        <LoggedUserMenu user={session.user} />
       ) : (
         <AppLink href="/auth/signin">{t("actions.signIn")}</AppLink>
       )}

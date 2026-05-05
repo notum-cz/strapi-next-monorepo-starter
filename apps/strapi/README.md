@@ -192,12 +192,26 @@ Custom CKEditor plugins and heading styles are configured in `src/admin/ckeditor
 
 #### Tiptap editor (`@notum-cz/strapi-plugin-tiptap-editor`)
 
-A JSON-based rich text editor. Content is stored as structured JSON (ProseMirror format) and rendered on the frontend using `tiptap-react-renderer` with full control over node/mark mapping.
+A JSON-based rich text editor. Content is stored as structured JSON (ProseMirror format) and rendered on the frontend using `@tiptap/static-renderer` with full control over node/mark mapping.
 
 > [!WARNING]
 > We've just released the Tip tap editor plugin and it's still in early stages. The editor is stable and works well for basic use cases, but it may require some adjustments and improvements in the future. If you want to use it in production, please test it thoroughly with your content and report any issues you find in the [Github repository](https://github.com/notum-cz/strapi-plugin-tiptap-editor/issues). We are actively working on improving the plugin and adding new features, so your feedback is very valuable.
 
 **Strapi component:** `utilities.tip-tap-rich-text`
+
+**Presets:**
+
+The TipTap editor supports configurable presets that control which extensions and toolbar options are available. Presets are defined in [config/plugins.ts](config/plugins.ts) under the `tiptap-editor` plugin configuration. Three presets are included out of the box:
+
+| Preset       | Description                                                                                                                                         |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `everything` | All extensions enabled — headings (1–6), text color, highlight, images (media library), tables, text alignment, lists, code blocks, sub/superscript |
+| `blog`       | Blog-oriented subset — bold, italic, headings (2–4), links, lists, blockquotes, history                                                             |
+| `minimal`    | Minimal formatting — bold, italic, links only                                                                                                       |
+
+The preset is assigned per Strapi component field via the `options.preset` attribute in the component schema (e.g. `tip-tap-rich-text.json`).
+
+Colors and theme CSS are sourced from the `@repo/design-system` package (`tiptap-color-config.json` and `tiptap-theme.css`), ensuring the editor palette matches the frontend design system.
 
 **Frontend usage:**
 
@@ -213,6 +227,10 @@ return (
   />
 )
 ```
+
+**Supported extensions (frontend renderer):**
+
+The renderer supports: bold, italic, underline, strike, text color, highlight (background color), headings (1–6), links, images (with alignment), blockquotes, ordered/unordered lists, tables, code blocks, sub/superscript, and text alignment.
 
 ### Plugins
 
