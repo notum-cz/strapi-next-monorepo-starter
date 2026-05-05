@@ -18,6 +18,8 @@ This is a [Strapi v5](https://strapi.io/) project.
 - @strapi/provider-email-mailgun
 - @strapi/provider-email-nodemailer
 - @strapi/provider-upload-aws-s3
+- strapi-provider-upload-azure-storage
+- @notum-cz/strapi-plugin-tiptap-editor
 - strapi-plugin-config-sync
 - qs
 - lodash
@@ -201,13 +203,14 @@ A JSON-based rich text editor. Content is stored as structured JSON (ProseMirror
 
 **Presets:**
 
-The TipTap editor supports configurable presets that control which extensions and toolbar options are available. Presets are defined in [config/plugins.ts](config/plugins.ts) under the `tiptap-editor` plugin configuration. Three presets are included out of the box:
+The TipTap editor supports configurable presets that control which extensions and toolbar options are available. Presets are defined in [config/plugins/tiptap.ts](config/plugins/tiptap.ts) under the `tiptap-editor` plugin configuration. Four presets are included out of the box:
 
 | Preset       | Description                                                                                                                                         |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `everything` | All extensions enabled — headings (1–6), text color, highlight, images (media library), tables, text alignment, lists, code blocks, sub/superscript |
-| `blog`       | Blog-oriented subset — bold, italic, headings (2–4), links, lists, blockquotes, history                                                             |
-| `minimal`    | Minimal formatting — bold, italic, links only                                                                                                       |
+| `baseText`   | Text-oriented subset — bold, italic, links, lists, used for paragraph content                                                                       |
+| `headings`   | Formatting needed for heading components, where we can set different SEO tags and heading variants — bold, italic, heading only                     |
+| `minimal`    | Minimal formatting — bold, italic, links only used for cases where we do not want to break components by anything else                              |
 
 The preset is assigned per Strapi component field via the `options.preset` attribute in the component schema (e.g. `tip-tap-rich-text.json`).
 
@@ -236,7 +239,26 @@ The renderer supports: bold, italic, underline, strike, text color, highlight (b
 
 All plugins are configured in [config/plugins.ts](config/plugins.ts) file. Some of them may require additional setting of API keys or different ENV variables. User-permissions, seo and config-sync plugins are enabled by default and don't require additional configuration.
 
-#### `@strapi/provider-upload-aws-s3` (S3 file storage)
+#### Upload providers
+
+The upload plugin uses cloud storage when the required environment variables are present. Azure Blob Storage has priority over AWS S3. If neither provider is fully configured, Strapi falls back to the local upload provider.
+
+##### `strapi-provider-upload-azure-storage` (Azure Blob Storage)
+
+This plugin is used to store uploaded files (images, documents, etc.) in Azure Blob Storage instead of the default local upload folder. This is required for production deployments where the local file system is not persistent or files need to be served from a CDN.
+
+Steps:
+
+- Create an Azure Storage account and container in the [Azure Portal](https://portal.azure.com/)
+- Set the required ENV vars in `.env` (see `.env.example` for all options):
+  - `STORAGE_ACCOUNT` — Azure storage account name
+  - `STORAGE_CONTAINER_NAME` — container name
+  - `STORAGE_ACCOUNT_KEY` or `STORAGE_ACCOUNT_SAS_TOKEN` — credentials when using `STORAGE_AUTH_TYPE=default`
+  - For Managed Identity auth, set `STORAGE_AUTH_TYPE=msi` and assign the **Storage Blob Data Contributor** RBAC role to the identity
+- Configure Blob service CORS for browser reads. For manually created storage accounts, allow at least `GET`, `HEAD`, and `OPTIONS` from the Strapi admin origin. Without this, media can appear in the gallery but fail when opened in the admin modal.
+- In [config/middlewares.ts](config/middlewares.ts) the Azure Blob Storage domain (`*.blob.core.windows.net`) is whitelisted in `media-src` and `img-src` CSP directives. If you use a custom `STORAGE_URL` or `STORAGE_CDN_URL`, add those domains there too.
+
+##### `@strapi/provider-upload-aws-s3` (S3 file storage)
 
 This plugin is used to store uploaded files (images, documents, etc.) in AWS S3 bucket instead of default local upload folder. This is required for production deployments where local file system is not persistent or files need to be served from CDN.
 
@@ -245,9 +267,9 @@ This plugin is used to store uploaded files (images, documents, etc.) in AWS S3 
 
 Steps:
 
-- go to [AWS console login](https://signin.aws.amazon.com/signin) and create bucket
-- set ENV vars (at least `AWS_ACCESS_KEY_ID`, `AWS_ACCESS_SECRET`, `AWS_REGION`, `AWS_BUCKET`)
-- in [config/middlewares.ts](config/middlewares.ts) whitelist URL of that S3 bucket in `directives` and `img-src` objects. Otherwise Strapi blocks these URLs and images are broken in UI. By default whole "amazonaws.com" is whitelisted, but you can be more specific here.
+- Go to [AWS console login](https://signin.aws.amazon.com/signin) and create bucket
+- Set ENV vars (at least `AWS_ACCESS_KEY_ID`, `AWS_ACCESS_SECRET`, `AWS_REGION`, `AWS_BUCKET`)
+- In [config/middlewares.ts](config/middlewares.ts) the AWS domain (`*.amazonaws.com`) is whitelisted in `media-src` and `img-src` CSP directives. If you use a custom `CDN_URL`, add that domain there too.
 
 [More info here](https://market.strapi.io/providers/@strapi-provider-upload-aws-s3)
 
@@ -282,7 +304,7 @@ async find(ctx) {
 
 #### Emails
 
-To send emails from Strapi (e.g., registration confirmation, password reset, etc.), this starter preconfigures 2 email providers: Mailgun and Mailtrap. It is supposed that Mailtrap is used during development and Mailgun in production, but you can change this easily in [config/plugins.ts](config/plugins.ts) file - the selection is based on provided ENV variables.
+To send emails from Strapi (e.g., registration confirmation, password reset, etc.), this starter preconfigures 2 email providers: Mailgun and Mailtrap. Mailgun has priority and is intended for production. Mailtrap is intended for development and testing. The selection is based on provided ENV variables and configured in [config/plugins/email.ts](config/plugins/email.ts).
 
 ##### `@strapi/provider-email-mailgun` (Mailgun)
 

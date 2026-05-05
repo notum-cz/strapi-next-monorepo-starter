@@ -15,6 +15,7 @@ export default [
             "https://maps.gstatic.com",
             "https://maps.googleapis.com",
             "*.amazonaws.com",
+            "*.blob.core.windows.net",
           ],
           "img-src": [
             "'self'",
@@ -43,6 +44,7 @@ export default [
             "streetviewpixels-pa.googleapis.com",
             "market-assets.strapi.io",
             "*.amazonaws.com",
+            "*.blob.core.windows.net",
           ],
         },
       },

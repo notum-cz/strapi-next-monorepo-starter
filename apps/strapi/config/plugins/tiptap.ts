@@ -8,7 +8,7 @@ export function tipTapEditorConfig() {
     enabled: true,
     config: {
       presets: {
-        allFeatures: {
+        everything: {
           bold: true,
           italic: true,
           strike: true,
