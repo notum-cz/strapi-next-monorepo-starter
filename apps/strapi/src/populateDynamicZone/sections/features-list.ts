@@ -1,3 +1,5 @@
+import type { Modules } from "@strapi/strapi"
+
 import basicImagePopulate from "../utilities/basic-image"
 
 export default {
@@ -7,4 +9,4 @@ export default {
     },
     mainImage: { populate: { image: basicImagePopulate } },
   },
-}
+} as Modules.Documents.Params.Populate.NestedParams<"sections.features-list">

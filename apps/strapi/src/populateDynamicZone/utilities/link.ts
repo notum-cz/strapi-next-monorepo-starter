@@ -1,3 +1,5 @@
+import type { Modules } from "@strapi/strapi"
+
 import linkDecorationsPopulate from "./link-decorations"
 
 export default {
@@ -7,4 +9,4 @@ export default {
     },
     decorations: linkDecorationsPopulate,
   },
-}
+} as Modules.Documents.Params.Populate.NestedParams<"utilities.link">
