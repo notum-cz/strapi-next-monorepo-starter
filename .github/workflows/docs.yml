@@ -33,7 +33,7 @@ jobs:
 
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v5.0.0
+        uses: actions/configure-pages@v6.0.0
 
       - name: Build Docusaurus
         run: pnpm --filter @repo/docs build
