@@ -5,18 +5,18 @@ inputs:
   pnpm-version:
     description: 'pnpm version to install'
     required: false
-    default: '10.28.1'
+    default: '10.33.3'
 
 runs:
   using: 'composite'
   steps:
     - name: Setup pnpm
-      uses: pnpm/action-setup@v4
+      uses: pnpm/action-setup@v4.2.0
       with:
-        version: 10.28.1
+        version: ${{ inputs.pnpm-version }}
 
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6.3.0
       with:
         node-version-file: '.nvmrc'
         cache: "pnpm"

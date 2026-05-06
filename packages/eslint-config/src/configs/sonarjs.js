@@ -42,7 +42,7 @@ export default [
       "**/en.ts",
     ],
     rules: {
-      "sonarjs/no-hardcoded-passwords": "off", // eslint-disable-line sonarjs/no-hardcoded-passwords
+      "sonarjs/no-hardcoded-passwords": "off",
       "sonarjs/no-hardcoded-secrets": "off",
     },
   },

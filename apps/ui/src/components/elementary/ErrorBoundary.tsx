@@ -18,7 +18,7 @@ function ErrorBoundaryFallback({
   hideReset,
   showErrorMessage,
 }: {
-  readonly error: Error & { digest?: string }
+  readonly error: unknown
   readonly resetErrorBoundary: () => void
   readonly customErrorTitle?: string
   readonly hideReset?: boolean
@@ -37,6 +37,8 @@ function ErrorBoundaryFallback({
   }
 
   const isDev = isDevelopment()
+  const errorMessage = error instanceof Error ? error.message : String(error)
+  const errorStack = error instanceof Error ? error.stack : undefined
 
   return (
     <Alert variant="destructive" className="relative">
@@ -44,12 +46,12 @@ function ErrorBoundaryFallback({
       <AlertTitle>{customErrorTitle ?? t("invalidContent")}</AlertTitle>
       <AlertDescription>
         {(showErrorMessage || isDev) && (
-          <p className="mt-1 text-sm text-black">{error.message}</p>
+          <p className="mt-1 text-sm text-black">{errorMessage}</p>
         )}
 
         {isDev && (
           <div className="mt-2 w-full overflow-x-auto bg-gray-100 p-3 text-xs">
-            <pre>{error.stack?.split("\n").slice(0, 5).join("\n")}</pre>
+            <pre>{errorStack?.split("\n").slice(0, 5).join("\n")}</pre>
           </div>
         )}
 
@@ -92,16 +94,20 @@ export function ErrorBoundary({
   readonly showErrorMessage?: boolean
   readonly onReset?: () => void
   readonly onError?: (
-    error: Error & { digest?: string },
-
+    error: unknown,
     info: { componentStack?: string | null }
   ) => void
 }) {
   const handleError = (
-    error: Error & { digest?: string },
-    info: { componentStack?: string | null; digest?: string | null }
+    error: unknown,
+    info: { componentStack?: string | null }
   ) => {
-    const digest = error.digest ?? info.digest
+    const errorDigest =
+      error instanceof Error
+        ? (error as Error & { digest?: string }).digest
+        : undefined
+    const infoDigest = (info as { digest?: string | null }).digest
+    const digest = errorDigest ?? infoDigest
     if (digest === "NEXT_NOT_FOUND" || digest?.includes("404")) {
       throw error
     }

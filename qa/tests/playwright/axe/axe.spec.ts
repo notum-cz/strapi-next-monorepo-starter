@@ -193,6 +193,7 @@ test.describe("AXE accessibility", () => {
           `🟠 Warnings found for ${site} (${warningViolations.length})${warningOnlySite ? " - warning-only page" : ""}`
         )
       } else {
+        // eslint-disable-next-line no-console
         console.log(`✅ No violations for ${site}`)
       }
 
@@ -281,6 +282,7 @@ test.describe("AXE accessibility", () => {
         : []),
     ])
 
+    // eslint-disable-next-line no-console
     console.log(`🖊️ AXE summary report written to ${reportFilePath}`)
   })
 })
