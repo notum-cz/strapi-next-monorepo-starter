@@ -5,6 +5,7 @@ import { use } from "react"
 
 import StrapiPageView from "@/components/layouts/StrapiPageView"
 import { createFallbackPath, debugStaticParams } from "@/lib/build"
+import { getEnvVar } from "@/lib/env-vars"
 import { isDevelopment } from "@/lib/general-helpers"
 import { getMetadataFromStrapi } from "@/lib/metadata"
 import { isValidLocale } from "@/lib/navigation"
@@ -42,23 +43,30 @@ export async function generateStaticParams({
     debugStaticParams([], "[[...rest]]", { isDevelopment: true })
 
     // do not prefetch all locales when developing
-    return [
-      {
-        locale: "en",
-        rest: [""],
-      },
-    ]
+    return [{ locale: "en" }]
   }
 
   const results = await fetchAllPages("api::page.page", locale as Locale)
 
   const params =
     results?.data.map((page) => ({
-      locale: page.locale as Locale,
-      rest: [page.slug],
+      locale: (page.locale ?? locale) as Locale,
+      rest:
+        page.fullPath === ROOT_PAGE_PATH
+          ? []
+          : (page.fullPath?.split("/").filter(Boolean) ?? []),
     })) ?? []
 
   debugStaticParams(params, "[[...rest]]")
+
+  if (params.length > 0) {
+    return params
+  }
+
+  const isStaticExport = getEnvVar("NEXT_OUTPUT") === "export"
+  if (!isStaticExport) {
+    return []
+  }
 
   // statically generated applications with output: 'export' require at least one entry (even invalid)
   // within the dynamic segment to avoid build errors
@@ -66,7 +74,7 @@ export async function generateStaticParams({
     rest: ["fallback"],
   })
 
-  return params.length > 0 ? params : [fallbackPath]
+  return [fallbackPath]
 }
 
 export async function generateMetadata(

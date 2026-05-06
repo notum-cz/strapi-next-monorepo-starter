@@ -15,19 +15,14 @@ export function ImageWithFallback({
   blurOff,
   ...imgProps
 }: ImageExtendedProps & { blurOff?: boolean }) {
-  const [src, setSrc] = useState(
-    originalSrc ?? fallbackSrc ?? FALLBACK_IMAGE_PATH
-  )
-  const [prevOriginalSrc, setPrevOriginalSrc] = useState(originalSrc)
-
-  if (originalSrc !== prevOriginalSrc) {
-    setPrevOriginalSrc(originalSrc)
-    setSrc(originalSrc ?? fallbackSrc ?? FALLBACK_IMAGE_PATH)
-  }
+  const [hasLoadError, setHasLoadError] = useState(false)
+  const src = hasLoadError
+    ? (fallbackSrc ?? FALLBACK_IMAGE_PATH)
+    : (originalSrc ?? fallbackSrc ?? FALLBACK_IMAGE_PATH)
 
   const handleLoadError = (e: SyntheticEvent<HTMLImageElement, Event>) => {
     console.error(`Error loading image from ${src}:`, e)
-    setSrc(fallbackSrc ?? FALLBACK_IMAGE_PATH)
+    setHasLoadError(true)
     imgProps.onError?.(e)
   }
 

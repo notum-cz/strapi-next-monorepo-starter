@@ -48,8 +48,8 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
    # switch to correct nodejs version (v24)
    nvm use
 
-   # optionally, switch to pnpm v10.28.1
-   (corepack prepare pnpm@10.28.1 --activate)
+   # optionally, switch to pnpm v10.33.3
+   (corepack prepare pnpm@10.33.3 --activate)
 
    # install deps for apps and packages that are part of this monorepo
    pnpm install
