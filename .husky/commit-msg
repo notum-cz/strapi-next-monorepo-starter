@@ -1,4 +1,0 @@
-
-echo '🏗️👷 Lets construct commit message 👷‍♂️🏗️'
-
-git rev-parse -q --no-revs --verify MERGE_HEAD || npx --no -- commitlint --edit ${1}
