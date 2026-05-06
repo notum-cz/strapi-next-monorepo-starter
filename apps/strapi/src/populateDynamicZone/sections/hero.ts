@@ -6,4 +6,4 @@ export default {
   populate: {
     links: linkPopulate,
   },
-} as Modules.Documents.Params.Populate.NestedParams<"sections.hero">
+} satisfies Modules.Documents.Params.Populate.NestedParams<"sections.hero">

@@ -8,4 +8,4 @@ export default {
     links: linkPopulate,
     features: { populate: { image: basicImagePopulate } },
   },
-} as Modules.Documents.Params.Populate.NestedParams<"sections.cta-banner">
+} satisfies Modules.Documents.Params.Populate.NestedParams<"sections.cta-banner">

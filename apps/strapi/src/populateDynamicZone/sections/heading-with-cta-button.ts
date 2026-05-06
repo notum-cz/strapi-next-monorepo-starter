@@ -4,4 +4,4 @@ import linkPopulate from "../utilities/link"
 
 export default {
   populate: { cta: linkPopulate },
-} as Modules.Documents.Params.Populate.NestedParams<"sections.heading-with-cta-button">
+} satisfies Modules.Documents.Params.Populate.NestedParams<"sections.heading-with-cta-button">

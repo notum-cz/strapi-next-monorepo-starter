@@ -9,4 +9,4 @@ export default {
     },
     mainImage: { populate: { image: basicImagePopulate } },
   },
-} as Modules.Documents.Params.Populate.NestedParams<"sections.features-list">
+} satisfies Modules.Documents.Params.Populate.NestedParams<"sections.features-list">

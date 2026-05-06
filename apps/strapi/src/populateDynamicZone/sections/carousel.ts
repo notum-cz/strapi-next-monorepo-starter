@@ -9,4 +9,4 @@ export default {
       populate: { image: basicImagePopulate, link: linkPopulate },
     },
   },
-} as Modules.Documents.Params.Populate.NestedParams<"sections.carousel">
+} satisfies Modules.Documents.Params.Populate.NestedParams<"sections.carousel">

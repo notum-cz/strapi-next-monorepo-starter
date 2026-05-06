@@ -4,4 +4,4 @@ import basicImagePopulate from "../utilities/basic-image"
 
 export default {
   populate: { logos: basicImagePopulate },
-} as Modules.Documents.Params.Populate.NestedParams<"sections.animated-logo-row">
+} satisfies Modules.Documents.Params.Populate.NestedParams<"sections.animated-logo-row">

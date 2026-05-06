@@ -117,7 +117,7 @@ export default {
     image: basicImagePopulate,
     steps: true,
   },
-} as Modules.Documents.Params.Populate.NestedParams<"{category}.{name}">
+} satisfies Modules.Documents.Params.Populate.NestedParams<"{category}.{name}">
 ```
 
 - Use `true` if the component has no nested relations/components (like `"utilities.ck-editor-content": true`)

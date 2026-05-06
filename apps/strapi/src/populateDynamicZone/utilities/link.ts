@@ -9,4 +9,4 @@ export default {
     },
     decorations: linkDecorationsPopulate,
   },
-} as Modules.Documents.Params.Populate.NestedParams<"utilities.link">
+} satisfies Modules.Documents.Params.Populate.NestedParams<"utilities.link">

@@ -7,4 +7,4 @@ export default {
     leftIcon: basicImagePopulate,
     rightIcon: basicImagePopulate,
   },
-} as Modules.Documents.Params.Populate.NestedParams<"utilities.link-decorations">
+} satisfies Modules.Documents.Params.Populate.NestedParams<"utilities.link-decorations">
