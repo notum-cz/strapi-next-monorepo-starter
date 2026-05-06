@@ -1,3 +1,5 @@
+import type { Modules } from "@strapi/strapi"
+
 import basicImagePopulate from "./basic-image"
 
 export default {
@@ -5,4 +7,4 @@ export default {
     leftIcon: basicImagePopulate,
     rightIcon: basicImagePopulate,
   },
-}
+} satisfies Modules.Documents.Params.Populate.NestedParams<"utilities.link-decorations">

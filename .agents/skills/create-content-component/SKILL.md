@@ -106,6 +106,8 @@ Add the new UID to the `attributes.content.components` array:
 Add files to `apps/strapi/src/populateDynamicZone` folder.
 
 ```typescript
+import type { Modules } from "@strapi/strapi"
+
 import basicImagePopulate from "../utilities/basic-image"
 import linkPopulate from "../utilities/link"
 
@@ -115,7 +117,7 @@ export default {
     image: basicImagePopulate,
     steps: true,
   },
-}
+} satisfies Modules.Documents.Params.Populate.NestedParams<"{category}.{name}">
 ```
 
 - Use `true` if the component has no nested relations/components (like `"utilities.ck-editor-content": true`)
@@ -123,6 +125,7 @@ export default {
 - Use `{ populate: { fieldName: { populate: { media: true } } } }` for deeply nested media
 - Match the pattern of existing entries — only populate relations and components, not scalar fields
 - When component has different component inside in Strapi, always import its population config and reuse it.
+- Type object-based populate exports with `Modules.Documents.Params.Populate.NestedParams<"{category}.{name}">` so TypeScript validates field names against the generated Strapi component schema.
 
 ### 4. Create React component
 
