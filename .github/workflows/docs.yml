@@ -43,7 +43,7 @@ jobs:
           DOCUSAURUS_BASE_URL: ${{ steps.pages.outputs.base_path }}/
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4.0.0
+        uses: actions/upload-pages-artifact@v5.0.0
         with:
           path: apps/docs/build/strapi-next-monorepo-starter
 
