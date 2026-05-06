@@ -31,9 +31,9 @@ export function StrapiHero({
           )}
           {links && (
             <div className="mx-auto flex w-full flex-col gap-2 pt-6 md:w-fit lg:flex-row lg:gap-4">
-              {links.map((link, i) => (
+              {links.map((link) => (
                 <StrapiLink
-                  key={i}
+                  key={link.id}
                   component={link}
                   className="w-full lg:w-fit"
                 />

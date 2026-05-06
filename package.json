@@ -49,7 +49,7 @@
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
-    "@commitlint/cli": "19.3.0",
+    "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
     "@commitlint/config-pnpm-scopes": "20.1.0",
     "@repo/eslint-config": "workspace:*",
@@ -57,26 +57,78 @@
     "@repo/typescript-config": "workspace:*",
     "commitizen": "4.3.1",
     "cz-conventional-changelog": "3.3.0",
-    "eslint": "^9.39.2",
+    "eslint": "9.39.4",
     "husky": "9.1.7",
-    "lint-staged": "15.2.7",
-    "prettier": "3.8.1",
-    "semantic-release": "24.2.0",
+    "lint-staged": "15.5.2",
+    "prettier": "3.8.3",
+    "semantic-release": "24.2.9",
+    "tslib": "2.8.1",
     "turbo": "2.7.6"
   },
-  "packageManager": "pnpm@10.28.1",
+  "packageManager": "pnpm@10.33.3",
   "engines": {
-    "node": "^22.0.0"
+    "node": "^24.0.0"
   },
   "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "eslint": "^9.39.0",
+        "react": ">=18 <20",
+        "react-dom": ">=18 <20",
+        "styled-components": ">=6.0.0 <7",
+        "typescript": ">=5.4.0 <6",
+        "zod": ">=3.25.67 <5"
+      }
+    },
     "overrides": {
-      "@types/react": "19.2.9",
+      "@types/react": "19.2.14",
       "@types/react-dom": "19.2.3"
     },
     "packageExtensions": {
       "@hookform/resolvers": {
         "peerDependencies": {
           "zod": "*"
+        }
+      },
+      "@uiw/codemirror-extensions-basic-setup": {
+        "peerDependenciesMeta": {
+          "@codemirror/autocomplete": {
+            "optional": true
+          },
+          "@codemirror/language": {
+            "optional": true
+          },
+          "@codemirror/lint": {
+            "optional": true
+          },
+          "@codemirror/search": {
+            "optional": true
+          },
+          "@codemirror/state": {
+            "optional": true
+          },
+          "@codemirror/view": {
+            "optional": true
+          }
+        }
+      },
+      "@uiw/react-codemirror": {
+        "peerDependenciesMeta": {
+          "@babel/runtime": {
+            "optional": true
+          },
+          "@codemirror/state": {
+            "optional": true
+          },
+          "@codemirror/theme-one-dark": {
+            "optional": true
+          },
+          "@codemirror/view": {
+            "optional": true
+          },
+          "codemirror": {
+            "optional": true
+          }
         }
       }
     }

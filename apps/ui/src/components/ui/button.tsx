@@ -1,5 +1,5 @@
-import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
+import { Slot } from "radix-ui"
 import type * as React from "react"
 
 import { Spinner } from "@/components/elementary/Spinner"
@@ -55,7 +55,7 @@ function Button({
     asChild?: boolean
     isLoading?: boolean
   }) {
-  const Comp = asChild ? Slot : "button"
+  const Comp = asChild ? Slot.Root : "button"
 
   if (isLoading) {
     props.children = <Spinner className="h-4 w-4 border-2" />

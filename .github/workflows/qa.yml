@@ -58,13 +58,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.2
 
       - name: Setup pnpm with cache
         uses: ./.github/actions/setup-pnpm
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v5
+        uses: actions/cache@v5.0.5
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
@@ -103,13 +103,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.2
 
       - name: Setup pnpm with cache
         uses: ./.github/actions/setup-pnpm
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v5
+        uses: actions/cache@v5.0.5
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
@@ -144,13 +144,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.2
 
       - name: Setup pnpm with cache
         uses: ./.github/actions/setup-pnpm
       
       - name: Cache Playwright browsers
-        uses: actions/cache@v5
+        uses: actions/cache@v5.0.5
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
@@ -187,7 +187,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.2
 
       - name: Setup pnpm with cache
         uses: ./.github/actions/setup-pnpm
