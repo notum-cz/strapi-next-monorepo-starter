@@ -10,3 +10,8 @@ export type StrapiPreviewConfig = {
 
 export type LifecycleEventType<T extends keyof Model["lifecycles"]> =
   Parameters<Model["lifecycles"][T]>[0]
+
+export type EnvGetter = (
+  key: string,
+  defaultValue?: string | number
+) => string | undefined
