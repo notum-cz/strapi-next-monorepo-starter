@@ -674,8 +674,6 @@ import { StrapiBasicImage } from "@/components/page-builder/components/utilities
 />
 ```
 
-`StrapiBasicImage` also applies the `img-fallback` class. If an image fails to load, global CSS shows a gray placeholder with the image alt text.
-
 #### The sizes prop
 
 The `sizes` prop tells the browser how wide the image will be displayed before the image loads. The browser combines `sizes`, viewport width, and device pixel ratio to choose the smallest useful `srcSet` candidate.

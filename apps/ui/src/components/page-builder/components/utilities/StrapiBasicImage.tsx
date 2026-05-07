@@ -4,7 +4,6 @@ import Image from "next/image"
 import { ImgproxyImage } from "@/components/elementary/images/ImgproxyImage"
 import { isImgproxyEnabled } from "@/lib/imgproxy"
 import { formatStrapiMediaUrl } from "@/lib/strapi-helpers"
-import { cn } from "@/lib/styles"
 import type { StrapiImageMedia } from "@/types/api"
 import type { ImageExtendedProps } from "@/types/next"
 
@@ -52,7 +51,7 @@ export function StrapiBasicImage({
   const useImgproxy = isImgproxyEnabled() && !isSvg
 
   const imageProps = {
-    className: cn("img-fallback", className),
+    className,
     src,
     alt,
     ...imgProps,
