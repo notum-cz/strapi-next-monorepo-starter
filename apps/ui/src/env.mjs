@@ -37,6 +37,8 @@ export const env = createEnv({
     BASIC_AUTH_ENABLED: optionalZodBoolean(),
     BASIC_AUTH_USERNAME: z.string().optional(),
     BASIC_AUTH_PASSWORD: z.string().optional(),
+
+    IMGPROXY_URL: z.string().url().optional(),
   },
 
   /*
@@ -91,6 +93,8 @@ export const env = createEnv({
     BASIC_AUTH_ENABLED: process.env.BASIC_AUTH_ENABLED,
     BASIC_AUTH_USERNAME: process.env.BASIC_AUTH_USERNAME,
     BASIC_AUTH_PASSWORD: process.env.BASIC_AUTH_PASSWORD,
+
+    IMGPROXY_URL: process.env.IMGPROXY_URL,
 
     // client
     // @dominik-juriga - find out if these are specific per environment

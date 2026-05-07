@@ -21,6 +21,24 @@
     border-color: var(--color-gray-200, currentColor);
   }
 
+  /* CSS-only broken image fallback.
+     When an <img> fails to load it becomes a non-replaced element,
+     so its background and pseudo-elements become visible. */
+  img.img-fallback {
+    background: var(--color-gray-100);
+  }
+
+  img.img-fallback::after {
+    content: attr(alt);
+    display: grid;
+    place-items: center;
+    height: 100%;
+    padding: 0.5rem;
+    color: var(--color-gray-500);
+    font-size: 0.75rem;
+    text-align: center;
+  }
+
   ul {
     list-style-type: disc;
     list-style-position: inside;

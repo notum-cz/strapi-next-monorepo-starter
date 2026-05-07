@@ -1,8 +1,10 @@
 import type { Data } from "@repo/strapi-types"
 import Image from "next/image"
 
-import { ImageWithFallback } from "@/components/elementary/ImageWithFallback"
+import { ImgproxyImage } from "@/components/elementary/images/ImgproxyImage"
+import { isImgproxyEnabled } from "@/lib/imgproxy"
 import { formatStrapiMediaUrl } from "@/lib/strapi-helpers"
+import { cn } from "@/lib/styles"
 import type { StrapiImageMedia } from "@/types/api"
 import type { ImageExtendedProps } from "@/types/next"
 
@@ -11,88 +13,64 @@ export interface BasicImageProps extends Omit<
   "src" | "alt"
 > {
   readonly component: Data.Component<"utilities.basic-image"> | undefined | null
-  readonly useNativeNextImageOnly?: boolean
   readonly className?: ImageExtendedProps["className"]
-  readonly hideWhenMissing?: boolean
-  readonly fallbackSizes?: { width?: number | null; height?: number | null }
-  readonly forcedSizes?: { width?: number | null; height?: number | null }
-  readonly format?: "large" | "small" | "medium" | "thumbnail"
-  readonly autoHeight?: boolean
-  readonly autoWidth?: boolean
 }
 
 export function StrapiBasicImage({
   component,
   className,
-  hideWhenMissing,
-  fallbackSizes,
-  forcedSizes,
-  format,
-  useNativeNextImageOnly,
-  autoHeight,
-  autoWidth,
   ...imgProps
 }: BasicImageProps) {
   const media: StrapiImageMedia = component?.media
-  const selectedFormat = format ? media?.formats?.[format] : undefined
 
-  const url = selectedFormat?.url ?? media?.url ?? component?.fallbackSrc
+  const src = formatStrapiMediaUrl(media?.url ?? component?.fallbackSrc)
 
-  if (url == null && hideWhenMissing) {
+  if (src == null) {
     return null
   }
 
-  const ImageComp = useNativeNextImageOnly ? Image : ImageWithFallback
+  const alt = component?.alt ?? media?.caption ?? media?.alternativeText ?? ""
 
-  const sizes = {
-    width:
-      forcedSizes?.width ??
-      component?.width ??
-      selectedFormat?.width ??
-      media?.width ??
-      fallbackSizes?.width ??
-      undefined,
+  const requestedWidth = imgProps.width ?? component?.width
+  const requestedHeight = imgProps.height ?? component?.height
+  const ratio = media?.width && media?.height ? media.width / media.height : 0
 
-    height:
-      forcedSizes?.height ??
-      component?.height ??
-      selectedFormat?.height ??
-      media?.height ??
-      fallbackSizes?.height ??
-      undefined,
+  const width =
+    requestedWidth ??
+    (requestedHeight && ratio
+      ? Math.round(Number(requestedHeight) * ratio)
+      : media?.width)
+
+  const height =
+    requestedHeight ??
+    (requestedWidth && ratio
+      ? Math.round(Number(requestedWidth) / ratio)
+      : media?.height)
+
+  const useFill = imgProps.fill || !width || !height
+  const isSvg = media?.ext === ".svg"
+  const useImgproxy = isImgproxyEnabled() && !isSvg
+
+  const imageProps = {
+    className: cn("img-fallback", className),
+    src,
+    alt,
+    ...imgProps,
+    ...(useFill ? { fill: true as const } : { width, height }),
+    // Keep visual sizing in Tailwind classes by default.
+    // If this component should own rendered dimensions again, uncomment this
+    // and explicit width/height props will override global image CSS:
+    // style: {
+    //   ...(!useFill && requestedWidth ? { width: requestedWidth } : {}),
+    //   ...(!useFill && requestedHeight ? { height: requestedHeight } : {}),
+    //   ...imgProps.style,
+    // },
+    style: imgProps.style,
   }
 
-  const src = formatStrapiMediaUrl(url)
-
-  if (imgProps.fill) {
-    // Fill has priority over sizes
-    sizes.width = undefined
-    sizes.height = undefined
+  if (useImgproxy) {
+    return <ImgproxyImage {...imageProps} />
   }
 
-  if (!imgProps.fill && (!sizes.width || !sizes.height)) {
-    // If width or height is missing, fill the image
-    // This happens mostly if there is no media in Strapi and
-    // we are using a fallback image
-    imgProps.fill = true
-    sizes.width = undefined
-    sizes.height = undefined
-  }
-
-  return (
-    <ImageComp
-      style={{
-        width: autoWidth && !imgProps.fill ? "auto" : sizes.width,
-        height: autoHeight && !imgProps.fill ? "auto" : sizes.height,
-        ...imgProps.style,
-      }}
-      className={className}
-      src={src as string}
-      alt={component?.alt ?? media?.caption ?? media?.alternativeText ?? ""}
-      {...sizes}
-      {...imgProps}
-    />
-  )
+  return <Image {...imageProps} alt={alt} unoptimized />
 }
-
-StrapiBasicImage.displayName = "StrapiBasicImage"

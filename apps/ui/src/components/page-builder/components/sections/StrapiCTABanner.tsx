@@ -56,8 +56,9 @@ export function StrapiCTABanner({
                   {image ? (
                     <StrapiBasicImage
                       component={image}
-                      forcedSizes={{ width: 40, height: 40 }}
-                      className="object-contain"
+                      width={40}
+                      height={40}
+                      className="size-10 object-contain"
                     />
                   ) : null}
                   <CkEditorRenderer htmlContent={title} />

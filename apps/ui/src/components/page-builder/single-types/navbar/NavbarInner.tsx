@@ -41,11 +41,9 @@ export function NavbarInner({
               {navbarData?.logoImage?.image && !navbarData?.logoImage?.link ? (
                 <StrapiBasicImage
                   component={navbarData.logoImage.image}
-                  forcedSizes={{
-                    width: 80,
-                    height: 30,
-                  }}
-                  className="flex shrink-0 object-contain"
+                  width={80}
+                  height={30}
+                  className="h-7.5 w-20 shrink-0 object-contain"
                 />
               ) : null}
               {/* Desktop Navigation */}

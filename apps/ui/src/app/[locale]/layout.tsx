@@ -63,6 +63,7 @@ export default async function RootLayout({
     "DEBUG_STRAPI_CLIENT_API_CALLS",
     "SHOW_NON_BLOCKING_ERRORS",
     "APP_PUBLIC_URL",
+    "IMGPROXY_URL",
   ]
 
   return (
