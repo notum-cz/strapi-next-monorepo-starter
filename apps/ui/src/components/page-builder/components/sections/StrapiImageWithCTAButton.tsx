@@ -22,8 +22,7 @@ export function StrapiImageWithCTAButton({
           <StrapiBasicImage
             component={component.image}
             className="w-full object-contain object-center"
-            hideWhenMissing
-            forcedSizes={{ height: 300 }}
+            height={300}
           />
         </div>
 

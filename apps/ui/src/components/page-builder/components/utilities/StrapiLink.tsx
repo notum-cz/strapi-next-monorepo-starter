@@ -9,7 +9,6 @@ export interface StrapiLinkProps {
   readonly component: Data.Component<"utilities.link"> | undefined | null
   readonly children?: React.ReactNode
   readonly className?: string
-  readonly hideWhenMissing?: boolean
   readonly onClick?: () => void
 }
 const getStrapiLinkHref = (
@@ -31,12 +30,11 @@ export function StrapiLink({
   component,
   children,
   className,
-  hideWhenMissing,
   onClick,
 }: StrapiLinkProps) {
   removeThisWhenYouNeedMe("StrapiLink")
 
-  if (component == null && hideWhenMissing) {
+  if (component == null) {
     return null
   }
 

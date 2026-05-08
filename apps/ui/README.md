@@ -635,6 +635,132 @@ export function ContactUsForm() {
 }
 ```
 
+### Image optimization
+
+Image optimization is intentionally not handled globally by the Next.js server. In self-hosted deployments, Next's built-in image optimizer can create CPU and memory peaks under image-heavy CMS traffic. Prefer Strapi-generated assets, a CDN image service such as Cloudinary, or imgproxy for CMS media.
+
+Images use different pipelines depending on the source:
+
+| Source              | Component          | Optimizer           | When               |
+| ------------------- | ------------------ | ------------------- | ------------------ |
+| Strapi media        | `StrapiBasicImage` | imgproxy            | `IMGPROXY_URL` set |
+| Strapi media        | `StrapiBasicImage` | none, direct Strapi | local/dev fallback |
+| Local/static assets | `StaticImage`      | Next.js Sharp       | always             |
+
+Do not set `images.unoptimized: true` globally in [next.config.mjs](next.config.mjs). Next applies that flag to every image, so component-level `unoptimized={false}` cannot re-enable custom loaders or the static asset optimizer. Keep the global flag unset and let image components decide.
+
+#### StrapiBasicImage
+
+Use [`StrapiBasicImage`](src/components/page-builder/components/utilities/StrapiBasicImage.tsx) for Strapi media. It resolves Strapi media data, normalizes the URL with [`formatStrapiMediaUrl`](src/lib/strapi-helpers.ts), calculates missing width/height from the media aspect ratio, and bypasses imgproxy for SVGs.
+
+When `IMGPROXY_URL` is set, it delegates to [`ImgproxyImage`](src/components/elementary/images/ImgproxyImage.tsx). Next generates responsive `srcSet` entries using `deviceSizes`, but the loader turns each width into an imgproxy URL such as:
+
+```text
+https://imgproxy.example.com/rs:fit:768:0/plain/{source}@webp
+```
+
+When `IMGPROXY_URL` is not set, it renders `<Image unoptimized />` and the browser fetches the original file directly from Strapi. This is the default local-development path.
+
+```tsx
+import { StrapiBasicImage } from "@/components/page-builder/components/utilities/StrapiBasicImage"
+
+<StrapiBasicImage component={component.image} className="h-auto w-full" />
+
+<StrapiBasicImage
+  component={component.image}
+  fill
+  sizes="100vw"
+  className="object-cover"
+/>
+```
+
+#### The sizes prop
+
+The `sizes` prop tells the browser how wide the image will be displayed before the image loads. The browser combines `sizes`, viewport width, and device pixel ratio to choose the smallest useful `srcSet` candidate.
+
+With imgproxy enabled and `deviceSizes: [420, 768, 1024, 1440, 2048]`, an image that is full width on mobile and half width on desktop should declare that:
+
+```tsx
+<StrapiBasicImage
+  component={image}
+  fill
+  sizes="(max-width: 768px) 100vw, 50vw"
+  className="object-cover"
+/>
+```
+
+Example browser choices:
+
+| Device  | Viewport | DPR | Display size calculation | Picked width |
+| ------- | -------- | --- | ------------------------ | ------------ |
+| Mobile  | 420px    | 2x  | 420px x 2                | `1024w`      |
+| Tablet  | 768px    | 1x  | 768px x 1                | `768w`       |
+| Desktop | 1440px   | 1x  | 720px x 1                | `768w`       |
+| Desktop | 1440px   | 2x  | 720px x 2                | `1440w`      |
+
+Rule of thumb: if an image uses `fill` and is not full-width at every breakpoint, pass `sizes`. Otherwise the browser may assume `100vw` and download a larger variant than needed.
+
+Common values:
+
+| Scenario                        | `sizes`                          |
+| ------------------------------- | -------------------------------- |
+| Full-width hero                 | `100vw`                          |
+| Half-width desktop image        | `(max-width: 768px) 100vw, 50vw` |
+| Three-column desktop grid       | `(max-width: 768px) 100vw, 33vw` |
+| Fixed-size logo/avatar          | `200px`                          |
+| Fixed `width`/`height`, no fill | optional                         |
+
+#### StaticImage
+
+Use [`StaticImage`](src/components/elementary/images/StaticImage.tsx) for frontend-owned images from static imports or the `public/` folder. These assets can use Next's Sharp optimizer because they are controlled app assets, not CMS traffic.
+
+```tsx
+import { StaticImage } from "@/components/elementary/images/StaticImage"
+import campusPhoto from "@/assets/campus.jpg"
+
+<StaticImage src={campusPhoto} alt="Campus" sizes="100vw" />
+<StaticImage src="/images/logo.png" alt="Logo" width={200} height={50} />
+```
+
+#### Strapi media URLs
+
+`StrapiBasicImage` calls `formatStrapiMediaUrl` automatically:
+
+- Production storage usually returns absolute `https://` URLs; these are returned as-is.
+- Local Strapi storage returns relative `/uploads/...` paths; these are resolved with `STRAPI_URL` on the server and `http://127.0.0.1:1337` in client-side development.
+
+#### Local imgproxy testing
+
+Set `IMGPROXY_URL` only when an imgproxy service is available:
+
+```env
+IMGPROXY_URL=https://imgproxy.example.com
+```
+
+To test imgproxy locally:
+
+```bash
+cd apps/strapi
+pnpm run:imgproxy
+```
+
+Then set:
+
+```env
+IMGPROXY_URL=http://localhost:8080
+```
+
+#### Image configuration
+
+Image settings live in [next.config.mjs](next.config.mjs):
+
+| Setting           | Value                          | Purpose                                             |
+| ----------------- | ------------------------------ | --------------------------------------------------- |
+| `unoptimized`     | not set globally               | each image component controls optimization          |
+| `deviceSizes`     | `[420, 768, 1024, 1440, 2048]` | responsive widths for imgproxy URLs and StaticImage |
+| `formats`         | `["image/webp"]`               | output format for Next Sharp, mainly StaticImage    |
+| `minimumCacheTTL` | 1 hour                         | cache duration for images processed by Next Sharp   |
+
 ### Health check endpoint
 
 A simple health check endpoint is available at `/api/health`, e.g. [http://localhost:3000/api/health](http://localhost:3000/api/health). This can be used for monitoring and uptime checks.

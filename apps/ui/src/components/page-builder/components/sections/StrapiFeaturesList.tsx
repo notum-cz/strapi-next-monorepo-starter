@@ -100,16 +100,18 @@ function FeatureItem({
       {image && !isBoxGrid ? (
         <StrapiBasicImage
           component={image}
-          fallbackSizes={{ width: 40, height: 40 }}
-          className="object-contain"
+          width={40}
+          height={40}
+          className="size-10 object-contain"
         />
       ) : null}
       <div className="flex flex-col gap-4">
         {image && isBoxGrid ? (
           <StrapiBasicImage
             component={image}
-            forcedSizes={{ width: 28, height: 28 }}
-            className="object-contain"
+            width={28}
+            height={28}
+            className="size-7 object-contain"
           />
         ) : null}
         <CkEditorRenderer htmlContent={title} />

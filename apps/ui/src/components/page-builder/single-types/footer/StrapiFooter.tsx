@@ -22,10 +22,7 @@ export function StrapiFooter({ locale }: { readonly locale: Locale }) {
       <Container className="pt-8 pb-4">
         <div className="flex flex-col justify-between gap-10 lg:flex-row">
           <div className="flex flex-col items-center justify-center space-y-4 md:items-start md:justify-start">
-            <StrapiImageWithLink
-              component={footer.logoImage}
-              imageProps={{ hideWhenMissing: true }}
-            />
+            <StrapiImageWithLink component={footer.logoImage} />
           </div>
 
           <div

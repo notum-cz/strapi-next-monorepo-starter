@@ -50,10 +50,10 @@ export type StrapiImageMedia = {
   updatedAt?: string
   publishedAt?: string
   formats: {
-    large: StrapiImageMediaFormat
-    small: StrapiImageMediaFormat
-    medium: StrapiImageMediaFormat
-    thumbnail: StrapiImageMediaFormat
+    large?: StrapiImageMediaFormat
+    small?: StrapiImageMediaFormat
+    medium?: StrapiImageMediaFormat
+    thumbnail?: StrapiImageMediaFormat
   }
   hash?: string
   ext?: string
