@@ -15,6 +15,28 @@ export interface BasicImageProps extends Omit<
   readonly className?: ImageExtendedProps["className"]
 }
 
+/**
+ * Renders Strapi media from a `utilities.basic-image` component.
+ *
+ * Use this for CMS-managed images only. Use `StaticImage` for frontend-owned
+ * assets from static imports or the public folder.
+ *
+ * Sizing follows `next/image`:
+ * - pass `width`/`height` for fixed-ratio images; if one is missing, the other
+ *   is derived from Strapi media metadata when possible.
+ * - pass `fill` plus a positioned parent for cover/background-like images.
+ * - pass `sizes` whenever a `fill` image is narrower than `100vw` at any
+ *   breakpoint, so the browser chooses the right responsive candidate.
+ * - use Tailwind classes for visual sizing (`h-10 w-auto`, `size-10`,
+ *   `object-cover`, `object-contain`); `width`/`height` props are layout and
+ *   optimizer hints, not a replacement for CSS sizing.
+ *
+ * Configuration:
+ * - with `IMGPROXY_URL`, raster Strapi images use the imgproxy loader.
+ * - without `IMGPROXY_URL`, images load directly from Strapi with
+ *   `unoptimized` to avoid Next.js processing CMS image traffic.
+ * - SVGs bypass imgproxy because they do not need raster resizing.
+ */
 export function StrapiBasicImage({
   component,
   className,
