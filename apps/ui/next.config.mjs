@@ -20,23 +20,31 @@ const nextConfig = {
   reactCompiler: true,
   transpilePackages: ["@repo/design-system"],
   images: {
-    // Be aware that Strapi has optimization on by default
-    // Do not optimize all images by default.
-    // This is because the optimization process can be slow and resource-intensive. Instead, only optimize images that are requested by the browser.
-    unoptimized: true,
+    // See apps/ui/README.md#image-optimization for the full policy.
+    // Keep global optimization enabled so components can opt in/out.
+    // Do not set `unoptimized: true` globally: Next.js applies it to every
+    // image and component-level `unoptimized={false}` cannot re-enable loaders.
+    //
+    // Image ownership in this app:
+    // - Strapi media + IMGPROXY_URL: StrapiBasicImage uses imgproxy URLs.
+    //   Next generates responsive srcsets, but imgproxy does the processing.
+    // - Strapi media without IMGPROXY_URL: StrapiBasicImage is unoptimized and
+    //   loads the Strapi URL directly, useful for local development.
+    // - StaticImage: uses Next's Sharp optimizer for local/static assets only.
+    // unoptimized: true,
 
-    // AVIF generally takes 20% longer to encode but it compresses 20% smaller compared to WebP.
-    // This means that the first time an image is requested, it will typically be slower and then subsequent requests that are cached will be faster.
-    formats: ["image/webp" /* 'image/avif' */],
+    // Used only by Next's built-in optimizer, mainly StaticImage.
+    // imgproxy/external services choose their own output format.
+    formats: ["image/webp"],
 
-    // The optimized image file will be served for subsequent requests until the expiration is reached.
-    // When a request is made that matches a cached but expired file, the expired image is served stale immediately.
-    // Then the image is optimized again in the background (also called revalidation) and saved to the cache with the new expiration date.
-    minimumCacheTTL: 60 * 15, // 15 minutes - after this time, the image will be revalidated
+    // Cache TTL for images processed by Next's built-in optimizer.
+    minimumCacheTTL: 60 * 60, // 1 hour
 
-    // You can configure deviceSizes or imageSizes to reduce the total number of possible generated images.
-    // Please check: https://nextjs.org/docs/app/api-reference/components/image
-    deviceSizes: [420, 768, 1024],
+    // Widths for generated srcsets. With imgproxy these become external
+    // imgproxy URLs; with StaticImage they are processed by Next.
+    // Covers: mobile 1x (420), tablet (768), desktop 1x (1024),
+    // large desktop / mobile 2x (1440), desktop 2x retina (2048).
+    deviceSizes: [420, 768, 1024, 1440, 2048],
 
     remotePatterns: [
       {
