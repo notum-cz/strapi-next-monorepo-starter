@@ -20,6 +20,13 @@ export function StrapiBasicImage({
   className,
   ...imgProps
 }: BasicImageProps) {
+  const {
+    fill,
+    height: propHeight,
+    style,
+    width: propWidth,
+    ...restImgProps
+  } = imgProps
   const media: StrapiImageMedia = component?.media
 
   const src = formatStrapiMediaUrl(media?.url ?? component?.fallbackSrc)
@@ -30,8 +37,8 @@ export function StrapiBasicImage({
 
   const alt = component?.alt ?? media?.caption ?? media?.alternativeText ?? ""
 
-  const requestedWidth = imgProps.width ?? component?.width
-  const requestedHeight = imgProps.height ?? component?.height
+  const requestedWidth = propWidth ?? component?.width
+  const requestedHeight = propHeight ?? component?.height
   const ratio = media?.width && media?.height ? media.width / media.height : 0
 
   const width =
@@ -46,7 +53,7 @@ export function StrapiBasicImage({
       ? Math.round(Number(requestedWidth) / ratio)
       : media?.height)
 
-  const useFill = imgProps.fill || !width || !height
+  const useFill = fill || !width || !height
   const isSvg = media?.ext === ".svg"
   const useImgproxy = isImgproxyEnabled() && !isSvg
 
@@ -54,7 +61,7 @@ export function StrapiBasicImage({
     className,
     src,
     alt,
-    ...imgProps,
+    ...restImgProps,
     ...(useFill ? { fill: true as const } : { width, height }),
     // Keep visual sizing in Tailwind classes by default.
     // If this component should own rendered dimensions again, uncomment this
@@ -62,9 +69,9 @@ export function StrapiBasicImage({
     // style: {
     //   ...(!useFill && requestedWidth ? { width: requestedWidth } : {}),
     //   ...(!useFill && requestedHeight ? { height: requestedHeight } : {}),
-    //   ...imgProps.style,
+    //   ...style,
     // },
-    style: imgProps.style,
+    style,
   }
 
   if (useImgproxy) {
