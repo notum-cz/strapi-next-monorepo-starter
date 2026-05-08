@@ -25,7 +25,7 @@ services:
   # Then set IMGPROXY_URL=http://localhost:8080 in apps/ui/.env.local
   # Without this, images are served unoptimized directly from Strapi (fine for dev).
   imgproxy:
-    image: darthsim/imgproxy:latest
+    image: darthsim/imgproxy:v3.24.1
     restart: unless-stopped
     ports:
       - "8080:8080"

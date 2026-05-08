@@ -69,6 +69,8 @@ function imgproxyUrl(sourceUrl: string, options: ImgproxyOptions = {}): string {
     .replace("http://127.0.0.1:", "http://host.docker.internal:")
     .replace("http://localhost:", "http://host.docker.internal:")
 
+  // return `${IMGPROXY_URL}/${processing}/plain/${encodeURIComponent(resolvedSource)}@${format}`
+
   return `${IMGPROXY_URL}/${processing}/plain/${resolvedSource}@${format}`
 }
 
