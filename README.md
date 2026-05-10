@@ -1,316 +1,244 @@
-# 🔥 Strapi v5 & Next.js v16 Monorepo Starter
+# 🏠 Portugal Real Estate Affiliate Site
 
-This is a ready-to-go starter template for Strapi projects. It combines the power of Strapi, Next.js, Shadcn/ui libraries with Turborepo setup and kickstarts your project development. We call it a **Page builder** for enterprise applications.
+A content-driven comparison and review platform for real estate investment companies in Portugal. Built as a monorepo with Next.js (frontend) and Strapi CMS (backend).
 
-## 👀 Live demo
+> Think Booking.com, but for property investment companies — helping users find and compare investment platforms, while earning affiliate commissions on referrals.
 
-- UI - [https://www.notum-dev.cz/](https://www.notum-dev.cz/)
-- Strapi - [https://api.notum-dev.cz/admin](https://api.notum-dev.cz/admin)
-- **Readonly user:**
-  - Email: user@notum.cz
-  - Password: Secret-pass-55
+---
 
-## 🥞 Tech stack
+## Tech Stack
 
-- [Strapi v5](https://strapi.io/) - Headless CMS to manage content
-- [Next.js App Router v16](https://nextjs.org/docs) - React v19 for building web apps
-- [Shadcn/ui](https://ui.shadcn.com/) - TailwindCSS based UI components
-- [TailwindCSS v4](https://tailwindcss.com/) - Utility-first CSS framework
-- [Turborepo](https://turbo.build/) - Monorepo management tool to keep things tidy
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js 14 (App Router, SSR) |
+| CMS / Backend | Strapi v5 |
+| Database | PostgreSQL |
+| Styling | Tailwind CSS |
+| Deployment | Render.com |
+| i18n | next-intl |
+| Rich text | react-markdown + remark-gfm |
+| Maps | react-leaflet |
 
-## 🚀 Getting started
+---
 
-[![Launch Strapi + Next.js Monorepo — Live in 5 Minutes](https://img.youtube.com/vi/VZlJZuurUH8/maxresdefault.jpg)](https://www.youtube.com/watch?v=VZlJZuurUH8 "Watch on YouTube")
+## Project Structure
+
+```
+strapi-next-monorepo-starter/
+├── apps/
+│   ├── frontend/                  # Next.js app
+│   │   ├── src/
+│   │   │   ├── app/
+│   │   │   │   ├── [locale]/
+│   │   │   │   │   ├── page.tsx               # Homepage
+│   │   │   │   │   ├── companies/
+│   │   │   │   │   │   ├── page.tsx           # All companies listing
+│   │   │   │   │   │   └── [slug]/page.tsx    # Company review page
+│   │   │   │   │   ├── articles/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── [slug]/page.tsx
+│   │   │   │   │   └── regions/[slug]/page.tsx
+│   │   │   │   ├── sitemap.ts
+│   │   │   │   └── robots.ts
+│   │   │   ├── components/
+│   │   │   │   ├── CompanyCard.tsx
+│   │   │   │   ├── ComparisonTable.tsx
+│   │   │   │   ├── AffiliateLink.tsx
+│   │   │   │   └── RegionMap.tsx
+│   │   │   └── lib/
+│   │   │       └── strapi.ts                  # API client
+│   └── backend/                   # Strapi CMS
+│       └── src/
+│           └── api/
+│               ├── company/
+│               ├── article/
+│               ├── region/
+│               └── comparison-table/
+├── packages/                      # Shared types, utils
+└── docker-compose.yml
+```
+
+---
+
+## Content Model (Strapi)
+
+### `Company` (Collection Type)
+The core entity — one entry per investment company reviewed.
+
+| Field | Type | Notes |
+|---|---|---|
+| `name` | Text | Required |
+| `slug` | UID | Auto-generated from name |
+| `logo` | Media | Company logo |
+| `founded_year` | Number | |
+| `min_investment_eur` | Number | Minimum investment in EUR |
+| `affiliate_url` | Text | Tracked outbound link |
+| `short_description` | Text | Used in listing cards |
+| `full_review` | Rich Text | Markdown, rendered on review page |
+| `pros` | JSON | Array of strings |
+| `cons` | JSON | Array of strings |
+| `is_featured` | Boolean | Shown on homepage |
+| `seo_title` | Text | Overrides page title |
+| `seo_description` | Text | Meta description |
+
+### `Article` (Collection Type)
+SEO content — guides, comparisons, "best of" lists.
+
+### `Region` (Collection Type)
+Geographic areas (Lisbon, Algarve, Porto) powering the interactive map.
+
+| Field | Type | Notes |
+|---|---|---|
+| `name` | Text | |
+| `slug` | UID | |
+| `color_hex` | Text | Map highlight color |
+| `latitude / longitude` | Decimal | |
+| `featured_companies` | Relation | Many-to-many → Company |
+
+### `ComparisonTable` (Single Type)
+Global comparison table rendered on the homepage.
+
+---
+
+## Localization
+
+The site supports multiple locales via Strapi's i18n plugin and `next-intl`.
+
+**Supported locales:**
+- `en` — English (default)
+- `pt` — Portuguese
+- `es` — Spanish (planned)
+
+All Strapi collection types have i18n enabled. Even during MVP with English-only content, the multilingual URL structure is in place:
+
+```
+/en/companies/abc-investments
+/pt/companies/abc-investments
+```
+
+> ⚠️ Do not add content in Strapi before enabling i18n on the content type — migrating existing entries is painful.
+
+---
+
+## Getting Started
 
 ### Prerequisites
 
-- Docker
-- node 22
-- pnpm 10
-- [nvm](https://github.com/nvm-sh/nvm) (optional, recommended)
+- Node.js 18+
+- PostgreSQL (or use Docker)
+- npm / yarn / pnpm
 
-### Run dev (in 4 steps)
-
-1. Clone this repository
-
-   ```sh
-   git clone https://github.com/notum-cz/strapi-next-monorepo-starter
-   # checkout `main` branch (`dev` contains unreleased features and improvements)
-   git checkout main
-   ```
-
-   Or click [Use this template](https://github.com/notum-cz/strapi-next-monorepo-starter/generate) to create a new repository based on this template.
-
-2. Install dependencies
-
-   ```sh
-   # in root
-   # switch to correct nodejs version (v22)
-   nvm use
-
-   # optionally, switch to pnpm v10.28.1
-   (corepack prepare pnpm@10.28.1 --activate)
-
-   # install deps for apps and packages that are part of this monorepo
-   pnpm install
-   ```
-
-3. Run apps
-   ```sh
-   # run all apps in dev mode (this triggers `pnpm dev` script in each app from `/apps` directory)
-   pnpm run dev
-   ```
-
-> [!WARNING]
-> Before the first run, you need to retrieve [Strapi API token](https://docs.strapi.io/cms/features/api-tokens).
->
-> ```sh
-> pnpm run dev:strapi
-> ```
->
-> Go to Strapi admin URL and navigate to [Settings > API Tokens](http://localhost:1337/admin/settings/api-tokens). Select "Create new API token" and copy it's value to `STRAPI_REST_READONLY_API_KEY` in `/apps/ui/.env.local` file.
-> Refer to the [UI README](apps/ui/README.md#environment-variables) for more details.
-
-4. 🎉 Enjoy!
-   - Open your browser and go to [http://localhost:3000](http://localhost:3000) to see the UI app in action.
-   - Open your browser and go to [http://localhost:1337/admin](http://localhost:1337/admin) to see the Strapi app in action.
-
-5. Next steps?
-   - See [What's inside?](#-whats-inside) for more details about apps and packages.
-   - You also probably want to customize naming in the project. See [Transform this template to a project](#-transform-this-template-to-a-project).
-
-## ✨ Features
-
-- **Strapi**: Fully typed (TypeScript) and up-to-date Strapi v5 controllers and services
-- **Strapi config**: Pre-configured and pre-installed with the most common plugins, packages and configurations
-- **Page builder**: Page rendering mechanism and prepared useful components. Ready to plug-and-play
-- **Strapi live preview**: Preview/draft mode for Next.js app to see changes in Strapi in real-time
-- **DB seed**: Seed script to populate DB with initial data
-- **Next.js**: Fully typed and modern Next.js v16 App router project
-- **Proxies**: Proxy API calls to Strapi from Next.js app to avoid CORS issues, hide API keys and backend address
-- **API**: Typed API calls to Strapi via API clients
-- **UI library**: 20+ pre-installed components, beautifully designed by [Shadcn/ui](https://ui.shadcn.com/)
-- **UI components**: Ready to use components for common use cases (forms, images, tables, navbar and much more)
-- **TailwindCSS**: [TailwindCSS v4](https://tailwindcss.com/) setup with configuration and theme, [CVA](https://cva.style/docs), [tailwind-merge](https://www.npmjs.com/package/tailwind-merge) and [tailwindcss-animate](https://www.npmjs.com/package/tailwindcss-animate)
-- **Rich text editors**: Pre-configured [CkEditor v5](https://ckeditor.com/) and [Tip tap](https://tiptap.dev/) WYSIWYG editors with shared styles and colors
-- **Utils**: Useful utils, hooks and helper functions included
-- **Auth**: JWT authentication with [Strapi Users & Permissions feature](https://docs.strapi.io/cms/features/users-permissions) and [Better Auth](https://www.better-auth.com), auth middleware and protected routes
-- **Auth providers**: Ready to plug-in providers like Google, Facebook etc.
-- **Localization**: Multi-language support with [next-intl](https://next-intl-docs.vercel.app/) and [@strapi/plugin-i18n](https://www.npmjs.com/package/@strapi/plugin-i18n) packages
-- **SEO**: Pre-configured SEO Strapi component and integrated with frontend SEO best practices like metadata, canonical etc.
-- **Turborepo**: Pre-configured, apps and packages connected and controlled by Turbo CLI
-- **Dockerized**: Ready to build in Docker containers for production
-- **Code quality**: Out-of-the-box ESLint (with integrated Prettier formatting) and TypeScript configurations in shareable packages
-- **Husky**: Pre-commit hooks for linting, formatting and commit message validation
-- **Commitizen**: Commitizen for conventional commits and their generation
-- **Heroku ready**: Ready to deploy to Heroku in a few steps
-- ... and much more is waiting for you to discover!
-
-## 📦 What's inside?
-
-### Apps
-
-- `apps/ui` - UI web app based on [Next.js v16](https://nextjs.org/docs/) and [shadcn/ui](https://ui.shadcn.com/) ([Tailwind](https://tailwindcss.com/)) - [README.md](./apps/ui/README.md)
-- `apps/strapi` - [Strapi v5](https://strapi.io/) API with prepared page-builder components - [README.md](./apps/strapi/README.md)
-
-### Packages
-
-- `packages/eslint-config`: [ESLint](https://eslint.org/) configurations with integrated [Prettier](https://prettier.io/) formatting, import ordering, and Tailwind plugin
-- `packages/typescript-config`: tsconfig JSONs used throughout the monorepo (not compatible with Strapi app now)
-- `packages/design-system`: shared styles, primarily for sharing CkEditor color configurations
-- `packages/shared-data`: package that stores common values across frontend and backend
-- `packages/strapi-types`: typescript definitions of content generated by Strapi and mirrored to separate package for easy usage in other apps. See [README.md](./packages/strapi-types/README.md) for more details.
-
-## ☕ Scripts
-
-### Turbo CLI
-
-After installing dependencies and setting env vars up, you can control all apps using Turbo CLI. Some common commands are wrapped into scripts. You can find them in root [package.json](./package.json) file. Few examples:
+### 1. Clone and install
 
 ```bash
-# run all apps in dev mode (this triggers `pnpm dev` script in each app from `/apps` directory)
-pnpm run dev
-
-# run apps separately
-pnpm run dev:ui
-pnpm run dev:strapi
-
-# build all apps
-pnpm run build
-
-# build specific app
-pnpm run build:ui
-pnpm run build:strapi
+git clone https://github.com/your-org/strapi-next-monorepo-starter
+cd strapi-next-monorepo-starter
+npm install
 ```
 
-Using those `turbo` scripts is preferred, because they ensure correct dependency installation and environment setup.
+### 2. Environment variables
 
-### `pnpm` scripts
+**Backend** (`apps/backend/.env`):
+```env
+DATABASE_CLIENT=postgres
+DATABASE_URL=postgresql://user:password@localhost:5432/portugal_re
+APP_KEYS=your-app-keys
+API_TOKEN_SALT=your-salt
+ADMIN_JWT_SECRET=your-secret
+JWT_SECRET=your-jwt-secret
+```
 
-In root [package.json](./package.json) file, there are some useful tasks wrapped into `pnpm` scripts:
+**Frontend** (`apps/frontend/.env.local`):
+```env
+NEXT_PUBLIC_STRAPI_URL=http://localhost:1337
+STRAPI_API_TOKEN=your-api-token
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+### 3. Start development
 
 ```bash
-# interactive commit message generator - stage files first, then run this in terminal
-pnpm run commit
+# Start both services in parallel
+npm run dev
+
+# Or individually
+npm run dev --workspace=apps/backend    # Strapi on :1337
+npm run dev --workspace=apps/frontend   # Next.js on :3000
 ```
 
-> [!TIP]
-> You can also use `pnpm` commands to run scripts in specific apps or packages:
+### 4. Strapi admin setup
 
-```bash
-# run a script in a specific app
-pnpm -F @repo/ui dev
+1. Open `http://localhost:1337/admin`
+2. Create your admin account
+3. Go to **Settings → API Tokens** → create a token for the frontend
+4. Go to **Settings → Internationalization** → add `pt` locale
+5. Go to **Settings → Roles → Public** → enable `find` and `findOne` for all content types
 
-# run a script in a specific package
-pnpm -F @repo/shared-data build
+---
 
-# run a script from root package.json in different directory
-cd apps/ui
-pnpm -w run lint
-```
+## Deployment (Render.com)
 
-### Bash scripts
+The app deploys as three Render services from the same repo.
 
-```bash
-# Remove all `node_modules` folders in the monorepo
-# Useful for scratch dependencies installation
-bash ./scripts/utils/rm-modules.sh
+### Services
 
-# Remove all node_modules, .next, .turbo, .strapi, dist folders
-bash ./scripts/utils/rm-all.sh
+| Service | Type | Root dir | Build command | Start command |
+|---|---|---|---|---|
+| `portugal-cms` | Web Service | `apps/backend` | `npm run build` | `npm run start` |
+| `portugal-frontend` | Web Service | `apps/frontend` | `npm run build` | `npm run start` |
+| `portugal-db` | PostgreSQL | — | — | — |
 
-# Remove all `.next` folders in the monorepo
-# Useful for scratch builds of ui
-bash ./scripts/utils/rm-next-cache.sh
-```
+### Environment variables on Render
 
-## 🧪 Testing and QA
+Set `DATABASE_URL` on the backend service using Render's internal PostgreSQL connection string. Set `NEXT_PUBLIC_STRAPI_URL` on the frontend to the backend's Render internal URL (faster, no egress cost).
 
-A dedicated QA workspace is available under the `qa/` directory, providing automated tests for E2E, accessibility, performance, and SEO validation.
+### Deploy steps
 
-See [README](./qa/tests/README.md) for available test suites and commands.
+1. Push to `main` branch
+2. Render auto-deploys both services
+3. Run `npm run strapi export` locally and import to production for initial content
 
-## 🔌 VSCode Extensions
+---
 
-Install extensions listed in the [.vscode/extensions.json](.vscode/extensions.json) file and have a better development experience.
+## SEO
 
-## 🔱 Git Hooks & Conventions
+Every page implements `generateMetadata` pulling `seo_title`, `seo_description`, and `og:image` from Strapi. Canonical URLs and `hreflang` alternate links are set per locale.
 
-Husky is installed by default and configured to enforce code quality and consistent naming conventions.
+Dynamic `sitemap.xml` and `robots.txt` are generated via Next.js App Router conventions (`app/sitemap.ts`, `app/robots.ts`).
 
-### Pre-commit Hook
+**After first deploy:** add the site to [Google Search Console](https://search.google.com/search-console) immediately — indexing takes weeks, so start the clock early.
 
-The [pre-commit hook](.husky/pre-commit) runs the following checks before each commit:
+---
 
-1. **Branch name validation** — Ensures branch names follow the convention (skipped during merges):
+## Affiliate links
 
-   ```
-   <type>/STAR-<number>-<description>
-   ```
-
-   **Examples:**
-   - `feat/STAR-1582-repo-config`
-   - `fix/STAR-42-null-pointer-on-login`
-
-   **Exempt branches:** `main`, `master`, `develop`, `dev`, `release/*`, `hotfix/*`
-
-   > [!TIP]
-   > To rename an existing branch: `git branch -m <old-name> <new-name>`
-
-2. **Lint-staged** — `lint` and `format` on every commit (`pre-commit` hook) via [lint-staged](https://www.npmjs.com/package/lint-staged).
-   ESLint handles JS/TS linting and formatting (via integrated Prettier), while Prettier runs directly on CSS/MD/SCSS files. Configuration is in root `.lintstagedrc.js` and per-app `.lintstagedrc.js` files.
-
-### Commit Message Hook
-
-The [commit-msg hook](.husky/commit-msg) validates commit messages using [commitlint](https://commitlint.js.org/):
-
-**Conventional commits** — Messages must follow [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) format, e.g.:
-
-```bash
-feat(ui): add dark mode toggle
-fix(strapi): resolve null pointer on login
-chore: update dependencies
-```
-
-> Use `pnpm run commit` for an interactive commit message generator.
-
-### Environment Variables in Commits
-
-When introducing new environment variables, mention them in commit messages using `env.VARIABLE_NAME` or `VARIABLE_NAME` (CONSTANT_CASE). The [auto-pr workflow](.github/workflows/auto-pr.yml) extracts these from commit messages and lists them in the PR description under "Required Environment Variables".
-
-**Example commit:**
+All outbound company links go through the `AffiliateLink` component, which appends UTM parameters and fires an analytics event on click:
 
 ```
-feat(ui): add sentry integration
-
-Added error tracking with Sentry.
-
-New environment variables:
-- env.SENTRY_DSN
-- env.SENTRY_AUTH_TOKEN
+https://company.com?utm_source=investportugal&utm_medium=affiliate&utm_campaign={company-slug}
 ```
 
-## 📝 Pull Request Template
+Analytics events are tracked via Plausible (privacy-friendly, no cookie banner needed).
 
-The [PR template](.github/PULL_REQUEST_TEMPLATE.md) enforces a consistent structure for all pull requests.
+---
 
-## ♾️ Deployment
+## Roadmap
 
-### GitHub Actions
+- [x] Monorepo scaffold (Next.js + Strapi)
+- [ ] Core content types (Company, Article, Region)
+- [ ] i18n setup (EN + PT)
+- [ ] Homepage + company listing page
+- [ ] Company review page with affiliate CTA
+- [ ] Interactive Portugal map (react-leaflet)
+- [ ] Comparison table
+- [ ] SEO metadata + sitemap
+- [ ] Deploy MVP to Render
+- [ ] Google Search Console setup
+- [ ] Spanish locale (ES)
+- [ ] Side-by-side company comparison tool
 
-We are using GitHub Actions for validation of builds and running tests. There are 2 workflows prepared:
+---
 
-1. [ci.yml](.github/workflows/ci.yml) - runs on every push and pull request to `main` branch. It verifies if code builds.
-2. [qa.yml](.github/workflows/qa.yml) - manually triggered workflow that runs the QA tests from `qa/tests` directory. Ideally it should be run against deployed frontend (by setting `BASE_URL` env variable and passing to [playwright.config.ts](./qa/tests/playwright/playwright.config.ts)).
-3. [auto-pr.yml](.github/workflows/auto-pr.yml) - automatically creates/updates a PR from `dev` to `main` when changes are pushed. Extracts environment variables from commit messages (see [Environment Variables in Commits](#environment-variables-in-commits)).
+## License
 
-### Heroku
-
-_This section is under construction._ 😔
-
-Create 2 apps in Heroku, one for Strapi and one for Next.js UI. Stack is `heroku-24`. Connect both to GitHub repository in the Deploy tab and configure automatic deploys from your branch.
-
-> [!TIP]
-> If you're not deploying to Heroku, remove all `Procfile`s from the repository.
-
-We published two buildpacks to make deployment easier and more efficient. They can **reduce the slug size by more than 70 %** by pruning unnecessary files from the Turborepo monorepo during the build and they also **speed up the build and installation**:
-
-- [https://github.com/notum-cz/heroku-buildpack-turbo-prune.git](https://github.com/notum-cz/heroku-buildpack-turbo-prune.git)
-- [https://github.com/notum-cz/heroku-buildpack-next-standalone-slim.git](https://github.com/notum-cz/heroku-buildpack-next-standalone-slim.git)
-
-#### Strapi app configuration
-
-1. Connect a database ([Heroku Postgres](https://elements.heroku.com/addons/heroku-postgresql)). `DATABASE_URL` env variable will be set automatically so you can skip any other database-related configuration.
-2. Set env variables based on `.env.example`, **don't forget to set**:
-   - `APP`- set to `strapi`
-   - `WORKSPACE` - set to `@repo/strapi`
-3. Set buildpacks in this order:
-   - https://github.com/notum-cz/heroku-buildpack-turbo-prune.git
-   - `heroku/nodejs`
-4. We recommend setting up an AWS S3 bucket for media uploads, as Heroku's filesystem will delete uploaded files after dyno restarts.
-
-#### UI app configuration
-
-1. Set env variables based on `.env.example`, **don't forget to set**:
-   - `APP`- set to `ui`
-   - `WORKSPACE` - set to `@repo/ui`
-   - `NEXT_OUTPUT` - set to `standalone`
-2. Set buildpacks in this order:
-   - https://github.com/notum-cz/heroku-buildpack-turbo-prune.git
-   - `heroku/nodejs`
-   - https://github.com/notum-cz/heroku-buildpack-next-standalone-slim.git
-
-## 💡 Transform this template to a project
-
-- In the root `package.json`, update the `name` and `description` fields to match the new project name. Optionally, update the names in `/apps` and `/packages` as well. Keep the `@repo` prefix unless you prefer a different scope or company name—changing it will require updates throughout the entire monorepo.
-- In [docker-compose.yml](./apps/strapi/docker-compose.yml), update the top-level name "strapi-next-starter" (and optionally the network name) to reflect the new project name. This helps prevent name conflicts on developers' machines.
-
-_[After this preparation is done, delete this section from README]_
-
-## 📖 Documentation
-
-There is a plenty of documentation in README files in individual apps and packages. Make sure to check them out. In addition, there are some more in the [/docs](./docs) directory. We want to [improve the documentation over time](https://github.com/notum-cz/strapi-next-monorepo-starter/issues/113), so stay tuned.
-
-## 💙 Feedback
-
-This repository was created based on [strapi-next-monorepo-starter](https://github.com/notum-cz/strapi-next-monorepo-starter). If you encounter a problem with the template code during development, or you have implemented a useful feature that should be part of that template, please create an issue with a description or PR in that repository. So we can keep it updated with great features.
+Private project. All rights reserved.
