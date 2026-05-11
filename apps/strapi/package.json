@@ -45,6 +45,7 @@
     "jsonwebtoken": "9.0.3",
     "lodash": "4.18.1",
     "nodemailer": "8.0.7",
+    "passport-azure-ad-oauth2": "0.0.4",
     "pg": "8.20.0",
     "qs": "6.15.1",
     "react": "^18.0.0",

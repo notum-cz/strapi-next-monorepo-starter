@@ -464,6 +464,14 @@ Edit `config/cron-tasks.ts` to add cron jobs. Enable them by setting `CRON_ENABL
 
 A simple health check endpoint is available at `/api/health`, e.g. [http://localhost:1337/api/health](http://localhost:1337/api/health). This can be used for monitoring and uptime checks.
 
+### Admin SSO (Microsoft Entra ID)
+
+This template includes an optional Microsoft SSO provider for Strapi admin login. The provider is registered in [config/admin.ts](config/admin.ts) and implemented in [config/auth-providers.ts](config/auth-providers.ts) using `passport-azure-ad-oauth2`. It activates automatically when `MICROSOFT_CLIENT_ID`, `MICROSOFT_CLIENT_SECRET`, and `MICROSOFT_TENANT_ID` are set; otherwise the Microsoft button is hidden from the login screen.
+
+Strapi admin SSO is a Strapi Enterprise feature and requires a valid `STRAPI_LICENSE`. When Strapi runs behind a reverse proxy that terminates HTTPS, `proxy: { koa: true }` must be enabled in `config/server.ts` so secure cookies work after the OAuth redirect.
+
+Full setup (Entra app registration, callback URLs, claim handling, troubleshooting): [/docs/sso/microsoft-sso.md](../../apps/docs/docs/sso/microsoft-sso.md).
+
 ### Strapi Live Previews
 
 This starter supports Strapi's new feature: [Previews](https://docs.strapi.io/cms/features/preview). It works by embedding an iframe of the frontend application directly inside the editor.
