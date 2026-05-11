@@ -1,6 +1,7 @@
 import cronTasks from "./cron-tasks"
 
 export default ({ env }) => ({
+  proxy: { koa: true },
   host: env("HOST", "0.0.0.0"),
   port: env.int("PORT", 1337),
   url: env("APP_URL"),
