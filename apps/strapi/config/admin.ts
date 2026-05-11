@@ -1,5 +1,6 @@
 import type { UID } from "@strapi/strapi"
 
+import { microsoftSSOProvider } from "./auth-providers"
 import type { StrapiPreviewConfig } from "../types/internals"
 
 export default ({ env }) => {
@@ -13,6 +14,7 @@ export default ({ env }) => {
   return {
     auth: {
       secret: env("ADMIN_JWT_SECRET"),
+      providers: [microsoftSSOProvider(env)].filter(Boolean),
     },
     apiToken: {
       salt: env("API_TOKEN_SALT"),
