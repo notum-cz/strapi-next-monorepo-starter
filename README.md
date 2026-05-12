@@ -81,29 +81,16 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 ## ✨ Features
 
-- **Strapi**: Fully typed (TypeScript) and up-to-date Strapi v5 controllers and services
-- **Strapi config**: Pre-configured and pre-installed with the most common plugins, packages and configurations
-- **Page builder**: Page rendering mechanism and prepared useful components. Ready to plug-and-play
-- **Strapi live preview**: Preview/draft mode for Next.js app to see changes in Strapi in real-time
-- **DB seed**: Seed script to populate DB with initial data
-- **Next.js**: Fully typed and modern Next.js v16 App router project
-- **Proxies**: Proxy API calls to Strapi from Next.js app to avoid CORS issues, hide API keys and backend address
-- **API**: Typed API calls to Strapi via API clients
-- **UI library**: 20+ pre-installed components, beautifully designed by [Shadcn/ui](https://ui.shadcn.com/)
-- **UI components**: Ready to use components for common use cases (forms, images, tables, navbar and much more)
-- **TailwindCSS**: [TailwindCSS v4](https://tailwindcss.com/) setup with configuration and theme, [CVA](https://cva.style/docs), [tailwind-merge](https://www.npmjs.com/package/tailwind-merge) and [tailwindcss-animate](https://www.npmjs.com/package/tailwindcss-animate)
-- **Rich text editors**: Pre-configured [CkEditor v5](https://ckeditor.com/) and [Tip tap](https://tiptap.dev/) WYSIWYG editors with shared styles and colors
-- **Utils**: Useful utils, hooks and helper functions included
-- **Auth**: JWT authentication with [Strapi Users & Permissions feature](https://docs.strapi.io/cms/features/users-permissions) and [Better Auth](https://www.better-auth.com), auth middleware and protected routes
-- **Auth providers**: Ready to plug-in providers like Google, Facebook etc.
-- **Localization**: Multi-language support with [next-intl](https://next-intl-docs.vercel.app/) and [@strapi/plugin-i18n](https://www.npmjs.com/package/@strapi/plugin-i18n) packages
-- **SEO**: Pre-configured SEO Strapi component and integrated with frontend SEO best practices like metadata, canonical etc.
-- **Turborepo**: Pre-configured, apps and packages connected and controlled by Turbo CLI
-- **Dockerized**: Ready to build in Docker containers for production
-- **Code quality**: Out-of-the-box ESLint (with integrated Prettier formatting) and TypeScript configurations in shareable packages
-- **Lefthook**: Git hooks for linting, formatting and commit message validation
-- **Commitizen**: Commitizen for conventional commits and their generation
-- **Heroku ready**: Ready to deploy to Heroku in a few steps
+- **Modern Strapi + Next.js foundation**: Strapi v5 CMS, Next.js v16 App Router, React 19, TypeScript, pnpm workspaces, Turborepo, Node 24, and Docker-ready production builds
+- **Typed page builder**: Prepared Strapi dynamic-zone components, typed populate configs, generated Strapi types, frontend component registry, and restyled starter sections ready for project customization
+- **Content preview and routing**: Strapi draft/live preview, localized page routing, dynamic rewrites, breadcrumbs, canonical metadata, and SEO-friendly page rendering
+- **Design system and UI kit**: TailwindCSS v4, shadcn/ui components, shared design tokens, reusable typography primitives, and common frontend components for navigation, forms, images, content sections, and rich text
+- **Rich text editing**: Pre-configured CKEditor and TipTap with shared styles, generated TipTap presets, and reusable editor rendering on the frontend
+- **Media handling**: Strapi upload configuration with local and Azure Blob Storage support, plus frontend image helpers for optimized Strapi media rendering and fallbacks
+- **Authentication**: Better Auth integrated with Strapi Users & Permissions, JWT handling, auth middleware, protected routes, and provider-ready setup
+- **Localization**: Multi-language content and routes powered by `next-intl` and `@strapi/plugin-i18n`
+- **Developer workflow**: DB seed data, typed Strapi API clients, shared utilities, ESLint with Prettier formatting, Lefthook git hooks, Commitizen, conventional commits, and CODEOWNERS/contribution templates
+- **Documentation and QA**: Docusaurus documentation app plus Playwright-based E2E, accessibility, performance, SEO, and visual regression test suites
 - ... and much more is waiting for you to discover!
 
 ## 📦 What's inside?
