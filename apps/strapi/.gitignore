@@ -38,7 +38,6 @@ $RECYCLE.BIN/
 *.dat
 *.dmg
 *.gz
-!strapi-export.tar.gz
 *.iso
 *.jar
 *.rar
@@ -104,6 +103,9 @@ coverage
 .env
 license.txt
 exports
+!seed/
+!seed/exports/
+!seed/exports/strapi-export-*.tar.gz
 *.cache
 dist
 build
