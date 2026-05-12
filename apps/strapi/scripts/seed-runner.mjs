@@ -32,6 +32,7 @@ const enabled = parseBoolean(
   strapiArgs[0] === "develop"
 )
 const mode = (process.env.AUTO_SEED_MODE || "empty").toLowerCase()
+const isDevelopCommand = strapiArgs[0] === "develop"
 
 try {
   if (enabled) {
@@ -67,6 +68,12 @@ async function maybeSeed(mode) {
   }
 
   const seedState = await runSeedCheck()
+
+  if (seedState === "unknown") {
+    console.warn("[seed] Seed check failed; starting Strapi without auto-seed.")
+
+    return
+  }
 
   if (mode === "empty") {
     if (seedState === "missing") {
@@ -115,9 +122,21 @@ async function maybeSeed(mode) {
 }
 
 async function runSeedCheck() {
-  const result = await runCommand(process.execPath, [seedCheckScript], {
-    allowExitCodes: [0, 10],
-  })
+  let result
+
+  try {
+    result = await runCommand(process.execPath, [seedCheckScript], {
+      allowExitCodes: [0, 10],
+    })
+  } catch (error) {
+    if (isDevelopCommand) {
+      console.warn(error instanceof Error ? error.message : error)
+
+      return "unknown"
+    }
+
+    throw error
+  }
 
   return result.exitCode === 10 ? "missing" : "ready"
 }

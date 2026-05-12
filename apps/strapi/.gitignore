@@ -38,7 +38,6 @@ $RECYCLE.BIN/
 *.dat
 *.dmg
 *.gz
-!strapi-export.tar.gz
 *.iso
 *.jar
 *.rar

@@ -29,6 +29,8 @@ When Strapi starts through the default scripts, `scripts/seed-runner.mjs` can ru
 
 Run commands from `apps/strapi`.
 
+Seed import and export scripts require `bash`. On Windows, use WSL, Git Bash, or another shell with Bash available.
+
 ```bash
 pnpm run seed:check   # Check whether Page, Navbar, and Footer content exists
 pnpm run seed:import  # Import the latest timestamped seed export

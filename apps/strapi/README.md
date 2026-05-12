@@ -76,6 +76,8 @@ Another way is to run **Strapi in docker** container too. Currently, an availabl
 
 `pnpm dev` starts Postgres and auto-seeds Strapi from the latest timestamped export when required baseline content is missing.
 
+Seed scripts use `bash`. On Windows, run them from WSL, Git Bash, or another shell with Bash available.
+
 Manual commands:
 
 ```bash
