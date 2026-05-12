@@ -31,7 +31,7 @@
     "postinstall": "pnpm run setup:apps",
     "lint": "turbo lint",
     "lint:fix": "turbo lint:fix",
-    "prepare": "lefthook install --reset-hooks-path",
+    "prepare": "if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then lefthook install --reset-hooks-path; else echo 'Skipping lefthook install: not inside a Git worktree.'; fi",
     "setup:apps": "find . -name '*.example' -exec sh -c 'cp -n \"$1\" \"${1%.example}\"' _ {} \\;",
     "start:strapi": "turbo run start --filter=@repo/strapi",
     "start:ui": "turbo run start --filter=@repo/ui",
