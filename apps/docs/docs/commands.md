@@ -43,6 +43,17 @@ cd apps/strapi && pnpm generate:types
 
 This updates `@repo/strapi-types`. Forgetting causes silent type mismatches.
 
+## Strapi Data Seeding
+
+```bash
+cd apps/strapi
+pnpm run seed:check    # Check whether baseline content exists
+pnpm run seed:import   # Import latest timestamped seed export
+pnpm run seed:export   # Create timestamped seed export
+```
+
+See [Data Seeding and Imports](./data-seeding.md) for workflow details.
+
 ## Testing
 
 ```bash
