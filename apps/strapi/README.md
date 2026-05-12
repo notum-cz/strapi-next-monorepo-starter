@@ -74,21 +74,17 @@ Another way is to run **Strapi in docker** container too. Currently, an availabl
 
 ### 3. Init database (first run)
 
-There is `strapi-export.tar.gz` file in this directory with required initial data. **You should import** it to your local database with:
+`pnpm dev` starts Postgres and auto-seeds Strapi from the latest timestamped export when required baseline content is missing.
+
+Manual commands:
 
 ```bash
-# in this directory
-
-pnpm run import
+pnpm run seed:check
+pnpm run seed:import
+pnpm run seed:export
 ```
 
-Otherwise, you have to create following manually in Strapi admin panel:
-
-- Create one page in `Page` collection with fullPath and slug = `/` (home page)
-- Create navbar in `Navbar` single type
-- Create footer in `Footer` single type
-
-Because FE supports 2 languages (`en` and `cs`) by default, you have to enable both languages in Strapi (Settings > Internationalization). Then you need to create corresponding content for both languages.
+See [Data Seeding and Imports](../docs/docs/data-seeding.md) for how auto-seeding works and the PR workflow for updating seed exports.
 
 ### 4. Sync configuration
 
@@ -454,7 +450,9 @@ In [src/index.ts](src/index.ts) there are prepared hooks for sending email to ad
 
 ### Transfer data between environments
 
-Data can be easily transferred between environments in multiple ways. Check out official docs [https://docs.strapi.io/dev-docs/data-management](https://docs.strapi.io/dev-docs/data-management). Scripts are prepared in `package.json` see `export:all`, `export:content`, `import`, `transfer`.
+Data can be easily transferred between environments in multiple ways. Check out official docs [https://docs.strapi.io/dev-docs/data-management](https://docs.strapi.io/dev-docs/data-management).
+
+Use `pnpm run transfer` for Strapi transfer. Use `seed:export` and `seed:import` for local development seed archives. See [Data Seeding and Imports](../docs/docs/data-seeding.md).
 
 ### Cron jobs
 

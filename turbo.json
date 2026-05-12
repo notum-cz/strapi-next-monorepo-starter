@@ -33,7 +33,9 @@
     "BASIC_AUTH_ENABLED",
     "BASIC_AUTH_USERNAME",
     "BASIC_AUTH_PASSWORD",
-    "IMGPROXY_URL"
+    "IMGPROXY_URL",
+    "AUTO_SEED_ENABLED",
+    "AUTO_SEED_MODE"
   ],
   "tasks": {
     "build": {

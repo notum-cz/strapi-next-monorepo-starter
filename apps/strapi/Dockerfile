@@ -75,7 +75,7 @@ RUN pnpm prune --prod
 # ---
 FROM node:24-alpine AS runner
 
-RUN apk add --no-cache vips-dev
+RUN apk add --no-cache vips-dev bash
 
 ARG APP
 ARG NODE_ENV=production
@@ -93,4 +93,4 @@ ENV PATH=/app/apps/${APP}/node_modules/.bin:$PATH
 USER strapi
 WORKDIR /app/apps/${APP}
 EXPOSE ${PORT:-1337}
-CMD ["./node_modules/.bin/strapi", "start"]
+CMD ["node", "scripts/seed-runner.mjs", "start"]

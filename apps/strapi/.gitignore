@@ -104,6 +104,9 @@ coverage
 .env
 license.txt
 exports
+!seed/
+!seed/exports/
+!seed/exports/strapi-export-*.tar.gz
 *.cache
 dist
 build
