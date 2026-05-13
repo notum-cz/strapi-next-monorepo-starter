@@ -37,7 +37,7 @@
     "@strapi/database": "5.44.0",
     "@strapi/design-system": "2.2.0",
     "@strapi/plugin-sentry": "5.44.0",
-    "@strapi/plugin-users-permissions": "5.44.0",
+    "@strapi/plugin-users-permissions": "5.45.0",
     "@strapi/provider-email-mailgun": "5.44.0",
     "@strapi/provider-email-nodemailer": "5.44.0",
     "@strapi/provider-upload-aws-s3": "5.44.0",
