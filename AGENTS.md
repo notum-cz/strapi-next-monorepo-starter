@@ -54,3 +54,11 @@ pnpm commit    # Interactive Commitizen flow
 ```
 
 Or write manually: `type(scope): subject`
+
+## Agent skills
+
+Reusable agent instructions live in [`.agents/skills/`](./.agents/skills/). Claude Code reads them via a committed symlink at `.claude/skills`. Any agent following the [agentskills.io](https://agentskills.io) standard discovers them from `.agents/skills/` directly.
+
+See [`.agents/skills/README.md`](./.agents/skills/README.md) for the authoring guide. Catalog of shipped skills is maintained in that README.
+
+**Windows note:** symlink requires `git config core.symlinks true` once per clone. Otherwise Claude Code will miss the skills directory.

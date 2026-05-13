@@ -48,3 +48,6 @@ yarn-error.log*
 next-env.d.ts
 
 .claude/settings.local.json
+.claude/plans/
+.worktrees/
+.claude/.worktrees/
