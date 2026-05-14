@@ -15,8 +15,8 @@ RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev l
 
 # Install pnpm globally
 ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable && corepack prepare pnpm@10.33.3 --activate
+ENV PATH="$PNPM_HOME/bin:$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@11.1.1 --activate
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
@@ -70,7 +70,7 @@ COPY turbo.json turbo.json
 RUN turbo run build
 
 # Remove devDependencies after build to reduce image size
-RUN pnpm prune --prod
+# RUN pnpm prune --prod
 
 # ---
 FROM node:24-alpine AS runner

@@ -1,1 +1,57 @@
-packages: ["packages/*", "apps/*", "qa/**"]
+packages: [ "packages/*", "apps/*", "qa/**" ]
+allowBuilds:
+  "@parcel/watcher": true
+  "@sentry/cli": true
+  "@swc/core": true
+  core-js: true
+  core-js-pure: true
+  esbuild: true
+  lefthook: true
+  sharp: true
+  unrs-resolver: true
+
+minimumReleaseAge: 5760
+
+overrides:
+  "@types/react": 19.2.14
+  "@types/react-dom": 19.2.3
+
+packageExtensions:
+  "@hookform/resolvers":
+    peerDependencies:
+      zod: "*"
+  "@uiw/codemirror-extensions-basic-setup":
+    peerDependenciesMeta:
+      "@codemirror/autocomplete":
+        optional: true
+      "@codemirror/language":
+        optional: true
+      "@codemirror/lint":
+        optional: true
+      "@codemirror/search":
+        optional: true
+      "@codemirror/state":
+        optional: true
+      "@codemirror/view":
+        optional: true
+  "@uiw/react-codemirror":
+    peerDependenciesMeta:
+      "@babel/runtime":
+        optional: true
+      "@codemirror/state":
+        optional: true
+      "@codemirror/theme-one-dark":
+        optional: true
+      "@codemirror/view":
+        optional: true
+      codemirror:
+        optional: true
+
+peerDependencyRules:
+  allowedVersions:
+    eslint: ^9.39.0
+    react: ">=18 <20"
+    react-dom: ">=18 <20"
+    styled-components: ">=6.0.0 <7"
+    typescript: ">=5.4.0 <6"
+    zod: ">=3.25.67 <5"
