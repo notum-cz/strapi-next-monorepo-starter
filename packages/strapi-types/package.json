@@ -22,7 +22,7 @@
     "sync-types": "cp -r ../../apps/strapi/types/generated ./generated"
   },
   "devDependencies": {
-    "@strapi/strapi": "5.44.0"
+    "@strapi/strapi": "5.46.0"
   },
   "engines": {
     "node": "^24.0.0"
