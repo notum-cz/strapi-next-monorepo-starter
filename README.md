@@ -294,6 +294,14 @@ We published two buildpacks to make deployment easier and more efficient. They c
 
 _[After this preparation is done, delete this section from README]_
 
+## 🤖 Agent tooling
+
+This repo ships agent skills (Claude Code, [agentskills.io](https://agentskills.io)) and worktree automation:
+
+- [`AGENTS.md`](./AGENTS.md) — top-level index for agentic tooling
+- [`.agents/skills/`](./.agents/skills/) — reusable skills (`fix-issue`, `make-pr`, `review-pr`, `add-content-type`, …); see [`.agents/skills/README.md`](./.agents/skills/README.md) for the catalog and authoring guide
+- [`scripts/worktree/`](./scripts/worktree/) — worktree create/setup/cleanup driven by [`worktree.config.json`](./worktree.config.json); exposed as `pnpm worktree:create <branch>`
+
 ## 📖 Documentation
 
 There is plenty of documentation in README files in individual apps and packages. Make sure to check them out. In addition, there is more in the [/apps/docs](./apps/docs) directory. We want to [improve the documentation over time](https://github.com/notum-cz/strapi-next-monorepo-starter/issues/113), so stay tuned.

@@ -59,6 +59,20 @@ Or write manually: `type(scope): subject`
 
 Reusable agent instructions live in [`.agents/skills/`](./.agents/skills/). Claude Code reads them via a committed symlink at `.claude/skills`. Any agent following the [agentskills.io](https://agentskills.io) standard discovers them from `.agents/skills/` directly.
 
-See [`.agents/skills/README.md`](./.agents/skills/README.md) for the authoring guide. Catalog of shipped skills is maintained in that README.
+See [`.agents/skills/README.md`](./.agents/skills/README.md) for the authoring guide and the catalog of shipped skills.
 
 **Windows note:** symlink requires `git config core.symlinks true` once per clone. Otherwise Claude Code will miss the skills directory.
+
+## Worktrees
+
+Multi-branch development uses git worktrees driven by [`worktree.config.json`](./worktree.config.json). Worktrees land at `<repo-root>/../.worktrees/<branch-slug>` (sibling, never nested).
+
+```bash
+pnpm worktree:create <branch> [base]   # default base: dev (falls back to main)
+pnpm worktree:setup   <path>           # re-apply manifest to an existing worktree
+pnpm worktree:cleanup <path-or-branch> # remove worktree; refuses unmerged unless --force
+```
+
+The manifest declares files to copy (env files), files to symlink, and `postSetup` commands (e.g. `pnpm install`). Adding a new env file = edit JSON, not scripts. Scripts live at [`scripts/worktree/`](./scripts/worktree/) and resolve the canonical repo root, so they work from a bare repo or from any worktree.
+
+The `fix-issue` skill calls these scripts when starting new work.
