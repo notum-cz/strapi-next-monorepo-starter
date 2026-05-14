@@ -1,4 +1,4 @@
-packages: [ "packages/*", "apps/*", "qa/**" ]
+packages: ["packages/*", "apps/*", "qa/**"]
 allowBuilds:
   "@parcel/watcher": true
   "@sentry/cli": true
