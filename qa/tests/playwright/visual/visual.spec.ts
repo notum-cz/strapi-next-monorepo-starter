@@ -19,6 +19,15 @@ function prettifySlug(url: string): string {
     .replaceAll("/", "-")
 }
 
+function getEnvSlug(baseUrl: string | undefined): string {
+  if (!baseUrl) return "unknown"
+  try {
+    return new URL(baseUrl).hostname.replaceAll(".", "-")
+  } catch {
+    return "unknown"
+  }
+}
+
 test.describe("Visual Regression", () => {
   for (const url of urls) {
     test(`Compare snapshot for ${url}`, async ({ page }, testInfo) => {
@@ -69,7 +78,8 @@ test.describe("Visual Regression", () => {
         )
       }
 
-      const snapshotName = `${prettifySlug(url)}.png`
+      const envSlug = getEnvSlug(process.env.BASE_URL)
+      const snapshotName = `${envSlug}-${prettifySlug(url)}.png`
       const baselinePath = testInfo.snapshotPath(snapshotName)
       const baselineExists = fs.existsSync(baselinePath)
       const browserName = testInfo.project.name

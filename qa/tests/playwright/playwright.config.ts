@@ -48,6 +48,24 @@ if (mobileViewportsEnabled) {
 
 projects.push(
   {
+    name: "visual-chromium",
+    testMatch: ["visual/**/*.spec.ts"],
+    use: { ...devices["Desktop Chrome"] },
+  },
+  {
+    name: "visual-firefox",
+    testMatch: ["visual/**/*.spec.ts"],
+    use: { ...devices["Desktop Firefox"] },
+  },
+  {
+    name: "visual-webkit",
+    testMatch: ["visual/**/*.spec.ts"],
+    use: {
+      ...devices["Desktop Safari"],
+      deviceScaleFactor: 1,
+    },
+  },
+  {
     name: "seo",
     testMatch: ["seo/**/*.spec.ts"],
     retries: 1,
