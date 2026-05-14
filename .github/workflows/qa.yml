@@ -170,7 +170,7 @@ jobs:
       - name: Run Playwright SEO tests
         env:
           BASE_URL: ${{ inputs.base_url }}
-        run: pnpm tests:playwright:seo --project=seo
+        run: pnpm tests:playwright:seo
 
       - name: Pack SEO reports
         if: always()
