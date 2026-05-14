@@ -66,9 +66,26 @@ Run from the review worktree, in parallel where independent:
 pnpm install --frozen-lockfile --prefer-offline
 pnpm typecheck
 pnpm lint
-pnpm build
 pnpm test:ci
 ```
+
+### Build verification (required gate)
+
+If the diff touches `apps/ui/**`, `apps/strapi/**`, or any `packages/**`, the affected app(s) MUST build cleanly. Typecheck does not prove the app builds — Next.js route collection, Strapi schema compile, and bundler-level errors only surface during `build`.
+
+Use **turbo's** filter (not `pnpm --filter`) so internal workspace deps are built in topo order. `turbo.json` declares `build.dependsOn: ["^build"]`, so `pnpm turbo build --filter=<pkg>` walks the dep graph; plain `pnpm --filter <pkg> build` does not.
+
+Pick the narrowest command that covers the changed surface:
+
+| Diff touches                          | Command                                                                      |
+| ------------------------------------- | ---------------------------------------------------------------------------- |
+| only `apps/ui/**`                     | `pnpm turbo build --filter=@repo/ui`                                         |
+| only `apps/strapi/**`                 | `pnpm turbo build --filter=@repo/strapi`                                     |
+| both apps                             | run both filters in parallel, **or** `pnpm build`                            |
+| any `packages/**` (shared code)       | `pnpm build` — safer than guessing which apps consume it                     |
+| only `qa/**`, `.github/**`, docs only | skip build; note "build skipped — no app/package code changed" in the report |
+
+Never silently skip when app or package code did change. Capture build failures verbatim into the Phase 5 report and **stop before dispatching subagents** (see Notes) — a broken build invalidates downstream review.
 
 If Strapi schema changed, also run `strapi-schema-check` (skill) on the diff.
 
