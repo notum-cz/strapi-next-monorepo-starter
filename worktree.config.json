@@ -5,9 +5,7 @@
     "apps/ui/.env.local",
     ".env"
   ],
-  "symlink": [
-    ".turbo"
-  ],
+  "symlink": [],
   "postSetup": [
     "pnpm install --frozen-lockfile --prefer-offline",
     "pnpm --filter @repo/strapi generate:types || true"
