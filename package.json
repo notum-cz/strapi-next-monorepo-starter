@@ -43,11 +43,11 @@
     "tests:playwright:axe": "turbo run axe-test --filter=@repo/tests-playwright",
     "tests:playwright:e2e:test": "turbo run playwright-e2e-tests --filter=@repo/tests-playwright",
     "tests:playwright:e2e:test:interactive": "turbo run playwright-interactive-mode --filter=@repo/tests-playwright",
-    "tests:playwright:seo": "pnpm -F @repo/tests-playwright exec playwright test --project=seo",
+    "tests:playwright:seo": "turbo run playwright-seo-tests --filter=@repo/tests-playwright",
     "tests:playwright:visual": "turbo run playwright-visual-tests --filter=@repo/tests-playwright",
-    "tests:playwright:visual:update": "turbo run playwright-visual-tests --filter=@repo/tests-playwright -- --update-snapshots",
-    "tests:playwright:visual:docker": "pnpm -F @repo/tests-playwright run playwright-visual-tests-docker",
-    "tests:playwright:visual:docker:update": "pnpm -F @repo/tests-playwright exec bash visual/update-snapshots-docker.sh",
+    "tests:playwright:visual:update": "turbo run playwright-visual-update-tests --filter=@repo/tests-playwright",
+    "tests:playwright:visual:docker": "turbo run playwright-visual-tests-docker --filter=@repo/tests-playwright",
+    "tests:playwright:visual:docker:update": "turbo run playwright-visual-update-snapshots-docker --filter=@repo/tests-playwright",
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
