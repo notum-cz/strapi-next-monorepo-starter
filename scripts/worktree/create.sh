@@ -57,8 +57,8 @@ echo "create: base = ${base}"
 
 # Slugify branch for directory name (replace `/` with `-`).
 slug="$(printf '%s' "${branch}" | tr '/' '-')"
-target="${canonical_root}/../.worktrees/${slug}"
-target="$(cd "$(dirname "${target}")" 2>/dev/null && pwd)/$(basename "${target}")" || target="${target}"
+parent_dir="$(cd "${canonical_root}/.." && pwd)"
+target="${parent_dir}/.worktrees/${slug}"
 echo "create: target = ${target}"
 
 # Refuse to nest: target must not fall under any existing worktree (other than canonical root).

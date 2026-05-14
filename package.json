@@ -46,7 +46,10 @@
     "tests:playwright:seo": "pnpm -F @repo/tests-playwright exec playwright test --project=seo",
     "tests:playwright:visual": "turbo run playwright-visual-tests --filter=@repo/tests-playwright",
     "tests:playwright:visual:update": "turbo run playwright-visual-tests --filter=@repo/tests-playwright -- --update-snapshots",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "turbo run typecheck",
+    "worktree:create": "scripts/worktree/create.sh",
+    "worktree:setup": "scripts/worktree/setup.sh",
+    "worktree:cleanup": "scripts/worktree/cleanup.sh"
   },
   "devDependencies": {
     "@commitlint/cli": "19.8.1",
