@@ -26,7 +26,7 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 - Docker
 - node 24
-- pnpm 10
+- pnpm 11
 - [nvm](https://github.com/nvm-sh/nvm) (optional, recommended)
 
 ### Run dev (in 4 steps)
@@ -48,8 +48,8 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
    # switch to correct nodejs version (v24)
    nvm use
 
-   # optionally, switch to pnpm v10.33.3
-   (corepack prepare pnpm@10.33.3 --activate)
+   # optionally, switch to pnpm v11.1.1
+   (corepack prepare pnpm@11.1.1 --activate)
 
    # install deps for apps and packages that are part of this monorepo
    pnpm install
