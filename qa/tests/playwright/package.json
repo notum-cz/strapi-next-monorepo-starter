@@ -14,7 +14,8 @@
     "playwright-e2e-tests": "playwright test e2e",
     "playwright-interactive-mode": "playwright test e2e --ui",
     "playwright-seo-tests": "playwright test seo/seo.spec.ts",
-    "playwright-visual-tests": "playwright test visual/visual.spec.ts"
+    "playwright-visual-tests": "playwright test --project=visual-chromium --project=visual-firefox --project=visual-webkit",
+    "playwright-visual-tests-docker": "bash visual/compare-snapshots-docker.sh visual-chromium visual-firefox visual-webkit"
   },
   "dependencies": {
     "@axe-core/playwright": "4.11.3",
