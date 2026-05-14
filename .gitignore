@@ -50,3 +50,4 @@ next-env.d.ts
 .claude/settings.local.json
 .claude/plans/
 .worktrees/
+PLAN.md
