@@ -71,15 +71,14 @@ test.describe("Visual Regression", () => {
         content: `
           * { animation: none !important; transition: none !important; }
           #logo-carousel { visibility: hidden !important; }
-          body { filter: invert(1) !important; }
         `,
       })
 
-      /*       for (const el of await page.locator("img, video").elementHandles()) {
+      for (const el of await page.locator("img, video").elementHandles()) {
         await el.evaluate((el) =>
           (el as HTMLElement).style.setProperty("opacity", "0", "important")
         )
-      } */
+      }
 
       const envSlug = getEnvSlug(process.env.BASE_URL)
       const snapshotName = `${envSlug}-${prettifySlug(url)}.png`
