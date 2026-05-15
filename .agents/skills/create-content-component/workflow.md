@@ -73,18 +73,19 @@ Rules:
 `apps/ui/src/components/page-builder/components/<category>/Strapi<PascalCaseName>.tsx`:
 
 ```tsx
-import { Data } from "@repo/strapi-types"
+import "server-only"
+
+import type { Data } from "@repo/strapi-types"
 
 import { Container } from "@/components/elementary/Container"
-import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
+import { cn } from "@/lib/styles"
+import type { PageBuilderComponentProps } from "@/types/general"
 
 export function Strapi<PascalCaseName>({
   component,
-}: {
-  readonly component: Data.Component<"<category>.<name>">
+}: PageBuilderComponentProps & {
+  component: Data.Component<"<category>.<name>">
 }) {
-  removeThisWhenYouNeedMe("Strapi<PascalCaseName>")
-
   return (
     <section>
       <Container className="py-8">
@@ -102,13 +103,14 @@ export default Strapi<PascalCaseName>
 
 Conventions (cross-ref `add-ui-component`):
 
-- Named export + default export
-- Props typed via `Data.Component<"<category>.<name>">` from `@repo/strapi-types`
-- `removeThisWhenYouNeedMe(...)` placeholder — keep until the component is real
-- Wrap content in `<Container>` from `@/components/elementary/Container` unless this component itself is a layout/container
-- `cn()` from `@/lib/styles` for class merging
-- Design tokens, not raw hex colors
-- Lucide icons
+- `import "server-only"` at the top — every shipped page-builder section has it; it forces a build-time error if a client component ever imports this file.
+- Props typed as `PageBuilderComponentProps & { component: Data.Component<"<category>.<name>"> }` — `PageBuilderComponentProps` carries page-level context (locale, etc.); the closest references are `StrapiFeaturesList.tsx` and `StrapiFigures.tsx`.
+- Named export + default export.
+- Wrap content in `<Container>` from `@/components/elementary/Container` unless this component is itself a layout/container.
+- `cn()` from `@/lib/styles` for class merging.
+- Design tokens (`bg-background`, `text-primary`, `text-muted-foreground`), not raw hex colors.
+- Lucide icons.
+- Static UI copy (e.g. a "/month" suffix, "Most popular" badge) should come from the i18n message catalog under `apps/ui/locales/`, not be hardcoded in the component.
 
 ## 5. Register in `PageContentComponents`
 

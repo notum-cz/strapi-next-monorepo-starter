@@ -79,6 +79,12 @@ bash .agents/skills/strapi-schema-check/scripts/check.sh
 - **Using Strapi `richtext` instead of CKEditor** for editorial copy — CKEditor `customField` with `preset: defaultCkEditor` is the starter convention.
 - **Pascal/camelCase component names** — Strapi UIDs must be kebab-case.
 - **Skipping type regeneration** — `Data.Component<"<category>.<name>">` won't resolve.
+- **Forgetting `import "server-only"`** — every shipped page-builder section has it; without it, a future client import silently turns the section into a client component.
+- **Typing props as `{ readonly component: ... }` only** — codebase convention is `PageBuilderComponentProps & { component: Data.Component<...> }`; the extra props are page-level context other sections rely on.
+- **Picking the wrong category for a repeatable child component** — `shared/` is for repeatable "row" components shared across sections (`shared.figure`, `shared.image-with-title-and-description`); `utilities/` is for primitives reused everywhere (`utilities.link`, `utilities.basic-image`, `utilities.ck-editor-content`). Match the closest existing pattern; don't invent a new category.
+- **Hardcoding UI copy** — strings like "/month", "Most popular", "Choose plan" go in `apps/ui/locales/`. Strapi-driven copy comes from the schema; static UI labels come from i18n.
+- **Gold-plating the schema** — only add fields the task actually asks for. Optional extras (CTA buttons, "highlighted" toggles, billing-period switches) inflate the schema and the migration risk surface; add them in a follow-up if needed.
+- **Repeatable scalars** — Strapi has no "repeatable string" type. A list of bullet strings needs either a child component with a single `text` field (reuse `utilities.text` if it fits) or, if richer per-row state is needed, a small new component.
 
 ## Verify
 
