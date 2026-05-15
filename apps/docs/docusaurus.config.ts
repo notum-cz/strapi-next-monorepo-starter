@@ -6,6 +6,13 @@ const url = process.env.DOCUSAURUS_URL ?? "https://notum-cz.github.io"
 const baseUrl = process.env.DOCUSAURUS_BASE_URL ?? "/strapi-next-monorepo-starter/"
 
 const config: Config = {
+  markdown: {
+    mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: "warn",
+    },
+  },
+  themes: ["@docusaurus/theme-mermaid"],
   plugins: [
     [
       require.resolve("@easyops-cn/docusaurus-search-local"),
@@ -25,11 +32,6 @@ const config: Config = {
   baseUrl,
   onBrokenLinks: "warn",
   favicon: undefined,
-  markdown: {
-    hooks: {
-      onBrokenMarkdownLinks: "warn",
-    },
-  },
 
   i18n: {
     defaultLocale: "en",

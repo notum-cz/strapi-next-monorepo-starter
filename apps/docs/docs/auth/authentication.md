@@ -4,32 +4,18 @@ The application uses a dual authentication system: Better Auth for session manag
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              Next.js (apps/ui)                              │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │                          Better Auth (v1)                            │   │
-│  │  - Session management via cookies                                    │   │
-│  │  - Stateless JWE cookie cache (30 days)                              │   │
-│  │  - Custom plugins for Strapi integration                             │   │
-│  └────────────────────────────────┬─────────────────────────────────────┘   │
-│                                   │                                         │
-│                    stores strapiJWT in session                              │
-│                                   │                                         │
-│  ┌────────────────────────────────▼─────────────────────────────────────┐   │
-│  │                       PrivateStrapiClient                            │   │
-│  │  - Retrieves JWT from session                                        │   │
-│  │  - Adds Authorization header to requests                             │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           Strapi (apps/strapi)                              │
-│  - users-permissions plugin                                                 │
-│  - JWT validation on protected endpoints                                    │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+  subgraph Next["Next.js (apps/ui)"]
+    direction TB
+    BA["Better Auth (v1)<br/>Session via cookies · JWE cache 30 d<br/>Strapi integration plugins"]
+    PSC["PrivateStrapiClient<br/>Retrieves JWT from session<br/>Adds Authorization header"]
+    BA -- "stores strapiJWT in session" --> PSC
+  end
+
+  Strapi["Strapi (apps/strapi)<br/>users-permissions plugin<br/>JWT validation on protected endpoints"]
+
+  PSC --> Strapi
 ```
 
 ## Key Files
@@ -166,4 +152,4 @@ APP_PUBLIC_URL=        # Base URL for auth callbacks
 
 ## Related Documentation
 
-- [Strapi API Client](./strapi-api-client.md) — How the clients handle auth headers
+- [Strapi API Client](../content-system/strapi-api-client.md) — How the clients handle auth headers

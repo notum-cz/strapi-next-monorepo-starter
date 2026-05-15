@@ -4,14 +4,14 @@ The `@repo/strapi-types` package provides auto-generated TypeScript types from S
 
 ## Regeneration
 
-After ANY Strapi schema change, regenerate types and sync them into the package:
+After ANY Strapi schema change, regenerate types and sync them into the package. From the **monorepo root**:
 
 ```bash
-cd apps/strapi && pnpm generate:types
-cd ../../packages/strapi-types && pnpm sync-types
+pnpm generate:types
+pnpm sync-types
 ```
 
-See [Packages → @repo/strapi-types](./packages.md) for the generation flow.
+See [Packages → @repo/strapi-types](../reference/packages.md) for the generation flow.
 
 ## Package Structure
 

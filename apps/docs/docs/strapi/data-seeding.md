@@ -27,14 +27,14 @@ When Strapi starts through the default scripts, `scripts/seed-runner.mjs` can ru
 
 ## Commands
 
-Run commands from `apps/strapi`.
+All commands run from the **monorepo root** via Turbo.
 
 Seed import and export scripts require `bash`. On Windows, use WSL, Git Bash, or another shell with Bash available.
 
 ```bash
-pnpm run seed:check   # Check whether Page, Navbar, and Footer content exists
-pnpm run seed:import  # Import the latest timestamped seed export
-pnpm run seed:export  # Create a new timestamped seed export
+pnpm seed:check   # Check whether Page, Navbar, and Footer content exists
+pnpm seed:import  # Import the latest timestamped seed export
+pnpm seed:export  # Create a new timestamped seed export
 ```
 
 `seed:export` keeps only the latest 5 exports.
@@ -74,18 +74,16 @@ When a PR creates or changes Strapi collections, components, single types, or co
 2. Export the updated seed:
 
    ```bash
-   cd apps/strapi
-   pnpm run seed:export
+   pnpm seed:export
    ```
 
 3. Commit the new `seed/exports/strapi-export-YYYY-MM-DD-HHmmss.tar.gz`.
 4. Open the PR with the schema/type/content changes and the new seed export together.
 
-Other developers will pick up the new export when they pull the branch. On the next Strapi start, their local database will be seeded automatically if baseline content is missing. If they already have local content and need to apply the new export, they can run:
+Other developers will pick up the new export when they pull the branch. On the next Strapi start, their local database will be seeded automatically if baseline content is missing. If they already have local content and need to apply the new export, they can run from root:
 
 ```bash
-cd apps/strapi
-pnpm run seed:import
+pnpm seed:import
 ```
 
 Or they can start Strapi with `AUTO_SEED_MODE=force` to automatically import the new seed on startup.

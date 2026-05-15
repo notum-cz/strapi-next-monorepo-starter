@@ -1,13 +1,19 @@
+---
+sidebar_position: 3
+---
+
 # Add a Content Type
 
 End-to-end recipe for introducing a new Strapi collection (or single type) and exposing it through the Next.js frontend. Uses `product` as a worked example. All steps map to actual file locations in the template.
 
-For a new **dynamic-zone component** (something that goes inside `page.content`), see [Page Builder](./page-builder.md). This page covers a separate collection.
+For a new **dynamic-zone component** (something that goes inside `page.content`), see [Page Builder](../content-system/page-builder.md). This page covers a separate collection.
 
 ## Prerequisites
 
-- Strapi running locally (`pnpm dev` in `apps/strapi`).
+- Strapi running locally — `pnpm dev:strapi` from the monorepo root.
 - A clean working tree — schema changes generate types and seed exports that should be committed together.
+
+All commands below run from the **monorepo root** via Turbo. Don't `cd` into individual apps.
 
 ## Step 1 — Define the schema
 
@@ -54,7 +60,7 @@ Create [`apps/strapi/src/api/product/content-types/product/schema.json`](https:/
 }
 ```
 
-Attribute shape reference: [Strapi Schemas](./strapi-schemas.md). Localized fields need `pluginOptions.i18n.localized: true`; un-localized fields share one value across locales (e.g. `price` above).
+Attribute shape reference: [Strapi Schemas](../content-system/strapi-schemas.md). Localized fields need `pluginOptions.i18n.localized: true`; un-localized fields share one value across locales (e.g. `price` above).
 
 ## Step 2 — Wire routes, controller, service
 
@@ -86,9 +92,9 @@ export default factories.createCoreService("api::product.product")
 
 That's enough to expose the standard CRUD routes (`GET /api/products`, `GET /api/products/:id`, `POST /api/products`, etc.). If you need custom logic, override individual controller methods — see [`apps/strapi/src/api/page/controllers/page.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/src/api/page/controllers/page.ts) for an example that adds `breadcrumbs` to the response.
 
-Alternatively, scaffold the same three files via Strapi CLI: `pnpm strapi generate` and pick `api`.
+Alternatively, scaffold via Strapi CLI: `pnpm -F @repo/strapi strapi generate` from root and pick `api`.
 
-Restart Strapi (`pnpm dev` re-watches by default) so it picks up the new content type.
+Restart Strapi (`pnpm dev:strapi` re-watches by default) so it picks up the new content type.
 
 ## Step 3 — Grant permissions in Strapi admin
 
@@ -99,7 +105,7 @@ Without this step, every public request returns `403`. In the admin panel:
 3. Under `Product`, tick `find` and `findOne` (and writes if needed).
 4. Save.
 
-Permissions are stored in the database, not in code. They travel via the seed export — see [Data Seeding](./data-seeding.md).
+Permissions are stored in the database, not in code. They travel via the seed export — see [Data Seeding](../strapi/data-seeding.md).
 
 ## Step 4 — Add the UID to `API_ENDPOINTS`
 
@@ -142,18 +148,13 @@ Server Components do not use the proxy, so this is unnecessary for SSR-only cons
 ## Step 6 — Regenerate types
 
 ```bash
-cd apps/strapi
 pnpm generate:types
-```
-
-This regenerates [`apps/strapi/types/generated/contentTypes.d.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/types/generated/). Because `packages/strapi-types/generated/` is meant to mirror it, also run:
-
-```bash
-cd packages/strapi-types
 pnpm sync-types
 ```
 
-After this, `"api::product.product"` is in `UID.ContentType` and `Data.ContentType<"api::product.product">` resolves. See [Strapi Types Usage](./strapi-types-usage.md).
+`generate:types` regenerates [`apps/strapi/types/generated/contentTypes.d.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/types/generated/). `sync-types` mirrors it into `packages/strapi-types/generated/`.
+
+After this, `"api::product.product"` is in `UID.ContentType` and `Data.ContentType<"api::product.product">` resolves. See [Strapi Types Usage](../content-system/strapi-types-usage.md).
 
 ## Step 7 — (Optional) Add a document middleware
 
@@ -178,14 +179,11 @@ export default async function ProductsPage({
 }) {
   const { locale } = await params
 
-  const response = await PublicStrapiClient.fetchMany(
-    "api::product.product",
-    {
-      locale,
-      populate: { image: true },
-      status: "published",
-    }
-  )
+  const response = await PublicStrapiClient.fetchMany("api::product.product", {
+    locale,
+    populate: { image: true },
+    status: "published",
+  })
 
   return (
     <ul>
@@ -209,34 +207,32 @@ const detail = await PublicStrapiClient.fetchOneBySlug(
 )
 ```
 
-`PrivateStrapiClient` has the same surface but injects the Strapi JWT from the Better Auth session — use it for per-user reads (e.g. orders, account-scoped products). See [Strapi API Client](./strapi-api-client.md).
+`PrivateStrapiClient` has the same surface but injects the Strapi JWT from the Better Auth session — use it for per-user reads (e.g. orders, account-scoped products). See [Strapi API Client](../content-system/strapi-api-client.md).
 
 ## Step 9 — (Optional) Seed sample content
 
-So other developers see the same example without re-typing:
+So other developers see the same example without re-typing. Create sample products in the admin UI, then from root:
 
 ```bash
-cd apps/strapi
-# create sample products in the admin UI, then:
 pnpm seed:export
 ```
 
-Commit the new `seed/exports/strapi-export-YYYY-MM-DD-HHmmss.tar.gz` alongside the schema. New developers will receive the data the next time they run `pnpm dev` (the seed runner auto-imports when baseline content is missing). See [Data Seeding](./data-seeding.md).
+Commit the new `seed/exports/strapi-export-YYYY-MM-DD-HHmmss.tar.gz` alongside the schema. New developers will receive the data the next time they run `pnpm dev` (the seed runner auto-imports when baseline content is missing). See [Data Seeding](../strapi/data-seeding.md).
 
 ## Verification Checklist
 
 - [ ] Strapi admin shows `Product` in the Content Manager.
 - [ ] `curl -H "Authorization: Bearer $STRAPI_REST_READONLY_API_KEY" $STRAPI_URL/api/products?locale=en` returns `200` with data.
-- [ ] `pnpm generate:types` in `apps/strapi` ran without errors.
+- [ ] `pnpm generate:types && pnpm sync-types` ran without errors.
 - [ ] `apps/ui` builds with no `Endpoint for UID … not found` error.
 - [ ] Page at `/<locale>/products` renders products end-to-end.
 - [ ] Schema, route/controller/service files, `API_ENDPOINTS` entry, and (optional) seed export are committed in the same PR.
 
 ## Related Documentation
 
-- [Architecture](./architecture.md) — where this type sits in the request lifecycle
-- [Strapi Schemas](./strapi-schemas.md) — attribute reference, lifecycle hooks, document middlewares
-- [Strapi API Client](./strapi-api-client.md) — `PublicStrapiClient` / `PrivateStrapiClient` surface
-- [Strapi Types Usage](./strapi-types-usage.md) — typed query params and `Data.ContentType<...>`
-- [Page Builder](./page-builder.md) — adding a dynamic-zone component instead of a collection
-- [Data Seeding](./data-seeding.md) — exporting and committing sample content
+- [Architecture](../architecture.md) — where this type sits in the request lifecycle
+- [Strapi Schemas](../content-system/strapi-schemas.md) — attribute reference, lifecycle hooks, document middlewares
+- [Strapi API Client](../content-system/strapi-api-client.md) — `PublicStrapiClient` / `PrivateStrapiClient` surface
+- [Strapi Types Usage](../content-system/strapi-types-usage.md) — typed query params and `Data.ContentType<...>`
+- [Page Builder](../content-system/page-builder.md) — adding a dynamic-zone component instead of a collection
+- [Data Seeding](../strapi/data-seeding.md) — exporting and committing sample content

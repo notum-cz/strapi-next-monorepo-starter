@@ -5,9 +5,9 @@
 Conceptual + feature docs live in [/apps/docs](../docs/docs). This README covers **setup and deployment** only.
 
 - [Architecture](../docs/docs/architecture.md) — request lifecycle, proxies, draft mode, i18n
-- [Frontend Features](../docs/docs/frontend-features.md) — project layout, shadcn, middleware proxies, Sentry, reCAPTCHA, logs
-- [Image Optimization](../docs/docs/images.md) — `StrapiBasicImage`, `StaticImage`, imgproxy, `sizes`
-- [Authentication](../docs/docs/authentication.md) · [Strapi API Client](../docs/docs/strapi-api-client.md) · [Page Builder](../docs/docs/page-builder.md)
+- [Frontend Features](../docs/docs/frontend/frontend-features.md) — project layout, shadcn, middleware proxies, Sentry, reCAPTCHA, logs
+- [Image Optimization](../docs/docs/frontend/images.md) — `StrapiBasicImage`, `StaticImage`, imgproxy, `sizes`
+- [Authentication](../docs/docs/auth/authentication.md) · [Strapi API Client](../docs/docs/content-system/strapi-api-client.md) · [Page Builder](../docs/docs/content-system/page-builder.md)
 
 ## 🥞 Stack
 
@@ -65,10 +65,12 @@ Set value in `STRAPI_REST_CUSTOM_API_KEY`.
 
 ### 2. Run locally (with hot-reloading)
 
+All commands from the **monorepo root**.
+
 ```bash
 nvm use           # switch to Node 24
-pnpm install      # from monorepo root
-pnpm run dev      # in apps/ui
+pnpm install
+pnpm dev:ui       # Next.js only — or `pnpm dev` to start everything
 ```
 
 App runs on [http://localhost:3000](http://localhost:3000).
@@ -119,7 +121,7 @@ docker run -it --rm --name starter-ui -p 3000:3000 \
 | `undefined` | Default `.next` build. For `next start` or hosting providers (Vercel etc.). |
 | `export` | Static HTML/CSS/JS. **Not supported out-of-box** — Better Auth, the POST [auth API route](src/app/api/auth/%5B...all%5D/route.ts), and other dynamic features must be removed. |
 
-`pnpm run build:ui:static` triggers `output: "export"` but will fail unless you've removed dynamic features. To validate static builds in CI, enable the relevant step in [ci.yml](../../.github/workflows/ci.yml).
+`pnpm build:ui:static` (from root) triggers `output: "export"` but will fail unless you've removed dynamic features. To validate static builds in CI, enable the relevant step in [ci.yml](../../.github/workflows/ci.yml).
 
 ### ISR (Incremental Static Regeneration)
 

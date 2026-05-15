@@ -1,0 +1,11 @@
+{
+  "label": "Content System",
+  "position": 3,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Content System",
+    "description": "How Strapi content is modeled, fetched, typed, and rendered as Next.js pages."
+  }
+}

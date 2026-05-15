@@ -6,7 +6,7 @@ Plugin configuration lives in [`apps/strapi/config/plugins.ts`](https://github.c
 
 JWT expiry is set to **30 days** to match the Better Auth session `maxAge` ([`plugins.ts:14`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/config/plugins.ts#L14)). Change both together or sessions and JWTs will desync.
 
-See [Authentication](./authentication.md) for the full auth flow.
+See [Authentication](../auth/authentication.md) for the full auth flow.
 
 ## config-sync
 
@@ -32,7 +32,7 @@ HTML-based. Content stored as HTML and rendered via `dangerouslySetInnerHTML` wi
 ```tsx
 import CkEditorRenderer from "@/components/elementary/ck-editor"
 
-<CkEditorRenderer
+;<CkEditorRenderer
   htmlContent={component.content}
   className="mx-auto w-full max-w-[1296px] px-4 py-8"
   variant="page" // "page" | "blog"
@@ -53,23 +53,23 @@ Plugin still in early stages. Stable for basic use; report issues to [strapi-plu
 
 **Presets** ([`config/plugins/tiptap.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/config/plugins/tiptap.ts)):
 
-| Preset | Description |
-| --- | --- |
+| Preset       | Description                                                                                          |
+| ------------ | ---------------------------------------------------------------------------------------------------- |
 | `everything` | All extensions — headings (1–6), color, highlight, images, tables, alignment, lists, code, sub/super |
-| `baseText` | Bold, italic, links, lists. Paragraph content. |
-| `headings` | Bold, italic, heading only. For heading components with SEO tags. |
-| `minimal` | Bold, italic, links only. |
+| `baseText`   | Bold, italic, links, lists. Paragraph content.                                                       |
+| `headings`   | Bold, italic, heading only. For heading components with SEO tags.                                    |
+| `minimal`    | Bold, italic, links only.                                                                            |
 
 Assign per-field via `options.preset` in the component schema (e.g. `tip-tap-rich-text.json`).
 
-Colors and theme CSS come from `@repo/design-system/tiptap-color-config.json` and `tiptap-theme.css` — the editor palette stays in sync with the frontend design system. See [Packages](./packages.md#repodesign-system).
+Colors and theme CSS come from `@repo/design-system/tiptap-color-config.json` and `tiptap-theme.css` — the editor palette stays in sync with the frontend design system. See [Packages](../reference/packages.md#repodesign-system).
 
 **Frontend:**
 
 ```tsx
 import { TiptapRichText } from "@/components/elementary/tiptap-editor"
 
-<TiptapRichText
+;<TiptapRichText
   content={component.content}
   defaultVariant="medium"
   defaultWeight="normal"
@@ -87,12 +87,12 @@ Config in [`config/plugins/upload.ts`](https://github.com/notum-cz/strapi-next-m
 
 Required env vars (set all):
 
-| Var | Purpose |
-| --- | --- |
-| `STORAGE_ACCOUNT` | Azure storage account name |
-| `STORAGE_CONTAINER_NAME` | container name |
-| `STORAGE_ACCOUNT_KEY` or `STORAGE_ACCOUNT_SAS_TOKEN` | credentials (when `STORAGE_AUTH_TYPE=default`) |
-| `STORAGE_AUTH_TYPE=msi` | Managed Identity — assign **Storage Blob Data Contributor** RBAC role instead of providing keys |
+| Var                                                  | Purpose                                                                                         |
+| ---------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `STORAGE_ACCOUNT`                                    | Azure storage account name                                                                      |
+| `STORAGE_CONTAINER_NAME`                             | container name                                                                                  |
+| `STORAGE_ACCOUNT_KEY` or `STORAGE_ACCOUNT_SAS_TOKEN` | credentials (when `STORAGE_AUTH_TYPE=default`)                                                  |
+| `STORAGE_AUTH_TYPE=msi`                              | Managed Identity — assign **Storage Blob Data Contributor** RBAC role instead of providing keys |
 
 Configure Blob service CORS to allow `GET`, `HEAD`, `OPTIONS` from the Strapi admin origin. Without this, media appears in the gallery but fails in the admin modal.
 
@@ -168,8 +168,8 @@ Defined in [`config/cron-tasks.ts`](https://github.com/notum-cz/strapi-next-mono
 
 ## Related Documentation
 
-- [Authentication](./authentication.md) — Better Auth + JWT
-- [OAuth Providers](./sso/oauth-providers.md) — GitHub/Google/Facebook setup via users-permissions
-- [Microsoft SSO](./sso/microsoft-sso.md) — admin panel SSO
-- [Strapi Schemas](./strapi-schemas.md) — content type/component reference
+- [Authentication](../auth/authentication.md) — Better Auth + JWT
+- [OAuth Providers](../auth/oauth-providers.md) — GitHub/Google/Facebook setup via users-permissions
+- [Microsoft SSO](../auth/microsoft-sso.md) — admin panel SSO
+- [Strapi Schemas](../content-system/strapi-schemas.md) — content type/component reference
 - [Data Seeding](./data-seeding.md) — seed export/import workflow

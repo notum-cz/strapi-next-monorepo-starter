@@ -1,0 +1,11 @@
+{
+  "label": "Strapi",
+  "position": 5,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Strapi",
+    "description": "Backend-only operational concerns — plugins, upload providers, email, data seeding."
+  }
+}

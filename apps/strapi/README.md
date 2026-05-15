@@ -5,16 +5,16 @@
 Conceptual + feature docs live in [/apps/docs](../docs/docs). This README covers **setup and deployment** only.
 
 - [Architecture](../docs/docs/architecture.md) — request lifecycle, document middleware, draft mode
-- [Strapi Plugins](../docs/docs/strapi-plugins.md) — CKEditor, Tiptap, upload (Azure/S3), email (Mailgun/Mailtrap), Sentry, cron, config-sync
-- [Strapi Schemas](../docs/docs/strapi-schemas.md) · [Strapi Types Usage](../docs/docs/strapi-types-usage.md) · [Pages Hierarchy](../docs/docs/pages-hierarchy.md)
-- [Data Seeding](../docs/docs/data-seeding.md) · [Add a Content Type](../docs/docs/add-content-type.md)
-- SSO: [Microsoft (admin)](../docs/docs/sso/microsoft-sso.md) · [OAuth (end-users)](../docs/docs/sso/oauth-providers.md)
+- [Strapi Plugins](../docs/docs/strapi/strapi-plugins.md) — CKEditor, Tiptap, upload (Azure/S3), email (Mailgun/Mailtrap), Sentry, cron, config-sync
+- [Strapi Schemas](../docs/docs/content-system/strapi-schemas.md) · [Strapi Types Usage](../docs/docs/content-system/strapi-types-usage.md) · [Pages Hierarchy](../docs/docs/content-system/pages-hierarchy.md)
+- [Data Seeding](../docs/docs/strapi/data-seeding.md) · [Add a Content Type](../docs/docs/getting-started/add-content-type.md)
+- SSO: [Microsoft (admin)](../docs/docs/auth/microsoft-sso.md) · [OAuth (end-users)](../docs/docs/auth/oauth-providers.md)
 
 ## 🥞 Stack
 
 - Strapi 5 · TypeScript · Node 24
 - Postgres 16 alpine (local Docker)
-- Plugins: i18n · sentry · users-permissions · @notum-cz/strapi-plugin-tiptap-editor · @_sh/strapi-plugin-ckeditor · strapi-plugin-config-sync
+- Plugins: i18n · sentry · users-permissions · @notum-cz/strapi-plugin-tiptap-editor · @\_sh/strapi-plugin-ckeditor · strapi-plugin-config-sync
 - Providers: AWS S3 + Azure Blob (upload); Mailgun + Mailtrap (email)
 
 ## 🚀 Get Up and Develop
@@ -29,21 +29,23 @@ Use `ADMIN_PANEL_CONFIG_API_AUTH_TOKEN` to inject runtime env vars into the Stra
 
 ### 2. Run locally (with hot-reloading)
 
+All commands from the **monorepo root**.
+
 Preferred: **Postgres in Docker, Strapi locally.**
 
 ```bash
 nvm use
-pnpm install                # from monorepo root
+pnpm install
 
 # one command — starts both Postgres (docker) and Strapi
-pnpm run dev
+pnpm dev:strapi
 ```
 
-Manual variant:
+Manual variant (Postgres separately, plain Strapi without auto-seed):
 
 ```bash
-docker compose up -d db     # Postgres in Docker
-pnpm run develop            # Strapi locally
+pnpm run:db                          # Postgres in Docker
+pnpm -F @repo/strapi run develop     # Strapi (auto-seed runner)
 ```
 
 Alternative: run Strapi in Docker too. The current [Dockerfile](Dockerfile) is **production-only** — see below.
@@ -56,23 +58,23 @@ Alternative: run Strapi in Docker too. The current [Dockerfile](Dockerfile) is *
 
 ### 3. Initialize database (first run)
 
-`pnpm dev` auto-seeds Strapi from the latest timestamped export when baseline content (`Page`, `Navbar`, `Footer`) is missing.
+`pnpm dev:strapi` auto-seeds Strapi from the latest timestamped export when baseline content (`Page`, `Navbar`, `Footer`) is missing.
 
 Seed scripts use `bash`. On Windows, run from WSL, Git Bash, or another shell with Bash available.
 
 ```bash
-pnpm run seed:check
-pnpm run seed:import
-pnpm run seed:export
+pnpm seed:check
+pnpm seed:import
+pnpm seed:export
 ```
 
-See [Data Seeding](../docs/docs/data-seeding.md) for the full flow and PR workflow.
+See [Data Seeding](../docs/docs/strapi/data-seeding.md) for the full flow and PR workflow.
 
 ### 4. Sync configuration
 
 Strapi admin → **Settings → Config Sync → Tools** → **Import**. Loads role/permission/setting JSON files into the database.
 
-See [Strapi Plugins → config-sync](../docs/docs/strapi-plugins.md#config-sync).
+See [Strapi Plugins → config-sync](../docs/docs/strapi/strapi-plugins.md#config-sync).
 
 ## 🛠️ Production Docker
 
@@ -133,22 +135,22 @@ docker run -it --rm --name starter-strapi -p 1337:1337 \
 
 These features are configured in this app but documented separately:
 
-- **Pages hierarchy** — parent/child pages with auto `fullPath`. See [Pages Hierarchy](../docs/docs/pages-hierarchy.md).
+- **Pages hierarchy** — parent/child pages with auto `fullPath`. See [Pages Hierarchy](../docs/docs/content-system/pages-hierarchy.md).
 - **`utilities.link` component** — internal/external link abstraction with icons, sizes, shadcn-aligned variants. Internal links are relations to collections, so they survive `fullPath` changes.
-- **Document middleware (relation population)** — the `populateDynamicZone` request param triggers automatic deep population. Avoids hand-maintaining populate trees. See [Architecture → Request Lifecycle](../docs/docs/architecture.md#request-lifecycle--page-render) + [Page Builder](../docs/docs/page-builder.md).
-- **TypeScript generation** — `pnpm generate:types` regenerates content/component types; sync to `@repo/strapi-types` via `pnpm sync-types`. See [Strapi Types Usage](../docs/docs/strapi-types-usage.md).
-- **Lifecycle hooks** — `afterCreate` subscribers in [`src/lifeCycles/`](./src/lifeCycles/). User registration email is set up but **disabled by default** (commented out). Enable email plugin first or registrations will fail. See [Strapi Schemas → Lifecycle Subscribers](../docs/docs/strapi-schemas.md#lifecycle-subscribers).
-- **Rich text editors (CKEditor + Tiptap)** — see [Strapi Plugins → Rich Text](../docs/docs/strapi-plugins.md#rich-text-editors).
-- **Upload providers (Azure / S3 / local)** — see [Strapi Plugins → Upload](../docs/docs/strapi-plugins.md#upload-providers).
-- **Email providers (Mailgun / Mailtrap)** — see [Strapi Plugins → Email](../docs/docs/strapi-plugins.md#email-providers).
-- **OAuth (GitHub/Google/etc.)** — see [OAuth Providers](../docs/docs/sso/oauth-providers.md).
-- **Admin SSO (Microsoft Entra ID)** — see [Microsoft SSO](../docs/docs/sso/microsoft-sso.md). Requires `STRAPI_LICENSE` (Enterprise feature). When behind an HTTPS-terminating proxy, enable `proxy: { koa: true }` in `config/server.ts` for secure cookies.
+- **Document middleware (relation population)** — the `populateDynamicZone` request param triggers automatic deep population. Avoids hand-maintaining populate trees. See [Architecture → Request Lifecycle](../docs/docs/architecture.md#request-lifecycle--page-render) + [Page Builder](../docs/docs/content-system/page-builder.md).
+- **TypeScript generation** — from monorepo root: `pnpm generate:types && pnpm sync-types`. See [Strapi Types Usage](../docs/docs/content-system/strapi-types-usage.md).
+- **Lifecycle hooks** — `afterCreate` subscribers in [`src/lifeCycles/`](./src/lifeCycles/). User registration email is set up but **disabled by default** (commented out). Enable email plugin first or registrations will fail. See [Strapi Schemas → Lifecycle Subscribers](../docs/docs/content-system/strapi-schemas.md#lifecycle-subscribers).
+- **Rich text editors (CKEditor + Tiptap)** — see [Strapi Plugins → Rich Text](../docs/docs/strapi/strapi-plugins.md#rich-text-editors).
+- **Upload providers (Azure / S3 / local)** — see [Strapi Plugins → Upload](../docs/docs/strapi/strapi-plugins.md#upload-providers).
+- **Email providers (Mailgun / Mailtrap)** — see [Strapi Plugins → Email](../docs/docs/strapi/strapi-plugins.md#email-providers).
+- **OAuth (GitHub/Google/etc.)** — see [OAuth Providers](../docs/docs/auth/oauth-providers.md).
+- **Admin SSO (Microsoft Entra ID)** — see [Microsoft SSO](../docs/docs/auth/microsoft-sso.md). Requires `STRAPI_LICENSE` (Enterprise feature). When behind an HTTPS-terminating proxy, enable `proxy: { koa: true }` in `config/server.ts` for secure cookies.
 - **Live previews** — set `STRAPI_PREVIEW_ENABLED=true`, `CLIENT_URL`, `STRAPI_PREVIEW_SECRET` (matching frontend). See [Architecture → Draft Mode](../docs/docs/architecture.md#draft-mode--preview).
 - **Cron jobs** — defined in [`config/cron-tasks.ts`](./config/cron-tasks.ts), enabled via `CRON_ENABLED=true`.
 
 ## Data transfer between environments
 
-`pnpm run transfer` for full Strapi transfer. For local development use `seed:export` / `seed:import`. See [Data Seeding](../docs/docs/data-seeding.md) and [Strapi data management docs](https://docs.strapi.io/dev-docs/data-management).
+From monorepo root: `pnpm transfer:strapi` for full Strapi transfer. For local development use `pnpm seed:export` / `pnpm seed:import`. See [Data Seeding](../docs/docs/strapi/data-seeding.md) and [Strapi data management docs](https://docs.strapi.io/dev-docs/data-management).
 
 ## Health check
 

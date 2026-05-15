@@ -45,3 +45,17 @@
   border-top: 1px solid var(--ifm-toc-border-color);
   font-size: 0.85rem;
 }
+
+/* Underline article links by default. Excludes nav, footer, sidebar, TOC,
+ * pagination buttons, anchor heading icons, and card-style links. */
+.markdown a:not(.hash-link, .card),
+.theme-doc-markdown a:not(.hash-link, .card) {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+.markdown a:not(.hash-link, .card):hover,
+.theme-doc-markdown a:not(.hash-link, .card):hover {
+  text-decoration-thickness: 2px;
+}

@@ -1,0 +1,11 @@
+{
+  "label": "Authentication",
+  "position": 6,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Authentication",
+    "description": "End-user auth (Better Auth + Strapi Users-Permissions), OAuth providers, and admin SSO."
+  }
+}

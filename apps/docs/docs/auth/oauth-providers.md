@@ -2,18 +2,27 @@
 
 End-user social login via Strapi's Users & Permissions plugin. Distinct from admin SSO ([Microsoft SSO](./microsoft-sso.md)) — these providers authenticate the public users of your app, not the Strapi admins.
 
-For the underlying auth architecture see [Authentication](../authentication.md).
+For the underlying auth architecture see [Authentication](./authentication.md).
 
 ## Flow
 
-```
-1. User clicks "Sign in with GitHub" on /auth/signin
-2. Frontend → Strapi /api/connect/github (browser redirect)
-3. GitHub OAuth completes → Strapi redirects to FRONTEND callback
-   /<locale>/auth/strapi-oauth/github?access_token=...
-4. Frontend callback page calls Better Auth /sync-oauth-strapi
-5. strapiOAuthPlugin exchanges the access_token for a Strapi JWT
-6. Session cookie set, user authenticated
+```mermaid
+sequenceDiagram
+  autonumber
+  participant U as User (browser)
+  participant N as Next.js (apps/ui)
+  participant S as Strapi (apps/strapi)
+  participant P as OAuth provider (e.g. GitHub)
+
+  U->>N: Click "Sign in with GitHub" on /auth/signin
+  N->>S: Redirect to /api/connect/github
+  S->>P: OAuth handshake
+  P-->>S: access_token
+  S-->>N: Redirect to /<locale>/auth/strapi-oauth/github?access_token=...
+  N->>N: Callback page calls Better Auth /sync-oauth-strapi
+  N->>S: Exchange access_token for Strapi JWT (strapiOAuthPlugin)
+  S-->>N: { jwt, user }
+  N-->>U: Session cookie set, authenticated
 ```
 
 The callback page is [`apps/ui/src/app/[locale]/auth/strapi-oauth/[provider]/page.tsx`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/app/%5Blocale%5D/auth/strapi-oauth/%5Bprovider%5D/page.tsx). The Better Auth plugin handling the exchange is `strapiOAuthPlugin` in [`apps/ui/src/lib/auth.ts:334`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/lib/auth.ts#L334).
@@ -86,6 +95,6 @@ Any provider implemented by Strapi's Users & Permissions plugin: GitHub, Google,
 
 ## Related Documentation
 
-- [Authentication](../authentication.md) — Better Auth session + Strapi JWT
+- [Authentication](./authentication.md) — Better Auth session + Strapi JWT
 - [Microsoft SSO](./microsoft-sso.md) — admin-panel SSO via Microsoft Entra ID
 - [Architecture](../architecture.md#authentication) — high-level auth flow diagram
