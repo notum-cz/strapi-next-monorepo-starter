@@ -80,8 +80,15 @@ echo "cleanup: base   = ${base}"
 
 if [ "${force}" -eq 0 ]; then
   # `git cherry` lists commits on branch not in base, accounting for squash equivalents
-  # (lines starting with `+` are unmerged).
-  unmerged="$(git -C "${canonical_root}" cherry "${base}" "${branch}" 2>/dev/null | awk '/^\+/{print}' || true)"
+  # (lines starting with `+` are unmerged). Run it in two steps so a failure
+  # (invalid ref, missing branch) is treated as "can't verify" rather than
+  # silently swallowed into an empty result.
+  if ! cherry_output="$(git -C "${canonical_root}" cherry "${base}" "${branch}")"; then
+    echo "cleanup: failed to verify merge status of ${branch} vs ${base}" >&2
+    echo "cleanup: pass --force to remove without verification" >&2
+    exit 1
+  fi
+  unmerged="$(printf '%s\n' "${cherry_output}" | awk '/^\+/{print}')"
   if [ -n "${unmerged}" ]; then
     echo "cleanup: branch ${branch} has unmerged commits vs ${base}:" >&2
     printf '%s\n' "${unmerged}" >&2

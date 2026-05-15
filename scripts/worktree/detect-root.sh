@@ -21,15 +21,14 @@ case "${common_dir}" in
   *)  abs_common="$(cd "${common_dir}" && pwd)" ;;
 esac
 
-# Bare repo layouts: <root>/.bare or <root>/.git (common-dir points at .git or .bare itself)
-base="$(basename "${abs_common}")"
-case "${base}" in
+case "$(basename "${abs_common}")" in
   .git|.bare)
+    # gitdir lives inside the repo; canonical root is its parent.
     canonical_root="$(dirname "${abs_common}")"
     ;;
   *)
-    # Bare repo created with `git clone --bare repo.git` — common-dir is the repo dir.
-    canonical_root="$(dirname "${abs_common}")"
+    # Bare clone (e.g. repo.git) — the gitdir IS the repo.
+    canonical_root="${abs_common}"
     ;;
 esac
 

@@ -1,5 +1,4 @@
 {
-  "$schema": "./scripts/worktree/schema.json",
   "copy": [
     "apps/strapi/.env",
     "apps/ui/.env.local",
@@ -8,6 +7,6 @@
   "symlink": [],
   "postSetup": [
     "pnpm install --frozen-lockfile --prefer-offline",
-    "pnpm --filter @repo/strapi generate:types || true"
+    "pnpm --filter @repo/shared-data --filter @repo/design-system build"
   ]
 }
