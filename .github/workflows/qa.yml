@@ -231,6 +231,27 @@ jobs:
       - name: Setup pnpm with cache
         uses: ./.github/actions/setup-pnpm
 
+      - name: Cache Playwright Docker image
+        id: docker-cache
+        uses: actions/cache@v5.0.5
+        with:
+          path: /tmp/docker-playwright-cache
+          key: docker-playwright-v1.59.1-noble
+
+      - name: Load or pull Playwright Docker image
+        run: |
+          IMAGE="mcr.microsoft.com/playwright:v1.59.1-noble"
+          CACHE_FILE="/tmp/docker-playwright-cache/playwright.tar"
+          if [[ -f "$CACHE_FILE" ]]; then
+            echo "Loading Docker image from cache..."
+            docker load -i "$CACHE_FILE"
+          else
+            echo "Pulling Docker image..."
+            docker pull "$IMAGE"
+            mkdir -p /tmp/docker-playwright-cache
+            docker save "$IMAGE" -o "$CACHE_FILE"
+          fi
+
       - name: Run Visual tests
         env:
           BASE_URL: ${{ inputs.base_url }}
