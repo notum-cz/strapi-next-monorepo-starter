@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test"
-import urls from "helpers/urls.json"
+
+import urls from "../helpers/urls.json"
 
 const PATHS = [...urls]
 
