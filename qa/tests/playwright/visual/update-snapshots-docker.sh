@@ -15,7 +15,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLAYWRIGHT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 PLAYWRIGHT_VERSION="1.59.1"
 if [[ $# -eq 0 ]]; then
-  PROJECTS=("visual-chromium" "visual-firefox" "visual-webkit")
+  PROJECTS=("visual-chromium" "visual-firefox")
 else
   PROJECTS=("$@")
 fi
