@@ -258,14 +258,14 @@ jobs:
         run: pnpm tests:playwright:visual:docker
 
       - name: Pack Visual reports
-        if: always()
+        if: failure()
         run: |
           tar -czf visual-reports-${{ github.run_id }}.tgz \
             -C qa/tests/playwright \
             playwright-report
 
       - uses: actions/upload-artifact@v7.0.1
-        if: always()
+        if: failure()
         with:
           name: visual-report
           path: visual-reports-${{ github.run_id }}.tgz
