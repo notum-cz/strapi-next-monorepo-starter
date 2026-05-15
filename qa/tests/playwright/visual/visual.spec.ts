@@ -73,6 +73,7 @@ test.describe("Visual Regression", () => {
           #logo-carousel { visibility: hidden !important; }
           ::-webkit-scrollbar { display: none !important; }
           * { scrollbar-width: none !important; }
+          body { filter: invert(1) !important; }
         `,
       })
 
