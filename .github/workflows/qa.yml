@@ -231,21 +231,10 @@ jobs:
       - name: Setup pnpm with cache
         uses: ./.github/actions/setup-pnpm
 
-      - name: Cache Playwright browsers
-        uses: actions/cache@v5.0.5
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
-
-      - name: Install Playwright Browsers
-        run: pnpm -F @repo/tests-playwright exec playwright install --with-deps
-
       - name: Run Visual tests
         env:
           BASE_URL: ${{ inputs.base_url }}
-        run: pnpm tests:playwright:visual
+        run: pnpm tests:playwright:visual:docker
 
       - name: Pack Visual reports
         if: always()
