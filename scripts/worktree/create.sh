@@ -55,10 +55,21 @@ if [ -z "${base}" ]; then
 fi
 echo "create: base = ${base}"
 
-# Slugify branch for directory name (replace `/` with `-`).
+# Decide the parent directory under which the new worktree will live.
+#   - From the main checkout (or any subdir of it): <canonical-root>/.worktrees
+#   - From a bare repo (no working tree): <canonical-root>/.worktrees
+#   - From inside a linked worktree: the parent dir of that worktree (sibling placement,
+#     keeps claude-native `.claude/.worktrees/*` siblings under `.claude/.worktrees/`).
+toplevel="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+if [ -n "${toplevel}" ] && [ "${toplevel}" != "${canonical_root}" ]; then
+  parent_dir="$(dirname "${toplevel}")"
+else
+  parent_dir="${canonical_root}/.worktrees"
+fi
+mkdir -p "${parent_dir}"
+
 slug="$(printf '%s' "${branch}" | tr '/' '-')"
-parent_dir="$(cd "${canonical_root}/.." && pwd)"
-target="${parent_dir}/.worktrees/${slug}"
+target="${parent_dir}/${slug}"
 echo "create: target = ${target}"
 
 # Refuse to nest: target must not fall under any existing worktree (other than canonical root).
