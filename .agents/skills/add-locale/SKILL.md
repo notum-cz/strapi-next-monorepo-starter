@@ -1,6 +1,6 @@
 ---
 name: add-locale
-description: "Adds a new language/locale to the application. Involves Strapi admin config, Next.js i18n routing, and translation files. Triggers: add language, add locale, new language, new translation, internationalization."
+description: "Use when adding a new language/locale to the application — e.g. \"add language\", \"add locale\", \"new language\", \"new translation\", \"internationalization\". Touches Strapi admin config, Next.js i18n routing, and translation files."
 ---
 
 Add a new language/locale to the application. Involves Strapi admin config, Next.js i18n routing, and translation files.
