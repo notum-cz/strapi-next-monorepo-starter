@@ -48,6 +48,40 @@ if (mobileViewportsEnabled) {
 
 projects.push(
   {
+    name: "visual-chromium",
+    testMatch: ["visual/**/*.spec.ts"],
+    retries: 0,
+    use: {
+      ...devices["Desktop Chrome"],
+      trace: "off",
+      video: "off",
+      screenshot: "off",
+    },
+  },
+  {
+    name: "visual-firefox",
+    testMatch: ["visual/**/*.spec.ts"],
+    retries: 0,
+    use: {
+      ...devices["Desktop Firefox"],
+      trace: "off",
+      video: "off",
+      screenshot: "off",
+    },
+  },
+  {
+    name: "visual-webkit",
+    testMatch: ["visual/**/*.spec.ts"],
+    retries: 0,
+    use: {
+      ...devices["Desktop Safari"],
+      deviceScaleFactor: 1,
+      trace: "off",
+      video: "off",
+      screenshot: "off",
+    },
+  },
+  {
     name: "seo",
     testMatch: ["seo/**/*.spec.ts"],
     retries: 1,
@@ -78,7 +112,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 3 : undefined,
-  reporter: "html",
+  reporter: [["html", { open: process.env.CI ? "never" : "on-failure" }]],
 
   use: {
     baseURL: process.env.BASE_URL,

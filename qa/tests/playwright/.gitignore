@@ -8,4 +8,5 @@ node_modules/
 .env
 /axe/reports/
 /perfo/.lighthouseci/
-/visual/visual.spec.ts-snapshots
+/visual/visual.spec.ts-snapshots/*darwin*.png
+/visual/visual.spec.ts-snapshots/*win32*.png

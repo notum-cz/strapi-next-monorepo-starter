@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "lib": ["ESNext", "dom"],
     "sourceMap": false,
     "types": ["@playwright/test", "node"],
-    "baseUrl": "./",
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "noEmit": true
   },
   "include": ["**/*.ts"]
 }

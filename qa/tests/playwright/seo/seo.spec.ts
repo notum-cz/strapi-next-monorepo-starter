@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test"
 
-import urls from "helpers/urls.json"
+import urls from "../helpers/urls.json"
 
 const PATHS = [...urls]
 
@@ -136,7 +136,7 @@ for (const path of PATHS) {
           )
         }
 
-        const text = (await h1.first().textContent()).trim()
+        const text = ((await h1.first().textContent()) ?? "").trim()
 
         if (!text) {
           throw new Error(
@@ -164,7 +164,7 @@ for (const path of PATHS) {
 
           const tagName = await heading.evaluate((el) => el.tagName)
           const level = Number.parseInt(tagName[1], 10)
-          const text = (await heading.textContent()).trim()
+          const text = ((await heading.textContent()) ?? "").trim()
 
           expect(
             level,

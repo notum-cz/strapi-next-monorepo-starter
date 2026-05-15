@@ -101,6 +101,18 @@
     "playwright-visual-tests": {
       "cache": false,
       "persistent": false
+    },
+    "playwright-visual-update-tests": {
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-visual-tests-docker": {
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-visual-update-snapshots-docker": {
+      "cache": false,
+      "persistent": false
     }
   },
   "ui": "tui"

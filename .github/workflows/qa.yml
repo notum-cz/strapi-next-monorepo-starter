@@ -5,13 +5,16 @@ run-name: >-
     inputs.run_e2e && 'E2E' ||
     inputs.run_axe && 'AXE' ||
     inputs.run_seo && 'SEO' ||
-    inputs.run_lhci_perfo && 'Perfo'
+    inputs.run_lhci_perfo && 'Perfo' ||
+    inputs.run_visual && 'Visual'
   }}${{
     inputs.run_e2e && inputs.run_axe && ', AXE' || ''
   }}${{
     (inputs.run_e2e || inputs.run_axe) && inputs.run_seo && ', SEO' || ''
   }}${{
     (inputs.run_e2e || inputs.run_axe || inputs.run_seo) && inputs.run_lhci_perfo && ', Perfo' || ''
+  }}${{
+    (inputs.run_e2e || inputs.run_axe || inputs.run_seo || inputs.run_lhci_perfo) && inputs.run_visual && ', Visual' || ''
   }}] QA – ${{ inputs.base_url }}
 
 on:
@@ -31,6 +34,10 @@ on:
         default: false
       run_lhci_perfo:
         description: LHCI Performance tests
+        type: boolean
+        default: false
+      run_visual:
+        description: Visual tests
         type: boolean
         default: false
       base_url:
@@ -148,7 +155,7 @@ jobs:
 
       - name: Setup pnpm with cache
         uses: ./.github/actions/setup-pnpm
-      
+
       - name: Cache Playwright browsers
         uses: actions/cache@v5.0.5
         with:
@@ -163,7 +170,7 @@ jobs:
       - name: Run Playwright SEO tests
         env:
           BASE_URL: ${{ inputs.base_url }}
-        run: pnpm tests:playwright:seo --project=seo
+        run: pnpm tests:playwright:seo
 
       - name: Pack SEO reports
         if: always()
@@ -196,7 +203,7 @@ jobs:
         env:
           BASE_URL: ${{ inputs.base_url }}
         run: pnpm tests:lhci:perfo
-      
+
       - name: Pack LHCI reports
         if: always()
         run: |
@@ -208,5 +215,59 @@ jobs:
         with:
           name: perfo-report
           path: lhci-perfo-reports-${{ github.run_id }}.tgz
+          retention-days: 7
+          if-no-files-found: warn
+
+  visual:
+    if: ${{ inputs.run_visual }}
+    name: Playwright Visual tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
+
+      - name: Setup pnpm with cache
+        uses: ./.github/actions/setup-pnpm
+
+      - name: Cache Playwright Docker image
+        id: docker-cache
+        uses: actions/cache@v5.0.5
+        with:
+          path: /tmp/docker-playwright-cache
+          key: docker-playwright-v1.59.1-noble
+
+      - name: Load or pull Playwright Docker image
+        run: |
+          IMAGE="mcr.microsoft.com/playwright:v1.59.1-noble"
+          CACHE_FILE="/tmp/docker-playwright-cache/playwright.tar"
+          if [[ -f "$CACHE_FILE" ]]; then
+            echo "Loading Docker image from cache..."
+            docker load -i "$CACHE_FILE"
+          else
+            echo "Pulling Docker image..."
+            docker pull "$IMAGE"
+            mkdir -p /tmp/docker-playwright-cache
+            docker save "$IMAGE" -o "$CACHE_FILE"
+          fi
+
+      - name: Run Visual tests
+        env:
+          BASE_URL: ${{ inputs.base_url }}
+        run: pnpm tests:playwright:visual:docker
+
+      - name: Pack Visual reports
+        if: failure()
+        run: |
+          tar -czf visual-reports-${{ github.run_id }}.tgz \
+            -C qa/tests/playwright \
+            playwright-report
+
+      - uses: actions/upload-artifact@v7.0.1
+        if: failure()
+        with:
+          name: visual-report
+          path: visual-reports-${{ github.run_id }}.tgz
           retention-days: 7
           if-no-files-found: warn
