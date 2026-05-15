@@ -55,6 +55,7 @@ projects.push(
       ...devices["Desktop Chrome"],
       trace: "off",
       video: "off",
+      screenshot: "off",
     },
   },
   {
@@ -65,6 +66,7 @@ projects.push(
       ...devices["Desktop Firefox"],
       trace: "off",
       video: "off",
+      screenshot: "off",
     },
   },
   {
@@ -76,6 +78,7 @@ projects.push(
       deviceScaleFactor: 1,
       trace: "off",
       video: "off",
+      screenshot: "off",
     },
   },
   {
