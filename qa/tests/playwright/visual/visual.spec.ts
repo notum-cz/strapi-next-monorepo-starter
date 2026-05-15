@@ -76,11 +76,11 @@ test.describe("Visual Regression", () => {
         `,
       })
 
-      for (const el of await page.locator("img, video").elementHandles()) {
-        await el.evaluate((el) =>
-          (el as HTMLElement).style.setProperty("opacity", "0", "important")
-        )
-      }
+      await page.locator("img, video").evaluateAll((els) => {
+        for (const el of els) {
+          ;(el as HTMLElement).style.setProperty("opacity", "0", "important")
+        }
+      })
 
       const envSlug = getEnvSlug(process.env.BASE_URL)
       const snapshotName = `${envSlug}-${prettifySlug(url)}.png`
