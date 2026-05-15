@@ -64,8 +64,8 @@ Validates Strapi JWT on every session access:
 
 Syncs OAuth logins with Strapi:
 
-```typescript
-POST / api / auth / sync - oauth - strapi // After OAuth success, create Strapi user
+```
+POST /api/auth/sync-oauth-strapi   # After OAuth success, create Strapi user
 ```
 
 ## Session Data

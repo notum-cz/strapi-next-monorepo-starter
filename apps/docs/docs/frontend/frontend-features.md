@@ -37,7 +37,6 @@ Config: [`components.json`](https://github.com/notum-cz/strapi-next-monorepo-sta
 
 ```tsx
 import { cn } from "@/lib/styles"
-
 ;<div className={cn("flex items-center", className)} />
 ```
 
@@ -67,7 +66,6 @@ Usage:
 
 ```tsx
 import { ErrorBoundary } from "@/components/elementary/ErrorBoundary"
-
 ;<ErrorBoundary customErrorTitle="Uh-oh" showErrorMessage>
   <StrapiNavbar />
 </ErrorBoundary>
@@ -95,15 +93,15 @@ NEXT_PUBLIC_RECAPTCHA_SITE_KEY=...
 RECAPTCHA_SECRET_KEY=...
 ```
 
-Wrap forms in `ReCaptchaProvider`, execute via `useReCaptcha`, validate server-side with `validateRecaptcha`:
+Wrap forms in `ReCaptchaProvider`, execute via `useReCaptcha`, validate server-side with `verifyRecaptcha`:
 
 ```tsx
 // Server action
-import { validateRecaptcha } from "@/lib/recaptcha"
+import { verifyRecaptcha } from "@/lib/recaptcha"
 
 export const submitContactUsForm = async (payload: FormData) => {
   const token = payload.get("recaptchaToken")
-  if (!(await validateRecaptcha(token))) throw new Error("Invalid reCAPTCHA")
+  if (!(await verifyRecaptcha(token))) throw new Error("Invalid reCAPTCHA")
 }
 ```
 
@@ -111,7 +109,6 @@ export const submitContactUsForm = async (payload: FormData) => {
 // Wrapper
 import { ReCaptchaProvider } from "next-recaptcha-v3"
 import { getEnvVar } from "@/lib/env-vars"
-
 ;<ReCaptchaProvider reCaptchaKey={getEnvVar("NEXT_PUBLIC_RECAPTCHA_SITE_KEY")}>
   <ContactUsForm />
 </ReCaptchaProvider>
