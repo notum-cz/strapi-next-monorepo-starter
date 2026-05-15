@@ -1,13 +1,11 @@
 ---
 name: add-content-type
 description: >
-  Create a new Strapi v5 content type (collection or single) — schema,
-  controller, service, routes — and wire the UI client. Use when adding
-  a new CMS entity that needs its own REST endpoint and DB table.
-  Triggers on: "add content type", "new content type", "create strapi
-  collection", "new single type", "add strapi model", "new entity".
-  Not for page-builder sections — use `create-content-component` for
-  those.
+  Use when adding a new CMS entity that needs its own REST endpoint and
+  DB table — e.g. "add content type", "new content type", "create
+  strapi collection", "new single type", "add strapi model", "new
+  entity". Not for page-builder sections; use `create-content-component`
+  for those.
 argument-hint: "[singularName]"
 ---
 

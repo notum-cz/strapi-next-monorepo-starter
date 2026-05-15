@@ -1,11 +1,9 @@
 ---
 name: make-pr
 description: >
-  Commit, push, and create a GitHub pull request with a reviewer-friendly
-  description. Use when the user is ready to submit work for review.
-  Triggers on: "open PR", "create pull request", "prepare PR", "make PR",
-  "submit for review". Reads `.github/pull_request_template.md`. Default
-  base branch: `dev`.
+  Use when the user is ready to submit work for review and wants a
+  GitHub pull request opened — e.g. "open PR", "create pull request",
+  "prepare PR", "make PR", "submit for review".
 disable-model-invocation: true
 argument-hint: "[base-branch | issue-url]"
 ---

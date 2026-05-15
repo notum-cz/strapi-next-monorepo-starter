@@ -1,12 +1,11 @@
 ---
 name: write-tests
 description: >
-  Write or extend automated tests for the starter — Vitest unit tests for
-  `apps/ui` and `apps/strapi`, Playwright tests under `qa/tests/playwright`
-  (e2e / visual / axe / seo). Use when asked to add tests, write a test,
-  cover a function, reproduce a bug with a test, or extend the test suite.
-  Triggers on: "write test", "add test", "cover X with tests", "reproduce
-  with a test", "test this", "e2e test", "playwright test".
+  Use when asked to add or extend automated tests — e.g. "write test",
+  "add test", "cover X with tests", "reproduce with a test", "test
+  this", "e2e test", "playwright test". Covers Vitest (apps/ui,
+  apps/strapi) and Playwright (qa/tests/playwright: e2e, visual, axe,
+  seo).
 argument-hint: "[file-or-feature-to-cover]"
 ---
 

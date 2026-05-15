@@ -1,13 +1,12 @@
 ---
 name: strapi-schema-check
 description: >
-  Flag risky Strapi v5 schema changes (rename, delete, type change,
-  tightened constraint) that need a database migration. Run before
-  opening a PR that touches `apps/strapi/src/api/**/schema.json` or
-  `apps/strapi/src/components/**/*.json`. Triggers on: "strapi schema",
-  "schema check", "strapi migration", "check schema", "did I break the
-  schema", or any diff that includes schema.json under apps/strapi.
-  Default base branch: `main`.
+  Use any time a Strapi v5 schema file is edited — auto-loads on changes
+  to `apps/strapi/src/api/**/schema.json` or
+  `apps/strapi/src/components/**/*.json`. Also triggers on "strapi
+  schema", "schema check", "strapi migration", "check schema", "did I
+  break the schema". Flags renames, deletes, type changes, and tightened
+  constraints that need a database migration.
 argument-hint: "[base-branch] [--format human|json]"
 paths:
   - apps/strapi/src/api/**/schema.json
@@ -20,9 +19,9 @@ Detects risky Strapi v5 schema changes that require a database migration. Strapi
 
 ## When to run
 
-- **Auto-load:** any diff in `apps/strapi/src/api/**/schema.json` or `apps/strapi/src/components/**/*.json` vs the base branch.
+- **Auto-load:** any edit to `apps/strapi/src/api/**/schema.json` or `apps/strapi/src/components/**/*.json` — run the check immediately, not just before opening a PR.
 - **Manual:** invoke the bundled script — `bash .agents/skills/strapi-schema-check/scripts/check.sh [base-branch]` (default base: `main`).
-- **Called by:** `review-pr` (blocks at review time), `fix-issue` (surfaces schema impact during planning).
+- **Called by:** `review-pr` (blocks at review time), `fix-issue` (surfaces schema impact during planning), `create-content-component` / `add-content-type` (after editing schemas).
 
 ## How to run
 

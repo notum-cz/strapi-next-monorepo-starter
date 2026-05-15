@@ -1,12 +1,10 @@
 ---
 name: fix-issue
 description: >
-  Start work on a fix or feature — create a worktree + branch, fetch the
-  GitHub issue body if a number/URL is given, lay out an initial plan.
-  Use when the user is ready to begin a new task and wants an isolated
-  workspace. Triggers on: "fix issue", "start work on", "new feature",
-  "begin task", "work on issue", "/fix-issue". Manual mode also works:
-  pass a branch name directly. Asana/Linear/Azure are out of scope.
+  Use when the user is ready to begin a new fix or feature and wants an
+  isolated workspace — e.g. "fix issue", "start work on", "new feature",
+  "begin task", "work on issue", "/fix-issue". Accepts a GitHub issue
+  number/URL or a plain branch name. Asana/Linear/Azure out of scope.
 argument-hint: "[issue-number | issue-url | branch-name]"
 ---
 

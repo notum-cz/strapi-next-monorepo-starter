@@ -1,13 +1,10 @@
 ---
 name: add-ui-component
 description: >
-  Scaffold a new React component in `apps/ui` following starter conventions
-  (shadcn/ui new-york style, slate base, RSC by default, Tailwind v4 +
-  `cn()` for class merging). Use when adding a generic UI primitive,
-  elementary block, or form field. Triggers on: "new ui component",
-  "add component", "create react component", "new shadcn component",
-  "add form field". Not for Strapi page-builder sections — use
-  `create-content-component`.
+  Use when adding a generic UI primitive, elementary block, or form
+  field in `apps/ui` — e.g. "new ui component", "add component",
+  "create react component", "new shadcn component", "add form field".
+  Not for Strapi page-builder sections; use `create-content-component`.
 argument-hint: "[ComponentName]"
 ---
 

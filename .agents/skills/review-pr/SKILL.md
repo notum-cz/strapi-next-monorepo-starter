@@ -1,12 +1,11 @@
 ---
 name: review-pr
 description: >
-  Review a GitHub pull request, or a local feature branch's diff against
-  `dev`, and report concrete issues. Spawns parallel review subagents
-  (correctness, types, tests, UX, security) and validates that the
-  branch builds + tests pass. Use when the user wants a thorough review
-  before merge. Triggers on: "review PR", "review pull request",
-  "review this branch", "review the diff", "feature review", "/review-pr".
+  Use when the user wants a thorough review of a GitHub PR or a local
+  feature branch's diff before merge — e.g. "review PR", "review pull
+  request", "review this branch", "review the diff", "feature review",
+  "/review-pr". Accepts a PR number/URL or runs against the current
+  branch.
 argument-hint: "[pr-number | pr-url]"
 ---
 
