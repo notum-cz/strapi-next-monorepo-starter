@@ -8,6 +8,9 @@
 #   base-branch: dev (falls back to main if dev missing)
 #   target dir : <canonical-root>/../.worktrees/<branch-slug>
 #
+# A child process can't change the caller's cwd. The final line of stdout
+# is the target path so the caller can run `cd $(...)` if desired.
+#
 # Hard rules:
 #   - never nests a worktree inside another worktree
 #   - aborts if the resolved target falls under any existing worktree path
@@ -72,9 +75,11 @@ slug="$(printf '%s' "${branch}" | tr '/' '-')"
 target="${parent_dir}/${slug}"
 echo "create: target = ${target}"
 
-# Refuse to nest: target must not fall under any existing worktree (other than canonical root).
-existing="$(git -C "${canonical_root}" worktree list --porcelain | awk '/^worktree /{print $2}')"
-for wt in ${existing}; do
+# Refuse to nest: target must not fall under any existing worktree (other than
+# canonical root). Read newline-delimited so paths with spaces survive intact.
+existing="$(git -C "${canonical_root}" worktree list --porcelain | awk '/^worktree /{sub(/^worktree /, ""); print}')"
+while IFS= read -r wt; do
+  [ -z "${wt}" ] && continue
   case "${target}/" in
     "${wt}/"*)
       if [ "${wt}" != "${canonical_root}" ]; then
@@ -83,7 +88,9 @@ for wt in ${existing}; do
       fi
       ;;
   esac
-done
+done <<EOF
+${existing}
+EOF
 
 # Idempotency: target already exists?
 if [ -d "${target}" ]; then
@@ -122,4 +129,6 @@ fi
 # Apply manifest.
 "${script_dir}/setup.sh" "${target}"
 
-echo "create: done — ${target}"
+echo "create: done — copy/paste to enter:"
+# Last line is just the path, suitable for `cd $(...)`.
+printf '%s\n' "cd ${target}"

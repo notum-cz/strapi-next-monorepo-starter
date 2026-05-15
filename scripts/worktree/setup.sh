@@ -79,6 +79,7 @@ echo "${manifest_symlink}" | while IFS= read -r rel; do
 done
 
 # postSetup commands run sequentially inside the worktree.
+# Manifest is trusted (committed in-repo); never source untrusted config here.
 echo "${manifest_postsetup}" | while IFS= read -r cmd; do
   [ -z "${cmd}" ] && continue
   echo "setup: running: ${cmd}"

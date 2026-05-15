@@ -36,24 +36,25 @@ fi
 canonical_root="$("${script_dir}/detect-root.sh")"
 
 # Resolve arg_target → worktree path + branch.
+# Try as branch first so a branch named e.g. `scripts` isn't misclassified
+# as a path when a local `scripts` directory happens to exist. Fall back to
+# path detection if no worktree checks out that branch.
 target=""
 branch=""
 existing="$(git -C "${canonical_root}" worktree list --porcelain)"
-# Try as path first.
-if [ -d "${arg_target}" ]; then
+branch_match="$(printf '%s\n' "${existing}" | awk -v b="refs/heads/${arg_target}" '
+  /^worktree /{sub(/^worktree /, ""); wt=$0}
+  /^branch /{ if ($2==b) print wt }
+' | head -n1)"
+if [ -n "${branch_match}" ]; then
+  target="${branch_match}"
+  branch="${arg_target}"
+elif [ -d "${arg_target}" ]; then
   target="$(cd "${arg_target}" && pwd)"
   branch="$(git -C "${target}" rev-parse --abbrev-ref HEAD)"
 else
-  # Treat as branch name; find worktree that has it checked out.
-  branch="${arg_target}"
-  target="$(printf '%s\n' "${existing}" | awk -v b="refs/heads/${branch}" '
-    /^worktree /{wt=$2}
-    /^branch /{ if ($2==b) print wt }
-  ' | head -n1)"
-  if [ -z "${target}" ]; then
-    echo "cleanup: no worktree found for branch ${branch}" >&2
-    exit 1
-  fi
+  echo "cleanup: no worktree found for branch or path ${arg_target}" >&2
+  exit 1
 fi
 
 # Refuse to remove the canonical root.
@@ -101,6 +102,12 @@ git -C "${canonical_root}" worktree remove ${force:+--force} "${target}"
 echo "cleanup: removed worktree ${target}"
 
 # Optionally delete the local branch if fully merged.
+# This re-checks merge status with `git branch -d`, which uses HEAD-based
+# reachability — stricter than the `git cherry` check above (which also
+# counts squash-merge equivalents). The two can disagree: a squash-merged
+# branch passes cherry but fails `branch -d`. We trust `branch -d` here
+# because we're about to delete the ref permanently and want git's own
+# safety net; a branch it refuses to delete is kept for manual review.
 if [ "${force}" -eq 0 ]; then
   git -C "${canonical_root}" branch -d "${branch}" 2>/dev/null && \
     echo "cleanup: deleted branch ${branch}" || \
