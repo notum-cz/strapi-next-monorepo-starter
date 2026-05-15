@@ -3,6 +3,9 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
+    "paths": {
+      "helpers/*": ["./helpers/*"]
+    },
     "lib": ["ESNext", "dom"],
     "sourceMap": false,
     "types": ["@playwright/test", "node"],
