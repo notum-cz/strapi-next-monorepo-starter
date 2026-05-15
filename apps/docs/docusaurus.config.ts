@@ -44,15 +44,15 @@ const config: Config = {
           sidebarPath: "./sidebars.ts",
           editUrl:
             "https://github.com/notum-cz/strapi-next-monorepo-starter/edit/main/apps/docs/",
-          lastVersion: "3.1.1",
+          lastVersion: "current",
           versions: {
             current: {
               label: "Current",
-              path: "latest",
+              path: "",
             },
             "3.1.1": {
               label: "3.1.1",
-              path: "",
+              path: "3.1.1",
             },
           },
         },
