@@ -6,6 +6,14 @@ description: >
   "create react component", "new shadcn component", "add form field".
   Not for Strapi page-builder sections; use `create-content-component`.
 argument-hint: "[ComponentName]"
+paths:
+  - apps/ui/src/components/elementary/**
+  - apps/ui/src/components/forms/**
+  - apps/ui/src/components/typography/**
+  - apps/ui/src/components/helpers/**
+  - apps/ui/src/components/layouts/**
+  - apps/ui/src/components/providers/**
+  - apps/ui/src/components/ui/**
 ---
 
 # Add a UI Component

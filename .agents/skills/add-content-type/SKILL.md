@@ -7,6 +7,11 @@ description: >
   entity". Not for page-builder sections; use `create-content-component`
   for those.
 argument-hint: "[singularName]"
+paths:
+  - apps/strapi/src/api/**/content-types/**/schema.json
+  - apps/strapi/src/api/**/controllers/**
+  - apps/strapi/src/api/**/services/**
+  - apps/strapi/src/api/**/routes/**
 ---
 
 # Add a Strapi Content Type

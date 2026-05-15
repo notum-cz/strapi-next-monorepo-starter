@@ -8,24 +8,23 @@ Skills are reusable agent instructions for tasks in this repo. Claude Code, gene
 .agents/skills/<skill-name>/
   SKILL.md         # required, the hub
   workflow.md      # optional, detail file when SKILL.md grows past ~200 lines
-  examples.md      # optional, concrete examples
+  examples.md      # optional, copy-paste material
   scripts/         # optional, scripts bundled with the skill
-  agents/          # optional, per-runtime config (e.g. openai.yaml)
 ```
 
 `.claude/skills` is a committed symlink pointing here so Claude Code auto-discovers skills without duplicate files.
 
 ## SKILL.md format
 
-Minimal frontmatter plus a rich `description`:
+Minimal frontmatter plus a `description` that leads with **when** to trigger:
 
 ```yaml
 ---
 name: make-pr
 description: >
-  Create GitHub pull requests with clear, reviewer-friendly descriptions.
-  Use when asked to open or prepare a PR. Triggers on keywords: "open PR",
-  "create pull request", "prepare PR". References .github/pull_request_template.md.
+  Use when the user asks to open or prepare a GitHub PR — e.g. "open PR",
+  "create pull request", "prepare PR". References
+  .github/pull_request_template.md.
 ---
 ```
 
@@ -36,7 +35,7 @@ Body holds the prompt. Keep it lean. Move long detail into `workflow.md` and ref
 | Field         | Purpose                                                       |
 | ------------- | ------------------------------------------------------------- |
 | `name`        | Skill identifier, kebab-case, matches dir name                |
-| `description` | When to trigger. Include keywords, refs, scope. Rich is fine. |
+| `description` | When to trigger. Lead with "Use when…"; list symptoms + keywords. Do **not** summarize the workflow — Claude will skip the body if you do. |
 
 ### Optional frontmatter (Claude-specific, ignored by other tools)
 
@@ -54,16 +53,20 @@ Body holds the prompt. Keep it lean. Move long detail into `workflow.md` and ref
 
 ## Cross-skill references
 
-Use `$skill-name` syntax to reference another skill in prose (next.js convention).
+Reference other skills by bare name in prose (e.g. ``use `create-content-component` for those``). Match the in-file convention; no special syntax.
+
+## Bundled scripts
+
+Bundled scripts assume **the repo root is the current working directory** when invoked (e.g. `bash .agents/skills/strapi-schema-check/scripts/check.sh`). Skill prose calls them with that absolute-from-root path. If a skill moves to a shared plugin later, this assumption needs revisiting — until then, repo-root is the contract.
 
 ## Writing a new skill
 
 1. Pick a task-named, action-first name: `add-content-type`, `make-pr`, `review-pr`.
 2. Decide if the skill has side effects → set `disable-model-invocation: true` if so.
-3. Write `description` so an agent can decide _when_ to trigger from prompt context. Include trigger keywords and scope.
-4. Keep `SKILL.md` body lean. Detail goes in `workflow.md`.
-5. Bundle scripts inside the skill dir under `scripts/`. Refer to them with relative paths.
-6. Skill prose stays portable: no starter-only paths hardcoded in the description. Reference paths inside the body where the agent needs them.
+3. Write `description` so an agent can decide _when_ to trigger from prompt context. Lead with "Use when…", list concrete symptoms and trigger keywords. Avoid recapping the workflow.
+4. Keep `SKILL.md` body lean. Detail goes in `workflow.md`; copy-paste material in `examples.md`.
+5. Bundle scripts inside the skill dir under `scripts/`. Refer to them from skill prose using the repo-root-relative path.
+6. Skill prose stays portable: no starter-only paths in the `description`. Reference paths inside the body where the agent needs them.
 
 ## Skills catalog
 
