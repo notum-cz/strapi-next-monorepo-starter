@@ -127,7 +127,17 @@ All test commands are run from the **project root**, not from inside the `qa/` f
 
 #### Additional info for visual tests
 
-Visual regression tests compare screenshots of the application against previously committed baseline images to detect unintended visual changes. Tests run against **Chromium, Firefox, and WebKit (Safari)**.
+Visual regression tests compare screenshots of the application against previously committed baseline images to detect unintended visual changes.
+
+**Browser coverage:**
+
+| Browser | Local | Docker / CI |
+|---------|-------|-------------|
+| Chromium | ✅ | ✅ |
+| Firefox | ✅ | ✅ |
+| WebKit (Safari) | ✅ | ❌ |
+
+WebKit is excluded from Docker and CI runs because WebKit on Linux produces blank or incorrectly rendered screenshots due to missing system-level graphics dependencies. On macOS, WebKit runs natively and works correctly — so it is included in local (non-Docker) test runs only.
 
 ##### Cross-platform consistency (macOS vs CI/Linux)
 
