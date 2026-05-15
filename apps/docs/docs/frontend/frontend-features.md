@@ -177,5 +177,5 @@ Useful when one Docker image must serve multiple environments (staging vs prod) 
 
 - [Architecture](../architecture.md) — request lifecycle, proxy routes, env-var table
 - [Image Optimization](./images.md) — `StrapiBasicImage`, `StaticImage`, imgproxy
-- [Authentication](../auth/authentication.md) — Better Auth + Strapi JWT
+- [Authentication](../auth/frontend/authentication.md) — Better Auth + Strapi JWT
 - [Strapi API Client](../content-system/strapi-api-client.md) — public/private client surface

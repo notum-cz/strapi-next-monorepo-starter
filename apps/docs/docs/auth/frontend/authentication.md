@@ -1,6 +1,14 @@
-# Authentication
+---
+sidebar_position: 1
+---
 
-The application uses a dual authentication system: Better Auth for session management and Strapi JWT for API access.
+# Frontend Authentication
+
+End-user authentication for the Next.js app (`apps/ui`). Dual-layer: **Better Auth** owns the session cookie; **Strapi Users-Permissions** issues a JWT used for per-user API calls.
+
+:::info Scope
+This page covers authentication of **end-users of your application** (people who visit the site, sign in, register, reset password). For admin-panel SSO (CMS editors logging into Strapi itself), see [Strapi Admin SSO](../strapi-admin/microsoft-sso.md).
+:::
 
 ## Architecture
 
@@ -152,4 +160,4 @@ APP_PUBLIC_URL=        # Base URL for auth callbacks
 
 ## Related Documentation
 
-- [Strapi API Client](../content-system/strapi-api-client.md) — How the clients handle auth headers
+- [Strapi API Client](../../content-system/strapi-api-client.md) — How the clients handle auth headers

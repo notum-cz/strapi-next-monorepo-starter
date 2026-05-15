@@ -138,7 +138,7 @@ On every session read, [`strapiSessionPlugin`](https://github.com/notum-cz/strap
 
 OAuth is wired via `strapiOAuthPlugin` (`/sync-oauth-strapi` endpoint) which exchanges a provider access token for a Strapi JWT.
 
-See [Authentication](./auth/authentication.md).
+See [Authentication](./auth/frontend/authentication.md).
 
 ## Internationalization
 
@@ -208,7 +208,7 @@ Pages are a parent/child tree. `fullPath` is the cached, denormalized slug chain
 
 ## Related Documentation
 
-- [Authentication](./auth/authentication.md) — Better Auth + Strapi JWT details
+- [Authentication](./auth/frontend/authentication.md) — Better Auth + Strapi JWT details
 - [Strapi API Client](./content-system/strapi-api-client.md) — client surface and proxy mechanics
 - [Page Builder](./content-system/page-builder.md) — dynamic-zone → React component mapping
 - [Add a Content Type](./getting-started/add-content-type.md) — end-to-end workflow for a new collection

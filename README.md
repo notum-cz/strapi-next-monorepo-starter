@@ -240,7 +240,7 @@ App READMEs cover **setup and environment** only. Conceptual and feature documen
 - **Content System** — [Page Builder](./apps/docs/docs/content-system/page-builder.md) · [Strapi Schemas](./apps/docs/docs/content-system/strapi-schemas.md) · [Pages Hierarchy](./apps/docs/docs/content-system/pages-hierarchy.md) · [Strapi Types Usage](./apps/docs/docs/content-system/strapi-types-usage.md) · [Strapi API Client](./apps/docs/docs/content-system/strapi-api-client.md)
 - **Frontend** — [Frontend Features](./apps/docs/docs/frontend/frontend-features.md) · [Image Optimization](./apps/docs/docs/frontend/images.md)
 - **Strapi** — [Strapi Plugins](./apps/docs/docs/strapi/strapi-plugins.md) · [Data Seeding](./apps/docs/docs/strapi/data-seeding.md)
-- **Authentication** — [Overview](./apps/docs/docs/auth/authentication.md) · [Microsoft SSO](./apps/docs/docs/auth/microsoft-sso.md) · [OAuth Providers](./apps/docs/docs/auth/oauth-providers.md)
+- **Authentication** — [Overview](./apps/docs/docs/auth/frontend/authentication.md) · [Microsoft SSO](./apps/docs/docs/auth/strapi-admin/microsoft-sso.md) · [OAuth Providers](./apps/docs/docs/auth/frontend/oauth-providers.md)
 - **Reference** — [Commands](./apps/docs/docs/reference/commands.md) · [Packages](./apps/docs/docs/reference/packages.md)
 
 Docs site builds to GitHub Pages — `pnpm build:docs` to preview locally. Tracking improvements: [issue #113](https://github.com/notum-cz/strapi-next-monorepo-starter/issues/113).

@@ -7,7 +7,7 @@ Conceptual + feature docs live in [/apps/docs](../docs/docs). This README covers
 - [Architecture](../docs/docs/architecture.md) — request lifecycle, proxies, draft mode, i18n
 - [Frontend Features](../docs/docs/frontend/frontend-features.md) — project layout, shadcn, middleware proxies, Sentry, reCAPTCHA, logs
 - [Image Optimization](../docs/docs/frontend/images.md) — `StrapiBasicImage`, `StaticImage`, imgproxy, `sizes`
-- [Authentication](../docs/docs/auth/authentication.md) · [Strapi API Client](../docs/docs/content-system/strapi-api-client.md) · [Page Builder](../docs/docs/content-system/page-builder.md)
+- [Authentication](../docs/docs/auth/frontend/authentication.md) · [Strapi API Client](../docs/docs/content-system/strapi-api-client.md) · [Page Builder](../docs/docs/content-system/page-builder.md)
 
 ## 🥞 Stack
 

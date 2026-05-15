@@ -8,7 +8,7 @@ Conceptual + feature docs live in [/apps/docs](../docs/docs). This README covers
 - [Strapi Plugins](../docs/docs/strapi/strapi-plugins.md) — CKEditor, Tiptap, upload (Azure/S3), email (Mailgun/Mailtrap), Sentry, cron, config-sync
 - [Strapi Schemas](../docs/docs/content-system/strapi-schemas.md) · [Strapi Types Usage](../docs/docs/content-system/strapi-types-usage.md) · [Pages Hierarchy](../docs/docs/content-system/pages-hierarchy.md)
 - [Data Seeding](../docs/docs/strapi/data-seeding.md) · [Add a Content Type](../docs/docs/getting-started/add-content-type.md)
-- SSO: [Microsoft (admin)](../docs/docs/auth/microsoft-sso.md) · [OAuth (end-users)](../docs/docs/auth/oauth-providers.md)
+- SSO: [Microsoft (admin)](../docs/docs/auth/strapi-admin/microsoft-sso.md) · [OAuth (end-users)](../docs/docs/auth/frontend/oauth-providers.md)
 
 ## 🥞 Stack
 
@@ -143,8 +143,8 @@ These features are configured in this app but documented separately:
 - **Rich text editors (CKEditor + Tiptap)** — see [Strapi Plugins → Rich Text](../docs/docs/strapi/strapi-plugins.md#rich-text-editors).
 - **Upload providers (Azure / S3 / local)** — see [Strapi Plugins → Upload](../docs/docs/strapi/strapi-plugins.md#upload-providers).
 - **Email providers (Mailgun / Mailtrap)** — see [Strapi Plugins → Email](../docs/docs/strapi/strapi-plugins.md#email-providers).
-- **OAuth (GitHub/Google/etc.)** — see [OAuth Providers](../docs/docs/auth/oauth-providers.md).
-- **Admin SSO (Microsoft Entra ID)** — see [Microsoft SSO](../docs/docs/auth/microsoft-sso.md). Requires `STRAPI_LICENSE` (Enterprise feature). When behind an HTTPS-terminating proxy, enable `proxy: { koa: true }` in `config/server.ts` for secure cookies.
+- **OAuth (GitHub/Google/etc.)** — see [OAuth Providers](../docs/docs/auth/frontend/oauth-providers.md).
+- **Admin SSO (Microsoft Entra ID)** — see [Microsoft SSO](../docs/docs/auth/strapi-admin/microsoft-sso.md). Requires `STRAPI_LICENSE` (Enterprise feature). When behind an HTTPS-terminating proxy, enable `proxy: { koa: true }` in `config/server.ts` for secure cookies.
 - **Live previews** — set `STRAPI_PREVIEW_ENABLED=true`, `CLIENT_URL`, `STRAPI_PREVIEW_SECRET` (matching frontend). See [Architecture → Draft Mode](../docs/docs/architecture.md#draft-mode--preview).
 - **Cron jobs** — defined in [`config/cron-tasks.ts`](./config/cron-tasks.ts), enabled via `CRON_ENABLED=true`.
 

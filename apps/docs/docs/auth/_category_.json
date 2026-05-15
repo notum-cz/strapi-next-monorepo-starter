@@ -6,6 +6,6 @@
   "link": {
     "type": "generated-index",
     "title": "Authentication",
-    "description": "End-user auth (Better Auth + Strapi Users-Permissions), OAuth providers, and admin SSO."
+    "description": "Two distinct auth surfaces. **Frontend Auth** covers end-users of the Next.js app (Better Auth + Strapi Users-Permissions, with OAuth providers for social login). **Strapi Admin SSO** covers CMS editors signing in to the Strapi admin panel itself."
   }
 }

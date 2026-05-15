@@ -85,7 +85,7 @@ To watch Strapi requests in the UI logs, set `DEBUG_STRAPI_CLIENT_API_CALLS=true
 
 - **Add a new content type** → next page in this guide
 - **Edit a page-builder component** → [Page Builder](../content-system/page-builder.md)
-- **Hook up authentication** → [Authentication](../auth/authentication.md)
+- **Hook up authentication** → [Authentication](../auth/frontend/authentication.md)
 - **Change a Strapi schema** → run `pnpm generate:types && pnpm sync-types` after every change. [Strapi Types Usage](../content-system/strapi-types-usage.md).
 - **Deploy** → root [README → Deployment](https://github.com/notum-cz/strapi-next-monorepo-starter#%EF%B8%8F-deployment)
 

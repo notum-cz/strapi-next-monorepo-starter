@@ -6,7 +6,7 @@ Plugin configuration lives in [`apps/strapi/config/plugins.ts`](https://github.c
 
 JWT expiry is set to **30 days** to match the Better Auth session `maxAge` ([`plugins.ts:14`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/config/plugins.ts#L14)). Change both together or sessions and JWTs will desync.
 
-See [Authentication](../auth/authentication.md) for the full auth flow.
+See [Authentication](../auth/frontend/authentication.md) for the full auth flow.
 
 ## config-sync
 
@@ -168,8 +168,8 @@ Defined in [`config/cron-tasks.ts`](https://github.com/notum-cz/strapi-next-mono
 
 ## Related Documentation
 
-- [Authentication](../auth/authentication.md) — Better Auth + JWT
-- [OAuth Providers](../auth/oauth-providers.md) — GitHub/Google/Facebook setup via users-permissions
-- [Microsoft SSO](../auth/microsoft-sso.md) — admin panel SSO
+- [Authentication](../auth/frontend/authentication.md) — Better Auth + JWT
+- [OAuth Providers](../auth/frontend/oauth-providers.md) — GitHub/Google/Facebook setup via users-permissions
+- [Microsoft SSO](../auth/strapi-admin/microsoft-sso.md) — admin panel SSO
 - [Strapi Schemas](../content-system/strapi-schemas.md) — content type/component reference
 - [Data Seeding](./data-seeding.md) — seed export/import workflow
