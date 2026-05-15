@@ -57,7 +57,7 @@ docker run --rm \
   bash -c "npm install --silent --no-package-lock && npx playwright test visual/visual.spec.ts ${PROJECT_FLAGS[*]}"
 EXIT_CODE=$?
 
-if [[ $EXIT_CODE -ne 0 ]]; then
+if [[ $EXIT_CODE -ne 0 ]] && [[ -z "${CI:-}" ]]; then
   echo ""
   echo "Tests failed — opening Playwright report..."
   cd "$PLAYWRIGHT_DIR" && pnpm exec playwright show-report
