@@ -51,13 +51,21 @@ projects.push(
     name: "visual-chromium",
     testMatch: ["visual/**/*.spec.ts"],
     retries: 0,
-    use: { ...devices["Desktop Chrome"] },
+    use: {
+      ...devices["Desktop Chrome"],
+      trace: "off",
+      video: "off",
+    },
   },
   {
     name: "visual-firefox",
     testMatch: ["visual/**/*.spec.ts"],
     retries: 0,
-    use: { ...devices["Desktop Firefox"] },
+    use: {
+      ...devices["Desktop Firefox"],
+      trace: "off",
+      video: "off",
+    },
   },
   {
     name: "visual-webkit",
@@ -66,6 +74,8 @@ projects.push(
     use: {
       ...devices["Desktop Safari"],
       deviceScaleFactor: 1,
+      trace: "off",
+      video: "off",
     },
   },
   {
