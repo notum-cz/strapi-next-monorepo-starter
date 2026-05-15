@@ -131,11 +131,11 @@ Visual regression tests compare screenshots of the application against previousl
 
 **Browser coverage:**
 
-| Browser | Local | Docker / CI |
-|---------|-------|-------------|
-| Chromium | ✅ | ✅ |
-| Firefox | ✅ | ✅ |
-| WebKit (Safari) | ✅ | ❌ |
+| Browser         | Local | Docker / CI |
+| --------------- | ----- | ----------- |
+| Chromium        | ✅    | ✅          |
+| Firefox         | ✅    | ✅          |
+| WebKit (Safari) | ✅    | ❌          |
 
 WebKit is excluded from Docker and CI runs because WebKit on Linux produces blank or incorrectly rendered screenshots due to missing system-level graphics dependencies. On macOS, WebKit runs natively and works correctly — so it is included in local (non-Docker) test runs only.
 
