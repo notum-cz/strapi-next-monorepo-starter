@@ -8,7 +8,7 @@
 #   ./compare-snapshots-docker.sh visual-chromium visual-firefox     # multiple browsers
 #   BASE_URL=https://example.com ./compare-snapshots-docker.sh
 
-set -euo pipefail
+set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLAYWRIGHT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -55,3 +55,12 @@ docker run --rm \
   -e CI=true \
   "mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble" \
   bash -c "npm install --silent --no-package-lock && npx playwright test visual/visual.spec.ts ${PROJECT_FLAGS[*]}"
+EXIT_CODE=$?
+
+if [[ $EXIT_CODE -ne 0 ]]; then
+  echo ""
+  echo "Tests failed — opening Playwright report..."
+  cd "$PLAYWRIGHT_DIR" && pnpm exec playwright show-report
+fi
+
+exit $EXIT_CODE

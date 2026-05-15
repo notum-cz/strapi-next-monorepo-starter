@@ -50,16 +50,19 @@ projects.push(
   {
     name: "visual-chromium",
     testMatch: ["visual/**/*.spec.ts"],
+    retries: 0,
     use: { ...devices["Desktop Chrome"] },
   },
   {
     name: "visual-firefox",
     testMatch: ["visual/**/*.spec.ts"],
+    retries: 0,
     use: { ...devices["Desktop Firefox"] },
   },
   {
     name: "visual-webkit",
     testMatch: ["visual/**/*.spec.ts"],
+    retries: 0,
     use: {
       ...devices["Desktop Safari"],
       deviceScaleFactor: 1,
@@ -96,7 +99,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 3 : undefined,
-  reporter: "html",
+  reporter: [["html", { open: process.env.CI ? "never" : "on-failure" }]],
 
   use: {
     baseURL: process.env.BASE_URL,
