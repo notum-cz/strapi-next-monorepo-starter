@@ -49,5 +49,6 @@ next-env.d.ts
 
 .claude/settings.local.json
 .claude/plans/
+.claude/reviews/
 .worktrees/
 PLAN.md
