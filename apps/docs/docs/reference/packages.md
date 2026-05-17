@@ -79,15 +79,14 @@ Bridges Strapi's TypeScript engine into the rest of the monorepo. No runtime cod
 
 **Generation flow**:
 
-```
-apps/strapi (Strapi CLI)
-   pnpm generate:types
-        │
-        ▼
-  apps/strapi/types/generated/{components,contentTypes}.d.ts
-        │  (copy via `pnpm sync-types`)
-        ▼
-  packages/strapi-types/generated/
+```mermaid
+flowchart TB
+  CLI["apps/strapi (Strapi CLI)<br/><code>pnpm generate:types</code>"]
+  Generated["apps/strapi/types/generated/<br/>{components,contentTypes}.d.ts"]
+  Synced["packages/strapi-types/generated/"]
+
+  CLI --> Generated
+  Generated -- "copy via <code>pnpm sync-types</code>" --> Synced
 ```
 
 `sync-types` is defined as `cp -r ../../apps/strapi/types/generated ./generated`. The `generated/` directory in this package is intended to be a refresh of the Strapi-side files — keep them in sync after any schema change. See [Strapi Types Usage](../content-system/strapi-types-usage.md).
