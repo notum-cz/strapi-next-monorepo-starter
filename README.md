@@ -22,138 +22,104 @@ This is a ready-to-go starter template for Strapi projects. It combines the powe
 
 [![Launch Strapi + Next.js Monorepo — Live in 5 Minutes](https://img.youtube.com/vi/VZlJZuurUH8/maxresdefault.jpg)](https://www.youtube.com/watch?v=VZlJZuurUH8 "Watch on YouTube")
 
-### Prerequisites
+Full step-by-step setup lives in docs:
 
-- Docker
-- node 24
-- pnpm 11
-- [nvm](https://github.com/nvm-sh/nvm) (optional, recommended)
+- [Installation](./apps/docs/docs/getting-started/installation.md) — prerequisites, clone, install
+- [Quick Start](./apps/docs/docs/getting-started/quick-start.md) — start Strapi + UI, get content rendering
+- [Add a Content Type](./apps/docs/docs/getting-started/add-content-type.md) — end-to-end recipe for extending the template
 
-### Run dev (in 4 steps)
+### TL;DR
 
-1. Clone this repository
+```bash
+git clone https://github.com/notum-cz/strapi-next-monorepo-starter
+cd strapi-next-monorepo-starter
+nvm use
+corepack prepare pnpm@11.1.1 --activate
+pnpm install
+pnpm dev:strapi              # then create API token, paste into apps/ui/.env.local
+pnpm dev:ui                  # in a second terminal
+```
 
-   ```sh
-   git clone https://github.com/notum-cz/strapi-next-monorepo-starter
-   # checkout `main` branch (`dev` contains unreleased features and improvements)
-   git checkout main
-   ```
+Open [http://localhost:3000](http://localhost:3000) (UI) and [http://localhost:1337/admin](http://localhost:1337/admin) (Strapi). See [Quick Start](./apps/docs/docs/getting-started/quick-start.md) for token + env setup.
 
-   Or click [Use this template](https://github.com/notum-cz/strapi-next-monorepo-starter/generate) to create a new repository based on this template.
+After getting it running you'll probably want to:
 
-2. Install dependencies
-
-   ```sh
-   # in root
-   # switch to correct nodejs version (v24)
-   nvm use
-
-   # optionally, switch to pnpm v11.1.1
-   (corepack prepare pnpm@11.1.1 --activate)
-
-   # install deps for apps and packages that are part of this monorepo
-   pnpm install
-   ```
-
-3. Run apps
-   ```sh
-   # run all apps in dev mode (this triggers `pnpm dev` script in each app from `/apps` directory)
-   pnpm run dev
-   ```
-
-> [!WARNING]
-> Before the first run, you need to retrieve [Strapi API token](https://docs.strapi.io/cms/features/api-tokens).
->
-> ```sh
-> pnpm run dev:strapi
-> ```
->
-> Go to Strapi admin URL and navigate to [Settings > API Tokens](http://localhost:1337/admin/settings/api-tokens). Select "Create new API token" and copy it's value to `STRAPI_REST_READONLY_API_KEY` in `/apps/ui/.env.local` file.
-> Refer to the [UI README](apps/ui/README.md#environment-variables) for more details.
-
-4. 🎉 Enjoy!
-   - Open your browser and go to [http://localhost:3000](http://localhost:3000) to see the UI app in action.
-   - Open your browser and go to [http://localhost:1337/admin](http://localhost:1337/admin) to see the Strapi app in action.
-
-5. Next steps?
-   - See [What's inside?](#-whats-inside) for more details about apps and packages.
-   - You also probably want to customize naming in the project. See [Transform this template to a project](#-transform-this-template-to-a-project).
+- Rename packages and project metadata. See [Transform this template to a project](#-transform-this-template-to-a-project).
+- Explore [What's inside?](#-whats-inside).
 
 ## ✨ Features
 
-- **Modern Strapi + Next.js foundation**: Strapi v5 CMS, Next.js v16 App Router, React 19, TypeScript, pnpm workspaces, Turborepo, Node 24, and Docker-ready production builds
-- **Typed page builder**: Prepared Strapi dynamic-zone components, typed populate configs, generated Strapi types, frontend component registry, and restyled starter sections ready for project customization
-- **Content preview and routing**: Strapi draft/live preview, localized page routing, dynamic rewrites, breadcrumbs, canonical metadata, and SEO-friendly page rendering
-- **Design system and UI kit**: TailwindCSS v4, shadcn/ui components, shared design tokens, reusable typography primitives, and common frontend components for navigation, forms, images, content sections, and rich text
-- **Rich text editing**: Pre-configured CKEditor and TipTap with shared styles, generated TipTap presets, and reusable editor rendering on the frontend
-- **Media handling**: Strapi upload configuration with local and Azure Blob Storage support, plus frontend image helpers for optimized Strapi media rendering and fallbacks
-- **Authentication**: Better Auth integrated with Strapi Users & Permissions, JWT handling, auth middleware, protected routes, and provider-ready setup
-- **Localization**: Multi-language content and routes powered by `next-intl` and `@strapi/plugin-i18n`
-- **Developer workflow**: DB seed data, typed Strapi API clients, shared utilities, ESLint with Prettier formatting, Lefthook git hooks, Commitizen, conventional commits, and CODEOWNERS/contribution templates
-- **Documentation and QA**: Docusaurus documentation app plus Playwright-based E2E, accessibility, performance, SEO, and visual regression test suites
-- ... and much more is waiting for you to discover!
+- **Modern foundation**: Strapi v5, Next.js v16 App Router, React 19, TypeScript, pnpm workspaces, Turborepo, Node 24, Docker-ready
+- **Typed page builder**: dynamic-zone components, typed populate configs, generated Strapi types, frontend component registry, starter sections
+- **Content preview and routing**: draft/live preview, localized routing, dynamic rewrites, breadcrumbs, canonical metadata
+- **Design system**: TailwindCSS v4, shadcn/ui, shared tokens, typography primitives, reusable form/image/section components
+- **Rich text**: CKEditor and TipTap pre-configured, shared styles, generated presets
+- **Media**: Strapi upload (local, Azure Blob, S3), frontend image helpers (`StrapiBasicImage`, imgproxy support)
+- **Authentication**: Better Auth + Strapi Users & Permissions, JWT, auth middleware, OAuth-ready
+- **Localization**: `next-intl` (frontend) + `@strapi/plugin-i18n` (content)
+- **Dev workflow**: DB seed, typed Strapi clients, ESLint + Prettier, Lefthook, Commitizen, conventional commits, CODEOWNERS
+- **QA**: Docusaurus docs + Playwright E2E/a11y/perf/SEO/visual
+
+Deep-dives live in [/apps/docs](./apps/docs) — start at [Architecture](./apps/docs/docs/architecture.md).
 
 ## 📦 What's inside?
 
 ### Apps
 
-- `apps/ui` - UI web app based on [Next.js v16](https://nextjs.org/docs/) and [shadcn/ui](https://ui.shadcn.com/) ([Tailwind](https://tailwindcss.com/)) - [README.md](./apps/ui/README.md)
-- `apps/strapi` - [Strapi v5](https://strapi.io/) API with prepared page-builder components - [README.md](./apps/strapi/README.md)
+| Path          | Tech                                  | README                                           |
+| ------------- | ------------------------------------- | ------------------------------------------------ |
+| `apps/ui`     | Next.js v16 + shadcn/ui + Tailwind v4 | [apps/ui/README.md](./apps/ui/README.md)         |
+| `apps/strapi` | Strapi v5 + Postgres                  | [apps/strapi/README.md](./apps/strapi/README.md) |
+| `apps/docs`   | Docusaurus 3                          | [apps/docs](./apps/docs)                         |
 
 ### Packages
 
-- `packages/eslint-config`: [ESLint](https://eslint.org/) configurations with integrated [Prettier](https://prettier.io/) formatting, import ordering, and Tailwind plugin
-- `packages/typescript-config`: tsconfig JSONs used throughout the monorepo (not compatible with Strapi app now)
-- `packages/design-system`: shared styles, design tokens, and editor configurations (CKEditor and TipTap)
-- `packages/shared-data`: package that stores common values across frontend and backend
-- `packages/strapi-types`: typescript definitions of content generated by Strapi and mirrored to separate package for easy usage in other apps. See [README.md](./packages/strapi-types/README.md) for more details.
+See [Packages reference](./apps/docs/docs/packages.md) for full surface and consumer notes.
+
+- `@repo/design-system` — Tailwind pipeline + editor color/font JSON
+- `@repo/shared-data` — path utilities used in both runtimes
+- `@repo/strapi-types` — auto-generated content/component types
+- `@repo/eslint-config` — composed flat ESLint config
+- `@repo/typescript-config` — tsconfig presets (Strapi app uses its own)
+- `@repo/semantic-release-config` — release pipeline config
 
 ## ☕ Scripts
 
-### Turbo CLI
+**Always run from the monorepo root.** Turbo dispatches to the correct workspace. Don't `cd` into individual apps.
 
-After installing dependencies and setting env vars up, you can control all apps using Turbo CLI. Some common commands are wrapped into scripts. You can find them in root [package.json](./package.json) file. Few examples:
+Common commands:
 
 ```bash
-# run all apps in dev mode (this triggers `pnpm dev` script in each app from `/apps` directory)
-pnpm run dev
+pnpm dev                    # all apps
+pnpm dev:strapi             # Strapi only (auto-starts Postgres)
+pnpm dev:ui                 # Next.js only
+pnpm dev:docs               # Docusaurus
 
-# run apps separately
-pnpm run dev:ui
-pnpm run dev:strapi
+pnpm build                  # build everything
+pnpm build:strapi
+pnpm build:ui
+pnpm build:docs
 
-# build all apps
-pnpm run build
+pnpm lint                   # ESLint everywhere
+pnpm typecheck
 
-# build specific app
-pnpm run build:ui
-pnpm run build:strapi
+pnpm generate:types         # regenerate Strapi types
+pnpm sync-types             # mirror into @repo/strapi-types
+
+pnpm seed:check
+pnpm seed:export
+pnpm seed:import
+
+pnpm commit                 # Commitizen interactive prompt
 ```
 
-Using those `turbo` scripts is preferred, because they ensure correct dependency installation and environment setup.
+Full reference: [Commands](./apps/docs/docs/reference/commands.md).
 
-### `pnpm` scripts
-
-In root [package.json](./package.json) file, there are some useful tasks wrapped into `pnpm` scripts:
+Escape hatch for per-package scripts that aren't wrapped — still from root:
 
 ```bash
-# interactive commit message generator - stage files first, then run this in terminal
-pnpm run commit
-```
-
-> [!TIP]
-> You can also use `pnpm` commands to run scripts in specific apps or packages:
-
-```bash
-# run a script in a specific app
-pnpm -F @repo/ui dev
-
-# run a script in a specific package
-pnpm -F @repo/shared-data build
-
-# run a script from root package.json in different directory
-cd apps/ui
-pnpm -w run lint
+pnpm -F @repo/ui <script>
+pnpm -F @repo/strapi <script>
 ```
 
 ### Bash scripts
@@ -183,43 +149,14 @@ Install extensions listed in the [.vscode/extensions.json](.vscode/extensions.js
 
 ## 🔱 Git Hooks & Conventions
 
-Lefthook is installed by default and configured to enforce code quality and consistent naming conventions.
+Lefthook ([`lefthook.yml`](./lefthook.yml)) enforces:
 
-### Pre-commit Hook
+- **pre-commit** — branch name validation + lint-staged (ESLint, Prettier)
+- **commit-msg** — conventional commit format via commitlint
 
-The [`pre-commit` hook](lefthook.yml) runs the following checks before each commit:
+Branch naming: `<type>/STAR-<number>-<description>` (e.g. `feat/STAR-1582-repo-config`). Exempt: `main`, `master`, `develop`, `dev`, `release/*`, `hotfix/*`.
 
-1. **Branch name validation** — Ensures branch names follow the convention (skipped during merges):
-
-   ```
-   <type>/STAR-<number>-<description>
-   ```
-
-   **Examples:**
-   - `feat/STAR-1582-repo-config`
-   - `fix/STAR-42-null-pointer-on-login`
-
-   **Exempt branches:** `main`, `master`, `develop`, `dev`, `release/*`, `hotfix/*`
-
-   > [!TIP]
-   > To rename an existing branch: `git branch -m <old-name> <new-name>`
-
-2. **Lint-staged** — `lint` and `format` on every commit (`pre-commit` hook) via [lint-staged](https://www.npmjs.com/package/lint-staged).
-   ESLint handles JS/TS linting and formatting (via integrated Prettier), while Prettier runs directly on CSS/MD/SCSS files. Configuration is in root `.lintstagedrc.js` and per-app `.lintstagedrc.js` files.
-
-### Commit Message Hook
-
-The [`commit-msg` hook](lefthook.yml) validates commit messages using [commitlint](https://commitlint.js.org/):
-
-**Conventional commits** — Messages must follow [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) format, e.g.:
-
-```bash
-feat(ui): add dark mode toggle
-fix(strapi): resolve null pointer on login
-chore: update dependencies
-```
-
-> Use `pnpm run commit` for an interactive commit message generator.
+Conventional commits: `feat(ui): add dark mode toggle`. Use `pnpm run commit` for the interactive generator.
 
 ### Environment Variables in Commits
 
@@ -296,7 +233,17 @@ _[After this preparation is done, delete this section from README]_
 
 ## 📖 Documentation
 
-There is plenty of documentation in README files in individual apps and packages. Make sure to check them out. In addition, there is more in the [/apps/docs](./apps/docs) directory. We want to [improve the documentation over time](https://github.com/notum-cz/strapi-next-monorepo-starter/issues/113), so stay tuned.
+App READMEs cover **setup and environment** only. Conceptual and feature documentation lives in [/apps/docs](./apps/docs):
+
+- **Getting Started** — [Installation](./apps/docs/docs/getting-started/installation.md) · [Quick Start](./apps/docs/docs/getting-started/quick-start.md) · [Add a Content Type](./apps/docs/docs/getting-started/add-content-type.md)
+- [Architecture](./apps/docs/docs/architecture.md) — request lifecycle, proxies, draft mode, i18n, env vars
+- **Content System** — [Page Builder](./apps/docs/docs/content-system/page-builder.md) · [Strapi Schemas](./apps/docs/docs/content-system/strapi-schemas.md) · [Pages Hierarchy](./apps/docs/docs/content-system/pages-hierarchy.md) · [Strapi Types Usage](./apps/docs/docs/content-system/strapi-types-usage.md) · [Strapi API Client](./apps/docs/docs/content-system/strapi-api-client.md)
+- **Frontend** — [Frontend Features](./apps/docs/docs/frontend/frontend-features.md) · [Image Optimization](./apps/docs/docs/frontend/images.md)
+- **Strapi** — [Strapi Plugins](./apps/docs/docs/strapi/strapi-plugins.md) · [Data Seeding](./apps/docs/docs/strapi/data-seeding.md)
+- **Authentication** — [Overview](./apps/docs/docs/auth/frontend/authentication.md) · [Microsoft SSO](./apps/docs/docs/auth/strapi-admin/microsoft-sso.md) · [OAuth Providers](./apps/docs/docs/auth/frontend/oauth-providers.md)
+- **Reference** — [Commands](./apps/docs/docs/reference/commands.md) · [Packages](./apps/docs/docs/reference/packages.md)
+
+Docs site builds to GitHub Pages — `pnpm build:docs` to preview locally. Tracking improvements: [issue #113](https://github.com/notum-cz/strapi-next-monorepo-starter/issues/113).
 
 ## 💙 Feedback
 

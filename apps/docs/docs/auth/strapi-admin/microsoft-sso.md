@@ -1,6 +1,14 @@
-# Strapi SSO with Microsoft Entra ID
+---
+sidebar_position: 1
+---
 
-This page documents the Microsoft SSO setup for Strapi admin users in this project.
+# Microsoft SSO (Strapi admin panel)
+
+Single sign-on for **Strapi admin users** — the people who log into the CMS admin panel to manage content. Authenticates via Microsoft Entra ID using `passport-azure-ad-oauth2`.
+
+:::info Scope
+This is **admin-panel only**. End-users of your Next.js application don't see this — for them, see [Frontend Authentication](../frontend/authentication.md) and [OAuth Providers](../frontend/oauth-providers.md).
+:::
 
 Official Strapi documentation:
 
@@ -14,8 +22,11 @@ Official Strapi documentation:
 - Users who should sign in must have an email address or UPN in that tenant.
 - Valid callback URLs must be registered for every environment where SSO will be used.
 
-> [Tip]
-> For local development, it is important to set `STRAPI_LICENSE` and verify SSO displays correctly in the login screen.
+:::info
+
+For local development, it is important to set `STRAPI_LICENSE` and verify SSO displays correctly in the login screen.
+
+:::
 
 ## Dependencies
 

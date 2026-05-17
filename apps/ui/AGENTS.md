@@ -30,7 +30,7 @@ export function StrapiHero({
 
 **Registry:** `components/page-builder/index.tsx` maps UIDs to components.
 
-Full workflow: [Page Builder docs](../../docs/page-builder.md)
+Full workflow: [Page Builder docs](../docs/docs/content-system/page-builder.md)
 
 ## Strapi API Clients
 
@@ -45,7 +45,7 @@ import { PrivateStrapiClient, PublicStrapiClient } from "@/lib/strapi-api"
 
 **Client-side:** Use `useProxy: true` option.
 
-Full reference: [Strapi API Client docs](../../docs/strapi-api-client.md)
+Full reference: [Strapi API Client docs](../docs/docs/content-system/strapi-api-client.md)
 
 ## Internationalization
 
@@ -67,7 +67,7 @@ const session = await getSessionSSR(await headers())
 const { data: session } = await getSessionCSR()
 ```
 
-Full reference: [Authentication docs](../../docs/authentication.md)
+Full reference: [Authentication docs](../docs/docs/auth/frontend/authentication.md)
 
 ## Adding Page Builder Components
 
@@ -80,7 +80,7 @@ Use skill: `/create-content-component`, or do it manually
 
 ## Related Documentation
 
-- [Page Builder](../../docs/page-builder.md) — Full component workflow
-- [Strapi API Client](../../docs/strapi-api-client.md) — Fetching content
-- [Authentication](../../docs/authentication.md) — Better Auth + Strapi JWT
-- [Strapi Types](../../docs/strapi-types-usage.md) — Type utilities
+- [Page Builder](../docs/docs/content-system/page-builder.md) — Full component workflow
+- [Strapi API Client](../docs/docs/content-system/strapi-api-client.md) — Fetching content
+- [Authentication](../docs/docs/auth/frontend/authentication.md) — Better Auth + Strapi JWT
+- [Strapi Types](../docs/docs/content-system/strapi-types-usage.md) — Type utilities

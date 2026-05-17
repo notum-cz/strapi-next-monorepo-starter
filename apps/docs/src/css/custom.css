@@ -45,3 +45,42 @@
   border-top: 1px solid var(--ifm-toc-border-color);
   font-size: 0.85rem;
 }
+
+/* Underline article links by default. Excludes nav, footer, sidebar, TOC,
+ * pagination buttons, anchor heading icons, and card-style links. */
+.markdown a:not(.hash-link, .card),
+.theme-doc-markdown a:not(.hash-link, .card) {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+.markdown a:not(.hash-link, .card):hover,
+.theme-doc-markdown a:not(.hash-link, .card):hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Footer is rendered with style: "dark" in both light & dark site themes.
+ * Primary color in light theme is near-black, which makes links inside the
+ * dark footer effectively invisible. Force a legible light-on-dark color
+ * and keep the same underline treatment as in-article links. */
+.footer--dark {
+  --ifm-footer-link-color: #d4e1f5;
+  --ifm-footer-link-hover-color: #ebf1fb;
+}
+
+.footer--dark a,
+.footer--dark .footer__link-item,
+.footer--dark .footer__copyright a {
+  color: var(--ifm-footer-link-color);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+.footer--dark a:hover,
+.footer--dark .footer__link-item:hover,
+.footer--dark .footer__copyright a:hover {
+  color: var(--ifm-footer-link-hover-color);
+  text-decoration-thickness: 2px;
+}

@@ -4,34 +4,21 @@ The page builder enables content editors to compose pages from reusable componen
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              Strapi CMS                                     │
-│  ┌─────────────────────────────────────────────────────────────────────┐    │
-│  │ Page (api::page.page)                                               │    │
-│  │  └─ content: dynamiczone                                            │    │
-│  │       ├─ sections.hero                                              │    │
-│  │       ├─ sections.faq                                               │    │
-│  │       ├─ forms.contact-form                                         │    │
-│  │       └─ ...                                                        │    │
-│  └─────────────────────────────────────────────────────────────────────┘    │
-│                                    │                                        │
-│                          documentMiddlewares/page.ts                        │
-│                          (deep population rules)                            │
-└────────────────────────────────────│────────────────────────────────────────┘
-                                     │ REST API
-                                     ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                            Next.js Frontend                                 │
-│  ┌─────────────────────────────────────────────────────────────────────┐    │
-│  │ StrapiPage (page.tsx)                                                │    │
-│  │  └─ maps __component UID → React component                          │    │
-│  │       ├─ sections.hero      → StrapiHero                            │    │
-│  │       ├─ sections.faq       → StrapiFaq                             │    │
-│  │       ├─ forms.contact-form → StrapiContactForm                     │    │
-│  │       └─ ...                                                        │    │
-│  └─────────────────────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+  subgraph Strapi["Strapi CMS"]
+    direction TB
+    Page["Page (api::page.page)<br/>content: dynamiczone<br/>• sections.hero<br/>• sections.faq<br/>• forms.contact-form<br/>• ..."]
+    DM["documentMiddlewares/page.ts<br/>(deep population rules)"]
+    Page --- DM
+  end
+
+  subgraph Next["Next.js Frontend"]
+    direction TB
+    SP["StrapiPage (page.tsx)<br/>maps __component UID → React component<br/>• sections.hero → StrapiHero<br/>• sections.faq → StrapiFaq<br/>• forms.contact-form → StrapiContactForm<br/>• ..."]
+  end
+
+  Strapi -- "REST API" --> Next
 ```
 
 **Data flow:**
@@ -104,10 +91,11 @@ export function StrapiHero({
 
 The generic parameter is the Strapi component UID (e.g., `"sections.hero"`). This provides full type safety for all attributes defined in the component schema.
 
-**After changing Strapi schemas, regenerate types:**
+**After changing Strapi schemas, regenerate types from the monorepo root:**
 
 ```bash
-cd apps/strapi && pnpm generate:types
+pnpm generate:types
+pnpm sync-types
 ```
 
 ## Population Rules
@@ -239,7 +227,7 @@ Or follow these manual steps:
 3. Add population files: `apps/strapi/src/populateDynamicZone`
 4. Create React component: `apps/ui/src/components/page-builder/components/{category}/Strapi{Name}.tsx`
 5. Register in `PageContentComponents`: `apps/ui/src/components/page-builder/index.tsx`
-6. Generate types: `cd apps/strapi && pnpm generate:types`
+6. Generate types: `pnpm generate:types && pnpm sync-types` (from root)
 
 ## Related Documentation
 

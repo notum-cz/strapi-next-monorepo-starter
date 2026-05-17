@@ -4,28 +4,26 @@ The Strapi API client provides a type-safe interface for fetching content from S
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                            Next.js Frontend                                 │
-│                                                                             │
-│  Server Components                     Client Components                    │
-│  ┌─────────────────────┐               ┌─────────────────────┐              │
-│  │ PublicStrapiClient  │               │ PublicStrapiClient  │              │
-│  │ PrivateStrapiClient │               │ (useProxy: true)    │              │
-│  └──────────┬──────────┘               └──────────┬──────────┘              │
-│             │ direct                              │                         │
-│             │                          ┌──────────▼──────────┐              │
-│             │                          │  /api/public-proxy  │              │
-│             │                          │  /api/private-proxy │              │
-│             │                          └──────────┬──────────┘              │
-└─────────────┼─────────────────────────────────────┼─────────────────────────┘
-              │                                     │
-              │           + Auth headers            │
-              ▼                                     ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              Strapi CMS                                     │
-│                          /api/pages, /api/footer, etc.                      │
-└─────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+  subgraph Next["Next.js Frontend (apps/ui)"]
+    direction TB
+    subgraph Server["Server Components"]
+      ServerClients["PublicStrapiClient<br/>PrivateStrapiClient"]
+    end
+    subgraph Client["Client Components"]
+      ClientClient["PublicStrapiClient<br/>(useProxy: true)"]
+    end
+    Proxy["/api/public-proxy<br/>/api/private-proxy"]
+    ClientClient --> Proxy
+  end
+
+  subgraph Strapi["Strapi CMS (apps/strapi)"]
+    Endpoints["/api/pages · /api/footer<br/>/api/navbar · ..."]
+  end
+
+  ServerClients -- "+ Auth headers (direct)" --> Endpoints
+  Proxy -- "+ Auth headers" --> Endpoints
 ```
 
 ## Client Classes

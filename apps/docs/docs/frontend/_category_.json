@@ -1,0 +1,11 @@
+{
+  "label": "Frontend",
+  "position": 4,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Frontend",
+    "description": "Operational concerns specific to apps/ui — project layout, edge proxies, error tracking, images."
+  }
+}

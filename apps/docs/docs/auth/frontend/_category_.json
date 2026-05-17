@@ -1,0 +1,11 @@
+{
+  "label": "Frontend Auth (end-users)",
+  "position": 1,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Frontend Authentication",
+    "description": "End-user authentication in apps/ui. Better Auth manages the session cookie; Strapi's Users-Permissions plugin issues a JWT; OAuth providers (GitHub/Google/etc.) hook into the same flow."
+  }
+}
