@@ -17,7 +17,7 @@ All commands below run from the **monorepo root** via Turbo. Don't `cd` into ind
 
 ## Step 1 — Define the schema
 
-Two options. Either use the Strapi admin Content-Type Builder (writes the JSON for you) **or** create the file by hand. The example below uses the hand-written path so the result is checked in deterministically.
+Two options. Either use the Strapi admin Content-Type Builder (writes the JSON for you) **or** create the file by hand.
 
 Create [`apps/strapi/src/api/product/content-types/product/schema.json`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/strapi/src/api/page/content-types/page) (mirror the directory layout from the `page` collection):
 
@@ -96,16 +96,19 @@ Alternatively, scaffold via Strapi CLI: `pnpm -F @repo/strapi strapi generate` f
 
 Restart Strapi (`pnpm dev:strapi` re-watches by default) so it picks up the new content type.
 
-## Step 3 — Grant permissions in Strapi admin
+## Step 3 — Grant access (only if you need writes or per-user reads)
 
-Without this step, every public request returns `403`. In the admin panel:
+The frontend authenticates to Strapi with the **Read-only API token** from [Quick Start → Step 2](./quick-start.md#2-create-a-strapi-api-token). Strapi's Read-only token type covers `find`/`findOne` on every content type automatically — including ones you add later — so for read-only frontend usage, **no admin permission changes are needed**.
 
-1. Settings → Users & Permissions plugin → Roles
-2. Pick the role that should access the endpoint (`Public` for anonymous reads, `Authenticated` for logged-in users).
-3. Under `Product`, tick `find` and `findOne` (and writes if needed).
-4. Save.
+You only need to touch permissions when:
 
-Permissions are stored in the database, not in code. They travel via the seed export — see [Data Seeding](../strapi/data-seeding.md).
+| Case                                                               | What to do                                                                                                                                                                                                 |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Frontend writes (POST/PUT/DELETE) via `STRAPI_REST_CUSTOM_API_KEY` | Settings → API Tokens → open your Custom token → enable the desired actions on `Product` → Save.                                                                                                           |
+| Per-user reads/writes via `PrivateStrapiClient` (user JWT)         | Settings → Users & Permissions plugin → Roles → `Authenticated` → tick the actions on `Product` → Save.                                                                                                    |
+| Truly anonymous access (no token at all)                           | Settings → Users & Permissions plugin → Roles → `Public` → tick the actions on `Product` → Save. **Not used by this template's frontend** — kept here only for external consumers hitting Strapi directly. |
+
+Permissions live in the database, not in code. They travel via the seed export — see [Data Seeding](../strapi/data-seeding.md).
 
 ## Step 4 — Add the UID to `API_ENDPOINTS`
 
@@ -218,15 +221,6 @@ pnpm seed:export
 ```
 
 Commit the new `seed/exports/strapi-export-YYYY-MM-DD-HHmmss.tar.gz` alongside the schema. New developers will receive the data the next time they run `pnpm dev` (the seed runner auto-imports when baseline content is missing). See [Data Seeding](../strapi/data-seeding.md).
-
-## Verification Checklist
-
-- [ ] Strapi admin shows `Product` in the Content Manager.
-- [ ] `curl -H "Authorization: Bearer $STRAPI_REST_READONLY_API_KEY" $STRAPI_URL/api/products?locale=en` returns `200` with data.
-- [ ] `pnpm generate:types && pnpm sync-types` ran without errors.
-- [ ] `apps/ui` builds with no `Endpoint for UID … not found` error.
-- [ ] Page at `/<locale>/products` renders products end-to-end.
-- [ ] Schema, route/controller/service files, `API_ENDPOINTS` entry, and (optional) seed export are committed in the same PR.
 
 ## Related Documentation
 

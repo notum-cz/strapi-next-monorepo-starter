@@ -22,7 +22,7 @@ pnpm lint             # ESLint all packages
 pnpm typecheck        # Typecheck (run from apps/ui)
 ```
 
-See [docs/commands.md](docs/commands.md) for full command reference.
+See [Commands Reference](apps/docs/docs/reference/commands.md) for full command reference.
 
 ## Type Generation (Critical)
 
@@ -36,14 +36,14 @@ This updates `@repo/strapi-types`. Forgetting causes silent type mismatches betw
 
 ## Documentation
 
-- [Commands Reference](docs/commands.md) — All pnpm commands
-- [Architecture](docs/architecture.md) — System design and patterns
-- [Page Builder](docs/page-builder.md) — Component registry and rendering
-- [Strapi API Client](docs/strapi-api-client.md) — Fetching content from Strapi
-- [Pages Hierarchy](docs/pages-hierarchy.md) — URL structure and redirects
-- [Authentication](docs/authentication.md) — Better Auth + Strapi JWT integration
-- [Strapi Schemas](docs/strapi-schemas.md) — Schema attributes, localization, lifecycle hooks
-- [Strapi Types](docs/strapi-types-usage.md) — Type utilities and usage patterns
+- [Commands Reference](apps/docs/docs/reference/commands.md) — All pnpm commands
+- [Architecture](apps/docs/docs/architecture.md) — System design and patterns
+- [Page Builder](apps/docs/docs/content-system/page-builder.md) — Component registry and rendering
+- [Strapi API Client](apps/docs/docs/content-system/strapi-api-client.md) — Fetching content from Strapi
+- [Pages Hierarchy](apps/docs/docs/content-system/pages-hierarchy.md) — URL structure and redirects
+- [Authentication](apps/docs/docs/auth/frontend/authentication.md) — Better Auth + Strapi JWT integration
+- [Strapi Schemas](apps/docs/docs/content-system/strapi-schemas.md) — Schema attributes, localization, lifecycle hooks
+- [Strapi Types](apps/docs/docs/content-system/strapi-types-usage.md) — Type utilities and usage patterns
 
 ## Commits
 

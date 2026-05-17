@@ -26,13 +26,10 @@ cd strapi-next-monorepo-starter
 git checkout main
 ```
 
-Or click **[Use this template](https://github.com/notum-cz/strapi-next-monorepo-starter/generate)** on GitHub to create your own copy.
-
 ## Install dependencies
 
 ```bash
-nvm use                                          # Node 24
-corepack prepare pnpm@11.1.1 --activate          # ensure correct pnpm
+nvm use
 pnpm install
 ```
 
@@ -52,11 +49,4 @@ Both start from `.env.example` templates. Most values work out of the box; you'l
 
 Full env reference: [Architecture → Environment Variables](../architecture.md#environment-variables).
 
-## Verify
-
-```bash
-pnpm typecheck     # all packages compile
-pnpm lint          # ESLint passes
-```
-
-If both succeed the workspace is wired correctly. Next: [Quick Start](./quick-start.md).
+Next: [Quick Start](./quick-start.md).

@@ -6,7 +6,11 @@ sidebar_position: 2
 
 Get both apps running locally and rendering a page in under 10 minutes. Assumes [Installation](./installation.md) is complete.
 
-All commands run from the **monorepo root** via Turbo. Don't `cd` into individual apps.
+:::important Run from monorepo root
+
+All app commands run from the **monorepo root** via Turbo (`pnpm dev:strapi`, `pnpm dev:ui`, etc.). Don't `cd` into individual apps — Turbo orchestrates dependencies, env loading, and task ordering across the workspace.
+
+:::
 
 ## 1. Start Strapi (with Postgres)
 
@@ -83,7 +87,7 @@ To watch Strapi requests in the UI logs, set `DEBUG_STRAPI_CLIENT_API_CALLS=true
 
 ## Common next steps
 
-- **Add a new content type** → next page in this guide
+- **Add a new content type** → [Add a New Content Type](./add-content-type.md)
 - **Edit a page-builder component** → [Page Builder](../content-system/page-builder.md)
 - **Hook up authentication** → [Authentication](../auth/frontend/authentication.md)
 - **Change a Strapi schema** → run `pnpm generate:types && pnpm sync-types` after every change. [Strapi Types Usage](../content-system/strapi-types-usage.md).

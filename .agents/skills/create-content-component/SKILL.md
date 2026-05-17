@@ -201,4 +201,4 @@ Example: glob for `**/page-builder/**/Strapi*.tsx` to find component location.
 
 ## See also
 
-- `docs/page-builder.md` — architecture overview, naming conventions, component props
+- `apps/docs/docs/content-system/page-builder.md` — architecture overview, naming conventions, component props

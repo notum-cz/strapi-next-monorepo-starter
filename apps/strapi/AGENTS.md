@@ -26,7 +26,7 @@ await client.fetchOneByFullPath("api::page.page", fullPath, {
 })
 ```
 
-Population uses `on` pattern for dynamic zones — see [Page Builder docs](../../docs/page-builder.md#population-rules).
+Population uses `on` pattern for dynamic zones — see [Page Builder docs](../docs/docs/content-system/page-builder.md#population-rules).
 
 ## Localization
 
@@ -53,7 +53,7 @@ Or manually:
 4. Generate types: `pnpm generate:types`
 5. Create React component in `apps/ui` — see [apps/ui/AGENTS.md](../ui/AGENTS.md)
 
-Full workflow: [Page Builder docs](../../docs/page-builder.md#adding-new-components)
+Full workflow: [Page Builder docs](../docs/docs/content-system/page-builder.md#adding-new-components)
 
 ## Page Hierarchy
 
@@ -73,10 +73,10 @@ Pages use parent-child relations. `fullPath` is auto-generated via internal jobs
 - `POST /api/internal-job/fullpaths/recalculate/all` — Process fullpath jobs
 - `POST /api/internal-job/redirects/create/all` — Create redirect records
 
-See [Pages Hierarchy docs](../../docs/pages-hierarchy.md) for content editor workflow.
+See [Pages Hierarchy docs](../docs/docs/content-system/pages-hierarchy.md) for content editor workflow.
 
 ## Related Documentation
 
-- [Strapi Schemas](../../docs/strapi-schemas.md) — Schema attributes, localization, lifecycle hooks
-- [Page Builder](../../docs/page-builder.md) — Component registry and rendering
-- [Pages Hierarchy](../../docs/pages-hierarchy.md) — URL structure and redirects
+- [Strapi Schemas](../docs/docs/content-system/strapi-schemas.md) — Schema attributes, localization, lifecycle hooks
+- [Page Builder](../docs/docs/content-system/page-builder.md) — Component registry and rendering
+- [Pages Hierarchy](../docs/docs/content-system/pages-hierarchy.md) — URL structure and redirects
