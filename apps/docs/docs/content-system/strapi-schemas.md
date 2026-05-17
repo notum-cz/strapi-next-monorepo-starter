@@ -121,46 +121,87 @@ All localizable fields need the i18n plugin option:
 
 Fields without `i18n.localized: true` share the same value across all locales.
 
-## Lifecycle Subscribers
+## Document Middlewares (preferred)
 
-Database event handlers in `apps/strapi/src/lifeCycles/`:
+Document middlewares are the v5-native way to react to or transform content operations. They run against the **Documents API** — the same surface the REST API and admin panel use — so they see actions in document terms (`create`, `update`, `publish`, `unpublish`, `discardDraft`, `findOne`, `findMany`, `findFirst`, `delete`) rather than raw DB rows.
+
+**Prefer document middlewares over lifecycle subscribers for any new code.** They behave predictably under Draft & Publish, locale switches, and the published/draft duality that Strapi v5 introduces.
+
+Files live in [`apps/strapi/src/documentMiddlewares/`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/strapi/src/documentMiddlewares). Register them inside `bootstrap()` in [`src/index.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/src/index.ts).
 
 ```typescript
-// src/lifeCycles/user.ts
-export default {
-  register({ strapi }) {
-    strapi.db.lifecycles.subscribe({
-      models: ["plugin::users-permissions.user"],
+// src/documentMiddlewares/product.ts
+import type { Core } from "@strapi/strapi"
 
-      async afterCreate(event) {
-        const user = event.result
-        // Send welcome email, create related records, etc.
-      },
+export const registerProductMiddleware = ({ strapi }: { strapi: Core.Strapi }) => {
+  strapi.documents.use(async (context, next) => {
+    // context.uid          — e.g. "api::product.product"
+    // context.action       — "create" | "update" | "publish" | "findMany" | ...
+    // context.params       — request params (filters, populate, data, ...)
+    if (context.uid !== "api::product.product") return next()
 
-      async beforeUpdate(event) {
-        const { data, where } = event.params
-        // Validate changes, transform data
-      },
-    })
-  },
+    if (context.action === "publish") {
+      // Runs once per *document* publish, regardless of whether the row
+      // already existed as a draft. No phantom "create" events.
+    }
+
+    const result = await next()
+    return result
+  })
 }
 ```
 
-Available events:
+Then in `src/index.ts`:
 
-- `beforeCreate`, `afterCreate`
-- `beforeUpdate`, `afterUpdate`
-- `beforeDelete`, `afterDelete`
-- `beforeFindOne`, `afterFindOne`
-- `beforeFindMany`, `afterFindMany`
+```typescript
+bootstrap({ strapi }) {
+  registerProductMiddleware({ strapi })
+}
+```
 
-## Document Middlewares
+Typical use cases:
 
-Intercept and modify queries. Used for deep population of dynamic zones.
+- Deep population of dynamic zones — the canonical example is [`documentMiddlewares/page.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/src/documentMiddlewares/page.ts) (intercepts `findMany`/`findOne`/`findFirst`, reads the `populateDynamicZone` request param, builds an optimal `populate` tree from [`src/populateDynamicZone/`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/strapi/src/populateDynamicZone)). See [Page Builder → Population](./page-builder.md#population-rules).
+- Side effects tied to **document state transitions** (publish, unpublish, discard draft) — e.g. invalidate a downstream cache when a `page` is published.
+- Cross-document validation that needs the full Documents API context (locale, status, populated relations) — easier here than reconstructing it from raw DB rows in a lifecycle.
 
-**`apps/strapi/src/documentMiddlewares/page.ts`**
+## Lifecycle Subscribers (legacy / row-level only)
 
-See [Page Builder](./page-builder.md) for population patterns.
+Lower-level DB-row event handlers in [`apps/strapi/src/lifeCycles/`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/strapi/src/lifeCycles). They subscribe to **database** events — not document events — via `strapi.db.lifecycles.subscribe`.
+
+:::warning Lifecycle confusion under Draft & Publish
+
+In Strapi v5, publishing a draft entry internally creates a **new DB row** for the published version while keeping the draft. That fires `afterCreate` on the lifecycle subscriber even though, from a content-editor perspective, the document already existed. Same trap for `beforeUpdate`/`afterDelete` during publish/discard.
+
+If your handler is meant to react to "a new product was added" (a **document** concept), do not use `afterCreate` — you will fire on every publish of every existing draft. Use a [document middleware](#document-middlewares-preferred) on `context.action === "publish"` instead.
+
+:::
+
+Keep lifecycles for genuinely row-scoped concerns: ORM-level integrity checks, migrating non-document tables, or extending plugin internals (`plugin::users-permissions.user`, admin users) where the Documents API does not apply.
+
+```typescript
+// src/lifeCycles/user.ts — extending the Users & Permissions plugin
+export const registerUserSubscriber = ({ strapi }) => {
+  strapi.db.lifecycles.subscribe({
+    models: ["plugin::users-permissions.user"],
+
+    async afterCreate(event) {
+      // Users & Permissions does not use Draft & Publish,
+      // so afterCreate is unambiguous here.
+    },
+  })
+}
+```
+
+Available events: `beforeCreate`/`afterCreate`, `beforeUpdate`/`afterUpdate`, `beforeDelete`/`afterDelete`, `beforeFindOne`/`afterFindOne`, `beforeFindMany`/`afterFindMany`.
+
+:::caution Exceptions roll back the transaction
+
+Lifecycle subscribers run **inside the same DB transaction as the triggering operation** — for both `before*` and `after*` events. Any uncaught exception thrown from a subscriber aborts the transaction and reverts the original write.
+
+This includes "post-write" side effects in `afterCreate`/`afterUpdate`: if an email send, webhook call, or downstream service throws inside the handler, the user/page/whatever you just created **will not exist** after the request returns. Wrap fallible side effects in `try`/`catch` (or `void`-fire them outside the transaction) unless you genuinely want the write reverted on failure.
+
+:::
 
 ## Adding New Components
 

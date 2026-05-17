@@ -166,9 +166,19 @@ Note: requests using `filters` return HTTP 200 with empty arrays — log flags d
 
 Defaults to off. Provides runtime injection of env vars into the client without `NEXT_PUBLIC_` prefix or build-time baking.
 
+
+:::danger Never inject secrets
+
+`window.CSR_CONFIG` is serialized into the HTML response and is fully visible to anyone who views the page source or opens DevTools. Only put values here that are **safe to publish** — public API base URLs, GA/Sentry public DSNs, feature flags, environment labels.
+
+Never list API keys, JWTs, database URLs, Strapi `STRAPI_REST_*_API_KEY` values, OAuth client secrets, or any token that grants server-side access in `CSR_ENVs`. Treat the allowlist the same way you would treat a `NEXT_PUBLIC_*` variable — once it ships in HTML, it is public.
+
+:::
+
 Mechanism: the root layout reads selected env vars on the server and injects them via `<script>` into `window.CSR_CONFIG`. `getEnvVar()` reads from `window.CSR_CONFIG` on the client. Configure the list via `CSR_ENVs` in [`src/app/[locale]/layout.tsx`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/app/%5Blocale%5D/layout.tsx).
 
 Useful when one Docker image must serve multiple environments (staging vs prod) without rebuilding.
+
 
 ## Related Documentation
 

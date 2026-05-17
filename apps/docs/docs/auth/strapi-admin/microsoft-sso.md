@@ -22,8 +22,11 @@ Official Strapi documentation:
 - Users who should sign in must have an email address or UPN in that tenant.
 - Valid callback URLs must be registered for every environment where SSO will be used.
 
-> [Tip]
-> For local development, it is important to set `STRAPI_LICENSE` and verify SSO displays correctly in the login screen.
+:::info
+
+For local development, it is important to set `STRAPI_LICENSE` and verify SSO displays correctly in the login screen.
+
+:::
 
 ## Dependencies
 

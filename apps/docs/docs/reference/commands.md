@@ -89,6 +89,18 @@ pnpm tests:lhci:perfo                       # Lighthouse CI
 pnpm commit                 # Interactive Commitizen prompt
 ```
 
+## Cleanup scripts
+
+Bash helpers in [`scripts/utils/`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/scripts/utils) — not wired into `pnpm`, invoke directly from the monorepo root:
+
+```bash
+bash scripts/utils/rm-modules.sh     # delete every node_modules in the workspace
+bash scripts/utils/rm-next-cache.sh  # delete apps/ui/.next, apps/ui/out, .turbo, apps/ui/.turbo
+bash scripts/utils/rm-all.sh         # nuke node_modules + .next + .turbo + .strapi + dist + build
+```
+
+Use `rm-modules.sh` to recover from `pnpm install` drift across apps (e.g. after a Node major bump or pnpm-lock conflict). Use `rm-all.sh` before a full rebuild when caches mask the bug you're chasing. Re-run `pnpm install` afterwards.
+
 ## Escape hatch
 
 Any per-package script not wrapped above can be invoked via pnpm filters from root:

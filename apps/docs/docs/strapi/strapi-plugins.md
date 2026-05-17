@@ -164,7 +164,7 @@ Strapi-side Sentry docs: [docs.strapi.io/dev-docs/plugins/sentry](https://docs.s
 
 ## Cron Jobs
 
-Defined in [`config/cron-tasks.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/config/cron-tasks.ts). Enable with `CRON_ENABLED=true`.
+Defined in [`config/cron-tasks.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/config/cron-tasks.ts). Enable with `CRON_ENABLED=true`. **Multi-replica deployments need an orchestrator** — see [Cron Jobs](./cron-jobs.md) for task shape, scheduling rules, and the multi-instance caveat.
 
 ## Related Documentation
 
