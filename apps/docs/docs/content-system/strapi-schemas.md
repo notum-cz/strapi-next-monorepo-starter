@@ -133,7 +133,11 @@ Files live in [`apps/strapi/src/documentMiddlewares/`](https://github.com/notum-
 // src/documentMiddlewares/product.ts
 import type { Core } from "@strapi/strapi"
 
-export const registerProductMiddleware = ({ strapi }: { strapi: Core.Strapi }) => {
+export const registerProductMiddleware = ({
+  strapi,
+}: {
+  strapi: Core.Strapi
+}) => {
   strapi.documents.use(async (context, next) => {
     // context.uid          — e.g. "api::product.product"
     // context.action       — "create" | "update" | "publish" | "findMany" | ...

@@ -31,7 +31,6 @@ HTML-based. Content stored as HTML and rendered via `dangerouslySetInnerHTML` wi
 
 ```tsx
 import CkEditorRenderer from "@/components/elementary/ck-editor"
-
 ;<CkEditorRenderer
   htmlContent={component.content}
   className="mx-auto w-full max-w-[1296px] px-4 py-8"
@@ -68,7 +67,6 @@ Colors and theme CSS come from `@repo/design-system/tiptap-color-config.json` an
 
 ```tsx
 import { TiptapRichText } from "@/components/elementary/tiptap-editor"
-
 ;<TiptapRichText
   content={component.content}
   defaultVariant="medium"

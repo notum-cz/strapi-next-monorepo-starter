@@ -24,11 +24,11 @@ Copy `.env.local.example` to `.env.local` and update values. **All variables are
 
 Required for build-time pre-rendering (`generateStaticParams()`):
 
-| Var | Purpose |
-| --- | --- |
-| `STRAPI_URL` | Strapi base URL. Required at build if pre-rendering ISR pages. |
-| `STRAPI_REST_READONLY_API_KEY` | Read-only Strapi API token (see below). |
-| `APP_PUBLIC_URL` | Used for canonical URLs and metadata. |
+| Var                            | Purpose                                                        |
+| ------------------------------ | -------------------------------------------------------------- |
+| `STRAPI_URL`                   | Strapi base URL. Required at build if pre-rendering ISR pages. |
+| `STRAPI_REST_READONLY_API_KEY` | Read-only Strapi API token (see below).                        |
+| `APP_PUBLIC_URL`               | Used for canonical URLs and metadata.                          |
 
 If ISR pages render at runtime only, these can be supplied at runtime instead. See [Docker](#-production-docker) and [Architecture → Env Vars](../docs/docs/architecture.md#environment-variables) for the full list.
 
@@ -115,11 +115,11 @@ docker run -it --rm --name starter-ui -p 3000:3000 \
 
 ### Output modes
 
-| Mode | Use |
-| --- | --- |
-| `standalone` | Self-hosting in Docker. **Default for this starter.** |
-| `undefined` | Default `.next` build. For `next start` or hosting providers (Vercel etc.). |
-| `export` | Static HTML/CSS/JS. **Not supported out-of-box** — Better Auth, the POST [auth API route](src/app/api/auth/%5B...all%5D/route.ts), and other dynamic features must be removed. |
+| Mode         | Use                                                                                                                                                                            |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `standalone` | Self-hosting in Docker. **Default for this starter.**                                                                                                                          |
+| `undefined`  | Default `.next` build. For `next start` or hosting providers (Vercel etc.).                                                                                                    |
+| `export`     | Static HTML/CSS/JS. **Not supported out-of-box** — Better Auth, the POST [auth API route](src/app/api/auth/%5B...all%5D/route.ts), and other dynamic features must be removed. |
 
 `pnpm build:ui:static` (from root) triggers `output: "export"` but will fail unless you've removed dynamic features. To validate static builds in CI, enable the relevant step in [ci.yml](../../.github/workflows/ci.yml).
 

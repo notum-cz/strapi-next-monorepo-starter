@@ -40,14 +40,14 @@ export default {
 
 Cron expression fields, in order: `second minute hour dayOfMonth month dayOfWeek`. Examples:
 
-| Rule              | Meaning                       |
-| ----------------- | ----------------------------- |
-| `*/30 * * * * *`  | every 30 seconds              |
-| `0 */5 * * * *`   | every 5 minutes               |
-| `0 0 * * * *`     | top of every hour             |
-| `0 0 2 * * *`     | every day at 02:00            |
-| `0 0 1 * * 1`     | every Monday at 01:00         |
-| `0 0 0 1 * *`     | first day of every month      |
+| Rule             | Meaning                  |
+| ---------------- | ------------------------ |
+| `*/30 * * * * *` | every 30 seconds         |
+| `0 */5 * * * *`  | every 5 minutes          |
+| `0 0 * * * *`    | top of every hour        |
+| `0 0 2 * * *`    | every day at 02:00       |
+| `0 0 1 * * 1`    | every Monday at 01:00    |
+| `0 0 0 1 * *`    | first day of every month |
 
 A task can also pass an explicit `Date` (one-shot) or a `{ start, end, rule }` object to bound the active window — see the Strapi cron docs.
 
@@ -92,14 +92,13 @@ There is **no built-in orchestration, leader election, or distributed lock**. Yo
 
 Pick one of the following patterns based on how you're running Strapi:
 
-| Pattern                              | When to use                                                    | How                                                                                                                                                                                                                                            |
-| ------------------------------------ | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Single dedicated scheduler replica** | Default fix. Cheap, simple, no extra infra.                    | Run one container/dyno with `CRON_ENABLED=true` and all others with `CRON_ENABLED=false`. Make sure your orchestrator (k8s/Heroku/etc.) does not scale that replica.                                                                          |
+| Pattern                                         | When to use                                                                         | How                                                                                                                                                                                                                                                                    |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Single dedicated scheduler replica**          | Default fix. Cheap, simple, no extra infra.                                         | Run one container/dyno with `CRON_ENABLED=true` and all others with `CRON_ENABLED=false`. Make sure your orchestrator (k8s/Heroku/etc.) does not scale that replica.                                                                                                   |
 | **External scheduler hitting an HTTP endpoint** | You already have k8s `CronJob`, Heroku Scheduler, GitHub Actions, EventBridge, etc. | Disable Strapi cron entirely (`CRON_ENABLED=false`). Expose an internal HTTP route (auth-gated — Strapi API token or shared secret) that performs the work. Schedule the external job to `POST` it on the cadence you want. Single trigger, all replicas can serve it. |
-| **Distributed lock**                 | You must keep tasks colocated with Strapi and can't pin a single instance. | Acquire a lock at task start (Postgres advisory lock, Redis `SET NX`, document with `documentId` = task name). Skip if held. Release at end. Set a TTL longer than worst-case task duration to recover from crashes.                          |
+| **Distributed lock**                            | You must keep tasks colocated with Strapi and can't pin a single instance.          | Acquire a lock at task start (Postgres advisory lock, Redis `SET NX`, document with `documentId` = task name). Skip if held. Release at end. Set a TTL longer than worst-case task duration to recover from crashes.                                                   |
 
 The single-replica pattern is the lowest-risk default for this template — flip `CRON_ENABLED` per replica via your deploy config and you're done. Reach for an external scheduler once you outgrow that (e.g. you need cross-region scheduling or auditability).
-
 
 ## Related Documentation
 
