@@ -11,7 +11,7 @@
   word-break: break-word;
 }
 
-p {
+.ck-editor-rich-text-page p {
   @apply text-gray-600 dark:text-gray-400;
 }
 
@@ -29,7 +29,7 @@ p {
 .tip-tap-editor-wrapper h1,
 .tip-tap-editor-wrapper .typo-h1,
 h1 {
-  @apply mb-2 text-6xl;
+  @apply mb-2 text-4xl md:text-5xl lg:text-6xl;
 }
 
 .ck-editor-rich-text-page h2,
@@ -40,7 +40,7 @@ h1 {
 .tip-tap-editor-wrapper h2,
 .tip-tap-editor-wrapper .typo-h2,
 h2 {
-  @apply mb-1.5 text-5xl;
+  @apply mb-1.5 text-3xl md:text-4xl lg:text-5xl;
 }
 
 .ck-editor-rich-text-page h3,
@@ -51,7 +51,7 @@ h2 {
 .tip-tap-editor-wrapper h3,
 .tip-tap-editor-wrapper .typo-h3,
 h3 {
-  @apply mb-1 text-4xl;
+  @apply mb-1 text-2xl md:text-3xl lg:text-4xl;
 }
 
 .ck-editor-rich-text-page h4,
@@ -62,7 +62,7 @@ h3 {
 .tip-tap-editor-wrapper h4,
 .tip-tap-editor-wrapper .typo-h4,
 h4 {
-  @apply mb-1 text-3xl;
+  @apply mb-1 text-xl md:text-2xl lg:text-3xl;
 }
 
 .ck-editor-rich-text-page h5,
@@ -73,7 +73,7 @@ h4 {
 .tip-tap-editor-wrapper h5,
 .tip-tap-editor-wrapper .typo-h5,
 h5 {
-  @apply mb-1 text-2xl;
+  @apply mb-1 text-lg md:text-xl lg:text-2xl;
 }
 
 .ck-editor-rich-text-page h6,
@@ -84,7 +84,7 @@ h5 {
 .tip-tap-editor-wrapper h6,
 .tip-tap-editor-wrapper .typo-h6,
 h6 {
-  @apply mb-1 text-xl;
+  @apply mb-1 text-base md:text-lg lg:text-xl;
 }
 
 /* Default paragraph style */
