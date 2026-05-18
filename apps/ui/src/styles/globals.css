@@ -121,8 +121,7 @@
 }
 /* Use this when you need a hard inversion for img/svg elements that don't follow currentColor.
      .icon--invert-on-dark: when in .dark mode, apply a filter that inverts light<->dark.
-     .icon--invert-on-light: the opposite (if you have dark icons on light backgrounds).
-  */
+*/
 .icon--invert-on-dark {
   filter: none;
 }

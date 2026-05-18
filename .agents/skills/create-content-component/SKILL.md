@@ -206,7 +206,7 @@ After you add a Strapi component and its frontend React implementation, add a mo
 The workflow is simplified: mocked files should export a single default component and should not use `ManualSection` / `ManualItem` wrappers — the Showcase reads `showcaseItems.tsx` and renders the component directly.
 
 1. Create a mocked file
-   - Path: `apps/ui/src/app/[locale]/dev/showcase/strapiComponents/MockedStrapi{PascalName}.tsx`
+   - Path: `apps/ui/src/app/[locale]/dev/showcase/components/strapiComponents/MockedStrapi{PascalName}.tsx`
    - Export default `MockedStrapi{PascalName}` which renders the production `Strapi{PascalName}` with a `data` object typed as `Data.Component<"{category}.{name}">`.
 
    Example:
