@@ -15,6 +15,7 @@ export interface AppLinkProps
   readonly startAdornment?: React.ReactNode
   readonly endAdornment?: React.ReactNode
   readonly disableAnimations?: boolean
+  readonly disableInvertOnDark?: boolean
 }
 
 export function AppLink({
@@ -27,6 +28,7 @@ export function AppLink({
   variant = "link",
   size = "default",
   disableAnimations = false,
+  disableInvertOnDark = false,
   ...props
 }: AppLinkProps) {
   const combinedClassName = cn(
@@ -45,6 +47,7 @@ export function AppLink({
         <span
           className={cn(
             sharedAdornmentClasses,
+            !disableInvertOnDark && "icon--invert-on-dark",
             !disableAnimations && "group-hover:-translate-x-2"
           )}
         >
@@ -56,6 +59,7 @@ export function AppLink({
         <span
           className={cn(
             sharedAdornmentClasses,
+            !disableInvertOnDark && "icon--invert-on-dark",
             !disableAnimations && "group-hover:translate-x-2"
           )}
         >
