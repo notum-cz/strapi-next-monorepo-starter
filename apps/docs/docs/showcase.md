@@ -19,44 +19,123 @@ The Showcase is intentionally developer-friendly: it renders mocked versions of 
 Follow these steps when you add a new page-builder component in Strapi:
 
 1. Implement the Strapi component schema and frontend React component as usual (see `create-content-component` skill).
-2. Add a mocked component file in the Showcase folder: `apps/ui/src/app/[locale]/dev/showcase/strapiComponents/Mocked{Name}.tsx`.
+2. Add a mocked component file in the Showcase folder:
 
-Minimal mocked component pattern (current workflow):
+```txt
+apps/ui/src/app/[locale]/dev/showcase/strapiComponents/Mocked{Name}.tsx
+```
+
+### Minimal mocked component pattern (current workflow)
 
 - Import the real frontend `Strapi{Name}` component.
-- Create a `data` object shaped as `Data.Component<"{category}.{name}">`.
-  - For fields that are rendered with a richtext editor in production (CKEditor), provide HTML strings (for example `"<p>Some <strong>HTML</strong></p>"`).
-  - For images, use the shared mock image helper exported from `apps/ui/src/app/[locale]/dev/showcase/components/StrapiImage.tsx` (named exports `mockImage`, `mockIcon`, and default).
-- Export a default React component that renders the `Strapi{Name}` directly with the mock `data` (no `ManualSection`/`ManualItem` wrappers are required anymore).
+- Create a `data` object shaped as:
 
-Example (illustrative, adapt to your project exports):
+```ts
+Data.Component<"{category}.{name}">
+```
 
-- apps/ui/src/app/[locale]/dev/showcase/strapiComponents/MockedHero.tsx
-  - import StrapiHero from "@/components/page-builder/sections/StrapiHero";
-  - const data: Data.Component<"sections.hero"> = { /_ minimal mock _/ };
-  - export default function MockedHero() { return <StrapiHero data={data} />; }
+- For fields that are rendered with a richtext editor in production (CKEditor), provide HTML strings.
 
-Registration (how the Showcase finds your mock):
+Example:
 
-- Open `apps/ui/src/app/[locale]/dev/showcase/showcaseItems.tsx` and import your mocked component.
-- Add an entry to the items array exported from that file so the Showcase page picks it up and shows it in the menu.
+```html
+<p>Some <strong>HTML</strong></p>
+```
 
-Example registration (illustrative):
+- For images, use the shared mock image helper exported from:
 
-- import MockedHero from "./strapiComponents/MockedHero";
-- export const items = [
-  { id: "sections.hero", title: "Hero", category: "Sections", component: MockedHero },
+```txt
+apps/ui/src/app/[locale]/dev/showcase/components/StrapiImage.tsx
+```
+
+Named exports:
+
+```ts
+mockImage
+mockIcon
+```
+
+- Export a default React component that renders the `Strapi{Name}` directly with the mock `data`.
+
+No `ManualSection` or `ManualItem` wrappers are required anymore.
+
+### Example mocked component
+
+```tsx
+// apps/ui/src/app/[locale]/dev/showcase/strapiComponents/MockedHero.tsx
+
+import StrapiHero from "@/components/page-builder/sections/StrapiHero"
+
+const data: Data.Component<"sections.hero"> = {
+  /* minimal mock */
+}
+
+export default function MockedHero() {
+  return <StrapiHero data={data} />
+}
+```
+
+## Registration (how the Showcase finds your mock)
+
+1. Open:
+
+```txt
+apps/ui/src/app/[locale]/dev/showcase/showcaseItems.tsx
+```
+
+2. Import your mocked component.
+3. Add an entry to the exported `items` array so the Showcase page picks it up and shows it in the menu.
+
+### Example registration
+
+```tsx
+import MockedHero from "./strapiComponents/MockedHero"
+
+export const items = [
+  {
+    id: "sections.hero",
+    title: "Hero",
+    category: "Sections",
+    component: MockedHero,
+  },
+
   // ...other items
-  ];
+]
+```
 
-The Showcase build will render the `component` you register. This central registration replaces the old `componentsAnchors` list in `page.tsx`.
+The Showcase build will render the `component` you register.
+
+This central registration replaces the old `componentsAnchors` list in `page.tsx`.
 
 ## Showcase conventions
 
-- Props typing: cast the `data` object to `Data.Component<"{category}.{name}">` to keep TypeScript happy.
-- Richtext: mock with HTML strings (not plain text) to match CKEditor rendering.
-- Images: import `mockImage`/`mockIcon` from the shared `StrapiImage` helper.
-- Registration: instead of adding anchors in `page.tsx`, register the mocked component in `showcaseItems.tsx`. The Showcase reads that registry to build the menu and render entries.
+### Props typing
+
+Cast the `data` object to:
+
+```ts
+Data.Component<"{category}.{name}">
+```
+
+to keep TypeScript happy.
+
+### Richtext
+
+Mock with HTML strings (not plain text) to match CKEditor rendering.
+
+### Images
+
+Import `mockImage` and `mockIcon` from the shared `StrapiMedia` helper.
+
+### Registration
+
+Instead of adding anchors in `page.tsx`, register the mocked component in:
+
+```txt
+showcaseItems.tsx
+```
+
+The Showcase reads that registry to build the menu and render entries.
 
 ## Why this helps
 
@@ -66,5 +145,12 @@ The Showcase build will render the `component` you register. This central regist
 
 ## Troubleshooting
 
-- If you see rendering errors, check that mocked data shape matches `Data.Component<"{category}.{name}">` and that nested components use the correct `populate` rules in Strapi.
-- If a UI primitive relies on specific Radix structure (e.g., SelectTrigger + SelectContent), mimic that structure in the mock.
+- If you see rendering errors, check that mocked data shape matches:
+
+```ts
+Data.Component<"{category}.{name}">
+```
+
+and that nested components use the correct `populate` rules in Strapi.
+
+- If a UI primitive relies on specific Radix structure (for example `SelectTrigger` + `SelectContent`), mimic that structure in the mock.

@@ -31,7 +31,7 @@
     list-style-position: inside;
   }
 
-    html {
+  html {
     scroll-behavior: smooth;
     /* This is size of the navbar - 64px + some padding - change if needed */
     scroll-padding-top: 72px;

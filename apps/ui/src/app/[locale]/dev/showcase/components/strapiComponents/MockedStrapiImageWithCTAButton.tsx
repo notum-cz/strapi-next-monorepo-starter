@@ -17,7 +17,7 @@ const data = {
     newTab: true,
     decorations: null,
   },
-} as unknown as Data.Component<"sections.image-with-cta-button">
+} as Data.Component<"sections.image-with-cta-button">
 
 export default function MockedStrapiImageWithCTAButton() {
   return <StrapiImageWithCTAButton component={data} />

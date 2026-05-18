@@ -10,7 +10,7 @@ function FontFamiliesSection() {
       </ManualItem>
       <Typography variant="small">
         We use font Roboto for both: headings and body text - it is imported
-        google font
+        Google Font
       </Typography>
     </div>
   )
