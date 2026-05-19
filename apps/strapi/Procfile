@@ -1,1 +1,1 @@
-web: cd apps/strapi && pnpm start 
+web: cd apps/strapi && node scripts/seed-runner.mjs start

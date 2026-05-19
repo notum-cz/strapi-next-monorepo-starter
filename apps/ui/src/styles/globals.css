@@ -31,6 +31,12 @@
     list-style-position: inside;
   }
 
+  html {
+    scroll-behavior: smooth;
+    /* This is size of the navbar - 64px + some padding - change if needed */
+    scroll-padding-top: 72px;
+  }
+
   /* TiptapRichText renders list items with a wrapping <p> tag but we want the bullet/number and the item text on one line */
   .tiptap-list > li > p:first-child {
     display: inline;
@@ -112,4 +118,13 @@
   100% {
     transform: translateX(100%);
   }
+}
+/* Use this when you need a hard inversion for img/svg elements that don't follow currentColor.
+     .icon--invert-on-dark: when in .dark mode, apply a filter that inverts light<->dark.
+*/
+.icon--invert-on-dark {
+  filter: none;
+}
+.dark .icon--invert-on-dark {
+  filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(1.05);
 }

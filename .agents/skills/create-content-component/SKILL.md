@@ -111,6 +111,47 @@ bash .agents/skills/strapi-schema-check/scripts/check.sh
 - **No Storybook.** Visual review via dev server or Playwright visual tests.
 - **Page schema is high-risk.** Any rename/delete on `apps/strapi/src/api/page/content-types/page/schema.json` triggers column drops on boot. Add-only on the dynamic-zone array is safe.
 
+### Mocking & Showcase (updated)
+
+After you add a Strapi component and its frontend React implementation, add a mocked wrapper so the component is visible in the dev Showcase.
+
+The workflow is simplified: mocked files should export a single default component and should not use `ManualSection` / `ManualItem` wrappers — the Showcase reads `showcaseItems.tsx` and renders the component directly.
+
+1. Create a mocked file
+   - Path: `apps/ui/src/app/[locale]/dev/showcase/components/strapiComponents/MockedStrapi{PascalName}.tsx`
+   - Export default `MockedStrapi{PascalName}` which renders the production `Strapi{PascalName}` with a `data` object typed as `Data.Component<"{category}.{name}">`.
+
+   Example:
+
+```tsx
+import type { Data } from "@repo/strapi-types"
+import StrapiMyComponent from "@/components/page-builder/components/sections/StrapiMyComponent"
+
+const data = {
+  id: 1,
+  __component: "sections.my-component",
+  /* attributes */
+} as unknown as Data.Component<"sections.my-component">
+
+export default function MockedStrapiMyComponent() {
+  return <StrapiMyComponent component={data} />
+}
+```
+
+2. Register in `showcaseItems.tsx`
+   - Import the mocked file:
+
+     `import MockedStrapiMyComponent from "@/app/[locale]/dev/showcase/components/strapiComponents/MockedStrapiMyComponent"`
+
+   - Add an entry to the `showcaseItems` array with `kind: "component"`, `component: MockedStrapiMyComponent`, `id`, `label` and `description`.
+
+3. Attribute tips
+   - Use HTML strings for `richtext` fields.
+   - For images/icons reuse `mockImage` / `mockIcon` from the dev showcase helpers.
+   - Keep mock objects minimal but representative.
+
+See `/docs/showcase.md` for full examples and conventions.
+
 ## See also
 
 - `workflow.md` — full per-phase procedure with code blocks
