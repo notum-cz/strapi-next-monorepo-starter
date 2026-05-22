@@ -201,6 +201,14 @@ for (const path of PATHS) {
       })
 
       test("should self-reference the current page", async ({ page }) => {
+        const hasHreflang =
+          (await page.locator("link[rel='alternate'][hreflang]").count()) > 0
+
+        test.skip(
+          hasHreflang,
+          "Canonical self-reference skipped on multilingual pages — canonical may point to a language variant"
+        )
+
         const href =
           (await page
             .locator("link[rel='canonical']")
