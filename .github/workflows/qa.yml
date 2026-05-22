@@ -140,7 +140,7 @@ jobs:
         run: |
           tar -czf axe-reports-${{ github.run_id }}.tgz \
             -C qa/tests/playwright \
-            playwright-report axe/reports
+            playwright-report
 
       - uses: actions/upload-artifact@v7.0.1
         if: always()
