@@ -226,9 +226,20 @@ test.describe("AXE accessibility", () => {
 
       expect(
         errorViolations.length,
-        errorViolations.length > 0
-          ? `Accessibility errors for ${site}: ${errorViolations.map((violation) => violation.id).join(", ")}`
-          : undefined
+        [
+          `Accessibility errors on ${site}`,
+          `Total: ${errorViolations.length} error(s)`,
+          "",
+          ...errorViolations.flatMap((v) => [
+            `🔴 ${v.id} — ${v.help} (impact: ${v.impact ?? "unknown"})`,
+            `   ${v.helpUrl}`,
+            ...v.nodes.flatMap((n, i) => [
+              `  ${i + 1}. ${n.html}`,
+              `     target: ${Array.isArray(n.target) ? n.target.join(", ") : String(n.target)}`,
+            ]),
+            "",
+          ]),
+        ].join("\n")
       ).toBe(0)
     })
   }
