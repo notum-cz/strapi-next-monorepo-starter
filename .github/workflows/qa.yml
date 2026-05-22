@@ -1,4 +1,4 @@
-name: QA (manual)
+name: QA
 
 run-name: >-
   [${{
@@ -18,6 +18,10 @@ run-name: >-
   }}] QA – ${{ inputs.base_url }}
 
 on:
+  # Uncomment the schedule trigger to run tests automatically on weekdays.
+  # schedule:
+    # Runs at 00:00 UTC on weekdays (02:00 CEST).
+    # - cron: "0 0 * * 1-5"
   workflow_dispatch:
     inputs:
       run_e2e:
