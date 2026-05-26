@@ -154,7 +154,7 @@ Only `*-linux-*.png` snapshots are committed to the repository. macOS (`*-darwin
 
 Each snapshot filename encodes the environment, page, browser, and platform:
 
-```
+```text
 {env-slug}-{page}-{browser}-{platform}.png
 ```
 
