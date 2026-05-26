@@ -19,7 +19,7 @@ All commands below run from the **monorepo root** via Turbo. Don't `cd` into ind
 
 Two options. Either use the Strapi admin Content-Type Builder (writes the JSON for you) **or** create the file by hand.
 
-Create [`apps/strapi/src/api/product/content-types/product/schema.json`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/strapi/src/api/page/content-types/page) (mirror the directory layout from the `page` collection):
+Create [`apps/strapi/src/api/product/content-types/product/schema.json`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/strapi/src/api/product/content-types/product) (mirror the directory layout from the `page` collection):
 
 ```json
 {

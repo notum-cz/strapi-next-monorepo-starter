@@ -51,6 +51,8 @@ GitHub → Settings → Developer settings → OAuth Apps → New OAuth App:
 
 Copy generated Client ID + Secret into the Strapi admin (step 1).
 
+If you previously used `/auth/strapi-oauth/callback`, update both the Strapi provider settings and the provider developer console to the per-provider callback path.
+
 No frontend code changes needed — `SignInForm` already routes to `/api/connect/<provider>` on button click. To add a new provider button, extend [`SocialButtons.tsx`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/app/%5Blocale%5D/auth/signin/_components/SocialButtons.tsx).
 
 ## Local Development with ngrok

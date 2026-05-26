@@ -34,7 +34,7 @@ When the `fullPath` of a page is changed (because its `slug` or `parent` was cha
 
 2. The `fullPath` is not updated immediately, but after the job is processed. This is done to avoid performance issues and cascading updates of the `fullPath` field for all child pages within lifecycle hooks. To trigger the recalculation of the `fullPath` of all pending jobs, click the "Recalculate all fullpaths" button in the admin panel. This will update the `fullPath` field for all pending pages and their children. All pages will be **published** during this update, so after triggering, related pages will be live with new `fullPath` values. The recalculation is done in the background, so it may take some time depending on the number of pages and their hierarchy.
 
-3. During the recalculation, the script create `CREATE_REDIRECT` internal jobs for all pages that have changed `fullPath` and save them in the "Internal Jobs" content type. To trigger them, click the "Create all redirects" button in the admin panel. This will create redirects (`api::redirect.redirect`) for all included jobs and save them in the "Redirect" content type. Redirects are locale-aware and their `source` and `destination` fields include locale prefix.
+3. During the recalculation, the script creates `CREATE_REDIRECT` internal jobs for all pages that have changed `fullPath` and saves them in the "Internal Jobs" content type. To trigger them, click the "Create all redirects" button in the admin panel. This will create redirects (`api::redirect.redirect`) for all included jobs and save them in the "Redirect" content type. Redirects are locale-aware and their `source` and `destination` fields include locale prefix.
 
 ### Workflow example
 

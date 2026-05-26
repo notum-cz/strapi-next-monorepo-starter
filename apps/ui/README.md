@@ -30,7 +30,7 @@ Required for build-time pre-rendering (`generateStaticParams()`):
 | `STRAPI_REST_READONLY_API_KEY` | Read-only Strapi API token (see below).                        |
 | `APP_PUBLIC_URL`               | Used for canonical URLs and metadata.                          |
 
-If ISR pages render at runtime only, these can be supplied at runtime instead. See [Docker](#-production-docker) and [Architecture → Env Vars](../docs/docs/architecture.md#environment-variables) for the full list.
+If ISR pages render at runtime only, these can be supplied at runtime instead. See [Docker](#production-docker) and [Architecture → Env Vars](../docs/docs/architecture.md#environment-variables) for the full list.
 
 #### Read-only API token
 
@@ -38,7 +38,7 @@ Required for fetching public content from Strapi.
 
 Strapi admin → [Settings → API Tokens](http://localhost:1337/admin/settings/api-tokens) → **Create new API token**:
 
-```
+```text
 Name: any name
 Token duration: Unlimited
 Token type: Read-only
@@ -52,7 +52,7 @@ Required for non-GET requests (POST/PUT/DELETE). Permissions are scoped manually
 
 Strapi admin → API Tokens → **Create new API token**:
 
-```
+```text
 Name: any name
 Token duration: Unlimited
 Token type: Custom

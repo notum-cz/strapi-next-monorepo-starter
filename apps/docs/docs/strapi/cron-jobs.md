@@ -78,7 +78,7 @@ export default {
 - **Timezone.** `node-schedule` defaults to the server's local timezone. Set `TZ=UTC` in your container env if you want predictable scheduling across hosts. Or pass `options.tz` per task.
 - **Long-running tasks block.** Tasks run in the Strapi process. Heavy work (large imports, image processing) should be kicked into a queue rather than executed inline.
 
-## :warning: Multi-Instance Caveat
+## Multi-Instance Caveat
 
 :::danger Strapi cron is per-process — every replica runs every task
 

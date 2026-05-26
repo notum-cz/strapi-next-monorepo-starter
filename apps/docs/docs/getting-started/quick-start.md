@@ -79,7 +79,7 @@ You should see the seeded landing page rendered through the page-builder. The de
 | URL                                                                                            | What you should see                         |
 | ---------------------------------------------------------------------------------------------- | ------------------------------------------- |
 | [http://localhost:3000](http://localhost:3000)                                                 | Seeded homepage                             |
-| [http://localhost:3000/api/health](http://localhost:3000/api/health)                           | `{"status":"ok"}` (UI)                      |
+| [http://localhost:3000/api/health](http://localhost:3000/api/health)                           | `{"data":"OK"}` (UI)                        |
 | [http://localhost:1337/api/health](http://localhost:1337/api/health)                           | health JSON (Strapi)                        |
 | [http://localhost:3000/dev/components-overview](http://localhost:3000/dev/components-overview) | dev-only catalog of page-builder components |
 

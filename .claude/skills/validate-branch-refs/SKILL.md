@@ -53,7 +53,7 @@ Build a structured table:
 
 | change_type | old_path | new_path | symbols_removed | symbols_renamed | values_changed |
 
-For modified source files, extract removed/renamed top-level symbols with `git diff -U0 ${MERGE_BASE}..HEAD -- <file>` and grep for `^-export `, `^-function `, `^-class `, `^-const `, `^-type `, `^-interface ` patterns (language-aware: ts/tsx/js/jsx/py/go/rs/rb).
+For modified source files, extract removed/renamed top-level symbols with `git diff -U0 ${MERGE_BASE}..HEAD -- <file>` and grep for `^-export`, `^-function`, `^-class`, `^-const`, `^-type`, `^-interface` patterns (language-aware: ts/tsx/js/jsx/py/go/rs/rb).
 
 For config files, extract changed keys with structural diff (`jq` for JSON, plain diff for YAML/TOML/env).
 
@@ -119,7 +119,7 @@ Write `.claude/skills/validate-branch-refs/last-run.md` (gitignored if `.gitigno
 
 Print compact summary to chat:
 
-```
+```text
 Branch: <head> vs <base> (merge-base <short-sha>)
 Inventory: <n> files changed (<A>A <D>D <M>M <R>R)
 Findings: <total> (high <h>, medium <m>, low <l>)

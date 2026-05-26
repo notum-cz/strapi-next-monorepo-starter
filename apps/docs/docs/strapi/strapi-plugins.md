@@ -135,7 +135,7 @@ MAILTRAP_EMAIL=            # from + reply-to
 
 Restart Strapi after setting.
 
-**Caveat:** without an email provider configured, user registration may fail because the `afterCreate` lifecycle in [`src/lifeCycles/user.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/src/lifeCycles/user.ts) sends an account activation email. Either disable the lifecycle or configure email before enabling registration.
+**Caveat:** the `afterCreate` lifecycle in [`src/lifeCycles/user.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/src/lifeCycles/user.ts) sends an account activation email only when `CLIENT_ACCOUNT_ACTIVATION_URL` is set. If email delivery fails, the error is logged and registration continues.
 
 ## Sentry (`@strapi/plugin-sentry`)
 

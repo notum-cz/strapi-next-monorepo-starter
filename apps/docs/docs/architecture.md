@@ -89,7 +89,7 @@ Default GET allow-list: `api/pages`, `api/footer`, `api/navbar`, `api/users/me`,
 
 Strapi's admin panel ships a Preview button (configured in [`apps/strapi/config/admin.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/config/admin.ts)) that opens:
 
-```
+```http
 GET /api/preview?secret=$STRAPI_PREVIEW_SECRET&url=/<path>&status=draft|published&locale=<locale>
 ```
 

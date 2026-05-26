@@ -74,7 +74,7 @@ Deep-dives live in [/apps/docs](./apps/docs) — start at [Architecture](./apps/
 
 ### Packages
 
-See [Packages reference](./apps/docs/docs/packages.md) for full surface and consumer notes.
+See [Packages reference](./apps/docs/docs/reference/packages.md) for full surface and consumer notes.
 
 - `@repo/design-system` — Tailwind pipeline + editor color/font JSON
 - `@repo/shared-data` — path utilities used in both runtimes

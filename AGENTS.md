@@ -19,7 +19,7 @@ Monorepo starter with Strapi v5 CMS and Next.js 16 frontend. Uses pnpm workspace
 pnpm dev              # Start both apps (Docker required for DB)
 pnpm build            # Build all
 pnpm lint             # ESLint all packages
-pnpm typecheck        # Typecheck (run from apps/ui)
+pnpm typecheck        # Typecheck all packages
 ```
 
 See [Commands Reference](apps/docs/docs/reference/commands.md) for full command reference.
