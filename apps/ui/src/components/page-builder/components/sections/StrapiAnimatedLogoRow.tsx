@@ -57,7 +57,7 @@ export function StrapiAnimatedLogoRow({
                     <StrapiBasicImage
                       component={logo}
                       loading="eager"
-                      className="h-10 w-auto object-contain"
+                      className="icon--invert-on-dark h-10 w-auto object-contain"
                       height={40}
                     />
                   </li>

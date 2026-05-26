@@ -31,7 +31,7 @@ export function StrapiCarousel({
                 key={item.id}
                 className="px-2 pl-1 md:basis-1/2 lg:basis-1/3"
               >
-                <div className="relative h-96 w-full lg:w-96">
+                <div className="relative h-96 w-full lg:w-80">
                   <StrapiBasicImage
                     component={item.image}
                     className="object-contain"
