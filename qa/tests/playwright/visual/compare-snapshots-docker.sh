@@ -22,7 +22,7 @@ fi
 if [[ -z "${BASE_URL:-}" ]]; then
   ENV_FILE="$PLAYWRIGHT_DIR/.env"
   if [[ -f "$ENV_FILE" ]]; then
-    BASE_URL="$(grep -E '^BASE_URL=' "$ENV_FILE" | head -1 | cut -d'=' -f2-)"
+    BASE_URL="$(grep -E '^BASE_URL=' "$ENV_FILE" | head -1 | cut -d'=' -f2-)" || true
   fi
 fi
 
