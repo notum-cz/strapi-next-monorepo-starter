@@ -98,7 +98,7 @@ Restart Strapi (`pnpm dev:strapi` re-watches by default) so it picks up the new 
 
 ## Step 3 — Grant access (only if you need writes or per-user reads)
 
-The frontend authenticates to Strapi with the **Read-only API token** from [Quick Start → Step 2](./quick-start.md#2-create-a-strapi-api-token). Strapi's Read-only token type covers `find`/`findOne` on every content type automatically — including ones you add later — so for read-only frontend usage, **no admin permission changes are needed**.
+The frontend authenticates to Strapi with the **Read-only API token** from [Quick Start → Step 2](./quick-start.md#2-regenerate-the-strapi-api-token). Strapi's Read-only token type covers `find`/`findOne` on every content type automatically — including ones you add later — so for read-only frontend usage, **no admin permission changes are needed**.
 
 You only need to touch permissions when:
 

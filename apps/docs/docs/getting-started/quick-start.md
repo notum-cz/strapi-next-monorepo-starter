@@ -24,29 +24,25 @@ This:
 2. Auto-imports the latest seed export when baseline content (`Page`, `Navbar`, `Footer`) is missing. See [Data Seeding](../strapi/data-seeding.md).
 3. Starts Strapi in develop mode with hot reload.
 
-Default URLs:
+Default endpoints:
 
-| Service      | URL                                                        |
+| Service      | Endpoint                                                   |
 | ------------ | ---------------------------------------------------------- |
 | Strapi REST  | [http://localhost:1337](http://localhost:1337)             |
 | Strapi admin | [http://localhost:1337/admin](http://localhost:1337/admin) |
-| Postgres     | `localhost:5432`                                           |
+| Postgres     | Docker service `db`, published to host port `5432`         |
 
 On first run, Strapi prompts you to create an admin user in the admin panel.
 
-## 2. Create a Strapi API token
+## 2. Regenerate the Strapi API token
 
 The Next.js frontend reads public content via a read-only Strapi API token.
 
-Strapi admin → **Settings → API Tokens** → **Create new API token**:
+Open [Strapi admin → Settings → API Tokens](http://localhost:1337/admin/settings/api-tokens), then open the seeded **Read Only** token and click **Regenerate**.
 
-| Field          | Value                               |
-| -------------- | ----------------------------------- |
-| Name           | anything — e.g. `frontend-readonly` |
-| Token duration | Unlimited                           |
-| Token type     | Read-only                           |
+![Strapi API Tokens screen with the seeded Read Only token](/img/strapi-api-tokens-read-only.png)
 
-**The token displays once.** Copy it.
+**The regenerated token displays once.** Copy it.
 
 ## 3. Configure the UI app
 
@@ -55,12 +51,15 @@ Open `apps/ui/.env.local` (already created by `pnpm install`). Set:
 ```env
 STRAPI_URL=http://localhost:1337
 STRAPI_REST_READONLY_API_KEY=<paste-token-here>
-APP_PUBLIC_URL=http://localhost:3000
 ```
 
 Other variables are optional for first-run. See [Architecture → Environment Variables](../architecture.md#environment-variables) for the full list.
 
-For write operations (POST/PUT/DELETE) you'll also need a Custom token in `STRAPI_REST_CUSTOM_API_KEY` — see [apps/ui/README](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/README.md#custom-api-token).
+:::warning Write operations need a separate token
+
+For write operations (`POST`, `PUT`, `DELETE`), set a Custom token in `STRAPI_REST_CUSTOM_API_KEY`. See [apps/ui/README](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/README.md#custom-api-token).
+
+:::
 
 ## 4. Start the UI
 
@@ -91,7 +90,7 @@ To watch Strapi requests in the UI logs, set `DEBUG_STRAPI_CLIENT_API_CALLS=true
 - **Edit a page-builder component** → [Page Builder](../content-system/page-builder.md)
 - **Hook up authentication** → [Authentication](../auth/frontend/authentication.md)
 - **Change a Strapi schema** → run `pnpm generate:types && pnpm sync-types` after every change. [Strapi Types Usage](../content-system/strapi-types-usage.md).
-- **Deploy** → root [README → Deployment](https://github.com/notum-cz/strapi-next-monorepo-starter#%EF%B8%8F-deployment)
+- **Deploy** → [Deployment](../reference/deployment.md)
 
 ## Troubleshooting
 

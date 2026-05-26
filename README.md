@@ -149,80 +149,11 @@ Install extensions listed in the [.vscode/extensions.json](.vscode/extensions.js
 
 ## 🔱 Git Hooks & Conventions
 
-Lefthook ([`lefthook.yml`](./lefthook.yml)) enforces:
-
-- **pre-commit** — branch name validation + lint-staged (ESLint, Prettier)
-- **commit-msg** — conventional commit format via commitlint
-
-Branch naming: `<type>/STAR-<number>-<description>` (e.g. `feat/STAR-1582-repo-config`). Exempt: `main`, `master`, `develop`, `dev`, `release/*`, `hotfix/*`.
-
-Conventional commits: `feat(ui): add dark mode toggle`. Use `pnpm run commit` for the interactive generator.
-
-### Environment Variables in Commits
-
-When introducing new environment variables, mention them in commit messages using `env.VARIABLE_NAME` or `VARIABLE_NAME` (CONSTANT_CASE). The [auto-pr workflow](.github/workflows/auto-pr.yml) extracts these from commit messages and lists them in the PR description under "Required Environment Variables".
-
-**Example commit:**
-
-```
-feat(ui): add sentry integration
-
-Added error tracking with Sentry.
-
-New environment variables:
-- env.SENTRY_DSN
-- env.SENTRY_AUTH_TOKEN
-```
-
-## 📝 Pull Request Template
-
-The [PR template](.github/PULL_REQUEST_TEMPLATE.md) enforces a consistent structure for all pull requests.
+Lefthook validates branch names, staged files, and conventional commits. See [Git Hooks and Conventions](./apps/docs/docs/reference/workflow.md).
 
 ## ♾️ Deployment
 
-### GitHub Actions
-
-We are using GitHub Actions for validation of builds and running tests. There are 2 workflows prepared:
-
-1. [ci.yml](.github/workflows/ci.yml) - runs on every push and pull request to `main` branch. It verifies if code builds.
-2. [qa.yml](.github/workflows/qa.yml) - manually triggered workflow that runs the QA tests from `qa/tests` directory. Ideally it should be run against deployed frontend (by setting `BASE_URL` env variable and passing to [playwright.config.ts](./qa/tests/playwright/playwright.config.ts)).
-3. [auto-pr.yml](.github/workflows/auto-pr.yml) - automatically creates/updates a PR from `dev` to `main` when changes are pushed. Extracts environment variables from commit messages (see [Environment Variables in Commits](#environment-variables-in-commits)).
-
-### Heroku
-
-_This section is under construction._ 😔
-
-Create 2 apps in Heroku, one for Strapi and one for Next.js UI. Stack is `heroku-24`. Connect both to GitHub repository in the Deploy tab and configure automatic deploys from your branch.
-
-> [!TIP]
-> If you're not deploying to Heroku, remove all `Procfile`s from the repository.
-
-We published two buildpacks to make deployment easier and more efficient. They can **reduce the slug size by more than 70 %** by pruning unnecessary files from the Turborepo monorepo during the build and they also **speed up the build and installation**:
-
-- [https://github.com/notum-cz/heroku-buildpack-turbo-prune.git](https://github.com/notum-cz/heroku-buildpack-turbo-prune.git)
-- [https://github.com/notum-cz/heroku-buildpack-next-standalone-slim.git](https://github.com/notum-cz/heroku-buildpack-next-standalone-slim.git)
-
-#### Strapi app configuration
-
-1. Connect a database ([Heroku Postgres](https://elements.heroku.com/addons/heroku-postgresql)). `DATABASE_URL` env variable will be set automatically so you can skip any other database-related configuration.
-2. Set env variables based on `.env.example`, **don't forget to set**:
-   - `APP`- set to `strapi`
-   - `WORKSPACE` - set to `@repo/strapi`
-3. Set buildpacks in this order:
-   - https://github.com/notum-cz/heroku-buildpack-turbo-prune.git
-   - `heroku/nodejs`
-4. We recommend setting up an AWS S3 bucket for media uploads, as Heroku's filesystem will delete uploaded files after dyno restarts.
-
-#### UI app configuration
-
-1. Set env variables based on `.env.example`, **don't forget to set**:
-   - `APP`- set to `ui`
-   - `WORKSPACE` - set to `@repo/ui`
-   - `NEXT_OUTPUT` - set to `standalone`
-2. Set buildpacks in this order:
-   - https://github.com/notum-cz/heroku-buildpack-turbo-prune.git
-   - `heroku/nodejs`
-   - https://github.com/notum-cz/heroku-buildpack-next-standalone-slim.git
+See [Deployment](./apps/docs/docs/reference/deployment.md) for GitHub Actions and Heroku setup notes.
 
 ## 💡 Transform this template to a project
 
@@ -241,7 +172,7 @@ App READMEs cover **setup and environment** only. Conceptual and feature documen
 - **Frontend** — [Frontend Features](./apps/docs/docs/frontend/frontend-features.md) · [Image Optimization](./apps/docs/docs/frontend/images.md)
 - **Strapi** — [Strapi Plugins](./apps/docs/docs/strapi/strapi-plugins.md) · [Data Seeding](./apps/docs/docs/strapi/data-seeding.md)
 - **Authentication** — [Overview](./apps/docs/docs/auth/frontend/authentication.md) · [Microsoft SSO](./apps/docs/docs/auth/strapi-admin/microsoft-sso.md) · [OAuth Providers](./apps/docs/docs/auth/frontend/oauth-providers.md)
-- **Reference** — [Commands](./apps/docs/docs/reference/commands.md) · [Packages](./apps/docs/docs/reference/packages.md)
+- **Reference** — [Commands](./apps/docs/docs/reference/commands.md) · [Packages](./apps/docs/docs/reference/packages.md) · [Workflow](./apps/docs/docs/reference/workflow.md) · [Deployment](./apps/docs/docs/reference/deployment.md)
 
 Docs site builds to GitHub Pages — `pnpm build:docs` to preview locally. Tracking improvements: [issue #113](https://github.com/notum-cz/strapi-next-monorepo-starter/issues/113).
 

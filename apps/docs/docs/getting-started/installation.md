@@ -26,6 +26,19 @@ cd strapi-next-monorepo-starter
 git checkout main
 ```
 
+:::tip New project remote
+
+If you cloned this starter to build a new project, change `origin` before further development so pushes go to your project repository instead of the template:
+
+```bash
+git remote set-url origin <your-repository-url>
+git remote -v
+```
+
+Keep the original remote only when you intentionally work on the upstream starter.
+
+:::
+
 ## Install dependencies
 
 ```bash
@@ -46,7 +59,3 @@ After install, you'll have:
 - `apps/ui/.env.local` — Next.js frontend
 
 Both start from `.env.example` templates. Most values work out of the box; you'll need to fill at minimum a Strapi API token before the UI can fetch content — covered in [Quick Start](./quick-start.md).
-
-Full env reference: [Architecture → Environment Variables](../architecture.md#environment-variables).
-
-Next: [Quick Start](./quick-start.md).

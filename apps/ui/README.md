@@ -36,15 +36,9 @@ If ISR pages render at runtime only, these can be supplied at runtime instead. S
 
 Required for fetching public content from Strapi.
 
-Strapi admin → [Settings → API Tokens](http://localhost:1337/admin/settings/api-tokens) → **Create new API token**:
+Open [Strapi admin → Settings → API Tokens](http://localhost:1337/admin/settings/api-tokens), then open the seeded **Read Only** token and click **Regenerate**.
 
-```text
-Name: any name
-Token duration: Unlimited
-Token type: Read-only
-```
-
-Set value in `STRAPI_REST_READONLY_API_KEY`. **Token displays once.**
+Set value in `STRAPI_REST_READONLY_API_KEY`. **The regenerated token displays once.**
 
 #### Custom API token
 
