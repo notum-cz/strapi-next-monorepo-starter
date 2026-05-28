@@ -12,7 +12,7 @@
                                      │ REST API
                                      ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                           Next.js Frontend (apps/ui)                        │
+│                           Next.js UI (apps/ui)                        │
 │  - App Router with catch-all routing                                        │
 │  - Server/client Strapi clients with proxy                                  │
 │  - Page builder component registry                                          │

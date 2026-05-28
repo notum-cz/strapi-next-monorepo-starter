@@ -1,6 +1,6 @@
 # Page Builder
 
-The page builder enables content editors to compose pages from reusable components in Strapi, which are automatically rendered by the Next.js frontend.
+The page builder enables content editors to compose pages from reusable components in Strapi, which are automatically rendered by the Next.js UI.
 
 ## Architecture
 
@@ -22,7 +22,7 @@ The page builder enables content editors to compose pages from reusable componen
                                      │ REST API
                                      ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                            Next.js Frontend                                 │
+│                            Next.js UI                                 │
 │  ┌─────────────────────────────────────────────────────────────────────┐    │
 │  │ StrapiPage (page.tsx)                                                │    │
 │  │  └─ maps __component UID → React component                          │    │

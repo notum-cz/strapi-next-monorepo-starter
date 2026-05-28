@@ -1,34 +1,42 @@
-# 🔥 Strapi v5 & Next.js v16 Monorepo Starter
+# Strapi v5 & Next.js v16 Monorepo Starter
 
-This is a ready-to-go starter template for Strapi projects. It combines the power of Strapi, Next.js, Shadcn/ui libraries with Turborepo setup and kickstarts your project development. We call it a **Page builder** for enterprise applications.
+Enterprise-ready starter template for building editable websites and applications with Strapi, Next.js, TypeScript, TailwindCSS, and Turborepo.
 
-## 👀 Live demo
+## Why
 
-- UI - [https://www.notum-dev.cz/](https://www.notum-dev.cz/)
-- Strapi - [https://api.notum-dev.cz/admin](https://api.notum-dev.cz/admin)
-- **Readonly user:**
-  - Email: user@notum.cz
-  - Password: Secret-pass-55
+Most Strapi + Next.js projects need the same foundation: content modeling, page rendering, typed API access, localization, preview, media handling, authentication, deployment setup, and a repeatable local workflow.
 
-## 🥞 Tech stack
+This starter puts those pieces together up front so teams can start from a working project instead of assembling infrastructure from scratch.
 
-- [Strapi v5](https://strapi.io/) - Headless CMS to manage content
-- [Next.js App Router v16](https://nextjs.org/docs) - React v19 for building web apps
-- [Shadcn/ui](https://ui.shadcn.com/) - TailwindCSS based UI components
-- [TailwindCSS v4](https://tailwindcss.com/) - Utility-first CSS framework
-- [Turborepo](https://turbo.build/) - Monorepo management tool to keep things tidy
+## What
 
-## 🚀 Getting started
+The template combines:
 
-[![Launch Strapi + Next.js Monorepo — Live in 5 Minutes](https://img.youtube.com/vi/VZlJZuurUH8/maxresdefault.jpg)](https://www.youtube.com/watch?v=VZlJZuurUH8 "Watch on YouTube")
+- Strapi v5 CMS with PostgreSQL, seed data, plugins, and generated schema types.
+- Next.js v16 UI with App Router, React 19, TailwindCSS v4, and shadcn/ui.
+- A typed page builder based on Strapi dynamic zones and React component mapping.
+- Shared packages for design tokens, Strapi types, path helpers, linting, TypeScript config, and releases.
+- Docusaurus documentation for architecture, setup, UI, Strapi, authentication, deployment, and workflow.
 
-Full step-by-step setup lives in docs:
+See [Features](./apps/docs/docs/getting-started/features.md) for the full list.
 
-- [Installation](./apps/docs/docs/getting-started/installation.md) — prerequisites, clone, install
-- [Quick Start](./apps/docs/docs/getting-started/quick-start.md) — start Strapi + UI, get content rendering
-- [Add a Content Type](./apps/docs/docs/getting-started/add-content-type.md) — end-to-end recipe for extending the template
+## Live Demo
 
-### TL;DR
+- UI: [https://www.notum-dev.cz/](https://www.notum-dev.cz/)
+- Strapi admin: [https://api.notum-dev.cz/admin](https://api.notum-dev.cz/admin)
+- Read-only user:
+  - Email: `user@notum.cz`
+  - Password: `Secret-pass-55`
+
+## Getting Started
+
+Full setup lives in the docs:
+
+- [Installation](./apps/docs/docs/getting-started/installation.md)
+- [Quick Start](./apps/docs/docs/getting-started/quick-start.md)
+- [Add a Content Type](./apps/docs/docs/getting-started/add-content-type.md)
+
+Shortest local path:
 
 ```bash
 git clone https://github.com/notum-cz/strapi-next-monorepo-starter
@@ -36,146 +44,41 @@ cd strapi-next-monorepo-starter
 nvm use
 corepack prepare pnpm@11.1.1 --activate
 pnpm install
-pnpm dev:strapi              # then create API token, paste into apps/ui/.env.local
-pnpm dev:ui                  # in a second terminal
+pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) (UI) and [http://localhost:1337/admin](http://localhost:1337/admin) (Strapi). See [Quick Start](./apps/docs/docs/getting-started/quick-start.md) for token + env setup.
+Open:
 
-After getting it running you'll probably want to:
+- UI: [http://localhost:3000](http://localhost:3000)
+- Strapi admin: [http://localhost:1337/admin](http://localhost:1337/admin)
 
-- Rename packages and project metadata. See [Transform this template to a project](#-transform-this-template-to-a-project).
-- Explore [What's inside?](#-whats-inside).
+The UI needs a Strapi API token before content can render. Follow [Quick Start](./apps/docs/docs/getting-started/quick-start.md) for the token and environment setup.
 
-## ✨ Features
+## Documentation
 
-- **Modern foundation**: Strapi v5, Next.js v16 App Router, React 19, TypeScript, pnpm workspaces, Turborepo, Node 24, Docker-ready
-- **Typed page builder**: dynamic-zone components, typed populate configs, generated Strapi types, frontend component registry, starter sections
-- **Content preview and routing**: draft/live preview, localized routing, dynamic rewrites, breadcrumbs, canonical metadata
-- **Design system**: TailwindCSS v4, shadcn/ui, shared tokens, typography primitives, reusable form/image/section components
-- **Rich text**: CKEditor and TipTap pre-configured, shared styles, generated presets
-- **Media**: Strapi upload (local, Azure Blob, S3), frontend image helpers (`StrapiBasicImage`, imgproxy support)
-- **Authentication**: Better Auth + Strapi Users & Permissions, JWT, auth middleware, OAuth-ready
-- **Localization**: `next-intl` (frontend) + `@strapi/plugin-i18n` (content)
-- **Dev workflow**: DB seed, typed Strapi clients, ESLint + Prettier, Lefthook, Commitizen, conventional commits, CODEOWNERS
-- **QA**: Docusaurus docs + Playwright E2E/a11y/perf/SEO/visual
+- [Docs homepage](./apps/docs)
+- [Features](./apps/docs/docs/getting-started/features.md)
+- [Page Builder](./apps/docs/docs/page-builder/introduction.md)
+- [UI](./apps/docs/docs/ui/ui-features.md)
+- [Strapi](./apps/docs/docs/strapi/strapi-schemas.md)
+- [Authentication](./apps/docs/docs/auth/ui/authentication.md)
+- [Commands](./apps/docs/docs/reference/commands.md)
+- [Deployment](./apps/docs/docs/reference/deployment.md)
 
-Deep-dives live in [/apps/docs](./apps/docs) — start at [Architecture](./apps/docs/docs/architecture.md).
+## Project Layout
 
-## 📦 What's inside?
+| Path                  | Purpose                                                |
+| --------------------- | ------------------------------------------------------ |
+| `apps/ui`             | Next.js UI application                                 |
+| `apps/strapi`         | Strapi CMS                                             |
+| `apps/docs`           | Docusaurus documentation                               |
+| `packages/*`          | Shared workspace packages                              |
+| `qa/tests/playwright` | E2E, accessibility, visual, SEO, and performance tests |
 
-### Apps
+## Using This Template
 
-| Path          | Tech                                  | README                                           |
-| ------------- | ------------------------------------- | ------------------------------------------------ |
-| `apps/ui`     | Next.js v16 + shadcn/ui + Tailwind v4 | [apps/ui/README.md](./apps/ui/README.md)         |
-| `apps/strapi` | Strapi v5 + Postgres                  | [apps/strapi/README.md](./apps/strapi/README.md) |
-| `apps/docs`   | Docusaurus 3                          | [apps/docs](./apps/docs)                         |
+After cloning for a real project, rename project metadata in `package.json` and app/package manifests as needed. Also update the `name` in `apps/strapi/docker-compose.yml` to avoid Docker project-name collisions with other local checkouts.
 
-### Packages
+## Feedback
 
-See [Packages reference](./apps/docs/docs/reference/packages.md) for full surface and consumer notes.
-
-- `@repo/design-system` — Tailwind pipeline + editor color/font JSON
-- `@repo/shared-data` — path utilities used in both runtimes
-- `@repo/strapi-types` — auto-generated content/component types
-- `@repo/eslint-config` — composed flat ESLint config
-- `@repo/typescript-config` — tsconfig presets (Strapi app uses its own)
-- `@repo/semantic-release-config` — release pipeline config
-
-## ☕ Scripts
-
-**Always run from the monorepo root.** Turbo dispatches to the correct workspace. Don't `cd` into individual apps.
-
-Common commands:
-
-```bash
-pnpm dev                    # all apps
-pnpm dev:strapi             # Strapi only (auto-starts Postgres)
-pnpm dev:ui                 # Next.js only
-pnpm dev:docs               # Docusaurus
-
-pnpm build                  # build everything
-pnpm build:strapi
-pnpm build:ui
-pnpm build:docs
-
-pnpm lint                   # ESLint everywhere
-pnpm typecheck
-
-pnpm generate:types         # regenerate Strapi types
-pnpm sync-types             # mirror into @repo/strapi-types
-
-pnpm seed:check
-pnpm seed:export
-pnpm seed:import
-
-pnpm commit                 # Commitizen interactive prompt
-```
-
-Full reference: [Commands](./apps/docs/docs/reference/commands.md).
-
-Escape hatch for per-package scripts that aren't wrapped — still from root:
-
-```bash
-pnpm -F @repo/ui <script>
-pnpm -F @repo/strapi <script>
-```
-
-### Bash scripts
-
-```bash
-# Remove all `node_modules` folders in the monorepo
-# Useful for scratch dependencies installation
-bash ./scripts/utils/rm-modules.sh
-
-# Remove all node_modules, .next, .turbo, .strapi, dist folders
-bash ./scripts/utils/rm-all.sh
-
-# Remove all `.next` folders in the monorepo
-# Useful for scratch builds of ui
-bash ./scripts/utils/rm-next-cache.sh
-```
-
-## 🧪 Testing and QA
-
-A dedicated QA workspace is available under the `qa/` directory, providing automated tests for E2E, accessibility, performance, and SEO validation.
-
-See [README](./qa/tests/README.md) for available test suites and commands.
-
-## 🔌 VSCode Extensions
-
-Install extensions listed in the [.vscode/extensions.json](.vscode/extensions.json) file and have a better development experience.
-
-## 🔱 Git Hooks & Conventions
-
-Lefthook validates branch names, staged files, and conventional commits. See [Git Hooks and Conventions](./apps/docs/docs/reference/workflow.md).
-
-## ♾️ Deployment
-
-See [Deployment](./apps/docs/docs/reference/deployment.md) for GitHub Actions and Heroku setup notes.
-
-## 💡 Transform this template to a project
-
-- In the root `package.json`, update the `name` and `description` fields to match the new project name. Optionally, update the names in `/apps` and `/packages` as well. Keep the `@repo` prefix unless you prefer a different scope or company name—changing it will require updates throughout the entire monorepo.
-- In [docker-compose.yml](./apps/strapi/docker-compose.yml), update the top-level name "strapi-next-starter" (and optionally the network name) to reflect the new project name. This helps prevent name conflicts on developers' machines.
-
-_[After this preparation is done, delete this section from README]_
-
-## 📖 Documentation
-
-App READMEs cover **setup and environment** only. Conceptual and feature documentation lives in [/apps/docs](./apps/docs):
-
-- **Getting Started** — [Installation](./apps/docs/docs/getting-started/installation.md) · [Quick Start](./apps/docs/docs/getting-started/quick-start.md) · [Add a Content Type](./apps/docs/docs/getting-started/add-content-type.md)
-- [Architecture](./apps/docs/docs/architecture.md) — request lifecycle, proxies, draft mode, i18n, env vars
-- **Content System** — [Page Builder](./apps/docs/docs/content-system/page-builder.md) · [Strapi Schemas](./apps/docs/docs/content-system/strapi-schemas.md) · [Pages Hierarchy](./apps/docs/docs/content-system/pages-hierarchy.md) · [Strapi Types Usage](./apps/docs/docs/content-system/strapi-types-usage.md) · [Strapi API Client](./apps/docs/docs/content-system/strapi-api-client.md)
-- **Frontend** — [Frontend Features](./apps/docs/docs/frontend/frontend-features.md) · [Image Optimization](./apps/docs/docs/frontend/images.md)
-- **Strapi** — [Strapi Plugins](./apps/docs/docs/strapi/strapi-plugins.md) · [Data Seeding](./apps/docs/docs/strapi/data-seeding.md)
-- **Authentication** — [Overview](./apps/docs/docs/auth/frontend/authentication.md) · [Microsoft SSO](./apps/docs/docs/auth/strapi-admin/microsoft-sso.md) · [OAuth Providers](./apps/docs/docs/auth/frontend/oauth-providers.md)
-- **Reference** — [Commands](./apps/docs/docs/reference/commands.md) · [Packages](./apps/docs/docs/reference/packages.md) · [Workflow](./apps/docs/docs/reference/workflow.md) · [Deployment](./apps/docs/docs/reference/deployment.md)
-
-Docs site builds to GitHub Pages — `pnpm build:docs` to preview locally. Tracking improvements: [issue #113](https://github.com/notum-cz/strapi-next-monorepo-starter/issues/113).
-
-## 💙 Feedback
-
-This repository was created based on [strapi-next-monorepo-starter](https://github.com/notum-cz/strapi-next-monorepo-starter). If you encounter a problem with the template code during development, or you have implemented a useful feature that should be part of that template, please create an issue with a description or PR in that repository. So we can keep it updated with great features.
+Report issues or propose improvements in [notum-cz/strapi-next-monorepo-starter](https://github.com/notum-cz/strapi-next-monorepo-starter).

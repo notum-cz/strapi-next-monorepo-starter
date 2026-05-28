@@ -36,7 +36,7 @@ On first run, Strapi prompts you to create an admin user in the admin panel.
 
 ## 2. Regenerate the Strapi API token
 
-The Next.js frontend reads public content via a read-only Strapi API token.
+The Next.js UI reads public content via a read-only Strapi API token.
 
 Open [Strapi admin → Settings → API Tokens](http://localhost:1337/admin/settings/api-tokens), then open the seeded **Read Only** token and click **Regenerate**.
 
@@ -53,7 +53,7 @@ STRAPI_URL=http://localhost:1337
 STRAPI_REST_READONLY_API_KEY=<paste-token-here>
 ```
 
-Other variables are optional for first-run. See [Architecture → Environment Variables](../architecture.md#environment-variables) for the full list.
+Other variables are optional for first-run. See [UI → Environment Variables](../ui/environment-variables.md) for the full list.
 
 :::warning Write operations need a separate token
 
@@ -82,15 +82,13 @@ You should see the seeded landing page rendered through the page-builder. The de
 | [http://localhost:1337/api/health](http://localhost:1337/api/health)                           | health JSON (Strapi)                        |
 | [http://localhost:3000/dev/components-overview](http://localhost:3000/dev/components-overview) | dev-only catalog of page-builder components |
 
-To watch Strapi requests in the UI logs, set `DEBUG_STRAPI_CLIENT_API_CALLS=true` in `.env.local`. See [Frontend Features → Log Verbosity](../frontend/frontend-features.md#log-verbosity-flags).
+To watch Strapi requests in the UI logs, set `DEBUG_STRAPI_CLIENT_API_CALLS=true` in `.env.local`. See [Log Verbosity](../ui/log-verbosity.md).
 
 ## Common next steps
 
+- **Explore included features** → [Features](./features.md)
 - **Add a new content type** → [Add a New Content Type](./add-content-type.md)
-- **Edit a page-builder component** → [Page Builder](../content-system/page-builder.md)
-- **Hook up authentication** → [Authentication](../auth/frontend/authentication.md)
-- **Change a Strapi schema** → run `pnpm generate:types && pnpm sync-types` after every change. [Strapi Types Usage](../content-system/strapi-types-usage.md).
-- **Deploy** → [Deployment](../reference/deployment.md)
+- **Edit a page-builder component** → [Page Builder](../page-builder/introduction.md)
 
 ## Troubleshooting
 
@@ -100,4 +98,3 @@ To watch Strapi requests in the UI logs, set `DEBUG_STRAPI_CLIENT_API_CALLS=true
 | UI shows 404 for `/`                            | Strapi missing baseline content. Run `pnpm seed:import`.                                                                                                                                                                                   |
 | Strapi `pnpm dev:strapi` hangs on DB            | Docker not running or port 5432 already taken                                                                                                                                                                                              |
 | `403 Forbidden` from Strapi on browser requests | Endpoint not in `ALLOWED_STRAPI_ENDPOINTS` ([request-auth.ts:3](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/lib/strapi-api/request-auth.ts#L3)) or content-type permissions not granted in Strapi admin |
-| Type errors after schema change                 | Forgot to run `pnpm generate:types && pnpm sync-types`                                                                                                                                                                                     |

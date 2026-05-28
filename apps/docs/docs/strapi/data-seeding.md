@@ -1,6 +1,12 @@
-# Data Seeding and Imports
+# Data Seeding
 
-Strapi seed exports keep local development databases aligned with the content shape expected by the frontend.
+Data seeding gives every developer a working Strapi database without rebuilding the same pages, navigation, footer, roles, and demo content by hand.
+
+The starter stores Strapi exports in the repository and can import the latest one automatically when baseline content is missing. This keeps local development close to the expected UI state: pages resolve, page-builder components have example content, and shared single types such as Navbar and Footer exist.
+
+Use seed exports when a change needs content or configuration to travel with the code. Typical examples are new page-builder components, changed component schemas, updated demo pages, or baseline content required by the UI.
+
+Seed imports overwrite existing Strapi data, so treat them as a project snapshot for development and test environments. For production, import intentionally and only when that is part of the deployment process.
 
 ## How It Works
 
@@ -98,4 +104,4 @@ If no seed export exists, create the baseline content manually in Strapi:
 - Create `Navbar` single type content
 - Create `Footer` single type content
 
-The frontend supports `en` and `cs` by default, so enable both locales in Strapi and create localized content for both.
+The UI supports `en` and `cs` by default, so enable both locales in Strapi and create localized content for both.

@@ -1,6 +1,6 @@
 # Strapi + Next.js Monorepo
 
-Monorepo starter with Strapi v5 CMS and Next.js 16 frontend. Uses pnpm workspaces with Turborepo.
+Monorepo starter with Strapi v5 CMS and Next.js 16 UI. Uses pnpm workspaces with Turborepo.
 
 ## Workspaces
 
@@ -38,12 +38,12 @@ This updates `@repo/strapi-types`. Forgetting causes silent type mismatches betw
 
 - [Commands Reference](apps/docs/docs/reference/commands.md) — All pnpm commands
 - [Architecture](apps/docs/docs/architecture.md) — System design and patterns
-- [Page Builder](apps/docs/docs/content-system/page-builder.md) — Component registry and rendering
-- [Strapi API Client](apps/docs/docs/content-system/strapi-api-client.md) — Fetching content from Strapi
-- [Pages Hierarchy](apps/docs/docs/content-system/pages-hierarchy.md) — URL structure and redirects
-- [Authentication](apps/docs/docs/auth/frontend/authentication.md) — Better Auth + Strapi JWT integration
-- [Strapi Schemas](apps/docs/docs/content-system/strapi-schemas.md) — Schema attributes, localization, lifecycle hooks
-- [Strapi Types](apps/docs/docs/content-system/strapi-types-usage.md) — Type utilities and usage patterns
+- [Page Builder](apps/docs/docs/page-builder/introduction.md) — Component registry and rendering
+- [Strapi API Client](apps/docs/docs/ui/strapi-api-client.md) — Fetching content from Strapi
+- [Pages Hierarchy](apps/docs/docs/page-builder/pages-hierarchy.md) — URL structure and redirects
+- [Authentication](apps/docs/docs/auth/ui/authentication.md) — Better Auth + Strapi JWT integration
+- [Strapi Schemas](apps/docs/docs/strapi/strapi-schemas.md) — Schema attributes, localization, lifecycle hooks
+- [Strapi Types](apps/docs/docs/strapi/strapi-types.md) — Type utilities and usage patterns
 
 ## Commits
 

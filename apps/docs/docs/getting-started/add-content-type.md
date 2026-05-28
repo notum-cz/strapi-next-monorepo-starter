@@ -4,9 +4,9 @@ sidebar_position: 3
 
 # Add a Content Type
 
-End-to-end recipe for introducing a new Strapi collection (or single type) and exposing it through the Next.js frontend. Uses `product` as a worked example. All steps map to actual file locations in the template.
+End-to-end recipe for introducing a new Strapi collection (or single type) and exposing it through the Next.js UI. Uses `product` as a worked example. All steps map to actual file locations in the template.
 
-For a new **dynamic-zone component** (something that goes inside `page.content`), see [Page Builder](../content-system/page-builder.md). This page covers a separate collection.
+For a new **dynamic-zone component** (something that goes inside `page.content`), see [Page Builder](../page-builder/introduction.md). This page covers a separate collection.
 
 ## Prerequisites
 
@@ -60,7 +60,7 @@ Create [`apps/strapi/src/api/product/content-types/product/schema.json`](https:/
 }
 ```
 
-Attribute shape reference: [Strapi Schemas](../content-system/strapi-schemas.md). Localized fields need `pluginOptions.i18n.localized: true`; un-localized fields share one value across locales (e.g. `price` above).
+Attribute shape reference: [Strapi Schemas](../strapi/strapi-schemas.md). Localized fields need `pluginOptions.i18n.localized: true`; un-localized fields share one value across locales (e.g. `price` above).
 
 ## Step 2 — Wire routes, controller, service
 
@@ -98,21 +98,21 @@ Restart Strapi (`pnpm dev:strapi` re-watches by default) so it picks up the new 
 
 ## Step 3 — Grant access (only if you need writes or per-user reads)
 
-The frontend authenticates to Strapi with the **Read-only API token** from [Quick Start → Step 2](./quick-start.md#2-regenerate-the-strapi-api-token). Strapi's Read-only token type covers `find`/`findOne` on every content type automatically — including ones you add later — so for read-only frontend usage, **no admin permission changes are needed**.
+The UI authenticates to Strapi with the **Read-only API token** from [Quick Start → Step 2](./quick-start.md#2-regenerate-the-strapi-api-token). Strapi's Read-only token type covers `find`/`findOne` on every content type automatically — including ones you add later — so for read-only UI usage, **no admin permission changes are needed**.
 
 You only need to touch permissions when:
 
-| Case                                                               | What to do                                                                                                                                                                                                 |
-| ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Frontend writes (POST/PUT/DELETE) via `STRAPI_REST_CUSTOM_API_KEY` | Settings → API Tokens → open your Custom token → enable the desired actions on `Product` → Save.                                                                                                           |
-| Per-user reads/writes via `PrivateStrapiClient` (user JWT)         | Settings → Users & Permissions plugin → Roles → `Authenticated` → tick the actions on `Product` → Save.                                                                                                    |
-| Truly anonymous access (no token at all)                           | Settings → Users & Permissions plugin → Roles → `Public` → tick the actions on `Product` → Save. **Not used by this template's frontend** — kept here only for external consumers hitting Strapi directly. |
+| Case                                                         | What to do                                                                                                                                                                                           |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| UI writes (POST/PUT/DELETE) via `STRAPI_REST_CUSTOM_API_KEY` | Settings → API Tokens → open your Custom token → enable the desired actions on `Product` → Save.                                                                                                     |
+| Per-user reads/writes via `PrivateStrapiClient` (user JWT)   | Settings → Users & Permissions plugin → Roles → `Authenticated` → tick the actions on `Product` → Save.                                                                                              |
+| Truly anonymous access (no token at all)                     | Settings → Users & Permissions plugin → Roles → `Public` → tick the actions on `Product` → Save. **Not used by this template's UI** — kept here only for external consumers hitting Strapi directly. |
 
 Permissions live in the database, not in code. They travel via the seed export — see [Data Seeding](../strapi/data-seeding.md).
 
 ## Step 4 — Add the UID to `API_ENDPOINTS`
 
-The Next.js `BaseStrapiClient` maps content-type UIDs to URL paths — see [Strapi API Client](../content-system/strapi-api-client.md#adding-new-endpoints) for the full client surface. New types must be added to [`apps/ui/src/lib/strapi-api/base.ts:17`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/lib/strapi-api/base.ts#L17):
+The Next.js `BaseStrapiClient` maps content-type UIDs to URL paths — see [Strapi API Client](../ui/strapi-api-client.md#adding-new-endpoints) for the full client surface. New types must be added to [`apps/ui/src/lib/strapi-api/base.ts:17`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/lib/strapi-api/base.ts#L17):
 
 ```ts
 export const API_ENDPOINTS: Partial<Record<UID.ContentType, string>> = {
@@ -128,7 +128,7 @@ Without this entry, `PublicStrapiClient.fetchMany("api::product.product", ...)` 
 
 ## Step 5 — Expose the endpoint to the browser (optional)
 
-Only required if the frontend will call this content type **from the client**, not from Server Components. The proxy routes have an allow-list at [`apps/ui/src/lib/strapi-api/request-auth.ts:3`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/lib/strapi-api/request-auth.ts#L3):
+Only required if the UI will call this content type **from the client**, not from Server Components. The proxy routes have an allow-list at [`apps/ui/src/lib/strapi-api/request-auth.ts:3`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/lib/strapi-api/request-auth.ts#L3):
 
 ```ts
 const ALLOWED_STRAPI_ENDPOINTS: Record<string, string[]> = {
@@ -148,16 +148,13 @@ const ALLOWED_STRAPI_ENDPOINTS: Record<string, string[]> = {
 
 Server Components do not use the proxy, so this is unnecessary for SSR-only consumption. Skip it if you don't fetch from the browser.
 
-## Step 6 — Regenerate types
+## Step 6 — Use the generated types
 
-```bash
-pnpm generate:types
-pnpm sync-types
-```
+:::info
+Strapi types are generated automatically as part of the project workflow. After the schema is picked up, `"api::product.product"` is available in `UID.ContentType` and `Data.ContentType<"api::product.product">` resolves.
 
-`generate:types` regenerates [`apps/strapi/types/generated/contentTypes.d.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/types/generated/). `sync-types` mirrors it into `packages/strapi-types/generated/`.
-
-After this, `"api::product.product"` is in `UID.ContentType` and `Data.ContentType<"api::product.product">` resolves. See [Strapi Types Usage](../content-system/strapi-types-usage.md).
+See [Strapi Types](../strapi/strapi-types.md) for the package structure and usage examples.
+:::
 
 ## Step 7 — (Optional) Add a document middleware
 
@@ -210,7 +207,7 @@ const detail = await PublicStrapiClient.fetchOneBySlug(
 )
 ```
 
-`PrivateStrapiClient` has the same surface but injects the Strapi JWT from the Better Auth session — use it for per-user reads (e.g. orders, account-scoped products). See [Strapi API Client](../content-system/strapi-api-client.md).
+`PrivateStrapiClient` has the same surface but injects the Strapi JWT from the Better Auth session — use it for per-user reads (e.g. orders, account-scoped products). See [Strapi API Client](../ui/strapi-api-client.md).
 
 ## Step 9 — (Optional) Seed sample content
 
@@ -224,9 +221,9 @@ Commit the new `seed/exports/strapi-export-YYYY-MM-DD-HHmmss.tar.gz` alongside t
 
 ## Related Documentation
 
-- [Architecture](../architecture.md) — where this type sits in the request lifecycle
-- [Strapi Schemas](../content-system/strapi-schemas.md) — attribute reference, lifecycle hooks, document middlewares
-- [Strapi API Client](../content-system/strapi-api-client.md) — `PublicStrapiClient` / `PrivateStrapiClient` surface
-- [Strapi Types Usage](../content-system/strapi-types-usage.md) — typed query params and `Data.ContentType<...>`
-- [Page Builder](../content-system/page-builder.md) — adding a dynamic-zone component instead of a collection
+- [Strapi API Client](../ui/strapi-api-client.md) — where this type sits in the UI request flow
+- [Strapi Schemas](../strapi/strapi-schemas.md) — attribute reference, lifecycle hooks, document middlewares
+- [Strapi API Client](../ui/strapi-api-client.md) — `PublicStrapiClient` / `PrivateStrapiClient` surface
+- [Strapi Types](../strapi/strapi-types.md) — typed query params and `Data.ContentType<...>`
+- [Page Builder](../page-builder/introduction.md) — adding a dynamic-zone component instead of a collection
 - [Data Seeding](../strapi/data-seeding.md) — exporting and committing sample content

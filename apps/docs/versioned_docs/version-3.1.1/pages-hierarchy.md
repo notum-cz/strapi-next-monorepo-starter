@@ -6,7 +6,7 @@ The visitable pages are organized in a hierarchy using the `parent` and (optiona
 
 ## Collections
 
-Following collections are used to store pages. That means that every following page is visitable from frontend and has its own URL.
+Following collections are used to store pages. That means that every following page is visitable from UI and has its own URL.
 
 ### Collection `api::page.page`
 
@@ -20,7 +20,7 @@ Every page from collections above has required `slug` field, which is used to id
 
 ## Full path generation and redirects
 
-The `fullPath` field is automatically generated and contains the full path of the page, including all parent slugs. It is main identifier used to render the page from the URL (frontend finds pages using `fullPath` filter).
+The `fullPath` field is automatically generated and contains the full path of the page, including all parent slugs. It is main identifier used to render the page from the URL (UI finds pages using `fullPath` filter).
 
 The `fullPath` is generated from the `slug` and the `parent` relation field. Automatic generation of `fullPath` can be disabled on the code level (by setting `PAGES_HIERARCHY_ENABLED` to `false` in the Strapi codebase).
 

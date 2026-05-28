@@ -1,0 +1,20 @@
+# Project Structure
+
+The UI app follows the Next.js App Router layout. Page-specific code should stay close to the route that owns it; shared code lives under `src/components`, `src/lib`, or `src/hooks`.
+
+| Path                                                                                                                                    | Purpose                                                                                                 |
+| --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| [`src/app`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/ui/src/app)                                         | App Router. Page-specific components belong under `src/app/<route>/_components`, not in shared folders. |
+| [`src/components/elementary`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/ui/src/components/elementary)     | Standalone primitives reusable anywhere.                                                                |
+| [`src/components/forms`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/ui/src/components/forms)               | Form wrappers, field types.                                                                             |
+| [`src/components/page-builder`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/ui/src/components/page-builder) | Strapi page-builder mapping. See [Page Builder](../page-builder/introduction.md).                       |
+| [`src/components/providers`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/ui/src/components/providers)       | Global context providers.                                                                               |
+| [`src/components/typography`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/ui/src/components/typography)     | Heading/paragraph/blockquote elements.                                                                  |
+| [`src/components/ui`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/ui/src/components/ui)                     | shadcn/ui wrappers around Radix. Managed by shadcn CLI.                                                 |
+| [`src/hooks`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/ui/src/hooks)                                     | React hooks.                                                                                            |
+| [`src/lib`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/ui/src/lib)                                         | Auth, theme, i18n, dates, navigation, reCAPTCHA, styles.                                                |
+| [`src/lib/metadata`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/ui/src/lib/metadata)                       | Strapi SEO to Next.js `Metadata` helpers.                                                               |
+| [`src/lib/strapi-api`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/ui/src/lib/strapi-api)                   | Strapi clients and proxy helpers. See [Strapi API Client](./strapi-api-client.md).                      |
+| [`src/locales`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/ui/locales)                                     | next-intl message catalogs.                                                                             |
+| [`src/styles`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/ui/src/styles)                                   | Global styles.                                                                                          |
+| [`src/types`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/ui/src/types)                                     | Type definitions.                                                                                       |

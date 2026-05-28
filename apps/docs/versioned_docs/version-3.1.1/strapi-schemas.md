@@ -17,7 +17,7 @@ The UID must match exactly in:
 1. Schema file location
 2. Page's dynamiczone components array
 3. Document middleware population rules
-4. Frontend component registry
+4. UI component registry
 
 ## Schema Attributes
 

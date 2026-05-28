@@ -6,6 +6,6 @@
   "link": {
     "type": "generated-index",
     "title": "Strapi",
-    "description": "Backend-only operational concerns — plugins, upload providers, email, data seeding."
+    "description": "Backend content modeling and operational concerns — schemas, generated types, plugins, upload providers, email, data seeding."
   }
 }

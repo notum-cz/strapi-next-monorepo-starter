@@ -1,13 +1,15 @@
 # 🔥 UI — `@repo/ui`
 
-[Next.js v16](https://nextjs.org/docs) frontend for the Strapi + Next.js Monorepo Starter.
+[Next.js v16](https://nextjs.org/docs) UI for the Strapi + Next.js Monorepo Starter.
 
 Conceptual + feature docs live in [/apps/docs](../docs/docs). This README covers **setup and deployment** only.
 
-- [Architecture](../docs/docs/architecture.md) — request lifecycle, proxies, draft mode, i18n
-- [Frontend Features](../docs/docs/frontend/frontend-features.md) — project layout, shadcn, middleware proxies, Sentry, reCAPTCHA, logs
-- [Image Optimization](../docs/docs/frontend/images.md) — `StrapiBasicImage`, `StaticImage`, imgproxy, `sizes`
-- [Authentication](../docs/docs/auth/frontend/authentication.md) · [Strapi API Client](../docs/docs/content-system/strapi-api-client.md) · [Page Builder](../docs/docs/content-system/page-builder.md)
+- [Features](../docs/docs/getting-started/features.md) — stack and included capabilities
+- [UI Features](../docs/docs/ui/ui-features.md) — overview of project layout, middleware, errors, Sentry, reCAPTCHA, SEO, logs
+- [Environment Variables](../docs/docs/ui/environment-variables.md) — `.env.local`, API tokens, `env.mjs`, `getEnvVar()`
+- [Docker Build](../docs/docs/ui/docker-build.md) · [Rendering Modes](../docs/docs/ui/rendering-modes.md)
+- [Image Optimization](../docs/docs/ui/images.md) — `StrapiBasicImage`, `StaticImage`, imgproxy, `sizes`
+- [Authentication](../docs/docs/auth/ui/authentication.md) · [Strapi API Client](../docs/docs/ui/strapi-api-client.md) · [Page Builder](../docs/docs/page-builder/introduction.md)
 
 ## 🥞 Stack
 
@@ -20,7 +22,7 @@ Conceptual + feature docs live in [/apps/docs](../docs/docs). This README covers
 
 ### 1. Environment variables
 
-Copy `.env.local.example` to `.env.local` and update values. **All variables are optional in [src/env.mjs](./src/env.mjs)** — the schema uses `@t3-oss/env-nextjs` and intentionally allows building without secrets baked in. Runtime code (`getEnvVar()` in [src/lib/env-vars.ts](./src/lib/env-vars.ts)) must check presence where it matters.
+Copy `.env.local.example` to `.env.local` and update values. Detailed behavior is documented in [Environment Variables](../docs/docs/ui/environment-variables.md).
 
 Required for build-time pre-rendering (`generateStaticParams()`):
 
@@ -30,7 +32,7 @@ Required for build-time pre-rendering (`generateStaticParams()`):
 | `STRAPI_REST_READONLY_API_KEY` | Read-only Strapi API token (see below).                        |
 | `APP_PUBLIC_URL`               | Used for canonical URLs and metadata.                          |
 
-If ISR pages render at runtime only, these can be supplied at runtime instead. See [Docker](#production-docker) and [Architecture → Env Vars](../docs/docs/architecture.md#environment-variables) for the full list.
+If ISR pages render at runtime only, these can be supplied at runtime instead. See [Docker Build](../docs/docs/ui/docker-build.md) and [Environment Variables](../docs/docs/ui/environment-variables.md) for details.
 
 #### Read-only API token
 
@@ -55,8 +57,6 @@ Permissions: e.g. "Create subscriber"
 
 Set value in `STRAPI_REST_CUSTOM_API_KEY`.
 
-`getEnvVar()` reads env vars on both server and client; always prefer it over `process.env` or direct `env` imports. See [Architecture → Env Vars](../docs/docs/architecture.md#environment-variables).
-
 ### 2. Run locally (with hot-reloading)
 
 All commands from the **monorepo root**.
@@ -71,69 +71,7 @@ App runs on [http://localhost:3000](http://localhost:3000).
 
 ## 🛠️ Production Docker
 
-Builds Next.js in [`standalone`](https://nextjs.org/docs/app/api-reference/next-config-js/output) mode for minimal image size. Hardcoded in [Dockerfile](Dockerfile) via `NEXT_OUTPUT=standalone`.
-
-:::warning
-Turborepo requires root `package.json`, `pnpm-lock.yaml`, and `turbo.json`. Run `docker build` from the monorepo root, not from `apps/ui`.
-[Reference](https://turbo.build/repo/docs/handbook/deploying-with-docker)
-:::
-
-### Build
-
-Two strategies:
-
-**A. Build once, deploy many** — no env vars at build time. ISR pages render entirely at runtime. Same image deploys to staging + prod.
-
-```bash
-# from monorepo root
-docker build -t starter-ui:latest -f apps/ui/Dockerfile .
-```
-
-**B. Build per environment** — pre-renders pages depending on `STRAPI_URL` at build. Faster first request, but image is tied to one environment and **bakes the Strapi readonly API key into the image**.
-
-```bash
-docker build -t starter-ui:latest -f apps/ui/Dockerfile \
-  --build-arg STRAPI_URL="http://host.docker.internal:1337" \
-  --build-arg STRAPI_REST_READONLY_API_KEY="your-readonly-api-key" \
-  --build-arg APP_PUBLIC_URL="http://localhost:3000" \
-  --progress=plain \
-  .
-```
-
-### Run
-
-```bash
-docker run -it --rm --name starter-ui -p 3000:3000 \
-  --env-file apps/ui/.env.local starter-ui:latest
-```
-
-### Output modes
-
-| Mode         | Use                                                                                                                                                                            |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `standalone` | Self-hosting in Docker. **Default for this starter.**                                                                                                                          |
-| `undefined`  | Default `.next` build. For `next start` or hosting providers (Vercel etc.).                                                                                                    |
-| `export`     | Static HTML/CSS/JS. **Not supported out-of-box** — Better Auth, the POST [auth API route](src/app/api/auth/%5B...all%5D/route.ts), and other dynamic features must be removed. |
-
-`pnpm build:ui:static` (from root) triggers `output: "export"` but will fail unless you've removed dynamic features. To validate static builds in CI, enable the relevant step in [ci.yml](../../.github/workflows/ci.yml).
-
-### ISR (Incremental Static Regeneration)
-
-ISR with time-based revalidation is enabled globally. Default revalidate: `60s` in production, `0` in development. Overridden per-request via [BaseStrapiClient](src/lib/strapi-api/base.ts) fetch options. See [Architecture → Caching](../docs/docs/architecture.md#caching).
-
-For dynamic routes where slugs are not known at build time:
-
-```ts
-export const dynamic = "force-static"
-export const dynamicParams = true
-export const revalidate = 300
-```
-
-Unknown slugs are generated **once on first request**, cached, revalidated every 300s. Request-time APIs (`cookies()`, `headers()`, `auth`) are not allowed in this mode — they force fully dynamic rendering. Without [`cacheComponents`](https://nextjs.org/docs/app/getting-started/cache-components) enabled, touching them disables ISR.
-
-Don't use this setup for user-specific pages.
-
-[More on ISR](https://nextjs.org/docs/app/building-your-application/data-fetching/incremental-static-regeneration).
+Docker build strategies are documented in [Docker Build](../docs/docs/ui/docker-build.md). See also [Rendering Modes](../docs/docs/ui/rendering-modes.md).
 
 ## 🧹 `removeThisWhenYouNeedMe`
 

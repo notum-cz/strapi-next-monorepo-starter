@@ -1,0 +1,11 @@
+{
+  "label": "Built-in pages",
+  "position": 4,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Built-in pages",
+    "description": "Non-production pages for development and testing, such as the components showcase and content overview pages."
+  }
+}

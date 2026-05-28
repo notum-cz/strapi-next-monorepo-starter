@@ -6,7 +6,7 @@ The Strapi API client provides a type-safe interface for fetching content from S
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                            Next.js Frontend                                 │
+│                            Next.js UI                                 │
 │                                                                             │
 │  Server Components                     Client Components                    │
 │  ┌─────────────────────┐               ┌─────────────────────┐              │

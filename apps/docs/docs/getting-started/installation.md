@@ -56,6 +56,6 @@ pnpm install
 After install, you'll have:
 
 - `apps/strapi/.env` — Strapi backend
-- `apps/ui/.env.local` — Next.js frontend
+- `apps/ui/.env.local` — Next.js UI
 
 Both start from `.env.example` templates. Most values work out of the box; you'll need to fill at minimum a Strapi API token before the UI can fetch content — covered in [Quick Start](./quick-start.md).

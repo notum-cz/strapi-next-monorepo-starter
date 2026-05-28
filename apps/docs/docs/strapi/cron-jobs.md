@@ -102,6 +102,6 @@ The single-replica pattern is the lowest-risk default for this template — flip
 
 ## Related Documentation
 
-- [Strapi Plugins](./strapi-plugins.md) — operational plugins (Sentry, upload, email)
-- [Strapi Schemas](../content-system/strapi-schemas.md) — document middlewares as an alternative for content-state side effects
+- [Strapi Plugins](./plugins/overview.md) — operational plugins (Sentry, upload, email)
+- [Strapi Schemas](./strapi-schemas.md) — document middlewares as an alternative for content-state side effects
 - Upstream: [Strapi cron configuration](https://docs.strapi.io/dev-docs/configurations/cron)

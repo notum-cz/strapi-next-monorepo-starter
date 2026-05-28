@@ -7,7 +7,7 @@ This starter includes GitHub Actions workflows and Heroku deployment helpers. Tr
 Prepared workflows:
 
 1. [`ci.yml`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/.github/workflows/ci.yml) runs on push and pull requests to `main` and verifies that code builds.
-2. [`qa.yml`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/.github/workflows/qa.yml) is manually triggered and runs the QA tests from `qa/tests`. It should usually target a deployed frontend by setting `BASE_URL`.
+2. [`qa.yml`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/.github/workflows/qa.yml) is manually triggered and runs the QA tests from `qa/tests`. It should usually target a deployed UI by setting `BASE_URL`.
 3. [`auto-pr.yml`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/.github/workflows/auto-pr.yml) creates or updates a PR from `dev` to `main` when changes are pushed. It extracts required environment variables from commit messages.
 
 See [Git Hooks and Conventions](./workflow.md#environment-variables-in-commits) for the commit-message format used by `auto-pr.yml`.

@@ -4,11 +4,11 @@
 
 Conceptual + feature docs live in [/apps/docs](../docs/docs). This README covers **setup and deployment** only.
 
-- [Architecture](../docs/docs/architecture.md) — request lifecycle, document middleware, draft mode
+- [Features](../docs/docs/getting-started/features.md) — stack and included capabilities
 - [Strapi Plugins](../docs/docs/strapi/strapi-plugins.md) — CKEditor, Tiptap, upload (Azure/S3), email (Mailgun/Mailtrap), Sentry, cron, config-sync
-- [Strapi Schemas](../docs/docs/content-system/strapi-schemas.md) · [Strapi Types Usage](../docs/docs/content-system/strapi-types-usage.md) · [Pages Hierarchy](../docs/docs/content-system/pages-hierarchy.md)
+- [Strapi Schemas](../docs/docs/strapi/strapi-schemas.md) · [Strapi Types](../docs/docs/strapi/strapi-types.md) · [Pages Hierarchy](../docs/docs/page-builder/pages-hierarchy.md)
 - [Data Seeding](../docs/docs/strapi/data-seeding.md) · [Add a Content Type](../docs/docs/getting-started/add-content-type.md)
-- SSO: [Microsoft (admin)](../docs/docs/auth/strapi-admin/microsoft-sso.md) · [OAuth (end-users)](../docs/docs/auth/frontend/oauth-providers.md)
+- SSO: [Microsoft (admin)](../docs/docs/auth/strapi-admin/microsoft-sso.md) · [OAuth (end-users)](../docs/docs/auth/ui/oauth-providers.md)
 
 ## 🥞 Stack
 
@@ -135,17 +135,17 @@ docker run -it --rm --name starter-strapi -p 1337:1337 \
 
 These features are configured in this app but documented separately:
 
-- **Pages hierarchy** — parent/child pages with auto `fullPath`. See [Pages Hierarchy](../docs/docs/content-system/pages-hierarchy.md).
+- **Pages hierarchy** — parent/child pages with auto `fullPath`. See [Pages Hierarchy](../docs/docs/page-builder/pages-hierarchy.md).
 - **`utilities.link` component** — internal/external link abstraction with icons, sizes, shadcn-aligned variants. Internal links are relations to collections, so they survive `fullPath` changes.
-- **Document middleware (relation population)** — the `populateDynamicZone` request param triggers automatic deep population. Avoids hand-maintaining populate trees. See [Architecture → Request Lifecycle](../docs/docs/architecture.md#request-lifecycle--page-render) + [Page Builder](../docs/docs/content-system/page-builder.md).
-- **TypeScript generation** — from monorepo root: `pnpm generate:types && pnpm sync-types`. See [Strapi Types Usage](../docs/docs/content-system/strapi-types-usage.md).
-- **Lifecycle hooks** — `afterCreate` subscribers in [`src/lifeCycles/`](./src/lifeCycles/). User registration email is active by default, but returns without sending when `CLIENT_ACCOUNT_ACTIVATION_URL` is unset and logs email-provider failures without blocking registration. See [Strapi Schemas → Lifecycle Subscribers](../docs/docs/content-system/strapi-schemas.md#lifecycle-subscribers).
+- **Document middleware (relation population)** — the `populateDynamicZone` request param triggers automatic deep population. Avoids hand-maintaining populate trees. See [Page Builder](../docs/docs/page-builder/introduction.md).
+- **TypeScript generation** — from monorepo root: `pnpm generate:types && pnpm sync-types`. See [Strapi Types](../docs/docs/strapi/strapi-types.md).
+- **Lifecycle hooks** — `afterCreate` subscribers in [`src/lifeCycles/`](./src/lifeCycles/). User registration email is active by default, but returns without sending when `CLIENT_ACCOUNT_ACTIVATION_URL` is unset and logs email-provider failures without blocking registration. See [Strapi Schemas → Lifecycle Subscribers](../docs/docs/strapi/strapi-schemas.md#lifecycle-subscribers).
 - **Rich text editors (CKEditor + Tiptap)** — see [Strapi Plugins → Rich Text](../docs/docs/strapi/strapi-plugins.md#rich-text-editors).
 - **Upload providers (Azure / S3 / local)** — see [Strapi Plugins → Upload](../docs/docs/strapi/strapi-plugins.md#upload-providers).
 - **Email providers (Mailgun / Mailtrap)** — see [Strapi Plugins → Email](../docs/docs/strapi/strapi-plugins.md#email-providers).
-- **OAuth (GitHub/Google/etc.)** — see [OAuth Providers](../docs/docs/auth/frontend/oauth-providers.md).
+- **OAuth (GitHub/Google/etc.)** — see [OAuth Providers](../docs/docs/auth/ui/oauth-providers.md).
 - **Admin SSO (Microsoft Entra ID)** — see [Microsoft SSO](../docs/docs/auth/strapi-admin/microsoft-sso.md). Requires `STRAPI_LICENSE` (Enterprise feature). When behind an HTTPS-terminating proxy, enable `proxy: { koa: true }` in `config/server.ts` for secure cookies.
-- **Live previews** — set `STRAPI_PREVIEW_ENABLED=true`, `CLIENT_URL`, `STRAPI_PREVIEW_SECRET` (matching frontend). See [Architecture → Draft Mode](../docs/docs/architecture.md#draft-mode--preview).
+- **Live previews** — set `STRAPI_PREVIEW_ENABLED=true`, `CLIENT_URL`, `STRAPI_PREVIEW_SECRET` (matching UI). See [Strapi Preview](../docs/docs/strapi/strapi-preview.md).
 - **Cron jobs** — defined in [`config/cron-tasks.ts`](./config/cron-tasks.ts), enabled via `CRON_ENABLED=true`.
 
 ## Data transfer between environments

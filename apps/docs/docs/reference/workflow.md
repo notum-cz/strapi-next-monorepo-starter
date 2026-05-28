@@ -55,4 +55,4 @@ New environment variables:
 
 ## Release Notes
 
-Release automation is driven by [semantic-release](https://semantic-release.gitbook.io/) and the shared [`@repo/semantic-release-config`](./packages.md#reposemantic-release-config) package.
+Release automation is driven by [semantic-release](https://semantic-release.gitbook.io/) and the shared [`@repo/semantic-release-config`](./packages/semantic-release-config.md) package.

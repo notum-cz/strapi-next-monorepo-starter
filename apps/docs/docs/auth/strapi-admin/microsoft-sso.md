@@ -7,7 +7,7 @@ sidebar_position: 1
 Single sign-on for **Strapi admin users** — the people who log into the CMS admin panel to manage content. Authenticates via Microsoft Entra ID using `passport-azure-ad-oauth2`.
 
 :::info Scope
-This is **admin-panel only**. End-users of your Next.js application don't see this — for them, see [Frontend Authentication](../frontend/authentication.md) and [OAuth Providers](../frontend/oauth-providers.md).
+This is **admin-panel only**. End-users of your Next.js application don't see this — for them, see [UI Authentication](../ui/authentication.md) and [OAuth Providers](../ui/oauth-providers.md).
 :::
 
 Official Strapi documentation:

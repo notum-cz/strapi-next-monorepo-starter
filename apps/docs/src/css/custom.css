@@ -84,3 +84,169 @@
   color: var(--ifm-footer-link-hover-color);
   text-decoration-thickness: 2px;
 }
+
+.homeHero {
+  padding: 5.5rem 0 4.5rem;
+  background: #f6f6f6;
+  border-bottom: 1px solid #e7e7e7;
+}
+
+[data-theme="dark"] .homeHero {
+  background: #2b292d;
+  border-bottom-color: #454545;
+}
+
+.homeHeroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(520px, 1.12fr);
+  gap: 3.5rem;
+  align-items: center;
+}
+
+.homeHero h1 {
+  max-width: 860px;
+  margin: 0;
+  font-size: 3.8rem;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.homeEyebrow {
+  margin: 0 0 1rem;
+  color: var(--ifm-color-primary);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.homeActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.homePreview {
+  overflow: hidden;
+  transform: scale(1.04);
+  transform-origin: center right;
+  background: #ffffff;
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  box-shadow: 0 24px 60px rgba(43, 41, 45, 0.14);
+}
+
+[data-theme="dark"] .homePreview {
+  background: #3d3d3d;
+  border-color: #5d5d5d;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+}
+
+.homePreview img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.homeSection {
+  padding: 4rem 0;
+}
+
+.homeSection--muted {
+  background: #f8fafc;
+  border-top: 1px solid #e7e7e7;
+  border-bottom: 1px solid #e7e7e7;
+}
+
+[data-theme="dark"] .homeSection--muted {
+  background: #3d3d3d;
+  border-color: #454545;
+}
+
+.homeGrid {
+  display: grid;
+  gap: 2rem;
+}
+
+.homeGrid--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.homeSection h2 {
+  margin-top: 0;
+  font-size: 2rem;
+  letter-spacing: 0;
+}
+
+.homeWhy {
+  max-width: 1120px;
+}
+
+.homeWhy h2 {
+  font-size: 2rem;
+}
+
+.homeWhy p {
+  max-width: 900px;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 1.08rem;
+}
+
+.homeCards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.homeCard {
+  display: block;
+  height: 100%;
+  padding: 1.25rem;
+  color: inherit;
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.homeCard:hover {
+  color: inherit;
+  border-color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+
+.homeCard h3 {
+  margin-top: 0;
+  font-size: 1.15rem;
+}
+
+.homeCard p {
+  margin-bottom: 0;
+  color: var(--ifm-color-emphasis-700);
+}
+
+@media (max-width: 996px) {
+  .homeHeroGrid,
+  .homeGrid--two,
+  .homeCards {
+    grid-template-columns: 1fr;
+  }
+
+  .homeHero {
+    padding: 3.5rem 0 3rem;
+  }
+
+  .homeHero h1 {
+    font-size: 3rem;
+  }
+
+  .homePreview {
+    max-width: 680px;
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .homeHero h1 {
+    font-size: 2.35rem;
+  }
+}
