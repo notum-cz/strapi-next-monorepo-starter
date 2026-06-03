@@ -1,0 +1,11 @@
+{
+  "label": "Instructions",
+  "position": 3,
+  "collapsible": true,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "title": "Instructions",
+    "description": "Step-by-step guidance for setting up and maintaining the shared design system."
+  }
+}
