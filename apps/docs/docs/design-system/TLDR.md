@@ -16,9 +16,8 @@ Choose the rich text editor early. CKEditor is better for closer WYSIWYG parity 
 
 Components should have clear variants and defined states. The main goal is consistency: design-system rules should be reused from shared places, not copied locally into every section.
 
-## Related Pages
+## Detailed instructions
 
-- [Full design-system checklist](./checklist.md)
 - [How to start](./instructions/01-how-to-start.md)
 - [Tokens And Global Styles](./instructions/02-tokens-and-global-styles.md)
 - [Typography](./instructions/03-typography.md)
