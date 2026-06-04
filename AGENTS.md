@@ -22,7 +22,7 @@ pnpm lint             # ESLint all packages
 pnpm typecheck        # Typecheck (run from apps/ui)
 ```
 
-See [docs/commands.md](docs/commands.md) for full command reference.
+See [apps/docs/docs/commands.md](apps/docs/docs/commands.md) for full command reference.
 
 ## Type Generation (Critical)
 
