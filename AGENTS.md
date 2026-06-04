@@ -36,14 +36,14 @@ This updates `@repo/strapi-types`. Forgetting causes silent type mismatches betw
 
 ## Documentation
 
-- [Commands Reference](docs/commands.md) — All pnpm commands
-- [Architecture](docs/architecture.md) — System design and patterns
-- [Page Builder](docs/page-builder.md) — Component registry and rendering
-- [Strapi API Client](docs/strapi-api-client.md) — Fetching content from Strapi
-- [Pages Hierarchy](docs/pages-hierarchy.md) — URL structure and redirects
-- [Authentication](docs/authentication.md) — Better Auth + Strapi JWT integration
-- [Strapi Schemas](docs/strapi-schemas.md) — Schema attributes, localization, lifecycle hooks
-- [Strapi Types](docs/strapi-types-usage.md) — Type utilities and usage patterns
+- [Commands Reference](apps/docs/docs/commands.md) — All pnpm commands
+- [Architecture](apps/docs/docs/architecture.md) — System design and patterns
+- [Page Builder](apps/docs/docs/page-builder.md) — Component registry and rendering
+- [Strapi API Client](apps/docs/docs/strapi-api-client.md) — Fetching content from Strapi
+- [Pages Hierarchy](apps/docs/docs/pages-hierarchy.md) — URL structure and redirects
+- [Authentication](apps/docs/docs/authentication.md) — Better Auth + Strapi JWT integration
+- [Strapi Schemas](apps/docs/docs/strapi-schemas.md) — Schema attributes, localization, lifecycle hooks
+- [Strapi Types](apps/docs/docs/strapi-types-usage.md) — Type utilities and usage patterns
 
 ## Commits
 
