@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # Commands Reference
 
 All commands run from the **monorepo root** via Turbo. Never `cd` into individual apps.
@@ -74,6 +78,7 @@ pnpm transfer:strapi        # Strapi data transfer (interactive)
 
 ```bash
 pnpm test                                   # Vitest in all apps
+pnpm test:ci                                # Vitest in all apps except Strapi
 pnpm test:strapi                            # Vitest in Strapi
 pnpm test:ui                                # Vitest in Next.js
 pnpm tests:playwright:e2e:test              # Playwright E2E
@@ -81,7 +86,19 @@ pnpm tests:playwright:e2e:test:interactive  # Playwright UI mode
 pnpm tests:playwright:axe                   # axe-core a11y
 pnpm tests:playwright:seo                   # SEO checks
 pnpm tests:playwright:visual                # Visual regression
+pnpm tests:playwright:visual:update         # Update visual regression snapshots
 pnpm tests:lhci:perfo                       # Lighthouse CI
+```
+
+## Setup and lifecycle
+
+These usually run automatically through pnpm or Git hooks, but can be invoked from the monorepo root when needed:
+
+```bash
+pnpm preinstall             # Enforce pnpm as the package manager
+pnpm postinstall            # Run setup:apps after install
+pnpm prepare                # Install Lefthook Git hooks
+pnpm setup:apps             # Copy *.example files to matching local files if absent
 ```
 
 ## Commit
@@ -109,4 +126,27 @@ Any per-package script not wrapped above can be invoked via pnpm filters from ro
 ```bash
 pnpm -F @repo/strapi <script>
 pnpm -F @repo/ui <script>
+pnpm -F @repo/docs <script>
+pnpm -F @repo/design-system <script>
+pnpm -F @repo/tests-playwright <script>
+```
+
+Common package-only scripts:
+
+```bash
+pnpm -F @repo/strapi config:dump        # Dump Strapi configuration to dump.json
+pnpm -F @repo/strapi config:restore     # Restore Strapi configuration from dump.json
+pnpm -F @repo/strapi develop            # Start Strapi through the seed runner
+pnpm -F @repo/strapi develop:plain      # Start plain strapi develop
+pnpm -F @repo/strapi develop:watch      # Start Strapi and watch admin changes
+pnpm -F @repo/strapi generate           # Run Strapi generator
+pnpm -F @repo/strapi start:plain        # Start plain strapi start
+pnpm -F @repo/strapi strapi             # Run Strapi CLI
+pnpm -F @repo/strapi test:watch         # Vitest watch mode for Strapi
+pnpm -F @repo/ui preview                # Build and start Next.js
+pnpm -F @repo/ui test:watch             # Vitest watch mode for Next.js
+pnpm -F @repo/docs clear                # Clear Docusaurus cache
+pnpm -F @repo/docs docusaurus           # Run Docusaurus CLI
+pnpm -F @repo/design-system dev         # Watch shared design-system CSS build
+pnpm -F @repo/tests-playwright playwright-seo-tests  # Playwright SEO script
 ```

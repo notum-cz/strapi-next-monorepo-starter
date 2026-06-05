@@ -1,10 +1,10 @@
 {
-  "label": "How to...",
-  "position": 8,
+  "label": "Testing",
+  "position": 5,
   "collapsible": true,
   "collapsed": true,
   "link": {
     "type": "doc",
-    "id": "how-to/index"
+    "id": "reference/testing/overview"
   }
 }

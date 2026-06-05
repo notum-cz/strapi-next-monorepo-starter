@@ -68,6 +68,6 @@ Shared code lives in [`packages/*`](../reference/packages/overview.md).
 - [UI Project Structure](../ui/project-structure.md)
 - [Strapi Plugins](../strapi/plugins/overview.md)
 - [Internationalization](../reference/internationalization.md)
-- [Testing](../reference/testing.md)
+- [Testing](../reference/testing/overview.md)
 - [Packages](../reference/packages/overview.md)
-- [Deployment](../reference/deployment.md)
+- [Deployment](../reference/deployment/overview.md)

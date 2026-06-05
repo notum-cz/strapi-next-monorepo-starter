@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# OAuth Providers (GitHub, Google, etc.) — end-users
+# OAuth Providers
 
 End-user social login via Strapi's Users & Permissions plugin. **End-users only** — these providers authenticate visitors of your app. For CMS-admin SSO see [Microsoft SSO](../strapi-admin/microsoft-sso.md).
 
@@ -102,5 +102,3 @@ Any provider implemented by Strapi's Users & Permissions plugin: GitHub, Google,
 ## Related Documentation
 
 - [Authentication](./authentication.md) — Better Auth session + Strapi JWT
-- [Microsoft SSO](../strapi-admin/microsoft-sso.md) — admin-panel SSO via Microsoft Entra ID
-- [Features](../../getting-started/features.md) — stack and included capabilities

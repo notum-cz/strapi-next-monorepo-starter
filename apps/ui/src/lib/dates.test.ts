@@ -6,7 +6,7 @@ import {
   formatDateRange,
   getDiffInDays,
   setupDayJs,
-} from "../dates"
+} from "./dates"
 
 beforeAll(() => {
   setupDayJs()

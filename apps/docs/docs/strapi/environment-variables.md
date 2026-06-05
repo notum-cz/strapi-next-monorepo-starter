@@ -61,7 +61,7 @@ table td:first-child code {
 | `DATABASE_POOL_MIN` / `DATABASE_POOL_MAX` | No                                          | Database pool limits.                                                                                 |
 | `DATABASE_CONNECTION_TIMEOUT`             | No                                          | Database connection timeout.                                                                          |
 | `TEST_DATABASE_FILENAME`                  | Tests                                       | SQLite filename for test setups.                                                                      |
-| `SENTRY_DSN`                              | When Sentry is used                         | Strapi-side error tracking. See [Sentry](../reference/sentry.md).                                     |
+| `SENTRY_DSN`                              | When Sentry is used                         | Strapi-side error tracking. See [Sentry](../reference/integrations/sentry.md).                        |
 | `CLIENT_URL`                              | Preview and frontend links                  | Frontend base URL; preview links; admin CORS allowed origin.                                          |
 | `STRAPI_PREVIEW_ENABLED`                  | No                                          | Enables Strapi Preview button configuration.                                                          |
 | `STRAPI_PREVIEW_SECRET`                   | When preview is enabled                     | Shared secret for Strapi Preview and the UI preview route. See [Strapi Preview](./strapi-preview.md). |
@@ -69,5 +69,5 @@ table td:first-child code {
 | `ADMIN_PANEL_CONFIG_API_AUTH_TOKEN`       | When admin runtime config injection is used | Protects the custom admin panel config endpoint.                                                      |
 
 :::info Provider and plugin variables
-Additional environment variables depend on enabled Strapi plugins and providers. See [Upload Providers](./plugins/upload-providers.md), [Email Providers](./plugins/email-providers.md), [Strapi Preview](./strapi-preview.md), [Microsoft SSO](../auth/strapi-admin/microsoft-sso.md), and [Sentry](../reference/sentry.md).
+Additional environment variables depend on enabled Strapi plugins and providers. See [Upload Providers](./plugins/upload-providers.md), [Email Providers](./plugins/email-providers.md), [Strapi Preview](./strapi-preview.md), [Microsoft SSO](../auth/strapi-admin/microsoft-sso.md), and [Sentry](../reference/integrations/sentry.md).
 :::

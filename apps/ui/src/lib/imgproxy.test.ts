@@ -9,7 +9,7 @@ vi.mock("@/lib/env-vars", () => ({
   getEnvVar: getEnvVarMock,
 }))
 
-import { imgproxyLoader, isImgproxyEnabled } from "../imgproxy"
+import { imgproxyLoader, isImgproxyEnabled } from "./imgproxy"
 
 const loaderProps = (src: string, width = 768): ImageLoaderProps => ({
   src,

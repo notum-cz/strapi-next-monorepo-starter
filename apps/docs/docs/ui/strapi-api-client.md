@@ -45,6 +45,8 @@ flowchart LR
 
 `PrivateStrapiClient` is for content that belongs to the signed-in end user. It uses the end user's Strapi JWT from the Better Auth session, or a JWT passed directly in request options, and should be used for protected endpoints where the response depends on the current user.
 
+Automatic user JWT lookup reads the Better Auth session. In Server Components this is a dynamic operation, so it prevents static rendering. When a `PrivateStrapiClient.fetchAPI()` request should not detect the current user or send an `Authorization` header, pass `omitUserAuthorization: true` in the options object.
+
 Both clients share the same base behavior for locale handling, response parsing, endpoint mapping through `API_ENDPOINTS`, and default Strapi fetch caching.
 
 ```typescript
@@ -228,6 +230,24 @@ import { PrivateStrapiClient } from "@/lib/strapi-api"
 const userData = await PrivateStrapiClient.fetchOne("api::user.user", userId, {
   locale,
 })
+```
+
+### Omitting User Authorization
+
+Use `omitUserAuthorization: true` when calling a Strapi endpoint through `PrivateStrapiClient` without a user JWT. This skips Better Auth session token detection and avoids adding the `Authorization` header.
+
+```typescript
+import { PrivateStrapiClient } from "@/lib/strapi-api"
+
+await PrivateStrapiClient.fetchAPI(
+  "/auth/local",
+  undefined,
+  {
+    body: JSON.stringify({ identifier: email, password }),
+    method: "POST",
+  },
+  { omitUserAuthorization: true }
+)
 ```
 
 ## Related Documentation

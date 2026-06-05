@@ -1,11 +1,11 @@
 {
   "label": "Reference",
-  "position": 8,
+  "position": 7,
   "collapsible": true,
   "collapsed": true,
   "link": {
     "type": "generated-index",
     "title": "Reference",
-    "description": "Cheat-sheet style pages — root commands, package surface, workflow, and deployment."
+    "description": "Cheat-sheet style pages for commands, workflow, packages, testing, deployment, and integrations."
   }
 }

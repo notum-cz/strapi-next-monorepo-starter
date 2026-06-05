@@ -1,3 +1,7 @@
+---
+sidebar_position: 2
+---
+
 # reCAPTCHA
 
 reCAPTCHA v3 is a spam and abuse protection service that scores form submissions without showing a user challenge.

@@ -63,8 +63,11 @@ Full reference: [Strapi API Client docs](../docs/docs/content-system/strapi-api-
 // Server
 const session = await getSessionSSR(await headers())
 
-// Client
-const { data: session } = await getSessionCSR()
+// Client component / hook
+const { data: session } = authClient.useSession()
+
+// Client imperative
+const { data: session } = await authClient.getSession()
 ```
 
 Full reference: [Authentication docs](../docs/docs/auth/frontend/authentication.md)

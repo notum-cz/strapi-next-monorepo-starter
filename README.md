@@ -59,11 +59,11 @@ The UI needs a Strapi API token before content can render. Follow [Quick Start](
 - [Docs homepage](./apps/docs)
 - [Features](./apps/docs/docs/getting-started/features.md)
 - [Page Builder](./apps/docs/docs/page-builder/introduction.md)
-- [UI](./apps/docs/docs/ui/ui-features.md)
+- [UI](./apps/docs/docs/ui/project-structure.md)
 - [Strapi](./apps/docs/docs/strapi/strapi-schemas.md)
 - [Authentication](./apps/docs/docs/auth/ui/authentication.md)
 - [Commands](./apps/docs/docs/reference/commands.md)
-- [Deployment](./apps/docs/docs/reference/deployment.md)
+- [Deployment](./apps/docs/docs/reference/deployment/overview.md)
 
 ## Project Layout
 

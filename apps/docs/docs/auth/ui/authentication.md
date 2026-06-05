@@ -13,20 +13,18 @@ This page covers authentication of **end-users of your application** (people who
 ## Architecture
 
 ```mermaid
-flowchart TB
-  subgraph Next["Next.js (apps/ui)"]
-    direction TB
-    BA["Better Auth (v1)<br/>Session via cookies · JWE cache 30 d<br/>Strapi integration plugins"]
-    PSC["PrivateStrapiClient<br/>Retrieves JWT from session<br/>Adds Authorization header"]
-    BA -- "stores strapiJWT in session" --> PSC
-  end
+flowchart LR
+  Browser["Browser"]
+  Next["Next.js<br/>Better Auth<br/>PrivateStrapiClient"]
+  Strapi["Strapi<br/>Users & Permissions"]
 
-  Strapi["Strapi (apps/strapi)<br/>users-permissions plugin<br/>JWT validation on protected endpoints"]
-
-  PSC --> Strapi
+  Browser -- "session cookie" --> Next
+  Next -- "Bearer strapiJWT" --> Strapi
 ```
 
-Credential sign-in flow:
+### Credential Sign-In Flow
+
+Credential sign-in keeps the browser talking to Next.js while Next.js performs the Strapi login server-side. The UI submits email and password to the custom Better Auth endpoint, Strapi returns a Users & Permissions JWT, and the Better Auth plugin stores that JWT on the session before setting the session cookie.
 
 ```mermaid
 sequenceDiagram
@@ -119,9 +117,13 @@ if (session?.user?.strapiJWT) {
 ### Client-Side
 
 ```typescript
-import { getSessionCSR } from "@/lib/auth-client"
+import { authClient } from "@/lib/auth-client"
 
-const { data: session, error } = await getSessionCSR()
+// Reactive session in a client component or hook.
+const { data: session } = authClient.useSession()
+
+// Imperative session lookup.
+const { data: session } = await authClient.getSession()
 
 if (session?.user?.strapiJWT) {
   // User is authenticated
@@ -131,6 +133,10 @@ if (session?.user?.strapiJWT) {
 ## Using PrivateStrapiClient
 
 The client automatically retrieves JWT from the session:
+
+:::warning Static rendering
+Automatic JWT lookup reads the Better Auth session, which is a dynamic operation and prevents static rendering. If a request should not include a user `Authorization` header, pass `omitUserAuthorization: true` in the options object.
+:::
 
 ```typescript
 import { PrivateStrapiClient } from "@/lib/strapi-api"
@@ -146,6 +152,7 @@ const userData = await PrivateStrapiClient.fetchOne(
   "plugin::users-permissions.user",
   userId,
   undefined,
+  undefined,
   { useProxy: true }
 )
 
@@ -154,7 +161,19 @@ const userData = await PrivateStrapiClient.fetchOne(
   "plugin::users-permissions.user",
   userId,
   undefined,
+  undefined,
   { userJWT: "specific-jwt-token" }
+)
+
+// Skip session token detection and omit the Authorization header
+const loginResult = await PrivateStrapiClient.fetchAPI(
+  "/auth/local",
+  undefined,
+  {
+    body: JSON.stringify({ identifier: email, password }),
+    method: "POST",
+  },
+  { omitUserAuthorization: true }
 )
 ```
 
@@ -177,3 +196,4 @@ APP_PUBLIC_URL=        # Base URL for auth callbacks
 ## Related Documentation
 
 - [Strapi API Client](../../ui/strapi-api-client.md) — How the clients handle auth headers
+- [OAuth Providers](./oauth-providers.md) — Adding GitHub, Google, etc. login

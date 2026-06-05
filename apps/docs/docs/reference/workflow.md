@@ -1,6 +1,10 @@
+---
+sidebar_position: 2
+---
+
 # Git Hooks and Conventions
 
-This repository uses Lefthook, commitlint, Commitizen, and conventional commits to keep branch names and commit history predictable.
+This repository uses Lefthook, commitlint, Commitizen, and [Conventional Commits](https://www.conventionalcommits.org/) to keep branch names and commit history predictable.
 
 ## Git Hooks
 
@@ -25,7 +29,7 @@ Exempt branches: `main`, `master`, `develop`, `dev`, `release/*`, `hotfix/*`.
 
 ## Commits
 
-Use conventional commits:
+Use [Conventional Commits](https://www.conventionalcommits.org/) for commit messages:
 
 ```text
 feat(ui): add dark mode toggle
@@ -39,9 +43,13 @@ pnpm commit
 
 ## Environment Variables in Commits
 
+:::warning Work in progress
+This is a lightweight helper, not a complete environment-management solution yet. Treat the extracted list as a reminder to review required variables manually before deployment.
+:::
+
 When introducing new environment variables, mention them in commit messages using `env.VARIABLE_NAME` or `VARIABLE_NAME` in `CONSTANT_CASE`.
 
-The `.github/workflows/auto-pr.yml` extracts these names from commit messages and lists them in the pull request description under "Required Environment Variables".
+The `.github/workflows/auto-pr.yml` extracts these names from commit messages and lists them in the pull request description under "Required Environment Variables". See [GitHub Actions](./deployment/github-actions.md#auto-pr) for the full Auto PR workflow behavior.
 
 Example commit body:
 

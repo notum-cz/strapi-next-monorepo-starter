@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # Sentry
 
 Sentry is an error monitoring service used to capture runtime exceptions, handled errors, and release diagnostics.

@@ -11,15 +11,15 @@ Defaults are enabled for `users-permissions`, `sentry`, `config-sync`, and `tipt
 
 ## Plugin Docs
 
-| Doc                                         | Covers                                                   |
-| ------------------------------------------- | -------------------------------------------------------- |
-| [Users Permissions](./users-permissions.md) | JWT lifetime and auth docs.                              |
-| [Config Sync](./config-sync.md)             | Version-controlled roles, permissions, and settings.     |
-| [CKEditor](./ckeditor.md)                   | HTML rich-text editing and UI rendering.                 |
-| [Tiptap Editor](./tiptap-editor.md)         | Structured rich-text editing, presets, and rendering.    |
-| [Upload Providers](./upload-providers.md)   | Local, Azure Blob Storage, and AWS S3 upload selection.  |
-| [Email Providers](./email-providers.md)     | Mailgun production email and Mailtrap development email. |
-| [Sentry](../../reference/sentry.md)         | UI and Strapi error tracking.                            |
+| Doc                                              | Covers                                                   |
+| ------------------------------------------------ | -------------------------------------------------------- |
+| [Users Permissions](./users-permissions.md)      | JWT lifetime and auth docs.                              |
+| [Config Sync](./config-sync.md)                  | Version-controlled roles, permissions, and settings.     |
+| [CKEditor](./ckeditor.md)                        | HTML rich-text editing and UI rendering.                 |
+| [Tiptap Editor](./tiptap-editor.md)              | Structured rich-text editing, presets, and rendering.    |
+| [Upload Providers](./upload-providers.md)        | Local, Azure Blob Storage, and AWS S3 upload selection.  |
+| [Email Providers](./email-providers.md)          | Mailgun production email and Mailtrap development email. |
+| [Sentry](../../reference/integrations/sentry.md) | UI and Strapi error tracking.                            |
 
 Cron tasks are configured separately from plugins. See [Cron Jobs](../cron-jobs.md).
 

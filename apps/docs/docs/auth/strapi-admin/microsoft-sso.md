@@ -2,17 +2,13 @@
 sidebar_position: 1
 ---
 
-# Microsoft SSO (Strapi admin panel)
+# Microsoft SSO
 
-Single sign-on for **Strapi admin users** — the people who log into the CMS admin panel to manage content. Authenticates via Microsoft Entra ID using `passport-azure-ad-oauth2`.
+Single sign-on for **Strapi admin users** — the people who log into the CMS admin panel to manage content. Authenticates via Microsoft Entra ID using `passport-azure-ad-oauth2`. [Official Strapi documentation](https://docs.strapi.io/cms/configurations/sso-providers/microsoft).
 
 :::info Scope
 This is **admin-panel only**. End-users of your Next.js application don't see this — for them, see [UI Authentication](../ui/authentication.md) and [OAuth Providers](../ui/oauth-providers.md).
 :::
-
-Official Strapi documentation:
-
-- https://docs.strapi.io/cms/configurations/sso-providers/microsoft
 
 ## Requirements
 
@@ -30,7 +26,7 @@ For local development, it is important to set `STRAPI_LICENSE` and verify SSO di
 
 ## Dependencies
 
-Libraries required by the provider - `passport-azure-ad-oauth2` and `jsonwebtoken`. By default, they are installed in Strapi project.
+Libraries required by the provider - [`passport-azure-ad-oauth2`](https://www.npmjs.com/package/passport-azure-ad-oauth2) and [`jsonwebtoken`](https://www.npmjs.com/package/jsonwebtoken). By default, they are installed in Strapi project.
 
 `passport-azure-ad-oauth2` is the Entra OAuth2 strategy used by the provider. `jsonwebtoken` is used to decode the returned `id_token` and extract user claims.
 
@@ -103,7 +99,9 @@ Cannot send secure cookie over unencrypted connection
 
 This happens because the browser uses HTTPS, but Strapi only sees the internal HTTP hop unless it trusts `X-Forwarded-Proto`.
 
+:::tip
 Only enable proxy trust when Strapi is behind a trusted proxy and is not directly exposed to the public internet.
+:::
 
 ## Microsoft / Entra-Side Configuration
 

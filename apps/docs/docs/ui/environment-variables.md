@@ -22,6 +22,21 @@ Do not leave empty values such as `DATABASE_PASSWORD=` in `.env`. Empty values a
 Use `getEnvVar()` from `src/lib/env-vars.ts` instead of reading `process.env` directly. It works in server code and client code, including values injected through CSR env injection.
 :::
 
+```tsx
+import { env } from "@/env.mjs"
+
+import { getEnvVar } from "@/lib/env-vars"
+
+// OK
+console.log(getEnvVar("TEST_VARIABLE"))
+
+// Also works, but prefer getEnvVar()
+console.log(env.TEST_VARIABLE)
+
+// Do not read process.env directly
+console.log(process.env.TEST_VARIABLE)
+```
+
 ## Strapi API Tokens
 
 Strapi API tokens authenticate UI requests to the Strapi Content API. See the official [Strapi API Tokens docs](https://docs.strapi.io/cms/features/api-tokens).

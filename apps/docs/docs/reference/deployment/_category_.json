@@ -1,10 +1,10 @@
 {
-  "label": "Authentication",
+  "label": "Deployment",
   "position": 6,
   "collapsible": true,
   "collapsed": true,
   "link": {
     "type": "doc",
-    "id": "auth/index"
+    "id": "reference/deployment/overview"
   }
 }
