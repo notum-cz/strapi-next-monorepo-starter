@@ -1,6 +1,10 @@
+---
+sidebar_position: 6
+---
+
 # Cron Jobs
 
-Strapi's built-in cron runner schedules background tasks inside the Strapi process. The template wires it up in [`apps/strapi/config/server.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/config/server.ts) and defines tasks in [`apps/strapi/config/cron-tasks.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/config/cron-tasks.ts).
+Strapi's built-in cron runner schedules background tasks inside the Strapi process. The template wires it up in `apps/strapi/config/server.ts` and defines tasks in `apps/strapi/config/cron-tasks.ts`.
 
 Upstream reference: [docs.strapi.io/dev-docs/configurations/cron](https://docs.strapi.io/dev-docs/configurations/cron).
 
@@ -16,7 +20,7 @@ cron: {
 }
 ```
 
-The production env override mirrors the same wiring in [`apps/strapi/config/env/production/server.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/config/env/production/server.ts) — flipping the env var is enough; no code change required to enable in prod.
+The production env override mirrors the same wiring in `apps/strapi/config/env/production/server.ts` — flipping the env var is enough; no code change required to enable in prod.
 
 ## Task Shape
 
@@ -102,6 +106,4 @@ The single-replica pattern is the lowest-risk default for this template — flip
 
 ## Related Documentation
 
-- [Strapi Plugins](./plugins/overview.md) — operational plugins (Sentry, upload, email)
-- [Strapi Schemas](./strapi-schemas.md) — document middlewares as an alternative for content-state side effects
 - Upstream: [Strapi cron configuration](https://docs.strapi.io/dev-docs/configurations/cron)

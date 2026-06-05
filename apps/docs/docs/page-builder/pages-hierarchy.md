@@ -1,6 +1,8 @@
 # Pages Hierarchy
 
-**This document describes how the page hierarchy is structured in Strapi - how pages are organized, how their URLs are generated and how to manage changes in the hierarchy.**
+:::tip
+This document describes how the page hierarchy is structured in Strapi: how pages are organized, how their URLs are generated, and how to manage changes in the hierarchy.
+:::
 
 The visitable pages are organized in a hierarchy using the `parent` and (optionally) `children` relation fields. Each page can have a parent page, and it can also have multiple child pages. It's **important** to maintain correct relations between pages to ensure proper hierarchy, breadcrumbs and navigation.
 

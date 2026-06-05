@@ -6,7 +6,9 @@ sidebar_position: 1
 
 Use this page when you only need the shortest path to run `apps/ui` locally.
 
+:::tip Full monorepo setup
 For the full monorepo setup, start with [Getting Started > Installation](../getting-started/installation.md).
+:::
 
 ## 1. Environment Variables
 
@@ -26,7 +28,7 @@ STRAPI_REST_READONLY_API_KEY=
 APP_PUBLIC_URL=http://localhost:3000
 ```
 
-For token setup, runtime public variables, Docker behavior, and `getEnvVar()`, see [Environment Variables](./environment-variables.md).
+For token setup, env variables and their usage, see [Environment Variables](./environment-variables.md).
 
 ## 2. Run Locally
 
@@ -40,6 +42,6 @@ pnpm install
 pnpm dev:ui
 ```
 
-`pnpm dev:ui` starts the Next.js app only. Use `pnpm dev` if you want to start the whole monorepo.
+`pnpm dev:ui` starts the Next.js app only. The UI runs on [http://localhost:3000](http://localhost:3000).
 
-The UI runs on [http://localhost:3000](http://localhost:3000).
+Use `pnpm dev` if you want to start the whole monorepo.

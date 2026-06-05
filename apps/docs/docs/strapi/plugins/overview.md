@@ -5,7 +5,7 @@ slug: /strapi/strapi-plugins
 
 # Strapi Plugins
 
-Plugin configuration lives in [`apps/strapi/config/plugins.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/config/plugins.ts), with larger plugin configs split under [`config/plugins/`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/strapi/config/plugins).
+Plugin configuration lives in `apps/strapi/config/plugins.ts`, with larger plugin configs split under `apps/strapi/config/plugins`.
 
 Defaults are enabled for `users-permissions`, `sentry`, `config-sync`, and `tiptap-editor`. Upload and email providers auto-select based on available environment variables.
 
@@ -19,7 +19,7 @@ Defaults are enabled for `users-permissions`, `sentry`, `config-sync`, and `tipt
 | [Tiptap Editor](./tiptap-editor.md)         | Structured rich-text editing, presets, and rendering.    |
 | [Upload Providers](./upload-providers.md)   | Local, Azure Blob Storage, and AWS S3 upload selection.  |
 | [Email Providers](./email-providers.md)     | Mailgun production email and Mailtrap development email. |
-| [Sentry](./sentry.md)                       | Strapi-side error tracking.                              |
+| [Sentry](../../reference/sentry.md)         | UI and Strapi error tracking.                            |
 
 Cron tasks are configured separately from plugins. See [Cron Jobs](../cron-jobs.md).
 

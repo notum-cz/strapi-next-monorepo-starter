@@ -4,9 +4,9 @@ sidebar_position: 5
 
 # Tiptap Editor
 
-`@notum-cz/strapi-plugin-tiptap-editor` provides structured rich text editing based on ProseMirror JSON.
+[`@notum-cz/strapi-plugin-tiptap-editor`](https://github.com/notum-cz/strapi-plugin-tiptap-editor) provides structured rich text editing based on [Tiptap](https://tiptap.dev/) and [ProseMirror](https://prosemirror.net/) JSON.
 
-The UI renders the stored JSON through `@tiptap/static-renderer`, which gives more control over nodes and marks than raw HTML.
+The UI renders the stored JSON through [`@tiptap/static-renderer`](https://tiptap.dev/docs/editor/api/utilities/static-renderer), which gives more control over nodes and marks than raw HTML.
 
 :::warning
 Plugin still in early stages. Stable for basic use; report issues to [strapi-plugin-tiptap-editor](https://github.com/notum-cz/strapi-plugin-tiptap-editor/issues).
@@ -18,7 +18,7 @@ Strapi component: `utilities.tip-tap-rich-text`.
 
 ## Presets
 
-Presets are configured in [`config/plugins/tiptap.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/config/plugins/tiptap.ts).
+Presets are configured in `apps/strapi/config/plugins/tiptap.ts`.
 
 | Preset       | Description                                                                                    |
 | ------------ | ---------------------------------------------------------------------------------------------- |

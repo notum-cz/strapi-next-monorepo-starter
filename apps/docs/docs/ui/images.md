@@ -1,26 +1,36 @@
+---
+sidebar_position: 10
+---
+
 # Image Optimization
 
-The template intentionally **disables** Next.js's global image optimizer. Self-hosted Next can spike CPU/memory under CMS image traffic, so each image source uses its own pipeline.
+The starter intentionally **disables** Next.js's global image optimizer. Self-hosted Next can spike CPU/memory under CMS image traffic, so each image source uses its own pipeline.
 
 ## Pipelines
 
-| Source              | Component                                                                                                                                                              | Optimizer                | When               |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ------------------ |
-| Strapi media        | [`StrapiBasicImage`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/components/page-builder/components/utilities/StrapiBasicImage.tsx) | imgproxy                 | `IMGPROXY_URL` set |
-| Strapi media        | `StrapiBasicImage`                                                                                                                                                     | none — direct Strapi URL | local/dev fallback |
-| Local/static assets | [`StaticImage`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/components/elementary/images/StaticImage.tsx)                           | Next.js Sharp            | always             |
+Base path: `apps/ui/src/components`
 
-**Do not** set `images.unoptimized: true` globally in [`next.config.mjs`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/next.config.mjs). That overrides per-component `unoptimized={false}` and breaks `StaticImage` optimization. Leave the global flag unset.
+| Source              | Component                                                | Optimizer                | When               |
+| ------------------- | -------------------------------------------------------- | ------------------------ | ------------------ |
+| Strapi media        | `page-builder/components/utilities/StrapiBasicImage.tsx` | imgproxy                 | `IMGPROXY_URL` set |
+| Strapi media        | `StrapiBasicImage`                                       | none — direct Strapi URL | local/dev fallback |
+| Local/static assets | `elementary/images/StaticImage.tsx`                      | Next.js Sharp            | always             |
+
+:::warning Do not disable images globally
+Do not set `images.unoptimized: true` globally in `next.config.mjs`. That overrides per-component `unoptimized={false}` and breaks `StaticImage` optimization. Leave the global flag unset.
+:::
 
 ## `StrapiBasicImage`
 
-Use for any Strapi media. It:
+Use for any Strapi images. It:
 
-- Resolves Strapi media data → normalized URL via [`formatStrapiMediaUrl`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/lib/strapi-helpers.ts)
+- Resolves Strapi media data → normalized URL via `formatStrapiMediaUrl()`
 - Calculates missing width/height from the media aspect ratio
 - Bypasses imgproxy for SVGs
 
-When `IMGPROXY_URL` is set, it delegates to [`ImgproxyImage`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/components/elementary/images/ImgproxyImage.tsx). Next.js generates responsive `srcSet` from `deviceSizes`; the loader rewrites each entry into an imgproxy URL:
+`formatStrapiMediaUrl()` returns absolute storage URLs as-is. Relative local Strapi paths such as `/uploads/...` are resolved with `STRAPI_URL` on the server and the local Strapi origin on the client during development.
+
+When `IMGPROXY_URL` is set, it delegates to `ImgproxyImage`. Next.js generates responsive `srcSet` from `deviceSizes`; the loader rewrites each entry into an imgproxy URL:
 
 ```text
 https://imgproxy.example.com/rs:fit:768:0/plain/{source}@webp
@@ -63,7 +73,9 @@ Browser picks:
 | Desktop | 1440     | 1×  | 720 × 1      | `768w`       |
 | Desktop | 1440     | 2×  | 720 × 2      | `1440w`      |
 
-**Rule of thumb:** if an image uses `fill` and isn't full-width at every breakpoint, pass `sizes`. Otherwise the browser defaults to `100vw` and over-fetches.
+:::tip Rule of thumb
+If an image uses `fill` and isn't full-width at every breakpoint, pass `sizes`. Otherwise the browser defaults to `100vw` and over-fetches.
+:::
 
 Common values:
 
@@ -87,13 +99,6 @@ import { StaticImage } from "@/components/elementary/images/StaticImage"
 <StaticImage src="/images/logo.png" alt="Logo" width={200} height={50} />
 ```
 
-## Strapi Media URL Resolution
-
-`StrapiBasicImage` calls `formatStrapiMediaUrl` automatically:
-
-- Production storage returns absolute `https://` URLs → returned as-is.
-- Local Strapi returns relative `/uploads/...` paths → resolved with `STRAPI_URL` on server, `http://127.0.0.1:1337` on client during dev.
-
 ## Local imgproxy
 
 Set `IMGPROXY_URL` **only** when an imgproxy service is reachable. Otherwise the image component falls back to direct Strapi URLs.
@@ -116,7 +121,7 @@ IMGPROXY_URL=http://localhost:8080
 
 ## Configuration Reference
 
-Image settings in [`next.config.mjs`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/next.config.mjs):
+Image settings in `apps/ui/next.config.mjs`:
 
 | Setting           | Value                          | Purpose                                                |
 | ----------------- | ------------------------------ | ------------------------------------------------------ |
@@ -127,14 +132,7 @@ Image settings in [`next.config.mjs`](https://github.com/notum-cz/strapi-next-mo
 
 ## Image Components
 
-| Component           | Path                                                                                                                                                                                                         | When to use                                                                |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
-| `StrapiBasicImage`  | [`page-builder/components/utilities/StrapiBasicImage.tsx`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/components/page-builder/components/utilities/StrapiBasicImage.tsx) | Any Strapi media. Default for page-builder.                                |
-| `StaticImage`       | [`elementary/images/StaticImage.tsx`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/components/elementary/images/StaticImage.tsx)                                           | App-owned assets.                                                          |
-| `ImageWithBlur`     | [`elementary/ImageWithBlur.tsx`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/components/elementary/ImageWithBlur.tsx)                                                     | Synchronous blur placeholder. No side effects.                             |
-| `ImageWithFallback` | [`elementary/ImageWithFallback.tsx`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/components/elementary/ImageWithFallback.tsx)                                             | Client-only. Falls back to secondary src and finally to local placeholder. |
-
-## Related Documentation
-
-- [UI Features](./ui-features.md) — overview of UI operational features
-- [Environment Variables](./environment-variables.md) — env vars including `IMGPROXY_URL`
+| Component          | Path                                                     | When to use                                 |
+| ------------------ | -------------------------------------------------------- | ------------------------------------------- |
+| `StrapiBasicImage` | `page-builder/components/utilities/StrapiBasicImage.tsx` | Any Strapi media. Default for page-builder. |
+| `StaticImage`      | `elementary/images/StaticImage.tsx`                      | App-owned assets.                           |

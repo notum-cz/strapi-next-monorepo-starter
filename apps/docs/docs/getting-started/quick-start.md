@@ -57,7 +57,7 @@ Other variables are optional for first-run. See [UI → Environment Variables](.
 
 :::warning Write operations need a separate token
 
-For write operations (`POST`, `PUT`, `DELETE`), set a Custom token in `STRAPI_REST_CUSTOM_API_KEY`. See [apps/ui/README](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/README.md#custom-api-token).
+For write operations (`POST`, `PUT`, `DELETE`), set a Custom token in `STRAPI_REST_CUSTOM_API_KEY`. See `apps/ui/README.md#custom-api-token`.
 
 :::
 
@@ -82,8 +82,6 @@ You should see the seeded landing page rendered through the page-builder. The de
 | [http://localhost:1337/api/health](http://localhost:1337/api/health)                           | health JSON (Strapi)                        |
 | [http://localhost:3000/dev/components-overview](http://localhost:3000/dev/components-overview) | dev-only catalog of page-builder components |
 
-To watch Strapi requests in the UI logs, set `DEBUG_STRAPI_CLIENT_API_CALLS=true` in `.env.local`. See [Log Verbosity](../ui/log-verbosity.md).
-
 ## Common next steps
 
 - **Explore included features** → [Features](./features.md)
@@ -92,9 +90,8 @@ To watch Strapi requests in the UI logs, set `DEBUG_STRAPI_CLIENT_API_CALLS=true
 
 ## Troubleshooting
 
-| Symptom                                         | Likely cause                                                                                                                                                                                                                               |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `STRAPI_URL` undefined errors during UI build   | env var missing in `.env.local`                                                                                                                                                                                                            |
-| UI shows 404 for `/`                            | Strapi missing baseline content. Run `pnpm seed:import`.                                                                                                                                                                                   |
-| Strapi `pnpm dev:strapi` hangs on DB            | Docker not running or port 5432 already taken                                                                                                                                                                                              |
-| `403 Forbidden` from Strapi on browser requests | Endpoint not in `ALLOWED_STRAPI_ENDPOINTS` ([request-auth.ts:3](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/lib/strapi-api/request-auth.ts#L3)) or content-type permissions not granted in Strapi admin |
+| Symptom                                       | Likely cause                                             |
+| --------------------------------------------- | -------------------------------------------------------- |
+| `STRAPI_URL` undefined errors during UI build | env var missing in `.env.local`                          |
+| UI shows 404 for `/`                          | Strapi missing baseline content. Run `pnpm seed:import`. |
+| Strapi `pnpm dev:strapi` hangs on DB          | Docker not running or port 5432 already taken            |

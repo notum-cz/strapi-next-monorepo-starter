@@ -19,7 +19,7 @@ All commands below run from the **monorepo root** via Turbo. Don't `cd` into ind
 
 Two options. Either use the Strapi admin Content-Type Builder (writes the JSON for you) **or** create the file by hand.
 
-Create [`apps/strapi/src/api/product/content-types/product/schema.json`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/strapi/src/api/product/content-types/product) (mirror the directory layout from the `page` collection):
+Create `apps/strapi/src/api/product/content-types/product` (mirror the directory layout from the `page` collection):
 
 ```json
 {
@@ -64,7 +64,7 @@ Attribute shape reference: [Strapi Schemas](../strapi/strapi-schemas.md). Locali
 
 ## Step 2 — Wire routes, controller, service
 
-Strapi's factory helpers cover the common case. Create three files mirroring [`apps/strapi/src/api/subscriber/`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/strapi/src/api/subscriber):
+Strapi's factory helpers cover the common case. Create three files mirroring `apps/strapi/src/api/subscriber`:
 
 **`apps/strapi/src/api/product/routes/product.ts`**
 
@@ -90,7 +90,7 @@ import { factories } from "@strapi/strapi"
 export default factories.createCoreService("api::product.product")
 ```
 
-That's enough to expose the standard CRUD routes (`GET /api/products`, `GET /api/products/:id`, `POST /api/products`, etc.). If you need custom logic, override individual controller methods — see [`apps/strapi/src/api/page/controllers/page.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/src/api/page/controllers/page.ts) for an example that adds `breadcrumbs` to the response.
+That's enough to expose the standard CRUD routes (`GET /api/products`, `GET /api/products/:id`, `POST /api/products`, etc.). If you need custom logic, override individual controller methods — see `apps/strapi/src/api/page/controllers/page.ts` for an example that adds `breadcrumbs` to the response.
 
 Alternatively, scaffold via Strapi CLI: `pnpm -F @repo/strapi strapi generate` from root and pick `api`.
 
@@ -112,7 +112,7 @@ Permissions live in the database, not in code. They travel via the seed export �
 
 ## Step 4 — Add the UID to `API_ENDPOINTS`
 
-The Next.js `BaseStrapiClient` maps content-type UIDs to URL paths — see [Strapi API Client](../ui/strapi-api-client.md#adding-new-endpoints) for the full client surface. New types must be added to [`apps/ui/src/lib/strapi-api/base.ts:17`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/lib/strapi-api/base.ts#L17):
+The Next.js `BaseStrapiClient` maps content-type UIDs to URL paths — see [Strapi API Client](../ui/strapi-api-client.md#adding-new-endpoints) for the full client surface. New types must be added to `apps/ui/src/lib/strapi-api/base.ts:17`:
 
 ```ts
 export const API_ENDPOINTS: Partial<Record<UID.ContentType, string>> = {
@@ -128,7 +128,7 @@ Without this entry, `PublicStrapiClient.fetchMany("api::product.product", ...)` 
 
 ## Step 5 — Expose the endpoint to the browser (optional)
 
-Only required if the UI will call this content type **from the client**, not from Server Components. The proxy routes have an allow-list at [`apps/ui/src/lib/strapi-api/request-auth.ts:3`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/lib/strapi-api/request-auth.ts#L3):
+Only required if the UI will call this content type **from the client**, not from Server Components. The proxy routes have an allow-list at `apps/ui/src/lib/strapi-api/request-auth.ts:3`:
 
 ```ts
 const ALLOWED_STRAPI_ENDPOINTS: Record<string, string[]> = {
@@ -153,12 +153,12 @@ Server Components do not use the proxy, so this is unnecessary for SSR-only cons
 :::info
 Strapi types are generated automatically as part of the project workflow. After the schema is picked up, `"api::product.product"` is available in `UID.ContentType` and `Data.ContentType<"api::product.product">` resolves.
 
-See [Strapi Types](../strapi/strapi-types.md) for the package structure and usage examples.
+See [`@repo/strapi-types`](../reference/packages/strapi-types.md) for the package structure and usage examples.
 :::
 
 ## Step 7 — (Optional) Add a document middleware
 
-Only if `Product` has its own dynamic zones or deep relations that should be auto-populated via `populateDynamicZone`. The `page` collection demonstrates the pattern: [`apps/strapi/src/documentMiddlewares/page.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/src/documentMiddlewares/page.ts) + [`apps/strapi/src/populateDynamicZone/`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/strapi/src/populateDynamicZone). Register the middleware in [`src/index.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/src/index.ts) `bootstrap()` like `registerPopulatePageMiddleware`.
+Only if `Product` has its own dynamic zones or deep relations that should be auto-populated via `populateDynamicZone`. The `page` collection demonstrates the pattern: `apps/strapi/src/documentMiddlewares/page.ts` + `apps/strapi/src/populateDynamicZone`. Register the middleware in `apps/strapi/src/index.ts` `bootstrap()` like `registerPopulatePageMiddleware`.
 
 For flat schemas (like the `product` example above), this step is unnecessary — declare `populate` inline at the call site.
 
@@ -224,6 +224,6 @@ Commit the new `seed/exports/strapi-export-YYYY-MM-DD-HHmmss.tar.gz` alongside t
 - [Strapi API Client](../ui/strapi-api-client.md) — where this type sits in the UI request flow
 - [Strapi Schemas](../strapi/strapi-schemas.md) — attribute reference, lifecycle hooks, document middlewares
 - [Strapi API Client](../ui/strapi-api-client.md) — `PublicStrapiClient` / `PrivateStrapiClient` surface
-- [Strapi Types](../strapi/strapi-types.md) — typed query params and `Data.ContentType<...>`
+- [`@repo/strapi-types`](../reference/packages/strapi-types.md) — typed query params and `Data.ContentType<...>`
 - [Page Builder](../page-builder/introduction.md) — adding a dynamic-zone component instead of a collection
 - [Data Seeding](../strapi/data-seeding.md) — exporting and committing sample content

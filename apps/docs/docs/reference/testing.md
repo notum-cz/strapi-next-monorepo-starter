@@ -6,11 +6,11 @@ sidebar_position: 5
 
 The repository has three testing layers:
 
-| Area   | Tooling                                     | Location                                                                                                                     |
-| ------ | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Strapi | Vitest, Node environment, 30 second timeout | [`apps/strapi/tests/`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/strapi/tests)                 |
-| UI     | Vitest                                      | [`apps/ui/src/lib/__tests__/`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/ui/src/lib/__tests__) |
-| QA     | Playwright, axe, Lighthouse CI              | [`qa/tests/playwright/`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/qa/tests/playwright)             |
+| Area   | Tooling                                     | Location                    |
+| ------ | ------------------------------------------- | --------------------------- |
+| Strapi | Vitest, Node environment, 30 second timeout | `apps/strapi/tests`         |
+| UI     | Vitest                                      | `apps/ui/src/lib/__tests__` |
+| QA     | Playwright, axe, Lighthouse CI              | `qa/tests/playwright`       |
 
 ## Unit And Integration Tests
 
@@ -98,4 +98,4 @@ Commit baseline updates only when the visual change is intentional.
 
 - [Commands](./commands.md)
 - [UI Built-in Pages](../ui/built-in-pages/showcase.md)
-- [QA workspace](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/qa/tests)
+- `qa/tests`

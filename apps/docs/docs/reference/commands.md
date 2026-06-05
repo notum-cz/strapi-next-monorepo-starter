@@ -24,6 +24,7 @@ pnpm build:docs             # Build Docusaurus
 ## Start (production)
 
 ```bash
+pnpm start:docs
 pnpm start:strapi
 pnpm start:ui
 ```
@@ -91,7 +92,7 @@ pnpm commit                 # Interactive Commitizen prompt
 
 ## Cleanup scripts
 
-Bash helpers in [`scripts/utils/`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/scripts/utils) — not wired into `pnpm`, invoke directly from the monorepo root:
+Bash helpers in `scripts/utils` — not wired into `pnpm`, invoke directly from the monorepo root:
 
 ```bash
 bash scripts/utils/rm-modules.sh     # delete every node_modules in the workspace

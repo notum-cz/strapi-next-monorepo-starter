@@ -4,13 +4,13 @@ sidebar_position: 7
 
 # Email Providers
 
-Email provider configuration lives in [`config/plugins/email.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/config/plugins/email.ts).
+Email provider configuration lives in `apps/strapi/config/plugins/email.ts`.
 
 Mailgun has priority. Mailtrap is the development fallback. Selection is based on which environment variables are present.
 
 ## Mailgun
 
-Provider: `@strapi/provider-email-mailgun`.
+Provider: [`@strapi/provider-email-mailgun`](https://www.npmjs.com/package/@strapi/provider-email-mailgun). See also the Strapi [Email](https://docs.strapi.io/cms/features/email) docs and [Mailgun documentation](https://documentation.mailgun.com/).
 
 Production default:
 
@@ -25,7 +25,7 @@ MAILGUN_HOST=https://api.eu.mailgun.net
 
 ## Mailtrap
 
-Provider: `@strapi/provider-email-nodemailer`.
+Provider: [`@strapi/provider-email-nodemailer`](https://www.npmjs.com/package/@strapi/provider-email-nodemailer), using [Nodemailer](https://nodemailer.com/). See also the Strapi [Email](https://docs.strapi.io/cms/features/email) docs and [Mailtrap documentation](https://help.mailtrap.io/).
 
 Development/testing provider. It captures emails in a Mailtrap inbox without sending them to real recipients:
 
@@ -43,6 +43,6 @@ Restart Strapi after changing email provider environment variables.
 
 ## Account Activation
 
-The `afterCreate` lifecycle in [`src/lifeCycles/user.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/src/lifeCycles/user.ts) sends an account activation email only when `CLIENT_ACCOUNT_ACTIVATION_URL` is set.
+The `afterCreate` lifecycle in `apps/strapi/src/lifeCycles/user.ts` sends an account activation email only when `CLIENT_ACCOUNT_ACTIVATION_URL` is set.
 
 If email delivery fails, the error is logged and registration continues.

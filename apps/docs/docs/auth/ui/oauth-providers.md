@@ -29,7 +29,7 @@ sequenceDiagram
   N-->>U: Session cookie set, authenticated
 ```
 
-The callback page is [`apps/ui/src/app/[locale]/auth/strapi-oauth/[provider]/page.tsx`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/app/%5Blocale%5D/auth/strapi-oauth/%5Bprovider%5D/page.tsx). The Better Auth plugin handling the exchange is `strapiOAuthPlugin` in [`apps/ui/src/lib/auth.ts:334`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/lib/auth.ts#L334).
+The callback page is `apps/ui/src/app/[locale]/auth/strapi-oauth/[provider]/page.tsx`. The Better Auth plugin handling the exchange is `strapiOAuthPlugin` in `apps/ui/src/lib/auth.ts:334`.
 
 ## Setup
 
@@ -53,7 +53,7 @@ Copy generated Client ID + Secret into the Strapi admin (step 1).
 
 If you previously used `/auth/strapi-oauth/callback`, update both the Strapi provider settings and the provider developer console to the per-provider callback path.
 
-No UI code changes needed — `SignInForm` already routes to `/api/connect/<provider>` on button click. To add a new provider button, extend [`SocialButtons.tsx`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/app/%5Blocale%5D/auth/signin/_components/SocialButtons.tsx).
+No UI code changes needed — `SignInForm` already routes to `/api/connect/<provider>` on button click. To add a new provider button, extend `apps/ui/src/app/[locale]/auth/signin/_components/SocialButtons.tsx`.
 
 ## Local Development with ngrok
 
@@ -68,13 +68,13 @@ Most OAuth providers reject `localhost` callbacks. Use ngrok (or similar) to tun
    ```
 
 4. Copy the generated URL (e.g. `https://abc123.ngrok.io`)
-5. Update [`apps/strapi/config/server.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/config/server.ts):
+5. Update `apps/strapi/config/server.ts`:
 
    ```ts
    url: "https://abc123.ngrok.io"
    ```
 
-6. Update [`apps/strapi/src/admin/vite.config.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/src/admin/vite.config.ts):
+6. Update `apps/strapi/src/admin/vite.config.ts`:
 
    ```ts
    server: {

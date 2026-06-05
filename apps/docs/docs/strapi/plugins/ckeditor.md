@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # CKEditor
 
-`@_sh/strapi-plugin-ckeditor` provides HTML-based rich text editing.
+[`@_sh/strapi-plugin-ckeditor`](https://www.npmjs.com/package/@_sh/strapi-plugin-ckeditor) provides HTML-based rich text editing through [CKEditor](https://ckeditor.com/docs/ckeditor5/latest/).
 
 Content is stored as HTML and rendered in the UI via `dangerouslySetInnerHTML` with link processing and sanitization.
 
@@ -33,4 +33,4 @@ return (
 
 `variant` can be `"page"` or `"blog"`.
 
-Custom CKEditor plugins and heading styles live in [`apps/strapi/src/admin/ckeditor/`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/strapi/src/admin/ckeditor).
+Custom CKEditor plugins and heading styles live in `apps/strapi/src/admin/ckeditor`.

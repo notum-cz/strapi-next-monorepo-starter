@@ -16,7 +16,7 @@ Set up the monorepo on a fresh machine.
 | Git                                  | any      | clone + hooks                                         |
 | [nvm](https://github.com/nvm-sh/nvm) | optional | switch Node versions                                  |
 
-Optional but recommended: install VSCode extensions from [`.vscode/extensions.json`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/.vscode/extensions.json).
+Optional but recommended: install VSCode extensions from `.vscode/extensions.json`.
 
 ## Clone
 
@@ -28,7 +28,7 @@ git checkout main
 
 :::tip New project remote
 
-If you cloned this starter to build a new project, change `origin` before further development so pushes go to your project repository instead of the template:
+If you cloned this starter to build a new project, change `origin` before further development so pushes go to your project repository instead of the starter:
 
 ```bash
 git remote set-url origin <your-repository-url>

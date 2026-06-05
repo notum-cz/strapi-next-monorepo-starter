@@ -1,156 +1,105 @@
+---
+sidebar_position: 7
+---
+
 # Strapi API Client
 
 The Strapi API client provides a type-safe interface for fetching content from Strapi CMS. It implements a dual-client pattern with proxy routes for security.
 
+:::tip TLDR
+Use `PublicStrapiClient` for fetching public CMS content. Use `PrivateStrapiClient` for fetching user-specific data that depends on end-user authentication.
+:::
+
 ## Architecture
 
 ```mermaid
-flowchart TB
-  subgraph Next["Next.js UI (apps/ui)"]
-    direction TB
-    subgraph Server["Server Components"]
-      ServerClients["PublicStrapiClient<br/>PrivateStrapiClient"]
-    end
-    subgraph Client["Client Components"]
-      ClientClient["PublicStrapiClient<br/>(useProxy: true)"]
-    end
-    Proxy["/api/public-proxy<br/>/api/private-proxy"]
-    ClientClient --> Proxy
+flowchart LR
+  subgraph Browser["Browser"]
+    ClientComponent["Client Component"]
   end
 
-  subgraph Strapi["Strapi CMS (apps/strapi)"]
-    Endpoints["/api/pages · /api/footer<br/>/api/navbar · ..."]
+  subgraph Next["Next.js server"]
+    ServerComponent["Server Component / Route Handler"]
+    PublicClient["PublicStrapiClient"]
+    PrivateClient["PrivateStrapiClient"]
+    PublicProxy["/api/public-proxy"]
+    PrivateProxy["/api/private-proxy"]
   end
 
-  ServerClients -- "+ Auth headers (direct)" --> Endpoints
-  Proxy -- "+ Auth headers" --> Endpoints
+  subgraph Strapi["Strapi CMS"]
+    PublicContent["Public CMS content<br/>pages, navbar, footer"]
+    UserContent["End-user content<br/>profile, account data"]
+  end
+
+  ServerComponent --> PublicClient
+  ServerComponent --> PrivateClient
+  ClientComponent --> PublicProxy
+  ClientComponent --> PrivateProxy
+  PublicProxy --> PublicClient
+  PrivateProxy --> PrivateClient
+  PublicClient -- "API token" --> PublicContent
+  PrivateClient -- "userJWT" --> UserContent
 ```
 
-## Client Classes
+`PublicStrapiClient` is the default choice for shared CMS content: pages, navigation, footer data, SEO data, and other content that is the same for every visitor. It uses Strapi application API tokens on the server side, so client components should reach it through the public proxy route when browser-side fetching is needed.
 
-### BaseStrapiClient
+`PrivateStrapiClient` is for content that belongs to the signed-in end user. It uses the end user's Strapi JWT from the Better Auth session, or a JWT passed directly in request options, and should be used for protected endpoints where the response depends on the current user.
 
-Abstract base class with shared fetch methods.
-
-**`apps/ui/src/lib/strapi-api/base.ts`**
-
-Key features:
-
-- Automatic locale handling
-- Response parsing and error handling
-- Configurable caching (dev: no cache, prod: 60s revalidation)
-- UID-to-endpoint mapping via `API_ENDPOINTS`
-
-### PublicClient
-
-For read operations using API key authentication.
-
-**`apps/ui/src/lib/strapi-api/public.ts`**
-
-- Uses `STRAPI_REST_READONLY_API_KEY` for GET/HEAD requests
-- Uses `STRAPI_REST_CUSTOM_API_KEY` for write operations
-- Supports proxy mode for client-side requests
-
-### PrivateClient
-
-For authenticated operations using user JWT tokens.
-
-**`apps/ui/src/lib/strapi-api/private.ts`**
-
-- Retrieves user JWT from Better Auth session
-- Supports direct JWT injection via `userJWT` option
-- Required for user-specific data and protected endpoints
-
-## Client Instances
-
-Pre-instantiated clients are exported from `apps/ui/src/lib/strapi-api/index.ts`:
+Both clients share the same base behavior for locale handling, response parsing, endpoint mapping through `API_ENDPOINTS`, and default Strapi fetch caching.
 
 ```typescript
 import { PrivateStrapiClient, PublicStrapiClient } from "@/lib/strapi-api"
 ```
 
-## Authentication Flow
+:::tip
+You do not need proxy routes when all Strapi data is fetched in Server Components or Route Handlers, the browser never sends Strapi write requests, and there is no end-user authorization. In that setup, remove the proxies and keep the architecture simpler.
+:::
 
-**`apps/ui/src/lib/strapi-api/request-auth.ts`**
+### Proxy Routes
 
-### API Key Authentication (Public)
+Client components can use proxy routes when they need to call Strapi through the Next.js server. These routes hide `STRAPI_URL`, keep server-side tokens out of the browser, and enforce an endpoint allowlist.
 
-```typescript
-// Read-only operations (GET, HEAD)
-STRAPI_REST_READONLY_API_KEY
+See [Public Strapi Proxy](./built-in-api-routes/public-proxy.md) and [Private Strapi Proxy](./built-in-api-routes/private-proxy.md) for route behavior and allowlist rules.
 
-// Write operations (POST, PUT, DELETE)
-STRAPI_REST_CUSTOM_API_KEY
-```
+### TypeScript Support
 
-### User JWT Authentication (Private)
+The client uses `@repo/strapi-types` so requests and responses are typed from the selected Strapi content type UID. For example, calling `fetchOne("api::page.page", ...)` gives TypeScript the matching page response shape, while query params are typed against the same content type.
 
-```typescript
-// Server-side: reads from cookies via getSessionSSR()
-const session = await getSessionSSR(await headers())
-const jwt = session?.user?.strapiJWT
+![Typed Strapi response IntelliSense](/img/typed-strapi-response.png)
 
-// Client-side: fetches from /api/auth/session
-const { data: session } = await getSessionCSR()
-const jwt = session?.user?.strapiJWT
-```
+The selected content type also drives typed request options, including nested populate configuration such as `populate: { seo }`.
 
-### createStrapiAuthHeader()
+![Typed Strapi populate IntelliSense](/img/typed-strapi-response-populate.png)
 
-Utility that automatically selects the correct auth strategy:
+The generated types come from the Strapi schemas and are shared through `packages/strapi-types`. See [`@repo/strapi-types`](../reference/packages/strapi-types.md) for package details.
+
+#### Adding New Endpoints
+
+Add every fetchable content type to `API_ENDPOINTS`:
 
 ```typescript
-const authHeader = await createStrapiAuthHeader({
-  isReadOnly: true, // use readonly API key
-  isPrivate: false, // use API key (not user JWT)
-})
-// Returns: { Authorization: "Bearer <token>" }
-```
-
-## Proxy Routes
-
-Proxies hide sensitive information from the client.
-
-### /api/public-proxy
-
-**`apps/ui/src/app/api/public-proxy/[...slug]/route.ts`**
-
-- Hides `STRAPI_URL` from client
-- Injects API key into requests
-- Validates endpoints against allowlist
-
-### /api/private-proxy
-
-**`apps/ui/src/app/api/private-proxy/[...slug]/route.ts`**
-
-- Hides `STRAPI_URL` from client
-- Passes through user's Authorization header
-- Validates endpoints against allowlist
-
-### Endpoint Allowlist
-
-**`request-auth.ts`**
-
-```typescript
-const ALLOWED_STRAPI_ENDPOINTS: Record<string, string[]> = {
-  GET: [
-    "api/pages",
-    "api/footer",
-    "api/navbar",
-    "api/users/me",
-    "api/auth/local",
-  ],
-  POST: [
-    "api/subscribers",
-    "api/auth/local/register",
-    "api/auth/forgot-password",
-    "api/auth/reset-password",
-    "api/auth/change-password",
-  ],
+// apps/ui/src/lib/strapi-api/base.ts
+export const API_ENDPOINTS: { [key in UID.ContentType]?: string } = {
+  "api::page.page": "/pages",
+  "api::footer.footer": "/footer",
+  "api::your-new-type.your-new-type": "/your-new-types", // add here
 }
 ```
 
-Requests to unlisted endpoints return 403 Forbidden.
+:::warning
+Keep `API_ENDPOINTS` in sync with Strapi content types. The client uses this mapping to resolve the REST endpoint for a selected UID, and TypeScript uses the same UID to infer typed request options and response data.
+:::
+
+Add the endpoint to the proxy allowlist when it needs to be fetched from browser-side code, usually through a client component using a proxy route:
+
+```typescript
+// apps/ui/src/lib/strapi-api/request-auth.ts
+const ALLOWED_STRAPI_ENDPOINTS = {
+  GET: [
+    "api/your-new-types", // add here
+  ],
+}
+```
 
 ## Fetch Methods
 
@@ -214,6 +163,8 @@ const page = await PublicStrapiClient.fetchOneBySlug(
 
 Fetch a single document by its `fullPath` field (for hierarchical pages).
 
+This is the most used helper for page builder content fetching because public CMS pages are resolved from the current route path.
+
 ```typescript
 const page = await PublicStrapiClient.fetchOneByFullPath(
   "api::page.page",
@@ -224,41 +175,6 @@ const page = await PublicStrapiClient.fetchOneByFullPath(
     populateDynamicZone: { content: true },
   }
 )
-```
-
-## Caching Strategy
-
-Configured in `BaseStrapiClient.fetchAPI()`:
-
-| Environment | Behavior                             |
-| ----------- | ------------------------------------ |
-| Development | `revalidate: 0` (no cache)           |
-| Production  | `revalidate: 60` (60 second default) |
-
-Override per-request:
-
-```typescript
-await PublicStrapiClient.fetchOne(uid, id, params, {
-  next: { revalidate: 0 }, // disable cache
-})
-```
-
-## CustomFetchOptions
-
-```typescript
-interface CustomFetchOptions {
-  // Use proxy route (required for client components)
-  useProxy?: boolean
-
-  // Skip adding locale to query params
-  doNotAddLocaleQueryParams?: boolean
-
-  // Skip user authorization (PrivateClient only)
-  omitUserAuthorization?: boolean
-
-  // Provide JWT directly instead of fetching from session
-  userJWT?: string
-}
 ```
 
 ## Usage Examples
@@ -314,31 +230,8 @@ const userData = await PrivateStrapiClient.fetchOne("api::user.user", userId, {
 })
 ```
 
-## Adding New Endpoints
-
-1. Add mapping in `API_ENDPOINTS`:
-
-```typescript
-// apps/ui/src/lib/strapi-api/base.ts
-export const API_ENDPOINTS: { [key in UID.ContentType]?: string } = {
-  "api::page.page": "/pages",
-  "api::footer.footer": "/footer",
-  "api::your-new-type.your-new-type": "/your-new-types", // add here
-}
-```
-
-2. Add to proxy allowlist if needed:
-
-```typescript
-// apps/ui/src/lib/strapi-api/request-auth.ts
-const ALLOWED_STRAPI_ENDPOINTS = {
-  GET: [
-    "api/your-new-types", // add here
-  ],
-}
-```
-
 ## Related Documentation
 
 - [Page Builder](../page-builder/introduction.md) — how fetched content is rendered
-- [Pages Hierarchy](../page-builder/pages-hierarchy.md) — URL structure and fullPath generation
+- [Public Strapi Proxy](./built-in-api-routes/public-proxy.md)
+- [Private Strapi Proxy](./built-in-api-routes/private-proxy.md)

@@ -1,3 +1,7 @@
+---
+sidebar_position: 4
+---
+
 # Data Seeding
 
 Data seeding gives every developer a working Strapi database without rebuilding the same pages, navigation, footer, roles, and demo content by hand.

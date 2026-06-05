@@ -5,7 +5,7 @@ slug: /reference/packages
 
 # Packages
 
-Shared workspace code lives in [`packages/*`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/packages). Packages are wired through `pnpm-workspace.yaml` and run on Node `^24.0.0`.
+Shared workspace code lives in `packages`. Packages are wired through `pnpm-workspace.yaml` and run on Node `^24.0.0`.
 
 ## Active Packages
 
@@ -43,7 +43,7 @@ Turbo wires package builds into app workflows. Notable examples:
 
 ### Git Hooks
 
-[`lefthook.yml`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/lefthook.yml) defines:
+`lefthook.yml` defines:
 
 - `pre-commit`: branch name validation and staged-file linting.
 - `commit-msg`: commitlint validation for Conventional Commits.
@@ -51,5 +51,5 @@ Turbo wires package builds into app workflows. Notable examples:
 ## Related Documentation
 
 - [Features](../../getting-started/features.md) — stack and included capabilities
-- [Strapi Types](../../strapi/strapi-types.md) — practical use of `@repo/strapi-types`
+- [`@repo/strapi-types`](./strapi-types.md) — practical use and generated type workflow
 - [Commands](../commands.md) — root and workspace scripts

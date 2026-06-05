@@ -47,6 +47,36 @@ Extra helpers added by this package:
 | `FindOne<T>`        | Typed params for document service `findOne`.                          |
 | `Result<T, Params>` | Response data shape after `fields` and `populate` params are applied. |
 
+## Common Types
+
+| Type                      | Purpose                                      | Example                                   |
+| ------------------------- | -------------------------------------------- | ----------------------------------------- |
+| `UID.ContentType`         | Union of content type UIDs                   | `"api::page.page"`                        |
+| `UID.Component`           | Union of component UIDs                      | `"sections.hero"`                         |
+| `Data.ContentType<"uid">` | Content type data                            | `Data.ContentType<"api::page.page">`      |
+| `Data.Component<"uid">`   | Component data                               | `Data.Component<"sections.hero">`         |
+| `FindMany<"uid">`         | Typed query params for multiple documents    | `FindMany<"api::page.page">`              |
+| `Result<"uid", Params>`   | Response shape for selected fields/populates | `Result<"api::page.page", typeof params>` |
+
+## API Calls
+
+For UI client usage with typed request params and response data, see [Strapi API Client > TypeScript Support](../../ui/strapi-api-client.md#typescript-support).
+
+```typescript
+import type { FindMany, Result } from "@repo/strapi-types"
+
+import { PublicStrapiClient } from "@/lib/strapi-api"
+
+const params = {
+  locale: "en",
+  filters: { slug: { $startsWith: "blog" } },
+  populate: { content: true, seo: true },
+} satisfies FindMany<"api::page.page">
+
+const pages: Result<"api::page.page", typeof params>[] =
+  await PublicStrapiClient.fetchMany("api::page.page", params)
+```
+
 ## Local Development
 
 ### Preferred: symlink for instant updates
@@ -96,8 +126,3 @@ Strapi response types model runtime API variability. A field can be required in 
 
 That is why many values are typed as optional or nullable. "Required" in a Strapi schema means required when creating or updating content, not guaranteed in every API response.
 :::
-
-## Related Documentation
-
-- [Strapi Types](../../strapi/strapi-types.md) — practical usage in this project
-- [Add a Content Type](../../getting-started/add-content-type.md) — using generated types after adding a schema

@@ -4,7 +4,7 @@ This repository uses Lefthook, commitlint, Commitizen, and conventional commits 
 
 ## Git Hooks
 
-Lefthook ([`lefthook.yml`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/lefthook.yml)) enforces:
+Lefthook (`lefthook.yml`) enforces:
 
 - **pre-commit**: branch name validation and lint-staged checks for ESLint and Prettier
 - **commit-msg**: conventional commit format via commitlint
@@ -41,7 +41,7 @@ pnpm commit
 
 When introducing new environment variables, mention them in commit messages using `env.VARIABLE_NAME` or `VARIABLE_NAME` in `CONSTANT_CASE`.
 
-The [`auto-pr` workflow](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/.github/workflows/auto-pr.yml) extracts these names from commit messages and lists them in the pull request description under "Required Environment Variables".
+The `.github/workflows/auto-pr.yml` extracts these names from commit messages and lists them in the pull request description under "Required Environment Variables".
 
 Example commit body:
 

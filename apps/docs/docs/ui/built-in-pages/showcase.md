@@ -1,10 +1,18 @@
+---
+sidebar_position: 4
+---
+
 # Components Showcase
 
 Route: `/dev/showcase`
 
+:::warning Non-production only
+Built-in `/dev` pages are available only outside production. The shared `/dev` layout returns `notFound()` when `isProduction()` is true; see [Environment Helpers](../environment-variables.md#environment-helpers).
+:::
+
 The Showcase is a small in-app component gallery. It is useful when you want to see how page-builder sections and shared UI primitives look without creating real Strapi content for every case.
 
-Think of it as a lightweight Storybook that ships with the app:
+Think of it as a **lightweight Storybook** that ships with the app:
 
 - Developers can test components with stable mock data.
 - Designers and stakeholders can review visual variants in the real UI shell.

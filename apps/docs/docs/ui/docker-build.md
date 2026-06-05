@@ -1,3 +1,7 @@
+---
+sidebar_position: 13
+---
+
 # Docker Build
 
 The UI Dockerfile builds Next.js in `standalone` mode for a smaller runtime image. `NEXT_OUTPUT=standalone` is set in:
@@ -6,9 +10,15 @@ The UI Dockerfile builds Next.js in `standalone` mode for a smaller runtime imag
 apps/ui/Dockerfile
 ```
 
+:::info Production runtime image
+The Dockerfile is intended for production runs. Use the local development commands from [Installation](./installation.md) when working on the UI locally.
+:::
+
 Run Docker commands from the monorepo root. Turborepo needs the root `package.json`, `pnpm-lock.yaml`, and `turbo.json` during the build.
 
 ## Build Strategies
+
+Choose a build strategy based on when pages should render and where environment values should be supplied. See [Caching](./caching.md) for ISR/static behavior and [Next Configuration](./next-config.md) for `NEXT_OUTPUT` modes.
 
 ### Build once, deploy many
 
@@ -55,8 +65,3 @@ docker build -t starter-ui:latest -f apps/ui/Dockerfile \
 docker run -it --rm --name starter-ui -p 3000:3000 \
   --env-file apps/ui/.env.local starter-ui:latest
 ```
-
-## Related
-
-- [Rendering Modes](./rendering-modes.md)
-- [Environment Variables](./environment-variables.md)

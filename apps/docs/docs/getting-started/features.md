@@ -8,11 +8,11 @@ This starter is built around a Strapi-managed page builder and a typed Next.js U
 
 ## Stack
 
-| App           | Stack                                                                   | Entry                                                                                                                                       |
-| ------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `apps/strapi` | Strapi 5.46, Node 24, PostgreSQL through Docker or SQLite               | [`src/index.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/src/index.ts)                               |
-| `apps/ui`     | Next.js 16 App Router, React 19, Better Auth, next-intl, TailwindCSS v4 | [`src/app/[locale]/layout.tsx`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/ui/src/app/%5Blocale%5D/layout.tsx) |
-| `apps/docs`   | Docusaurus 3.10                                                         | [`docusaurus.config.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/docs/docusaurus.config.ts)                 |
+| App           | Stack                                                                   | Entry                                 |
+| ------------- | ----------------------------------------------------------------------- | ------------------------------------- |
+| `apps/strapi` | Strapi 5, PostgreSQL through Docker or SQLite                           | `apps/strapi/src/index.ts`            |
+| `apps/ui`     | Next.js 16 App Router, React 19, Better Auth, next-intl, TailwindCSS v4 | `apps/ui/src/app/[locale]/layout.tsx` |
+| `apps/docs`   | Docusaurus 3                                                            | `apps/docs/docusaurus.config.ts`      |
 
 Shared code lives in [`packages/*`](../reference/packages/overview.md).
 
@@ -30,7 +30,7 @@ Shared code lives in [`packages/*`](../reference/packages/overview.md).
 - **App Router UI** — localized Next.js routes render Strapi-managed pages.
 - **Strapi API clients** — typed server and browser-safe clients for public and private content.
 - **Preview support** — editors can open draft or published content from Strapi.
-- **Caching defaults** — Strapi responses use development-friendly no-cache behavior and production ISR defaults.
+- **Caching defaults** — Strapi responses cache, Next.js page cache and production ISR defaults.
 - **Edge proxies** — controlled proxy routes expose selected Strapi endpoints to the browser.
 - **SEO helpers** — metadata, sitemap, robots, canonical URLs, and structured data are generated from content.
 - **Image handling** — Strapi media helpers and optional imgproxy support are included.
@@ -65,7 +65,7 @@ Shared code lives in [`packages/*`](../reference/packages/overview.md).
 ## Related Documentation
 
 - [Page Builder](../page-builder/introduction.md)
-- [UI Features](../ui/ui-features.md)
+- [UI Project Structure](../ui/project-structure.md)
 - [Strapi Plugins](../strapi/plugins/overview.md)
 - [Internationalization](../reference/internationalization.md)
 - [Testing](../reference/testing.md)

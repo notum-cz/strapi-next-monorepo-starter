@@ -6,6 +6,6 @@
   "link": {
     "type": "generated-index",
     "title": "UI",
-    "description": "Operational concerns specific to apps/ui — project layout, edge proxies, error tracking, images."
+    "description": "Operational concerns specific to apps/ui — setup, structure, built-in routes, data fetching, caching, images, SEO, and deployment."
   }
 }

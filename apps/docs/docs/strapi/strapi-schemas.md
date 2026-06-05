@@ -1,3 +1,7 @@
+---
+sidebar_position: 3
+---
+
 # Strapi Schemas
 
 Guidelines for creating and managing Strapi content type and component schemas.
@@ -127,7 +131,7 @@ Document middlewares are the v5-native way to react to or transform content oper
 
 **Prefer document middlewares over lifecycle subscribers for any new code.** They behave predictably under Draft & Publish, locale switches, and the published/draft duality that Strapi v5 introduces.
 
-Files live in [`apps/strapi/src/documentMiddlewares/`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/strapi/src/documentMiddlewares). Register them inside `bootstrap()` in [`src/index.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/src/index.ts).
+Files live in `apps/strapi/src/documentMiddlewares`. Register them inside `bootstrap()` in `apps/strapi/src/index.ts`.
 
 ```typescript
 // src/documentMiddlewares/product.ts
@@ -165,13 +169,13 @@ bootstrap({ strapi }) {
 
 Typical use cases:
 
-- Deep population of dynamic zones — the canonical example is [`documentMiddlewares/page.ts`](https://github.com/notum-cz/strapi-next-monorepo-starter/blob/main/apps/strapi/src/documentMiddlewares/page.ts) (intercepts `findMany`/`findOne`/`findFirst`, reads the `populateDynamicZone` request param, builds an optimal `populate` tree from [`src/populateDynamicZone/`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/strapi/src/populateDynamicZone)). See [Page Builder → Population](../page-builder/introduction.md#population-rules).
+- Deep population of dynamic zones — the canonical example is `apps/strapi/src/documentMiddlewares/page.ts` (intercepts `findMany`/`findOne`/`findFirst`, reads the `populateDynamicZone` request param, builds an optimal `populate` tree from `apps/strapi/src/populateDynamicZone`). See [Page Builder → Population](../page-builder/introduction.md#population-rules).
 - Side effects tied to **document state transitions** (publish, unpublish, discard draft) — e.g. invalidate a downstream cache when a `page` is published.
 - Cross-document validation that needs the full Documents API context (locale, status, populated relations) — easier here than reconstructing it from raw DB rows in a lifecycle.
 
 ## Lifecycle Subscribers (legacy / row-level only)
 
-Lower-level DB-row event handlers in [`apps/strapi/src/lifeCycles/`](https://github.com/notum-cz/strapi-next-monorepo-starter/tree/main/apps/strapi/src/lifeCycles). They subscribe to **database** events — not document events — via `strapi.db.lifecycles.subscribe`.
+Lower-level DB-row event handlers in `apps/strapi/src/lifeCycles`. They subscribe to **database** events — not document events — via `strapi.db.lifecycles.subscribe`.
 
 :::warning Lifecycle confusion under Draft & Publish
 
@@ -206,18 +210,3 @@ Lifecycle subscribers run **inside the same DB transaction as the triggering ope
 This includes "post-write" side effects in `afterCreate`/`afterUpdate`: if an email send, webhook call, or downstream service throws inside the handler, the user/page/whatever you just created **will not exist** after the request returns. Wrap fallible side effects in `try`/`catch` (or `void`-fire them outside the transaction) unless you genuinely want the write reverted on failure.
 
 :::
-
-## Adding New Components
-
-Use the skill for automated creation:
-
-```
-/create-content-component
-```
-
-Or follow manual steps in [Page Builder](../page-builder/introduction.md#adding-new-components).
-
-## Related Documentation
-
-- [Page Builder](../page-builder/introduction.md) — Component registry and rendering
-- [Pages Hierarchy](../page-builder/pages-hierarchy.md) — URL structure and redirects
