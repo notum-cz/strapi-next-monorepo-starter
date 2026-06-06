@@ -24,6 +24,8 @@ Strapi page-builder components are often hard to review in isolation because the
 
 It is especially useful before QA, during design reviews, or when adding a new section to the page builder.
 
+Use the Showcase together with the [Design System docs](/docs/design-system) when reviewing typography, shared tokens, component states, and CMS-facing variants.
+
 ## Adding a Component
 
 1. Create a mock component in:
@@ -36,6 +38,8 @@ apps/ui/src/app/[locale]/dev/showcase/components/strapiComponents
 3. Register it in `showcaseItems.tsx`.
 
 Use `Data.Component<"{category}.{name}">` for mocked Strapi component data. For rich text fields, use HTML strings so the mock behaves like CKEditor content.
+
+When adding mocked variants, keep the options aligned with [CMS And Components](/docs/design-system/cms-and-components#variants).
 
 Mock media helpers are available in:
 

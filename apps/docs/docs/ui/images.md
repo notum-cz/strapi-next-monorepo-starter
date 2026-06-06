@@ -10,11 +10,11 @@ The starter intentionally **disables** Next.js's global image optimizer. Self-ho
 
 Base path: `apps/ui/src/components`
 
-| Source              | Component                                                | Optimizer                | When               |
-| ------------------- | -------------------------------------------------------- | ------------------------ | ------------------ |
-| Strapi media        | `page-builder/components/utilities/StrapiBasicImage.tsx` | imgproxy                 | `IMGPROXY_URL` set |
-| Strapi media        | `StrapiBasicImage`                                       | none — direct Strapi URL | local/dev fallback |
-| Local/static assets | `elementary/images/StaticImage.tsx`                      | Next.js Sharp            | always             |
+| Source              | Component              | Optimizer                | When               |
+| ------------------- | ---------------------- | ------------------------ | ------------------ |
+| Strapi media        | `StrapiBasicImage.tsx` | imgproxy                 | `IMGPROXY_URL` set |
+| Strapi media        | `StrapiBasicImage`     | none — direct Strapi URL | local/dev fallback |
+| Local/static assets | `StaticImage.tsx`      | Next.js Sharp            | always             |
 
 :::warning Do not disable images globally
 Do not set `images.unoptimized: true` globally in `next.config.mjs`. That overrides per-component `unoptimized={false}` and breaks `StaticImage` optimization. Leave the global flag unset.
@@ -129,10 +129,3 @@ Image settings in `apps/ui/next.config.mjs`:
 | `deviceSizes`     | `[420, 768, 1024, 1440, 2048]` | responsive widths for imgproxy + `StaticImage`         |
 | `formats`         | `["image/webp"]`               | output format for Next.js Sharp (mainly `StaticImage`) |
 | `minimumCacheTTL` | 1 h                            | cache duration for Next Sharp images                   |
-
-## Image Components
-
-| Component          | Path                                                     | When to use                                 |
-| ------------------ | -------------------------------------------------------- | ------------------------------------------- |
-| `StrapiBasicImage` | `page-builder/components/utilities/StrapiBasicImage.tsx` | Any Strapi media. Default for page-builder. |
-| `StaticImage`      | `elementary/images/StaticImage.tsx`                      | App-owned assets.                           |

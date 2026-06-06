@@ -1,10 +1,15 @@
-# TLDR
+---
+sidebar_position: 1
+slug: /design-system
+---
+
+# Design System
 
 The design system in this repository is shared between Figma/design, the Next.js frontend, Strapi CMS, and rich text editor previews. Set it up before page-builder work spreads across the project.
 
 Clarify the source of truth first: Figma, the current website, Strapi content, or a documented combination. Align naming across design, code, and CMS early so the same concept is not named differently in every layer.
 
-Shared visual values belong mainly in `packages/design-system/src/theme.css` and `packages/design-system/src/custom-styles.css`. These files affect both the frontend and Strapi editor integrations.
+Shared visual values belong mainly in `packages/design-system/src/theme.css` and `packages/design-system/src/custom-styles.css`. These files affect both the frontend and Strapi editor integrations. See the [`@repo/design-system` package reference](/docs/reference/packages/design-system) for package-level context.
 
 Define colors, fonts, spacing, containers, typography, and section-level layout once. Treat tokens, typography classes, rich text styles, and editor config outputs as shared contracts.
 
@@ -18,12 +23,8 @@ Components should have clear variants and defined states. The main goal is consi
 
 ## Detailed instructions
 
-- [How to start](./instructions/01-how-to-start.md)
-- [Tokens And Global Styles](./instructions/02-tokens-and-global-styles.md)
-- [Typography](./instructions/03-typography.md)
-- [Rich Text Editors](./instructions/04-rich-text-editors.md)
-- [CMS And Components](./instructions/05-cms-and-components.md)
-
-## Checklist
-
-Use the [Full design-system checklist](./checklist.md) before starting or reviewing design-system work.
+- [How to start](/docs/design-system/how-to-start)
+- [Tokens And Global Styles](/docs/design-system/tokens-and-global-styles)
+- [Typography](/docs/design-system/typography)
+- [Rich Text Editors](/docs/design-system/rich-text-editors)
+- [CMS And Components](/docs/design-system/cms-and-components)

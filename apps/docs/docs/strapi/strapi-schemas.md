@@ -58,6 +58,8 @@ The UID must match exactly in:
 }
 ```
 
+Use enumerations for clear, bounded visual choices that editors are expected to select. For deciding which variants belong in Strapi versus frontend code, see [CMS And Components](/docs/design-system/cms-and-components#what-belongs-in-strapi).
+
 ### Nested Components
 
 ```json

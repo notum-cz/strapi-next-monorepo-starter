@@ -1,8 +1,14 @@
+---
+sidebar_position: 4
+---
+
 # Tokens And Global Styles
 
-The shared design system lives in `packages/design-system`. It is consumed by both the Next.js frontend and Strapi editor integrations.
+The shared design system lives in `packages/design-system`. It is consumed by both the Next.js frontend and Strapi editor integrations. See the [`@repo/design-system` package reference](/docs/reference/packages/design-system) for package-level context.
 
-In this repository, Tailwind v4 reads theme configuration from CSS. The main source of reusable UI values is:
+This package keeps frontend rendering and Strapi rich text editing aligned. Tailwind v4 reads theme configuration from CSS, while Strapi editor integrations need compiled CSS and JSON configuration files that can be imported directly.
+
+The main source of reusable UI values is:
 
 ```text
 packages/design-system/src/theme.css
@@ -19,6 +25,16 @@ apps/ui/src/styles/globals.css
 @import "@repo/design-system/theme.css";
 @import "@repo/design-system/custom-styles.css";
 ```
+
+## Package Purpose
+
+`@repo/design-system` bridges three styling needs:
+
+- Tailwind theme tokens for the Next.js UI.
+- Shared rich text and editor CSS.
+- Generated Strapi editor configuration for CKEditor and TipTap.
+
+Strapi cannot process Tailwind directives inside admin editor configuration. For Strapi, the package builds plain CSS and JSON outputs from the same source tokens used by the frontend.
 
 ## Theme CSS
 
@@ -50,6 +66,33 @@ Use `apps/ui/src/styles/globals.css` for application-wide styling:
 - App-wide layout helpers.
 
 Keep project-specific global behavior here. Keep shared design tokens in `packages/design-system/src/theme.css`.
+
+## Consuming The Package
+
+### Next.js
+
+Import the shared theme and custom styles from `apps/ui/src/styles/globals.css`:
+
+```css
+@import "@repo/design-system/theme.css";
+@import "@repo/design-system/custom-styles.css";
+```
+
+Use `@repo/design-system/styles.css` only when a consumer needs compiled CSS instead of Tailwind source theme directives.
+
+### Strapi
+
+Strapi imports generated editor assets from `@repo/design-system`:
+
+- `@repo/design-system/styles-strapi.json` is injected into the Strapi admin editor setup as serialized CSS.
+- `@repo/design-system/ck-color-config.json` provides CKEditor colors.
+- `@repo/design-system/ck-fontSize-config.json` provides CKEditor font sizes.
+- `@repo/design-system/tiptap-color-config.json` provides TipTap color options with readable labels.
+- `@repo/design-system/tiptap-theme.css` provides TipTap theme variables as plain CSS.
+
+TipTap plugin configuration imports the generated TipTap files from `apps/strapi/config/plugins.ts` and `apps/strapi/config/plugins/tiptap.ts`.
+
+For editor selection, presets, and renderer guidance, see [Rich Text Editors](/docs/design-system/rich-text-editors).
 
 ## Color Format
 
@@ -158,6 +201,21 @@ Important exports:
 | `@repo/design-system/tiptap-color-config.json` | TipTap color palette config.               |
 | `@repo/design-system/tiptap-theme.css`         | TipTap theme CSS variables.                |
 
-## Checklist
+## Editor Config Outputs
 
-Use the [Tokens And Global Styles checklist](../checklist.md#tokens-and-global-styles) before starting or reviewing token work.
+The package build runs Tailwind first, then generates editor-specific outputs:
+
+```bash
+tailwindcss -i ./src/styles.css -o ./dist/styles.css
+node ./src/build-ck-config.js
+node ./src/build-tiptap-config.js
+```
+
+`packages/design-system/src/build-ck-config.js` generates CKEditor color, font-size, and serialized style outputs.
+`packages/design-system/src/build-tiptap-config.js` generates TipTap color options and theme CSS.
+
+For how those outputs are used in Strapi and the frontend, see [Rich Text Editors](/docs/design-system/rich-text-editors).
+
+:::tip Rebuild After Token Changes
+Next.js can pick up source CSS changes during local development, but Strapi editor outputs are generated files. Rebuild `@repo/design-system` and restart Strapi when editor colors, font sizes, or injected styles need to change.
+:::

@@ -1,14 +1,16 @@
+---
+sidebar_position: 7
+---
+
 # CMS And Components
 
-The design system should connect Figma, frontend components, and Strapi content modeling. Editors should see names and options that match the real design system.
+The design system should connect Figma, frontend components, and Strapi content modeling. Editors should see names and options that match the real design system, not implementation details.
 
-Use this page when deciding how a visual pattern becomes:
+Use this page when deciding whether a visual pattern becomes a frontend component, Strapi component, Strapi single type, page-builder section, shared token, or utility.
 
-- A frontend component.
-- A Strapi component.
-- A Strapi single type.
-- A page-builder section.
-- A shared token or utility.
+:::tip Keep CMS Options Editor-Friendly
+Editors should choose meaningful options such as `Default`, `Muted`, or `Image left`, not implementation names such as `py-24`, `bg-slate-100`, or internal class names.
+:::
 
 ## Naming Across Design, Code, And CMS
 
@@ -24,7 +26,7 @@ Keep names aligned across all layers:
 
 Avoid using different words for the same concept. If the design calls it `heading`, avoid using `title` in one component and `headline` in another without a clear reason.
 
-For page-builder naming conventions, see [Page Builder](../../page-builder/introduction.md).
+For page-builder naming conventions, see [Page Builder](/docs/category/page-builder).
 
 ## What Belongs In Strapi
 
@@ -41,9 +43,13 @@ Good Strapi candidates:
 
 Avoid putting purely technical styling details in Strapi. Editors should not need to understand implementation-specific layout internals.
 
-## Strapi Editor Experience
+:::caution Do Not Model Every CSS Decision
+If a value is part of the global visual system, prefer a token, component variant, or shared wrapper. Put it in Strapi only when editors should intentionally choose it.
+:::
 
-CMS modeling is not finished when the schema exists. Editors should understand what each field does and how much freedom they have.
+## Editor Experience
+
+CMS modeling is not finished when the schema exists. Editors need clear fields, good defaults, and bounded choices.
 
 For editor-facing fields, define:
 
@@ -54,8 +60,6 @@ For editor-facing fields, define:
 - Limited enum values for visual variants instead of open-ended strings.
 - Required fields only where missing content would break the component.
 - Placeholder text when it helps explain expected content shape.
-
-Avoid exposing implementation details such as internal class names, token names, or layout mechanics. Editors should choose from meaningful options such as `Default`, `Muted` background, or `Large` spacing, not implementation names like `py-24` or `bg-slate-100`.
 
 ## Single Types
 
@@ -70,12 +74,9 @@ Use single types for global reusable content or configuration:
 
 Before creating a single type, check whether the content is truly global or whether pages need independent variants.
 
-If layout elements differ across pages, decide whether the project needs:
-
-- One global layout.
-- Multiple layout variants.
-- Page-specific section composition.
-- A collection type instead of a single type.
+:::tip
+If layout elements differ across pages, prefer page-specific section composition or a collection type instead of forcing everything into one global single type.
+:::
 
 ## Page Builder Components
 
@@ -89,6 +90,10 @@ Before implementing a new section, decide:
 - Does it depend on shared typography, color, spacing, or container tokens?
 - Does it require a new Strapi schema?
 - Will changing it affect generated Strapi types?
+
+:::info Type Generation
+After changing a Strapi component schema, regenerate Strapi types so the UI receives the updated component shape.
+:::
 
 ## Shared Section Configuration
 
@@ -110,7 +115,7 @@ For each shared pattern, define only the essentials:
 
 For example, if most sections need top padding, bottom padding, and background variant controls, model those fields once as shared section configuration. This keeps editor options consistent and prevents section renderers from drifting away from the design system.
 
-## Shadcn And Atomic Components
+## Base UI Components
 
 Base UI primitives live in:
 
@@ -131,8 +136,6 @@ Use these as the starting point for atomic UI:
 
 Project-specific styling should usually be expressed through variants and shared tokens, not by duplicating primitives.
 
-Before adding a new utility, hook, helper, component, or type, check whether an equivalent already exists in `apps/ui` or `packages/*`.
-
 ## Component States
 
 Design-system components should define more than the default state. Before a component is considered reusable, confirm the states that apply to it:
@@ -151,6 +154,10 @@ This is especially important for buttons, links, forms, tabs, accordions, dialog
 
 State styling should use shared tokens and existing component variants where possible. Avoid local one-off state classes that make the same button, input, or card behave differently in each section.
 
+:::tip Design States Before Reuse
+A component is not reusable just because it renders once. Define its interaction, loading, empty, error, disabled, responsive, and dark-mode behavior before using it across page-builder sections.
+:::
+
 ## Icons And Decorative Assets
 
 Decide how icons, symbols, and decorative assets are handled to avoid multiple approaches per section.
@@ -166,7 +173,7 @@ Clarify:
 
 Prefer a small number of documented icon and decoration patterns. If every section imports or uploads decorative assets differently, visual consistency and accessibility become difficult to maintain.
 
-## Component Flexibility
+## Variants
 
 Prefer explicit, bounded variants over open-ended component APIs.
 
@@ -190,6 +197,10 @@ interface HeroProps {
 
 One prop should control one concept. If a prop changes image position, spacing, text alignment, and background at once, it should probably be a named variant instead.
 
+:::caution Avoid Universal Components
+Over-flexible components become hard to document, test, and expose in Strapi. Prefer clear variants or separate components when the design intent is genuinely different.
+:::
+
 ## Accessibility
 
 Clarify accessibility rules before implementation:
@@ -203,7 +214,3 @@ Clarify accessibility rules before implementation:
 - Component variants should work with long translated content.
 
 Accessibility is easier to preserve when tokens, typography variants, and CMS options are intentionally limited.
-
-## Checklist
-
-Use the [CMS Modeling checklist](../checklist.md#cms-modeling) and [Frontend Components checklist](../checklist.md#frontend-components) before starting or reviewing CMS component work.

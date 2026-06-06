@@ -33,6 +33,8 @@ Assign a preset per field via `options.preset` in the component schema.
 
 Colors and theme CSS come from `@repo/design-system/tiptap-color-config.json` and `tiptap-theme.css`, so the editor palette stays in sync with the UI design system. See [`@repo/design-system`](../../reference/packages/design-system.md).
 
+For editor presets, shared styles, and renderer decisions, see [Rich Text Editors](/docs/design-system/rich-text-editors).
+
 ## UI Rendering
 
 ```tsx
@@ -47,3 +49,5 @@ return (
 ```
 
 The renderer supports bold, italic, underline, strike, text color, highlight, headings, links, images, blockquotes, lists, tables, code blocks, sub/superscript, and text alignment.
+
+Typography variants used by TipTap rendering should stay aligned with [Typography](/docs/design-system/typography).

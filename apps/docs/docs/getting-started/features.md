@@ -18,49 +18,60 @@ Shared code lives in [`packages/*`](../reference/packages/overview.md).
 
 ## Content And Page Builder
 
-- **Editable pages** — editors compose pages from Strapi dynamic-zone components.
-- **Typed rendering** — React components receive typed Strapi component data through `@repo/strapi-types`.
-- **Component registry** — Strapi component UIDs map to UI components in one predictable place.
-- **Deep population** — small per-component populate configs are combined automatically.
-- **Page hierarchy** — full paths, parent/child pages, breadcrumbs, and redirects are handled in Strapi.
-- **Seed data** — baseline pages, navbar, footer, and demo content can be shared with the team.
+- **[Editable pages](../page-builder/introduction.md)** — editors compose pages from Strapi dynamic-zone components.
+- **[Typed rendering](../reference/packages/strapi-types.md)** — React components receive typed Strapi component data through `@repo/strapi-types`.
+- **[Component registry](../page-builder/introduction.md)** — Strapi component UIDs map to UI components in one predictable place.
+- **[Smart population](../page-builder/introduction.md)** — small per-component populate configs are combined automatically.
+- **[Page hierarchy](../page-builder/pages-hierarchy.md)** — full paths, parent/child pages, breadcrumbs, and redirects are handled in Strapi.
+- **[Seed data](../strapi/data-seeding.md)** — baseline pages, navbar, footer, and demo content can be shared with the team.
+- **[Add content type workflow](./add-content-type.md)** — extend Strapi schemas, regenerate types, and render new data in the UI.
 
 ## UI
 
-- **App Router UI** — localized Next.js routes render Strapi-managed pages.
-- **Strapi API clients** — typed server and browser-safe clients for public and private content.
-- **Preview support** — editors can open draft or published content from Strapi.
-- **Caching defaults** — Strapi responses cache, Next.js page cache and production ISR defaults.
-- **Edge proxies** — controlled proxy routes expose selected Strapi endpoints to the browser.
-- **SEO helpers** — metadata, sitemap, robots, canonical URLs, and structured data are generated from content.
-- **Image handling** — Strapi media helpers and optional imgproxy support are included.
-- **Operational tooling** — health checks, error boundaries, Sentry, log verbosity, and runtime env injection are documented.
+- **[App Router UI](../ui/project-structure.md)** — localized Next.js routes render Strapi-managed pages.
+- **[Static and dynamic Strapi pages](../ui/built-in-pages/pages-overview.md)** — built-in routes cover static pages, dynamic Strapi pages, auth pages, and development overview pages.
+- **[Strapi API clients](../ui/strapi-api-client.md)** — typed server and browser-safe clients fetch public and private content.
+- **[Built-in API routes](../ui/built-in-api-routes/auth.md)** — route handlers cover auth, Strapi proxying, preview, assets, and health checks.
+- **[Preview support](../ui/built-in-api-routes/preview.md)** — editors can open draft or published content from Strapi.
+- **[Caching defaults](../ui/caching.md)** — Strapi responses cache, Next.js page cache, ISR, and static export tradeoffs are documented.
+- **[Next proxies](../ui/next-proxies.md)** — controlled proxy middleware handles locale redirects, HTTPS redirects, basic auth, and auth guards.
+- **[SEO helpers](../ui/seo.md)** — metadata, sitemap, robots, canonical URLs, and structured data are generated from content.
+- **[Image handling](../ui/images.md)** — Strapi media helpers and optional imgproxy support are included.
+- **[Environment variables](../ui/environment-variables.md)** — runtime config, CSR env injection, public variables, and debug flags are documented.
+- **[Error handling](../ui/error-handling.md)** — React error boundaries and Sentry integration are covered.
+- **[Next configuration](../ui/next-config.md)** — Next.js output modes, React Compiler, Sentry wrapping, and image configuration are documented.
 
 ## Strapi
 
-- **Local database** — PostgreSQL runs through Docker for development.
-- **Schema conventions** — content types, components, relations, lifecycle hooks, and document middlewares are documented.
-- **Rich text editors** — CKEditor and Tiptap are preconfigured.
-- **Upload providers** — local storage, Azure Blob Storage, and AWS S3 are supported.
-- **Email providers** — Mailgun and Mailtrap are wired through Strapi provider config.
-- **Preview** — Strapi preview is configured for draft/live editorial review.
-- **Operational plugins** — Sentry, Config Sync, Users Permissions, cron jobs, and plugin setup have dedicated docs.
+- **[Local setup](../strapi/installation.md)** — PostgreSQL runs through Docker for development.
+- **[Schema conventions](../strapi/strapi-schemas.md)** — content types, components, relations, lifecycle hooks, and document middlewares are documented.
+- **[Generated Strapi types](../reference/packages/strapi-types.md)** — schema-generated types are shared with the UI.
+- **Rich text editors** — [CKEditor](../strapi/plugins/ckeditor.md) and [Tiptap](../strapi/plugins/tiptap-editor.md) editor integrations are documented.
+- **[Upload providers](../strapi/plugins/upload-providers.md)** — local storage, Azure Blob Storage, and AWS S3 are supported.
+- **[Email providers](../strapi/plugins/email-providers.md)** — Mailgun production email and Mailtrap development email are wired through Strapi provider config.
+- **[Preview](../strapi/strapi-preview.md)** — Strapi preview is configured for draft/live editorial review.
+- **[Users & Permissions](../strapi/plugins/users-permissions.md)** — Strapi end-user accounts and JWT behavior are documented.
+- **[Config Sync](../strapi/plugins/config-sync.md)** — admin configuration can be exported and synchronized between environments.
+- **[Cron jobs](../strapi/cron-jobs.md)** — scheduled work and multi-replica deployment concerns are documented.
+- **[Docker build](../strapi/docker-build.md)** — container build guidance is available for Strapi deployments.
 
 ## Authentication
 
-- **End-user auth** — Better Auth owns the session cookie in the UI.
-- **Strapi JWT** — Users & Permissions issues the JWT used for per-user Strapi calls.
-- **OAuth-ready** — social providers use the same Better Auth + Strapi bridge.
-- **Admin SSO** — Strapi admin Microsoft SSO is documented separately from end-user auth.
+- **[End-user auth](../auth/ui/authentication.md)** — Better Auth owns the session cookie in the UI.
+- **[Strapi JWT](../auth/ui/authentication.md)** — Users & Permissions issues the JWT used for per-user Strapi calls.
+- **[OAuth providers](../auth/ui/oauth-providers.md)** — social providers use the same Better Auth + Strapi bridge.
+- **[Admin SSO](../auth/strapi-admin/microsoft-sso.md)** — Strapi admin Microsoft SSO is documented separately from end-user auth.
 
 ## Development Workflow
 
-- **Monorepo scripts** — Turbo runs app and package tasks from the root.
-- **Shared packages** — design tokens, path helpers, generated Strapi types, lint config, TypeScript config, and release config live in `packages/*`.
-- **Code quality** — ESLint, Prettier, Lefthook, Commitizen, and Conventional Commits are included.
-- **Internationalization** — UI messages and Strapi content locales are documented together.
-- **Testing and QA** — Vitest, Playwright, axe, visual tests, SEO checks, and Lighthouse CI are covered.
-- **Deployment notes** — Docker build, Heroku, GitHub Actions, and environment variables have reference docs.
+- **[Monorepo scripts](../reference/commands.md)** — Turbo runs app and package tasks from the root.
+- **[Shared packages](../reference/packages/overview.md)** — design tokens, path helpers, generated Strapi types, lint config, TypeScript config, and release config live in `packages/*`.
+- **[Code quality](../reference/workflow.md)** — ESLint, Prettier, Lefthook, Commitizen, and Conventional Commits are included.
+- **[Internationalization](../reference/internationalization.md)** — UI messages and Strapi content locales are documented together.
+- **[Testing and QA](../reference/testing/overview.md)** — Vitest, Playwright, axe, visual tests, SEO checks, and Lighthouse CI are covered.
+- **[Deployment](../reference/deployment/overview.md)** — GitHub Actions, Heroku, Vercel, and Docker deployment notes are documented.
+- **[Design system](../design-system/overview.md)** — shared tokens, typography, rich text styling, and CMS component design rules are documented.
+- **Integrations** — [Sentry](../reference/integrations/sentry.md) and [reCAPTCHA](../reference/integrations/recaptcha.md) setup have dedicated reference pages.
 
 ## Related Documentation
 

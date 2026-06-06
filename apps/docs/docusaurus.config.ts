@@ -77,6 +77,11 @@ const config: Config = {
           label: "Docs",
         },
         {
+          href: "https://www.notum-dev.cz/",
+          label: "Live demo",
+          position: "right",
+        },
+        {
           type: "docsVersionDropdown",
           position: "right",
         },

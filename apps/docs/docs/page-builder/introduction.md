@@ -10,6 +10,8 @@ This gives the project a practical split:
 - The UI owns visual implementation and behavior.
 - Editors can change page composition without code changes, as long as the needed components already exist.
 
+For design-system decisions around CMS fields, variants, shared section configuration, and reusable UI states, see [CMS And Components](/docs/design-system/cms-and-components).
+
 ```mermaid
 flowchart TB
   classDef zone fill:#eef2ff,stroke:#6366f1,color:#1f2937,stroke-width:1px
@@ -82,6 +84,8 @@ Components are grouped by category (matching Strapi's component folder structure
 | Strapi collectionName | `components_{category}_{name_underscored}` | `components_sections_hero`                                               |
 | React component       | `Strapi{PascalCase}`                       | `StrapiHero`                                                             |
 | React file            | `Strapi{PascalCase}.tsx`                   | `apps/ui/src/components/page-builder/components/sections/StrapiHero.tsx` |
+
+Keep design, CMS, and code names aligned. The design-system naming guidance lives in [CMS And Components](/docs/design-system/cms-and-components#naming-across-design-code-and-cms).
 
 ## Props Typing
 

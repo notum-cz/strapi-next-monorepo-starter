@@ -44,6 +44,8 @@ pnpm dlx shadcn@latest add accordion
 
 Config lives in `apps/ui/components.json`. Theme tokens live in `apps/ui/src/styles/globals.css` and `@repo/design-system/theme.css`.
 
+For shared tokens and global styling rules, see [Tokens And Global Styles](/docs/design-system/tokens-and-global-styles). For reusable component variants and states, see [CMS And Components](/docs/design-system/cms-and-components).
+
 Use `cn()` from `apps/ui/src/lib/styles.ts` when merging Tailwind classes:
 
 ```tsx

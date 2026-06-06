@@ -8,6 +8,8 @@ sidebar_position: 4
 
 Content is stored as HTML and rendered in the UI via `dangerouslySetInnerHTML` with link processing and sanitization.
 
+For editor choice, shared rich text styles, presets, and frontend renderer guidance, see [Rich Text Editors](/docs/design-system/rich-text-editors).
+
 ## Components
 
 Strapi components:
@@ -33,4 +35,4 @@ return (
 
 `variant` can be `"page"` or `"blog"`.
 
-Custom CKEditor plugins and heading styles live in `apps/strapi/src/admin/ckeditor`.
+Custom CKEditor plugins and heading styles live in `apps/strapi/src/admin/ckeditor`. Typography variant guidance lives in [Typography](/docs/design-system/typography).
