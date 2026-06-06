@@ -46,17 +46,6 @@ const config: Config = {
           sidebarPath: "./sidebars.ts",
           editUrl:
             "https://github.com/notum-cz/strapi-next-monorepo-starter/edit/main/apps/docs/",
-          lastVersion: "current",
-          versions: {
-            current: {
-              label: "Current",
-              path: "",
-            },
-            "3.1.1": {
-              label: "3.1.1",
-              path: "3.1.1",
-            },
-          },
         },
         blog: false,
         theme: {
@@ -79,10 +68,6 @@ const config: Config = {
         {
           href: "https://www.notum-dev.cz/",
           label: "Live demo",
-          position: "right",
-        },
-        {
-          type: "docsVersionDropdown",
           position: "right",
         },
       ],
