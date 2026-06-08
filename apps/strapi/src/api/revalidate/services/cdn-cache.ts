@@ -1,5 +1,9 @@
 import { normalizeFullPaths, readRevalidationConfig } from "./helpers"
 
+// Cap how long we wait on the UI purge endpoint so a stalled upstream cannot
+// hang the request (and the admin widget) indefinitely.
+const PURGE_TIMEOUT_MS = 15_000
+
 type PurgeError = {
   status: number
   message: string
@@ -49,6 +53,7 @@ export async function purgeCDNCache(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ secret, paths: normalizedPaths }),
+      signal: AbortSignal.timeout(PURGE_TIMEOUT_MS),
     })
   } catch (error) {
     const message =
@@ -92,7 +97,9 @@ export async function purgeCDNCache(
     }
   }
 
-  const result = await response.json()
+  // A successful purge may return an empty or non-JSON body; parse defensively
+  // so a missing/odd body never turns a 2xx response into a thrown 500.
+  const result = await parseJsonSafely(response)
 
   console.debug("CDN purge completed", {
     pathCount: normalizedPaths.length,
@@ -100,6 +107,25 @@ export async function purgeCDNCache(
   })
 
   return { purged: true, skipped: false, paths: normalizedPaths, result }
+}
+
+/**
+ * Parses a successful response body as JSON, tolerating empty or non-JSON
+ * bodies (returns `undefined` instead of throwing). The purge already
+ * succeeded by the time this runs, so the body is informational only.
+ */
+async function parseJsonSafely(response: Response): Promise<unknown> {
+  const raw = await response.text()
+
+  if (!raw) {
+    return undefined
+  }
+
+  try {
+    return JSON.parse(raw)
+  } catch {
+    return undefined
+  }
 }
 
 /**

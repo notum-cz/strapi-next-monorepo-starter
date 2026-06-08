@@ -68,7 +68,7 @@ function DataRevalidateButton() {
         payload: {
           uid,
           fullPaths: [fullPath],
-          locale,
+          ...(locale ? { locale } : {}),
         },
       }
     }

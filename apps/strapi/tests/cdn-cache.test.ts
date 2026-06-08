@@ -39,11 +39,15 @@ describe("purgeCDNCache", () => {
       skipped: false,
       paths: ["/about"],
     })
-    expect(fetchMock).toHaveBeenCalledWith(PURGE_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ secret: "test-secret", paths: ["/about"] }),
-    })
+    expect(fetchMock).toHaveBeenCalledWith(
+      PURGE_URL,
+      expect.objectContaining({
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ secret: "test-secret", paths: ["/about"] }),
+        signal: expect.any(AbortSignal),
+      })
+    )
   })
 
   it("skips the request when no paths are provided", async () => {
