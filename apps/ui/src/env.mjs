@@ -22,6 +22,14 @@ export const env = createEnv({
     STRAPI_REST_READONLY_API_KEY: z.string().optional(),
     STRAPI_REST_CUSTOM_API_KEY: z.string().optional(),
     STRAPI_PREVIEW_SECRET: z.string().optional(),
+    STRAPI_REVALIDATE_SECRET: z.string().optional(),
+
+    AZURE_SUBSCRIPTION_ID: z.string().optional(),
+    AZURE_RESOURCE_GROUP: z.string().optional(),
+    AZURE_FRONT_DOOR_PROFILE: z.string().optional(),
+    AZURE_MI_CLIENT_ID: z.string().optional(),
+    IDENTITY_ENDPOINT: z.string().optional(),
+    IDENTITY_HEADER: z.string().optional(),
 
     NEXT_OUTPUT: z.string().optional(),
 
@@ -77,6 +85,14 @@ export const env = createEnv({
     STRAPI_REST_READONLY_API_KEY: process.env.STRAPI_REST_READONLY_API_KEY,
     STRAPI_REST_CUSTOM_API_KEY: process.env.STRAPI_REST_CUSTOM_API_KEY,
     STRAPI_PREVIEW_SECRET: process.env.STRAPI_PREVIEW_SECRET,
+    STRAPI_REVALIDATE_SECRET: process.env.STRAPI_REVALIDATE_SECRET,
+
+    AZURE_SUBSCRIPTION_ID: process.env.AZURE_SUBSCRIPTION_ID,
+    AZURE_RESOURCE_GROUP: process.env.AZURE_RESOURCE_GROUP,
+    AZURE_FRONT_DOOR_PROFILE: process.env.AZURE_FRONT_DOOR_PROFILE,
+    AZURE_MI_CLIENT_ID: process.env.AZURE_MI_CLIENT_ID,
+    IDENTITY_ENDPOINT: process.env.IDENTITY_ENDPOINT,
+    IDENTITY_HEADER: process.env.IDENTITY_HEADER,
 
     NEXT_OUTPUT: process.env.NEXT_OUTPUT,
 
