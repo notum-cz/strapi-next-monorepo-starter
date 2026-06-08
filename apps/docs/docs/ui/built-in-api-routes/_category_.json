@@ -1,0 +1,11 @@
+{
+  "label": "Built-in API routes",
+  "position": 6,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Built-in API routes",
+    "description": "Next.js route handlers shipped with apps/ui for auth, Strapi proxying, preview, assets, and health checks."
+  }
+}

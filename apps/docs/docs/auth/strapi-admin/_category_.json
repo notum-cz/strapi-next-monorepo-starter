@@ -1,0 +1,11 @@
+{
+  "label": "Strapi Admin SSO",
+  "position": 2,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Strapi Admin SSO",
+    "description": "Single sign-on for the Strapi admin panel itself. Distinct from end-user auth — these flows authenticate CMS editors, not site visitors. Requires Strapi Enterprise license."
+  }
+}

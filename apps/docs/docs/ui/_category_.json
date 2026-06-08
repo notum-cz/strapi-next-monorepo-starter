@@ -1,0 +1,11 @@
+{
+  "label": "UI",
+  "position": 3,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "UI",
+    "description": "Operational concerns specific to apps/ui — setup, structure, built-in routes, data fetching, caching, images, SEO, and deployment."
+  }
+}
