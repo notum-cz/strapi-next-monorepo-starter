@@ -66,9 +66,12 @@ export async function GET(request: Request) {
   // Flag this session as a Strapi preview so the security-headers proxy widens
   // `frame-ancestors` to allow the Strapi admin to iframe the previewed page.
   // Set for both draft and published previews — both are framed by Strapi.
+  // Bounded by a short TTL so `frame-ancestors` is not widened indefinitely
+  // after the preview session ends.
   cookieStore.set({
     name: STRAPI_PREVIEW_FRAME_COOKIE,
     value: "1",
+    maxAge: 60 * 60 * 2, // 2 hours
     httpOnly: true,
     path: "/",
     secure: true,
