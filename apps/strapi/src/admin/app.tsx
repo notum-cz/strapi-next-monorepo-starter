@@ -1,4 +1,5 @@
 import { setPluginConfig } from "@_sh/strapi-plugin-ckeditor"
+import { Cloud } from "@strapi/icons"
 import type { StrapiApp } from "@strapi/strapi/admin"
 
 // eslint-disable-next-line import-x/order
@@ -7,6 +8,7 @@ import "@repo/design-system/styles.css"
 
 // eslint-disable-next-line import-x/order
 import { defaultCkEditorConfig, simpleCkEditorConfig } from "./ckeditor/configs"
+import DataRevalidate from "./extensions/DataRevalidate"
 import InternalJobs from "./extensions/InternalJobs"
 
 export default {
@@ -20,6 +22,28 @@ export default {
     app.getPlugin("content-manager").injectComponent("listView", "actions", {
       name: "InternalJobs",
       Component: InternalJobs,
+    })
+
+    app
+      .getPlugin("content-manager")
+      .injectComponent("editView", "right-links", {
+        name: "DataRevalidate",
+        Component: DataRevalidate,
+      })
+
+    app.widgets.register({
+      icon: Cloud,
+      title: {
+        id: "cdn-cache.widget.title",
+        defaultMessage: "CDN cache",
+      },
+      component: async () => {
+        const component = await import("./widgets/CdnCacheWidget")
+
+        return component.default
+      },
+      id: "cdn-cache",
+      pluginId: "content-manager",
     })
 
     const adminPanelConfigEnv = process.env.ADMIN_PANEL_CONFIG_API_AUTH_TOKEN
