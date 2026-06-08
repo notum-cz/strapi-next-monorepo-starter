@@ -2,6 +2,7 @@ import { ROOT_PAGE_PATH } from "@repo/shared-data"
 import { cookies, draftMode } from "next/headers"
 import { hasLocale } from "next-intl"
 
+import { STRAPI_PREVIEW_FRAME_COOKIE } from "@/lib/constants"
 import { getEnvVar } from "@/lib/env-vars"
 import { redirect, routing } from "@/lib/navigation"
 
@@ -57,6 +58,17 @@ export async function GET(request: Request) {
     name: draftModePrerenderCookieKey,
     value: draftCookie?.value || "",
     expires: draftCookie?.value ? undefined : 0, // undefined => does not expire, 0 => expires at timestamp 0
+    httpOnly: true,
+    path: "/",
+    secure: true,
+    sameSite: "none", // Allow cookie in cross-origin iframes
+  })
+  // Flag this session as a Strapi preview so the security-headers proxy widens
+  // `frame-ancestors` to allow the Strapi admin to iframe the previewed page.
+  // Set for both draft and published previews — both are framed by Strapi.
+  cookieStore.set({
+    name: STRAPI_PREVIEW_FRAME_COOKIE,
+    value: "1",
     httpOnly: true,
     path: "/",
     secure: true,
