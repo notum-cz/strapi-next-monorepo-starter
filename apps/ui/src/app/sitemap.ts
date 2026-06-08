@@ -51,7 +51,32 @@ async function generateLocalizedSitemap(
 
   // Fetch all records for each entity individually
   for (const entityUid of pageEntityUids) {
-    const entityResponse = await fetchAllPages(entityUid, locale)
+    const entityResponse = await fetchAllPages(
+      entityUid,
+      locale,
+      {
+        populate: { seo: true },
+        filters: {
+          $or: [
+            // No seo component configured -> include
+            { seo: { $null: true } },
+            // seo.metaRobots explicitly not set to noindex variants
+            {
+              seo: {
+                metaRobots: {
+                  $notIn: ["noindex", "noindex,nofollow", "noindex,follow"],
+                },
+              },
+            },
+            // seo.metaRobots is null/undefined -> include
+            { seo: { metaRobots: { $null: true } } },
+          ],
+        },
+      },
+      // Cache the page list; the tag invalidates it instantly on page changes,
+      // the TTL is a backstop.
+      { next: { revalidate: 3600, tags: ["strapi:api::page.page"] } }
+    )
 
     if (entityResponse.data.length > 0) {
       pageEntities[entityUid] = entityResponse.data
