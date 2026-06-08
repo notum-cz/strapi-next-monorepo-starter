@@ -242,4 +242,4 @@ See `/docs/showcase.md` for full examples and conventions.
 
 ## See also
 
-- `docs/page-builder.md` — architecture overview, naming conventions, component props
+- `apps/docs/docs/page-builder/introduction.md` — architecture overview, naming conventions, component props

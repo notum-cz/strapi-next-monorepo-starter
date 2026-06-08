@@ -61,6 +61,33 @@
     "sync-types": {
       "cache": false
     },
+    "generate:types": {
+      "cache": false
+    },
+    "seed:check": {
+      "cache": false,
+      "persistent": false
+    },
+    "seed:export": {
+      "cache": false,
+      "persistent": false
+    },
+    "seed:import": {
+      "cache": false,
+      "persistent": false
+    },
+    "run:db": {
+      "cache": false,
+      "persistent": false
+    },
+    "run:imgproxy": {
+      "cache": false,
+      "persistent": false
+    },
+    "transfer": {
+      "cache": false,
+      "persistent": false
+    },
     "dev": {
       "dependsOn": ["@repo/shared-data#build", "@repo/design-system#build"],
       "cache": false,

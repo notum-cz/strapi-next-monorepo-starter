@@ -1,56 +1,80 @@
 # Strapi + Next.js Monorepo
 
-Monorepo starter with Strapi v5 CMS and Next.js 16 frontend. Uses pnpm workspaces with Turborepo.
+Monorepo starter with Strapi v5 CMS, Next.js 16 UI, Docusaurus docs, pnpm workspaces, and Turborepo.
 
 ## Workspaces
 
 | Path                     | Description                                                  |
 | ------------------------ | ------------------------------------------------------------ |
-| `apps/ui`                | Next.js 16 (App Router, React 19, TailwindCSS v4, Shadcn/ui) |
-| `apps/strapi`            | Strapi v5 CMS (PostgreSQL via Docker)                        |
+| `apps/ui`                | Next.js 16 App Router, React 19, TailwindCSS v4, shadcn/ui   |
+| `apps/strapi`            | Strapi v5 CMS with PostgreSQL through Docker                 |
+| `apps/docs`              | Docusaurus documentation site                                |
 | `packages/strapi-types`  | Auto-generated TypeScript types from Strapi schemas          |
 | `packages/design-system` | Shared TailwindCSS tokens, CKEditor and TipTap editor styles |
 | `packages/shared-data`   | Shared constants and types                                   |
-| `qa/tests/playwright`    | E2E and accessibility tests                                  |
+| `qa/tests/playwright`    | E2E, accessibility, SEO, visual, and Lighthouse tests        |
 
 ## Essential Commands
 
+Run commands from the monorepo root unless a docs page says otherwise.
+
 ```bash
-pnpm dev              # Start both apps (Docker required for DB)
+pnpm dev              # Start all apps
+pnpm dev:strapi       # Start Strapi only
+pnpm dev:ui           # Start Next.js only
+pnpm dev:docs         # Start Docusaurus only
 pnpm build            # Build all
 pnpm lint             # ESLint all packages
-pnpm typecheck        # Typecheck (run from apps/ui)
+pnpm typecheck        # Typecheck all packages
+pnpm test             # Vitest in all apps
 ```
 
-See [apps/docs/docs/commands.md](apps/docs/docs/commands.md) for full command reference.
+See [Commands Reference](apps/docs/docs/reference/commands.md) for the full command list, package filters, testing commands, and cleanup scripts.
 
-## Type Generation (Critical)
+## Critical Workflow
 
-After ANY Strapi schema change:
+After any Strapi schema or component change, regenerate and sync shared types from the monorepo root:
 
 ```bash
-cd apps/strapi && pnpm generate:types
+pnpm generate:types
+pnpm sync-types
 ```
 
-This updates `@repo/strapi-types`. Forgetting causes silent type mismatches between apps.
+This updates `@repo/strapi-types`. Forgetting this can cause silent type mismatches between Strapi schemas and UI code.
 
-## Documentation
+## Documentation Routing
 
-- [Commands Reference](apps/docs/docs/commands.md) — All pnpm commands
-- [Architecture](apps/docs/docs/architecture.md) — System design and patterns
-- [Page Builder](apps/docs/docs/page-builder.md) — Component registry and rendering
-- [Strapi API Client](apps/docs/docs/strapi-api-client.md) — Fetching content from Strapi
-- [Pages Hierarchy](apps/docs/docs/pages-hierarchy.md) — URL structure and redirects
-- [Authentication](apps/docs/docs/authentication.md) — Better Auth + Strapi JWT integration
-- [Strapi Schemas](apps/docs/docs/strapi-schemas.md) — Schema attributes, localization, lifecycle hooks
-- [Strapi Types](apps/docs/docs/strapi-types-usage.md) — Type utilities and usage patterns
+Start with [Documentation Overview](apps/docs/docs/getting-started/features.md) for the stack, included capabilities, and links across the docs.
+
+Use these pages for common coding-agent tasks:
+
+- [Commands Reference](apps/docs/docs/reference/commands.md) — Root scripts, package filters, tests, and cleanup commands
+- [Workflow](apps/docs/docs/reference/workflow.md) — Git hooks, branch naming, Conventional Commits, env vars in commits, and release notes
+- [Quick Start](apps/docs/docs/getting-started/quick-start.md) — Local setup flow
+- [Add Content Type](apps/docs/docs/getting-started/add-content-type.md) — Strapi schema-to-UI implementation workflow
+- [Page Builder](apps/docs/docs/page-builder/introduction.md) — Dynamic zones, component registry, rendering, and population rules
+- [Pages Hierarchy](apps/docs/docs/page-builder/pages-hierarchy.md) — URL structure, redirects, breadcrumbs, and page relationships
+- [UI Project Structure](apps/docs/docs/ui/project-structure.md) — Next.js app layout and route organization
+- [Strapi API Client](apps/docs/docs/ui/strapi-api-client.md) — Fetching Strapi content from server and browser-safe clients
+- [Authentication](apps/docs/docs/auth/ui/authentication.md) — Better Auth session handling and Strapi JWT integration
+- [Strapi Schemas](apps/docs/docs/strapi/strapi-schemas.md) — Content types, components, relations, localization, and document middlewares
+- [Strapi Types](apps/docs/docs/reference/packages/strapi-types.md) — Generated type utilities and usage patterns
+- [Design System](apps/docs/docs/design-system/overview.md) — Tokens, typography, rich text styles, and CMS component design guidance
+- [Testing](apps/docs/docs/reference/testing/overview.md) — Unit, Playwright, accessibility, visual, SEO, and Lighthouse coverage
+- [Deployment](apps/docs/docs/reference/deployment/overview.md) — GitHub Actions, Heroku, Vercel, and Docker notes
 
 ## Commits
 
-Uses conventional commits enforced by Lefthook + commitlint.
+Use Conventional Commits. The repo enforces branch naming and commit messages through Lefthook and commitlint.
 
 ```bash
 pnpm commit    # Interactive Commitizen flow
 ```
 
-Or write manually: `type(scope): subject`
+Manual format:
+
+```text
+type(scope): subject
+```
+
+When adding environment variables, mention them in the commit body as `env.VARIABLE_NAME` or `VARIABLE_NAME` in `CONSTANT_CASE` so the Auto PR workflow can surface them. See [Workflow](apps/docs/docs/reference/workflow.md) for details.

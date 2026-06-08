@@ -23,4 +23,4 @@ Types generated in Strapi, symlinked to package:
 packages/strapi-types/generated/  →  apps/strapi/types/generated/
 ```
 
-Full reference: [Strapi Types docs](../../docs/strapi-types-usage.md)
+Full reference: [Strapi Types docs](../../apps/docs/docs/content-system/strapi-types-usage.md)

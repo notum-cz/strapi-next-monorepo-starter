@@ -1,0 +1,11 @@
+{
+  "label": "Getting Started",
+  "position": 1,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Getting Started",
+    "description": "Install the template, run it locally, and extend it with your own content types."
+  }
+}
