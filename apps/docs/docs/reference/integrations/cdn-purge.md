@@ -2,27 +2,27 @@
 sidebar_position: 3
 ---
 
-# CDN Purge (optional)
+# CDN
 
 :::info Scope
-Optional, opt-in feature. Cache revalidation works without it — see [Cache Revalidation](../cache-revalidation.md). CDN purge only matters when a CDN sits in front of the Next.js app and you need incident-time eviction faster than the route's TTL.
+Optional, opt-in feature. Cache revalidation works without it — see [Cache Revalidation](../cache-revalidation). This CDN integration is used for purging cached CDN entries when a CDN sits in front of the Next.js app and operators need incident-time eviction faster than the route's TTL.
 :::
 
-CDN purge is a pluggable provider, like the optional [Microsoft SSO](../../auth/strapi-admin/microsoft-sso.md) provider. The provider is **inert until configured**: `resolveCdnProvider()` (`apps/ui/src/lib/cdn/index.ts`) returns `null` when no provider's env vars are set, and the **CDN cache** widget on the Strapi homepage reports that no provider is configured.
+CDN cache purging uses a pluggable provider model. The integration is **inert until configured**: `resolveCdnProvider()` (`apps/ui/src/lib/cdn/index.ts`) returns `null` when no provider's environment variables are set, and the **CDN cache** widget on the Strapi homepage reports that no provider is configured.
 
-## Architecture
+## CDN Purge Flow
 
-- Operator uses the **CDN cache** widget → `POST /api/revalidate/cdn-purge` (Strapi controller, admin-token validated)
-- Strapi `cdn-cache` service → `POST /api/cdn-purge` (UI route)
+- Operator uses the **CDN cache** widget and chooses specific URLs or the entire website
+- Strapi sends the selected URL list, or `/*` for the entire website, to `POST /api/cdn-purge` on the UI
 - UI route → `purgeCdnCache()` → the resolved `CdnPurgeProvider`
 
-## Adding a provider
-
-Implement a `CdnPurgeProvider` (`apps/ui/src/lib/cdn/types.ts`) in `apps/ui/src/lib/cdn/providers/`, returning `null` from its factory until its env vars are set, then add it to the list in `resolveCdnProvider()`. The first configured provider wins.
-
-## Bundled example: Azure Front Door
+### Azure Front Door
 
 `apps/ui/src/lib/cdn/providers/azure-front-door.ts` purges an Azure Front Door endpoint using the Container App's managed identity (IMDS token). It activates only when all of these are set:
+
+:::caution Purge propagation
+Azure Front Door cache purge can take up to 20 minutes to propagate globally. Because that is often slower than the normal Next.js revalidation window, automatic CDN purge is intentionally not part of the Strapi publish flow. See the [Azure Front Door FAQ](https://learn.microsoft.com/en-us/azure/frontdoor/front-door-faq#how-long-does-it-take-to-purge-content-from-azure-front-door) for Microsoft's propagation guidance.
+:::
 
 | Variable                               | Purpose                                          |
 | -------------------------------------- | ------------------------------------------------ |

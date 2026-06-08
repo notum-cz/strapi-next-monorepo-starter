@@ -54,7 +54,7 @@ In an application without auth or request-aware navbar behavior, the stricter op
 
 Beyond TTL-based ISR, Strapi publishes invalidate cached content immediately via the revalidation pipeline: page/redirect paths through `revalidatePath`, and shared content (navbar, footer) through `revalidateTag`. Fetchers in `apps/ui/src/lib/strapi-api/content/server.ts` tag shared content with `strapi:api::<uid>` so a publish can target it precisely.
 
-See [Cache Revalidation](../reference/cache-revalidation.md) for the full Strapi → UI flow, and [CDN Purge](../reference/integrations/cdn-purge.md) for optional CDN eviction.
+See [Cache Revalidation](../reference/cache-revalidation) for the full Strapi → UI flow, and [CDN](../reference/integrations/cdn-purge) for optional CDN cache purging.
 
 ## Dynamic Pages
 
