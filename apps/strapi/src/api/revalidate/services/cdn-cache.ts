@@ -1,5 +1,4 @@
 import { normalizeFullPaths, readRevalidationConfig } from "./helpers"
-import { logError, logger, withSpan } from "../../../utils/logging"
 
 type PurgeError = {
   status: number
@@ -27,87 +26,86 @@ export type PurgeResult = {
 export async function purgeCDNCache(
   paths: Iterable<string>
 ): Promise<PurgeResult> {
-  return withSpan("strapi.cdnCache.purge", async () => {
-    const normalizedPaths = normalizeFullPaths(paths)
+  const normalizedPaths = normalizeFullPaths(paths)
 
-    if (normalizedPaths.length === 0) {
-      logger.debug("CDN purge skipped because no paths were provided")
+  if (normalizedPaths.length === 0) {
+    console.debug("CDN purge skipped because no paths were provided")
 
-      return { purged: false, skipped: true, paths: [] }
-    }
+    return { purged: false, skipped: true, paths: [] }
+  }
 
-    const { clientUrl, secret } = readRevalidationConfig()
+  const { clientUrl, secret } = readRevalidationConfig()
 
-    logger.info("Submitting CDN purge request", {
-      clientUrl,
-      pathCount: normalizedPaths.length,
-      paths: normalizedPaths,
-    })
-
-    let response: Response
-
-    try {
-      response = await fetch(`${clientUrl}/api/cdn-purge`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ secret, paths: normalizedPaths }),
-      })
-    } catch (error) {
-      const message =
-        error instanceof Error && error.message
-          ? `Could not reach CDN purge endpoint: ${error.message}`
-          : "Could not reach CDN purge endpoint."
-
-      logError(error, "CDN purge request failed", {
-        pathCount: normalizedPaths.length,
-        paths: normalizedPaths,
-      })
-
-      return {
-        purged: false,
-        skipped: false,
-        paths: normalizedPaths,
-        error: { status: 0, message },
-      }
-    }
-
-    if (!response.ok) {
-      const fallbackMessage = `CDN purge endpoint responded ${response.status}.`
-      const upstreamMessage = await extractUpstreamMessage(response)
-
-      logger.error("CDN purge failed", {
-        status: response.status,
-        message: upstreamMessage,
-        pathCount: normalizedPaths.length,
-        paths: normalizedPaths,
-      })
-
-      return {
-        purged: false,
-        skipped: false,
-        paths: normalizedPaths,
-        error: {
-          status: response.status,
-          message: upstreamMessage ?? fallbackMessage,
-        },
-      }
-    }
-
-    const result = await response.json()
-
-    logger.info("CDN purge completed", {
-      pathCount: normalizedPaths.length,
-      paths: normalizedPaths,
-    })
-
-    return { purged: true, skipped: false, paths: normalizedPaths, result }
+  console.debug("Submitting CDN purge request", {
+    clientUrl,
+    pathCount: normalizedPaths.length,
+    paths: normalizedPaths,
   })
+
+  let response: Response
+
+  try {
+    response = await fetch(`${clientUrl}/api/cdn-purge`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ secret, paths: normalizedPaths }),
+    })
+  } catch (error) {
+    const message =
+      error instanceof Error && error.message
+        ? `Could not reach CDN purge endpoint: ${error.message}`
+        : "Could not reach CDN purge endpoint."
+
+    console.error("CDN purge request failed", {
+      pathCount: normalizedPaths.length,
+      paths: normalizedPaths,
+      error,
+    })
+
+    return {
+      purged: false,
+      skipped: false,
+      paths: normalizedPaths,
+      error: { status: 0, message },
+    }
+  }
+
+  if (!response.ok) {
+    const fallbackMessage = `CDN purge endpoint responded ${response.status}.`
+    const upstreamMessage = await extractUpstreamMessage(response)
+
+    console.error("CDN purge failed", {
+      status: response.status,
+      message: upstreamMessage,
+      pathCount: normalizedPaths.length,
+      paths: normalizedPaths,
+    })
+
+    return {
+      purged: false,
+      skipped: false,
+      paths: normalizedPaths,
+      error: {
+        status: response.status,
+        message: upstreamMessage ?? fallbackMessage,
+      },
+    }
+  }
+
+  const result = await response.json()
+
+  console.debug("CDN purge completed", {
+    pathCount: normalizedPaths.length,
+    paths: normalizedPaths,
+  })
+
+  return { purged: true, skipped: false, paths: normalizedPaths, result }
 }
 
 /**
  * Pulls a human-readable message out of an error response. The Next.js purge
  * endpoint returns JSON with either a `message` (validation/auth errors) or a
- * `purged: false` body with a `message` field on Front Door failure. Falls
+ * `purged: false` body with a `message` field on CDN failure. Falls
  * back to the raw text when the body is not parseable JSON.
  */
 async function extractUpstreamMessage(

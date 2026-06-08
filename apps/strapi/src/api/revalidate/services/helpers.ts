@@ -1,8 +1,6 @@
 import { normalizePageFullPath } from "@repo/shared-data"
 import type { UID } from "@strapi/strapi"
 
-import { logger } from "../../../utils/logging"
-
 export type StrapiTag<TUid extends UID.ContentType = UID.ContentType> =
   `strapi:${TUid}`
 
@@ -27,7 +25,7 @@ export const getNonEmptyString = (value: unknown): string | undefined => {
 
 /**
  * Reads the env configuration required for any UI-bound revalidation or
- * Front Door purge call. Throws when either variable is missing — without
+ * CDN purge call. Throws when either variable is missing — without
  * them the request cannot reach the UI or authenticate against it.
  */
 export function readRevalidationConfig(): RevalidationConfig {
@@ -35,7 +33,7 @@ export function readRevalidationConfig(): RevalidationConfig {
   const secret = process.env.STRAPI_REVALIDATE_SECRET
 
   if (!clientUrl || !secret) {
-    logger.error("Revalidation configuration is missing", {
+    console.error("Revalidation configuration is missing", {
       hasClientUrl: Boolean(clientUrl),
       hasSecret: Boolean(secret),
     })
@@ -50,9 +48,9 @@ export function readRevalidationConfig(): RevalidationConfig {
 
 /**
  * Trims, drops empty entries, and deduplicates a list of path strings. Used
- * for both Next.js revalidation paths and Azure Front Door purge paths.
+ * for both Next.js revalidation paths and CDN purge paths.
  *
- * - Wildcard paths (`/jobs/*`, `/*`) are kept as-is so Front Door receives
+ * - Wildcard paths (`/jobs/*`, `/*`) are kept as-is so the CDN receives
  *   them in the form it expects, only ensuring a leading slash.
  * - Concrete page paths run through `normalizePageFullPath` so `/about` and
  *   `/en/about` collapse to the canonical form. Pass `locale` when the call

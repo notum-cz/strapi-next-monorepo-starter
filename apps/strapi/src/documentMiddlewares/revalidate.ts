@@ -1,7 +1,5 @@
 import type { Core, UID } from "@strapi/strapi"
 
-import { logError, logger, withSpan } from "../utils/logging"
-
 type RevalidateMode = "path-revalidate" | "tag-revalidate"
 type RevalidatePolicy = "publish-only" | "all-writes"
 
@@ -60,7 +58,7 @@ export const registerAutoRevalidateMiddleware = ({
       (context.action === "create" || context.action === "update") &&
       data?.updatedBy === null
     ) {
-      logger.debug("Auto revalidation skipped for internal hierarchy write", {
+      console.debug("Auto revalidation skipped for internal hierarchy write", {
         uid,
       })
 
@@ -83,44 +81,32 @@ export const registerAutoRevalidateMiddleware = ({
     const revalidateService = strapi.service("api::revalidate.revalidate")
 
     try {
-      await withSpan(
-        "strapi.autoRevalidate",
-        async () => {
-          if (config.mode === "tag-revalidate") {
-            await revalidateService.run({ uid, tags: config.tags })
+      if (config.mode === "tag-revalidate") {
+        await revalidateService.run({ uid, tags: config.tags })
 
-            return
-          }
+        return nextResult
+      }
 
-          const pathField = config.pathField ?? "fullPath"
-          const fullPath = getString(effectiveResult?.[pathField])
+      const pathField = config.pathField ?? "fullPath"
+      const fullPath = getString(effectiveResult?.[pathField])
 
-          if (!fullPath) {
-            logger.warn(
-              "Auto revalidation skipped because path field is empty",
-              {
-                uid,
-                action,
-                pathField,
-              }
-            )
+      if (!fullPath) {
+        console.warn("Auto revalidation skipped because path field is empty", {
+          uid,
+          action,
+          pathField,
+        })
 
-            return
-          }
+        return nextResult
+      }
 
-          await revalidateService.run({ uid, fullPaths: [fullPath], locale })
-        },
-        {
-          "strapi.uid": uid,
-          "strapi.action": action,
-          "strapi.locale": locale,
-        }
-      )
+      await revalidateService.run({ uid, fullPaths: [fullPath], locale })
     } catch (error) {
-      logError(error, "Auto revalidation failed", {
+      console.error("Auto revalidation failed", {
         uid,
         action,
         locale,
+        error,
       })
     }
 

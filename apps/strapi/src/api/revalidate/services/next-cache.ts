@@ -5,7 +5,6 @@ import {
   readRevalidationConfig,
   strapiTag,
 } from "./helpers"
-import { logger } from "../../../utils/logging"
 
 export type RevalidateNextCacheParams = {
   uid: UID.ContentType
@@ -26,10 +25,10 @@ export type RevalidationResponse = {
  * surfaces upstream failures as thrown errors so the caller (admin button,
  * document middleware, hierarchy batch) does not silently proceed.
  *
- * Front Door is intentionally not purged here. AFD purge propagation (up to
+ * The CDN is intentionally not purged here. CDN purge propagation (up to
  * 20 minutes) is always slower than the affected route's `revalidate` TTL,
  * so the natural TTL refresh after `revalidateTag` wins. Operators can still
- * force a purge through the Front Door cache widget on the Strapi homepage.
+ * force a purge through the CDN cache widget on the Strapi homepage.
  * See `docs/frontend-cache-revalidation.md` for the full reasoning.
  */
 export async function revalidateNextCache({
@@ -42,7 +41,7 @@ export async function revalidateNextCache({
   const cacheTags = collectCacheTags(uid, tags)
 
   if (normalizedFullPaths.length === 0 && cacheTags.length === 0) {
-    logger.debug(
+    console.debug(
       "Next.js cache revalidation skipped because no paths or tags were provided"
     )
 
@@ -51,7 +50,7 @@ export async function revalidateNextCache({
 
   const config = readRevalidationConfig()
 
-  logger.info("Next.js cache revalidation requested", {
+  console.debug("Next.js cache revalidation requested", {
     uid,
     locale,
     fullPathCount: normalizedFullPaths.length,
@@ -74,7 +73,7 @@ export async function revalidateNextCache({
   if (!response.ok) {
     const message = await response.text()
 
-    logger.error("Next.js cache revalidation request failed", {
+    console.error("Next.js cache revalidation request failed", {
       uid,
       locale,
       status: response.status,

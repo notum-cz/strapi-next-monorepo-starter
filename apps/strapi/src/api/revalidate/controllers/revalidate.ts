@@ -1,7 +1,6 @@
 import type { UID } from "@strapi/strapi"
 import { z } from "zod"
 
-import { logger, withSpan } from "../../../utils/logging"
 import { validateAdminToken } from "../../../utils/validate-admin-token"
 import { purgeCDNCache } from "../services/cdn-cache"
 
@@ -11,14 +10,16 @@ export default {
     const validation = validateAdminToken(strapi, headers)
 
     if (validation.valid === false) {
-      logger.warn("Manual revalidation rejected because admin token is invalid")
+      console.warn(
+        "Manual revalidation rejected because admin token is invalid"
+      )
 
       return ctx.forbidden(validation.error)
     }
 
     const parsedBody = revalidateBodySchema.safeParse(ctx.request.body)
     if (!parsedBody.success) {
-      logger.warn("Manual revalidation rejected because payload is invalid", {
+      console.warn("Manual revalidation rejected because payload is invalid", {
         issue: parsedBody.error.issues[0]?.message,
       })
 
@@ -28,22 +29,12 @@ export default {
     }
 
     const { uid, fullPaths, locale, tags } = parsedBody.data
-    const result = await withSpan(
-      "strapi.revalidate.controller.run",
-      () =>
-        strapi.service("api::revalidate.revalidate").run({
-          uid: uid as UID.ContentType,
-          fullPaths,
-          locale,
-          tags,
-        }),
-      {
-        "strapi.uid": uid,
-        "strapi.locale": locale,
-        "strapi.fullPathCount": fullPaths.length,
-        "strapi.tagCount": tags.length,
-      }
-    )
+    const result = await strapi.service("api::revalidate.revalidate").run({
+      uid: uid as UID.ContentType,
+      fullPaths,
+      locale,
+      tags,
+    })
 
     ctx.body = result
 
@@ -55,14 +46,14 @@ export default {
     const validation = validateAdminToken(strapi, headers)
 
     if (validation.valid === false) {
-      logger.warn("Manual CDN purge rejected because admin token is invalid")
+      console.warn("Manual CDN purge rejected because admin token is invalid")
 
       return ctx.forbidden(validation.error)
     }
 
     const parsedBody = purgeCdnBodySchema.safeParse(ctx.request.body)
     if (!parsedBody.success) {
-      logger.warn("Manual CDN purge rejected because payload is invalid", {
+      console.warn("Manual CDN purge rejected because payload is invalid", {
         issue: parsedBody.error.issues[0]?.message,
       })
 
@@ -71,14 +62,7 @@ export default {
       )
     }
 
-    const result = await withSpan(
-      "strapi.revalidate.controller.purgeCdn",
-      () => purgeCDNCache(parsedBody.data.paths),
-      {
-        "strapi.userId": validation.userId,
-        "strapi.pathCount": parsedBody.data.paths.length,
-      }
-    )
+    const result = await purgeCDNCache(parsedBody.data.paths)
 
     if (!result.purged && !result.skipped) {
       // The downstream Next.js endpoint reported failure but the request itself
@@ -89,14 +73,14 @@ export default {
         result.error?.status && result.error.status >= 400
           ? result.error.status
           : 502
-      const message = result.error?.message ?? "Front Door purge failed."
+      const message = result.error?.message ?? "CDN purge failed."
 
       ctx.status = status
       ctx.body = {
         data: null,
         error: {
           status,
-          name: "FrontDoorPurgeError",
+          name: "CdnPurgeError",
           message,
           details: {
             paths: result.paths,
@@ -128,8 +112,8 @@ const revalidateBodySchema = z
     fullPaths: nonEmptyStringArray,
     locale: z
       .string()
-      .optional()
-      .transform((value) => value?.trim()),
+      .nullish()
+      .transform((value) => value?.trim() ?? undefined),
     tags: nonEmptyStringArray,
   })
   .superRefine((value, ctx) => {
