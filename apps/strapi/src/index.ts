@@ -31,6 +31,7 @@ export default {
 
     // Register Documents API middleware for dynamic zone population
     registerPopulatePageMiddleware({ strapi })
+    // Register automatic frontend revalidation middleware for content changes
     registerAutoRevalidateMiddleware({ strapi })
   },
 }
