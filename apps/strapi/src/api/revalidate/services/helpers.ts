@@ -1,0 +1,79 @@
+import { normalizePageFullPath } from "@repo/shared-data"
+import type { UID } from "@strapi/strapi"
+
+import { logger } from "../../../utils/logging"
+
+export type StrapiTag<TUid extends UID.ContentType = UID.ContentType> =
+  `strapi:${TUid}`
+
+export type RevalidationConfig = {
+  clientUrl: string
+  secret: string
+}
+
+export const strapiTag = <TUid extends UID.ContentType>(
+  uid: TUid
+): StrapiTag<TUid> => `strapi:${uid}`
+
+export const getNonEmptyString = (value: unknown): string | undefined => {
+  if (typeof value !== "string") {
+    return undefined
+  }
+
+  const trimmed = value.trim()
+
+  return trimmed.length > 0 ? trimmed : undefined
+}
+
+/**
+ * Reads the env configuration required for any UI-bound revalidation or
+ * Front Door purge call. Throws when either variable is missing — without
+ * them the request cannot reach the UI or authenticate against it.
+ */
+export function readRevalidationConfig(): RevalidationConfig {
+  const clientUrl = process.env.CLIENT_URL
+  const secret = process.env.STRAPI_REVALIDATE_SECRET
+
+  if (!clientUrl || !secret) {
+    logger.error("Revalidation configuration is missing", {
+      hasClientUrl: Boolean(clientUrl),
+      hasSecret: Boolean(secret),
+    })
+
+    throw new Error(
+      "Revalidation configuration missing. Ensure CLIENT_URL and STRAPI_REVALIDATE_SECRET are set."
+    )
+  }
+
+  return { clientUrl, secret }
+}
+
+/**
+ * Trims, drops empty entries, and deduplicates a list of path strings. Used
+ * for both Next.js revalidation paths and Azure Front Door purge paths.
+ *
+ * - Wildcard paths (`/jobs/*`, `/*`) are kept as-is so Front Door receives
+ *   them in the form it expects, only ensuring a leading slash.
+ * - Concrete page paths run through `normalizePageFullPath` so `/about` and
+ *   `/en/about` collapse to the canonical form. Pass `locale` when the call
+ *   site knows which locale the paths belong to.
+ */
+export function normalizeFullPaths(
+  rawPaths: Iterable<string>,
+  locale?: string
+): string[] {
+  return [
+    ...new Set(
+      [...rawPaths]
+        .map((path) => (typeof path === "string" ? path.trim() : ""))
+        .filter((path) => path.length > 0)
+        .map((path) => {
+          if (path.includes("*")) {
+            return path.startsWith("/") ? path : `/${path}`
+          }
+
+          return normalizePageFullPath([path], locale)
+        })
+    ),
+  ]
+}
