@@ -16,6 +16,8 @@ CDN cache purging uses a pluggable provider model. The integration is **inert un
 - Strapi sends the selected URL list, or `/*` for the entire website, to `POST /api/cdn-purge` on the UI
 - UI route → `purgeCdnCache()` → the resolved `CdnPurgeProvider`
 
+![CDN cache widget in the Strapi homepage](/img/cdn-purge-widget.png)
+
 ### Azure Front Door
 
 `apps/ui/src/lib/cdn/providers/azure-front-door.ts` purges an Azure Front Door endpoint using the Container App's managed identity (IMDS token). It activates only when all of these are set:
