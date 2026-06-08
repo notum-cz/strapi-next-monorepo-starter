@@ -3,7 +3,6 @@ import { z } from "zod"
 import { addDefaultLocalePathVariants } from "@/lib/cache-paths"
 import { purgeCdnCache } from "@/lib/cdn"
 import { getEnvVar } from "@/lib/env-vars"
-import { logger, withSpan } from "@/lib/logging"
 
 /**
  * CDN purge executor called by Strapi's CDN cache widget. Strapi stores
@@ -11,58 +10,56 @@ import { logger, withSpan } from "@/lib/logging"
  * variants right before the purge call.
  */
 export async function POST(request: Request) {
-  return withSpan("cdn-purge.request", async () => {
-    const revalidateSecret = getEnvVar("STRAPI_REVALIDATE_SECRET")
-    if (!revalidateSecret) {
-      return Response.json(
-        { message: "Missing revalidation configuration." },
-        { status: 503 }
-      )
-    }
+  const revalidateSecret = getEnvVar("STRAPI_REVALIDATE_SECRET")
+  if (!revalidateSecret) {
+    return Response.json(
+      { message: "Missing revalidation configuration." },
+      { status: 503 }
+    )
+  }
 
-    let body: unknown
-    try {
-      body = await request.json()
-    } catch {
-      return Response.json({ message: "Invalid JSON body." }, { status: 400 })
-    }
+  let body: unknown
+  try {
+    body = await request.json()
+  } catch {
+    return Response.json({ message: "Invalid JSON body." }, { status: 400 })
+  }
 
-    const parsedBody = cdnPurgeRequestSchema.safeParse(body)
-    if (!parsedBody.success) {
-      return Response.json(
-        { message: parsedBody.error.issues[0]?.message ?? "Invalid payload." },
-        { status: 400 }
-      )
-    }
+  const parsedBody = cdnPurgeRequestSchema.safeParse(body)
+  if (!parsedBody.success) {
+    return Response.json(
+      { message: parsedBody.error.issues[0]?.message ?? "Invalid payload." },
+      { status: 400 }
+    )
+  }
 
-    const payload = parsedBody.data
+  const payload = parsedBody.data
 
-    if (payload.secret !== revalidateSecret) {
-      logger.warn("CDN purge rejected invalid token")
+  if (payload.secret !== revalidateSecret) {
+    console.warn("CDN purge rejected invalid token")
 
-      return Response.json({ message: "Invalid token." }, { status: 401 })
-    }
+    return Response.json({ message: "Invalid token." }, { status: 401 })
+  }
 
-    const pathsToPurge = new Set<string>()
-    addDefaultLocalePathVariants(pathsToPurge, payload.paths)
+  const pathsToPurge = new Set<string>()
+  addDefaultLocalePathVariants(pathsToPurge, payload.paths)
 
-    logger.info("Purging CDN paths", { paths: [...pathsToPurge] })
+  console.debug("Purging CDN paths", { paths: [...pathsToPurge] })
 
-    const outcome = await purgeCdnCache([...pathsToPurge])
+  const outcome = await purgeCdnCache([...pathsToPurge])
 
-    const responseBody = {
-      purged: outcome.ok,
-      paths: [...pathsToPurge],
-      at: new Date().toISOString(),
-      ...(outcome.reason ? { message: outcome.reason } : {}),
-    }
+  const responseBody = {
+    purged: outcome.ok,
+    paths: [...pathsToPurge],
+    at: new Date().toISOString(),
+    ...(outcome.reason ? { message: outcome.reason } : {}),
+  }
 
-    if (!outcome.ok) {
-      return Response.json(responseBody, { status: 502 })
-    }
+  if (!outcome.ok) {
+    return Response.json(responseBody, { status: 502 })
+  }
 
-    return Response.json(responseBody)
-  })
+  return Response.json(responseBody)
 }
 
 const cdnPurgeRequestSchema = z.object({

@@ -4,7 +4,6 @@ import { z } from "zod"
 
 import { addDefaultLocalePathVariants } from "@/lib/cache-paths"
 import { getEnvVar } from "@/lib/env-vars"
-import { logger, withSpan } from "@/lib/logging"
 
 /**
  * On-demand cache revalidation endpoint triggered by Strapi.
@@ -18,67 +17,65 @@ import { logger, withSpan } from "@/lib/logging"
  * Strapi homepage when an incident requires a faster eviction.
  */
 export async function POST(request: Request) {
-  return withSpan("strapi.revalidate", async () => {
-    const revalidateSecret = getEnvVar("STRAPI_REVALIDATE_SECRET")
-    if (!revalidateSecret) {
-      return Response.json(
-        { message: "Missing revalidation configuration." },
-        { status: 503 }
-      )
-    }
+  const revalidateSecret = getEnvVar("STRAPI_REVALIDATE_SECRET")
+  if (!revalidateSecret) {
+    return Response.json(
+      { message: "Missing revalidation configuration." },
+      { status: 503 }
+    )
+  }
 
-    let body: unknown
-    try {
-      body = await request.json()
-    } catch {
-      return Response.json({ message: "Invalid JSON body." }, { status: 400 })
-    }
+  let body: unknown
+  try {
+    body = await request.json()
+  } catch {
+    return Response.json({ message: "Invalid JSON body." }, { status: 400 })
+  }
 
-    const parsedBody = revalidateRequestSchema.safeParse(body)
-    if (!parsedBody.success) {
-      return Response.json(
-        { message: parsedBody.error.issues[0]?.message ?? "Invalid payload." },
-        { status: 400 }
-      )
-    }
+  const parsedBody = revalidateRequestSchema.safeParse(body)
+  if (!parsedBody.success) {
+    return Response.json(
+      { message: parsedBody.error.issues[0]?.message ?? "Invalid payload." },
+      { status: 400 }
+    )
+  }
 
-    const payload = parsedBody.data
+  const payload = parsedBody.data
 
-    if (payload.secret !== revalidateSecret) {
-      logger.warn("Revalidation request rejected because secret does not match")
+  if (payload.secret !== revalidateSecret) {
+    console.warn("Revalidation request rejected because secret does not match")
 
-      return Response.json({ message: "Invalid token." }, { status: 401 })
-    }
+    return Response.json({ message: "Invalid token." }, { status: 401 })
+  }
 
-    const uid = payload.uid
-    const pathsToRevalidate = new Set<string>()
-    const tagsToRevalidate = new Set<string>(payload.next.tags)
+  const uid = payload.uid
+  const pathsToRevalidate = new Set<string>()
+  const tagsToRevalidate = new Set<string>(payload.next.tags)
 
-    // Strapi full paths are expanded into default-locale URL variants before
-    // calling `revalidatePath`.
-    addDefaultLocalePathVariants(pathsToRevalidate, payload.next.fullPaths)
+  // Strapi full paths are expanded into default-locale URL variants before
+  // calling `revalidatePath`.
+  addDefaultLocalePathVariants(pathsToRevalidate, payload.next.fullPaths)
 
-    for (const path of pathsToRevalidate) {
-      revalidatePath(path)
-    }
+  for (const path of pathsToRevalidate) {
+    revalidatePath(path)
+  }
 
-    for (const tag of tagsToRevalidate) {
-      revalidateTag(tag, "max")
-    }
+  for (const tag of tagsToRevalidate) {
+    revalidateTag(tag, "max")
+  }
 
-    logger.info("Invalidated Strapi-driven Next.js cache", {
-      uid,
-      paths: [...pathsToRevalidate],
-      tags: [...tagsToRevalidate],
-    })
+  console.debug("Invalidated Strapi-driven Next.js cache", {
+    uid,
+    paths: [...pathsToRevalidate],
+    tags: [...tagsToRevalidate],
+  })
 
-    return Response.json({
-      uid,
-      revalidated: true,
-      fullPaths: [...pathsToRevalidate],
-      tags: [...tagsToRevalidate],
-      at: new Date().toISOString(),
-    })
+  return Response.json({
+    uid,
+    revalidated: true,
+    fullPaths: [...pathsToRevalidate],
+    tags: [...tagsToRevalidate],
+    at: new Date().toISOString(),
   })
 }
 

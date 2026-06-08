@@ -8,7 +8,6 @@
  * Entra SSO provider in apps/strapi/config/auth-providers.ts.
  */
 import { getEnvVar } from "@/lib/env-vars"
-import { logError, logger, withSpan } from "@/lib/logging"
 
 import type { CdnPurgeOutcome, CdnPurgeProvider } from "../types"
 
@@ -33,7 +32,7 @@ async function getArmToken(clientId: string): Promise<string | null> {
   const imdsEndpoint = getEnvVar("IDENTITY_ENDPOINT")
   const imdsHeader = getEnvVar("IDENTITY_HEADER")
   if (!imdsEndpoint || !imdsHeader) {
-    logger.error("CDN purge skipped because managed identity is missing")
+    console.error("CDN purge skipped because managed identity is missing")
 
     return null
   }
@@ -49,7 +48,10 @@ async function getArmToken(clientId: string): Promise<string | null> {
 
   if (!res.ok) {
     const body = await res.text()
-    logger.error("CDN IMDS token request failed", { status: res.status, body })
+    console.error("CDN IMDS token request failed", {
+      status: res.status,
+      body,
+    })
 
     return null
   }
@@ -72,70 +74,64 @@ async function purgeAzureFrontDoor(
   contentPaths: string[],
   config: AzureConfig
 ): Promise<CdnPurgeOutcome> {
-  return withSpan(
-    "cdn.azure-front-door.purge",
-    async () => {
-      if (contentPaths.length === 0) {
-        return { ok: false, reason: "No paths to purge." }
+  if (contentPaths.length === 0) {
+    return { ok: false, reason: "No paths to purge." }
+  }
+
+  try {
+    const token = await getArmToken(config.miClientId)
+    if (!token) {
+      return {
+        ok: false,
+        reason: "Could not obtain managed identity token for the CDN.",
       }
+    }
 
-      try {
-        const token = await getArmToken(config.miClientId)
-        if (!token) {
-          return {
-            ok: false,
-            reason: "Could not obtain managed identity token for the CDN.",
-          }
-        }
+    const purgeUrl =
+      `https://management.azure.com/subscriptions/${config.subscriptionId}` +
+      `/resourceGroups/${config.resourceGroup}` +
+      `/providers/Microsoft.Cdn/profiles/${config.profileName}` +
+      `/afdEndpoints/${UI_ENDPOINT_NAME}/purge` +
+      `?api-version=${ARM_API_VERSION}`
 
-        const purgeUrl =
-          `https://management.azure.com/subscriptions/${config.subscriptionId}` +
-          `/resourceGroups/${config.resourceGroup}` +
-          `/providers/Microsoft.Cdn/profiles/${config.profileName}` +
-          `/afdEndpoints/${UI_ENDPOINT_NAME}/purge` +
-          `?api-version=${ARM_API_VERSION}`
+    const res = await fetch(purgeUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ contentPaths }),
+    })
 
-        const res = await fetch(purgeUrl, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ contentPaths }),
-        })
+    // AFD purge is async; 202 Accepted is the success response.
+    if (res.status !== 202 && !res.ok) {
+      const body = await res.text()
+      console.error("CDN purge failed", {
+        status: res.status,
+        body,
+        contentPaths,
+      })
 
-        // AFD purge is async; 202 Accepted is the success response.
-        if (res.status !== 202 && !res.ok) {
-          const body = await res.text()
-          logger.error("CDN purge failed", {
-            status: res.status,
-            body,
-            contentPaths,
-          })
-
-          return {
-            ok: false,
-            reason: `Azure Front Door rejected the purge with status ${res.status}.`,
-          }
-        }
-
-        logger.info("CDN purge submitted", { contentPaths })
-
-        return { ok: true }
-      } catch (err) {
-        logError(err, "CDN purge error", { contentPaths })
-
-        return {
-          ok: false,
-          reason:
-            err instanceof Error && err.message
-              ? `CDN purge threw: ${err.message}`
-              : "CDN purge threw an unknown error.",
-        }
+      return {
+        ok: false,
+        reason: `Azure Front Door rejected the purge with status ${res.status}.`,
       }
-    },
-    { "cdn.contentPathCount": contentPaths.length }
-  )
+    }
+
+    console.debug("CDN purge submitted", { contentPaths })
+
+    return { ok: true }
+  } catch (err) {
+    console.error("CDN purge error", { contentPaths, error: err })
+
+    return {
+      ok: false,
+      reason:
+        err instanceof Error && err.message
+          ? `CDN purge threw: ${err.message}`
+          : "CDN purge threw an unknown error.",
+    }
+  }
 }
 
 /**
