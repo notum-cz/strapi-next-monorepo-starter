@@ -31,20 +31,6 @@ export default {
         Component: DataRevalidate,
       })
 
-    app.widgets.register({
-      icon: Cloud,
-      title: {
-        id: "cdn-cache.widget.title",
-        defaultMessage: "CDN cache",
-      },
-      component: async () => {
-        const component = await import("./widgets/CdnCacheWidget")
-
-        return component.default
-      },
-      id: "cdn-cache",
-    })
-
     const adminPanelConfigEnv = process.env.ADMIN_PANEL_CONFIG_API_AUTH_TOKEN
     if (adminPanelConfigEnv) {
       /**
@@ -88,7 +74,21 @@ export default {
       }
     }
   },
-  register() {
+  register(app: StrapiApp) {
+    app.widgets.register({
+      icon: Cloud,
+      title: {
+        id: "cdn-cache.widget.title",
+        defaultMessage: "CDN cache",
+      },
+      component: async () => {
+        const component = await import("./widgets/CdnCacheWidget")
+
+        return component.default
+      },
+      id: "cdn-cache",
+    })
+
     setPluginConfig({ presets: [defaultCkEditorConfig, simpleCkEditorConfig] })
   },
 }
