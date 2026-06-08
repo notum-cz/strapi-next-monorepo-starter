@@ -44,6 +44,7 @@
     "@repo/shared-data": "workspace:*",
     "@strapi/database": "5.46.0",
     "@strapi/design-system": "2.2.0",
+    "@strapi/icons": "2.2.0",
     "@strapi/plugin-sentry": "5.46.0",
     "@strapi/plugin-users-permissions": "5.46.0",
     "@strapi/provider-email-mailgun": "5.46.0",
