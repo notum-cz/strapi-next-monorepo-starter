@@ -98,14 +98,36 @@ export default factories.createCoreService(
       const successfulJobs: string[] = []
       const failedJobs: string[] = []
 
+      // Aggregate touched paths so the frontend cache is revalidated once per
+      // batch. Hierarchy jobs write `updatedBy: null`, which the auto-revalidate
+      // document middleware skips, so we revalidate here instead.
+      const fullPathsByLocale = new Map<string, Set<string>>()
+      const redirectSources = new Set<string>()
+
       let job = await this.getNextJob(jobType)
 
       while (job != null) {
         try {
-          await handlers[jobType](job)
+          const result = await handlers[jobType](job)
           await this.removeJob(job.documentId)
 
           successfulJobs.push(job.documentId)
+
+          if (result && typeof result === "object") {
+            const fullPath = (result as { fullPath?: unknown }).fullPath
+            const locale = (result as { locale?: unknown }).locale
+            const source = (result as { source?: unknown }).source
+
+            if (typeof fullPath === "string" && typeof locale === "string") {
+              const set = fullPathsByLocale.get(locale) ?? new Set<string>()
+              set.add(fullPath)
+              fullPathsByLocale.set(locale, set)
+            }
+
+            if (typeof source === "string") {
+              redirectSources.add(source)
+            }
+          }
 
           strapi.log.info(`Job ${jobType} (${job.id}) completed`)
         } catch (error) {
@@ -118,6 +140,33 @@ export default factories.createCoreService(
         }
 
         job = await this.getNextJob(jobType)
+      }
+
+      const revalidateService = strapi.service("api::revalidate.revalidate")
+
+      try {
+        for (const [locale, paths] of fullPathsByLocale) {
+          if (paths.size === 0) {
+            continue
+          }
+
+          await revalidateService.run({
+            uid: "api::page.page",
+            locale,
+            fullPaths: [...paths],
+          })
+        }
+
+        if (redirectSources.size > 0) {
+          await revalidateService.run({
+            uid: "api::redirect.redirect",
+            fullPaths: [...redirectSources],
+          })
+        }
+      } catch (error) {
+        strapi.log.error(
+          `Revalidation after ${jobType} batch failed: ${(error as Error).message}`
+        )
       }
 
       return {
