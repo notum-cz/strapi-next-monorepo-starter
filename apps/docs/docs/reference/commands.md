@@ -12,7 +12,7 @@ All commands run from the **monorepo root** via Turbo. Never `cd` into individua
 pnpm dev                    # Start all apps (Strapi auto-starts Docker DB)
 pnpm dev:strapi             # Start Strapi only
 pnpm dev:ui                 # Start Next.js only
-pnpm dev:docs               # Start Docusaurus dev server
+pnpm dev:docs               # Start Docusaurus dev server on port 3300
 ```
 
 ## Build
@@ -28,7 +28,7 @@ pnpm build:docs             # Build Docusaurus
 ## Start (production)
 
 ```bash
-pnpm start:docs
+pnpm start:docs             # Serve built Docusaurus site on port 3300
 pnpm start:strapi
 pnpm start:ui
 ```

@@ -68,8 +68,6 @@ table td:first-child code {
 | `CLIENT_ACCOUNT_ACTIVATION_URL`           | When account activation emails are used     | Frontend account activation link in backend email templates.                                          |
 | `ADMIN_PANEL_CONFIG_API_AUTH_TOKEN`       | When admin runtime config injection is used | Protects the custom admin panel config endpoint.                                                      |
 
-> Strapi publishes trigger frontend cache revalidation. See [Cache Revalidation](../reference/cache-revalidation).
-
 :::info Provider and plugin variables
 Additional environment variables depend on enabled Strapi plugins and providers. See [Upload Providers](./plugins/upload-providers.md), [Email Providers](./plugins/email-providers.md), [Strapi Preview](./strapi-preview.md), [Microsoft SSO](../auth/strapi-admin/microsoft-sso.md), and [Sentry](../reference/integrations/sentry.md).
 :::

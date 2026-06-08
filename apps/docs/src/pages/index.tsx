@@ -20,6 +20,27 @@ const docLinks = [
   },
 ]
 
+const valueItems = [
+  {
+    label: "Editable pages",
+    title: "Content teams compose pages in Strapi",
+    description:
+      "Dynamic-zone sections map directly to typed React components, so page structure can change without rebuilding the UI foundation.",
+  },
+  {
+    label: "Typed delivery",
+    title: "Generated types connect Strapi and the UI",
+    description:
+      "Schemas, shared packages, and API clients are documented as one flow, so frontend changes stay predictable.",
+  },
+  {
+    label: "Project baseline",
+    title: "Common production setup is already wired",
+    description:
+      "Auth, localization, preview, SEO, media, testing, deployment notes, and docs live in one monorepo from the start.",
+  },
+]
+
 export default function Home(): JSX.Element {
   const pageBuilderImage = useBaseUrl("/img/page-builder-flow.png")
 
@@ -30,7 +51,7 @@ export default function Home(): JSX.Element {
     >
       <main className="home">
         <section className="homeHero">
-          <div className="container homeHeroGrid">
+          <div className="homeHeroGrid">
             <div className="homeHeroCopy">
               <p className="homeEyebrow">Strapi + Next.js monorepo</p>
               <h1>Build editable UI pages without rebuilding the foundation.</h1>
@@ -56,33 +77,42 @@ export default function Home(): JSX.Element {
           </div>
         </section>
 
-        <section className="homeSection">
+        <section className="homeSection homeSection--statement">
           <div className="container homeWhy">
-            <h2>Why</h2>
-            <p>
-              This is a ready-to-go starter template for Strapi projects. It
-              combines Strapi, Next.js, shadcn/ui, and Turborepo into one
-              monorepo so teams can start from a working foundation.
-            </p>
-            <p>
-              The main idea is a page builder for enterprise applications:
-              editors compose pages in Strapi, while the UI renders those
-              content blocks as typed React components.
-            </p>
-            <p>
-              It gives the team a practical starting point for real project
-              work, with the common setup already in place instead of waiting
-              for the basic infrastructure to be assembled first.
-            </p>
-            <Link className="button button--secondary" to="/docs/getting-started/features">
-              View features
-            </Link>
+            <div className="homeWhyIntro">
+              <p className="homeSectionLabel">Why this starter</p>
+              <h2>Start from a working content platform, not a blank repo.</h2>
+              <p>
+                This starter brings Strapi, Next.js, shadcn/ui, Turborepo, and
+                documentation into one practical foundation for content-driven
+                projects.
+              </p>
+              <Link
+                className="button button--secondary"
+                to="/docs/getting-started/features"
+              >
+                View features
+              </Link>
+            </div>
+
+            <div className="homeValueGrid" aria-label="Starter value summary">
+              {valueItems.map((item) => (
+                <article className="homeValueItem" key={item.title}>
+                  <p>{item.label}</p>
+                  <h3>{item.title}</h3>
+                  <span>{item.description}</span>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
-        <section className="homeSection">
+        <section className="homeSection homeDocsSection">
           <div className="container">
-            <h2>Start with the docs</h2>
+            <div className="homeDocsHeader">
+              <p className="homeSectionLabel">Documentation</p>
+              <h2>Start with the docs</h2>
+            </div>
             <div className="homeCards">
               {docLinks.map((item) => (
                 <Link className="homeCard" key={item.href} to={item.href}>

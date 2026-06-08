@@ -22,7 +22,7 @@ Run commands from the monorepo root unless a docs page says otherwise.
 pnpm dev              # Start all apps
 pnpm dev:strapi       # Start Strapi only
 pnpm dev:ui           # Start Next.js only
-pnpm dev:docs         # Start Docusaurus only
+pnpm dev:docs         # Start Docusaurus only on port 3300
 pnpm build            # Build all
 pnpm lint             # ESLint all packages
 pnpm typecheck        # Typecheck all packages
