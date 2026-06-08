@@ -146,10 +146,6 @@ export default factories.createCoreService(
 
       try {
         for (const [locale, paths] of fullPathsByLocale) {
-          if (paths.size === 0) {
-            continue
-          }
-
           await revalidateService.run({
             uid: "api::page.page",
             locale,
@@ -157,6 +153,8 @@ export default factories.createCoreService(
           })
         }
 
+        // Redirect sources are already locale-prefixed by
+        // processCreateRedirectJob, so no `locale` is passed here.
         if (redirectSources.size > 0) {
           await revalidateService.run({
             uid: "api::redirect.redirect",

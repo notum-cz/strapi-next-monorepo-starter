@@ -13,11 +13,13 @@ vi.mock("../src/utils/hierarchy", () => ({
   processCreateRedirectJob: redirectMock,
 }))
 
-const buildService = (runMock: ReturnType<typeof vi.fn>) => {
-  const jobs = [
+const buildService = (
+  runMock: ReturnType<typeof vi.fn>,
+  jobs: { documentId: string; id: number; jobType: string }[] = [
     { documentId: "j1", id: 1, jobType: "RECALCULATE_FULLPATH" },
     { documentId: "j2", id: 2, jobType: "RECALCULATE_FULLPATH" },
   ]
+) => {
   let index = 0
 
   const strapiMock = {
@@ -65,5 +67,56 @@ describe("internal-job runAll revalidation", () => {
       locale: "en",
       fullPaths: ["/parent", "/parent/child"],
     })
+  })
+
+  it("revalidates once per locale when a batch touches multiple locales", async () => {
+    recalcMock
+      .mockResolvedValueOnce({ fullPath: "/a", locale: "en" })
+      .mockResolvedValueOnce({ fullPath: "/b", locale: "cs" })
+    const runMock = vi.fn().mockResolvedValue({})
+
+    const service = buildService(runMock)
+    await service.runAll("RECALCULATE_FULLPATH")
+
+    expect(runMock).toHaveBeenCalledWith({
+      uid: "api::page.page",
+      locale: "en",
+      fullPaths: ["/a"],
+    })
+    expect(runMock).toHaveBeenCalledWith({
+      uid: "api::page.page",
+      locale: "cs",
+      fullPaths: ["/b"],
+    })
+  })
+
+  it("revalidates aggregated redirect sources without a locale after a CREATE_REDIRECT batch", async () => {
+    redirectMock.mockResolvedValue({ source: "/old" })
+    const runMock = vi.fn().mockResolvedValue({})
+
+    const service = buildService(runMock, [
+      { documentId: "r1", id: 1, jobType: "CREATE_REDIRECT" },
+    ])
+    await service.runAll("CREATE_REDIRECT")
+
+    expect(runMock).toHaveBeenCalledWith({
+      uid: "api::redirect.redirect",
+      fullPaths: ["/old"],
+    })
+  })
+
+  it("does not throw when revalidation fails and still reports successful jobs", async () => {
+    recalcMock
+      .mockResolvedValueOnce({ fullPath: "/parent", locale: "en" })
+      .mockResolvedValueOnce({ fullPath: "/parent/child", locale: "en" })
+    const runMock = vi.fn().mockRejectedValue(new Error("boom"))
+
+    const service = buildService(runMock)
+    const result = (await service.runAll("RECALCULATE_FULLPATH")) as {
+      successfulJobs: string[]
+      failedJobs: string[]
+    }
+
+    expect(result.successfulJobs).toEqual(["j1", "j2"])
   })
 })
