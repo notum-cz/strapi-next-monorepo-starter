@@ -25,10 +25,10 @@ Add your own content types in `REVALIDATE_COLLECTIONS` in the document middlewar
 
 ## Revalidate windows
 
-| Fetch                        | Interval | Notes                                                            |
-| ---------------------------- | -------- | ---------------------------------------------------------------- |
-| `fetchPage`                  | 120s     | Aligned with the public page route. Path-revalidated on publish. |
-| `fetchNavbar`, `fetchFooter` | 600s     | Tag-revalidated on publish; TTL is the backstop.                 |
+| Fetch                        | Interval | Notes                                                       |
+| ---------------------------- | -------- | ----------------------------------------------------------- |
+| `fetchPage`                  | 120s     | Strapi page-data fetch window. Path-revalidated on publish. |
+| `fetchNavbar`, `fetchFooter` | 600s     | Tag-revalidated on publish; TTL is the backstop.            |
 
 ## Bulk hierarchy changes
 
