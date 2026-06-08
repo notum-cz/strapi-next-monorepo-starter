@@ -26,7 +26,7 @@ Keep names aligned across all layers:
 
 Avoid using different words for the same concept. If the design calls it `heading`, avoid using `title` in one component and `headline` in another without a clear reason.
 
-For page-builder naming conventions, see [Page Builder](/docs/category/page-builder).
+For page-builder naming conventions, see [Page Builder](/docs/page-builder/introduction).
 
 ## What Belongs In Strapi
 

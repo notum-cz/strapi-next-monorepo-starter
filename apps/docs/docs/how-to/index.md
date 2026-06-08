@@ -123,6 +123,20 @@ See [Add a Content Type](../getting-started/add-content-type.md) and [Strapi API
 </details>
 
 <details>
+<summary>Which rich text editors are supported?</summary>
+
+The starter supports two Strapi rich text paths:
+
+- **CKEditor** for HTML-based rich text and closer WYSIWYG preview behavior.
+- **TipTap** for structured ProseMirror JSON with stricter presets and more controlled rendering.
+
+Pick one main authoring path for a project unless there is a clear reason to maintain both. Running both editors increases schema, rendering, and QA work.
+
+See [Rich Text Editors](../design-system/rich-text-editors.md), [CKEditor](../strapi/plugins/ckeditor.md), and [TipTap Editor](../strapi/plugins/tiptap-editor.md).
+
+</details>
+
+<details>
 <summary>What is the difference between Public and Private API clients?</summary>
 
 Use `PublicStrapiClient` for shared CMS content that is the same for every visitor, such as pages, navbar, footer, SEO data, and public listings. It authenticates with the server-side Strapi API token from `STRAPI_REST_READONLY_API_KEY`.
