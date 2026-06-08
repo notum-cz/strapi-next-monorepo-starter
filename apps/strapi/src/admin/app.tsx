@@ -43,7 +43,6 @@ export default {
         return component.default
       },
       id: "cdn-cache",
-      pluginId: "content-manager",
     })
 
     const adminPanelConfigEnv = process.env.ADMIN_PANEL_CONFIG_API_AUTH_TOKEN
