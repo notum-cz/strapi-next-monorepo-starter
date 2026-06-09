@@ -75,17 +75,23 @@ export async function fetchPage(
 }
 
 export async function fetchAllPages(
-  // eslint-disable-next-line @typescript-eslint/default-param-last
   uid: Extract<UID.ContentType, "api::page.page"> = "api::page.page",
-  locale: Locale
+  locale?: Locale,
+  params?: Record<string, unknown>,
+  requestInit?: RequestInit
 ) {
   try {
-    return await PublicStrapiClient.fetchAll(uid, {
-      locale,
-      fields: ["fullPath", "locale", "updatedAt", "createdAt", "slug"],
-      populate: {},
-      status: "published",
-    })
+    return await PublicStrapiClient.fetchAll(
+      uid,
+      {
+        locale,
+        fields: ["fullPath", "locale", "updatedAt", "createdAt", "slug"],
+        populate: {},
+        status: "published",
+        ...params,
+      },
+      requestInit
+    )
   } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching all pages for locale '${locale}'`,
