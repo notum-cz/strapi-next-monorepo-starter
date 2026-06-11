@@ -3,6 +3,10 @@ import type { UID } from "@strapi/strapi"
 
 import { normalizeFullPaths, readRevalidationConfig } from "./helpers"
 
+// Cap how long we wait on the UI revalidate endpoint so a stalled upstream
+// cannot hang the publish path indefinitely.
+const REVALIDATE_TIMEOUT_MS = 15_000
+
 export type RevalidateNextCacheParams = {
   uid: UID.ContentType
   fullPaths?: string[]
@@ -65,6 +69,7 @@ export async function revalidateNextCache({
         tags: cacheTags,
       },
     }),
+    signal: AbortSignal.timeout(REVALIDATE_TIMEOUT_MS),
   })
 
   if (!response.ok) {
