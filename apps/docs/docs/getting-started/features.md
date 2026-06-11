@@ -34,6 +34,8 @@ Shared code lives in [`packages/*`](../reference/packages/overview.md).
 - **[Built-in API routes](../ui/built-in-api-routes/auth.md)** — route handlers cover auth, Strapi proxying, preview, assets, and health checks.
 - **[Preview support](../ui/built-in-api-routes/preview.md)** — editors can open draft or published content from Strapi.
 - **[Caching defaults](../ui/caching.md)** — Strapi responses cache, Next.js page cache, ISR, and static export tradeoffs are documented.
+- **[Cache revalidation](../reference/cache-revalidation.md)** — Strapi publish/update/delete events can invalidate affected Next.js paths and shared data tags.
+- **[CDN cache purge](../reference/integrations/cdn.md)** — optional operator-triggered CDN eviction is available for urgent cache updates.
 - **[Next proxies](../ui/next-proxies.md)** — controlled proxy middleware handles locale redirects, HTTPS redirects, basic auth, and auth guards.
 - **[SEO helpers](../ui/seo.md)** — metadata, sitemap, robots, canonical URLs, and structured data are generated from content.
 - **[Image handling](../ui/images.md)** — Strapi media helpers and optional imgproxy support are included.
@@ -71,7 +73,7 @@ Shared code lives in [`packages/*`](../reference/packages/overview.md).
 - **[Testing and QA](../reference/testing/overview.md)** — Vitest, Playwright, axe, visual tests, SEO checks, and Lighthouse CI are covered.
 - **[Deployment](../reference/deployment/overview.md)** — GitHub Actions, Heroku, Vercel, and Docker deployment notes are documented.
 - **[Design system](../design-system/overview.md)** — shared tokens, typography, rich text styling, and CMS component design rules are documented.
-- **Integrations** — [Sentry](../reference/integrations/sentry.md) and [reCAPTCHA](../reference/integrations/recaptcha.md) setup have dedicated reference pages.
+- **Integrations** — [Sentry](../reference/integrations/sentry.md), [reCAPTCHA](../reference/integrations/recaptcha.md), and [CDN / Azure Front Door](../reference/integrations/cdn.md) setup have dedicated reference pages.
 
 ## Related Documentation
 
@@ -82,3 +84,5 @@ Shared code lives in [`packages/*`](../reference/packages/overview.md).
 - [Testing](../reference/testing/overview.md)
 - [Packages](../reference/packages/overview.md)
 - [Deployment](../reference/deployment/overview.md)
+- [Cache Revalidation](../reference/cache-revalidation.md)
+- [CDN](../reference/integrations/cdn.md)

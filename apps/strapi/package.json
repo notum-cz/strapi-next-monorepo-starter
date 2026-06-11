@@ -44,6 +44,7 @@
     "@repo/shared-data": "workspace:*",
     "@strapi/database": "5.46.0",
     "@strapi/design-system": "2.2.0",
+    "@strapi/icons": "2.2.0",
     "@strapi/plugin-sentry": "5.46.0",
     "@strapi/plugin-users-permissions": "5.46.0",
     "@strapi/provider-email-mailgun": "5.46.0",
@@ -63,7 +64,8 @@
     "react-router-dom": "^6.0.0",
     "strapi-plugin-config-sync": "3.2.0",
     "strapi-provider-upload-azure-storage": "3.5.0",
-    "styled-components": "6.0.0"
+    "styled-components": "6.0.0",
+    "zod": "4.4.3"
   },
   "devDependencies": {
     "@types/node": "24.12.2",
