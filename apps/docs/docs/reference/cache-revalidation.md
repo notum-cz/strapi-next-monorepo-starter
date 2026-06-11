@@ -67,8 +67,8 @@ On-demand revalidation handles fresh publishes immediately. The `revalidate` int
 | ------------------------ | --------------------------------- | ------------------------ |
 | `api::page.page`         | path (`fullPath`)                 | publish/unpublish/delete |
 | `api::redirect.redirect` | path (`source`)                   | publish/unpublish/delete |
-| `api::navbar.navbar`     | tag (`strapi:api::navbar.navbar`) | update/publish           |
-| `api::footer.footer`     | tag (`strapi:api::footer.footer`) | update/publish           |
+| `api::navbar.navbar`     | tag (`strapi:api::navbar.navbar`) | create/update/delete     |
+| `api::footer.footer`     | tag (`strapi:api::footer.footer`) | create/update/delete     |
 
 :::important Enable automatic revalidation
 `REVALIDATE_COLLECTIONS` in `apps/strapi/src/documentMiddlewares/revalidate.ts` is the allowlist for automatic revalidation. Add a content type there before expecting its publish/update/delete events to invalidate the UI cache.
