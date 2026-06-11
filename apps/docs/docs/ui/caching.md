@@ -41,7 +41,7 @@ This route uses:
 | `revalidate`    | Sets the page regeneration interval to 300 seconds.                        |
 
 :::warning CDN cache headers
-The `revalidate` value also affects the HTTP cache headers emitted by Next.js. CDN providers read those headers to decide how long they can reuse a cached response before checking for fresh content.
+The `revalidate` value also affects the HTTP cache headers emitted by Next.js. A CDN in front of the app reads those headers to decide how long it can reuse a cached response before checking for fresh content — so it inherits this route's freshness window. See [CDN](../reference/integrations/cdn) for how that works and the optional incident-time purge.
 :::
 
 The route uses `force-static` because the root layout includes request-time behavior from auth and the navbar. `force-static` keeps the public Strapi pages eligible for ISR even though those dynamic APIs exist higher in the tree.
@@ -54,7 +54,7 @@ In an application without auth or request-aware navbar behavior, the stricter op
 
 Beyond TTL-based ISR, Strapi invalidates cached content immediately when publishing via the revalidation pipeline: page/redirect paths through `revalidatePath`, and shared content (navbar, footer) through `revalidateTag`. Fetchers in `apps/ui/src/lib/strapi-api/content/server.ts` tag shared content with `strapi:api::<uid>` so a publish can target it precisely.
 
-See [Cache Revalidation](../reference/cache-revalidation) for the full Strapi → UI flow, and [CDN](../reference/integrations/cdn-purge) for optional CDN cache purging.
+See [Cache Revalidation](../reference/cache-revalidation) for the full Strapi → UI flow, and [CDN](../reference/integrations/cdn) for optional CDN cache purging.
 
 ## Dynamic Pages
 

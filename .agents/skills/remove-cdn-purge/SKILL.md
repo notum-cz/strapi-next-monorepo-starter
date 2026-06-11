@@ -21,7 +21,7 @@ rm -rf apps/ui/src/app/api/cdn-purge
 rm -f  apps/strapi/src/api/revalidate/services/cdn-cache.ts
 rm -rf apps/strapi/src/admin/widgets/CdnCacheWidget
 rm -f  apps/strapi/tests/cdn-cache.test.ts
-rm -f  apps/docs/docs/reference/integrations/cdn-purge.md
+rm -f  apps/docs/docs/reference/integrations/cdn.md
 ```
 
 ### 2. Strip the CDN purge action from the Strapi revalidate controller
@@ -56,7 +56,7 @@ Edit `apps/strapi/src/admin/app.tsx`:
 
 ### 6. Remove the CDN reference from the revalidation doc
 
-Edit `apps/docs/docs/reference/cache-revalidation.md`: remove the `## CDN purge (optional)` section (the paragraph and the link to `./integrations/cdn-purge.md`). Leave the rest of the page.
+Edit `apps/docs/docs/reference/cache-revalidation.md`: remove the `## CDN purge (optional)` section (the paragraph and the link to `./integrations/cdn.md`). Leave the rest of the page.
 
 ### 7. Verify
 

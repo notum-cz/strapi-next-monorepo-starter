@@ -19,7 +19,6 @@ Remove the **entire cache revalidation feature** from the project, including the
 # Strapi
 rm -rf apps/strapi/src/api/revalidate
 rm -f  apps/strapi/src/documentMiddlewares/revalidate.ts
-rm -f  apps/strapi/src/utils/validate-admin-token.ts
 rm -rf apps/strapi/src/admin/extensions/DataRevalidate
 rm -rf apps/strapi/src/admin/widgets/CdnCacheWidget
 rm -f  apps/strapi/tests/revalidate.test.ts
@@ -36,10 +35,10 @@ rm -f  apps/ui/src/lib/verify-bearer-token.ts
 
 # Docs
 rm -f  apps/docs/docs/reference/cache-revalidation.md
-rm -f  apps/docs/docs/reference/integrations/cdn-purge.md
+rm -f  apps/docs/docs/reference/integrations/cdn.md
 ```
 
-Note: `apps/strapi/src/utils/validate-admin-token.ts` is only consumed by the revalidate controller (the internal-job controller has its own inline copy), so it is safe to delete.
+Note: `apps/strapi/src/utils/validate-admin-token.ts` is intentionally **not** deleted — the `internal-job` controller also imports it to guard its endpoints, and that feature survives this removal. Removing it would break `apps/strapi/src/api/internal-job/controllers/internal-job.ts`.
 
 ### 2. Revert edits the feature made to shared files
 
@@ -81,7 +80,7 @@ Note: `apps/strapi/src/utils/validate-admin-token.ts` is only consumed by the re
 
 ```bash
 # No dangling references to any removed piece
-grep -rn "revalidate\|strapi-revalidate\|cdn-purge\|purgeCdn\|CdnCacheWidget\|DataRevalidate\|@/lib/cdn\|cache-paths\|verify-bearer-token\|registerAutoRevalidate\|validate-admin-token\|STRAPI_REVALIDATE_SECRET\|STRAPI_CDN_PURGE_SECRET\|AZURE_\|strapiTag" apps packages turbo.json | grep -v node_modules | grep -v "\.next"
+grep -rn "revalidate\|strapi-revalidate\|cdn-purge\|purgeCdn\|CdnCacheWidget\|DataRevalidate\|@/lib/cdn\|cache-paths\|verify-bearer-token\|registerAutoRevalidate\|STRAPI_REVALIDATE_SECRET\|STRAPI_CDN_PURGE_SECRET\|AZURE_\|strapiTag" apps packages turbo.json | grep -v node_modules | grep -v "\.next"
 # Expect: no matches related to the feature. (Strapi's built-in `revalidate` of core
 # content-types via the Documents API is unrelated; if any match appears, confirm it
 # is not one of the files/edits above before leaving it.)

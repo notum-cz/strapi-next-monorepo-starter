@@ -18,7 +18,7 @@ On publish/update/delete, a Strapi **Document Service middleware** calls the `ap
 The next request re-renders with fresh Strapi data without waiting for the normal TTL to expire.
 
 :::tip Cache revalidation is not CDN purge
-Next.js revalidation marks the application cache stale. It does not automatically evict an upstream CDN. For incident-time CDN cache eviction, use the optional [CDN](./integrations/cdn-purge) flow.
+Next.js revalidation marks the application cache stale. It does not automatically evict an upstream CDN. For incident-time CDN cache eviction, use the optional [CDN](./integrations/cdn) flow.
 :::
 
 ## Flow Diagram
@@ -136,7 +136,7 @@ At least one of `next.fullPaths` or `next.tags` must be provided. The Strapi ser
 
 Revalidation does not purge an upstream CDN. Operators can use the **CDN cache** widget for urgent cache eviction, such as hot fixes, takedowns, or broken redirects.
 
-See [CDN](./integrations/cdn-purge) for the purge flow, provider setup, and Azure Front Door propagation notes.
+See [CDN](./integrations/cdn) for the purge flow, provider setup, and Azure Front Door propagation notes.
 
 ## Testing
 
@@ -168,4 +168,4 @@ Useful checks:
 | `STRAPI_URL`                   | UI          | Strapi base URL used by the public client.   |
 | `STRAPI_REST_READONLY_API_KEY` | UI          | Read-only token for UI-side Strapi requests. |
 
-Optional CDN provider variables are covered in [CDN](./integrations/cdn-purge). See [Strapi environment variables](../strapi/environment-variables) and [UI environment variables](../ui/environment-variables) for the complete environment reference.
+Optional CDN provider variables are covered in [CDN](./integrations/cdn). See [Strapi environment variables](../strapi/environment-variables) and [UI environment variables](../ui/environment-variables) for the complete environment reference.
