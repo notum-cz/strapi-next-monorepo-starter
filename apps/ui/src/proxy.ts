@@ -48,7 +48,7 @@ export const config = {
     `/(cs|en)/:path*`,
 
     // Skip all paths that should not be internationalized
-    // eslint-disable-next-line unicorn/prefer-string-raw
-    "/((?!_next|_vercel|api|robots.txt|favicon.ico|sitemap|.*\\..*).*)",
+
+    "/((?!_next|_vercel|api|images|robots.txt|favicon.ico|sitemap).*)",
   ],
 }
