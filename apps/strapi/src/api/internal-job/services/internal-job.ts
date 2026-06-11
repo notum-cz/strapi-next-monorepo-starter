@@ -98,14 +98,36 @@ export default factories.createCoreService(
       const successfulJobs: string[] = []
       const failedJobs: string[] = []
 
+      // Aggregate touched paths so the frontend cache is revalidated once per
+      // batch. Hierarchy jobs write `updatedBy: null`, which the auto-revalidate
+      // document middleware skips, so we revalidate here instead.
+      const fullPathsByLocale = new Map<string, Set<string>>()
+      const redirectSources = new Set<string>()
+
       let job = await this.getNextJob(jobType)
 
       while (job != null) {
         try {
-          await handlers[jobType](job)
+          const result = await handlers[jobType](job)
           await this.removeJob(job.documentId)
 
           successfulJobs.push(job.documentId)
+
+          if (result && typeof result === "object") {
+            const fullPath = (result as { fullPath?: unknown }).fullPath
+            const locale = (result as { locale?: unknown }).locale
+            const source = (result as { source?: unknown }).source
+
+            if (typeof fullPath === "string" && typeof locale === "string") {
+              const set = fullPathsByLocale.get(locale) ?? new Set<string>()
+              set.add(fullPath)
+              fullPathsByLocale.set(locale, set)
+            }
+
+            if (typeof source === "string") {
+              redirectSources.add(source)
+            }
+          }
 
           strapi.log.info(`Job ${jobType} (${job.id}) completed`)
         } catch (error) {
@@ -120,9 +142,42 @@ export default factories.createCoreService(
         job = await this.getNextJob(jobType)
       }
 
+      // Revalidate each locale independently so a single failing path set
+      // doesn't stop the rest of the revalidation pipeline.
+      for (const [locale, paths] of fullPathsByLocale) {
+        await this.revalidate(jobType, {
+          uid: "api::page.page",
+          locale,
+          fullPaths: [...paths],
+        })
+      }
+
+      // Redirect sources are already locale-prefixed by
+      // processCreateRedirectJob, so no `locale` is passed here.
+      if (redirectSources.size > 0) {
+        await this.revalidate(jobType, {
+          uid: "api::redirect.redirect",
+          fullPaths: [...redirectSources],
+        })
+      }
+
       return {
         successfulJobs,
         failedJobs,
+      }
+    },
+
+    async revalidate(
+      jobType: Data.ContentType<"api::internal-job.internal-job">["jobType"],
+      params: { uid: string; locale?: string; fullPaths: string[] }
+    ) {
+      try {
+        await strapi.service("api::revalidate.revalidate").run(params)
+      } catch (error) {
+        const scope = params.locale ? ` for locale ${params.locale}` : ""
+        strapi.log.error(
+          `Revalidation after ${jobType} batch failed${scope}: ${(error as Error).message}`
+        )
       }
     },
 

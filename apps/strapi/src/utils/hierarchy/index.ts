@@ -84,11 +84,11 @@ export async function handleHierarchyBeforeCreate(
  */
 export const processRecalculateFullPathJob = async (
   job: Data.ContentType<"api::internal-job.internal-job">
-) => {
+): Promise<{ fullPath: string; locale: string } | undefined> => {
   const { relatedDocumentId, documentType, targetLocale, jobType } = job
 
   if (jobType !== "RECALCULATE_FULLPATH") {
-    return
+    return undefined
   }
 
   const document = await strapi
@@ -103,7 +103,7 @@ export const processRecalculateFullPathJob = async (
     })
 
   if (!document) {
-    return
+    return undefined
   }
 
   let oldFullPath = document.fullPath
@@ -112,7 +112,11 @@ export const processRecalculateFullPathJob = async (
     document.slug,
   ])
 
+  let touched: { fullPath: string; locale: string } | undefined
+
   if (newFullPath !== oldFullPath) {
+    touched = { fullPath: newFullPath, locale: targetLocale }
+
     // Always update fullPath of document to newFullPath
     await strapi.documents(documentType as HierarchicalDocumentType).update({
       documentId: document.documentId,
@@ -195,6 +199,8 @@ export const processRecalculateFullPathJob = async (
       documentId: existingRedirectJob.documentId,
     })
   }
+
+  return touched
 }
 
 /**
@@ -203,15 +209,15 @@ export const processRecalculateFullPathJob = async (
  */
 export const processCreateRedirectJob = async (
   job: Data.ContentType<"api::internal-job.internal-job">
-) => {
+): Promise<{ source: string } | undefined> => {
   if (job.jobType !== "CREATE_REDIRECT") {
-    return
+    return undefined
   }
 
   const payload = job.payload as CreateRedirectPayload | null
 
   if (!payload) {
-    return
+    return undefined
   }
 
   await strapi.documents("api::redirect.redirect").create({
@@ -222,4 +228,6 @@ export const processCreateRedirectJob = async (
     },
     status: "published",
   })
+
+  return { source: payload.oldPath }
 }

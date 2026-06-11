@@ -37,7 +37,7 @@ const valueItems = [
     label: "Project baseline",
     title: "Common production setup is already wired",
     description:
-      "Auth, localization, preview, SEO, media, testing, deployment notes, and docs live in one monorepo from the start.",
+      "Cache revalidation, auth, localization, preview, SEO, media, testing, deployment notes, and docs live in one monorepo from the start.",
   },
 ]
 
