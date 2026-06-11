@@ -21,6 +21,16 @@ vi.mock("@/lib/navigation", () => ({
 
 import { POST } from "./route"
 
+const request = (body: unknown, token?: string) =>
+  new Request("http://localhost/api/cdn-purge", {
+    method: "POST",
+    body: JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  })
+
 describe("POST /api/cdn-purge", () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -29,12 +39,7 @@ describe("POST /api/cdn-purge", () => {
   })
 
   it("expands default-locale variants before purging", async () => {
-    const response = await POST(
-      new Request("http://localhost/api/cdn-purge", {
-        method: "POST",
-        body: JSON.stringify({ secret: "test-secret", paths: ["/about"] }),
-      })
-    )
+    const response = await POST(request({ paths: ["/about"] }, "test-secret"))
 
     expect(response.status).toBe(200)
     expect(purgeCdnCacheMock).toHaveBeenCalledWith(["/en/about", "/about"])
@@ -45,13 +50,15 @@ describe("POST /api/cdn-purge", () => {
     })
   })
 
-  it("rejects invalid secrets", async () => {
-    const response = await POST(
-      new Request("http://localhost/api/cdn-purge", {
-        method: "POST",
-        body: JSON.stringify({ secret: "wrong-secret", paths: ["/about"] }),
-      })
-    )
+  it("rejects a missing bearer token", async () => {
+    const response = await POST(request({ paths: ["/about"] }))
+
+    expect(response.status).toBe(401)
+    expect(purgeCdnCacheMock).not.toHaveBeenCalled()
+  })
+
+  it("rejects an invalid bearer token", async () => {
+    const response = await POST(request({ paths: ["/about"] }, "wrong-secret"))
 
     expect(response.status).toBe(401)
     expect(purgeCdnCacheMock).not.toHaveBeenCalled()
@@ -63,12 +70,7 @@ describe("POST /api/cdn-purge", () => {
       reason: "No CDN provider is configured for this environment.",
     })
 
-    const response = await POST(
-      new Request("http://localhost/api/cdn-purge", {
-        method: "POST",
-        body: JSON.stringify({ secret: "test-secret", paths: ["/about"] }),
-      })
-    )
+    const response = await POST(request({ paths: ["/about"] }, "test-secret"))
 
     expect(response.status).toBe(502)
     await expect(response.json()).resolves.toMatchObject({

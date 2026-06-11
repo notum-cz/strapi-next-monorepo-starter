@@ -25,6 +25,16 @@ vi.mock("next/cache", () => ({
 
 import { POST } from "./route"
 
+const request = (body: unknown, token?: string) =>
+  new Request("http://localhost/api/strapi-revalidate", {
+    method: "POST",
+    body: typeof body === "string" ? body : JSON.stringify(body),
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  })
+
 describe("POST /api/strapi-revalidate", () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -33,12 +43,7 @@ describe("POST /api/strapi-revalidate", () => {
   it("returns 503 when the revalidation secret is not configured", async () => {
     getEnvVarMock.mockReturnValue(undefined)
 
-    const response = await POST(
-      new Request("http://localhost/api/strapi-revalidate", {
-        method: "POST",
-        body: JSON.stringify({}),
-      })
-    )
+    const response = await POST(request({}, "test-secret"))
 
     expect(response.status).toBe(503)
     await expect(response.json()).resolves.toEqual({
@@ -46,39 +51,13 @@ describe("POST /api/strapi-revalidate", () => {
     })
   })
 
-  it("returns 400 for invalid JSON", async () => {
+  it("returns 401 when no bearer token is provided", async () => {
     getEnvVarMock.mockReturnValue("test-secret")
 
     const response = await POST(
-      new Request("http://localhost/api/strapi-revalidate", {
-        method: "POST",
-        body: "{",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-    )
-
-    expect(response.status).toBe(400)
-    await expect(response.json()).resolves.toEqual({
-      message: "Invalid JSON body.",
-    })
-  })
-
-  it("returns 401 for an invalid secret", async () => {
-    getEnvVarMock.mockReturnValue("test-secret")
-
-    const response = await POST(
-      new Request("http://localhost/api/strapi-revalidate", {
-        method: "POST",
-        body: JSON.stringify({
-          uid: "api::page.page",
-          next: {
-            fullPaths: ["/about"],
-            tags: [],
-          },
-          secret: "wrong-secret",
-        }),
+      request({
+        uid: "api::page.page",
+        next: { fullPaths: ["/about"], tags: [] },
       })
     )
 
@@ -88,21 +67,50 @@ describe("POST /api/strapi-revalidate", () => {
     })
   })
 
+  it("returns 401 for an invalid bearer token", async () => {
+    getEnvVarMock.mockReturnValue("test-secret")
+
+    const response = await POST(
+      request(
+        {
+          uid: "api::page.page",
+          next: { fullPaths: ["/about"], tags: [] },
+        },
+        "wrong-secret"
+      )
+    )
+
+    expect(response.status).toBe(401)
+    await expect(response.json()).resolves.toEqual({
+      message: "Invalid token.",
+    })
+  })
+
+  it("returns 400 for invalid JSON", async () => {
+    getEnvVarMock.mockReturnValue("test-secret")
+
+    const response = await POST(request("{", "test-secret"))
+
+    expect(response.status).toBe(400)
+    await expect(response.json()).resolves.toEqual({
+      message: "Invalid JSON body.",
+    })
+  })
+
   it("revalidates normalized path variants and deduplicated tags", async () => {
     getEnvVarMock.mockReturnValue("test-secret")
 
     const response = await POST(
-      new Request("http://localhost/api/strapi-revalidate", {
-        method: "POST",
-        body: JSON.stringify({
+      request(
+        {
           uid: "api::page.page",
-          secret: "test-secret",
           next: {
             fullPaths: [" /en/about ", "/about", "/en"],
             tags: [" strapi:api::page.page ", "", "news", "news"],
           },
-        }),
-      })
+        },
+        "test-secret"
+      )
     )
 
     expect(response.status).toBe(200)
@@ -130,17 +138,13 @@ describe("POST /api/strapi-revalidate", () => {
     getEnvVarMock.mockReturnValue("test-secret")
 
     const response = await POST(
-      new Request("http://localhost/api/strapi-revalidate", {
-        method: "POST",
-        body: JSON.stringify({
+      request(
+        {
           uid: "api::page.page",
-          secret: "test-secret",
-          next: {
-            fullPaths: [" "],
-            tags: [],
-          },
-        }),
-      })
+          next: { fullPaths: [" "], tags: [] },
+        },
+        "test-secret"
+      )
     )
 
     expect(response.status).toBe(400)
