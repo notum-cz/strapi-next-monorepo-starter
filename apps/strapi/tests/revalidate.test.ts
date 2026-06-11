@@ -125,16 +125,16 @@ describe("revalidate service", () => {
 
     const service = revalidateServiceFactory()
     await service.run({
-      uid: "api::committee.committee",
+      uid: "api::subscriber.subscriber",
     })
 
     const revalidateCall = findFetchCall(fetchMock, REVALIDATE_URL)
 
     expect(JSON.parse(revalidateCall?.[1].body as string)).toEqual({
-      uid: "api::committee.committee",
+      uid: "api::subscriber.subscriber",
       next: {
         fullPaths: [],
-        tags: ["strapi:api::committee.committee"],
+        tags: ["strapi:api::subscriber.subscriber"],
       },
     })
     expect(findFetchCall(fetchMock, CDN_PURGE_URL)).toBeUndefined()
