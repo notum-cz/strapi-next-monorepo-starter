@@ -58,7 +58,7 @@
     "nodemailer": "8.0.7",
     "passport-azure-ad-oauth2": "0.0.4",
     "pg": "8.20.0",
-    "qs": "6.15.1",
+    "qs": "6.15.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
