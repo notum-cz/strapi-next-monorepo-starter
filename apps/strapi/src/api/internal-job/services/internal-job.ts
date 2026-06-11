@@ -142,34 +142,42 @@ export default factories.createCoreService(
         job = await this.getNextJob(jobType)
       }
 
-      const revalidateService = strapi.service("api::revalidate.revalidate")
+      // Revalidate each locale independently so a single failing path set
+      // doesn't stop the rest of the revalidation pipeline.
+      for (const [locale, paths] of fullPathsByLocale) {
+        await this.revalidate(jobType, {
+          uid: "api::page.page",
+          locale,
+          fullPaths: [...paths],
+        })
+      }
 
-      try {
-        for (const [locale, paths] of fullPathsByLocale) {
-          await revalidateService.run({
-            uid: "api::page.page",
-            locale,
-            fullPaths: [...paths],
-          })
-        }
-
-        // Redirect sources are already locale-prefixed by
-        // processCreateRedirectJob, so no `locale` is passed here.
-        if (redirectSources.size > 0) {
-          await revalidateService.run({
-            uid: "api::redirect.redirect",
-            fullPaths: [...redirectSources],
-          })
-        }
-      } catch (error) {
-        strapi.log.error(
-          `Revalidation after ${jobType} batch failed: ${(error as Error).message}`
-        )
+      // Redirect sources are already locale-prefixed by
+      // processCreateRedirectJob, so no `locale` is passed here.
+      if (redirectSources.size > 0) {
+        await this.revalidate(jobType, {
+          uid: "api::redirect.redirect",
+          fullPaths: [...redirectSources],
+        })
       }
 
       return {
         successfulJobs,
         failedJobs,
+      }
+    },
+
+    async revalidate(
+      jobType: Data.ContentType<"api::internal-job.internal-job">["jobType"],
+      params: { uid: string; locale?: string; fullPaths: string[] }
+    ) {
+      try {
+        await strapi.service("api::revalidate.revalidate").run(params)
+      } catch (error) {
+        const scope = params.locale ? ` for locale ${params.locale}` : ""
+        strapi.log.error(
+          `Revalidation after ${jobType} batch failed${scope}: ${(error as Error).message}`
+        )
       }
     },
 
