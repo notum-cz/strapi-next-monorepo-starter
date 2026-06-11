@@ -1,4 +1,4 @@
-import type { NextRequest } from "next/server"
+import type { NextRequest, NextResponse } from "next/server"
 import createMiddleware from "next-intl/middleware"
 
 import { routing } from "@/lib/navigation"
@@ -11,15 +11,26 @@ import { withSecurityHeaders } from "@/lib/proxies/securityHeaders"
 // https://next-intl-docs.vercel.app/docs/getting-started/app-router
 const intlProxy = createMiddleware(routing)
 
+// Ordered guards run before the intl fallback; the first to return a response
+// wins. Each returns null to defer to the next.
+const proxies: ((
+  req: NextRequest
+) => NextResponse | null | Promise<NextResponse | null>)[] = [
+  basicAuth,
+  httpsRedirect,
+  (req) => authGuard(req, intlProxy),
+  (req) => dynamicRewrite(req, intlProxy),
+]
+
 export default async function proxy(req: NextRequest) {
   // First proxy to return a response wins; intlProxy always returns one, so the
   // chain never resolves to null.
-  const response =
-    basicAuth(req) ??
-    httpsRedirect(req) ??
-    (await authGuard(req, intlProxy)) ??
-    dynamicRewrite(req, intlProxy) ??
-    intlProxy(req)
+  let response: NextResponse | null = null
+  for (const runProxy of proxies) {
+    response = await runProxy(req)
+    if (response) break
+  }
+  response ??= intlProxy(req)
 
   // CSP / X-Frame-Options are applied here (not next.config, which is build
   // time) because frame-ancestors depends on the runtime STRAPI_URL. Wrapping
