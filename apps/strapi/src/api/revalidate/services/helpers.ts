@@ -1,17 +1,9 @@
-import { normalizePageFullPath } from "@repo/shared-data"
-import type { UID } from "@strapi/strapi"
-
-export type StrapiTag<TUid extends UID.ContentType = UID.ContentType> =
-  `strapi:${TUid}`
+import { normalizeCachePath } from "@repo/shared-data"
 
 export type RevalidationConfig = {
   clientUrl: string
   secret: string
 }
-
-export const strapiTag = <TUid extends UID.ContentType>(
-  uid: TUid
-): StrapiTag<TUid> => `strapi:${uid}`
 
 export const getNonEmptyString = (value: unknown): string | undefined => {
   if (typeof value !== "string") {
@@ -47,14 +39,11 @@ export function readRevalidationConfig(): RevalidationConfig {
 }
 
 /**
- * Trims, drops empty entries, and deduplicates a list of path strings. Used
- * for both Next.js revalidation paths and CDN purge paths.
- *
- * - Wildcard paths (`/jobs/*`, `/*`) are kept as-is so the CDN receives
- *   them in the form it expects, only ensuring a leading slash.
- * - Concrete page paths run through `normalizePageFullPath` so `/about` and
- *   `/en/about` collapse to the canonical form. Pass `locale` when the call
- *   site knows which locale the paths belong to.
+ * Trims, drops empty entries, and deduplicates a list of path strings, then
+ * normalizes each via the shared `normalizeCachePath` (wildcards preserved,
+ * concrete paths canonicalized). Used for both Next.js revalidation paths and
+ * CDN purge paths. Pass `locale` when the call site knows which locale the
+ * paths belong to.
  */
 export function normalizeFullPaths(
   rawPaths: Iterable<string>,
@@ -65,13 +54,7 @@ export function normalizeFullPaths(
       [...rawPaths]
         .map((path) => (typeof path === "string" ? path.trim() : ""))
         .filter((path) => path.length > 0)
-        .map((path) => {
-          if (path.includes("*")) {
-            return path.startsWith("/") ? path : `/${path}`
-          }
-
-          return normalizePageFullPath([path], locale)
-        })
+        .map((path) => normalizeCachePath(path, locale))
     ),
   ]
 }

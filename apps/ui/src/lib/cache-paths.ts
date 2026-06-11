@@ -1,4 +1,4 @@
-import { normalizePageFullPath } from "@repo/shared-data"
+import { normalizeCachePath } from "@repo/shared-data"
 
 import { routing } from "@/lib/navigation"
 
@@ -23,19 +23,6 @@ export function addDefaultLocalePathVariants(
     paths.add(withDefaultLocale(path))
     paths.add(withoutDefaultLocale(path))
   }
-}
-
-/**
- * Normalizes page paths while preserving Front Door wildcard paths.
- */
-function normalizeCachePath(rawPath: string): string {
-  const path = rawPath.trim()
-
-  if (path.includes("*")) {
-    return path.startsWith("/") ? path : `/${path}`
-  }
-
-  return normalizePageFullPath([path])
 }
 
 /**

@@ -1,3 +1,4 @@
+import { strapiCacheTag } from "@repo/shared-data"
 import type { MetadataRoute } from "next"
 import type { Locale } from "next-intl"
 
@@ -75,7 +76,7 @@ async function generateLocalizedSitemap(
       },
       // Cache the page list; the tag invalidates it instantly on page changes,
       // the TTL is a backstop.
-      { next: { revalidate: 3600, tags: ["strapi:api::page.page"] } }
+      { next: { revalidate: 3600, tags: [strapiCacheTag("api::page.page")] } }
     )
 
     if (entityResponse.data.length > 0) {

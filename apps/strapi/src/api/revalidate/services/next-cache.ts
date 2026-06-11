@@ -1,10 +1,7 @@
+import { strapiCacheTag } from "@repo/shared-data"
 import type { UID } from "@strapi/strapi"
 
-import {
-  normalizeFullPaths,
-  readRevalidationConfig,
-  strapiTag,
-} from "./helpers"
+import { normalizeFullPaths, readRevalidationConfig } from "./helpers"
 
 export type RevalidateNextCacheParams = {
   uid: UID.ContentType
@@ -101,5 +98,5 @@ function collectCacheTags(
     .map((tag) => tag.trim())
     .filter((tag) => tag.length > 0)
 
-  return [...new Set([strapiTag(uid), ...normalizedExplicitTags])]
+  return [...new Set([strapiCacheTag(uid), ...normalizedExplicitTags])]
 }

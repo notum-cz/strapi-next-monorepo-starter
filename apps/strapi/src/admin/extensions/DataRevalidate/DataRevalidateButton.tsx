@@ -1,3 +1,4 @@
+import { strapiCacheTag } from "@repo/shared-data"
 import { Button } from "@strapi/design-system"
 import {
   getFetchClient,
@@ -47,7 +48,7 @@ const tagBasedAction =
     label: REVALIDATE_LABEL,
     successMessage: `Revalidated ${name} cache.`,
     errorMessage: `Failed to revalidate ${name} cache.`,
-    payload: { uid, tags: [`strapi:${uid}`] },
+    payload: { uid, tags: [strapiCacheTag(uid)] },
   })
 
 const REVALIDATE_CONFIG: Record<

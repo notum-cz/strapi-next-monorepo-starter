@@ -1,5 +1,6 @@
 import "server-only"
 
+import { strapiCacheTag } from "@repo/shared-data"
 import type { UID } from "@repo/strapi-types"
 import { draftMode } from "next/headers"
 import type { Locale } from "next-intl"
@@ -158,7 +159,7 @@ export async function fetchNavbar(locale: Locale) {
       {
         next: {
           revalidate: 600, // 10 minutes; tag-revalidated on Strapi publish
-          tags: ["strapi:api::navbar.navbar"],
+          tags: [strapiCacheTag("api::navbar.navbar")],
         },
       }
     )
@@ -193,7 +194,7 @@ export async function fetchFooter(locale: Locale) {
       {
         next: {
           revalidate: 600, // 10 minutes; tag-revalidated on Strapi publish
-          tags: ["strapi:api::footer.footer"],
+          tags: [strapiCacheTag("api::footer.footer")],
         },
       }
     )
