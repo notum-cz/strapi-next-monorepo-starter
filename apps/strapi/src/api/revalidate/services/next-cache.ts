@@ -60,10 +60,12 @@ export async function revalidateNextCache({
 
   const response = await fetch(`${config.clientUrl}/api/strapi-revalidate`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${config.secret}`,
+    },
     body: JSON.stringify({
       uid,
-      secret: config.secret,
       next: {
         fullPaths: normalizedFullPaths,
         tags: cacheTags,

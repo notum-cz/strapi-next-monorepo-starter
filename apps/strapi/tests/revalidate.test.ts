@@ -104,11 +104,13 @@ describe("revalidate service", () => {
     expect(revalidateCall).toBeDefined()
     expect(revalidateCall?.[1]).toMatchObject({
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer test-secret",
+      },
     })
     expect(JSON.parse(revalidateCall?.[1].body as string)).toEqual({
       uid: "api::page.page",
-      secret: "test-secret",
       next: {
         fullPaths: ["/en/about"],
         tags: ["strapi:api::page.page", "shared"],
@@ -130,7 +132,6 @@ describe("revalidate service", () => {
 
     expect(JSON.parse(revalidateCall?.[1].body as string)).toEqual({
       uid: "api::committee.committee",
-      secret: "test-secret",
       next: {
         fullPaths: [],
         tags: ["strapi:api::committee.committee"],

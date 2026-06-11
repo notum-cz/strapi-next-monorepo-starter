@@ -1,4 +1,4 @@
-import { normalizeFullPaths, readRevalidationConfig } from "./helpers"
+import { normalizeFullPaths, readCdnPurgeConfig } from "./helpers"
 
 // Cap how long we wait on the UI purge endpoint so a stalled upstream cannot
 // hang the request (and the admin widget) indefinitely.
@@ -38,7 +38,7 @@ export async function purgeCDNCache(
     return { purged: false, skipped: true, paths: [] }
   }
 
-  const { clientUrl, secret } = readRevalidationConfig()
+  const { clientUrl, secret } = readCdnPurgeConfig()
 
   console.debug("Submitting CDN purge request", {
     clientUrl,
@@ -51,8 +51,11 @@ export async function purgeCDNCache(
   try {
     response = await fetch(`${clientUrl}/api/cdn-purge`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ secret, paths: normalizedPaths }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${secret}`,
+      },
+      body: JSON.stringify({ paths: normalizedPaths }),
       signal: AbortSignal.timeout(PURGE_TIMEOUT_MS),
     })
   } catch (error) {

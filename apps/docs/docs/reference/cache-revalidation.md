@@ -118,12 +118,11 @@ The manual Strapi endpoint requires a valid admin token and accepts either `full
 
 ## Request Payload
 
-The UI endpoint receives this shape from Strapi:
+Strapi authenticates the call with an `Authorization: Bearer <STRAPI_REVALIDATE_SECRET>` header (the UI verifies it with a constant-time comparison **before** reading the body). The secret is never part of the payload. The UI endpoint then receives this shape:
 
 ```json
 {
   "uid": "api::page.page",
-  "secret": "STRAPI_REVALIDATE_SECRET",
   "next": {
     "fullPaths": ["/about"],
     "tags": ["strapi:api::page.page"]
@@ -150,20 +149,21 @@ pnpm start:ui
 
 Useful checks:
 
-- Call `POST /api/strapi-revalidate` with the shared secret and confirm the response lists paths/tags.
+- Call `POST /api/strapi-revalidate` with an `Authorization: Bearer <STRAPI_REVALIDATE_SECRET>` header and confirm the response lists paths/tags.
 - Publish a configured Strapi document and confirm Strapi logs a revalidation request.
 - Revisit the affected page and confirm fresh content appears after the next request.
 - Submit a path through the CDN cache widget only when testing the optional CDN cache purge flow.
 
 :::caution Secret required
-`STRAPI_REVALIDATE_SECRET` must match in Strapi and the UI. If it is missing or mismatched, UI revalidation rejects the request.
+`STRAPI_REVALIDATE_SECRET` must match in Strapi and the UI. If it is missing or mismatched, UI revalidation rejects the request with `401`. The CDN purge endpoint uses `STRAPI_CDN_PURGE_SECRET`.
 :::
 
 ## Configuration
 
 | Variable                       | Where       | Purpose                                      |
 | ------------------------------ | ----------- | -------------------------------------------- |
-| `STRAPI_REVALIDATE_SECRET`     | Strapi + UI | Shared secret for Strapi → UI revalidation.  |
+| `STRAPI_REVALIDATE_SECRET`     | Strapi + UI | Bearer secret for Strapi → UI revalidation.  |
+| `STRAPI_CDN_PURGE_SECRET`      | Strapi + UI | Bearer secret for Strapi → UI CDN purge.     |
 | `CLIENT_URL`                   | Strapi      | Frontend base URL used by Strapi callbacks.  |
 | `STRAPI_URL`                   | UI          | Strapi base URL used by the public client.   |
 | `STRAPI_REST_READONLY_API_KEY` | UI          | Read-only token for UI-side Strapi requests. |

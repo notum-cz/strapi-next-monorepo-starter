@@ -4,6 +4,7 @@ import { z } from "zod"
 
 import { addDefaultLocalePathVariants } from "@/lib/cache-paths"
 import { getEnvVar } from "@/lib/env-vars"
+import { hasValidBearerToken } from "@/lib/verify-bearer-token"
 
 /**
  * On-demand cache revalidation endpoint triggered by Strapi.
@@ -25,6 +26,16 @@ export async function POST(request: Request) {
     )
   }
 
+  // Authenticate from the Authorization header before reading the body so an
+  // unauthenticated caller is rejected without any further work.
+  if (!hasValidBearerToken(request, revalidateSecret)) {
+    console.warn(
+      "Revalidation request rejected because the bearer token is missing or invalid"
+    )
+
+    return Response.json({ message: "Invalid token." }, { status: 401 })
+  }
+
   let body: unknown
   try {
     body = await request.json()
@@ -41,12 +52,6 @@ export async function POST(request: Request) {
   }
 
   const payload = parsedBody.data
-
-  if (payload.secret !== revalidateSecret) {
-    console.warn("Revalidation request rejected because secret does not match")
-
-    return Response.json({ message: "Invalid token." }, { status: 401 })
-  }
 
   const uid = payload.uid
   const pathsToRevalidate = new Set<string>()
@@ -94,7 +99,6 @@ const revalidateRequestSchema = z
       .trim()
       .min(1, "Missing uid.")
       .transform((uid) => uid as UID.ContentType),
-    secret: z.string(),
     next: z.object({
       fullPaths: nonEmptyStringArray,
       tags: nonEmptyStringArray,

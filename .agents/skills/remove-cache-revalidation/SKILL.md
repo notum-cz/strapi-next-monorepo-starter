@@ -7,7 +7,7 @@ Remove the **entire cache revalidation feature** from the project, including the
 
 ## Scope
 
-- This removes EVERYTHING: the core revalidation pipeline AND the CDN purge integration (they share the `api::revalidate` controller/routes and `STRAPI_REVALIDATE_SECRET`).
+- This removes EVERYTHING: the core revalidation pipeline AND the CDN purge integration (they share the `api::revalidate` controller/routes; revalidation authenticates with `STRAPI_REVALIDATE_SECRET` and CDN purge with `STRAPI_CDN_PURGE_SECRET`).
 - If you only want to drop the CDN purge layer but keep on-demand revalidation, use the `remove-cdn-purge` skill instead.
 - Do not remove pre-existing scaffolding that the feature only _edited_ — revert those edits to their pre-feature state (see Step 2).
 
@@ -32,6 +32,7 @@ rm -rf apps/ui/src/app/api/cdn-purge
 rm -rf apps/ui/src/lib/cdn
 rm -f  apps/ui/src/lib/cache-paths.ts
 rm -f  apps/ui/src/lib/cache-paths.test.ts
+rm -f  apps/ui/src/lib/verify-bearer-token.ts
 
 # Docs
 rm -f  apps/docs/docs/reference/cache-revalidation.md
@@ -62,11 +63,11 @@ Note: `apps/strapi/src/utils/validate-admin-token.ts` is only consumed by the re
 - `fetchNavbar` and `fetchFooter`: remove the added `requestInit` argument carrying `next: { revalidate: 600, tags: ["strapi:api::navbar.navbar" | "strapi:api::footer.footer"] }`, restoring the original calls (which passed no `requestInit`).
 - `fetchPage`: remove the `next: { ...requestInit?.next, revalidate: requestInit?.next?.revalidate ?? 120 }` wrapper, restoring the original passthrough of `requestInit`.
 
-**`apps/ui/src/env.mjs`** — remove from BOTH the `server` schema and `runtimeEnv`: `STRAPI_REVALIDATE_SECRET`, `AZURE_SUBSCRIPTION_ID`, `AZURE_RESOURCE_GROUP`, `AZURE_FRONT_DOOR_PROFILE`, `AZURE_MI_CLIENT_ID`, `IDENTITY_ENDPOINT`, `IDENTITY_HEADER`.
+**`apps/ui/src/env.mjs`** — remove from BOTH the `server` schema and `runtimeEnv`: `STRAPI_REVALIDATE_SECRET`, `STRAPI_CDN_PURGE_SECRET`, `AZURE_SUBSCRIPTION_ID`, `AZURE_RESOURCE_GROUP`, `AZURE_FRONT_DOOR_PROFILE`, `AZURE_MI_CLIENT_ID`, `IDENTITY_ENDPOINT`, `IDENTITY_HEADER`.
 
-**`apps/ui/.env.local.example`** — remove the cache-revalidation / CDN purge block (the `STRAPI_REVALIDATE_SECRET` line and the `AZURE_*` comments).
+**`apps/ui/.env.local.example`** — remove the cache-revalidation / CDN purge block (the `STRAPI_REVALIDATE_SECRET` and `STRAPI_CDN_PURGE_SECRET` lines and the `AZURE_*` comments).
 
-**`apps/strapi/.env.example`** — remove the `STRAPI_REVALIDATE_SECRET` entry and its comment. Keep `CLIENT_URL` (it pre-existed the feature).
+**`apps/strapi/.env.example`** — remove the `STRAPI_REVALIDATE_SECRET` and `STRAPI_CDN_PURGE_SECRET` entries and their comments. Keep `CLIENT_URL` (it pre-existed the feature).
 
 **`apps/strapi/package.json`** — remove the `"zod"` dependency ONLY if nothing else imports zod (verify with `grep -rn "from \"zod\"" apps/strapi/src` → if empty, remove it and run `pnpm install`). It was added solely for the revalidate controller.
 
@@ -74,13 +75,13 @@ Note: `apps/strapi/src/utils/validate-admin-token.ts` is only consumed by the re
 
 **`apps/docs/docs/strapi/environment-variables.md`** — remove the one-line blockquote cross-link to `../reference/cache-revalidation.md`.
 
-**`turbo.json`** (`globalEnv`) — remove the entries the feature added: `CLIENT_URL`, `STRAPI_REVALIDATE_SECRET`, `AZURE_SUBSCRIPTION_ID`, `AZURE_RESOURCE_GROUP`, `AZURE_FRONT_DOOR_PROFILE`, `AZURE_MI_CLIENT_ID`, `IDENTITY_ENDPOINT`, `IDENTITY_HEADER`. (If `CLIENT_URL` was already declared before the feature, leave it.)
+**`turbo.json`** (`globalEnv`) — remove the entries the feature added: `CLIENT_URL`, `STRAPI_REVALIDATE_SECRET`, `STRAPI_CDN_PURGE_SECRET`, `AZURE_SUBSCRIPTION_ID`, `AZURE_RESOURCE_GROUP`, `AZURE_FRONT_DOOR_PROFILE`, `AZURE_MI_CLIENT_ID`, `IDENTITY_ENDPOINT`, `IDENTITY_HEADER`. (If `CLIENT_URL` was already declared before the feature, leave it.)
 
 ### 3. Verify
 
 ```bash
 # No dangling references to any removed piece
-grep -rn "revalidate\|strapi-revalidate\|cdn-purge\|purgeCdn\|CdnCacheWidget\|DataRevalidate\|@/lib/cdn\|cache-paths\|registerAutoRevalidate\|validate-admin-token\|STRAPI_REVALIDATE_SECRET\|AZURE_\|strapiTag" apps packages turbo.json | grep -v node_modules | grep -v "\.next"
+grep -rn "revalidate\|strapi-revalidate\|cdn-purge\|purgeCdn\|CdnCacheWidget\|DataRevalidate\|@/lib/cdn\|cache-paths\|verify-bearer-token\|registerAutoRevalidate\|validate-admin-token\|STRAPI_REVALIDATE_SECRET\|STRAPI_CDN_PURGE_SECRET\|AZURE_\|strapiTag" apps packages turbo.json | grep -v node_modules | grep -v "\.next"
 # Expect: no matches related to the feature. (Strapi's built-in `revalidate` of core
 # content-types via the Documents API is unrelated; if any match appears, confirm it
 # is not one of the files/edits above before leaving it.)

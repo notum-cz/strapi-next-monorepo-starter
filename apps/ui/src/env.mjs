@@ -23,6 +23,7 @@ export const env = createEnv({
     STRAPI_REST_CUSTOM_API_KEY: z.string().optional(),
     STRAPI_PREVIEW_SECRET: z.string().optional(),
     STRAPI_REVALIDATE_SECRET: z.string().optional(),
+    STRAPI_CDN_PURGE_SECRET: z.string().optional(),
 
     AZURE_SUBSCRIPTION_ID: z.string().optional(),
     AZURE_RESOURCE_GROUP: z.string().optional(),
@@ -86,6 +87,7 @@ export const env = createEnv({
     STRAPI_REST_CUSTOM_API_KEY: process.env.STRAPI_REST_CUSTOM_API_KEY,
     STRAPI_PREVIEW_SECRET: process.env.STRAPI_PREVIEW_SECRET,
     STRAPI_REVALIDATE_SECRET: process.env.STRAPI_REVALIDATE_SECRET,
+    STRAPI_CDN_PURGE_SECRET: process.env.STRAPI_CDN_PURGE_SECRET,
 
     AZURE_SUBSCRIPTION_ID: process.env.AZURE_SUBSCRIPTION_ID,
     AZURE_RESOURCE_GROUP: process.env.AZURE_RESOURCE_GROUP,

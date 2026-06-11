@@ -16,6 +16,8 @@ CDN cache purging uses a pluggable provider model. The integration is **inert un
 - Strapi sends the selected URL list, or `/*` for the entire website, to `POST /api/cdn-purge` on the UI
 - UI route → `purgeCdnCache()` → the resolved `CdnPurgeProvider`
 
+Strapi authenticates the call with an `Authorization: Bearer <STRAPI_CDN_PURGE_SECRET>` header (verified with a constant-time comparison before the body is read). The secret must match in `apps/strapi` and `apps/ui`. The endpoint rejects unauthenticated calls regardless of whether a CDN provider is configured.
+
 ![CDN cache widget in the Strapi homepage](/img/cdn-purge-widget.png)
 
 ### Azure Front Door

@@ -9,7 +9,7 @@ Remove the **optional CDN purge integration** from the project. This is the oper
 
 - This removes ONLY the CDN purge layer. The core cache revalidation (Strapi → Next.js `revalidatePath`/`revalidateTag` on publish) keeps working.
 - To remove the entire revalidation feature instead, use the `remove-cache-revalidation` skill (which also removes this CDN layer).
-- `STRAPI_REVALIDATE_SECRET`, `CLIENT_URL`, `apps/ui/src/lib/cache-paths.ts`, and the `apps/strapi/src/api/revalidate` service/controller/routes belong to core revalidation — do NOT remove them here.
+- `STRAPI_REVALIDATE_SECRET`, `CLIENT_URL`, `apps/ui/src/lib/cache-paths.ts`, `apps/ui/src/lib/verify-bearer-token.ts` (shared with the revalidate endpoint), and the `apps/strapi/src/api/revalidate` service/controller/routes belong to core revalidation — do NOT remove them here.
 
 ## Steps
 
@@ -37,6 +37,8 @@ Edit `apps/strapi/src/api/revalidate/controllers/revalidate.ts`:
 
 Edit `apps/strapi/src/api/revalidate/routes/revalidate.ts`: delete the route object whose `path` is `"/revalidate/cdn-purge"` (handler `revalidate.purgeCdn`). Keep the `"/revalidate"` route.
 
+Then edit `apps/strapi/src/api/revalidate/services/helpers.ts`: remove the now-orphaned `readCdnPurgeConfig` export (only `cdn-cache.ts` used it). Keep `readClientCallConfig` and `readRevalidationConfig`; if `STRAPI_CDN_PURGE_SECRET` is no longer referenced, drop it from the `SecretEnvVar` union too.
+
 ### 4. Unregister the CDN cache widget
 
 Edit `apps/strapi/src/admin/app.tsx`:
@@ -47,9 +49,10 @@ Edit `apps/strapi/src/admin/app.tsx`:
 
 ### 5. Remove the optional CDN env vars
 
-- `apps/ui/src/env.mjs`: remove these keys from BOTH the `server` schema and the `runtimeEnv` map: `AZURE_SUBSCRIPTION_ID`, `AZURE_RESOURCE_GROUP`, `AZURE_FRONT_DOOR_PROFILE`, `AZURE_MI_CLIENT_ID`, `IDENTITY_ENDPOINT`, `IDENTITY_HEADER`. Keep `STRAPI_REVALIDATE_SECRET`.
-- `apps/ui/.env.local.example`: remove the "Azure Front Door CDN purge provider" comment block and its commented `AZURE_*` lines. Keep `STRAPI_REVALIDATE_SECRET`.
-- `turbo.json` (`globalEnv`): remove `AZURE_SUBSCRIPTION_ID`, `AZURE_RESOURCE_GROUP`, `AZURE_FRONT_DOOR_PROFILE`, `AZURE_MI_CLIENT_ID`, `IDENTITY_ENDPOINT`, `IDENTITY_HEADER`. Keep `CLIENT_URL` and `STRAPI_REVALIDATE_SECRET`.
+- `apps/ui/src/env.mjs`: remove these keys from BOTH the `server` schema and the `runtimeEnv` map: `STRAPI_CDN_PURGE_SECRET`, `AZURE_SUBSCRIPTION_ID`, `AZURE_RESOURCE_GROUP`, `AZURE_FRONT_DOOR_PROFILE`, `AZURE_MI_CLIENT_ID`, `IDENTITY_ENDPOINT`, `IDENTITY_HEADER`. Keep `STRAPI_REVALIDATE_SECRET` (core revalidation).
+- `apps/ui/.env.local.example`: remove the `STRAPI_CDN_PURGE_SECRET` line and the "Azure Front Door CDN purge provider" comment block with its commented `AZURE_*` lines. Keep `STRAPI_REVALIDATE_SECRET`.
+- `apps/strapi/.env.example`: remove the `STRAPI_CDN_PURGE_SECRET` entry and its comment. Keep `STRAPI_REVALIDATE_SECRET` and `CLIENT_URL`.
+- `turbo.json` (`globalEnv`): remove `STRAPI_CDN_PURGE_SECRET`, `AZURE_SUBSCRIPTION_ID`, `AZURE_RESOURCE_GROUP`, `AZURE_FRONT_DOOR_PROFILE`, `AZURE_MI_CLIENT_ID`, `IDENTITY_ENDPOINT`, `IDENTITY_HEADER`. Keep `CLIENT_URL` and `STRAPI_REVALIDATE_SECRET`.
 
 ### 6. Remove the CDN reference from the revalidation doc
 

@@ -6,7 +6,7 @@ const PURGE_URL = "https://frontend.example/api/cdn-purge"
 
 describe("purgeCDNCache", () => {
   const originalClientUrl = process.env.CLIENT_URL
-  const originalSecret = process.env.STRAPI_REVALIDATE_SECRET
+  const originalSecret = process.env.STRAPI_CDN_PURGE_SECRET
   const fetchMock = vi.fn()
 
   beforeEach(() => {
@@ -20,12 +20,12 @@ describe("purgeCDNCache", () => {
       },
     } as unknown as typeof globalThis.strapi)
     process.env.CLIENT_URL = "https://frontend.example"
-    process.env.STRAPI_REVALIDATE_SECRET = "test-secret"
+    process.env.STRAPI_CDN_PURGE_SECRET = "test-secret"
   })
 
   afterEach(() => {
     process.env.CLIENT_URL = originalClientUrl
-    process.env.STRAPI_REVALIDATE_SECRET = originalSecret
+    process.env.STRAPI_CDN_PURGE_SECRET = originalSecret
     vi.unstubAllGlobals()
   })
 
@@ -43,8 +43,11 @@ describe("purgeCDNCache", () => {
       PURGE_URL,
       expect.objectContaining({
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ secret: "test-secret", paths: ["/about"] }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer test-secret",
+        },
+        body: JSON.stringify({ paths: ["/about"] }),
         signal: expect.any(AbortSignal),
       })
     )

@@ -3,6 +3,7 @@ import { z } from "zod"
 import { addDefaultLocalePathVariants } from "@/lib/cache-paths"
 import { purgeCdnCache } from "@/lib/cdn"
 import { getEnvVar } from "@/lib/env-vars"
+import { hasValidBearerToken } from "@/lib/verify-bearer-token"
 
 /**
  * CDN purge executor called by Strapi's CDN cache widget. Strapi stores
@@ -10,12 +11,22 @@ import { getEnvVar } from "@/lib/env-vars"
  * variants right before the purge call.
  */
 export async function POST(request: Request) {
-  const revalidateSecret = getEnvVar("STRAPI_REVALIDATE_SECRET")
-  if (!revalidateSecret) {
+  const purgeSecret = getEnvVar("STRAPI_CDN_PURGE_SECRET")
+  if (!purgeSecret) {
     return Response.json(
-      { message: "Missing revalidation configuration." },
+      { message: "Missing CDN purge configuration." },
       { status: 503 }
     )
+  }
+
+  // Authenticate from the Authorization header before reading the body so an
+  // unauthenticated caller is rejected without any further work.
+  if (!hasValidBearerToken(request, purgeSecret)) {
+    console.warn(
+      "CDN purge rejected because the bearer token is missing or invalid"
+    )
+
+    return Response.json({ message: "Invalid token." }, { status: 401 })
   }
 
   let body: unknown
@@ -34,12 +45,6 @@ export async function POST(request: Request) {
   }
 
   const payload = parsedBody.data
-
-  if (payload.secret !== revalidateSecret) {
-    console.warn("CDN purge rejected invalid token")
-
-    return Response.json({ message: "Invalid token." }, { status: 401 })
-  }
 
   const pathsToPurge = new Set<string>()
   addDefaultLocalePathVariants(pathsToPurge, payload.paths)
@@ -63,7 +68,6 @@ export async function POST(request: Request) {
 }
 
 const cdnPurgeRequestSchema = z.object({
-  secret: z.string(),
   paths: z
     .array(z.string())
     .transform((paths) =>
