@@ -7,7 +7,7 @@ import { purgeCDNCache } from "../services/cdn-cache"
 export default {
   async run(ctx) {
     const headers = ctx.request.headers
-    const validation = validateAdminToken(strapi, headers)
+    const validation = await validateAdminToken(strapi, headers)
 
     if (validation.valid === false) {
       console.warn(
@@ -43,7 +43,7 @@ export default {
 
   async purgeCdn(ctx) {
     const headers = ctx.request.headers
-    const validation = validateAdminToken(strapi, headers)
+    const validation = await validateAdminToken(strapi, headers)
 
     if (validation.valid === false) {
       console.warn("Manual CDN purge rejected because admin token is invalid")

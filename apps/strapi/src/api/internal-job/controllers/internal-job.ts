@@ -3,24 +3,8 @@
  */
 
 import { factories } from "@strapi/strapi"
-import jwt from "jsonwebtoken"
 
-const validateAdminToken = (strapi, headers) => {
-  const authHeader = headers["authorization"]
-  const token = authHeader?.split(" ")[1]
-  if (!token) {
-    return { valid: false, error: "No token provided" }
-  }
-
-  const decoded = jwt.verify(token, strapi.config.get("admin.auth.secret")) as {
-    userId?: string
-  }
-  if (!decoded?.userId) {
-    return { valid: false, error: "Invalid token" }
-  }
-
-  return { valid: true, userId: decoded.userId }
-}
+import { validateAdminToken } from "../../../utils/validate-admin-token"
 
 export default factories.createCoreController(
   "api::internal-job.internal-job",
@@ -28,9 +12,13 @@ export default factories.createCoreController(
     runRecalculateFullpathAll: async (ctx) => {
       const headers = ctx.request.headers
 
-      const { valid, error } = validateAdminToken(strapi, headers)
-      if (!valid) {
-        return ctx.forbidden(error)
+      const validation = await validateAdminToken(strapi, headers)
+      if (validation.valid === false) {
+        console.warn(
+          "Recalculate full path jobs rejected because admin token is invalid"
+        )
+
+        return ctx.forbidden(validation.error)
       }
 
       const result = await strapi
@@ -43,9 +31,13 @@ export default factories.createCoreController(
     runCreateRedirectsAll: async (ctx) => {
       const headers = ctx.request.headers
 
-      const { valid, error } = validateAdminToken(strapi, headers)
-      if (!valid) {
-        return ctx.forbidden(error)
+      const validation = await validateAdminToken(strapi, headers)
+      if (validation.valid === false) {
+        console.warn(
+          "Create redirect jobs rejected because admin token is invalid"
+        )
+
+        return ctx.forbidden(validation.error)
       }
 
       const result = await strapi
