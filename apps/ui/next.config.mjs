@@ -58,6 +58,33 @@ const nextConfig = {
     ],
   },
 
+  // Static, build-time-constant security headers applied to every route.
+  // Runtime-dependent headers (Content-Security-Policy with `frame-ancestors`,
+  // and the conditional X-Frame-Options) are set in the proxy instead —
+  // see apps/ui/src/lib/proxies/securityHeaders.ts.
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+    ]
+  },
+
   // Turbopack configuration (replaces webpack config)
   // Turbopack has built-in intelligent caching, so no manual cache configuration needed
   // Note: Custom webpack loaders/plugins are not supported in Turbopack
