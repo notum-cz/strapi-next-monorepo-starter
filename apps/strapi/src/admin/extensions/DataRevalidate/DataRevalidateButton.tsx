@@ -26,6 +26,54 @@ const parseString = (value: unknown): string | null => {
   return normalized.length > 0 ? normalized : null
 }
 
+const REVALIDATE_LABEL = "Revalidate cache"
+
+type RevalidateContext = {
+  uid: string
+  fullPath: string | null
+  locale: string | null
+}
+
+type RevalidateAction = {
+  label: string
+  successMessage: string
+  errorMessage: string
+  payload: Record<string, unknown>
+}
+
+const tagBasedAction =
+  (name: string) =>
+  ({ uid }: RevalidateContext): RevalidateAction => ({
+    label: REVALIDATE_LABEL,
+    successMessage: `Revalidated ${name} cache.`,
+    errorMessage: `Failed to revalidate ${name} cache.`,
+    payload: { uid, tags: [`strapi:${uid}`] },
+  })
+
+const REVALIDATE_CONFIG: Record<
+  string,
+  (ctx: RevalidateContext) => RevalidateAction | null
+> = {
+  "api::page.page": ({ uid, fullPath, locale }) => {
+    if (!fullPath) {
+      return null
+    }
+
+    return {
+      label: REVALIDATE_LABEL,
+      successMessage: `Revalidated page cache at "${fullPath}".`,
+      errorMessage: "Failed to revalidate page cache.",
+      payload: {
+        uid,
+        fullPaths: [fullPath],
+        ...(locale ? { locale } : {}),
+      },
+    }
+  },
+  "api::navbar.navbar": tagBasedAction("navbar"),
+  "api::footer.footer": tagBasedAction("footer"),
+}
+
 function DataRevalidateButton() {
   const [isLoading, setIsLoading] = useState(false)
   const [{ query }] = useQueryParams<{
@@ -56,42 +104,7 @@ function DataRevalidateButton() {
       return null
     }
 
-    if (uid === "api::page.page") {
-      if (!fullPath) {
-        return null
-      }
-
-      return {
-        label: "Revalidate cache",
-        successMessage: `Revalidated page cache at "${fullPath}".`,
-        errorMessage: "Failed to revalidate page cache.",
-        payload: {
-          uid,
-          fullPaths: [fullPath],
-          ...(locale ? { locale } : {}),
-        },
-      }
-    }
-
-    if (uid === "api::navbar.navbar") {
-      return {
-        label: "Revalidate cache",
-        successMessage: "Revalidated navbar cache.",
-        errorMessage: "Failed to revalidate navbar cache.",
-        payload: { uid, tags: [`strapi:${uid}`] },
-      }
-    }
-
-    if (uid === "api::footer.footer") {
-      return {
-        label: "Revalidate cache",
-        successMessage: "Revalidated footer cache.",
-        errorMessage: "Failed to revalidate footer cache.",
-        payload: { uid, tags: [`strapi:${uid}`] },
-      }
-    }
-
-    return null
+    return REVALIDATE_CONFIG[uid]?.({ uid, fullPath, locale }) ?? null
   }, [fullPath, locale, uid])
 
   if (!shouldShowButton || !action) {
