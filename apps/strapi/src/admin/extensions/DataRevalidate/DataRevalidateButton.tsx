@@ -1,4 +1,3 @@
-import { strapiCacheTag } from "@repo/shared-data"
 import { Button } from "@strapi/design-system"
 import {
   getFetchClient,
@@ -48,7 +47,11 @@ const tagBasedAction =
     label: REVALIDATE_LABEL,
     successMessage: `Revalidated ${name} cache.`,
     errorMessage: `Failed to revalidate ${name} cache.`,
-    payload: { uid, tags: [strapiCacheTag(uid)] },
+    // Built inline rather than via the shared `strapiCacheTag`: this runs in
+    // the Vite-built admin bundle, which cannot consume @repo/shared-data's
+    // CommonJS build as ESM named imports. The revalidate service re-derives
+    // and dedupes this canonical tag server-side anyway.
+    payload: { uid, tags: [`strapi:${uid}`] },
   })
 
 const REVALIDATE_CONFIG: Record<
