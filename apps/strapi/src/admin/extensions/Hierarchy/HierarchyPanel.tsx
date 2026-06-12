@@ -121,22 +121,20 @@ function HierarchyPanel() {
 
   return (
     <Flex direction="column" alignItems="stretch" gap={2} width="100%">
+      {/* Separates this custom section from the default Strapi sidebar above */}
+      <Divider width="100%" />
+
       <Typography variant="sigma" textColor="neutral600">
-        Pending fullPath changes ({changes.length})
+        Page hierarchy
       </Typography>
 
-      {changes.length === 0 ? (
-        <Typography variant="pi" textColor="neutral600">
-          All fullPaths are up to date.
-        </Typography>
-      ) : (
-        changes.map((change) => (
-          <ChangeRow
-            key={`${change.documentId}-${change.locale}`}
-            change={change}
-          />
-        ))
-      )}
+      <Typography variant="pi" textColor="neutral600">
+        {changes.length === 0
+          ? "All full paths are up to date."
+          : `Pending ${changes.length} full path ${
+              changes.length === 1 ? "change" : "changes"
+            }`}
+      </Typography>
 
       <Button
         variant="secondary"
