@@ -5,7 +5,12 @@ import { errors } from "@strapi/utils"
 import type { LifecycleEventType } from "../../../types/internals"
 import { PAGES_HIERARCHY_ENABLED } from "../constants"
 import { getOldPublishedDocument } from "./helpers"
-import type { CreateRedirectPayload, HierarchicalDocumentType } from "./types"
+import type {
+  CreateRedirectPayload,
+  FullPathChange,
+  HierarchicalDocumentType,
+  HierarchyPageNode,
+} from "./types"
 
 const { ValidationError } = errors
 
@@ -229,4 +234,77 @@ export const processCreateRedirectJob = async (
   })
 
   return { source: payload.oldPath }
+}
+
+/**
+ * Computes which pages need a new fullPath by comparing the stored fullPath
+ * with the one derived from the parent chain (parent fullPath + own slug).
+ *
+ * Pure function over one locale's published pages. Pages whose stored
+ * fullPath already matches produce no change; pages without a previous
+ * fullPath (newly published) produce a change without a redirect.
+ */
+export function computeFullPathChanges(
+  pages: HierarchyPageNode[]
+): FullPathChange[] {
+  const pagesById = new Map(pages.map((page) => [page.documentId, page]))
+  const expectedFullPaths = new Map<string, string>()
+
+  const getExpectedFullPath = (
+    page: HierarchyPageNode,
+    visited: Set<string>
+  ): string => {
+    const cached = expectedFullPaths.get(page.documentId)
+    if (cached != null) {
+      return cached
+    }
+
+    const parent = page.parentDocumentId
+      ? pagesById.get(page.parentDocumentId)
+      : undefined
+
+    let fullPath: string
+    if (parent && !visited.has(parent.documentId)) {
+      visited.add(parent.documentId)
+      fullPath = normalizePageFullPath([
+        getExpectedFullPath(parent, visited),
+        page.slug,
+      ])
+    } else {
+      // No parent (root page or orphan), parent not published, or a parent
+      // cycle — fall back to the page's own slug, matching the previous
+      // behavior when the `parent` relation did not populate.
+      fullPath = normalizePageFullPath([page.slug])
+    }
+
+    expectedFullPaths.set(page.documentId, fullPath)
+
+    return fullPath
+  }
+
+  const changes: FullPathChange[] = []
+
+  for (const page of pages) {
+    const newFullPath = getExpectedFullPath(page, new Set([page.documentId]))
+
+    if (newFullPath === page.fullPath) {
+      continue
+    }
+
+    changes.push({
+      documentId: page.documentId,
+      locale: page.locale,
+      slug: page.slug,
+      oldFullPath: page.fullPath ?? null,
+      newFullPath,
+      redirect: page.fullPath
+        ? {
+            source: normalizePageFullPath([page.fullPath], page.locale),
+            destination: normalizePageFullPath([newFullPath], page.locale),
+          }
+        : null,
+    })
+  }
+
+  return changes
 }
