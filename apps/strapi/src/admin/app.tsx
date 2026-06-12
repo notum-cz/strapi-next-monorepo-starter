@@ -9,7 +9,7 @@ import "@repo/design-system/styles.css"
 // eslint-disable-next-line import-x/order
 import { defaultCkEditorConfig, simpleCkEditorConfig } from "./ckeditor/configs"
 import DataRevalidate from "./extensions/DataRevalidate"
-import InternalJobs from "./extensions/InternalJobs"
+import Hierarchy from "./extensions/Hierarchy"
 
 export default {
   config: {
@@ -19,10 +19,12 @@ export default {
     },
   },
   async bootstrap(app: StrapiApp) {
-    app.getPlugin("content-manager").injectComponent("listView", "actions", {
-      name: "InternalJobs",
-      Component: InternalJobs,
-    })
+    app
+      .getPlugin("content-manager")
+      .injectComponent("editView", "right-links", {
+        name: "Hierarchy",
+        Component: Hierarchy,
+      })
 
     app
       .getPlugin("content-manager")
