@@ -512,46 +512,6 @@ export interface ApiHierarchyHierarchy extends Struct.SingleTypeSchema {
   }
 }
 
-export interface ApiInternalJobInternalJob extends Struct.CollectionTypeSchema {
-  collectionName: "internal_jobs"
-  info: {
-    displayName: "InternalJob"
-    pluralName: "internal-jobs"
-    singularName: "internal-job"
-  }
-  options: {
-    draftAndPublish: false
-  }
-  attributes: {
-    createdAt: Schema.Attribute.DateTime
-    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
-      Schema.Attribute.Private
-    documentType: Schema.Attribute.String
-    error: Schema.Attribute.String
-    jobType: Schema.Attribute.Enumeration<
-      ["RECALCULATE_FULLPATH", "CREATE_REDIRECT"]
-    > &
-      Schema.Attribute.Required
-    locale: Schema.Attribute.String & Schema.Attribute.Private
-    localizations: Schema.Attribute.Relation<
-      "oneToMany",
-      "api::internal-job.internal-job"
-    > &
-      Schema.Attribute.Private
-    payload: Schema.Attribute.JSON
-    publishedAt: Schema.Attribute.DateTime
-    relatedDocumentId: Schema.Attribute.String
-    slug: Schema.Attribute.String
-    state: Schema.Attribute.Enumeration<["pending", "completed", "failed"]> &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<"pending">
-    targetLocale: Schema.Attribute.String
-    updatedAt: Schema.Attribute.DateTime
-    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
-      Schema.Attribute.Private
-  }
-}
-
 export interface ApiNavbarNavbar extends Struct.SingleTypeSchema {
   collectionName: "navbars"
   info: {
@@ -1260,7 +1220,6 @@ declare module "@strapi/strapi" {
       "admin::user": AdminUser
       "api::footer.footer": ApiFooterFooter
       "api::hierarchy.hierarchy": ApiHierarchyHierarchy
-      "api::internal-job.internal-job": ApiInternalJobInternalJob
       "api::navbar.navbar": ApiNavbarNavbar
       "api::page.page": ApiPagePage
       "api::redirect.redirect": ApiRedirectRedirect

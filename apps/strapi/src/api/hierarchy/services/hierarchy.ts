@@ -2,7 +2,7 @@
  * hierarchy service
  *
  * Computes and applies pending fullPath changes for the page hierarchy.
- * Replaces the legacy internal-job queue: instead of recording jobs in
+ * Replaces the legacy job queue: instead of recording jobs in
  * lifecycles, the pending changes are derived on demand by comparing each
  * published page's stored fullPath with the one calculated from its parent
  * chain. Applying a change updates the page's fullPath and creates the

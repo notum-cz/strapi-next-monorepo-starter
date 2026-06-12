@@ -3,11 +3,6 @@
 // Usually, they are visitable in the frontend through their `fullPath` (URL)
 export type HierarchicalDocumentType = "api::page.page"
 
-export type CreateRedirectPayload = {
-  oldPath: string
-  newPath: string
-}
-
 // Minimal page projection the hierarchy diff works on
 export type HierarchyPageNode = {
   documentId: string

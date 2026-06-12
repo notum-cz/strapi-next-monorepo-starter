@@ -17,13 +17,7 @@ export const getOldPublishedDocument = (
           // Here we need use `connection` and `knex` to get the old published data
           // `strapi.documents` or `strapi.db.query` does not return the old published data here (strapi issue/future)
           .connection("pages")
-          .leftJoin("pages_parent_lnk", "pages.id", "pages_parent_lnk.page_id")
-          .leftJoin(
-            "pages as parent_pages",
-            "pages_parent_lnk.inv_page_id",
-            "parent_pages.id"
-          )
-          .select(["pages.*", "parent_pages.id as parent_id"])
+          .select("pages.*")
           .where("pages.document_id", documentId)
           .whereNotNull("pages.published_at")
           .first()
