@@ -224,7 +224,6 @@ export const processCreateRedirectJob = async (
     data: {
       source: payload.oldPath,
       destination: payload.newPath,
-      permanent: true,
     },
     status: "published",
   })
