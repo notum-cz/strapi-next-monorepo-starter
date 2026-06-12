@@ -483,6 +483,35 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
   }
 }
 
+export interface ApiHierarchyHierarchy extends Struct.SingleTypeSchema {
+  collectionName: "hierarchies"
+  info: {
+    description: "Page hierarchy management: lists pending fullPath changes and applies them together with redirects."
+    displayName: "Hierarchy"
+    pluralName: "hierarchies"
+    singularName: "hierarchy"
+  }
+  options: {
+    draftAndPublish: false
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    lastRecalculationAt: Schema.Attribute.DateTime
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::hierarchy.hierarchy"
+    > &
+      Schema.Attribute.Private
+    publishedAt: Schema.Attribute.DateTime
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+  }
+}
+
 export interface ApiInternalJobInternalJob extends Struct.CollectionTypeSchema {
   collectionName: "internal_jobs"
   info: {
@@ -1230,6 +1259,7 @@ declare module "@strapi/strapi" {
       "admin::transfer-token-permission": AdminTransferTokenPermission
       "admin::user": AdminUser
       "api::footer.footer": ApiFooterFooter
+      "api::hierarchy.hierarchy": ApiHierarchyHierarchy
       "api::internal-job.internal-job": ApiInternalJobInternalJob
       "api::navbar.navbar": ApiNavbarNavbar
       "api::page.page": ApiPagePage
