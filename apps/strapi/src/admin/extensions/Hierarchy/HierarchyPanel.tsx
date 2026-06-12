@@ -1,5 +1,5 @@
 import {
-  Badge,
+  Alert,
   Button,
   Divider,
   Flex,
@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@strapi/design-system"
 import { useFetchClient, useNotification } from "@strapi/strapi/admin"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 type FullPathChange = {
   documentId: string
@@ -18,17 +18,15 @@ type FullPathChange = {
   redirect: { source: string; destination: string } | null
 }
 
+// Locale is conveyed by the selected locale chip, so the row itself omits it.
 function ChangeRow({ change }: { change: FullPathChange }) {
   return (
     <Flex direction="column" alignItems="flex-start" gap={1} width="100%">
-      <Flex gap={2}>
-        <Badge>{change.locale}</Badge>
-        <Typography variant="pi" fontWeight="bold">
-          {change.slug}
-        </Typography>
-      </Flex>
+      <Typography variant="pi" fontWeight="bold">
+        {change.slug}
+      </Typography>
       <Typography variant="pi" textColor="neutral800">
-        {(change.oldFullPath ?? "(new page)") + " → " + change.newFullPath}
+        {`Fullpath: ${change.oldFullPath ?? "(new page)"} → ${change.newFullPath}`}
       </Typography>
       <Typography variant="pi" textColor="neutral600">
         {change.redirect
@@ -44,6 +42,9 @@ function HierarchyPanel() {
   const [changes, setChanges] = useState<FullPathChange[] | null>(null) // null = loading
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
+  // Locale chips act as toggles filtering which changes the modal lists; all
+  // locales are shown by default.
+  const [selectedLocales, setSelectedLocales] = useState<Set<string>>(new Set())
   const { toggleNotification } = useNotification()
   // `useFetchClient` (unlike `getFetchClient`) memoizes the client, so `get`
   // is referentially stable and the mount effect below runs only once.
@@ -115,6 +116,38 @@ function HierarchyPanel() {
     }
   }
 
+  // Group changes by locale so the confirmation modal can render one chip per
+  // locale with its change count.
+  const changesByLocale = useMemo(() => {
+    const grouped = new Map<string, FullPathChange[]>()
+    for (const change of changes ?? []) {
+      const localeChanges = grouped.get(change.locale) ?? []
+      localeChanges.push(change)
+      grouped.set(change.locale, localeChanges)
+    }
+
+    return [...grouped.entries()]
+  }, [changes])
+
+  const openModal = () => {
+    // Reset the locale filter to "all selected" each time the modal opens.
+    setSelectedLocales(new Set((changes ?? []).map((change) => change.locale)))
+    setIsModalOpen(true)
+  }
+
+  const toggleLocale = (locale: string) => {
+    setSelectedLocales((prev) => {
+      const next = new Set(prev)
+      if (next.has(locale)) {
+        next.delete(locale)
+      } else {
+        next.add(locale)
+      }
+
+      return next
+    })
+  }
+
   if (changes === null) {
     return null
   }
@@ -140,7 +173,7 @@ function HierarchyPanel() {
         variant="secondary"
         fullWidth
         disabled={changes.length === 0}
-        onClick={() => setIsModalOpen(true)}
+        onClick={openModal}
       >
         Update hierarchy
       </Button>
@@ -161,18 +194,39 @@ function HierarchyPanel() {
           <Modal.Body>
             <Flex direction="column" alignItems="stretch" gap={4}>
               <Typography>
-                The following {changes.length} change(s) will be applied. Each
-                page gets a new fullPath and a redirect from the old path is
-                created and published. This may take some time and affect Strapi
-                performance.
+                The following changes will be applied. Each page gets a new
+                fullPath and a redirect from the old path is created and
+                published.
               </Typography>
-              <Flex direction="column" alignItems="stretch" gap={2}>
-                {changes.map((change) => (
-                  <ChangeRow
-                    key={`modal-${change.documentId}-${change.locale}`}
-                    change={change}
-                  />
+
+              <Alert variant="warning" closeLabel="Dismiss">
+                This may take some time and affect Strapi performance.
+              </Alert>
+
+              <Flex gap={1} wrap="wrap">
+                {changesByLocale.map(([locale, localeChanges]) => (
+                  <Button
+                    key={locale}
+                    size="S"
+                    variant={
+                      selectedLocales.has(locale) ? "secondary" : "tertiary"
+                    }
+                    onClick={() => toggleLocale(locale)}
+                  >
+                    {`${locale.toUpperCase()} (${localeChanges.length})`}
+                  </Button>
                 ))}
+              </Flex>
+
+              <Flex direction="column" alignItems="stretch" gap={2}>
+                {changes
+                  .filter((change) => selectedLocales.has(change.locale))
+                  .map((change) => (
+                    <ChangeRow
+                      key={`modal-${change.documentId}-${change.locale}`}
+                      change={change}
+                    />
+                  ))}
               </Flex>
             </Flex>
           </Modal.Body>

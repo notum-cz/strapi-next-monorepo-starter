@@ -12,11 +12,8 @@
 import { factories } from "@strapi/strapi"
 
 import { PAGES_HIERARCHY_ENABLED } from "../../../utils/constants"
-import { computeFullPathChanges } from "../../../utils/hierarchy"
-import type {
-  FullPathChange,
-  HierarchyPageNode,
-} from "../../../utils/hierarchy/types"
+import { computeFullPathChanges } from "../utils"
+import type { FullPathChange, HierarchyPageNode } from "../utils/types"
 
 const PAGE_BATCH_SIZE = 500
 

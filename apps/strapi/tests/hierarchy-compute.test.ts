@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 
-import { computeFullPathChanges } from "../src/utils/hierarchy"
-import type { HierarchyPageNode } from "../src/utils/hierarchy/types"
+import { computeFullPathChanges } from "../src/api/hierarchy/utils"
+import type { HierarchyPageNode } from "../src/api/hierarchy/utils/types"
 
 const page = (
   overrides: Partial<HierarchyPageNode> & { documentId: string; slug: string }

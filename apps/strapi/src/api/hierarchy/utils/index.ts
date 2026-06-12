@@ -1,14 +1,14 @@
 import { normalizePageFullPath, ROOT_PAGE_PATH } from "@repo/shared-data"
+import type { Modules } from "@strapi/strapi"
 import { errors } from "@strapi/utils"
 
-import type { LifecycleEventType } from "../../../types/internals"
-import { PAGES_HIERARCHY_ENABLED } from "../constants"
-import { getOldPublishedDocument } from "./helpers"
 import type {
   FullPathChange,
   HierarchicalDocumentType,
   HierarchyPageNode,
 } from "./types"
+import type { LifecycleEventType } from "../../../../types/internals"
+import { PAGES_HIERARCHY_ENABLED } from "../../../utils/constants"
 
 const { ValidationError } = errors
 
@@ -54,6 +54,29 @@ export async function handleHierarchyBeforeCreate(
     throw new ValidationError(
       `The slug '${ROOT_PAGE_PATH}' is reserved for the root page and cannot be changed.`
     )
+  }
+}
+
+/**
+ * Retrieves the old (currently) published version of document by its documentId.
+ */
+export const getOldPublishedDocument = (
+  documentType: HierarchicalDocumentType,
+  documentId: Modules.Documents.ID
+) => {
+  // eslint-disable-next-line sonarjs/no-small-switch
+  switch (documentType) {
+    case "api::page.page":
+      return (
+        strapi.db
+          // Here we need use `connection` and `knex` to get the old published data
+          // `strapi.documents` or `strapi.db.query` does not return the old published data here (strapi issue/future)
+          .connection("pages")
+          .select("pages.*")
+          .where("pages.document_id", documentId)
+          .whereNotNull("pages.published_at")
+          .first()
+      )
   }
 }
 

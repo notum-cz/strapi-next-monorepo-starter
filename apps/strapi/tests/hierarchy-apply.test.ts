@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import serviceFactory from "../src/api/hierarchy/services/hierarchy"
-import type { FullPathChange } from "../src/utils/hierarchy/types"
+import type { FullPathChange } from "../src/api/hierarchy/utils/types"
 
 const CHANGES: FullPathChange[] = [
   {

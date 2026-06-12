@@ -1,5 +1,5 @@
 import type { LifecycleEventType } from "../../../../../types/internals"
-import { handleHierarchyBeforeCreate } from "../../../../utils/hierarchy"
+import { handleHierarchyBeforeCreate } from "../../../hierarchy/utils"
 
 export default {
   async beforeCreate(event: LifecycleEventType<"beforeCreate">) {
