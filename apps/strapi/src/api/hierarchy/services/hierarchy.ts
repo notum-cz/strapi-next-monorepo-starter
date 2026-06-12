@@ -36,7 +36,7 @@ export default factories.createCoreService(
           status: "published",
           locale,
           fields: ["slug", "fullPath"],
-          populate: { parent: { fields: ["slug"] } },
+          populate: { parent: { fields: ["documentId"] } },
           start,
           limit: PAGE_BATCH_SIZE,
         })
@@ -116,8 +116,23 @@ export default factories.createCoreService(
             },
             status: "published",
           })
+        } catch (error) {
+          failed.push({ change, error: (error as Error).message })
+          strapi.log.error(
+            `Hierarchy: failed to apply change for ${change.documentId} (${change.locale}): ${(error as Error).message}`
+          )
+          continue
+        }
 
-          if (change.redirect) {
+        // The page is live under the new path from this point on — revalidate
+        // it even if the redirect creation below fails.
+        const localePaths =
+          fullPathsByLocale.get(change.locale) ?? new Set<string>()
+        localePaths.add(change.newFullPath)
+        fullPathsByLocale.set(change.locale, localePaths)
+
+        if (change.redirect) {
+          try {
             await strapi.documents("api::redirect.redirect").create({
               data: {
                 source: change.redirect.source,
@@ -126,23 +141,25 @@ export default factories.createCoreService(
               status: "published",
             })
             redirectSources.add(change.redirect.source)
+          } catch (error) {
+            // The fullPath update already succeeded and pending changes are
+            // derived from stored state, so a re-run won't recreate this
+            // redirect — report it so it can be created manually.
+            failed.push({
+              change,
+              error: `fullPath was updated but creating the redirect failed: ${(error as Error).message}`,
+            })
+            strapi.log.error(
+              `Hierarchy: failed to create redirect ${change.redirect.source} -> ${change.redirect.destination}: ${(error as Error).message}`
+            )
+            continue
           }
-
-          const localePaths =
-            fullPathsByLocale.get(change.locale) ?? new Set<string>()
-          localePaths.add(change.newFullPath)
-          fullPathsByLocale.set(change.locale, localePaths)
-
-          applied.push(change)
-          strapi.log.info(
-            `Hierarchy: fullPath of ${change.documentId} (${change.locale}) updated to ${change.newFullPath}`
-          )
-        } catch (error) {
-          failed.push({ change, error: (error as Error).message })
-          strapi.log.error(
-            `Hierarchy: failed to apply change for ${change.documentId} (${change.locale}): ${(error as Error).message}`
-          )
         }
+
+        applied.push(change)
+        strapi.log.info(
+          `Hierarchy: fullPath of ${change.documentId} (${change.locale}) updated to ${change.newFullPath}`
+        )
       }
 
       // Revalidate each locale independently so a single failing path set
@@ -163,6 +180,8 @@ export default factories.createCoreService(
         })
       }
 
+      // Stamped on every run (even a no-op one): it records when the
+      // recalculation last ran, not when changes were last applied.
       await this.stampLastRecalculation()
 
       return { applied, failed }

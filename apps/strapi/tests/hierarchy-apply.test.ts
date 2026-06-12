@@ -163,6 +163,62 @@ describe("hierarchy applyPendingChanges", () => {
     })
   })
 
+  it("still revalidates the new path when only the redirect creation fails", async () => {
+    const redirectCreate = vi
+      .fn()
+      .mockRejectedValueOnce(new Error("redirect boom"))
+      .mockResolvedValue({})
+    const { service, revalidateRun } = buildService({ redirectCreate })
+    vi.spyOn(service, "getPendingChanges").mockResolvedValue(CHANGES as never)
+
+    const result = (await service.applyPendingChanges()) as {
+      applied: FullPathChange[]
+      failed: { change: FullPathChange; error: string }[]
+    }
+
+    expect(result.failed).toEqual([
+      {
+        change: CHANGES[0],
+        error:
+          "fullPath was updated but creating the redirect failed: redirect boom",
+      },
+    ])
+    expect(result.applied).toHaveLength(2)
+    // the successfully updated page is still revalidated
+    expect(revalidateRun).toHaveBeenCalledWith({
+      uid: "api::page.page",
+      locale: "en",
+      fullPaths: ["/page-b", "/page-b/page-child"],
+    })
+  })
+
+  it("paginates through pages in batches of 500", async () => {
+    const fullBatch = Array.from({ length: 500 }, (_, index) => ({
+      documentId: `page-${index}`,
+      slug: `slug-${index}`,
+      fullPath: `/slug-${index}`,
+      parent: null,
+    }))
+    const pageFindMany = vi
+      .fn()
+      .mockResolvedValueOnce(fullBatch)
+      .mockResolvedValueOnce([])
+    const { service } = buildService({ pageFindMany })
+
+    const pages = (await service.listPublishedPages("en")) as unknown[]
+
+    expect(pages).toHaveLength(500)
+    expect(pageFindMany).toHaveBeenCalledTimes(2)
+    expect(pageFindMany).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({ start: 0, limit: 500 })
+    )
+    expect(pageFindMany).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({ start: 500, limit: 500 })
+    )
+  })
+
   it("computes pending changes from published pages of every locale", async () => {
     const pageFindMany = vi.fn(async ({ locale }: { locale: string }) =>
       locale === "en"
