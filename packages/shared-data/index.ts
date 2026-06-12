@@ -33,9 +33,11 @@ export const normalizePageFullPath = (
   locale?: string | null
 ) => {
   const filteredPaths = paths.filter(Boolean) as string[]
-  const fullPath = [ROOT_PAGE_PATH, ...filteredPaths]
+  const rawPath = [ROOT_PAGE_PATH, ...filteredPaths]
     .join("/")
     .replaceAll(/\/+/g, "/")
+  // Strip trailing slash except for the root path itself
+  const fullPath = rawPath !== "/" ? rawPath.replace(/\/$/, "") : rawPath
 
   if (locale) {
     // make sure not to add same locale twice

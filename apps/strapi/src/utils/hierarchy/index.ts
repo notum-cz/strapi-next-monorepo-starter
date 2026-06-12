@@ -291,18 +291,23 @@ export function computeFullPathChanges(
       continue
     }
 
+    let redirect: FullPathChange["redirect"] = null
+    if (page.fullPath) {
+      const source = normalizePageFullPath([page.fullPath], page.locale)
+      const destination = normalizePageFullPath([newFullPath], page.locale)
+
+      // A redirect pointing to itself (e.g. the stored fullPath only differed
+      // in normalization) would be useless, so skip it.
+      redirect = source === destination ? null : { source, destination }
+    }
+
     changes.push({
       documentId: page.documentId,
       locale: page.locale,
       slug: page.slug,
       oldFullPath: page.fullPath ?? null,
       newFullPath,
-      redirect: page.fullPath
-        ? {
-            source: normalizePageFullPath([page.fullPath], page.locale),
-            destination: normalizePageFullPath([newFullPath], page.locale),
-          }
-        : null,
+      redirect,
     })
   }
 

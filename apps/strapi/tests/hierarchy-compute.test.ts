@@ -159,6 +159,24 @@ describe("computeFullPathChanges", () => {
     expect(computeFullPathChanges(pages)[0]?.newFullPath).toBe("/orphan")
   })
 
+  it("emits no redirect when the change is only path normalization", () => {
+    const pages = [
+      page({ documentId: "root", slug: "/", fullPath: "/" }),
+      page({
+        documentId: "p",
+        slug: "page-a",
+        fullPath: "/page-a/",
+        parentDocumentId: "root",
+      }),
+    ]
+
+    const changes = computeFullPathChanges(pages)
+
+    expect(changes).toHaveLength(1)
+    expect(changes[0]?.newFullPath).toBe("/page-a")
+    expect(changes[0]?.redirect).toBeNull()
+  })
+
   it("does not hang on a parent cycle", () => {
     const pages = [
       page({
