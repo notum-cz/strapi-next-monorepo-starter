@@ -144,7 +144,7 @@ function HierarchyPanel() {
         disabled={changes.length === 0}
         onClick={() => setIsModalOpen(true)}
       >
-        Recalculate fullPaths &amp; create redirects
+        Update hierarchy
       </Button>
 
       <Modal.Root

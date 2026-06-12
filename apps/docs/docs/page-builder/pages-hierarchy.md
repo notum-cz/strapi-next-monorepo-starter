@@ -36,7 +36,7 @@ These auto-created entries are ordinary records in the **Redirect** collection. 
 
 2. The **Hierarchy** single type in the admin panel lists all pending fullPath changes. The list is computed on demand by comparing every published page's stored `fullPath` with the one calculated from its parents' slugs — including all children of a moved or renamed page, in every locale.
 
-3. Clicking **"Recalculate fullPaths & create redirects"** opens a confirmation dialog with every change that will be applied: the old path, the new path, and the redirect that will be created. After confirming, the system:
+3. Clicking **"Update hierarchy"** opens a confirmation dialog with every change that will be applied: the old path, the new path, and the redirect that will be created. After confirming, the system:
    - updates each affected page's published `fullPath` (as a system write, so no further lifecycle cascades are triggered),
    - creates and publishes a redirect (`api::redirect.redirect`) from the old path to the new path for every page that had a previous path — redirects are locale-aware, their `source` and `destination` include the locale prefix,
    - revalidates the frontend cache for all touched paths and redirect sources in one batch,
@@ -52,7 +52,7 @@ We want to change the slug of a page from `page-a` to `page-b` in `en` locale. T
 
 2. Open the **Hierarchy** single type in the admin panel. The pending changes panel shows both affected pages (`/page-a` → `/page-b` and `/page-a/page-child` → `/page-b/page-child`).
 
-3. Click **"Recalculate fullPaths & create redirects"**, review the listed changes in the dialog, and confirm.
+3. Click **"Update hierarchy"**, review the listed changes in the dialog, and confirm.
 
 4. Verify that the page has new `fullPath` and its child page (`page-child`) has updated `fullPath` as well.
 
@@ -88,7 +88,7 @@ Do one change at a time (e.g. change slug of one page, recalculate, verify resul
 
 - Recalculation and redirect creation are tied together and always run as one action. During development or before going live, redirects created by recalculation can be deleted from the **Redirect** collection afterwards.
 
-- If applying some change fails (e.g. a `fullPath` uniqueness conflict), the rest of the batch still proceeds; failures are reported in the admin notification and logged by Strapi. Re-open the Hierarchy single type and run the recalculation again — changes that did not get applied are still listed as pending.
+- If applying some change fails (e.g. a `fullPath` uniqueness conflict), the rest of the batch still proceeds; failures are reported in the admin notification and logged by Strapi. Re-open the Hierarchy single type and run the recalculation again — changes that did not get applied are still listed as pending. The one exception: if the `fullPath` update succeeded and only the redirect creation failed, the change won't reappear as pending — create that redirect manually in the **Redirect** collection (the Strapi log contains its source and destination).
 
 - You can't change `/` slug from admin panel. The change requires update on the code level.
 
