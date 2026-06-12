@@ -52,8 +52,9 @@ export const registerAutoRevalidateMiddleware = ({
     const params = toRecord(context.params) ?? {}
     const data = toRecord(params.data)
 
-    // Internal hierarchy jobs write documents with `updatedBy: null`.
-    // Skip middleware-level revalidation to avoid duplicate calls.
+    // The hierarchy recalculation writes documents with `updatedBy: null`.
+    // Skip middleware-level revalidation to avoid duplicate calls — the
+    // hierarchy service revalidates the touched paths once per batch.
     if (
       (context.action === "create" || context.action === "update") &&
       data?.updatedBy === null

@@ -44,7 +44,7 @@ To add a redirect by hand:
 
 ## Automatically created redirects
 
-When a page's `slug` or `parent` changes, its `fullPath` (and its children's) changes too, so the old URLs must redirect to the new ones. The page hierarchy flow creates these `api::redirect.redirect` entries for you, locale-aware, via internal jobs. See [Pages Hierarchy](../page-builder/pages-hierarchy#full-path-generation-and-redirects) for the slug/parent change workflow and how to trigger it.
+When a page's `slug` or `parent` changes, its `fullPath` (and its children's) changes too, so the old URLs must redirect to the new ones. The page hierarchy flow creates these `api::redirect.redirect` entries for you, locale-aware, via the **Update hierarchy** action in the Hierarchy single type. See [Pages Hierarchy](../page-builder/pages-hierarchy#full-path-generation-and-redirects) for the slug/parent change workflow and how to trigger it.
 
 ## Cache revalidation
 
