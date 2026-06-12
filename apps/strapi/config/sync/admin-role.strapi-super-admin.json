@@ -152,6 +152,15 @@
       "locale": null
     },
     {
+      "action": "plugin::content-manager.explorer.publish",
+      "actionParameters": {},
+      "subject": "api::hierarchy.hierarchy",
+      "properties": {},
+      "conditions": [],
+      "documentId": "gvzr68moobn6lejvgzg4jmau",
+      "locale": null
+    },
+    {
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
       "subject": "api::hierarchy.hierarchy",
