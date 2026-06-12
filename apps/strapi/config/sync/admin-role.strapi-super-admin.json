@@ -481,7 +481,6 @@
         "fields": [
           "source",
           "destination",
-          "permanent",
           "page"
         ]
       },
@@ -515,7 +514,6 @@
         "fields": [
           "source",
           "destination",
-          "permanent",
           "page"
         ]
       },
@@ -531,7 +529,6 @@
         "fields": [
           "source",
           "destination",
-          "permanent",
           "page"
         ]
       },

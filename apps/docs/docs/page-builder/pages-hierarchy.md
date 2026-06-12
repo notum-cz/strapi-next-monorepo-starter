@@ -30,6 +30,8 @@ Because the `fullPath` is generated automatically, it should never be edited man
 
 When the `fullPath` of a page is changed (because its `slug` or `parent` was changed), a redirect from the old `fullPath` to the new `fullPath` is automatically created. This is done using internal jobs (see below) and requires manual triggering of the jobs in the admin panel. Any other change (e.g. in `children` relation) doesn't affect this process.
 
+These auto-created entries are ordinary records in the **Redirect** collection. See [CMS Redirects](../strapi/cms-redirects) for how redirects are stored and served on the frontend, and how to author one manually.
+
 ### How it works
 
 1. Every time the published page changes the `slug` or `parent` relation field a new internal job (`api::internal-job.internal-job`) is created to regenerate the `fullPath` field. It has `jobType` set to `RECALCULATE_FULLPATH` and `state` set to `pending` (see "Internal Jobs" content type in admin panel).
@@ -102,3 +104,4 @@ Do one change at a time (e.g. change slug of one page, trigger jobs, verify resu
 ## Related Documentation
 
 - [Page Builder](./introduction.md) — Page Builder specific documentation
+- [CMS Redirects](../strapi/cms-redirects) — how the redirects created here are stored and served on the frontend

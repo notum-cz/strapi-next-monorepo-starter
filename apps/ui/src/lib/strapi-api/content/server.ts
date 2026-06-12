@@ -208,3 +208,37 @@ export async function fetchFooter(locale: Locale) {
     })
   }
 }
+
+// ------ Redirect fetching functions
+
+export async function fetchRedirects() {
+  try {
+    // fetchAll paginates through every page — a redirect list capped at one
+    // page would silently drop redirects beyond the page size (easy to hit
+    // after a site migration).
+    const response = await PublicStrapiClient.fetchAll(
+      "api::redirect.redirect",
+      {
+        status: "published",
+      },
+      {
+        // Redirects are cached in-process by `src/lib/redirects.ts`. Avoid
+        // stacking Next's Data Cache underneath it, because proxy refreshes
+        // should decide freshness from the local stale-while-refresh cache.
+        cache: "no-store",
+      }
+    )
+
+    return response.data
+  } catch (e: unknown) {
+    logNonBlockingError({
+      message: "Error fetching redirects",
+      error: {
+        error: e instanceof Error ? e.message : String(e),
+        stack: e instanceof Error ? e.stack : undefined,
+      },
+    })
+
+    return []
+  }
+}

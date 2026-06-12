@@ -17,10 +17,6 @@
     "destination": {
       "type": "string",
       "required": true
-    },
-    "permanent": {
-      "type": "boolean",
-      "default": false
     }
   }
 }

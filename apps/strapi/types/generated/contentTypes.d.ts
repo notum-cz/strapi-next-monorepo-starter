@@ -678,7 +678,6 @@ export interface ApiRedirectRedirect extends Struct.CollectionTypeSchema {
       "api::redirect.redirect"
     > &
       Schema.Attribute.Private
-    permanent: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>
     publishedAt: Schema.Attribute.DateTime
     source: Schema.Attribute.String & Schema.Attribute.Required
     updatedAt: Schema.Attribute.DateTime

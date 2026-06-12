@@ -36,7 +36,7 @@ Shared code lives in [`packages/*`](../reference/packages/overview.md).
 - **[Caching defaults](../ui/caching.md)** — Strapi responses cache, Next.js page cache, ISR, and static export tradeoffs are documented.
 - **[Cache revalidation](../reference/cache-revalidation.md)** — Strapi publish/update/delete events can invalidate affected Next.js paths and shared data tags.
 - **[CDN cache purge](../reference/integrations/cdn.md)** — optional operator-triggered CDN eviction is available for urgent cache updates.
-- **[Next proxies](../ui/next-proxies.md)** — controlled proxy middleware handles locale redirects, HTTPS redirects, basic auth, and auth guards.
+- **[Next proxies](../ui/next-proxies.md)** — controlled proxy middleware handles locale redirects, HTTPS redirects, Strapi-defined redirects, basic auth, and auth guards.
 - **[SEO helpers](../ui/seo.md)** — metadata, sitemap, robots, canonical URLs, and structured data are generated from content.
 - **[Image handling](../ui/images.md)** — Strapi media helpers and optional imgproxy support are included.
 - **[Environment variables](../ui/environment-variables.md)** — runtime config, CSR env injection, public variables, and debug flags are documented.
@@ -48,6 +48,7 @@ Shared code lives in [`packages/*`](../reference/packages/overview.md).
 - **[Local setup](../strapi/installation.md)** — PostgreSQL runs through Docker for development.
 - **[Schema conventions](../strapi/strapi-schemas.md)** — content types, components, relations, lifecycle hooks, and document middlewares are documented.
 - **[Generated Strapi types](../reference/packages/strapi-types.md)** — schema-generated types are shared with the UI.
+- **[CMS redirects](../strapi/cms-redirects.md)** — editors manage `source` → `destination` redirects as content; the UI proxy applies them, and page moves create them automatically.
 - **Rich text editors** — [CKEditor](../strapi/plugins/ckeditor.md) and [Tiptap](../strapi/plugins/tiptap-editor.md) editor integrations are documented.
 - **[Upload providers](../strapi/plugins/upload-providers.md)** — local storage, Azure Blob Storage, and AWS S3 are supported.
 - **[Email providers](../strapi/plugins/email-providers.md)** — Mailgun production email and Mailtrap development email are wired through Strapi provider config.
@@ -74,15 +75,3 @@ Shared code lives in [`packages/*`](../reference/packages/overview.md).
 - **[Deployment](../reference/deployment/overview.md)** — GitHub Actions, Heroku, Vercel, and Docker deployment notes are documented.
 - **[Design system](../design-system/overview.md)** — shared tokens, typography, rich text styling, and CMS component design rules are documented.
 - **Integrations** — [Sentry](../reference/integrations/sentry.md), [reCAPTCHA](../reference/integrations/recaptcha.md), and [CDN / Azure Front Door](../reference/integrations/cdn.md) setup have dedicated reference pages.
-
-## Related Documentation
-
-- [Page Builder](../page-builder/introduction.md)
-- [UI Project Structure](../ui/project-structure.md)
-- [Strapi Plugins](../strapi/plugins/overview.md)
-- [Internationalization](../reference/internationalization.md)
-- [Testing](../reference/testing/overview.md)
-- [Packages](../reference/packages/overview.md)
-- [Deployment](../reference/deployment/overview.md)
-- [Cache Revalidation](../reference/cache-revalidation.md)
-- [CDN](../reference/integrations/cdn.md)

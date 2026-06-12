@@ -6,6 +6,7 @@ import { authGuard } from "@/lib/proxies/authGuard"
 import { basicAuth } from "@/lib/proxies/basicAuth"
 import { dynamicRewrite } from "@/lib/proxies/dynamicRewrite"
 import { httpsRedirect } from "@/lib/proxies/httpsRedirect"
+import { redirectsProxy } from "@/lib/proxies/redirects"
 import { withSecurityHeaders } from "@/lib/proxies/securityHeaders"
 
 // https://next-intl-docs.vercel.app/docs/getting-started/app-router
@@ -18,6 +19,7 @@ const proxies: ((
 ) => NextResponse | null | Promise<NextResponse | null>)[] = [
   basicAuth,
   httpsRedirect,
+  redirectsProxy,
   (req) => authGuard(req, intlProxy),
   (req) => dynamicRewrite(req, intlProxy),
 ]
