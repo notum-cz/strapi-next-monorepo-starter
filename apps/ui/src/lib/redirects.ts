@@ -101,7 +101,17 @@ export function buildRedirectDestinationUrl(
   destination: string,
   defaultLocale?: string
 ) {
-  const destinationUrl = new URL(destination, currentUrl.origin)
+  // Editors type `destination` by hand and some malformed values (e.g.
+  // "https://" or a host containing a space) make the URL constructor throw.
+  // One bad record must not take down the proxy for the matching path.
+  let destinationUrl: URL
+  try {
+    destinationUrl = new URL(destination, currentUrl.origin)
+  } catch {
+    console.error("[redirects] Invalid redirect destination:", destination)
+
+    return null
+  }
 
   if (destinationUrl.origin !== currentUrl.origin) {
     return null

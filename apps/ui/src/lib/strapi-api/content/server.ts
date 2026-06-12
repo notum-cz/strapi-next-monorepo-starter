@@ -239,6 +239,9 @@ export async function fetchRedirects() {
       },
     })
 
-    return []
+    // Rethrow instead of returning [] — the redirect cache must distinguish
+    // "no redirects exist" from "Strapi unreachable". An empty list here would
+    // be cached and wipe the last known good redirects for a full TTL.
+    throw e instanceof Error ? e : new Error(String(e))
   }
 }

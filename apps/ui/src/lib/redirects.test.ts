@@ -50,6 +50,19 @@ describe("redirect helpers", () => {
     expect(destination?.href).toBe("https://www.test/en/new-page?from=strapi")
   })
 
+  it("returns null for malformed destination URLs instead of throwing", () => {
+    // Note: most garbage strings ("not a url", "ht!tp://x") resolve as
+    // relative paths against the origin; only these shapes actually throw.
+    for (const malformed of ["https://", "http://exa mple.com/page", "//"]) {
+      const destination = buildRedirectDestinationUrl(
+        new URL("https://www.test/old-page"),
+        malformed
+      )
+
+      expect(destination).toBeNull()
+    }
+  })
+
   it("rejects external destinations", () => {
     const destination = buildRedirectDestinationUrl(
       new URL("https://www.test/en/old-page?utm=test"),
@@ -188,6 +201,40 @@ describe("redirect helpers", () => {
       }
     )
     expect(fetchManyMock).toHaveBeenCalledTimes(2)
+  })
+
+  it("keeps serving the last known redirects when a refresh fails", async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(0)
+
+    fetchManyMock
+      .mockResolvedValueOnce([
+        {
+          source: "/en/old-page",
+          destination: "/en/new-page",
+        },
+      ])
+      .mockRejectedValue(new Error("Strapi unavailable"))
+
+    await findRedirectForPath("/old-page", "en")
+
+    vi.setSystemTime(5 * 60 * 1000 + 1)
+
+    // Stale hit triggers a background refresh that fails; let it settle, then
+    // verify the failure did not replace the cached list with an empty one.
+    await expect(findRedirectForPath("/old-page", "en")).resolves.toMatchObject(
+      {
+        destination: "/en/new-page",
+      }
+    )
+    await Promise.resolve()
+    await Promise.resolve()
+
+    await expect(findRedirectForPath("/old-page", "en")).resolves.toMatchObject(
+      {
+        destination: "/en/new-page",
+      }
+    )
   })
 
   it("continues with no redirect when an expired-cache miss refresh fails", async () => {
