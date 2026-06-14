@@ -67,12 +67,12 @@ grep -rn "cdn-purge\|purgeCdn\|purgeCDNCache\|CdnCacheWidget\|@/lib/cdn\|cdn-cac
 
 pnpm -F @repo/strapi exec tsc --noEmit
 pnpm -F @repo/ui exec tsc --noEmit
-pnpm -F @repo/strapi exec vitest run tests/revalidate.test.ts tests/internal-job-revalidate.test.ts
+pnpm -F @repo/strapi exec vitest run tests/revalidate.test.ts tests/hierarchy-revalidate.test.ts
 pnpm -F @repo/ui exec vitest run src/app/api/strapi-revalidate/route.test.ts src/lib/cache-paths.test.ts
 pnpm -F @repo/docs build
 ```
 
-All typechecks/tests/build must pass. The core revalidation tests (`revalidate.test.ts`, `internal-job-revalidate.test.ts`, `strapi-revalidate/route.test.ts`, `cache-paths.test.ts`) must still be green — confirming core revalidation survived.
+All typechecks/tests/build must pass. The core revalidation tests (`revalidate.test.ts`, `hierarchy-revalidate.test.ts`, `strapi-revalidate/route.test.ts`, `cache-paths.test.ts`) must still be green — confirming core revalidation survived.
 
 ### 8. Commit
 

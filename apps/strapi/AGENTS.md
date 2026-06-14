@@ -57,21 +57,20 @@ Full workflow: [Page Builder docs](../docs/docs/content-system/page-builder.md#a
 
 ## Page Hierarchy
 
-Pages use parent-child relations. `fullPath` is auto-generated via internal jobs.
+Pages use parent-child relations. `fullPath` is recalculated on demand via the Hierarchy single type.
 
 **Key files:**
 
-| File                                            | Purpose                          |
-| ----------------------------------------------- | -------------------------------- |
-| `src/api/page/content-types/page/lifecycles.ts` | Triggers on publish              |
-| `src/utils/hierarchy/index.ts`                  | Job processing logic             |
-| `src/api/internal-job/services/internal-job.ts` | Job queue service                |
-| `src/utils/constants.ts`                        | `PAGES_HIERARCHY_ENABLED` toggle |
+| File                                            | Purpose                           |
+| ----------------------------------------------- | --------------------------------- |
+| `src/api/page/content-types/page/lifecycles.ts` | Root-slug guard (save + publish)  |
+| `src/api/hierarchy/utils/index.ts`              | fullPath diff computation         |
+| `src/api/hierarchy/services/hierarchy.ts`       | Computes/applies fullPath changes |
 
 **Admin endpoints:**
 
-- `POST /api/internal-job/fullpaths/recalculate/all` — Process fullpath jobs
-- `POST /api/internal-job/redirects/create/all` — Create redirect records
+- `GET /api/hierarchy/pending-changes` — List pending fullPath changes
+- `POST /api/hierarchy/recalculate` — Apply changes + create redirects
 
 See [Pages Hierarchy docs](../docs/docs/content-system/pages-hierarchy.md) for content editor workflow.
 

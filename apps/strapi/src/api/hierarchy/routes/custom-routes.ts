@@ -1,17 +1,17 @@
 export default {
   routes: [
     {
-      method: "POST",
-      path: "/internal-job/fullpaths/recalculate/all",
-      handler: "internal-job.runRecalculateFullpathAll",
+      method: "GET",
+      path: "/hierarchy/pending-changes",
+      handler: "hierarchy.pendingChanges",
       config: {
         auth: false, // Strapi-level auth is disabled; admin token is validated in the controller
       },
     },
     {
       method: "POST",
-      path: "/internal-job/redirects/create/all",
-      handler: "internal-job.runCreateRedirectsAll",
+      path: "/hierarchy/recalculate",
+      handler: "hierarchy.recalculate",
       config: {
         auth: false, // Strapi-level auth is disabled; admin token is validated in the controller
       },

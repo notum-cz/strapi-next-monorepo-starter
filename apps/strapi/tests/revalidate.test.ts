@@ -276,7 +276,7 @@ describe("auto revalidate document middleware", () => {
     })
   })
 
-  it("skips duplicate update revalidation from internal hierarchy jobs", async () => {
+  it("skips duplicate update revalidation from hierarchy system writes", async () => {
     const { middleware, runMock } = buildMiddleware()
     const next = vi.fn().mockResolvedValue({ status: "published" })
 

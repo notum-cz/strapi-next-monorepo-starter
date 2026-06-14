@@ -34,11 +34,11 @@ flowchart TD
   nextRequest["Next matching request"]
   freshPage["Freshly rendered UI"]
 
-  internalJob["Internal hierarchy job"]
+  hierarchyRecalc["Hierarchy fullPath recalculation"]
   adminButton["Hidden Revalidate cache action"]
 
   editor --> middleware --> service --> uiEndpoint
-  internalJob --> service
+  hierarchyRecalc --> service
   adminButton --> service
   uiEndpoint --> pathCache
   uiEndpoint --> tagCache
@@ -86,14 +86,14 @@ The document middleware derives its default policy from Strapi Draft & Publish:
 - `draftAndPublish: false` → revalidate every write because saves are immediately public
 
 :::caution Internal writes are skipped by middleware
-Hierarchy jobs write documents with `updatedBy: null`. The document middleware skips those writes to avoid duplicate calls; the internal job runner revalidates the affected paths once per batch instead.
+The hierarchy recalculation writes documents with `updatedBy: null`. The document middleware skips those writes to avoid duplicate calls; the hierarchy service revalidates the affected paths once per batch instead.
 :::
 
 ## Bulk Hierarchy Changes
 
-Moving a page recalculates child `fullPath`s through the `internal-job` queue, which writes with `updatedBy: null`. The document middleware skips those writes to avoid duplicate calls, so the **job runner** (`runAll` in `apps/strapi/src/api/internal-job/services/internal-job.ts`) revalidates the aggregated touched paths once per batch instead.
+Moving a page recalculates child `fullPath`s through the Hierarchy single type action, which writes with `updatedBy: null`. The document middleware skips those writes to avoid duplicate calls, so the **hierarchy service** (`applyPendingChanges` in `apps/strapi/src/api/hierarchy/services/hierarchy.ts`) revalidates the aggregated touched paths once per batch instead.
 
-Redirect-source jobs are also batched. Redirect sources are already locale-prefixed by the redirect job, so the revalidation service sends them without a locale override.
+Redirect sources are also batched. They are already locale-prefixed, so the revalidation service sends them without a locale override.
 
 ## Locale Handling
 

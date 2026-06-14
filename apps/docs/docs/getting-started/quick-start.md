@@ -84,6 +84,8 @@ You should see the seeded landing page rendered through the page-builder. The de
 
 ## Common next steps
 
+[![Launch Strapi + Next.js Monorepo — Live in 5 Minutes](https://img.youtube.com/vi/VZlJZuurUH8/maxresdefault.jpg)](https://www.youtube.com/watch?v=VZlJZuurUH8 "Watch on YouTube")
+
 - **Explore included features** → [Features](./features.md)
 - **Add a new content type** → [Add a New Content Type](./add-content-type.md)
 - **Edit a page-builder component** → [Page Builder](../page-builder/introduction.md)

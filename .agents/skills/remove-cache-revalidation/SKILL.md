@@ -23,7 +23,7 @@ rm -rf apps/strapi/src/admin/extensions/DataRevalidate
 rm -rf apps/strapi/src/admin/widgets/CdnCacheWidget
 rm -f  apps/strapi/tests/revalidate.test.ts
 rm -f  apps/strapi/tests/cdn-cache.test.ts
-rm -f  apps/strapi/tests/internal-job-revalidate.test.ts
+rm -f  apps/strapi/tests/hierarchy-revalidate.test.ts
 
 # UI
 rm -rf apps/ui/src/app/api/strapi-revalidate
@@ -38,7 +38,7 @@ rm -f  apps/docs/docs/reference/cache-revalidation.md
 rm -f  apps/docs/docs/reference/integrations/cdn.md
 ```
 
-Note: `apps/strapi/src/utils/validate-admin-token.ts` is intentionally **not** deleted — the `internal-job` controller also imports it to guard its endpoints, and that feature survives this removal. Removing it would break `apps/strapi/src/api/internal-job/controllers/internal-job.ts`.
+Note: `apps/strapi/src/utils/validate-admin-token.ts` is intentionally **not** deleted — the `hierarchy` controller also imports it to guard its endpoints, and that feature survives this removal. Removing it would break `apps/strapi/src/api/hierarchy/controllers/hierarchy.ts`.
 
 ### 2. Revert edits the feature made to shared files
 
@@ -48,14 +48,9 @@ Note: `apps/strapi/src/utils/validate-admin-token.ts` is intentionally **not** d
 
 - `import DataRevalidate from "./extensions/DataRevalidate"` and the `injectComponent("editView", "right-links", { name: "DataRevalidate", ... })` block.
 - `import { Cloud } from "@strapi/icons"` and the `app.widgets.register({ ... id: "cdn-cache" ... })` block.
-- Keep the pre-existing `injectComponent("listView", "actions", { name: "InternalJobs", ... })` and all other bootstrap logic.
+- Keep the pre-existing `injectComponent("editView", "right-links", { name: "Hierarchy", ... })` and all other bootstrap logic.
 
-**`apps/strapi/src/api/internal-job/services/internal-job.ts`** — revert `runAll` to its original simple form: a `while` loop that, for each pending job, calls the handler, removes the job on success (pushing to `successfulJobs`) or marks it failed (pushing to `failedJobs`), and returns `{ successfulJobs, failedJobs }`. Remove the `fullPathsByLocale`/`redirectSources` aggregation, the capture of handler return values, and the post-loop `strapi.service("api::revalidate.revalidate").run(...)` calls. Leave `enqueueJob`, `getNextJob`, `updateJobStatus`, `removeJob`, and `getJobHandlers` untouched.
-
-**`apps/strapi/src/utils/hierarchy/index.ts`** — revert the two job handlers to return `void`:
-
-- `processRecalculateFullPathJob`: remove the `: Promise<{ fullPath: string; locale: string } | undefined>` return type, the `let touched` declaration and its assignment, and the final `return touched`. Restore the guard clauses to bare `return` (not `return undefined`). Leave the fullPath recalculation, children-enqueue loop, and redirect-job logic intact.
-- `processCreateRedirectJob`: remove the `: Promise<{ source: string } | undefined>` return type and the trailing `return { source: payload.oldPath }`. Restore guards to bare `return`.
+**`apps/strapi/src/api/hierarchy/services/hierarchy.ts`** — strip the revalidation from `applyPendingChanges`: remove the `fullPathsByLocale`/`redirectSources` aggregation, the two post-loop `this.revalidate(...)` call sites, and the `revalidate` method itself. Leave `listPublishedPages`, `getPendingChanges`, the per-change update/redirect-creation loop, and `stampLastRecalculation` untouched.
 
 **`apps/ui/src/lib/strapi-api/content/server.ts`** — revert the cache tagging:
 
@@ -105,4 +100,4 @@ git commit -m "chore: remove cache revalidation feature"
 ## Notes
 
 - Fast path: if the feature was added in a contiguous set of commits with nothing built on top since, `git revert` of those commits is simpler. The manual steps above are the robust path when the feature is intermixed with later work.
-- The internal-job and hierarchy reverts are the most error-prone — after editing, confirm `processRecalculateFullPathJob` still recalculates `fullPath`, enqueues child jobs, and manages redirect jobs exactly as before; you are only removing the touched-path _return values_ and the revalidation calls that consumed them.
+- The hierarchy revert is the most error-prone — after editing, confirm `applyPendingChanges` still updates `fullPath`s and creates redirects exactly as before; you are only removing the aggregation and the revalidation calls that consumed it.

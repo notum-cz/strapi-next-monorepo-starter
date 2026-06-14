@@ -31,13 +31,13 @@
       "locale": null
     },
     {
-      "documentId": "kgxypb8bh6q2prf3iuq7myhx",
-      "action": "plugin::users-permissions.auth.forgotPassword",
+      "documentId": "cloi0j4k1qnnmm762tzc3yss",
+      "action": "plugin::users-permissions.auth.changePassword",
       "locale": null
     },
     {
-      "documentId": "cloi0j4k1qnnmm762tzc3yss",
-      "action": "plugin::users-permissions.auth.changePassword",
+      "documentId": "kgxypb8bh6q2prf3iuq7myhx",
+      "action": "plugin::users-permissions.auth.forgotPassword",
       "locale": null
     },
     {
