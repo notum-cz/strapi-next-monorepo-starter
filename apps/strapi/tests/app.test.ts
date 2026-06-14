@@ -30,6 +30,7 @@ describe("content-type schemas", () => {
       ["navbar", "navbar"],
       ["footer", "footer"],
       ["redirect", "redirect"],
+      ["hierarchy", "hierarchy"],
     ]) {
       expect(readSchema(api, contentType).attributes).toBeTypeOf("object")
     }
