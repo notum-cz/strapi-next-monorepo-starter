@@ -74,4 +74,4 @@ Shared code lives in [`packages/*`](../reference/packages/overview.md).
 - **[Testing and QA](../reference/testing/overview.md)** — Vitest, Playwright, axe, visual tests, SEO checks, and Lighthouse CI are covered.
 - **[Deployment](../reference/deployment/overview.md)** — GitHub Actions, Heroku, Vercel, and Docker deployment notes are documented.
 - **[Design system](../design-system/overview.md)** — shared tokens, typography, rich text styling, and CMS component design rules are documented.
-- **Integrations** — [Sentry](../reference/integrations/sentry.md), [reCAPTCHA](../reference/integrations/recaptcha.md), and [CDN / Azure Front Door](../reference/integrations/cdn.md) setup have dedicated reference pages.
+- **Integrations** — [Observability](../reference/integrations/logging.md) (structured logging, Azure Monitor, Sentry), [reCAPTCHA](../reference/integrations/recaptcha.md), and [CDN / Azure Front Door](../reference/integrations/cdn.md) setup have dedicated reference pages.

@@ -1,5 +1,7 @@
 import { normalizeCachePath } from "@repo/shared-data"
 
+import { logger } from "../../../utils/logging"
+
 export type RevalidationConfig = {
   clientUrl: string
   secret: string
@@ -31,7 +33,7 @@ function readClientCallConfig(secretVar: SecretEnvVar): RevalidationConfig {
   const secret = process.env[secretVar]
 
   if (!clientUrl || !secret) {
-    console.error("UI call configuration is missing", {
+    logger.error("UI call configuration is missing", {
       hasClientUrl: Boolean(clientUrl),
       hasSecret: Boolean(secret),
       secretVar,

@@ -1,4 +1,5 @@
 import { normalizeFullPaths, readCdnPurgeConfig } from "./helpers"
+import { logError, logger } from "../../../utils/logging"
 
 // Cap how long we wait on the UI purge endpoint so a stalled upstream cannot
 // hang the request (and the admin widget) indefinitely.
@@ -33,14 +34,14 @@ export async function purgeCDNCache(
   const normalizedPaths = normalizeFullPaths(paths)
 
   if (normalizedPaths.length === 0) {
-    console.debug("CDN purge skipped because no paths were provided")
+    logger.debug("CDN purge skipped because no paths were provided")
 
     return { purged: false, skipped: true, paths: [] }
   }
 
   const { clientUrl, secret } = readCdnPurgeConfig()
 
-  console.debug("Submitting CDN purge request", {
+  logger.debug("Submitting CDN purge request", {
     clientUrl,
     pathCount: normalizedPaths.length,
     paths: normalizedPaths,
@@ -64,10 +65,9 @@ export async function purgeCDNCache(
         ? `Could not reach CDN purge endpoint: ${error.message}`
         : "Could not reach CDN purge endpoint."
 
-    console.error("CDN purge request failed", {
+    logError(error, "CDN purge request failed", {
       pathCount: normalizedPaths.length,
       paths: normalizedPaths,
-      error,
     })
 
     return {
@@ -82,7 +82,7 @@ export async function purgeCDNCache(
     const fallbackMessage = `CDN purge endpoint responded ${response.status}.`
     const upstreamMessage = await extractUpstreamMessage(response)
 
-    console.error("CDN purge failed", {
+    logger.error("CDN purge failed", {
       status: response.status,
       message: upstreamMessage,
       pathCount: normalizedPaths.length,
@@ -104,7 +104,7 @@ export async function purgeCDNCache(
   // so a missing/odd body never turns a 2xx response into a thrown 500.
   const result = await parseJsonSafely(response)
 
-  console.debug("CDN purge completed", {
+  logger.debug("CDN purge completed", {
     pathCount: normalizedPaths.length,
     paths: normalizedPaths,
   })

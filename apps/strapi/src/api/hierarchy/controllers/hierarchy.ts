@@ -4,6 +4,7 @@
 
 import { factories } from "@strapi/strapi"
 
+import { logger } from "../../../utils/logging"
 import { validateAdminToken } from "../../../utils/validate-admin-token"
 
 export default factories.createCoreController(
@@ -12,7 +13,7 @@ export default factories.createCoreController(
     pendingChanges: async (ctx) => {
       const validation = await validateAdminToken(strapi, ctx.request.headers)
       if (validation.valid === false) {
-        console.warn(
+        logger.warn(
           "Hierarchy pending changes rejected because admin token is invalid"
         )
 
@@ -29,7 +30,7 @@ export default factories.createCoreController(
     recalculate: async (ctx) => {
       const validation = await validateAdminToken(strapi, ctx.request.headers)
       if (validation.valid === false) {
-        console.warn(
+        logger.warn(
           "Hierarchy recalculation rejected because admin token is invalid"
         )
 

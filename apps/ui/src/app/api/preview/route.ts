@@ -4,12 +4,13 @@ import { hasLocale } from "next-intl"
 
 import { STRAPI_PREVIEW_FRAME_COOKIE } from "@/lib/constants"
 import { getEnvVar } from "@/lib/env-vars"
+import { logger } from "@/lib/logging"
 import { redirect, routing } from "@/lib/navigation"
 
 export async function GET(request: Request) {
   const previewSecret = getEnvVar("STRAPI_PREVIEW_SECRET")
   if (!previewSecret) {
-    console.warn(
+    logger.warn(
       "[STRAPI_PREVIEW]: Preview request received, but [STRAPI_PREVIEW_SECRET] has not been configured. Status: 404."
     )
 
@@ -19,7 +20,7 @@ export async function GET(request: Request) {
   // Check if the provided secret matches our secret key
   const secret = String(searchParams.get("secret"))
   if (secret !== previewSecret) {
-    console.warn(
+    logger.warn(
       "[STRAPI_PREVIEW]: Preview request received, but [secret] does not match [STRAPI_PREVIEW_SECRET]. Status: 401."
     )
 
@@ -83,16 +84,14 @@ export async function GET(request: Request) {
   const locale = hasLocale(routing.locales, localeParam)
     ? localeParam
     : routing.defaultLocale
-  console.warn(
-    `[STRAPI_PREVIEW]: Preview request generated. ${JSON.stringify({
-      locale,
-      url: {
-        urlParam,
-        processedUrl: `${url}`,
-      },
-      status,
-    })}`
-  )
+  logger.info("[STRAPI_PREVIEW]: Preview request generated.", {
+    locale,
+    url: {
+      urlParam,
+      processedUrl: `${url}`,
+    },
+    status,
+  })
 
   // Redirect to the path from the fetched post
   redirect({ href: `${url}`, locale })

@@ -1,3 +1,5 @@
+import { logger } from "@/lib/logging"
+
 import { azureFrontDoorProvider } from "./providers/azure-front-door"
 import type { CdnPurgeOutcome, CdnPurgeProvider } from "./types"
 
@@ -24,7 +26,7 @@ export async function purgeCdnCache(paths: string[]): Promise<CdnPurgeOutcome> {
   const provider = resolveCdnProvider()
 
   if (!provider) {
-    console.debug("CDN purge skipped because no provider is configured")
+    logger.debug("CDN purge skipped because no provider is configured")
 
     return {
       ok: false,

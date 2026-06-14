@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 
+import { logError } from "@/lib/logging"
 import { routing } from "@/lib/navigation"
 import {
   buildRedirectDestinationUrl,
@@ -28,7 +29,7 @@ export async function redirectsProxy(
       routing.defaultLocale
     )
   } catch (error) {
-    console.error("[redirectsProxy] Redirect lookup failed:", error)
+    logError(error, "[redirectsProxy] Redirect lookup failed")
 
     // Proxy should fail open. A redirect lookup outage must not block normal
     // page rendering.

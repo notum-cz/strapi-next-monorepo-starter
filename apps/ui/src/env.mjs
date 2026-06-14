@@ -41,6 +41,13 @@ export const env = createEnv({
     SENTRY_PROJECT: z.string().optional(),
     SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING: z.string().optional(),
 
+    // Observability — see packages/logging and src/lib/telemetry
+    OTEL_SERVICE_NAME: z.string().optional(),
+    LOG_LEVEL: z
+      .enum(["trace", "debug", "info", "warn", "error", "fatal", "silent"])
+      .optional(),
+    APPLICATIONINSIGHTS_CONNECTION_STRING: z.string().optional(),
+
     RECAPTCHA_SECRET_KEY: z.string().optional(),
 
     BASIC_AUTH_ENABLED: optionalZodBoolean(),
@@ -105,6 +112,11 @@ export const env = createEnv({
     SENTRY_PROJECT: process.env.SENTRY_PROJECT,
     SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING:
       process.env.SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING,
+
+    OTEL_SERVICE_NAME: process.env.OTEL_SERVICE_NAME,
+    LOG_LEVEL: process.env.LOG_LEVEL,
+    APPLICATIONINSIGHTS_CONNECTION_STRING:
+      process.env.APPLICATIONINSIGHTS_CONNECTION_STRING,
 
     RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY,
 

@@ -8,6 +8,20 @@ vi.mock("@/lib/strapi-api/content/server", () => ({
   fetchRedirects: fetchManyMock,
 }))
 
+// The logger pulls in env validation at import; stub it to keep the suite hermetic.
+vi.mock("@/lib/logging", () => ({
+  logger: {
+    trace: vi.fn(),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    fatal: vi.fn(),
+  },
+  logError: vi.fn(),
+  withSpan: vi.fn(),
+}))
+
 import {
   buildRedirectDestinationUrl,
   clearRedirectCache,

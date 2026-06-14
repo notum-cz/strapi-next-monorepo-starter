@@ -2,6 +2,7 @@ import { strapiCacheTag } from "@repo/shared-data"
 import type { UID } from "@strapi/strapi"
 
 import { normalizeFullPaths, readRevalidationConfig } from "./helpers"
+import { logger } from "../../../utils/logging"
 
 // Cap how long we wait on the UI revalidate endpoint so a stalled upstream
 // cannot hang the publish path indefinitely.
@@ -42,7 +43,7 @@ export async function revalidateNextCache({
   const cacheTags = collectCacheTags(uid, tags)
 
   if (normalizedFullPaths.length === 0 && cacheTags.length === 0) {
-    console.debug(
+    logger.debug(
       "Next.js cache revalidation skipped because no paths or tags were provided"
     )
 
@@ -51,7 +52,7 @@ export async function revalidateNextCache({
 
   const config = readRevalidationConfig()
 
-  console.debug("Next.js cache revalidation requested", {
+  logger.debug("Next.js cache revalidation requested", {
     uid,
     locale,
     fullPathCount: normalizedFullPaths.length,
@@ -77,7 +78,7 @@ export async function revalidateNextCache({
   if (!response.ok) {
     const message = await response.text()
 
-    console.error("Next.js cache revalidation request failed", {
+    logger.error("Next.js cache revalidation request failed", {
       uid,
       locale,
       status: response.status,

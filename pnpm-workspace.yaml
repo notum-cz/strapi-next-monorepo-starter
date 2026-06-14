@@ -1,4 +1,4 @@
-packages: ["packages/*", "apps/*", "qa/**"]
+packages: [ "packages/*", "apps/*", "qa/**" ]
 allowBuilds:
   "@parcel/watcher": true
   "@sentry/cli": true
@@ -7,6 +7,7 @@ allowBuilds:
   core-js-pure: true
   esbuild: true
   lefthook: true
+  protobufjs: true
   sharp: true
   unrs-resolver: true
 

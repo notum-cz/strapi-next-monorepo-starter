@@ -1,13 +1,14 @@
 import * as Sentry from "@sentry/nextjs"
 
-export async function register() {
-  if (process.env.NEXT_RUNTIME === "nodejs") {
-    await import("../sentry.server.config")
-  }
+import { initializeTelemetry } from "@/lib/telemetry"
 
-  if (process.env.NEXT_RUNTIME === "edge") {
-    await import("../sentry.edge.config")
+export async function register() {
+  const runtime = process.env.NEXT_RUNTIME
+
+  if (runtime === "nodejs" || runtime === "edge") {
+    await initializeTelemetry(runtime)
   }
 }
 
+// Sentry's Next.js request-error hook. No-ops when Sentry is not configured.
 export const onRequestError = Sentry.captureRequestError

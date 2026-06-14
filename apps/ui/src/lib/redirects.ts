@@ -1,5 +1,6 @@
 import { normalizePageFullPath } from "@repo/shared-data"
 
+import { logError, logger } from "@/lib/logging"
 import { fetchRedirects } from "@/lib/strapi-api/content/server"
 
 type RedirectRecord = Awaited<ReturnType<typeof fetchRedirects>>[number]
@@ -85,7 +86,7 @@ function refreshRedirects() {
   redirectFetchPromise ??= fetchRedirects()
     .then(cacheRedirects)
     .catch((error: unknown) => {
-      console.error("[redirects] Failed to refresh redirect cache:", error)
+      logError(error, "[redirects] Failed to refresh redirect cache")
 
       return redirectCache?.redirects ?? []
     })
@@ -108,7 +109,7 @@ export function buildRedirectDestinationUrl(
   try {
     destinationUrl = new URL(destination, currentUrl.origin)
   } catch {
-    console.error("[redirects] Invalid redirect destination:", destination)
+    logger.warn("[redirects] Invalid redirect destination", { destination })
 
     return null
   }
