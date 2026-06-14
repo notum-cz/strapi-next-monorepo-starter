@@ -36,6 +36,9 @@ const CHANGES: FullPathChange[] = [
 const buildService = ({
   pageUpdate = vi.fn().mockResolvedValue({}),
   redirectCreate = vi.fn().mockResolvedValue({}),
+  redirectFindMany = vi.fn().mockResolvedValue([]),
+  redirectUpdate = vi.fn().mockResolvedValue({}),
+  redirectDelete = vi.fn().mockResolvedValue({}),
   revalidateRun = vi.fn().mockResolvedValue({}),
   hierarchyFindFirst = vi.fn().mockResolvedValue({ documentId: "h1" }),
   pageFindMany = vi.fn().mockResolvedValue([]),
@@ -52,7 +55,12 @@ const buildService = ({
         return { update: pageUpdate, findMany: pageFindMany }
       }
       if (uid === "api::redirect.redirect") {
-        return { create: redirectCreate }
+        return {
+          create: redirectCreate,
+          findMany: redirectFindMany,
+          update: redirectUpdate,
+          delete: redirectDelete,
+        }
       }
 
       return hierarchyDocuments
@@ -82,6 +90,9 @@ const buildService = ({
     service,
     pageUpdate,
     redirectCreate,
+    redirectFindMany,
+    redirectUpdate,
+    redirectDelete,
     revalidateRun,
     hierarchyDocuments,
     pageFindMany,
@@ -253,5 +264,92 @@ describe("hierarchy applyPendingChanges", () => {
     expect(pageFindMany).toHaveBeenCalledWith(
       expect.objectContaining({ status: "published", locale: "cs" })
     )
+  })
+})
+
+describe("hierarchy redirect compaction", () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    vi.unstubAllGlobals()
+  })
+
+  it("collapses a redirect chain a -> b -> c into a -> c", async () => {
+    // An existing `/en/a -> /en/b` record; the page is now moving b -> c.
+    const redirectFindMany = vi.fn(
+      async ({ filters }: { filters: Record<string, string> }) =>
+        filters.destination === "/en/b"
+          ? [{ documentId: "r-ab", source: "/en/a", destination: "/en/b" }]
+          : []
+    )
+    const { service, redirectUpdate, redirectCreate, redirectDelete } =
+      buildService({ redirectFindMany })
+
+    const affected = (await service.upsertRedirectWithCompaction({
+      source: "/en/b",
+      destination: "/en/c",
+    })) as string[]
+
+    // The inbound `/en/a` record is repointed straight to the final path.
+    expect(redirectUpdate).toHaveBeenCalledWith({
+      documentId: "r-ab",
+      data: { destination: "/en/c" },
+      status: "published",
+    })
+    expect(redirectCreate).toHaveBeenCalledWith({
+      data: { source: "/en/b", destination: "/en/c" },
+      status: "published",
+    })
+    expect(redirectDelete).not.toHaveBeenCalled()
+    expect(affected).toEqual(expect.arrayContaining(["/en/a", "/en/b"]))
+  })
+
+  it("removes a reverted redirect instead of creating a loop (a -> b -> a)", async () => {
+    // An existing `/en/a -> /en/b` record; the page is reverting b -> a.
+    const redirectFindMany = vi.fn(
+      async ({ filters }: { filters: Record<string, string> }) =>
+        filters.destination === "/en/b"
+          ? [{ documentId: "r-ab", source: "/en/a", destination: "/en/b" }]
+          : []
+    )
+    const { service, redirectDelete, redirectUpdate, redirectCreate } =
+      buildService({ redirectFindMany })
+
+    await service.upsertRedirectWithCompaction({
+      source: "/en/b",
+      destination: "/en/a",
+    })
+
+    // Repointing `/en/a` would yield `/en/a -> /en/a`, so it is dropped instead.
+    expect(redirectDelete).toHaveBeenCalledWith({ documentId: "r-ab" })
+    expect(redirectUpdate).not.toHaveBeenCalled()
+    expect(redirectCreate).toHaveBeenCalledWith({
+      data: { source: "/en/b", destination: "/en/a" },
+      status: "published",
+    })
+  })
+
+  it("updates a stale redirect reusing the same source instead of duplicating it", async () => {
+    // `/en/a` already redirects somewhere; a page now claims `/en/a` as source.
+    const redirectFindMany = vi.fn(
+      async ({ filters }: { filters: Record<string, string> }) =>
+        filters.source === "/en/a"
+          ? [{ documentId: "r-ac", source: "/en/a", destination: "/en/c" }]
+          : []
+    )
+    const { service, redirectUpdate, redirectCreate } = buildService({
+      redirectFindMany,
+    })
+
+    await service.upsertRedirectWithCompaction({
+      source: "/en/a",
+      destination: "/en/d",
+    })
+
+    expect(redirectUpdate).toHaveBeenCalledWith({
+      documentId: "r-ac",
+      data: { destination: "/en/d" },
+      status: "published",
+    })
+    expect(redirectCreate).not.toHaveBeenCalled()
   })
 })

@@ -125,14 +125,12 @@ export default factories.createCoreService(
 
         if (change.redirect) {
           try {
-            await strapi.documents("api::redirect.redirect").create({
-              data: {
-                source: change.redirect.source,
-                destination: change.redirect.destination,
-              },
-              status: "published",
-            })
-            redirectSources.add(change.redirect.source)
+            const affectedSources = await this.upsertRedirectWithCompaction(
+              change.redirect
+            )
+            for (const source of affectedSources) {
+              redirectSources.add(source)
+            }
           } catch (error) {
             // The fullPath update already succeeded and pending changes are
             // derived from stored state, so a re-run won't recreate this
@@ -177,6 +175,78 @@ export default factories.createCoreService(
       await this.stampLastRecalculation()
 
       return { applied, failed }
+    },
+
+    /**
+     * Creates the `source -> destination` redirect while keeping the redirect
+     * set free of chains and loops:
+     *  - any existing redirect pointing TO `source` is repointed straight to
+     *    `destination`, so a renamed-twice page (a -> b -> c) resolves in one
+     *    hop (a -> c) instead of a chain,
+     *  - a repointed record that would now point to its own source is deleted,
+     *    which resolves reverts (a -> b -> a) and longer loops (a -> b -> c -> a)
+     *    that would otherwise redirect endlessly,
+     *  - a stale redirect already using `source` is updated in place instead of
+     *    creating a duplicate record for the same source path.
+     *
+     * Returns every redirect source whose target changed so the caller can
+     * revalidate them.
+     */
+    async upsertRedirectWithCompaction({
+      source,
+      destination,
+    }: {
+      source: string
+      destination: string
+    }): Promise<string[]> {
+      const redirects = strapi.documents("api::redirect.redirect")
+      const affectedSources = new Set<string>([source])
+
+      // 1. Collapse chains leading into `source`: X -> source becomes X -> destination.
+      const inbound = await redirects.findMany({
+        filters: { destination: source },
+        status: "published",
+      })
+
+      for (const record of inbound) {
+        affectedSources.add(record.source)
+
+        // Repointing a record whose source equals the new destination would
+        // create a self-redirect (revert or loop), so drop it instead.
+        await (record.source === destination
+          ? redirects.delete({ documentId: record.documentId })
+          : redirects.update({
+              documentId: record.documentId,
+              data: { destination },
+              status: "published",
+            }))
+      }
+
+      // 2. Upsert the `source -> destination` record itself, reusing any stale
+      // record that already maps this source instead of duplicating it.
+      const [existing, ...duplicates] = await redirects.findMany({
+        filters: { source },
+        status: "published",
+      })
+
+      if (existing) {
+        await redirects.update({
+          documentId: existing.documentId,
+          data: { destination },
+          status: "published",
+        })
+
+        for (const duplicate of duplicates) {
+          await redirects.delete({ documentId: duplicate.documentId })
+        }
+      } else {
+        await redirects.create({
+          data: { source, destination },
+          status: "published",
+        })
+      }
+
+      return [...affectedSources]
     },
 
     async revalidate(params: {

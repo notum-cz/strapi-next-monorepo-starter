@@ -87,7 +87,7 @@ Do one change at a time (e.g. change slug of one page, recalculate, verify resul
 
 - Pending changes are computed live from the current state — there is no job queue. If you revert a slug change before recalculating (`a` → `b` → `a`), the pending change simply disappears and no redirect is created. Multiple renames before recalculating (`a` → `b` → `c`) collapse into a single change and a single redirect (`a` → `c`).
 
-- If you rename a page, recalculate, and rename it again, the second recalculation creates a second redirect (`a` → `b`, then `b` → `c`). Redirect chains still resolve on the frontend (two consecutive HTTP redirects).
+- Renaming a page across several recalculations never leaves a multi-hop redirect chain or a redirect loop behind — the redirect set is compacted automatically so every old URL reaches the current path in a single hop. See [CMS Redirects → Compaction](../strapi/cms-redirects#compaction-no-chains-no-loops) for the details and examples.
 
 - Strapi handles every locale separately - page in `en` locale can have different `slug` or even different `parent` relation. That means that changing the `slug` in one locale produces pending changes only for that locale. If you want to change the `slug` in multiple locales, you must manually do same change for every required locale (it isn't a bug).
   - Based on this, the redirects are also created separately for each touched locale and the locale is embedded into `source` and `destination` URLs.
