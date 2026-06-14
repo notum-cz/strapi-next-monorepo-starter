@@ -11,7 +11,6 @@
 
 import { factories } from "@strapi/strapi"
 
-import { PAGES_HIERARCHY_ENABLED } from "../../../utils/constants"
 import { computeFullPathChanges } from "../utils"
 import type { FullPathChange, HierarchyPageNode } from "../utils/types"
 
@@ -60,10 +59,6 @@ export default factories.createCoreService(
      * across all locales.
      */
     async getPendingChanges(): Promise<FullPathChange[]> {
-      if (!PAGES_HIERARCHY_ENABLED) {
-        return []
-      }
-
       const locales: { code: string }[] = await strapi
         .plugin("i18n")
         .service("locales")

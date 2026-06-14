@@ -24,7 +24,7 @@ Every page from collections above has required `slug` field, which is used to id
 
 The `fullPath` field is automatically generated and contains the full path of the page, including all parent slugs. It is main identifier used to render the page from the URL (UI finds pages using `fullPath` filter).
 
-The `fullPath` is generated from the `slug` and the `parent` relation field. Automatic generation of `fullPath` can be disabled on the code level (by setting `PAGES_HIERARCHY_ENABLED` to `false` in the Strapi codebase).
+The `fullPath` is generated from the `slug` and the `parent` relation field.
 
 Because the `fullPath` is generated automatically, it should never be edited manually. If you need to change the `fullPath`, change the `slug` or the `parent` relation field instead. Change in `fullPath` means, that the page has different URL address and old URL should redirect to the new URL. This is done automatically by creating redirect (`api::redirect.redirect`) records. These two operations are always tied together and run as one action.
 
@@ -36,7 +36,13 @@ These auto-created entries are ordinary records in the **Redirect** collection. 
 
 2. The **Hierarchy** single type in the admin panel lists all pending fullPath changes. The list is computed on demand by comparing every published page's stored `fullPath` with the one calculated from its parents' slugs — including all children of a moved or renamed page, in every locale.
 
-3. Clicking **"Update hierarchy"** opens a confirmation dialog with every change that will be applied: the old path, the new path, and the redirect that will be created. After confirming, the system:
+![Hierarchy single type with the pending full path changes summary and the Update hierarchy action](/img/update-hierarchy.png)
+
+3. Clicking **"Update hierarchy"** opens a confirmation dialog with every change that will be applied: the old path, the new path, and the redirect that will be created. Changes are grouped per locale — use the locale chips to filter the list.
+
+   ![Hierarchy recalculation confirmation dialog listing the pending changes per locale before they are applied](/img/hierarchy-recalculation-dialog.png)
+
+   After confirming, the system:
    - updates each affected page's published `fullPath` (as a system write, so no further lifecycle cascades are triggered),
    - creates and publishes a redirect (`api::redirect.redirect`) from the old path to the new path for every page that had a previous path — redirects are locale-aware, their `source` and `destination` include the locale prefix,
    - revalidates the frontend cache for all touched paths and redirect sources in one batch,

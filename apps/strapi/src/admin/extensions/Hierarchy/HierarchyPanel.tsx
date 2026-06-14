@@ -1,11 +1,4 @@
-import {
-  Alert,
-  Button,
-  Divider,
-  Flex,
-  Modal,
-  Typography,
-} from "@strapi/design-system"
+import { Button, Divider, Flex, Modal, Typography } from "@strapi/design-system"
 import { useFetchClient, useNotification } from "@strapi/strapi/admin"
 import { useCallback, useEffect, useMemo, useState } from "react"
 
@@ -18,20 +11,55 @@ type FullPathChange = {
   redirect: { source: string; destination: string } | null
 }
 
+function WarningAlert({ children }: { children: React.ReactNode }) {
+  return (
+    <Flex
+      direction="row"
+      alignItems="center"
+      gap={3}
+      paddingLeft={4}
+      paddingRight={4}
+      paddingTop={3}
+      paddingBottom={3}
+      background="warning100"
+      style={{ border: "1px solid #C67C2C" }}
+      hasRadius
+    >
+      <div style={{ color: "#C67C2C", fontSize: "18px" }}>⚠</div>
+      <Typography variant="pi">{children}</Typography>
+    </Flex>
+  )
+}
+
 // Locale is conveyed by the selected locale chip, so the row itself omits it.
 function ChangeRow({ change }: { change: FullPathChange }) {
   return (
     <Flex direction="column" alignItems="flex-start" gap={1} width="100%">
-      <Typography variant="pi" fontWeight="bold">
+      <Typography variant="omega" fontWeight="bold">
         {change.slug}
       </Typography>
       <Typography variant="pi" textColor="neutral800">
-        {`Fullpath: ${change.oldFullPath ?? "(new page)"} → ${change.newFullPath}`}
+        <>
+          Fullpath:{" "}
+          <span style={{ color: "#D32F2F" }}>
+            {change.oldFullPath ?? "(new page)"}
+          </span>
+          <span style={{ margin: "0 8px" }}>→</span>
+          <span style={{ color: "#388E3C", fontWeight: "bold" }}>
+            {change.newFullPath}
+          </span>
+        </>
       </Typography>
-      <Typography variant="pi" textColor="neutral600">
-        {change.redirect
-          ? `Redirect: ${change.redirect.source} → ${change.redirect.destination}`
-          : "No redirect (newly published page)"}
+      <Typography variant="pi" textColor="neutral800">
+        {change.redirect ? (
+          <>
+            Redirect: {change.redirect.source}
+            <span style={{ margin: "0 8px" }}>→</span>
+            {change.redirect.destination}
+          </>
+        ) : (
+          "No redirect (newly published page)"
+        )}
       </Typography>
       <Divider width="100%" />
     </Flex>
@@ -189,7 +217,7 @@ function HierarchyPanel() {
       >
         <Modal.Content>
           <Modal.Header>
-            <Modal.Title>Confirm fullPath recalculation</Modal.Title>
+            <Modal.Title>Hierarchy recalculation</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Flex direction="column" alignItems="stretch" gap={4}>
@@ -199,9 +227,9 @@ function HierarchyPanel() {
                 published.
               </Typography>
 
-              <Alert variant="warning" closeLabel="Dismiss">
+              <WarningAlert>
                 This may take some time and affect Strapi performance.
-              </Alert>
+              </WarningAlert>
 
               <Flex gap={1} wrap="wrap">
                 {changesByLocale.map(([locale, localeChanges]) => (
@@ -218,7 +246,15 @@ function HierarchyPanel() {
                 ))}
               </Flex>
 
-              <Flex direction="column" alignItems="stretch" gap={2}>
+              <div
+                style={{
+                  maxHeight: "400px",
+                  overflowY: "auto",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "8px",
+                }}
+              >
                 {changes
                   .filter((change) => selectedLocales.has(change.locale))
                   .map((change) => (
@@ -227,7 +263,7 @@ function HierarchyPanel() {
                       change={change}
                     />
                   ))}
-              </Flex>
+              </div>
             </Flex>
           </Modal.Body>
           <Modal.Footer>
@@ -237,7 +273,7 @@ function HierarchyPanel() {
               </Button>
             </Modal.Close>
             <Button onClick={runRecalculation} loading={isRunning}>
-              Apply changes
+              Apply all changes
             </Button>
           </Modal.Footer>
         </Modal.Content>

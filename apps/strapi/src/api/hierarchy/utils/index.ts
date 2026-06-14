@@ -8,7 +8,6 @@ import type {
   HierarchyPageNode,
 } from "./types"
 import type { LifecycleEventType } from "../../../../types/internals"
-import { PAGES_HIERARCHY_ENABLED } from "../../../utils/constants"
 
 const { ValidationError } = errors
 
@@ -23,10 +22,6 @@ export async function handleHierarchyBeforeCreate(
   event: LifecycleEventType<"beforeCreate">,
   documentType: HierarchicalDocumentType
 ) {
-  if (!PAGES_HIERARCHY_ENABLED) {
-    return
-  }
-
   // Called when the entity is first saved and every time it is published.
   // On the first save there is no `documentId` field in `newData`.
   const newData = event.params.data
