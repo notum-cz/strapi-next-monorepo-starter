@@ -26,7 +26,7 @@
           "description": "",
           "placeholder": "",
           "visible": true,
-          "editable": true
+          "editable": false
         },
         "list": {
           "label": "lastRecalculationAt",
@@ -102,12 +102,6 @@
       }
     },
     "layouts": {
-      "list": [
-        "id",
-        "lastRecalculationAt",
-        "createdAt",
-        "updatedAt"
-      ],
       "edit": [
         [
           {
@@ -115,6 +109,12 @@
             "size": 6
           }
         ]
+      ],
+      "list": [
+        "id",
+        "lastRecalculationAt",
+        "createdAt",
+        "updatedAt"
       ]
     },
     "uid": "api::hierarchy.hierarchy"
