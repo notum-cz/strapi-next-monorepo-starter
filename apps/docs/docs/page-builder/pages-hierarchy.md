@@ -92,7 +92,7 @@ Do one change at a time (e.g. change slug of one page, recalculate, verify resul
 - Strapi handles every locale separately - page in `en` locale can have different `slug` or even different `parent` relation. That means that changing the `slug` in one locale produces pending changes only for that locale. If you want to change the `slug` in multiple locales, you must manually do same change for every required locale (it isn't a bug).
   - Based on this, the redirects are also created separately for each touched locale and the locale is embedded into `source` and `destination` URLs.
 
-- Recalculation and redirect creation are tied together and always run as one action. During development or before going live, redirects created by recalculation can be deleted from the **Redirect** collection afterwards.
+- Recalculation and redirect creation are tied together and always run as one action. The generated redirects are what keep the old URLs working, so **leave them in place in production**. They are only safe to delete on a development or staging environment where the old URLs don't need to keep resolving (e.g. while seeding test content before launch).
 
 - If applying some change fails (e.g. a `fullPath` uniqueness conflict), the rest of the batch still proceeds; failures are reported in the admin notification and logged by Strapi. Re-open the Hierarchy single type and run the recalculation again — changes that did not get applied are still listed as pending. The one exception: if the `fullPath` update succeeded and only the redirect creation failed, the change won't reappear as pending — create that redirect manually in the **Redirect** collection (the Strapi log contains its source and destination).
 

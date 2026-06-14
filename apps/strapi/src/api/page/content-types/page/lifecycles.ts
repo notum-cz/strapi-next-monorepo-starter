@@ -67,9 +67,14 @@ function getOldPublishedPage(documentId: Modules.Documents.ID) {
  */
 async function preventRootSlugChange(event: WriteEvent) {
   const newData = event.params.data
+  if (!newData) {
+    return
+  }
 
-  // Automated/system change (e.g. hierarchy recalculation) -> skip.
-  if (newData?.updatedBy == null) {
+  // Automated/system changes (e.g. hierarchy recalculation) set `updatedBy`
+  // to `null` explicitly -> skip. Regular writes that simply omit `updatedBy`
+  // (undefined) must still be guarded, so compare strictly against null.
+  if (newData.updatedBy === null) {
     return
   }
 
