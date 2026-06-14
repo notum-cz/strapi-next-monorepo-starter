@@ -15,7 +15,10 @@ export function getDefaultMetadata(siteUrl: string, t: TranslateFn) {
     applicationName: t("applicationName"),
 
     icons: {
-      icon: "favicon.ico",
+      icon: [
+        { url: "/favicon.ico", sizes: "16x16 32x32" },
+        { url: "/favicon.svg", type: "image/svg+xml" },
+      ],
     },
 
     metadataBase: new URL(siteUrl),

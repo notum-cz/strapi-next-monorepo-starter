@@ -31,7 +31,7 @@ const config: Config = {
   url,
   baseUrl,
   onBrokenLinks: "warn",
-  favicon: undefined,
+  favicon: "img/favicon.svg",
 
   i18n: {
     defaultLocale: "en",
