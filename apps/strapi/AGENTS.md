@@ -63,8 +63,8 @@ Pages use parent-child relations. `fullPath` is recalculated on demand via the H
 
 | File                                            | Purpose                           |
 | ----------------------------------------------- | --------------------------------- |
-| `src/api/page/content-types/page/lifecycles.ts` | Triggers on publish               |
-| `src/api/hierarchy/utils/index.ts`              | Root-slug guard + fullPath diff   |
+| `src/api/page/content-types/page/lifecycles.ts` | Root-slug guard (save + publish)  |
+| `src/api/hierarchy/utils/index.ts`              | fullPath diff computation         |
 | `src/api/hierarchy/services/hierarchy.ts`       | Computes/applies fullPath changes |
 
 **Admin endpoints:**
