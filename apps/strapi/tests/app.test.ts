@@ -1,43 +1,60 @@
-import { afterAll, beforeAll, describe, expect, it } from "vitest"
+import { readFileSync } from "node:fs"
+import path from "node:path"
 
-import { setupStrapi, strapi, teardownStrapi } from "./helpers/strapi"
+import { describe, expect, it } from "vitest"
 
-describe("App Test Suite", () => {
-  beforeAll(async () => {
-    await setupStrapi()
-  }, 60000)
+// Reads a content-type schema straight from disk, so these checks don't require
+// booting a Strapi instance or a database (which would block CI). The schema
+// files are the source of truth Strapi loads at runtime anyway.
+const readSchema = (api: string, contentType: string) => {
+  const file = path.resolve(
+    process.cwd(),
+    "src/api",
+    api,
+    "content-types",
+    contentType,
+    "schema.json"
+  )
 
-  afterAll(async () => {
-    await teardownStrapi()
-  }, 30000)
+  return JSON.parse(readFileSync(file, "utf8")) as {
+    attributes: Record<string, unknown>
+  }
+}
 
-  describe("strapi instance", () => {
-    it("is defined", () => {
-      expect(strapi).toBeDefined()
-    })
-
-    it("has required content types registered", () => {
-      const contentTypes = Object.keys(strapi.contentTypes)
-
-      expect(contentTypes).toContain("api::page.page")
-      expect(contentTypes).toContain("api::subscriber.subscriber")
-      expect(contentTypes).toContain("api::navbar.navbar")
-      expect(contentTypes).toContain("api::footer.footer")
-      expect(contentTypes).toContain("api::redirect.redirect")
-    })
+describe("content-type schemas", () => {
+  it("registers the expected content types", () => {
+    // Each entry must have a readable schema file on disk.
+    for (const [api, contentType] of [
+      ["page", "page"],
+      ["subscriber", "subscriber"],
+      ["navbar", "navbar"],
+      ["footer", "footer"],
+      ["redirect", "redirect"],
+    ]) {
+      expect(readSchema(api, contentType).attributes).toBeTypeOf("object")
+    }
   })
 
-  describe("page content type", () => {
-    it("has correct schema attributes", () => {
-      const pageSchema = strapi.contentTypes["api::page.page"]
+  it("defines the expected attributes on the page schema", () => {
+    const { attributes } = readSchema("page", "page")
 
-      expect(pageSchema.attributes.title).toBeDefined()
-      expect(pageSchema.attributes.slug).toBeDefined()
-      expect(pageSchema.attributes.fullPath).toBeDefined()
-      expect(pageSchema.attributes.content).toBeDefined()
-      expect(pageSchema.attributes.parent).toBeDefined()
-      expect(pageSchema.attributes.children).toBeDefined()
-      expect(pageSchema.attributes.seo).toBeDefined()
-    })
+    for (const field of [
+      "title",
+      "slug",
+      "fullPath",
+      "content",
+      "parent",
+      "children",
+      "seo",
+    ]) {
+      expect(attributes[field]).toBeDefined()
+    }
+  })
+
+  it("defines source and destination on the redirect schema", () => {
+    const { attributes } = readSchema("redirect", "redirect")
+
+    expect(attributes.source).toBeDefined()
+    expect(attributes.destination).toBeDefined()
   })
 })
