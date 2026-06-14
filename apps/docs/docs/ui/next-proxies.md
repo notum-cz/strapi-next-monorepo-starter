@@ -56,7 +56,7 @@ Localhost and development mode are skipped.
 
 ## Redirects
 
-`redirectsProxy` (`redirects.ts`) applies redirects authored in the Strapi **Redirect** collection (`source` → `destination`) see [CMS Redirects](../strapi/cms-redirects.md). It matches the incoming path against the published redirect list and issues the redirect before the page renders, so old URLs are honored without any per-page code.
+`redirectsProxy` (`redirects.ts`) applies redirects authored in the Strapi **Redirect** collection (`source` → `destination`); see [CMS Redirects](../strapi/cms-redirects.md). It matches the incoming path against the published redirect list and issues the redirect before the page renders, so old URLs are honored without any per-page code.
 
 The starter resolves these Strapi-defined redirects **in-app**, inside Next.js middleware. That is the right default for most sites, but for a larger website fronted by a programmable CDN it is not the best solution — see [Alternative: redirect at the CDN / edge](#alternative-redirect-at-the-cdn--edge).
 
