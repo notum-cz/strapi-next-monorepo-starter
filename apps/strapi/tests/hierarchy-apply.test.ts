@@ -328,6 +328,35 @@ describe("hierarchy redirect compaction", () => {
     })
   })
 
+  it("revalidates repointed redirect sources, not just the new one", async () => {
+    // Applying b -> c while `/en/a -> /en/b` already exists repoints the old
+    // record to `/en/a -> /en/c`; both /en/a and /en/b must be revalidated.
+    const redirectFindMany = vi.fn(
+      async ({ filters }: { filters: Record<string, string> }) =>
+        filters.destination === "/en/b"
+          ? [{ documentId: "r-ab", source: "/en/a", destination: "/en/b" }]
+          : []
+    )
+    const { service, revalidateRun } = buildService({ redirectFindMany })
+    vi.spyOn(service, "getPendingChanges").mockResolvedValue([
+      {
+        documentId: "p",
+        locale: "en",
+        slug: "page-c",
+        oldFullPath: "/page-b",
+        newFullPath: "/page-c",
+        redirect: { source: "/en/b", destination: "/en/c" },
+      },
+    ] as never)
+
+    await service.applyPendingChanges()
+
+    expect(revalidateRun).toHaveBeenCalledWith({
+      uid: "api::redirect.redirect",
+      fullPaths: expect.arrayContaining(["/en/a", "/en/b"]),
+    })
+  })
+
   it("updates a stale redirect reusing the same source instead of duplicating it", async () => {
     // `/en/a` already redirects somewhere; a page now claims `/en/a` as source.
     const redirectFindMany = vi.fn(
