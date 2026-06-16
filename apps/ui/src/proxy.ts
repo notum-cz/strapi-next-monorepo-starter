@@ -3,6 +3,7 @@ import createMiddleware from "next-intl/middleware"
 
 import { routing } from "@/lib/navigation"
 import { authGuard } from "@/lib/proxies/authGuard"
+import { authSitemap } from "@/lib/proxies/authSitemap"
 import { basicAuth } from "@/lib/proxies/basicAuth"
 import { dynamicRewrite } from "@/lib/proxies/dynamicRewrite"
 import { httpsRedirect } from "@/lib/proxies/httpsRedirect"
@@ -19,6 +20,7 @@ const proxies: ((
 ) => NextResponse | null | Promise<NextResponse | null>)[] = [
   basicAuth,
   httpsRedirect,
+  authSitemap,
   redirectsProxy,
   (req) => authGuard(req, intlProxy),
   (req) => dynamicRewrite(req, intlProxy),
@@ -45,6 +47,8 @@ export const config = {
   matcher: [
     // Enable a redirect to a matching locale at the root
     "/",
+    // Gate the generated sitemap in non-production deployed environments
+    "/sitemap.xml",
     // Set a cookie to remember the previous locale for
     // all requests that have a locale prefix
     `/(cs|en)/:path*`,

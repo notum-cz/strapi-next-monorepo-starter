@@ -35,6 +35,15 @@ To include more pageable collections in the sitemap, add their UIDs to `pageEnti
 
 The sitemap returns an empty list when the app is not production or development, or when `APP_PUBLIC_URL` is not configured.
 
+### Access
+
+Access to `/sitemap.xml` is gated by the `authSitemap` proxy in `lib/proxies/authSitemap.ts`, wired into the middleware chain in `proxy.ts`:
+
+- In **production** and **local development** the sitemap is unrestricted (so search engines can crawl it, and it stays easy to inspect locally).
+- In **non-production deployments** (e.g. staging/preview) the request must include the `?allow-sitemap=yes` query parameter; otherwise it returns `404`. This keeps those sitemaps out of search indexes while still allowing on-demand inspection.
+
+The proxy requires no environment variables. Note that `/sitemap.xml` is listed explicitly in the middleware `matcher` so the proxy runs for it.
+
 ## Robots
 
 `app/robots.ts` generates `robots.txt`.
