@@ -21,7 +21,18 @@ export async function initializeTelemetry(
     sentryProvider(),
   ].filter((provider): provider is TelemetryProvider => provider !== null)
 
+  // Telemetry is best-effort: a misconfigured provider must not break
+  // instrumentation, so isolate each provider and continue past failures.
+  // `console` (not the pino logger) because register() also runs on the edge
+  // runtime, where pino is unavailable.
   for (const provider of providers) {
-    await provider.initialize(runtime)
+    try {
+      await provider.initialize(runtime)
+    } catch (error) {
+      console.error(
+        `Telemetry provider "${provider.name}" failed to initialize`,
+        error
+      )
+    }
   }
 }

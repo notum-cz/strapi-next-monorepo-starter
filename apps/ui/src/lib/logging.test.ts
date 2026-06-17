@@ -90,7 +90,7 @@ describe("logging", () => {
         authorization: "[redacted]",
         cookie: "[redacted]",
       },
-      password: expect.any(String),
+      password: "[redacted]",
       request: {
         token: "[redacted]",
       },

@@ -1,4 +1,4 @@
-import { logger } from "../utils/logging"
+import { logError, logger } from "../utils/logging"
 import { azureMonitorProvider } from "./providers/azure-monitor"
 import type { TelemetryProvider } from "./types"
 
@@ -17,8 +17,16 @@ export function initializeTelemetry(): void {
     (provider): provider is TelemetryProvider => provider !== null
   )
 
+  // Telemetry is best-effort: a misconfigured provider must not crash startup,
+  // so isolate each provider and continue past failures.
   for (const provider of providers) {
-    provider.initialize()
-    logger.info("Telemetry provider initialized", { provider: provider.name })
+    try {
+      provider.initialize()
+      logger.info("Telemetry provider initialized", { provider: provider.name })
+    } catch (error) {
+      logError(error, "Telemetry provider failed to initialize", {
+        provider: provider.name,
+      })
+    }
   }
 }

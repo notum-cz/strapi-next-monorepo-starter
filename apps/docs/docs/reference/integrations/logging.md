@@ -61,7 +61,7 @@ The monorepo has two Sentry integrations:
 
 Sentry is wired as a UI telemetry provider. Server and edge initialization live in `apps/ui/src/lib/telemetry/providers/sentry.ts`, which stays inert until `NEXT_PUBLIC_SENTRY_DSN` is set. Browser initialization stays in `sentry.client.config.ts` (loaded automatically by the Sentry SDK).
 
-Errors that bubble through `<ErrorBoundary />` or `error.tsx` are forwarded to Sentry automatically. The exported Next config is also wrapped with `withSentryConfig()` for source-map upload and build-time integration.
+`error.tsx` and the `<ErrorBoundary />` component report caught errors by calling `Sentry.captureException()` directly. The exported Next config is also wrapped with `withSentryConfig()` for source-map upload and build-time integration.
 
 | Var                                                 | Required for                   | Notes                              |
 | --------------------------------------------------- | ------------------------------ | ---------------------------------- |

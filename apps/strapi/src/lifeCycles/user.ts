@@ -32,7 +32,7 @@ const sendEmail = async (strapi: Core.Strapi, event: Event) => {
 
   if (confirmed) {
     // do not send email if the user is already confirmed
-    logger.warn("User is already confirmed. Skipping email.", { email })
+    logger.warn("User is already confirmed. Skipping email.", { documentId })
 
     return
   }
