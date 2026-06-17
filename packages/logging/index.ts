@@ -75,8 +75,11 @@ export function createLogging({
   function log(level: LogLevel, message: string, context?: LogContext) {
     pinoLogger[level](
       {
-        ...getTraceContext(),
         ...context,
+        // Spread last so the active span's IDs always win — a caller-provided
+        // traceId/spanId must not override real trace correlation. When there is
+        // no active span this returns {}, so it never clobbers caller context.
+        ...getTraceContext(),
       },
       message
     )
@@ -108,8 +111,10 @@ export function createLogging({
 
     pinoLogger.error(
       {
-        ...getTraceContext(),
         ...context,
+        // Active span IDs win over any caller-provided traceId/spanId; `err`
+        // stays last so the normalized error is never overridden.
+        ...getTraceContext(),
         err: normalizedError,
       },
       message
