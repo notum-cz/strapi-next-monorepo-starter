@@ -126,13 +126,11 @@ for (const path of PATHS) {
     })
 
     test.describe("Robots", () => {
-      test("should not have noindex directive", async ({ page }, testInfo) => {
-        const projectBaseUrl = testInfo.project.use.baseURL
+      test("should not have noindex directive", async ({ page }) => {
+        const baseUrl = process.env.BASE_URL
 
         test.skip(
-          !projectBaseUrl ||
-            typeof projectBaseUrl !== "string" ||
-            isHerokuBaseUrl(projectBaseUrl),
+          !baseUrl || isHerokuBaseUrl(baseUrl),
           "Robots noindex check skipped on Heroku (dev/staging/preview) environments"
         )
 
@@ -496,13 +494,11 @@ for (const path of PATHS) {
     test.describe("Heroku references", () => {
       test('HTML and canonical should not contain "heroku" on PROD', async ({
         page,
-      }, testInfo) => {
-        const projectBaseUrl = testInfo.project.use.baseURL
+      }) => {
+        const baseUrl = process.env.BASE_URL
 
         test.skip(
-          !projectBaseUrl ||
-            typeof projectBaseUrl !== "string" ||
-            isHerokuBaseUrl(projectBaseUrl),
+          !baseUrl || isHerokuBaseUrl(baseUrl),
           'Heroku reference check runs only when baseURL does not contain "heroku"'
         )
 
