@@ -121,16 +121,29 @@ Strapi-side Sentry docs: [docs.strapi.io/dev-docs/plugins/sentry](https://docs.s
 The logger runs with full features — structured JSON, redaction, trace
 correlation, backend export — only on the **server**: Strapi, the UI's server
 components, route handlers, and the `proxy.ts` middleware (Node runtime in
-Next.js 16+). In the **browser**, pino falls back to a thin `console` shim: logs
-print to the devtools console but are not exported to any backend (Azure Monitor
-is server-only; browser errors are covered by [Sentry](#sentry)).
+Next.js 16+). In the **browser** it does not crash — pino falls back to a thin
+`console` shim — but it degrades:
 
-Practical guidance:
+- logs print to the devtools console only; **nothing is exported to a backend**
+  (the Azure Monitor exporter is server-only),
+- context-less calls render with a leading empty `{}` (pino-browser prints the
+  bindings object before the message),
+- the pino + OpenTelemetry shim is added to the **client bundle**, and
+- if Sentry console forwarding is enabled, the lines are shipped to Sentry too.
 
-- **Server-only code** — always use the logger.
+Browser error tracking is [Sentry](#sentry)'s job, not the logger's.
+
+### The rule
+
+**Use the logger where it runs on the server; use `console` where it runs only
+in the browser.**
+
+- **Server-only code** (Strapi, route handlers, RSC, `proxy.ts`) — always the
+  logger.
 - **Dual server/client modules** (e.g. the Strapi API client
-  `strapi-api/base.ts`) — use the logger: it's structured server-side and
-  degrades to `console` in the browser, so error logging stays uniform.
-- **Purely client-side, hot, or low-value spots** (React component dev warnings,
-  small client helpers like `general-helpers.ts`) — keep plain `console.*` to
-  avoid pulling the logger into those client bundles for no backend gain.
+  `strapi-api/base.ts`) — the logger: it's structured on the server and degrades
+  to `console` in the browser, so error logging stays uniform.
+- **Purely client-side, hot, or dev-only spots** (React component dev warnings,
+  the `removeThisWhenYouNeedMe` helper, small client helpers like
+  `general-helpers.ts`) — plain `console.*`. It renders cleanly, adds no bundle
+  weight, and Sentry still captures it.
