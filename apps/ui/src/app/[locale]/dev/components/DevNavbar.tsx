@@ -15,6 +15,10 @@ export default function DevNavbar() {
       href: "/dev/components-overview",
       label: "Components overview",
     },
+    {
+      href: "/dev/showcase",
+      label: "Showcase",
+    },
   ]
 
   return (

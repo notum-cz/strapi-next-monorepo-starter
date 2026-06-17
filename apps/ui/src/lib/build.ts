@@ -1,6 +1,7 @@
 import type { Locale } from "next-intl"
 
 import { getEnvVar } from "@/lib/env-vars"
+import { logger } from "@/lib/logging"
 
 /**
  * Logs the output of generateStaticParams when the debug flag is enabled
@@ -15,11 +16,12 @@ export const debugStaticParams = (
   const { isDevelopment } = config ?? {}
 
   if (getEnvVar("DEBUG_STATIC_PARAMS_GENERATION")) {
-    console.debug(`generateStaticParams output <${segment}>`)
     if (isDevelopment === true) {
-      console.debug(" L (skipped in development mode)")
+      logger.debug(`generateStaticParams output <${segment}>`, {
+        skipped: "development mode",
+      })
     } else {
-      console.dir(staticParams)
+      logger.debug(`generateStaticParams output <${segment}>`, { staticParams })
     }
   }
 }

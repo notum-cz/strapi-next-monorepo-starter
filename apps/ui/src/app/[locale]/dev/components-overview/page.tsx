@@ -7,8 +7,6 @@ import Typography from "@/components/typography"
 import { logNonBlockingError } from "@/lib/logging"
 import { PublicStrapiClient } from "@/lib/strapi-api"
 
-export const dynamic = "force-dynamic"
-
 async function fetchAllPages(locale: Locale) {
   try {
     return await PublicStrapiClient.fetchAll("api::page.page", {

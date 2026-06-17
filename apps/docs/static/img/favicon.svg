@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Notum Strapi docs favicon">
+  <defs>
+    <mask id="notum-cutout">
+      <rect width="64" height="64" fill="#ffffff"/>
+      <path d="M16 17h8.8v30L16 36.2V17Z" fill="#000000"/>
+      <path d="M24.2 17h9.8l19 30h-9.8l-19-30Z" fill="#000000"/>
+      <path d="M43.2 17H52v30h-8.8V17Z" fill="#000000"/>
+    </mask>
+  </defs>
+  <g mask="url(#notum-cutout)">
+    <path d="M20 5h38v47L44 61V23H4L20 5Z" fill="#7C3DFF"/>
+    <path d="M4 23h40v30H4V23Z" fill="#C8B6FF"/>
+    <path d="M44 23h14L44 53V23Z" fill="#4F26D9"/>
+    <path d="M20 5h38v18H4L20 5Z" fill="#9C78FF"/>
+  </g>
+</svg>

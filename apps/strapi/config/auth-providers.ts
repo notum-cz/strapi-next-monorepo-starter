@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken"
 import AzureAdOAuth2Strategy from "passport-azure-ad-oauth2"
 
+import { logger } from "../src/utils/logging"
+
 export function microsoftSSOProvider(
   env: (key: string, defaultValue?: string) => string | undefined
 ) {
@@ -9,7 +11,7 @@ export function microsoftSSOProvider(
   const tenant = env("MICROSOFT_TENANT_ID")
 
   if (!clientID || !clientSecret || !tenant) {
-    console.warn("Microsoft SSO provider is not configured", {
+    logger.warn("Microsoft SSO provider is not configured", {
       hasClientId: Boolean(clientID),
       hasClientSecret: Boolean(clientSecret),
       hasTenant: Boolean(tenant),

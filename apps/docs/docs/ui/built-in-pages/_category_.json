@@ -1,0 +1,11 @@
+{
+  "label": "Built-in pages",
+  "position": 5,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Built-in pages",
+    "description": "Built-in UI routes for Strapi page rendering, auth, and non-production development tools."
+  }
+}

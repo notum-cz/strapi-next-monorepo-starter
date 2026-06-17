@@ -1,35 +1,111 @@
 # Please see the documentation for all configuration options:
 # https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
-
+#
+# Security updates additionally require "Dependabot alerts" and
+# "Dependabot security updates" to be enabled in repo Settings → Code security
+# (both already enabled). Security PRs are NOT throttled by
+# open-pull-requests-limit and ignore `cooldown`, so they always land fast —
+# version-update noise is kept low here so security PRs stand out.
 version: 2
+
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    allow:
-      - dependency-type: "direct"
-    # Skip regular update PRs, do only security updates
-    # https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference#open-pull-requests-limit-
-    open-pull-requests-limit: 0
-
-  - package-ecosystem: "npm"
-    directory: "/apps/ui"
-    schedule:
-      interval: "weekly"
-    allow:
-      - dependency-type: "direct"
-    open-pull-requests-limit: 0
-
-  - package-ecosystem: "npm"
-    directory: "/apps/strapi"
-    schedule:
-      interval: "weekly"
-    allow:
-      - dependency-type: "direct"
-    open-pull-requests-limit: 0
-
+  # ─────────────────────────────────────────────
+  # GitHub Actions
+  # ─────────────────────────────────────────────
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
+    open-pull-requests-limit: 2
+    groups:
+      github-actions:
+        patterns: ["*"]
+    commit-message:
+      include: scope
+      prefix: "ci"
+    labels:
+      - "update-dependencies"
+      - "auto-generated"
+      - "ready-for-review"
+
+  # ─────────────────────────────────────────────
+  # All npm packages (root monorepo + all apps)
+  # Using `directories` (plural) ensures dependabot
+  # properly updates the root pnpm-lock.yaml for all
+  # workspace packages.
+  # Dependabot does not support group-by for npm packages, so we have to group by dependency-name - it does not update pnpm-lock.yaml correctly
+  # ─────────────────────────────────────────────
+  - package-ecosystem: "npm"
+    versioning-strategy: "increase"
+    directories:
+      - "/"
+      - "/apps/*"
+      - "/packages/*"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 5
+    # Wait out fresh releases before opening PRs (skips the buggy x.0.0 rush)
+    cooldown:
+      default-days: 3
+      semver-minor-days: 5
+    allow:
+      - dependency-type: "direct"
+    groups:
+      # React ecosystem — kept separate for careful review
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+        update-types: ["patch", "minor", "major"]
+      # Strapi ecosystem — kept separate for careful review
+      strapi:
+        patterns:
+          - "@strapi/*"
+        update-types: ["patch", "minor", "major"]
+      # Everything else bundled into a single PR (grouped by name pattern,
+      # not dependency-type — keeps pnpm-lock.yaml updates correct)
+      all-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+          - "@strapi/*"
+        update-types: ["patch", "minor", "major"]
+    commit-message:
+      include: scope
+      prefix: "chore"
+    labels:
+      - "update-dependencies"
+      - "auto-generated"
+      - "ready-for-review"
+
+  # ─────────────────────────────────────────────
+  # Docker base images (apps/ui, apps/strapi)
+  # ─────────────────────────────────────────────
+  - package-ecosystem: "docker"
+    directories:
+      - "/apps/ui"
+      - "/apps/strapi"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 5
+    groups:
+      docker:
+        patterns: ["*"]
+    commit-message:
+      include: scope
+      prefix: "chore"
+    labels:
+      - "update-dependencies"
+      - "auto-generated"
+      - "ready-for-review"
+    # Stay on the Node 24 LTS line — never auto-bump the runtime major.
+    # Runtime-major moves are a platform decision, not a routine dep bump.
+    ignore:
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]

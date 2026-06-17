@@ -1,0 +1,18 @@
+{
+  "kind": "singleType",
+  "collectionName": "hierarchies",
+  "info": {
+    "singularName": "hierarchy",
+    "pluralName": "hierarchies",
+    "displayName": "Hierarchy",
+    "description": "Page hierarchy management: lists pending fullPath changes and applies them together with redirects."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "lastRecalculationAt": {
+      "type": "datetime"
+    }
+  }
+}

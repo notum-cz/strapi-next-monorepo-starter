@@ -2,6 +2,7 @@ import type { FindFirst, FindMany, ID, Result, UID } from "@repo/strapi-types"
 
 import { getEnvVar } from "@/lib/env-vars"
 import { isDevelopment } from "@/lib/general-helpers"
+import { logError } from "@/lib/logging"
 import type {
   APIResponse,
   APIResponseCollection,
@@ -19,6 +20,7 @@ export const API_ENDPOINTS: Partial<Record<UID.ContentType, string>> = {
   "api::footer.footer": "/footer",
   "api::navbar.navbar": "/navbar",
   "api::subscriber.subscriber": "/subscribers",
+  "api::redirect.redirect": "/redirects",
 } as const
 
 export default abstract class BaseStrapiClient {
@@ -62,7 +64,10 @@ export default abstract class BaseStrapiClient {
         status: response.status,
         details: { url },
       }
-      console.error("[BaseStrapiClient] Strapi API request error:", appError)
+      logError(appError, "Strapi API returned invalid response format", {
+        status: response.status,
+        path,
+      })
       throw new Error(JSON.stringify(appError))
     }
 
@@ -77,7 +82,10 @@ export default abstract class BaseStrapiClient {
         status: response.status ?? error?.status,
       }
       if (getEnvVar("DEBUG_STRAPI_CLIENT_API_CALLS")) {
-        console.error("[BaseStrapiClient] Strapi API request error:", appError)
+        logError(appError, "Strapi API request error", {
+          status: response.status,
+          path,
+        })
       }
       throw new Error(JSON.stringify(appError))
     }
