@@ -2,6 +2,8 @@ import fs from "node:fs"
 import { createRequire } from "node:module"
 import path from "node:path"
 
+import { logger } from "../utils/logging"
+
 const isRuntimeFile = (name: string) =>
   /\.(js|ts)$/.test(name) && !name.endsWith(".d.ts")
 
@@ -58,7 +60,7 @@ export function getPopulateDynamicZoneConfig() {
       })
   )
 
-  console.debug(
+  logger.debug(
     "Successfully generated dynamic zone populate configuration from filesystem."
   )
 

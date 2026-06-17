@@ -1,3 +1,4 @@
+import { logger } from "../../src/utils/logging"
 import type { EnvGetter } from "../../types/internals"
 
 const localUploadConfig: Record<string, unknown> = {
@@ -93,15 +94,15 @@ export function uploadConfig(env: EnvGetter) {
   }
 
   if (configs.blob) {
-    console.warn("Using Azure Storage for uploads.")
+    logger.info("Using Azure Storage for uploads.")
   }
 
   if (configs.s3) {
-    console.warn("Using AWS S3 for uploads.")
+    logger.info("Using AWS S3 for uploads.")
   }
 
   if (!configs.blob && !configs.s3) {
-    console.warn(
+    logger.warn(
       "No cloud upload configuration is set. Falling back to local upload provider."
     )
   }

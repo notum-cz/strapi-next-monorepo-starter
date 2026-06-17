@@ -16,9 +16,23 @@ vi.mock("@/lib/navigation", () => ({
 vi.mock("server-only", () => ({}))
 
 // Keep the suite hermetic: importing the real `@/lib/redirects` below would
-// otherwise pull in the Strapi client and trigger env validation at import.
+// otherwise pull in the Strapi client and the logger (both trigger env
+// validation at import).
 vi.mock("@/lib/strapi-api/content/server", () => ({
   fetchRedirects: vi.fn().mockResolvedValue([]),
+}))
+
+vi.mock("@/lib/logging", () => ({
+  logger: {
+    trace: vi.fn(),
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    fatal: vi.fn(),
+  },
+  logError: vi.fn(),
+  withSpan: vi.fn(),
 }))
 
 vi.mock("@/lib/redirects", async () => {

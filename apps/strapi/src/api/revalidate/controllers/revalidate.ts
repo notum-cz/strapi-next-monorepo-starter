@@ -1,6 +1,7 @@
 import type { UID } from "@strapi/strapi"
 import { z } from "zod"
 
+import { logger } from "../../../utils/logging"
 import { validateAdminToken } from "../../../utils/validate-admin-token"
 import { purgeCDNCache } from "../services/cdn-cache"
 
@@ -10,16 +11,14 @@ export default {
     const validation = await validateAdminToken(strapi, headers)
 
     if (validation.valid === false) {
-      console.warn(
-        "Manual revalidation rejected because admin token is invalid"
-      )
+      logger.warn("Manual revalidation rejected because admin token is invalid")
 
       return ctx.forbidden(validation.error)
     }
 
     const parsedBody = revalidateBodySchema.safeParse(ctx.request.body)
     if (!parsedBody.success) {
-      console.warn("Manual revalidation rejected because payload is invalid", {
+      logger.warn("Manual revalidation rejected because payload is invalid", {
         issue: parsedBody.error.issues[0]?.message,
       })
 
@@ -46,14 +45,14 @@ export default {
     const validation = await validateAdminToken(strapi, headers)
 
     if (validation.valid === false) {
-      console.warn("Manual CDN purge rejected because admin token is invalid")
+      logger.warn("Manual CDN purge rejected because admin token is invalid")
 
       return ctx.forbidden(validation.error)
     }
 
     const parsedBody = purgeCdnBodySchema.safeParse(ctx.request.body)
     if (!parsedBody.success) {
-      console.warn("Manual CDN purge rejected because payload is invalid", {
+      logger.warn("Manual CDN purge rejected because payload is invalid", {
         issue: parsedBody.error.issues[0]?.message,
       })
 

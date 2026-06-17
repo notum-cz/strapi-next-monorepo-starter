@@ -22,7 +22,7 @@ React Compiler is enabled through `reactCompiler: true`. Most component memoizat
 
 ## Sentry
 
-The exported Next config is wrapped with `withSentryConfig()` for source-map upload and Sentry build-time integration. See [Sentry](../reference/integrations/sentry.md).
+The exported Next config is wrapped with `withSentryConfig()` for source-map upload and Sentry build-time integration. See [Observability → Sentry](../reference/integrations/logging.md#sentry).
 
 ## Image Configuration
 
@@ -48,4 +48,4 @@ See [Environment Variables](./environment-variables.md), [Docker Build](./docker
 
 - [Caching](./caching.md)
 - [Image Optimization](./images.md)
-- [Sentry](../reference/integrations/sentry.md)
+- [Observability](../reference/integrations/logging.md)

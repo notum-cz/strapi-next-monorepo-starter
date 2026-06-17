@@ -4,6 +4,7 @@ import { z } from "zod"
 
 import { addDefaultLocalePathVariants } from "@/lib/cache-paths"
 import { getEnvVar } from "@/lib/env-vars"
+import { logger } from "@/lib/logging"
 import { hasValidBearerToken } from "@/lib/verify-bearer-token"
 
 /**
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
   // Authenticate from the Authorization header before reading the body so an
   // unauthenticated caller is rejected without any further work.
   if (!hasValidBearerToken(request, revalidateSecret)) {
-    console.warn(
+    logger.warn(
       "Revalidation request rejected because the bearer token is missing or invalid"
     )
 
@@ -69,7 +70,7 @@ export async function POST(request: Request) {
     revalidateTag(tag, "max")
   }
 
-  console.debug("Invalidated Strapi-driven Next.js cache", {
+  logger.debug("Invalidated Strapi-driven Next.js cache", {
     uid,
     paths: [...pathsToRevalidate],
     tags: [...tagsToRevalidate],

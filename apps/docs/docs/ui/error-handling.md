@@ -31,4 +31,4 @@ Async errors and event-handler errors are not caught by React boundaries. Handle
 
 ## Related Documentation
 
-- [Sentry](../reference/integrations/sentry.md) — UI and Strapi error tracking.
+- [Observability → Sentry](../reference/integrations/logging.md#sentry) — UI and Strapi error tracking.

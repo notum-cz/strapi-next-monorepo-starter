@@ -1,3 +1,5 @@
+import "server-only"
+
 import type { Locale } from "next-intl"
 import { use } from "react"
 

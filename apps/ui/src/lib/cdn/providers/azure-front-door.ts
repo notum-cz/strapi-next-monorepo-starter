@@ -8,6 +8,7 @@
  * Entra SSO provider in apps/strapi/config/auth-providers.ts.
  */
 import { getEnvVar } from "@/lib/env-vars"
+import { logError, logger } from "@/lib/logging"
 
 import type { CdnPurgeOutcome, CdnPurgeProvider } from "../types"
 
@@ -32,7 +33,7 @@ async function getArmToken(clientId: string): Promise<string | null> {
   const imdsEndpoint = getEnvVar("IDENTITY_ENDPOINT")
   const imdsHeader = getEnvVar("IDENTITY_HEADER")
   if (!imdsEndpoint || !imdsHeader) {
-    console.error("CDN purge skipped because managed identity is missing")
+    logger.error("CDN purge skipped because managed identity is missing")
 
     return null
   }
@@ -48,7 +49,7 @@ async function getArmToken(clientId: string): Promise<string | null> {
 
   if (!res.ok) {
     const body = await res.text()
-    console.error("CDN IMDS token request failed", {
+    logger.error("CDN IMDS token request failed", {
       status: res.status,
       body,
     })
@@ -106,7 +107,7 @@ async function purgeAzureFrontDoor(
     // AFD purge is async; 202 Accepted is the success response.
     if (res.status !== 202 && !res.ok) {
       const body = await res.text()
-      console.error("CDN purge failed", {
+      logger.error("CDN purge failed", {
         status: res.status,
         body,
         contentPaths,
@@ -118,11 +119,11 @@ async function purgeAzureFrontDoor(
       }
     }
 
-    console.debug("CDN purge submitted", { contentPaths })
+    logger.debug("CDN purge submitted", { contentPaths })
 
     return { ok: true }
   } catch (err) {
-    console.error("CDN purge error", { contentPaths, error: err })
+    logError(err, "CDN purge error", { contentPaths })
 
     return {
       ok: false,

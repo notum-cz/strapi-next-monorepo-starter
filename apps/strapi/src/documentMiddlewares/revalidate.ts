@@ -1,5 +1,7 @@
 import type { Core, UID } from "@strapi/strapi"
 
+import { logError, logger } from "../utils/logging"
+
 type RevalidateMode = "path-revalidate" | "tag-revalidate"
 type RevalidatePolicy = "publish-only" | "all-writes"
 
@@ -59,7 +61,7 @@ export const registerAutoRevalidateMiddleware = ({
       (context.action === "create" || context.action === "update") &&
       data?.updatedBy === null
     ) {
-      console.debug("Auto revalidation skipped for internal hierarchy write", {
+      logger.debug("Auto revalidation skipped for internal hierarchy write", {
         uid,
       })
 
@@ -92,7 +94,7 @@ export const registerAutoRevalidateMiddleware = ({
       const fullPath = getString(effectiveResult?.[pathField])
 
       if (!fullPath) {
-        console.warn("Auto revalidation skipped because path field is empty", {
+        logger.warn("Auto revalidation skipped because path field is empty", {
           uid,
           action,
           pathField,
@@ -103,11 +105,10 @@ export const registerAutoRevalidateMiddleware = ({
 
       await revalidateService.run({ uid, fullPaths: [fullPath], locale })
     } catch (error) {
-      console.error("Auto revalidation failed", {
+      logError(error, "Auto revalidation failed", {
         uid,
         action,
         locale,
-        error,
       })
     }
 
