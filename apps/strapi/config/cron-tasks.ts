@@ -1,9 +1,11 @@
 // https://docs.strapi.io/dev-docs/configurations/cron
 
+import { logger } from "../src/utils/logging"
+
 const sayHelloJob = {
   task: ({ strapi }) => {
     // Add your own logic here (e.g. send a queue of email, create a database backup, etc.).
-    console.warn("A beautiful start to the week!")
+    logger.info("A beautiful start to the week!")
   },
   /**
    * Simple example.

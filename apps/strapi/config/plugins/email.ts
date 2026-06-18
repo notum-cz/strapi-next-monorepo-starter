@@ -1,3 +1,4 @@
+import { logger } from "../../src/utils/logging"
 import type { EnvGetter } from "../../types/internals"
 
 const prepareMailgunEmailConfig = (env: EnvGetter) => {
@@ -60,15 +61,15 @@ export function emailConfig(env: EnvGetter) {
   }
 
   if (configs.mailgun) {
-    console.warn("Using Mailgun for emails.")
+    logger.info("Using Mailgun for emails.")
   }
 
   if (configs.mailtrap) {
-    console.warn("Using Mailtrap for emails.")
+    logger.info("Using Mailtrap for emails.")
   }
 
   if (!configs.mailgun && !configs.mailtrap) {
-    console.warn(
+    logger.warn(
       "No email provider is configured. Email functionality will not work."
     )
   }

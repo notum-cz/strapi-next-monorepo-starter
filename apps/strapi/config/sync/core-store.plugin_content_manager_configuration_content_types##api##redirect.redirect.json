@@ -47,20 +47,6 @@
           "sortable": true
         }
       },
-      "permanent": {
-        "edit": {
-          "label": "permanent",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "permanent",
-          "searchable": true,
-          "sortable": true
-        }
-      },
       "page": {
         "edit": {
           "label": "page",
@@ -149,10 +135,6 @@
         ],
         [
           {
-            "name": "permanent",
-            "size": 4
-          },
-          {
             "name": "page",
             "size": 6
           }
@@ -162,7 +144,6 @@
         "id",
         "source",
         "destination",
-        "permanent",
         "createdAt"
       ]
     },

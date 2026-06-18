@@ -9,6 +9,7 @@ import { Container } from "@/components/elementary/Container"
 import { ErrorBoundary } from "@/components/elementary/ErrorBoundary"
 import { PageContentComponents } from "@/components/page-builder"
 import StrapiStructuredData from "@/components/page-builder/components/seo-utilities/StrapiStructuredData"
+import { logger } from "@/lib/logging"
 import { fetchPage } from "@/lib/strapi-api/content/server"
 import { cn } from "@/lib/styles"
 
@@ -56,7 +57,7 @@ export default function StrapiPageView({ params, searchParams }: Props) {
             const key = `${name}-${id}`
             const Component = PageContentComponents[name]
             if (Component == null) {
-              console.warn(`Unknown component "${name}" with id "${id}".`)
+              logger.warn("Unknown page-builder component", { name, id })
 
               return (
                 <div key={key} className="font-medium text-red-500">

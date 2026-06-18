@@ -1,0 +1,81 @@
+# Strapi Backend
+
+Strapi v5 CMS with PostgreSQL. Handles content management, page hierarchy, and API endpoints.
+
+## Component Naming (Critical)
+
+Pattern: `category.kebab-case`
+
+| Element        | Pattern                                    | Example                             |
+| -------------- | ------------------------------------------ | ----------------------------------- |
+| Strapi UID     | `category.kebab-case`                      | `sections.hero`                     |
+| Schema file    | `src/components/{category}/{name}.json`    | `src/components/sections/hero.json` |
+| collectionName | `components_{category}_{name_underscored}` | `components_sections_hero`          |
+
+The UID must match in: schema location, page dynamiczone, middleware population, frontend registry.
+
+## Document Middleware
+
+**`src/documentMiddlewares/page.ts`** applies deep population.
+
+Frontend triggers via `populateDynamicZone` parameter:
+
+```typescript
+await client.fetchOneByFullPath("api::page.page", fullPath, {
+  populateDynamicZone: { content: true },
+})
+```
+
+Population uses `on` pattern for dynamic zones — see [Page Builder docs](../docs/docs/content-system/page-builder.md#population-rules).
+
+## Localization
+
+Localizable fields need i18n plugin option:
+
+```json
+{
+  "title": {
+    "type": "string",
+    "pluginOptions": { "i18n": { "localized": true } }
+  }
+}
+```
+
+## Adding Page Components
+
+Use skill: `/create-content-component`
+
+Or manually:
+
+1. Create schema: `src/components/{category}/{name}.json`
+2. Register in page dynamiczone: `src/api/page/content-types/page/schema.json`
+3. Add population files: `src/populateDynamicZone`
+4. Generate types: `pnpm generate:types`
+5. Create React component in `apps/ui` — see [apps/ui/CLAUDE.md](../ui/CLAUDE.md)
+
+Full workflow: [Page Builder docs](../docs/docs/content-system/page-builder.md#adding-new-components)
+
+## Page Hierarchy
+
+Pages use parent-child relations. `fullPath` is recalculated on demand via the Hierarchy single type.
+
+**Key files:**
+
+| File                                            | Purpose                           |
+| ----------------------------------------------- | --------------------------------- |
+| `src/api/page/content-types/page/lifecycles.ts` | Root-slug guard (save + publish)  |
+| `src/api/hierarchy/utils/index.ts`              | fullPath diff computation         |
+| `src/api/hierarchy/services/hierarchy.ts`       | Computes/applies fullPath changes |
+
+**Admin endpoints:**
+
+- `GET /api/hierarchy/pending-changes` — List pending fullPath changes
+- `POST /api/hierarchy/recalculate` — Apply changes + create redirects
+
+See [Pages Hierarchy docs](../docs/docs/content-system/pages-hierarchy.md) for content editor workflow.
+
+## Related Documentation
+
+- [Strapi Schemas](../docs/docs/content-system/strapi-schemas.md) — Schema attributes, localization, lifecycle hooks
+- [Page Builder](../docs/docs/content-system/page-builder.md) — Component registry and rendering
+- [Pages Hierarchy](../docs/docs/content-system/pages-hierarchy.md) — URL structure and redirects

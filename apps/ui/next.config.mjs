@@ -19,6 +19,13 @@ const nextConfig = {
   },
   reactCompiler: true,
   transpilePackages: ["@repo/design-system"],
+  // pino (via @repo/logging) and the Azure Monitor exporter rely on Node
+  // internals / worker threads that must not be bundled by the server compiler.
+  serverExternalPackages: [
+    "pino",
+    "pino-pretty",
+    "@azure/monitor-opentelemetry",
+  ],
   images: {
     // See apps/ui/README.md#image-optimization for the full policy.
     // Keep global optimization enabled so components can opt in/out.
@@ -56,6 +63,33 @@ const nextConfig = {
         hostname: "127.0.0.1",
       },
     ],
+  },
+
+  // Static, build-time-constant security headers applied to every route.
+  // Runtime-dependent headers (Content-Security-Policy with `frame-ancestors`,
+  // and the conditional X-Frame-Options) are set in the proxy instead —
+  // see apps/ui/src/lib/proxies/securityHeaders.ts.
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+    ]
   },
 
   // Turbopack configuration (replaces webpack config)

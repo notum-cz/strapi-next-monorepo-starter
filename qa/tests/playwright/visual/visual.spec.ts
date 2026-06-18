@@ -19,6 +19,17 @@ function prettifySlug(url: string): string {
     .replaceAll("/", "-")
 }
 
+function getEnvSlug(baseUrl: string | undefined): string {
+  if (!baseUrl) return "unknown"
+  try {
+    const hostname = new URL(baseUrl).hostname.replace(/^www\./, "")
+
+    return hostname.replaceAll(".", "-")
+  } catch {
+    return "unknown"
+  }
+}
+
 test.describe("Visual Regression", () => {
   for (const url of urls) {
     test(`Compare snapshot for ${url}`, async ({ page }, testInfo) => {
@@ -60,16 +71,19 @@ test.describe("Visual Regression", () => {
         content: `
           * { animation: none !important; transition: none !important; }
           #logo-carousel { visibility: hidden !important; }
+          ::-webkit-scrollbar { display: none !important; }
+          * { scrollbar-width: none !important; }
         `,
       })
 
-      for (const el of await page.locator("img, video").elementHandles()) {
-        await el.evaluate((el) =>
-          (el as HTMLElement).style.setProperty("opacity", "0", "important")
-        )
-      }
+      await page.locator("img, video").evaluateAll((els) => {
+        for (const el of els) {
+          ;(el as HTMLElement).style.setProperty("opacity", "0", "important")
+        }
+      })
 
-      const snapshotName = `${prettifySlug(url)}.png`
+      const envSlug = getEnvSlug(process.env.BASE_URL)
+      const snapshotName = `${envSlug}-${prettifySlug(url)}.png`
       const baselinePath = testInfo.snapshotPath(snapshotName)
       const baselineExists = fs.existsSync(baselinePath)
       const browserName = testInfo.project.name

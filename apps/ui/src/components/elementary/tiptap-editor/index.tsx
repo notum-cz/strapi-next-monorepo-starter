@@ -30,6 +30,7 @@ import type {
 } from "@/components/typography/config"
 import Element from "@/components/typography/element"
 import { safeJSONParse } from "@/lib/general-helpers"
+import { logger } from "@/lib/logging"
 import { formatStrapiMediaUrl } from "@/lib/strapi-helpers"
 import { cn } from "@/lib/styles"
 
@@ -94,7 +95,7 @@ export function TiptapRichText({
   const jsonContent = normalizeContent(content)
 
   if (!jsonContent?.type) {
-    console.warn("TiptapRichText: content is not valid:", content)
+    logger.warn("TiptapRichText: content is not valid", { content })
 
     return null
   }

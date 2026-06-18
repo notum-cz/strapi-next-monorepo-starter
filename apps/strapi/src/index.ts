@@ -1,9 +1,14 @@
 import type { Core } from "@strapi/strapi"
 
+// Must stay first so configured telemetry exporters initialize before the rest
+// of the server is loaded.
+import "./instrumentation"
 import { registerPopulatePageMiddleware } from "./documentMiddlewares/page"
+import { registerAutoRevalidateMiddleware } from "./documentMiddlewares/revalidate"
 import { registerAdminUserSubscriber } from "./lifeCycles/adminUser"
 import { registerUserSubscriber } from "./lifeCycles/user"
 import { getPopulateDynamicZoneConfig } from "./populateDynamicZone"
+import { logger } from "./utils/logging"
 
 export default {
   /**
@@ -22,6 +27,8 @@ export default {
    * run jobs, or perform some special logic.
    */
   bootstrap({ strapi }: { strapi: Core.Strapi }) {
+    logger.info("Strapi bootstrap started")
+
     registerAdminUserSubscriber({ strapi })
     registerUserSubscriber({ strapi })
 
@@ -30,5 +37,9 @@ export default {
 
     // Register Documents API middleware for dynamic zone population
     registerPopulatePageMiddleware({ strapi })
+    // Register automatic frontend revalidation middleware for content changes
+    registerAutoRevalidateMiddleware({ strapi })
+
+    logger.info("Strapi bootstrap completed")
   },
 }

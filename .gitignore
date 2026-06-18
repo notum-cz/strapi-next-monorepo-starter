@@ -52,3 +52,5 @@ next-env.d.ts
 .claude/reviews/
 .worktrees/
 PLAN.md
+
+.playwright-mcp

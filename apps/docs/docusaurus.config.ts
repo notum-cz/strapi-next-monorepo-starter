@@ -6,6 +6,13 @@ const url = process.env.DOCUSAURUS_URL ?? "https://notum-cz.github.io"
 const baseUrl = process.env.DOCUSAURUS_BASE_URL ?? "/strapi-next-monorepo-starter/"
 
 const config: Config = {
+  markdown: {
+    mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: "warn",
+    },
+  },
+  themes: ["@docusaurus/theme-mermaid"],
   plugins: [
     [
       require.resolve("@easyops-cn/docusaurus-search-local"),
@@ -24,12 +31,7 @@ const config: Config = {
   url,
   baseUrl,
   onBrokenLinks: "warn",
-  favicon: undefined,
-  markdown: {
-    hooks: {
-      onBrokenMarkdownLinks: "warn",
-    },
-  },
+  favicon: "img/favicon.svg",
 
   i18n: {
     defaultLocale: "en",
@@ -44,17 +46,6 @@ const config: Config = {
           sidebarPath: "./sidebars.ts",
           editUrl:
             "https://github.com/notum-cz/strapi-next-monorepo-starter/edit/main/apps/docs/",
-          lastVersion: "3.1.1",
-          versions: {
-            current: {
-              label: "Current",
-              path: "latest",
-            },
-            "3.1.1": {
-              label: "3.1.1",
-              path: "",
-            },
-          },
         },
         blog: false,
         theme: {
@@ -75,14 +66,15 @@ const config: Config = {
           label: "Docs",
         },
         {
-          type: "docsVersionDropdown",
+          href: "https://www.notum-dev.cz/",
+          label: "Live demo",
           position: "right",
         },
       ],
     },
     footer: {
       style: "dark",
-      copyright: `Copyright © ${new Date().getFullYear()} Notum Technologies. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Notum Technologies. Report docs issues on <a href="https://github.com/notum-cz/strapi-next-monorepo-starter/issues">GitHub</a>.`,
     },
     prism: {
       theme: prismThemes.oneLight,

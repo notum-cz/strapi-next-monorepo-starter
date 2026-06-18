@@ -33,9 +33,11 @@ export const normalizePageFullPath = (
   locale?: string | null
 ) => {
   const filteredPaths = paths.filter(Boolean) as string[]
-  const fullPath = [ROOT_PAGE_PATH, ...filteredPaths]
+  const rawPath = [ROOT_PAGE_PATH, ...filteredPaths]
     .join("/")
     .replaceAll(/\/+/g, "/")
+  // Strip trailing slash except for the root path itself
+  const fullPath = rawPath !== "/" ? rawPath.replace(/\/$/, "") : rawPath
 
   if (locale) {
     // make sure not to add same locale twice
@@ -47,4 +49,43 @@ export const normalizePageFullPath = (
   }
 
   return fullPath
+}
+
+/**
+ * Next.js Data Cache tag for a Strapi content type, e.g.
+ * `strapiCacheTag("api::page.page")` -> `"strapi:api::page.page"`.
+ *
+ * Shared between Strapi and the UI so both sides derive the exact same tag:
+ * the UI stamps fetches with it, and Strapi sends it on publish to invalidate
+ * those fetches. They must match byte-for-byte or `revalidateTag` no-ops.
+ *
+ * Typed against a plain string so this package stays framework-agnostic;
+ * callers pass their Strapi content-type UID (already a string).
+ */
+export type StrapiCacheTag<TUid extends string = string> = `strapi:${TUid}`
+
+export const strapiCacheTag = <TUid extends string>(
+  uid: TUid
+): StrapiCacheTag<TUid> => `strapi:${uid}`
+
+/**
+ * Normalizes a path for cache operations (Next.js revalidation or CDN purge).
+ * Wildcard paths (`/jobs/*`, `/*`) are preserved as-is, only ensuring a leading
+ * slash; concrete paths collapse to their canonical form via
+ * `normalizePageFullPath`. Pass `locale` when the caller knows it.
+ *
+ * Shared so Strapi (building revalidate/purge payloads) and the UI (expanding
+ * locale variants before `revalidatePath`/CDN purge) normalize identically.
+ */
+export const normalizeCachePath = (
+  path: string,
+  locale?: string | null
+): string => {
+  const trimmed = path.trim()
+
+  if (trimmed.includes("*")) {
+    return trimmed.startsWith("/") ? trimmed : `/${trimmed}`
+  }
+
+  return normalizePageFullPath([trimmed], locale)
 }

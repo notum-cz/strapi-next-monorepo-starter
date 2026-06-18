@@ -13,8 +13,11 @@
     "lint:fix": "pnpm lint --fix",
     "playwright-e2e-tests": "playwright test e2e",
     "playwright-interactive-mode": "playwright test e2e --ui",
-    "playwright-seo-tests": "playwright test seo/seo.spec.ts",
-    "playwright-visual-tests": "playwright test visual/visual.spec.ts"
+    "playwright-seo-tests": "playwright test --project=seo",
+    "playwright-visual-tests": "playwright test --project=visual-chromium --project=visual-firefox --project=visual-webkit",
+    "playwright-visual-update-tests": "playwright test --project=visual-chromium --project=visual-firefox --project=visual-webkit --update-snapshots",
+    "playwright-visual-tests-docker": "bash visual/compare-snapshots-docker.sh visual-chromium visual-firefox",
+    "playwright-visual-update-snapshots-docker": "bash visual/update-snapshots-docker.sh visual-chromium visual-firefox"
   },
   "dependencies": {
     "@axe-core/playwright": "4.11.3",
