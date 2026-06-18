@@ -8,7 +8,6 @@ import type {
   APIResponseCollection,
   APIResponseWithBreadcrumbs,
   AppLocalizedParams,
-  DynamicZonePopulateParams,
   PageLocalization,
 } from "@/types/api"
 import type { AppError, CustomFetchOptions } from "@/types/general"
@@ -105,9 +104,7 @@ export default abstract class BaseStrapiClient {
     params?: TParams,
     requestInit?: RequestInit,
     options?: CustomFetchOptions
-  ): Promise<
-    APIResponse<Result<TContentTypeUID, DynamicZonePopulateParams<TParams>>>
-  > {
+  ): Promise<APIResponse<Result<TContentTypeUID, TParams>>> {
     const path = this.getStrapiApiPathByUId(uid)
     const url = `${path}${documentId ? `/${documentId}` : ""}`
 
@@ -125,11 +122,7 @@ export default abstract class BaseStrapiClient {
     params?: TParams,
     requestInit?: RequestInit,
     options?: CustomFetchOptions
-  ): Promise<
-    APIResponseCollection<
-      Result<TContentTypeUID, DynamicZonePopulateParams<TParams>>
-    >
-  > {
+  ): Promise<APIResponseCollection<Result<TContentTypeUID, TParams>>> {
     const path = this.getStrapiApiPathByUId(uid)
 
     return this.fetchAPI(path, params, requestInit, options)
@@ -207,19 +200,20 @@ export default abstract class BaseStrapiClient {
     params?: TParams,
     requestInit?: RequestInit,
     options?: CustomFetchOptions
-  ): Promise<
-    APIResponse<Result<TContentTypeUID, DynamicZonePopulateParams<TParams>>>
-  > {
+  ): Promise<APIResponse<Result<TContentTypeUID, TParams>>> {
     const slugFilter = slug && slug.length > 0 ? { $eq: slug } : { $null: true }
     const mergedParams = {
       ...params,
       sort: { publishedAt: "desc" },
       filters: { ...params?.filters, slug: slugFilter },
+      pagination: {
+        page: 1,
+        pageSize: 1,
+      },
     }
     const path = this.getStrapiApiPathByUId(uid)
-    const response: APIResponseCollection<
-      Result<TContentTypeUID, DynamicZonePopulateParams<TParams>>
-    > = await this.fetchAPI(path, mergedParams, requestInit, options)
+    const response: APIResponseCollection<Result<TContentTypeUID, TParams>> =
+      await this.fetchAPI(path, mergedParams, requestInit, options)
 
     // return last published entry
     return {
@@ -242,8 +236,7 @@ export default abstract class BaseStrapiClient {
     options?: CustomFetchOptions
   ): Promise<
     APIResponseWithBreadcrumbs<
-      Result<TContentTypeUID, DynamicZonePopulateParams<TParams>> &
-        PageLocalization
+      Result<TContentTypeUID, TParams> & PageLocalization
     >
   > {
     const slugFilter =

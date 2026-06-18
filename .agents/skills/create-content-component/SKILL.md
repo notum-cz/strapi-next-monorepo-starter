@@ -101,31 +101,13 @@ Add the new UID to the `attributes.content.components` array:
 }
 ```
 
-### 3. Add population rules
+### 3. Review smart populate overrides
 
-Add files to `apps/strapi/src/populateDynamicZone` folder.
+Smart populate generates component, nested component, and media population from Strapi schemas automatically. Do not add per-component population files.
 
-```typescript
-import type { Modules } from "@strapi/strapi"
+Only add or update a `populateOverrides` entry in `apps/strapi/config/plugins.ts` when the new component contains a relation field that needs a project-specific shape, such as limiting relation fields or adding deeper relation population.
 
-import basicImagePopulate from "../utilities/basic-image"
-import linkPopulate from "../utilities/link"
-
-export default {
-  populate: {
-    links: linkPopulate,
-    image: basicImagePopulate,
-    steps: true,
-  },
-} satisfies Modules.Documents.Params.Populate.NestedParams<"{category}.{name}">
-```
-
-- Use `true` if the component has no nested relations/components (like `"utilities.ck-editor-content": true`)
-- Use `{ populate: { fieldName: true } }` for simple nested components
-- Use `{ populate: { fieldName: { populate: { media: true } } } }` for deeply nested media
-- Match the pattern of existing entries — only populate relations and components, not scalar fields
-- When component has different component inside in Strapi, always import its population config and reuse it.
-- Type object-based populate exports with `Modules.Documents.Params.Populate.NestedParams<"{category}.{name}">` so TypeScript validates field names against the generated Strapi component schema.
+If the component has no relation fields, do nothing for this step.
 
 ### 4. Create React component
 

@@ -1,4 +1,5 @@
 import { emailConfig } from "./plugins/email"
+import { smartPopulateConfig } from "./plugins/smart-populate"
 import { tipTapEditorConfig } from "./plugins/tiptap"
 import { uploadConfig } from "./plugins/upload"
 
@@ -30,5 +31,7 @@ export default ({ env }) => {
     email: emailConfig(env),
 
     "tiptap-editor": tipTapEditorConfig(),
+
+    "smart-populate": smartPopulateConfig(),
   }
 }

@@ -12,6 +12,8 @@ allowBuilds:
   unrs-resolver: true
 
 minimumReleaseAge: 5760
+minimumReleaseAgeExclude:
+  - "@notum-cz/strapi-plugin-smart-populate"
 
 overrides:
   "@types/react": 19.2.14
