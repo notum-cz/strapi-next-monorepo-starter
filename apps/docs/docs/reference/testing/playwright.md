@@ -71,16 +71,67 @@ pnpm tests:playwright:axe                   # Accessibility checks
 pnpm tests:playwright:seo                   # SEO checks
 pnpm tests:playwright:visual                # Visual regression checks
 pnpm tests:playwright:visual:update         # Update visual snapshots
+pnpm tests:playwright:visual:docker         # Visual regression checks via Docker (CI-compatible)
+pnpm tests:playwright:visual:docker:update  # Update Linux snapshots via Docker
 pnpm tests:lhci:perfo                       # Lighthouse CI performance checks
 ```
 
 ## Visual Regression
 
-Visual tests compare screenshots against a baseline:
+Visual regression tests compare screenshots of the application against previously committed baseline images to detect unintended visual changes.
 
-1. Run `pnpm tests:playwright:visual` once to create baseline screenshots.
-2. Deploy or run the application version you want to validate.
-3. Run `pnpm tests:playwright:visual` again to compare the current UI against the baseline.
-4. Use `pnpm tests:playwright:visual:update` only when the visual change is intentional and the baseline should change.
+### Browser coverage
+
+| Browser         | Local | Docker / CI |
+| --------------- | ----- | ----------- |
+| Chromium        | ✅    | ✅          |
+| Firefox         | ✅    | ✅          |
+| WebKit (Safari) | ✅    | ❌          |
+
+WebKit is excluded from Docker and CI runs because WebKit on Linux produces blank or incorrectly rendered screenshots due to missing system-level graphics dependencies. On macOS, WebKit runs natively and works correctly — so it is included in local (non-Docker) test runs only.
+
+### Cross-platform consistency (macOS vs CI/Linux)
+
+macOS and Linux render fonts and UI elements differently, which causes snapshots generated locally to fail when compared on a GitHub CI runner (Linux). To solve this, **baseline snapshots must be generated on Linux**.
+
+Two approaches are available:
+
+- **Docker (recommended for local baseline generation)** — runs Playwright inside the official Linux Docker image, producing Linux-compatible snapshots without needing to push to CI first. Requires Docker Desktop to be running.
+- **CI runner** — GitHub Actions runs directly on Linux, so no Docker is needed there.
+
+Only `*-linux-*.png` snapshots are committed to the repository. macOS (`*-darwin-*.png`) and Windows (`*-win32-*.png`) snapshots are gitignored.
+
+### Snapshot naming convention
+
+Each snapshot filename encodes the environment, page, browser, and platform:
+
+```text
+{env-slug}-{page}-{browser}-{platform}.png
+```
+
+- `env-slug` is derived from the `BASE_URL` hostname (`www.` is stripped automatically)
+- Each environment maintains its own set of baselines — DEV compares against DEV, STG against STG, etc.
+- First run on a given environment always creates baselines (pass). Failures only occur on subsequent runs when visual changes are detected.
+
+### Workflow
+
+**First time setup or after UI changes — generate Linux baselines locally:**
+
+```bash
+# Requires Docker Desktop to be running
+pnpm tests:playwright:visual:docker:update
+```
+
+This generates `*-linux-*.png` snapshots in `qa/tests/playwright/visual/visual.spec.ts-snapshots/`. Review them, then commit and push.
+
+**Verify comparison locally before pushing (optional):**
+
+```bash
+pnpm tests:playwright:visual:docker
+```
+
+**CI (GitHub Actions):**
+
+The `visual` job in `qa.yml` runs on a Linux runner and compares against committed baseline snapshots. Trigger it manually via the QA workflow with the **Visual tests** checkbox and a `base_url` value.
 
 Commit baseline updates only with the related UI change.

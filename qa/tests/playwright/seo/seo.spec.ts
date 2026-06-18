@@ -1,8 +1,12 @@
 import { expect, test, type Page } from "@playwright/test"
 
-import urls from "helpers/urls.json"
+import urls from "../helpers/urls.json"
 
 const PATHS = [...urls]
+
+function isHerokuBaseUrl(url: string): boolean {
+  return url.includes("heroku")
+}
 
 async function expectAttrNonEmpty(page: Page, selector: string, attr: string) {
   const el = page.locator(selector)
@@ -60,11 +64,92 @@ for (const path of PATHS) {
           ].join("\n")
         ).not.toBe("")
       })
+
+      test("should have reasonable length (10–70 chars)", async ({ page }) => {
+        const title = (await page.title()).trim()
+
+        expect(
+          title.length,
+          [
+            "Page title is too short (min 10 chars)",
+            `URL: ${page.url()}`,
+            `Current title: "${title}"`,
+            `Length: ${title.length}`,
+          ].join("\n")
+        ).toBeGreaterThanOrEqual(10)
+
+        expect(
+          title.length,
+          [
+            "Page title is too long (max 70 chars)",
+            `URL: ${page.url()}`,
+            `Current title: "${title}"`,
+            `Length: ${title.length}`,
+          ].join("\n")
+        ).toBeLessThanOrEqual(70)
+      })
     })
 
     test.describe("Meta description", () => {
       test("should exist and be non-empty", async ({ page }) => {
         await expectAttrNonEmpty(page, "meta[name='description']", "content")
+      })
+
+      test("should have reasonable length (50–160 chars)", async ({ page }) => {
+        const content = (
+          (await page
+            .locator("meta[name='description']")
+            .first()
+            .getAttribute("content")) ?? ""
+        ).trim()
+
+        expect(
+          content.length,
+          [
+            "Meta description is too short (min 50 chars)",
+            `URL: ${page.url()}`,
+            `Current description: "${content}"`,
+            `Length: ${content.length}`,
+          ].join("\n")
+        ).toBeGreaterThanOrEqual(50)
+
+        expect(
+          content.length,
+          [
+            "Meta description is too long (max 160 chars)",
+            `URL: ${page.url()}`,
+            `Current description: "${content}"`,
+            `Length: ${content.length}`,
+          ].join("\n")
+        ).toBeLessThanOrEqual(160)
+      })
+    })
+
+    test.describe("Robots", () => {
+      test("should not have noindex directive", async ({ page }) => {
+        const baseUrl = process.env.BASE_URL
+
+        test.skip(
+          !baseUrl || isHerokuBaseUrl(baseUrl),
+          "Robots noindex check skipped on Heroku (dev/staging/preview) environments"
+        )
+
+        const robots = page.locator("meta[name='robots']")
+
+        if ((await robots.count()) === 0) return
+
+        const content = (
+          (await robots.first().getAttribute("content")) ?? ""
+        ).toLowerCase()
+
+        expect(
+          content,
+          [
+            "robots meta must not contain noindex",
+            `URL: ${page.url()}`,
+            `Content: "${content}"`,
+          ].join("\n")
+        ).not.toContain("noindex")
       })
     })
 
@@ -112,6 +197,45 @@ for (const path of PATHS) {
           ].join("\n")
         ).toBeTruthy()
       })
+
+      test("should self-reference the current page", async ({ page }) => {
+        const hasHreflang =
+          (await page.locator("link[rel='alternate'][hreflang]").count()) > 0
+
+        test.skip(
+          hasHreflang,
+          "Canonical self-reference skipped on multilingual pages — canonical may point to a language variant"
+        )
+
+        const href =
+          (await page
+            .locator("link[rel='canonical']")
+            .first()
+            .getAttribute("href")) ?? ""
+        const currentUrl = page.url()
+
+        const normalizePath = (url: string) => {
+          try {
+            return new URL(url).pathname.replace(/\/$/, "") || "/"
+          } catch {
+            return url
+          }
+        }
+
+        const canonicalPath = normalizePath(href)
+        const currentPath = normalizePath(currentUrl)
+
+        expect(
+          canonicalPath,
+          [
+            "Canonical path does not match current page path",
+            `URL: ${currentUrl}`,
+            `Canonical: "${href}"`,
+            `Canonical path: "${canonicalPath}"`,
+            `Current path: "${currentPath}"`,
+          ].join("\n")
+        ).toBe(currentPath)
+      })
     })
 
     test.describe("H1 heading", () => {
@@ -136,7 +260,7 @@ for (const path of PATHS) {
           )
         }
 
-        const text = (await h1.first().textContent()).trim()
+        const text = ((await h1.first().textContent()) ?? "").trim()
 
         if (!text) {
           throw new Error(
@@ -164,7 +288,7 @@ for (const path of PATHS) {
 
           const tagName = await heading.evaluate((el) => el.tagName)
           const level = Number.parseInt(tagName[1], 10)
-          const text = (await heading.textContent()).trim()
+          const text = ((await heading.textContent()) ?? "").trim()
 
           expect(
             level,
@@ -234,6 +358,61 @@ for (const path of PATHS) {
           }
         })
       })
+
+      test("JSON-LD schemas should have @context and @type", async ({
+        page,
+      }) => {
+        const ld = page.locator("script[type='application/ld+json']")
+        const contents = await ld.allTextContents()
+
+        contents.forEach((content, i) => {
+          let data: unknown
+          try {
+            data = JSON.parse(content)
+          } catch {
+            return
+          }
+
+          const schemas = Array.isArray(data) ? data : [data]
+
+          schemas.forEach((schema, j) => {
+            const s = schema as Record<string, unknown>
+
+            expect(
+              s["@context"],
+              [
+                "JSON-LD missing @context",
+                `URL: ${page.url()}`,
+                `Script index: ${i}, schema index: ${j}`,
+              ].join("\n")
+            ).toBeTruthy()
+
+            expect(
+              s["@type"],
+              [
+                "JSON-LD missing @type",
+                `URL: ${page.url()}`,
+                `Script index: ${i}, schema index: ${j}`,
+              ].join("\n")
+            ).toBeTruthy()
+          })
+        })
+      })
+
+      test("JSON-LD should be present in raw HTML (not only JS-injected)", async ({
+        page,
+      }) => {
+        const response = await page.request.get(page.url())
+        const html = await response.text()
+
+        expect(
+          html,
+          [
+            "JSON-LD not found in raw HTML — it may be injected only by JavaScript",
+            `URL: ${page.url()}`,
+          ].join("\n")
+        ).toContain('type="application/ld+json"')
+      })
     })
 
     test.describe("Open Graph", () => {
@@ -246,6 +425,90 @@ for (const path of PATHS) {
           "meta[property='og:description']",
           "content"
         )
+        await expectAttrNonEmpty(page, "meta[property='og:image']", "content")
+        await expectAttrNonEmpty(page, "meta[property='og:url']", "content")
+        await expectAttrNonEmpty(page, "meta[property='og:type']", "content")
+      })
+    })
+
+    test.describe("hreflang", () => {
+      test("hreflang tags should be valid if present", async ({ page }) => {
+        const alternates = page.locator("link[rel='alternate'][hreflang]")
+
+        if ((await alternates.count()) === 0) return
+
+        const xDefaultCount = await page
+          .locator("link[rel='alternate'][hreflang='x-default']")
+          .count()
+
+        expect(
+          xDefaultCount,
+          ["x-default hreflang tag is missing", `URL: ${page.url()}`].join("\n")
+        ).toBeGreaterThan(0)
+
+        const entries = await alternates.evaluateAll((links) =>
+          links.map((l) => ({
+            hreflang: l.getAttribute("hreflang") ?? "",
+            href: l.getAttribute("href") ?? "",
+          }))
+        )
+
+        for (const { hreflang, href } of entries) {
+          expect(
+            href,
+            [
+              "hreflang href must be absolute",
+              `URL: ${page.url()}`,
+              `hreflang: "${hreflang}"`,
+              `href: "${href}"`,
+            ].join("\n")
+          ).toMatch(/^https?:\/\//)
+        }
+
+        const currentPath =
+          new URL(page.url()).pathname.replace(/\/$/, "") || "/"
+
+        const selfRef = entries.find(({ href }) => {
+          try {
+            return (
+              (new URL(href).pathname.replace(/\/$/, "") || "/") === currentPath
+            )
+          } catch {
+            return false
+          }
+        })
+
+        expect(
+          selfRef,
+          [
+            "Current page path is not represented in hreflang tags",
+            `URL: ${page.url()}`,
+            `Current path: "${currentPath}"`,
+            "hreflang entries:",
+            ...entries.map(({ hreflang, href }) => `  ${hreflang}: ${href}`),
+          ].join("\n")
+        ).toBeTruthy()
+      })
+    })
+
+    test.describe("Heroku references", () => {
+      test('HTML and canonical should not contain "heroku" on PROD', async ({
+        page,
+      }) => {
+        const baseUrl = process.env.BASE_URL
+
+        test.skip(
+          !baseUrl || isHerokuBaseUrl(baseUrl),
+          'Heroku reference check runs only when baseURL does not contain "heroku"'
+        )
+
+        const html = await page.content()
+
+        if (html.toLowerCase().includes("heroku")) {
+          throw new Error(
+            ['HTML contains "heroku"', `URL: ${page.url()}`].join("\n")
+          )
+        }
       })
     })
   })
