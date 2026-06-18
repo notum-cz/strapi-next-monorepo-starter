@@ -156,11 +156,11 @@ Strapi types are generated automatically as part of the project workflow. After 
 See [`@repo/strapi-types`](../reference/packages/strapi-types.md) for the package structure and usage examples.
 :::
 
-## Step 7 — (Optional) Add a document middleware
+## Step 7 — (Optional) Configure smart populate overrides
 
-Only if `Product` has its own dynamic zones or deep relations that should be auto-populated via `populateDynamicZone`. The `page` collection demonstrates the pattern: `apps/strapi/src/documentMiddlewares/page.ts` + `apps/strapi/src/populateDynamicZone`. Register the middleware in `apps/strapi/src/index.ts` `bootstrap()` like `registerPopulatePageMiddleware`.
+Only if `Product` has relations that need a more specific shape than the generated smart populate default. Configure those cases in the `smart-populate` plugin `populateOverrides` in `apps/strapi/config/plugins.ts`.
 
-For flat schemas (like the `product` example above), this step is unnecessary — declare `populate` inline at the call site.
+For flat schemas (like the `product` example above), this step is unnecessary — declare `populate` inline at the call site. For dynamic zones or nested components, use the `"smart"` populate token where the generated shape should be applied.
 
 ## Step 8 — Fetch from Next.js
 

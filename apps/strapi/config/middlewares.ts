@@ -54,6 +54,7 @@ export default [
   "strapi::poweredBy",
   "strapi::logger",
   "strapi::query",
+  "plugin::smart-populate.sanitize-smart-populate",
   "strapi::body",
   "strapi::session",
   "strapi::favicon",

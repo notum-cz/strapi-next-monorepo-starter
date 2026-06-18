@@ -145,8 +145,7 @@ export async function fetchPage(fullPath: string, locale: Locale) {
   return PublicStrapiClient.fetchOneByFullPath("api::page.page", fullPath, {
     locale,
     status: "published",
-    populate: { seo: true },
-    populateDynamicZone: { content: true },
+    populate: { seo: true, content: "smart" },
   })
 }
 ```
