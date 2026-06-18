@@ -206,6 +206,10 @@ export default abstract class BaseStrapiClient {
       ...params,
       sort: { publishedAt: "desc" },
       filters: { ...params?.filters, slug: slugFilter },
+      pagination: {
+        page: 1,
+        pageSize: 1,
+      },
     }
     const path = this.getStrapiApiPathByUId(uid)
     const response: APIResponseCollection<Result<TContentTypeUID, TParams>> =
