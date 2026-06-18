@@ -171,7 +171,6 @@ bootstrap({ strapi }) {
 
 Typical use cases:
 
-- Deep population of dynamic zones — use `@notum-cz/strapi-plugin-smart-populate` with `"smart"` populate tokens and configure relation-specific `populateOverrides` in `apps/strapi/config/plugins.ts` when the generated default is not enough. See [Page Builder → Population](../page-builder/introduction.md#population-rules).
 - Side effects tied to **document state transitions** (publish, unpublish, discard draft) — e.g. invalidate a downstream cache when a `page` is published.
 - Cross-document validation that needs the full Documents API context (locale, status, populated relations) — easier here than reconstructing it from raw DB rows in a lifecycle.
 

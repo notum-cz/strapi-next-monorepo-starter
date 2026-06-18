@@ -54,6 +54,8 @@ export default [
   "strapi::poweredBy",
   "strapi::logger",
   "strapi::query",
+  // Order is important
+  // https://github.com/notum-cz/strapi-plugin-smart-populate#add-the-rest-middleware
   "plugin::smart-populate.sanitize-smart-populate",
   "strapi::body",
   "strapi::session",

@@ -42,7 +42,7 @@ flowchart TB
 **Data flow:**
 
 1. Editor adds components to page's `content` dynamic zone in Strapi admin
-2. Page is fetched via REST API with deep population (handled by the Smart Populate plugin)
+2. Page is fetched via REST API with deep population (handled by [Smart Population](../strapi/plugins/smart-populate.md))
 3. `StrapiPageView` iterates over the `content` array
 4. Each item's `__component` UID is matched against `PageContentComponents` registry
 5. Matching React component renders with full component data as props
@@ -113,31 +113,16 @@ The generic parameter is the Strapi component UID (e.g., `"sections.hero"`). Thi
 
 ## Population Rules
 
-Dynamic zone content requires explicit population of nested relations and components. This is handled by `@notum-cz/strapi-plugin-smart-populate`.
-
-The plugin reads Strapi component schemas at bootstrap and replaces `"smart"` populate tokens with native Strapi populate objects for dynamic zones, nested components, media fields, and first-level relations.
+Dynamic zone content requires explicit population of nested relations and components. Use `"smart"` populate tokens for page-builder fields that should use schema-generated deep population.
 
 :::tip
-Most component population is schema-generated. Use `populateOverrides` in `apps/strapi/config/plugins.ts` only for relation shapes that need project-specific fields or depth.
+Configuration and override examples live in [Smart Population](../strapi/plugins/smart-populate.md).
 :::
 
 **Key patterns:**
 
 - Use `"smart"` for dynamic zones and components that should use the generated populate shape
 - Keep manual populate objects for small flat relations or custom API needs
-- Use `populateOverrides` for generated component population that needs relation-specific fields or depth
-
-**Triggering smart populate:**
-
-Requests include `"smart"` inside `populate`:
-
-```typescript
-await PublicStrapiClient.fetchOneByFullPath("api::page.page", fullPath, {
-  locale,
-  populate: { seo: true, content: "smart" },
-  pagination: { page: 1, pageSize: 1 },
-})
-```
 
 ## Page Rendering
 
