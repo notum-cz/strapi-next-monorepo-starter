@@ -26,7 +26,7 @@ FROM base AS prepare
 ARG WORKSPACE
 
 # Install turbo globally to prune below
-RUN pnpm add -g turbo@2.7.3
+RUN pnpm add -g turbo@2.9.18
 
 COPY . .
 
@@ -45,7 +45,7 @@ RUN turbo prune ${WORKSPACE} --docker
 FROM base AS builder
 
 # Install turbo globally to use during build below
-RUN pnpm add -g turbo@2.7.3
+RUN pnpm add -g turbo@2.9.18
 
 # First install dependencies (as they change less often)
 COPY .gitignore .gitignore
