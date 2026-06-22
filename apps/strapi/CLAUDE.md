@@ -12,21 +12,21 @@ Pattern: `category.kebab-case`
 | Schema file    | `src/components/{category}/{name}.json`    | `src/components/sections/hero.json` |
 | collectionName | `components_{category}_{name_underscored}` | `components_sections_hero`          |
 
-The UID must match in: schema location, page dynamiczone, middleware population, frontend registry.
+The UID must match in: schema location, page dynamic zone, smart populate generation, frontend registry.
 
-## Document Middleware
+## Smart Populate
 
-**`src/documentMiddlewares/page.ts`** applies deep population.
+`@notum-cz/strapi-plugin-smart-populate` applies deep population for components and dynamic zones.
 
-Frontend triggers via `populateDynamicZone` parameter:
+Frontend triggers it with the `"smart"` populate token:
 
 ```typescript
 await client.fetchOneByFullPath("api::page.page", fullPath, {
-  populateDynamicZone: { content: true },
+  populate: { content: "smart" },
 })
 ```
 
-Population uses `on` pattern for dynamic zones — see [Page Builder docs](../docs/docs/content-system/page-builder.md#population-rules).
+Use `populateOverrides` in `config/plugins.ts` only for project-specific relation shapes that should not use the generated default.
 
 ## Localization
 
@@ -49,9 +49,8 @@ Or manually:
 
 1. Create schema: `src/components/{category}/{name}.json`
 2. Register in page dynamiczone: `src/api/page/content-types/page/schema.json`
-3. Add population files: `src/populateDynamicZone`
-4. Generate types: `pnpm generate:types`
-5. Create React component in `apps/ui` — see [apps/ui/CLAUDE.md](../ui/CLAUDE.md)
+3. Generate types: `pnpm generate:types`
+4. Create React component in `apps/ui` — see [apps/ui/AGENTS.md](../ui/AGENTS.md)
 
 Full workflow: [Page Builder docs](../docs/docs/content-system/page-builder.md#adding-new-components)
 

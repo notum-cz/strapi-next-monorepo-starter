@@ -29,7 +29,7 @@ FROM base AS prepare
 ARG WORKSPACE
 
 # Install turbo globally to prune below
-RUN pnpm add -g turbo@2.7.3
+RUN pnpm add -g turbo@2.9.18
 
 COPY . .
 
@@ -42,7 +42,7 @@ FROM base AS builder
 ARG APP
 
 # Install turbo globally to use during build below
-RUN pnpm add -g turbo@2.7.3
+RUN pnpm add -g turbo@2.9.18
 # Install node-gyp globally to build native addons
 RUN pnpm add -g node-gyp
 

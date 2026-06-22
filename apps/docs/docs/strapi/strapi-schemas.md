@@ -171,7 +171,6 @@ bootstrap({ strapi }) {
 
 Typical use cases:
 
-- Deep population of dynamic zones — the canonical example is `apps/strapi/src/documentMiddlewares/page.ts` (intercepts `findMany`/`findOne`/`findFirst`, reads the `populateDynamicZone` request param, builds an optimal `populate` tree from `apps/strapi/src/populateDynamicZone`). See [Page Builder → Population](../page-builder/introduction.md#population-rules).
 - Side effects tied to **document state transitions** (publish, unpublish, discard draft) — e.g. invalidate a downstream cache when a `page` is published.
 - Cross-document validation that needs the full Documents API context (locale, status, populated relations) — easier here than reconstructing it from raw DB rows in a lifecycle.
 

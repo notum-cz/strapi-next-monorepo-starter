@@ -173,8 +173,7 @@ const page = await PublicStrapiClient.fetchOneByFullPath(
   "/services/web-development",
   {
     locale,
-    populate: { seo: true },
-    populateDynamicZone: { content: true },
+    populate: { seo: true, content: "smart" },
   }
 )
 ```
@@ -196,8 +195,7 @@ export async function fetchPage(fullPath: string, locale: Locale) {
     {
       locale,
       status: dm.isEnabled ? "draft" : "published",
-      populate: { seo: true },
-      populateDynamicZone: { content: true },
+      populate: { seo: true, content: "smart" },
     }
   )
 }

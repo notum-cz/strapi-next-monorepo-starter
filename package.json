@@ -65,23 +65,23 @@
     "worktree:setup": "scripts/worktree/setup.sh"
   },
   "devDependencies": {
-    "@commitlint/cli": "19.8.1",
-    "@commitlint/config-conventional": "19.8.1",
-    "@commitlint/config-pnpm-scopes": "20.1.0",
+    "@commitlint/cli": "20.5.3",
+    "@commitlint/config-conventional": "20.5.3",
+    "@commitlint/config-pnpm-scopes": "20.5.2",
     "@repo/eslint-config": "workspace:*",
     "@repo/semantic-release-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "commitizen": "4.3.1",
+    "commitizen": "4.3.2",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "9.39.4",
-    "lefthook": "2.1.6",
+    "lefthook": "2.1.9",
     "lint-staged": "15.5.2",
-    "prettier": "3.8.3",
+    "prettier": "3.8.4",
     "semantic-release": "24.2.9",
     "tslib": "2.8.1",
-    "turbo": "2.7.6"
+    "turbo": "2.9.18"
   },
-  "packageManager": "pnpm@11.1.1",
+  "packageManager": "pnpm@11.8.0",
   "engines": {
     "node": "^24.0.0"
   }
