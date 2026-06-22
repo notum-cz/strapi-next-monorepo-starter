@@ -101,7 +101,11 @@
       "persistent": false
     },
     "dev": {
-      "dependsOn": ["@repo/shared-data#build", "@repo/design-system#build"],
+      "dependsOn": [
+        "@repo/shared-data#build",
+        "@repo/design-system#build",
+        "@repo/logging#build"
+      ],
       "cache": false,
       "persistent": true
     },
