@@ -74,7 +74,7 @@ const config = [
         },
       ],
       "@typescript-eslint/no-namespace": ["error", { allowDeclarations: true }],
-      // turn off eslint undef
+      // turn off ESLint undef
       "no-undef": "off",
     },
   },

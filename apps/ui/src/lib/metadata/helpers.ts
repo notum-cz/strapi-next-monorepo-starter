@@ -84,41 +84,42 @@ export const getMetaAlternates = ({
   localizations?: StrapiLocalization[]
 }) => {
   const canonicalUrl = seo?.canonicalUrl ?? fullPath ?? ""
+  let languages: Record<string, string> | undefined
 
-  const languages = Array.isArray(localizations)
-    ? {
-        // Only available languages should be added as alternates
-        ...localizations?.reduce((acc, curr) => {
-          if (!curr.locale) {
-            return acc
-          }
+  if (Array.isArray(localizations)) {
+    languages = {}
 
-          return {
-            ...acc,
-            [curr.locale]: normalizePageFullPath([canonicalUrl], curr.locale),
-          }
-        }, {}),
-        // If you are on defaultLocale, it should point to the en version too
-        ...(locale === routing.defaultLocale
-          ? {
-              [routing.defaultLocale]: normalizePageFullPath(
-                [canonicalUrl],
-                routing.defaultLocale
-              ),
-            }
-          : {}),
-        // x-default should be added to point to defaultLocale version if exists
-        ...(locale === routing.defaultLocale ||
-        localizations?.find((lang) => lang.locale === routing.defaultLocale)
-          ? {
-              "x-default": normalizePageFullPath(
-                [canonicalUrl],
-                routing.defaultLocale
-              ),
-            }
-          : {}),
+    // Only available languages should be added as alternates
+    for (const localization of localizations) {
+      if (!localization.locale) {
+        continue
       }
-    : undefined
+
+      languages[localization.locale] = normalizePageFullPath(
+        [canonicalUrl],
+        localization.locale
+      )
+    }
+
+    // If you are on defaultLocale, it should point to the en version too
+    if (locale === routing.defaultLocale) {
+      languages[routing.defaultLocale] = normalizePageFullPath(
+        [canonicalUrl],
+        routing.defaultLocale
+      )
+    }
+
+    // x-default should be added to point to defaultLocale version if exists
+    if (
+      locale === routing.defaultLocale ||
+      localizations.some((lang) => lang.locale === routing.defaultLocale)
+    ) {
+      languages["x-default"] = normalizePageFullPath(
+        [canonicalUrl],
+        routing.defaultLocale
+      )
+    }
+  }
 
   const canonical = canonicalUrl
     ? normalizePageFullPath([canonicalUrl], locale)

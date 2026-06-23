@@ -88,17 +88,15 @@ export async function GET(request: Request) {
     locale,
     url: {
       urlParam,
-      processedUrl: `${url}`,
+      processedUrl: url,
     },
     status,
   })
 
   // Redirect to the path from the fetched post
-  redirect({ href: `${url}`, locale })
+  redirect({ href: url, locale })
 }
 const validPageStatusKeys = new Set(["draft", "published"])
 const draftModePrerenderCookieKey = "__prerender_bypass"
 
-const validPageUrlRegex = new RegExp(
-  String.raw`^(${ROOT_PAGE_PATH}[a-zA-Z0-9-%]*)+$`
-)
+const validPageUrlRegex = new RegExp(`^(${ROOT_PAGE_PATH}[a-zA-Z0-9-%]*)+$`)

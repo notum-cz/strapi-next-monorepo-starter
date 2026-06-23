@@ -23,7 +23,7 @@ export class PrivateClient extends BaseStrapiClient {
       url += `?${queryString}`
     }
 
-    let completeUrl = ""
+    let completeUrl: string
     let headers: Record<string, string> = {}
 
     if (options?.useProxy) {
@@ -55,7 +55,7 @@ export class PrivateClient extends BaseStrapiClient {
       url: completeUrl,
       headers: {
         Accept: "application/json",
-        ...(isFormData ? {} : { "Content-type": "application/json" }),
+        ...(!isFormData && { "Content-type": "application/json" }),
         ...headers,
       },
     }

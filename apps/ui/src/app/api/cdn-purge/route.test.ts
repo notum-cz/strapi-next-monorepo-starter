@@ -25,10 +25,12 @@ const request = (body: unknown, token?: string) =>
   new Request("http://localhost/api/cdn-purge", {
     method: "POST",
     body: JSON.stringify(body),
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
+    headers: token
+      ? {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        }
+      : { "Content-Type": "application/json" },
   })
 
 describe("POST /api/cdn-purge", () => {

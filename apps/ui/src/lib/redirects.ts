@@ -82,7 +82,14 @@ function cacheRedirects(redirects: RedirectRecord[]) {
 
 // Refresh failures should not break navigation. If Strapi is temporarily down,
 // keep serving the last known redirect list until a later refresh succeeds.
+//
+// Kept as a promise chain (not async/await): the expired-cache-miss path in
+// `findRedirectForPath` reuses this same in-flight promise via the `??=` guard,
+// and that dedup relies on `redirectFetchPromise` staying set until the chain
+// fully settles. Rewriting with async/await resets it a few microtasks earlier,
+// which lets the miss path spawn a redundant Strapi fetch.
 function refreshRedirects() {
+  /* eslint-disable unicorn/prefer-await -- promise chain is intentional, see note above */
   redirectFetchPromise ??= fetchRedirects()
     .then(cacheRedirects)
     .catch((error: unknown) => {
@@ -93,6 +100,7 @@ function refreshRedirects() {
     .finally(() => {
       redirectFetchPromise = undefined
     })
+  /* eslint-enable unicorn/prefer-await */
 
   return redirectFetchPromise
 }

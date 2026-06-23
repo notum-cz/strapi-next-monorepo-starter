@@ -89,6 +89,6 @@ export type StrapiLocalization = {
   locale: Locale
 }
 
-export type PageLocalization = {
+export type PageLocalization = null | {
   localizations: StrapiLocalization[]
-} | null
+}

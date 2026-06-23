@@ -68,7 +68,7 @@ export async function generateStaticParams({
     return []
   }
 
-  // statically generated applications with output: 'export' require at least one entry (even invalid)
+  // statically generated apps with output: 'export' require at least one entry (even invalid)
   // within the dynamic segment to avoid build errors
   const fallbackPath = createFallbackPath(locale as Locale, {
     rest: ["fallback"],

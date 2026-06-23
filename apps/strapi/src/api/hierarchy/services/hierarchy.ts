@@ -16,6 +16,12 @@ import type { FullPathChange, HierarchyPageNode } from "../utils/types"
 
 const PAGE_BATCH_SIZE = 500
 
+// Strapi core services are object factories where methods dispatch to each
+// other via `this` (the merged service instance). That late binding is what
+// lets the service be composed/overridden and lets tests spy on individual
+// methods. `unicorn/no-this-outside-of-class` assumes `this` only belongs in
+// classes, which does not fit this framework pattern.
+/* eslint-disable unicorn/no-this-outside-of-class */
 export default factories.createCoreService(
   "api::hierarchy.hierarchy",
   ({ strapi }) => ({
@@ -265,7 +271,8 @@ export default factories.createCoreService(
     },
 
     async stampLastRecalculation() {
-      const data = { lastRecalculationAt: new Date().toISOString() }
+      const now = new Date()
+      const data = { lastRecalculationAt: now.toISOString() }
 
       try {
         const existing = await strapi

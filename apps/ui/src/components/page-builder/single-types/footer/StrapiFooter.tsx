@@ -19,6 +19,9 @@ export function StrapiFooter({ locale }: { readonly locale: Locale }) {
     return null
   }
 
+  const now = new Date()
+  const currentYear = now.getFullYear()
+
   return (
     <div className="bg-primary/10 w-full border-t shadow-sm backdrop-blur transition-colors duration-300">
       <Container className="pt-8 pb-4">
@@ -56,10 +59,7 @@ export function StrapiFooter({ locale }: { readonly locale: Locale }) {
           <div>
             {footer.copyRight && (
               <Typography className="mx-auto w-fit lg:mx-0">
-                {footer.copyRight.replace(
-                  "{YEAR}",
-                  new Date().getFullYear().toString()
-                )}
+                {footer.copyRight.split("{YEAR}").join(String(currentYear))}
               </Typography>
             )}
           </div>

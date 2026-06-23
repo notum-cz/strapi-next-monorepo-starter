@@ -29,10 +29,12 @@ const request = (body: unknown, token?: string) =>
   new Request("http://localhost/api/strapi-revalidate", {
     method: "POST",
     body: typeof body === "string" ? body : JSON.stringify(body),
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
+    headers: token
+      ? {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        }
+      : { "Content-Type": "application/json" },
   })
 
 describe("POST /api/strapi-revalidate", () => {

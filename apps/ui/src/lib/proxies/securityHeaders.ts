@@ -45,7 +45,7 @@ function frameAncestorsFromEnv(): string | null {
  * Builds the Content-Security-Policy.
  *
  * The baseline below is intentionally strict — it only allows this app's own
- * origin plus Strapi media over https. If you add third-party scripts/services
+ * origin plus Strapi media over HTTPS. If you add third-party scripts/services
  * (analytics, tag managers, embeds, captchas), allowlist their origins in the
  * relevant directive. Commented examples for a Google Tag Manager / Analytics /
  * Ads setup are left inline as a starting point — uncomment and adjust as needed.
@@ -73,7 +73,7 @@ function buildCsp({
       // "https://googleads.g.doubleclick.net",
     ].join(" "),
     "style-src 'self' 'unsafe-inline'",
-    // imgproxy, blob storage and Strapi media are all served over https.
+    // imgproxy, blob storage and Strapi media are all served over HTTPS.
     [
       "img-src 'self' data: blob: https:",
       ...(allowLocalStrapiMedia ? ["http://127.0.0.1:1337"] : []),
@@ -119,7 +119,7 @@ export function withSecurityHeaders(
   req: NextRequest,
   res: NextResponse
 ): NextResponse {
-  // Expose the Strapi origin only after a valid /api/preview flow; public
+  // Expose the Strapi origin only after a valid /API/preview flow; public
   // traffic gets frame-ancestors 'none' and never sees STRAPI_URL.
   const isPreview = req.cookies.has(STRAPI_PREVIEW_FRAME_COOKIE)
   const frameAncestors = isPreview ? frameAncestorsFromEnv() : null

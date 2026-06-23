@@ -12,13 +12,14 @@ export const verifyRecaptcha = async (token?: string): Promise<boolean> => {
   }
 
   try {
+    const params = new URLSearchParams({
+      secret,
+      response: token,
+    })
     const response = await fetch(verificationUrl, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        secret,
-        response: token,
-      }).toString(),
+      body: params.toString(),
       cache: "no-store",
     })
 

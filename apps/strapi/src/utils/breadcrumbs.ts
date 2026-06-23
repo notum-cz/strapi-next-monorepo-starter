@@ -27,13 +27,13 @@ export const generateBreadcrumbs = async (
 
   // Create a populate object based on the number of parents
   interface Populate {
-    parent?: { populate: Populate } | true
+    parent?: true | { populate: Populate }
   }
 
   const populate: Populate = {}
   let currentPopulate: Populate = populate
 
-  parents.forEach((_, index) => {
+  for (let index = 0; index < parents.length; index++) {
     if (index === parents.length - 1) {
       // If it's the last parent, assign `true` to indicate the deepest level
       currentPopulate.parent = true
@@ -43,7 +43,7 @@ export const generateBreadcrumbs = async (
       // Move deeper into the next level
       currentPopulate = currentPopulate.parent.populate
     }
-  })
+  }
 
   // Create Breadcrumbs data based on parents
   const breadcrumbs: Breadcrumb[] = [

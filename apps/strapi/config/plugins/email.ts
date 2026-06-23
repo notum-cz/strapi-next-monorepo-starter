@@ -40,7 +40,7 @@ const prepareMailtrapEmailConfig = (env: EnvGetter) => {
       provider: "nodemailer",
       providerOptions: {
         host: env("MAILTRAP_HOST", "sandbox.smtp.mailtrap.io"),
-        port: Number.parseInt(env("MAILTRAP_PORT", "2525"), 10),
+        port: Number(env("MAILTRAP_PORT", "2525")),
         auth: {
           user: mailtrapUser,
           pass: mailtrapPass,

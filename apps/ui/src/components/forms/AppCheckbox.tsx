@@ -16,13 +16,13 @@ import { cn } from "@/lib/styles"
 import { AppFormDescription } from "./AppFormDescription"
 import { AppFormLabel } from "./AppFormLabel"
 
-type Props = {
+type Props = Omit<React.InputHTMLAttributes<HTMLInputElement>, "className"> & {
   readonly name: string
   readonly label?: React.ReactNode
   readonly containerClassName?: string
   readonly fieldClassName?: string
   readonly description?: React.ReactNode
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "className">
+}
 
 export function AppCheckbox({
   name,
