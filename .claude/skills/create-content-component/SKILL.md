@@ -31,6 +31,7 @@ If unsure, ask the user before scaffolding.
 - **Name** — kebab-case, lowercase (e.g. `pricing-table`). Reject Pascal/camelCase.
 - **Category** — lowercase, no spaces. Existing under `apps/strapi/src/components/`: `elements`, `forms`, `layout`, `sections`, `seo-utilities`, `shared`, `utilities`. Create the dir before the schema if new.
 - **Attributes** — fields the component needs.
+- **Admin icon** — set `info.icon` to a representative name from `references/strapi-icons.txt` (optional but recommended; vary it per component).
 - **Rich text?** — two editors are available, CKEditor and TipTap. Reuse a `utilities.*` rich-text component, or declare the matching `customField` — never raw `richtext`. See `examples.md` (Rich text).
 - **Relation needing specific fields?** — components are populated automatically by smart-populate; only relations that need extra fields/depth require a `populateOverrides` entry (Procedure step 3).
 
@@ -158,6 +159,7 @@ See `apps/docs/docs/ui/built-in-pages/showcase.md` for full examples and convent
 
 - `workflow.md` — full per-phase procedure with code blocks
 - `examples.md` — attribute patterns, rich-text editors (CKEditor + TipTap), override shapes
+- `references/strapi-icons.txt` — valid `info.icon` names for the admin builder
 - `add-content-type` — when the new thing should be a top-level API resource
 - `add-ui-component` — generic UI primitives
 - `vercel-react-best-practices` / `next-best-practices` / `frontend-design` — vendored React/Next.js + design standards for the component's frontend (in `.agents/skills/`)

@@ -40,6 +40,10 @@ Additional knobs: `description` (admin UI hint), `default`, `private`.
 
 Reference: https://docs.strapi.io/cms/backend-customization/models#model-schema
 
+## Admin icon (`info.icon`)
+
+Optional but recommended — the icon shown for the component in the admin builder. Pick a representative name from [`references/strapi-icons.txt`](references/strapi-icons.txt) (e.g. `discuss` for testimonials, `cube` for a feature grid, `bell` for a banner) and use the exact string. Vary icons across components.
+
 ## Rich text (CKEditor or TipTap)
 
 Two rich-text editors are configured — both are `customField`s. **Never use Strapi's raw `richtext`.** When you just need a rich-text block, reuse an existing `utilities.*` component rather than redeclaring the field.
@@ -89,7 +93,8 @@ Schema (`apps/strapi/src/components/sections/testimonials.json`):
 {
   "collectionName": "components_sections_testimonials",
   "info": {
-    "displayName": "Testimonials"
+    "displayName": "Testimonials",
+    "icon": "discuss"
   },
   "options": {},
   "attributes": {

@@ -11,6 +11,7 @@ Full step-by-step. SKILL.md is the routing surface; this file holds the per-phas
   "collectionName": "components_<category>_<name_underscored>",
   "info": {
     "displayName": "<PascalCaseName>",
+    "icon": "<chosen-icon>",
     "description": ""
   },
   "options": {},
@@ -22,6 +23,8 @@ Full step-by-step. SKILL.md is the routing surface; this file holds the per-phas
   }
 }
 ```
+
+`info.icon` is the admin-panel icon (optional but recommended). Pick one that represents the component's purpose from [`references/strapi-icons.txt`](references/strapi-icons.txt) — use the exact name, and vary it across components rather than reusing one.
 
 See `examples.md` for the full attribute palette (rich text — CKEditor & TipTap, nested components, media, enums, etc.).
 
