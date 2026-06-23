@@ -99,6 +99,7 @@ if [ -d "${target}" ]; then
     git -C "${canonical_root}" worktree remove --force "${target}" 2>/dev/null || rm -rf "${target}"
   else
     echo "create: target already exists at ${target} (pass --force to recreate)"
+    printf '%s\n' "${target}"
     exit 0
   fi
 fi
@@ -129,6 +130,6 @@ fi
 # Apply manifest.
 "${script_dir}/setup.sh" "${target}"
 
-echo "create: done — copy/paste to enter:"
+echo "create: done — target path:"
 # Last line is just the path, suitable for `cd $(...)`.
-printf '%s\n' "cd ${target}"
+printf '%s\n' "${target}"

@@ -16,8 +16,11 @@ export default ({ env }) => ({
     tasks: cronTasks,
   },
   // Built-in Strapi MCP server (Strapi 5.47+), exposed at /mcp.
-  // Enabled by default; set STRAPI_MCP_ENABLED=false to turn it off.
+  // Enabled by default only in development; set STRAPI_MCP_ENABLED=true to opt in elsewhere.
   mcp: {
-    enabled: env.bool("STRAPI_MCP_ENABLED", true),
+    enabled: env.bool(
+      "STRAPI_MCP_ENABLED",
+      env("NODE_ENV", "development") === "development"
+    ),
   },
 })

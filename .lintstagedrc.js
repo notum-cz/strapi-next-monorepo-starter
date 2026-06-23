@@ -3,7 +3,13 @@ const fs = require("node:fs")
 // Symlinked files (e.g. AGENTS.md → CLAUDE.md) can't be formatted/linted when
 // passed explicitly — prettier/eslint error on them. Drop symlinks from the list.
 const realFiles = (files) =>
-  files.filter((f) => !fs.lstatSync(f).isSymbolicLink())
+  files.filter((f) => {
+    try {
+      return fs.existsSync(f) && !fs.lstatSync(f).isSymbolicLink()
+    } catch {
+      return false
+    }
+  })
 
 module.exports = {
   "*.{js,jsx,ts,tsx}": (files) => {

@@ -17,7 +17,14 @@ arg_target=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --force) force=1 ;;
-    --base)  shift; base="${1:-}" ;;
+    --base)
+      shift
+      if [ $# -eq 0 ] || [ "${1#-}" != "$1" ]; then
+        echo "cleanup: --base requires a branch name" >&2
+        exit 2
+      fi
+      base="$1"
+      ;;
     -*)      echo "cleanup: unknown flag $1" >&2; exit 2 ;;
     *)
       if [ -z "${arg_target}" ]; then arg_target="$1"
@@ -98,7 +105,11 @@ if [ "${force}" -eq 0 ]; then
   fi
 fi
 
-git -C "${canonical_root}" worktree remove ${force:+--force} "${target}"
+if [ "${force}" -eq 1 ]; then
+  git -C "${canonical_root}" worktree remove --force "${target}"
+else
+  git -C "${canonical_root}" worktree remove "${target}"
+fi
 echo "cleanup: removed worktree ${target}"
 
 # Optionally delete the local branch if fully merged.
