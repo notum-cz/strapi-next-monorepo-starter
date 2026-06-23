@@ -79,36 +79,37 @@ Bundled scripts assume **the repo root is the current working directory** when i
 
 Currently shipped:
 
-| Skill                         | Type            | Purpose                                                                 |
-| ----------------------------- | --------------- | ----------------------------------------------------------------------- |
-| `make-pr`                     | stack-agnostic  | Create a GitHub PR from the current branch with a templated body.       |
-| `start-work`                  | stack-agnostic  | Start work on an issue: create worktree + branch, draft initial plan.   |
-| `review-pr`                   | stack-agnostic  | Review a PR (or local branch vs `dev`) with parallel review subagents.  |
-| `write-tests`                 | stack-agnostic  | Generate or extend Vitest / Playwright tests for a target.              |
-| `validate-branch-refs`        | stack-agnostic  | Validate and update stale references/claims in docs, comments, config.  |
-| `add-content-type`            | stack-coupled   | Scaffold a Strapi v5 collection or single type + reminders.             |
-| `add-ui-component`            | stack-coupled   | Add a Next.js / shadcn UI component under `apps/ui/src/components/`.    |
-| `add-locale`                  | stack-coupled   | Wire a new locale into Strapi i18n + Next.js routing.                   |
-| `create-content-component`    | stack-coupled   | Build a Strapi component used by the page builder + Next.js render.     |
-| `copy-component`              | stack-coupled   | Replicate a section from a description, screenshot, or code snippet.    |
-| `find-component`              | stack-coupled   | Find an existing page-builder component by description or screenshot.   |
-| `consolidate-patterns`        | stack-coupled   | Extract repeated JSX from page-builder components into elementary ones. |
-| `seed-content`                | stack-coupled   | Seed pages / navbar / footer into local Strapi via the MCP server.      |
-| `strapi-schema-check`         | stack-coupled   | Validate Strapi schema diffs (auto-loaded on `schema.json` edits).      |
-| `remove-sentry`               | stack-coupled   | Remove Sentry from the UI and Strapi while keeping structured logging.  |
-| `remove-azure-monitor`        | stack-coupled   | Remove the Azure Monitor telemetry exporter, keeping logging intact.    |
-| `remove-cache-revalidation`   | stack-coupled   | Uninstall the Next.js cache revalidation feature (and CDN purge).       |
-| `remove-cdn-purge`            | stack-coupled   | Uninstall the optional CDN purge integration only.                      |
-| `find-skills`                 | helper/vendored | Discover and install additional agent skills via the Skills CLI.        |
-| `frontend-design`             | helper/vendored | Apply distinctive visual design guidance for frontend work.             |
-| `next-best-practices`         | helper/vendored | Apply Next.js App Router, RSC, data, metadata, and bundling guidance.   |
-| `vercel-react-best-practices` | helper/vendored | Apply Vercel React and Next.js performance rules.                       |
+| Skill                         | Type            | Purpose                                                                  |
+| ----------------------------- | --------------- | ------------------------------------------------------------------------ |
+| `start-work`                  | stack-agnostic  | Start work on an issue: create worktree + branch, draft initial plan.    |
+| `make-pr`                     | stack-agnostic  | Create a GitHub PR from the current branch with a templated body.        |
+| `review-pr`                   | stack-agnostic  | Review a PR (or local branch vs `dev`) with parallel review subagents.   |
+| `resolve-review-suggestions`  | stack-agnostic  | Use authenticated `gh` to implement unresolved GitHub PR review threads. |
+| `validate-branch-refs`        | stack-agnostic  | Validate and update stale references/claims in docs, comments, config.   |
+| `write-tests`                 | stack-agnostic  | Generate or extend Vitest / Playwright tests for a target.               |
+| `add-content-type`            | stack-coupled   | Scaffold a Strapi v5 collection or single type + reminders.              |
+| `add-ui-component`            | stack-coupled   | Add a Next.js / shadcn UI component under `apps/ui/src/components/`.     |
+| `add-locale`                  | stack-coupled   | Wire a new locale into Strapi i18n + Next.js routing.                    |
+| `create-content-component`    | stack-coupled   | Build a Strapi component used by the page builder + Next.js render.      |
+| `copy-component`              | stack-coupled   | Replicate a section from a description, screenshot, or code snippet.     |
+| `find-component`              | stack-coupled   | Find an existing page-builder component by description or screenshot.    |
+| `consolidate-patterns`        | stack-coupled   | Extract repeated JSX from page-builder components into elementary ones.  |
+| `seed-content`                | stack-coupled   | Seed pages / navbar / footer into local Strapi via the MCP server.       |
+| `strapi-schema-check`         | stack-coupled   | Validate Strapi schema diffs (auto-loaded on `schema.json` edits).       |
+| `remove-sentry`               | stack-coupled   | Remove Sentry from the UI and Strapi while keeping structured logging.   |
+| `remove-azure-monitor`        | stack-coupled   | Remove the Azure Monitor telemetry exporter, keeping logging intact.     |
+| `remove-cache-revalidation`   | stack-coupled   | Uninstall the Next.js cache revalidation feature (and CDN purge).        |
+| `remove-cdn-purge`            | stack-coupled   | Uninstall the optional CDN purge integration only.                       |
+| `find-skills`                 | helper/vendored | Discover and install additional agent skills via the Skills CLI.         |
+| `frontend-design`             | helper/vendored | Apply distinctive visual design guidance for frontend work.              |
+| `next-best-practices`         | helper/vendored | Apply Next.js App Router, RSC, data, metadata, and bundling guidance.    |
+| `vercel-react-best-practices` | helper/vendored | Apply Vercel React and Next.js performance rules.                        |
 
 ## Stack-coupled vs stack-agnostic
 
 | Type            | Examples                                                                                                                                                                                                                                                                      |
 | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Stack-agnostic  | `make-pr`, `review-pr`, `start-work`, `write-tests`, `validate-branch-refs`                                                                                                                                                                                                   |
+| Stack-agnostic  | `start-work`, `make-pr`, `review-pr`, `resolve-review-suggestions`, `validate-branch-refs`, `write-tests`                                                                                                                                                                     |
 | Stack-coupled   | `add-content-type`, `add-ui-component`, `strapi-schema-check`, `add-locale`, `create-content-component`, `copy-component`, `find-component`, `consolidate-patterns`, `seed-content`, `remove-sentry`, `remove-azure-monitor`, `remove-cache-revalidation`, `remove-cdn-purge` |
 | Helper/vendored | `find-skills`, `frontend-design`, `next-best-practices`, `vercel-react-best-practices`                                                                                                                                                                                        |
 

@@ -31,6 +31,7 @@ See the [Workflows](#workflows) section below for diagrams of how these chain to
 | [start-work](./start-work.md)                                   | Stack-agnostic    | Start work on an issue in an isolated worktree + plan.                                     |
 | [make-pr](./make-pr.md)                                         | Stack-agnostic    | Commit, push, and open a GitHub PR from the branch.                                        |
 | [review-pr](./review-pr.md)                                     | Stack-agnostic    | Review a PR or local branch diff before merge.                                             |
+| [resolve-review-suggestions](./resolve-review-suggestions.md)   | Stack-agnostic    | Use authenticated `gh` to implement unresolved GitHub PR review threads.                   |
 | [validate-branch-refs](./validate-branch-refs.md)               | Stack-agnostic    | Fix stale references/claims a branch's diff left behind.                                   |
 | [write-tests](./write-tests.md)                                 | Stack-agnostic    | Add or extend Vitest / Playwright tests.                                                   |
 | [find-skills](./find-skills.md)                                 | Helper / vendored | Discover and install additional agent skills.                                              |
@@ -42,31 +43,52 @@ See the [Workflows](#workflows) section below for diagrams of how these chain to
 
 ## Workflows
 
-How the skills chain together for common tasks. Every implementation path ends the same way — **write tests → review → open the PR**.
+How the skills chain together for common tasks. Every implementation path ends the same way — **write tests → review → open the PR**. After reviewers comment on GitHub, `resolve-review-suggestions` handles the feedback loop; it is GitHub-only and requires authenticated `gh`.
 
 ### At a glance
 
 The entry points and the shared finish.
 
 ```mermaid
-flowchart LR
+flowchart TB
   classDef skill fill:#eef2ff,stroke:#6366f1,color:#1f2937
   classDef tail fill:#ecfeff,stroke:#0891b2,color:#164e63
   classDef helper fill:#f1f5f9,stroke:#94a3b8,color:#0f172a
 
-  S["/start-work"]:::skill
-  S --> CP["/copy-component<br/><small>description · screenshot · code</small>"]:::skill
-  S --> C["/add-content-type<br/><small>new collection / single type</small>"]:::skill
+  subgraph Entry["Start"]
+    direction TB
+    S["/start-work"]:::skill
+  end
 
-  CP --> F["/find-component<br/><small>reuse check</small>"]:::skill
+  subgraph Build["Build or change"]
+    direction TB
+    CP["/copy-component<br/><small>description · screenshot · code</small>"]:::skill
+    F["/find-component<br/><small>reuse check</small>"]:::skill
+    A["/create-content-component<br/><small>build the section</small>"]:::skill
+    C["/add-content-type<br/><small>new collection / single type</small>"]:::skill
+    H["frontend-design<br/>next-best-practices<br/>vercel-react-best-practices"]:::helper
+  end
+
+  subgraph Finish["Finish"]
+    direction TB
+    T["/write-tests"]:::tail
+    R["/review-pr"]:::tail
+    P["/make-pr"]:::tail
+    RS["/resolve-review-suggestions<br/><small>GitHub review feedback</small>"]:::tail
+  end
+
+  S --> CP
+  S --> C
+  CP --> F
   F -->|"reuse"| T
-  F -->|"no match"| A["/create-content-component<br/><small>build the section</small>"]:::skill
+  F -->|"no match"| A
 
-  A -.-> H["frontend-design<br/>next-best-practices<br/>vercel-react-best-practices"]:::helper
-  A --> T["/write-tests"]:::tail
+  A -.-> H
+  A --> T
   C --> T
-  T --> R["/review-pr"]:::tail
-  R --> P["/make-pr"]:::tail
+  T --> R
+  R --> P
+  P -.-> RS
 ```
 
 ### Replicating a component (description, screenshot, or code)
