@@ -16,40 +16,21 @@ paths:
 
 # Add a Strapi Content Type
 
-Create a new top-level Strapi v5 content type. A content type owns a DB table, a REST endpoint at `/api/<plural>`, and admin UI entries. For schema fragments dropped into a page's dynamic zone, use `create-content-component` instead.
+Create a new top-level Strapi v5 content type — a DB table, a REST endpoint at `/api/<plural>`, and admin entries. For schema fragments dropped into a page's dynamic zone, use `create-content-component` instead.
 
-## Phase 1 — Decide kind
+Full worked walkthrough (with a `product` example): `apps/docs/docs/getting-started/add-content-type.md`. This skill is the condensed checklist.
 
-| Kind | When | Example |
-|---|---|---|
-| `collectionType` | Multiple entries | blog posts, authors, tours, events |
-| `singleType` | Exactly one entry | navbar, footer, site settings |
+## Phase 1 — Kind, i18n, draft/publish
 
-Ask the user if unclear. Default to `collectionType`.
+- **Kind** — `collectionType` (many entries: blog posts, authors, events) or `singleType` (exactly one: navbar, footer, settings). Default `collectionType`; ask if unclear.
+- **Localized?** Most public content yes (Page, Navbar, Footer are); internal records often no.
+- **Draft & publish?** `true` for editorial content; `false` for system records.
 
-## Phase 2 — Decide i18n + draft/publish
+## Phase 2 — Scaffold files
 
-- **Localized?** Most public content yes. Internal admin records often no. Check existing content types in `apps/strapi/src/api/` for project convention (Page, Footer, Navbar are localized).
-- **Draft & publish?** Default `true` for editorial content. `false` for system records (e.g. internal-job).
+Singular kebab-case name (`blog-post`, `product`). Create under `apps/strapi/src/api/<name>/`: `content-types/<name>/schema.json`, `controllers/<name>.ts`, `services/<name>.ts`, `routes/<name>.ts`.
 
-## Phase 3 — Scaffold files
-
-Singular kebab-case name (`blog-post`, `author`, `event`). Create at `apps/strapi/src/api/<name>/`:
-
-```
-apps/strapi/src/api/<name>/
-  content-types/
-    <name>/
-      schema.json
-  controllers/
-    <name>.ts
-  services/
-    <name>.ts
-  routes/
-    <name>.ts
-```
-
-### schema.json (collection example)
+### schema.json
 
 ```json
 {
@@ -58,129 +39,100 @@ apps/strapi/src/api/<name>/
   "info": {
     "singularName": "<name>",
     "pluralName": "<plural>",
-    "displayName": "Display Name",
-    "description": ""
+    "displayName": "Display Name"
   },
-  "options": {
-    "draftAndPublish": true
-  },
-  "pluginOptions": {
-    "i18n": {
-      "localized": true
-    }
-  },
+  "options": { "draftAndPublish": true },
+  "pluginOptions": { "i18n": { "localized": true } },
   "attributes": {
     "title": {
       "type": "string",
       "required": true,
-      "pluginOptions": {
-        "i18n": { "localized": true }
-      }
+      "pluginOptions": { "i18n": { "localized": true } }
     }
   }
 }
 ```
 
-For single types: `"kind": "singleType"`. `collectionName` still required (used as table name).
+Single types use `"kind": "singleType"` (`collectionName` still required — it's the table name).
 
-### controllers/<name>.ts
+### controllers / services / routes
 
-```ts
-import { factories } from "@strapi/strapi"
-
-export default factories.createCoreController("api::<name>.<name>")
-```
-
-For custom logic, extend the factory — see `apps/strapi/src/api/page/controllers/page.ts` for an in-tree reference (custom `find` with breadcrumb generation).
-
-### services/<name>.ts
+Each is a one-line factory (substitute `<name>`):
 
 ```ts
 import { factories } from "@strapi/strapi"
 
-export default factories.createCoreService("api::<name>.<name>")
+export default factories.createCoreController("api::<name>.<name>") // controller
+export default factories.createCoreService("api::<name>.<name>") // service
+export default factories.createCoreRouter("api::<name>.<name>") // router
 ```
 
-### routes/<name>.ts
+This exposes standard CRUD (`GET`/`POST /api/<plural>`, …). For custom logic, override controller methods — see `apps/strapi/src/api/page/controllers/page.ts`. You can also scaffold via `pnpm -F @repo/strapi strapi generate`.
 
-```ts
-import { factories } from "@strapi/strapi"
+## Phase 3 — Attributes
 
-export default factories.createCoreRouter("api::<name>.<name>")
-```
+Common types (full reference: `apps/docs/docs/strapi/strapi-schemas.md`):
 
-For custom routes, replace with a plain `routes` array — see Strapi v5 docs.
+| Type                           | Snippet                                                                         |
+| ------------------------------ | ------------------------------------------------------------------------------- |
+| `string` / `text` / `richtext` | `{ "type": "string" }`                                                          |
+| `integer` / `decimal`          | `{ "type": "decimal" }`                                                         |
+| `boolean`                      | `{ "type": "boolean", "default": false }`                                       |
+| `enumeration`                  | `{ "type": "enumeration", "enum": ["A","B"] }`                                  |
+| `media`                        | `{ "type": "media", "allowedTypes": ["images"], "multiple": false }`            |
+| `relation`                     | `{ "type": "relation", "relation": "oneToMany", "target": "api::other.other" }` |
+| `component`                    | `{ "type": "component", "component": "category.name", "repeatable": false }`    |
+| `uid`                          | `{ "type": "uid", "targetField": "title" }`                                     |
 
-## Phase 4 — Common attribute types
+Localized fields need `"pluginOptions": { "i18n": { "localized": true } }` **per attribute**; un-localized fields share one value across locales.
 
-| Type | Snippet |
-|---|---|
-| `string` | `{ "type": "string" }` |
-| `text` | `{ "type": "text" }` |
-| `richtext` | `{ "type": "richtext" }` |
-| `integer` | `{ "type": "integer" }` |
-| `boolean` | `{ "type": "boolean", "default": false }` |
-| `enumeration` | `{ "type": "enumeration", "enum": ["A","B"] }` |
-| `media` | `{ "type": "media", "allowedTypes": ["images"], "multiple": false }` |
-| `relation` | `{ "type": "relation", "relation": "oneToMany", "target": "api::other.other" }` |
-| `component` | `{ "type": "component", "component": "category.name", "repeatable": false }` |
-| `dynamiczone` | `{ "type": "dynamiczone", "components": ["sections.hero","sections.cta"] }` |
-| `json` | `{ "type": "json" }` |
-| `uid` | `{ "type": "uid", "targetField": "title" }` |
-
-Localized fields need `"pluginOptions": { "i18n": { "localized": true } }` per attribute (not just on the schema).
-
-## Phase 5 — Regenerate types
+## Phase 4 — Regenerate types
 
 ```bash
 pnpm --filter @repo/strapi generate:types
 ```
 
-Runs `strapi ts:generate-types`. Required before the UI client can reference the new UID.
+Required before the UI can reference the new UID. Afterward `UID.ContentType` and `Data.ContentType<"api::<name>.<name>">` resolve — see `apps/docs/docs/reference/packages/strapi-types.md`.
 
-## Phase 6 — Wire UI client (if frontend reads it)
+## Phase 5 — Wire the UI client (if the frontend reads it)
 
-Edit `apps/ui/src/lib/strapi-api/base.ts` — add UID → path mapping in `API_ENDPOINTS`:
+- Add the UID → path mapping to `API_ENDPOINTS` in `apps/ui/src/lib/strapi-api/base.ts`:
 
-```ts
-export const API_ENDPOINTS: Partial<Record<UID.ContentType, string>> = {
-  // ...existing entries
+  ```ts
   "api::<name>.<name>": "/<plural>",
-}
-```
+  ```
 
-Then add a fetcher in `apps/ui/src/lib/strapi-api/content/` (mirror an existing one — page, footer, navbar).
+- Fetch with `PublicStrapiClient.fetchMany` / `fetchOneBySlug(...)` (mirror page/footer/navbar). See `apps/docs/docs/ui/strapi-api-client.md`.
+- **Client-side fetches only:** also add `api/<plural>` to the allow-list in `apps/ui/src/lib/strapi-api/request-auth.ts`. Server Components don't need this.
+- **Relations needing a specific shape:** add a `populateOverrides` entry in `apps/strapi/config/plugins.ts` (smart-populate). Flat schemas need nothing — see `apps/docs/docs/strapi/plugins/smart-populate.md`.
 
-## Phase 7 — Configure admin permissions
+## Phase 6 — Access (usually nothing to do)
 
-Manual step in Strapi admin (not codifiable):
+The UI authenticates with Strapi's **read-only API token**, which already covers `find`/`findOne` on every content type — including new ones — so a read-only UI needs **no permission change**. Adjust permissions only for:
 
-1. Settings → Roles → **Public** → enable `find` + `findOne` for the new content type.
-2. If API tokens used, grant token access to the type.
+- **UI writes** (Custom token) → Settings → API Tokens → enable actions on the type.
+- **Per-user reads/writes** (user JWT via `PrivateStrapiClient`) → Settings → Users & Permissions → Roles → Authenticated.
 
-## Phase 8 — Verify
+Permissions live in the DB and travel via the seed export — see the walkthrough's "Grant access" section and `apps/docs/docs/strapi/data-seeding.md`.
 
-1. `pnpm --filter @repo/strapi dev` boots without schema errors.
-2. Visit `http://localhost:1337/admin` → confirm new content type appears.
-3. Create one test entry, publish.
-4. Hit `http://localhost:1337/api/<plural>` → expect non-empty `data` array.
-5. If UI-wired: confirm fetcher returns data in dev UI.
+## Phase 7 — Verify
+
+1. `pnpm dev:strapi` boots without schema errors; the new type appears in admin.
+2. Create + publish one entry; `GET http://localhost:1337/api/<plural>` returns a non-empty `data` array.
+3. If UI-wired: the fetcher returns data in dev.
+4. Optional — `pnpm seed:export` and commit the export so others get the sample content (only if you created new content).
 
 ## Checklist
 
 - [ ] schema.json — correct `kind`, `collectionName`, `singularName`, `pluralName`
-- [ ] controller, service, routes files created
+- [ ] controller, service, routes created
 - [ ] i18n flag set per schema + per localized attribute
 - [ ] `pnpm --filter @repo/strapi generate:types` run
-- [ ] `API_ENDPOINTS` entry added (if UI reads)
-- [ ] UI fetcher added (if UI reads)
-- [ ] Public permissions granted in admin
+- [ ] `API_ENDPOINTS` entry added (if UI reads); proxy allow-list updated (client-side only)
+- [ ] Write / per-user permissions adjusted only if needed
 - [ ] Strapi boots clean
-- [ ] **Schema migration check passes** — if you modify schemas later, run `strapi-schema-check` before opening PR
 
 ## Notes
 
-- **Not for page-builder sections.** Sections live as components under `apps/strapi/src/components/sections/` and are dropped into a Page's dynamic zone. Use `create-content-component`.
-- **No regional variants in this starter.** Don't create `page-au`, `blog-cz`, etc. — the starter is single-region.
-- **No Meilisearch by default.** Don't add Meilisearch config unless the user explicitly opts in.
-- **Schema changes after first ship are risky.** Renames/deletes/type-changes drop columns on boot. Always run `bash .claude/skills/strapi-schema-check/scripts/check.sh` before opening a PR that touches existing schemas.
+- **Not for page-builder sections** — those are components under `apps/strapi/src/components/` dropped into a Page's dynamic zone. Use `create-content-component`.
+- **Schema changes after first ship are risky** — renames/deletes/type-changes drop columns on boot. Run `bash .claude/skills/strapi-schema-check/scripts/check.sh` (skill `strapi-schema-check`) before a PR that touches existing schemas.

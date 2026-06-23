@@ -1,31 +1,44 @@
 ---
-name: fix-issue
+name: start-work
 description: >
   Use when the user is ready to begin a new fix or feature and wants an
-  isolated workspace — e.g. "fix issue", "start work on", "new feature",
-  "begin task", "work on issue", "/fix-issue". Accepts a GitHub issue
-  number/URL or a plain branch name. Asana/Linear/Azure out of scope.
-argument-hint: "[issue-number | issue-url | branch-name]"
+  isolated workspace — e.g. "start work on", "fix issue", "new feature",
+  "begin task", "work on issue", "/start-work". Accepts a GitHub, Linear,
+  or Jira issue (number, key, or URL) or a plain branch name.
+argument-hint: "[issue-number | issue-key | issue-url | branch-name]"
 ---
 
-# Fix an Issue
+# Start Work
 
 Set up an isolated workspace for new work. Prefer a git worktree so the current checkout stays untouched. Fetch issue context when available, draft a short plan, then hand off to implementation.
+
+Worktree mechanics + branch naming: `apps/docs/docs/reference/workflow.md` and `worktree.config.json` (manifest the scripts apply).
 
 **Be automated.** Resolve arguments by shape, do not interrogate the user unless something is genuinely ambiguous (e.g. multiple plausible base branches, branch name fails the project's validation hook).
 
 ## Phase 1 — Resolve `$ARGUMENTS`
 
-Detect by shape — first match wins:
+Detect the tracker and ticket by shape — first match wins:
 
-| Shape                        | Treat as            | Action                                                  |
-| ---------------------------- | ------------------- | ------------------------------------------------------- |
-| Pure digits (`284`)          | GitHub issue number | `gh issue view 284 --json number,title,body,url,labels` |
-| URL containing `/issues/<n>` | GitHub issue URL    | extract `<n>`, fetch as above                           |
-| `#<digits>`                  | GitHub issue number | strip `#`, fetch as above                               |
-| Anything else                | Branch name         | skip fetch, use verbatim as branch                      |
+| Shape                                                             | Tracker            | Ticket                                             |
+| ----------------------------------------------------------------- | ------------------ | -------------------------------------------------- |
+| Pure digits (`284`), `#284`, or a `github.com/.../issues/<n>` URL | GitHub             | issue `<n>`                                        |
+| `linear.app/.../issue/<KEY>` URL                                  | Linear             | `<KEY>`                                            |
+| `<org>.atlassian.net/browse/<KEY>` URL                            | Jira               | `<KEY>`                                            |
+| Bare key `ABC-123` (`[A-Z][A-Z0-9]+-\d+`)                         | Linear **or** Jira | `<KEY>` — disambiguate below                       |
+| Anything else                                                     | —                  | none — treat verbatim as a branch name, skip fetch |
 
-If `gh` is missing or unauthenticated, skip the fetch and fall back to branch-name-only mode. Tell the user once.
+Bare keys are ambiguous between Linear and Jira. Resolve in order: the tracker whose MCP server is connected → ask the user once. (This starter's branch hook expects `STAR-<n>`, so a `STAR-###` key is the common case.)
+
+### Fetch issue context
+
+- **GitHub** → `gh issue view <n> --json number,title,body,url,labels`. Fall back if `gh` is missing or unauthenticated.
+- **Linear** → the connected **Linear MCP** server's get-issue tool.
+- **Jira** → the connected **Atlassian (Jira) MCP** server's get-issue tool.
+
+For Linear and Jira, **MCP is the only channel** — never fall back to a REST API or env credentials, and never ask for or echo a token. If the tracker's MCP server isn't connected, skip the fetch, fall back to branch-name-only mode, and tell the user once (they can authenticate the connector with `/mcp`).
+
+From whichever channel, capture: title, description/body, the key or number, the URL, and the issue type/labels.
 
 If `$ARGUMENTS` is empty, ask the user for an issue ref or a branch name. Do not invent one.
 
@@ -33,12 +46,13 @@ If `$ARGUMENTS` is empty, ask the user for an issue ref or a branch name. Do not
 
 ### When the issue was fetched
 
-Propose `<type>/<number>-<slug>`:
+Propose `<type>/<ticket>-<slug>`:
 
-- `<type>` from issue labels (`bug` → `fix`, `enhancement`/`feature` → `feat`, default `feat`)
-- `<slug>` = lowercased, kebab-cased title, ≤ 5 words, ASCII only
+- `<ticket>` — for Linear/Jira, the issue **key** verbatim (e.g. `STAR-284`); for GitHub, the issue **number**.
+- `<type>` — from issue type/labels: `bug` → `fix`; `feature`/`enhancement`/`story`/`task` → `feat`; default `feat`.
+- `<slug>` — lowercased, kebab-cased title, ≤ 5 words, ASCII only.
 
-Check `scripts/validate-branch-name.sh` if present — its regex defines the project's required shape (e.g. this starter requires `<type>/STAR-<n>-<slug>`). If the proposed name will fail, ask the user once for the correct ticket id, do not silently invent one.
+Check `scripts/validate-branch-name.sh` if present — its regex defines the required shape (this starter requires `<type>/STAR-<n>-<slug>`). A Linear/Jira `STAR-###` key satisfies it directly; a bare GitHub issue number will not, so ask the user once for the correct ticket id rather than inventing one.
 
 ### When user passed a branch name
 
@@ -135,5 +149,5 @@ Stop there. Do not start implementing — that is the user's call (or another sk
 
 - Do not push the new branch. `make-pr` handles that.
 - Do not run `pnpm install` yourself when the worktree script is absent — the user picks when to install. If the fallback path was used, mention it explicitly so they remember.
-- Asana / Linear / Azure DevOps integrations are out of scope for v1. If `$ARGUMENTS` looks like a non-GitHub ticket id, fall back to branch-name-only mode and tell the user.
+- Supported trackers: GitHub, Linear, Jira. Asana and Azure DevOps are out of scope — for an untracked or unrecognized reference, fall back to branch-name-only mode and tell the user.
 - Never delete or reset existing worktrees. Hand off to `scripts/worktree/cleanup.sh` (when it exists) for that.

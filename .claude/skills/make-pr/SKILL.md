@@ -10,7 +10,9 @@ argument-hint: "[base-branch | issue-url]"
 
 # Create Pull Request
 
-Commit any uncommitted work in logical groups, push, then open a GitHub pull request filled against the project PR template.
+Commit any uncommitted work in logical groups, push, then open a pull request (a _merge request_ on GitLab) filled against the project PR template. GitHub is automated end-to-end via `gh`; on other hosts the work is still committed and pushed, and you hand the user a ready-to-open PR/MR link.
+
+Commit / branch conventions: `apps/docs/docs/reference/workflow.md`.
 
 **Be automated.** Do not ask for confirmations unless something is genuinely ambiguous. Only stop to ask the user if you cannot resolve the issue link or the diff is too large to summarize confidently.
 
@@ -61,7 +63,7 @@ Resolution order — stop at first match:
 2. Branch name contains `<digits>` at the end (e.g. `feat/foo-284`) → try `gh issue view <num>` and verify the title looks related.
 3. Skip — leave issue link out of the PR body.
 
-If `gh` is missing or unauthenticated, skip and continue.
+Auto-fetch uses `gh`, so it resolves GitHub issues only. On other hosts (or if `gh` is missing/unauthenticated), skip the fetch and continue — the branch's ticket id still lands in the title/body.
 
 ## Phase 2 — Smart commits
 
@@ -76,7 +78,7 @@ Skip if working tree is clean.
 
 1. Stage explicit files: `git add <file...>` (never `-A` or `.`).
 2. Generate a conventional commit subject (`type(scope): subject`, under 50 chars). Type from branch prefix (`feat/` → `feat`, etc.) or change context.
-3. Commit. If the pre-commit hook (Husky + commitlint) fails:
+3. Commit. If the pre-commit hook (Lefthook + commitlint) fails:
    - Read the error.
    - Fix lint/format/commitlint complaint.
    - Re-stage and create a **new** commit (do NOT `--amend`).
@@ -97,9 +99,11 @@ Concise conventional-commit-style subject. Under 70 chars. Example: `fix(ui): fo
 
 ### 3.3 Body — fill the PR template
 
-Read `.github/pull_request_template.md` and fill it in. Preserve structure exactly.
+Check for a PR template at `.github/pull_request_template.md` (also `.github/PULL_REQUEST_TEMPLATE.md` or `.github/PULL_REQUEST_TEMPLATE/`). If present, fill it in and preserve its structure exactly.
 
-Mapping rules:
+**If no template file exists** (current state of this starter), build the body from these sections: a 2–4 sentence **Description** (WHY before WHAT), a one-line **TL;DR**, **New environmental variables** (or `None`), and a short **Test plan**. Then skip to "Create PR".
+
+When a template is present, apply these mapping rules:
 
 - **Task Link** → if an issue was resolved in Phase 1, replace placeholder URL with the real one. Otherwise leave the placeholder.
 - **Description** → 2–4 sentences. WHY before WHAT. Reference root cause if it's a fix.
@@ -116,22 +120,31 @@ Mapping rules:
 
 If the template has no `Task Link` section but an issue was resolved, prepend `Closes #<num>` above the body.
 
-### 3.4 Create PR
+### 3.4 Open the PR
 
-```bash
-gh pr create --base "<base>" --title "<title>" --body-file <tmpfile>
-```
+Detect the remote host from `git remote get-url origin`:
 
-Use a tempfile via `mktemp` to avoid shell-escaping the multi-line body. Parse output for the PR URL.
+- **GitHub, with `gh` available**:
 
-If `gh` is missing → print the title + body and instruct the user to open the PR manually.
+  ```bash
+  gh pr create --base "<base>" --title "<title>" --body-file <tmpfile>
+  ```
+
+  Use a tempfile via `mktemp` to avoid shell-escaping the multi-line body. Parse the output for the PR URL.
+
+- **Any other host, or `gh` missing/unauthenticated** — the branch is already pushed, so don't fail. Print the title and body and hand the user a ready-to-open link for the detected host:
+  - GitLab → `<repo-web-url>/-/merge_requests/new?merge_request%5Bsource_branch%5D=<branch>`
+  - Bitbucket → `<repo-web-url>/pull-requests/new?source=<branch>`
+  - Azure Repos / unknown host → confirm the push and tell the user to open the PR in their host's UI against `<base>`.
+
+  Derive `<repo-web-url>` from the origin remote (strip a trailing `.git`, convert `git@host:org/repo` to `https://host/org/repo`).
 
 ## Report
 
 Print:
 
 ```
-PR created: <url>
+PR/MR: <url>   (or "open manually — link printed above")
 Branch: <branch> -> <base>
 Commits on branch: <n>
 Issue: <#num title> (or "no issue linked")

@@ -23,7 +23,7 @@ Full step-by-step. SKILL.md is the routing surface; this file holds the per-phas
 }
 ```
 
-See `examples.md` for the full attribute palette (CKEditor, nested components, media, enums, etc.).
+See `examples.md` for the full attribute palette (rich text — CKEditor & TipTap, nested components, media, enums, etc.).
 
 Reference: https://docs.strapi.io/cms/backend-customization/models#model-schema
 
@@ -43,30 +43,25 @@ Edit `apps/strapi/src/api/page/content-types/page/schema.json`. Append the new U
 
 **Add-only is safe.** Renames/deletes trigger column drops on Strapi boot. Run `bash .claude/skills/strapi-schema-check/scripts/check.sh` before the PR.
 
-## 3. Add the populate rule
+## 3. Population — usually nothing to do
 
-The starter uses a **filesystem-driven populate map** — drop a file under `apps/strapi/src/populateDynamicZone/<category>/<name>.ts` and it auto-registers (see `apps/strapi/src/populateDynamicZone/index.ts`; don't edit that file).
+The page fetch in `apps/ui/src/lib/strapi-api/content/server.ts` uses `populate: { content: "smart" }`. The [smart-populate plugin](https://github.com/notum-cz/strapi-plugin-smart-populate) reads each component's schema at bootstrap and auto-populates its nested components, media, and relations. A new section therefore needs **no populate code** in the common case.
+
+Add an override only when a relation needs specific fields or extra depth. Edit `populateOverrides` in `apps/strapi/config/plugins/smart-populate.ts`:
 
 ```ts
-import basicImagePopulate from "../utilities/basic-image"
-import linkPopulate from "../utilities/link"
-
-export default {
-  populate: {
-    links: linkPopulate,
-    image: basicImagePopulate,
-    steps: true,
+const populateOverrides = [
+  {
+    componentUid: "utilities.link",
+    mergeWithGeneratedPopulate: true,
+    overridePopulate: {
+      page: { fields: ["fullPath"] },
+    },
   },
-}
+] satisfies PopulateOverrideEntries<ComponentPopulateMap>
 ```
 
-Rules:
-
-- `true` for components/relations with no further nesting (e.g. `"utilities.ck-editor-content": true`)
-- `{ populate: { fieldName: true } }` for one level of nested component
-- `{ populate: { fieldName: { populate: { media: true } } } }` for deeper media
-- **Only populate components and relations** — never scalar fields
-- **Reuse existing populate configs** — when a nested component already has a populate file, `import` it rather than redefining
+`mergeWithGeneratedPopulate: true` keeps the auto-generated shape and layers the override on top. See `apps/docs/docs/strapi/plugins/smart-populate.md`.
 
 ## 4. Create the React component
 
@@ -128,17 +123,20 @@ Edit `apps/ui/src/components/page-builder/index.tsx`:
    "<category>.<name>": Strapi<PascalCaseName>,
    ```
 
-## 6. Regenerate types
+## 6. Regenerate types (optional, done automatically on Strapi restart)
 
 ```bash
 pnpm --filter @repo/strapi generate:types
 ```
 
-Updates `@repo/strapi-types` so `Data.Component<"<category>.<name>">` resolves. If the script errors with "Cannot find module @repo/design-system" or "@repo/shared-data", build those packages first:
+Updates `@repo/strapi-types` so `Data.Component<"<category>.<name>">` resolves.
+
+If the script errors with "Cannot find module @repo/design-system" or "@repo/shared-data" or "@repo/logging" build those packages first:
 
 ```bash
 pnpm --filter @repo/design-system build
 pnpm --filter @repo/shared-data build
+pnpm --filter @repo/logging build
 ```
 
 ## Path resilience
@@ -147,5 +145,5 @@ If the expected paths don't match, glob first before raising an error:
 
 - Strapi components: `apps/strapi/src/components/**/*.json`
 - UI page-builder components: `apps/ui/src/components/page-builder/components/**/Strapi*.tsx`
-- Populate: `apps/strapi/src/populateDynamicZone/**/*.ts`
 - Mapping: `apps/ui/src/components/page-builder/index.tsx`
+- Populate overrides: `apps/strapi/config/plugins/smart-populate.ts`

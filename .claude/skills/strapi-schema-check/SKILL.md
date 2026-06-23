@@ -21,7 +21,7 @@ Detects risky Strapi v5 schema changes that require a database migration. Strapi
 
 - **Auto-load:** any edit to `apps/strapi/src/api/**/schema.json` or `apps/strapi/src/components/**/*.json` — run the check immediately, not just before opening a PR.
 - **Manual:** invoke the bundled script — `bash .claude/skills/strapi-schema-check/scripts/check.sh [base-branch]` (default base: `main`).
-- **Called by:** `review-pr` (blocks at review time), `fix-issue` (surfaces schema impact during planning), `create-content-component` / `add-content-type` (after editing schemas).
+- **Called by:** `review-pr` (blocks at review time), `start-work` (surfaces schema impact during planning), `create-content-component` / `add-content-type` (after editing schemas).
 
 ## How to run
 
@@ -38,12 +38,12 @@ bash .claude/skills/strapi-schema-check/scripts/check.sh [base-branch] [--format
 
 ### Exit codes
 
-| Code | Meaning |
-|---|---|
-| `0` | No risky changes |
-| `1` | Risky changes **without** migration — **BLOCK** |
-| `2` | Risky changes **with** matching migration — review, do not auto-pass |
-| `3` | Internal failure (jq missing, git error, invalid args) |
+| Code | Meaning                                                              |
+| ---- | -------------------------------------------------------------------- |
+| `0`  | No risky changes                                                     |
+| `1`  | Risky changes **without** migration — **BLOCK**                      |
+| `2`  | Risky changes **with** matching migration — review, do not auto-pass |
+| `3`  | Internal failure (jq missing, git error, invalid args)               |
 
 ## Detection algorithm
 
@@ -63,17 +63,17 @@ bash .claude/skills/strapi-schema-check/scripts/check.sh [base-branch] [--format
 
 ## Risk classification
 
-| Change | Severity | Required action |
-|---|---|---|
-| Field added | none | None — Strapi handles additive sync |
-| Field renamed | critical | Migration with `ALTER TABLE ... RENAME COLUMN` |
-| Field deleted | critical | Migration that drops or archives data; confirm intentional |
-| Field type changed | critical | Migration that converts/casts data |
-| `required: true` added | critical | Backfill NULL rows before constraint |
-| `unique: true` added | critical | Deduplicate before constraint |
-| Schema file deleted (table dropped) | critical | Archive + DROP TABLE; confirm intentional |
-| `collectionName` renamed | not detected v1 | Manual review |
-| Cross-content-type field move | not detected v1 | Treat as delete + add, write data-migration |
+| Change                              | Severity        | Required action                                            |
+| ----------------------------------- | --------------- | ---------------------------------------------------------- |
+| Field added                         | none            | None — Strapi handles additive sync                        |
+| Field renamed                       | critical        | Migration with `ALTER TABLE ... RENAME COLUMN`             |
+| Field deleted                       | critical        | Migration that drops or archives data; confirm intentional |
+| Field type changed                  | critical        | Migration that converts/casts data                         |
+| `required: true` added              | critical        | Backfill NULL rows before constraint                       |
+| `unique: true` added                | critical        | Deduplicate before constraint                              |
+| Schema file deleted (table dropped) | critical        | Archive + DROP TABLE; confirm intentional                  |
+| `collectionName` renamed            | not detected v1 | Manual review                                              |
+| Cross-content-type field move       | not detected v1 | Treat as delete + add, write data-migration                |
 
 ## Output
 
@@ -124,7 +124,7 @@ When invoked manually:
 
 ```js
 // apps/strapi/database/migrations/<unix-ts>_<desc>.js
-'use strict';
+"use strict"
 
 module.exports = {
   async up(knex) {
@@ -133,7 +133,7 @@ module.exports = {
   async down(knex) {
     // reverse of up
   },
-};
+}
 ```
 
 The check is unconditional: no escape-hatch flag, no PR-description marker. If a risky change must ship and migration is handled out-of-band, add a stub migration file referencing the affected attribute + collection — that downgrades exit 1 → exit 2, but every finding still renders as `critical`. A human reviewer must verify.
@@ -144,7 +144,7 @@ The check is unconditional: no escape-hatch flag, no PR-description marker. If a
 - **Cross-content-type renames not detected.** Moving a field from `blog` to `article` = delete on one, add on the other. Treat as delete + data-migration.
 - **Stub migration acknowledges, does not validate.** A migration that mentions both attribute and collection makes exit 2, but the script cannot check correctness — reviewer must.
 - **Collection / content-type directory renames out of scope.** Manual review.
-- **Migration match is substring, not semantic.** Filename or body mentions attribute + collection (case-insensitive). Treat exit 2 as "migration *might* exist — verify".
+- **Migration match is substring, not semantic.** Filename or body mentions attribute + collection (case-insensitive). Treat exit 2 as "migration _might_ exist — verify".
 - **Acknowledge stubs must reference both attribute and collection.** Bare attribute mention without collection name won't match. Include snake_case table (`blog_authors`) plus camelCase or snake_case attribute.
 
 ## Reference: Strapi v5 schema → DB sync

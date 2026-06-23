@@ -8,7 +8,7 @@ Concrete attribute and populate shapes. SKILL.md is the routing surface; `workfl
 // Plain text
 { "type": "string" }
 { "type": "text" }       // multiline
-{ "type": "richtext" }   // not preferred — see CKEditor below
+{ "type": "richtext" }   // avoid — use a rich-text customField, see "Rich text" below
 
 // Required + length constraints
 { "type": "string", "required": true, "minLength": 1, "maxLength": 120 }
@@ -40,74 +40,46 @@ Additional knobs: `description` (admin UI hint), `default`, `private`.
 
 Reference: https://docs.strapi.io/cms/backend-customization/models#model-schema
 
-## CKEditor rich text (editorial-copy default)
+## Rich text (CKEditor or TipTap)
 
-Starter convention — use this, **not** Strapi's built-in `richtext`:
+Two rich-text editors are configured — both are `customField`s. **Never use Strapi's raw `richtext`.** When you just need a rich-text block, reuse an existing `utilities.*` component rather than redeclaring the field.
+
+| Editor   | `customField`                    | presets                                         | reusable component                                         | stored as        | renderer                                                   |
+| -------- | -------------------------------- | ----------------------------------------------- | ---------------------------------------------------------- | ---------------- | ---------------------------------------------------------- |
+| CKEditor | `plugin::ckeditor5.CKEditor`     | `defaultCkEditor` (full), `simpleCkEditor`      | `utilities.ck-editor-content` / `utilities.ck-editor-text` | HTML             | `CKEditorRenderer` (`@/components/elementary/ck-editor`)   |
+| TipTap   | `plugin::tiptap-editor.RichText` | `everything`, `baseText`, `headings`, `minimal` | `utilities.tip-tap-rich-text`                              | ProseMirror JSON | `TiptapRichText` (`@/components/elementary/tiptap-editor`) |
+
+Declare an inline customField only when rich text is one field of a larger component:
 
 ```json
-{
-  "type": "customField",
-  "customField": "plugin::ckeditor5.CKEditor",
-  "options": { "preset": "defaultCkEditor" }
-}
+// CKEditor
+{ "type": "customField", "customField": "plugin::ckeditor5.CKEditor", "options": { "preset": "defaultCkEditor" } }
+
+// TipTap
+{ "type": "customField", "customField": "plugin::tiptap-editor.RichText", "options": { "preset": "everything" } }
 ```
 
-Working reference: `apps/strapi/src/components/sections/hero.json` — `description`, `tag`, `note` all use CKEditor.
+Render with the matching renderer above, passing `component.<field>`. CKEditor is the most common in shipped sections (e.g. `sections/hero.json`); choose TipTap when you need its structured nodes/marks. Editor choice, presets, and renderer guidance: `apps/docs/docs/design-system/rich-text-editors.md` (also `strapi/plugins/ckeditor.md`, `strapi/plugins/tiptap-editor.md`).
 
-## Populate-rule shapes
+## Population
 
-```ts
-// Flat — no nested components
-export default {
-  populate: {
-    image: true,
-    cta: true,
-  },
-}
-```
+Nested components, media, and relations are populated automatically by the smart-populate plugin (`content: "smart"` in the page fetch). New sections need no populate code.
+
+Override only when a relation needs specific fields/depth — add an entry to `populateOverrides` in `apps/strapi/config/plugins/smart-populate.ts`:
 
 ```ts
-// One level of nested population
-export default {
-  populate: {
-    items: {
-      populate: { icon: true },
+const populateOverrides = [
+  {
+    componentUid: "utilities.link",
+    mergeWithGeneratedPopulate: true,
+    overridePopulate: {
+      page: { fields: ["fullPath"] },
     },
   },
-}
+] satisfies PopulateOverrideEntries<ComponentPopulateMap>
 ```
 
-```ts
-// Deeper nesting (media inside a nested component)
-export default {
-  populate: {
-    cards: {
-      populate: {
-        image: { populate: { media: true } },
-      },
-    },
-  },
-}
-```
-
-```ts
-// Reuse existing populate configs (preferred when a child component has its own file)
-import basicImagePopulate from "../utilities/basic-image"
-import linkPopulate from "../utilities/link"
-
-export default {
-  populate: {
-    image: basicImagePopulate,
-    cta: linkPopulate,
-  },
-}
-```
-
-Rules of thumb:
-
-- `true` only for components/relations with no further nesting.
-- Never populate scalar fields (`string`, `boolean`, `integer`, etc.).
-- Reuse > redefine — if a nested component already has a populate file, `import` it.
+Full details: `apps/docs/docs/strapi/plugins/smart-populate.md`.
 
 ## Worked example — `sections.testimonials`
 
@@ -136,19 +108,7 @@ Schema (`apps/strapi/src/components/sections/testimonials.json`):
 }
 ```
 
-Populate (`apps/strapi/src/populateDynamicZone/sections/testimonials.ts`):
-
-```ts
-import basicImagePopulate from "../utilities/basic-image"
-
-export default {
-  populate: {
-    items: {
-      populate: { avatar: basicImagePopulate },
-    },
-  },
-}
-```
+Population: none needed — `content: "smart"` auto-populates `items` and its nested `avatar` media from the schema.
 
 Dynamic-zone registration (`apps/strapi/src/api/page/content-types/page/schema.json`):
 

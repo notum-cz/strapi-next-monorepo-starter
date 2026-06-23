@@ -11,12 +11,12 @@ argument-hint: "[category] [name]"
 paths:
   - apps/strapi/src/components/**/*.json
   - apps/ui/src/components/page-builder/**
-  - apps/strapi/src/populateDynamicZone/**
+  - apps/strapi/config/plugins/smart-populate.ts
 ---
 
 # Create a Page-Builder Content Component
 
-Add a new page-builder section to both Strapi (component schema + populate rules + dynamic-zone entry) and the Next.js frontend (React component + mapping), ending with type regeneration.
+Add a new page-builder section to both Strapi (component schema + dynamic-zone entry) and the Next.js frontend (React component + mapping), ending with type regeneration. Population is automatic via the smart-populate plugin — see `apps/docs/docs/strapi/plugins/smart-populate.md`.
 
 ## Routing — which skill do you actually want?
 
@@ -31,9 +31,12 @@ If unsure, ask the user before scaffolding.
 - **Name** — kebab-case, lowercase (e.g. `pricing-table`). Reject Pascal/camelCase.
 - **Category** — lowercase, no spaces. Existing under `apps/strapi/src/components/`: `elements`, `forms`, `layout`, `sections`, `seo-utilities`, `shared`, `utilities`. Create the dir before the schema if new.
 - **Attributes** — fields the component needs.
-- **Rich text?** — CKEditor is the editorial default in this starter (see `examples.md`).
+- **Rich text?** — two editors are available, CKEditor and TipTap. Reuse a `utilities.*` rich-text component, or declare the matching `customField` — never raw `richtext`. See `examples.md` (Rich text).
+- **Relation needing specific fields?** — components are populated automatically by smart-populate; only relations that need extra fields/depth require a `populateOverrides` entry (Procedure step 3).
 
 ## Duplication check
+
+Not sure whether a similar section already exists (by purpose, attributes, or a screenshot)? Run `find-component` first — reuse or extend beats duplicating. Quick name check:
 
 ```bash
 ls apps/strapi/src/components/<category>/<name>.json 2>/dev/null
@@ -53,7 +56,6 @@ Given `category=sections`, `name=testimonials`:
 | `collectionName`   | `components_sections_testimonials` (format: `components_<category>_<name_underscored>`) |
 | React component    | `StrapiTestimonials` (prefix `Strapi` + PascalCase)                                     |
 | React file         | `apps/ui/src/components/page-builder/components/sections/StrapiTestimonials.tsx`        |
-| Populate file      | `apps/strapi/src/populateDynamicZone/<category>/<name>.ts`                              |
 
 ## Procedure
 
@@ -61,7 +63,7 @@ Follow `workflow.md` for the full step-by-step. The high-level sequence:
 
 1. **Strapi schema** — create `apps/strapi/src/components/<category>/<name>.json` (see `examples.md` for attribute patterns).
 2. **Register in Page dynamic zone** — append the new UID to `attributes.content.components` in `apps/strapi/src/api/page/content-types/page/schema.json`.
-3. **Populate rule** — drop a file under `apps/strapi/src/populateDynamicZone/<category>/<name>.ts` (auto-registered by filesystem scan).
+3. **Population (usually nothing to do)** — the page fetch uses `content: "smart"`, so the smart-populate plugin auto-populates the component's nested components/media/relations from its schema. Only add a `populateOverrides` entry in `apps/strapi/config/plugins/smart-populate.ts` if a relation needs specific fields or extra depth.
 4. **React component** — `apps/ui/src/components/page-builder/components/<category>/Strapi<PascalCaseName>.tsx`.
 5. **Register in `PageContentComponents`** — `apps/ui/src/components/page-builder/index.tsx`.
 6. **Regenerate types** — `pnpm --filter @repo/strapi generate:types`.
@@ -75,8 +77,8 @@ bash .claude/skills/strapi-schema-check/scripts/check.sh
 ## Common mistakes
 
 - **Renaming or deleting an existing field** instead of adding alongside — Strapi auto-syncs to DB and drops the column. Run schema check first.
-- **Editing `populateDynamicZone/index.ts`** — it auto-scans siblings; don't touch it.
-- **Using Strapi `richtext` instead of CKEditor** for editorial copy — CKEditor `customField` with `preset: defaultCkEditor` is the starter convention.
+- **Hand-writing a populate tree** — smart-populate (`content: "smart"`) handles nested components automatically; don't add manual `populate` objects unless a relation needs specific fields, and then only via `populateOverrides`.
+- **Using raw `richtext`** — use a rich-text `customField` (CKEditor or TipTap), or reuse a `utilities.*` rich-text component; see `examples.md` (Rich text).
 - **Pascal/camelCase component names** — Strapi UIDs must be kebab-case.
 - **Skipping type regeneration** — `Data.Component<"<category>.<name>">` won't resolve.
 - **Forgetting `import "server-only"`** — every shipped page-builder section has it; without it, a future client import silently turns the section into a client component.
@@ -98,7 +100,7 @@ bash .claude/skills/strapi-schema-check/scripts/check.sh
 
 - [ ] Strapi schema created with correct `collectionName`
 - [ ] UID registered in Page's `content` dynamic zone
-- [ ] Populate file created (only if any field needs population)
+- [ ] `populateOverrides` entry added only if a relation needs specific fields (most components need none)
 - [ ] React component with `Strapi` prefix + named + default exports
 - [ ] Mapped in `PageContentComponents`
 - [ ] `pnpm --filter @repo/strapi generate:types` ran clean
@@ -111,7 +113,7 @@ bash .claude/skills/strapi-schema-check/scripts/check.sh
 - **No Storybook.** Visual review via dev server or Playwright visual tests.
 - **Page schema is high-risk.** Any rename/delete on `apps/strapi/src/api/page/content-types/page/schema.json` triggers column drops on boot. Add-only on the dynamic-zone array is safe.
 
-### Mocking & Showcase (updated)
+### Mocking & Showcase
 
 After you add a Strapi component and its frontend React implementation, add a mocked wrapper so the component is visible in the dev Showcase.
 
@@ -146,17 +148,19 @@ export default function MockedStrapiMyComponent() {
    - Add an entry to the `showcaseItems` array with `kind: "component"`, `component: MockedStrapiMyComponent`, `id`, `label` and `description`.
 
 3. Attribute tips
-   - Use HTML strings for `richtext` fields.
+   - Rich-text mock values match how the field is stored: an **HTML string** for CKEditor fields, **ProseMirror JSON** for TipTap fields (see `examples.md`).
    - For images/icons reuse `mockImage` / `mockIcon` from the dev showcase helpers.
    - Keep mock objects minimal but representative.
 
-See `/docs/showcase.md` for full examples and conventions.
+See `apps/docs/docs/ui/built-in-pages/showcase.md` for full examples and conventions.
 
 ## See also
 
 - `workflow.md` — full per-phase procedure with code blocks
-- `examples.md` — attribute patterns, CKEditor, populate-rule shapes
+- `examples.md` — attribute patterns, rich-text editors (CKEditor + TipTap), override shapes
 - `add-content-type` — when the new thing should be a top-level API resource
 - `add-ui-component` — generic UI primitives
+- `vercel-react-best-practices` / `next-best-practices` / `frontend-design` — vendored React/Next.js + design standards for the component's frontend (in `.agents/skills/`)
 - `strapi-schema-check` — pre-PR schema risk validation
 - `apps/docs/docs/page-builder/introduction.md` — architecture overview, naming conventions, component props
+- `apps/docs/docs/strapi/plugins/smart-populate.md` — automatic population + `populateOverrides`

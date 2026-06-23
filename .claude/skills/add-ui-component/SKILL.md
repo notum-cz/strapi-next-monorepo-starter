@@ -18,117 +18,64 @@ paths:
 
 # Add a UI Component
 
-Scaffold a new React component in `apps/ui/src/components/` matching the starter's conventions. shadcn/ui is configured in `apps/ui/components.json` — **new-york** style, **slate** baseColor, RSC enabled, lucide icons, `cn()` from `@/lib/styles`.
+Scaffold a React component in `apps/ui/src/components/` to the starter's conventions. shadcn/ui is configured in `apps/ui/components.json` (new-york, slate, RSC, lucide, `cn()` from `@/lib/styles`). Background: `apps/docs/docs/ui/project-structure.md`, `apps/docs/docs/design-system/overview.md`.
 
 ## Phase 1 — Pick the category
 
-| Category        | Location                  | When                                                                                         |
-| --------------- | ------------------------- | -------------------------------------------------------------------------------------------- |
-| `ui/`           | shadcn primitives         | Generic reusable primitives (Button, Input, Dialog, Form). Add via shadcn CLI when possible. |
-| `elementary/`   | App building blocks       | App-specific blocks (Container, Breadcrumbs, AppLink, DatePicker).                           |
-| `forms/`        | Form fields               | react-hook-form-bound fields. `App*` prefix. Build on shadcn `form` primitives.              |
-| `typography/`   | Text components           | Heading, Paragraph, Lead, etc.                                                               |
-| `helpers/`      | Wrappers / utility        | Server/client boundary shims like `UseSearchParamsWrapper`.                                  |
-| `layouts/`      | Page-level layout         | Shells composing sections (e.g. `StrapiPageView`).                                           |
-| `providers/`    | Context / SDK wrappers    | `ClientProviders`, `ServerProviders`, `TrackingScripts`.                                     |
-| `page-builder/` | Strapi-connected sections | **Do not add here directly** — use `create-content-component`.                               |
+| Category        | When                                                           | File name        |
+| --------------- | -------------------------------------------------------------- | ---------------- |
+| `ui/`           | shadcn primitives (Button, Input, Dialog) — prefer the CLI     | `kebab-case.tsx` |
+| `elementary/`   | app-specific reusable blocks (Container, Breadcrumbs, AppLink) | `PascalCase.tsx` |
+| `forms/`        | react-hook-form fields, `App*` prefix, built on `ui/form`      | `PascalCase.tsx` |
+| `typography/`   | Heading, Paragraph, Lead                                       | `PascalCase.tsx` |
+| `helpers/`      | server/client boundary shims                                   | `PascalCase.tsx` |
+| `layouts/`      | page shells composing sections                                 | `PascalCase.tsx` |
+| `providers/`    | context / SDK wrappers                                         | `PascalCase.tsx` |
+| `page-builder/` | Strapi sections — **stop, use `create-content-component`**     | —                |
 
-Default: ask the user if unclear. Bias toward `elementary/` for app-specific reusables, `ui/` only for true primitives.
+Default to `elementary/` for app reusables, `ui/` only for true primitives. Ask if unclear. Match the closest sibling's export style.
 
-## Phase 2 — Naming
+## Phase 2 — Server vs client
 
-- Filename: `PascalCase.tsx` for elementary/forms/typography/helpers/layouts/providers (matches existing files).
-- Filename: `kebab-case.tsx` for `ui/` (shadcn convention — `button.tsx`, `input.tsx`).
-- Form fields use `App` prefix (`AppInput`, `AppSelect`, `AppField`).
-- One default export OR named export — match the closest sibling's pattern.
+Default to a **server component**. Add `"use client"` only for hooks, event handlers, browser APIs, or client-only libraries (react-hook-form, Framer Motion). Form fields are always client; layout shells usually server.
 
-## Phase 3 — Decide RSC vs Client
+## Phase 3 — Scaffold
 
-Default to **server component** (no `"use client"`).
-
-Add `"use client"` only if the component needs:
-
-- React hooks (`useState`, `useEffect`, `useContext`, `useRef`)
-- Event handlers (`onClick`, `onChange`, …)
-- Browser APIs (`window`, `document`, `localStorage`)
-- Third-party client-only libraries (Framer Motion `motion`, react-hook-form, etc.)
-
-Form fields are always client. Layout shells are usually server.
-
-## Phase 4 — Scaffold
-
-### shadcn primitive (`ui/`)
-
-Prefer the shadcn CLI when the primitive exists upstream:
+**`ui/` primitive** — prefer the CLI:
 
 ```bash
 pnpm --filter @repo/ui exec shadcn@latest add <name>
 ```
 
-When hand-rolling:
+Post-install fixup (review generated files):
 
-```tsx
-"use client"
+1. `cn()` import must be `@/lib/styles`, not the upstream default `@/lib/utils` — the most common breakage on upgrades.
+2. Radix: both the unified `radix-ui` and scoped `@radix-ui/react-*` packages coexist here — match the sibling, don't force-convert.
+3. Tokens: CSS vars live in `apps/ui/src/styles/globals.css` + `packages/design-system/src/theme.css`; prefer them over shadcn defaults. No `tailwind.config.js` — never create one.
+4. Keep `"use client"` on interactive primitives.
+5. If the file already exists in `components/ui/`, diff and merge — don't overwrite.
 
-import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
+Hand-rolling a `ui/` primitive: follow an existing one in `apps/ui/src/components/ui/` (`forwardRef` + `cva` variants + `cn()`).
 
-import { cn } from "@/lib/styles"
-
-const componentVariants = cva("inline-flex items-center justify-center", {
-  variants: {
-    variant: {
-      default: "bg-primary text-primary-foreground",
-      secondary: "bg-secondary text-secondary-foreground",
-    },
-    size: {
-      default: "h-10 px-4",
-      sm: "h-8 px-3 text-sm",
-      lg: "h-12 px-6",
-    },
-  },
-  defaultVariants: { variant: "default", size: "default" },
-})
-
-export interface ComponentNameProps
-  extends
-    React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof componentVariants> {}
-
-const ComponentName = React.forwardRef<HTMLDivElement, ComponentNameProps>(
-  ({ className, variant, size, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(componentVariants({ variant, size, className }))}
-      {...props}
-    />
-  )
-)
-ComponentName.displayName = "ComponentName"
-
-export { ComponentName, componentVariants }
-```
-
-### Elementary (`elementary/`)
+**`elementary/`**:
 
 ```tsx
 import { cn } from "@/lib/styles"
 
-type Props = {
-  children: React.ReactNode
-  className?: string
-}
-
-export function ComponentName({ children, className }: Props) {
+export function ComponentName({
+  children,
+  className,
+}: {
+  readonly children: React.ReactNode
+  readonly className?: string
+}) {
   return <div className={cn("base-classes", className)}>{children}</div>
 }
 ```
 
-Ref: `apps/ui/src/components/elementary/Container.tsx`, `Breadcrumbs.tsx`, `DatePicker.tsx`.
+Ref: `Container.tsx`, `Breadcrumbs.tsx`.
 
-### Form field (`forms/`)
-
-`App` prefix, builds on `@/components/ui/form` primitives, uses `useFormContext` from `react-hook-form`.
+**`forms/` field** — `App` prefix, `useFormContext`, built on `@/components/ui/form`:
 
 ```tsx
 "use client"
@@ -143,12 +90,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 
-type Props = {
-  name: string
-  label: string
-}
-
-export function AppFieldName({ name, label }: Props) {
+export function AppFieldName({ name, label }: { name: string; label: string }) {
   const { control } = useFormContext()
 
   return (
@@ -158,7 +100,7 @@ export function AppFieldName({ name, label }: Props) {
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>
-          <FormControl>{/* field input */}</FormControl>
+          <FormControl>{/* input */}</FormControl>
           <FormMessage />
         </FormItem>
       )}
@@ -167,47 +109,33 @@ export function AppFieldName({ name, label }: Props) {
 }
 ```
 
-### Provider / layout / helper
+**Provider / layout / helper** — no fixed template; match the closest sibling.
 
-Match the closest existing sibling. No fixed template — function component, props typed, `cn()` for classes if any.
+## Phase 4 — Conventions
 
-## Phase 5 — Conventions (apply to all categories)
+- `cn()` from `@/lib/styles` for all class merging; `@/` alias = `apps/ui/src/` (no deep relative imports, no barrel files).
+- Design tokens only (`text-primary`, `bg-secondary`, `border-input`) — no hex. Tailwind v4 (CSS-first config). Lucide icons. Mobile-first (`sm:`/`md:`/`lg:`).
+- `forwardRef` only for `ui/` primitives that need it (Radix composition) — not elsewhere.
+- Wrap full-bleed sections in `<Container>` from `@/components/elementary/Container`.
 
-- **`cn()` always.** Import from `@/lib/styles` (the aliased path per `components.json`).
-- **Path alias `@/`** maps to `apps/ui/src/`. Never use deep relative imports across categories.
-- **Design tokens, not raw colors.** Use `text-primary`, `bg-secondary`, `border-input` — defined as CSS variables. No hex codes.
-- **Tailwind v4.** No `tailwind.config.ts` — config is CSS-first in `apps/ui/src/styles/globals.css`.
-- **Lucide icons.** Configured via `components.json` (`"iconLibrary": "lucide"`).
-- **Responsive.** Mobile-first. `sm:`, `md:`, `lg:` prefixes for breakpoints.
-- **Wrap full-bleed sections** in `<Container>` from `@/components/elementary/Container`.
+## Phase 5 — Showcase (elementary / atomic only)
 
-## Phase 6 — Wire-up
+The starter has no Storybook — the in-app `/dev/showcase` gallery is its lightweight equivalent (see `apps/docs/docs/ui/built-in-pages/showcase.md`). When the component is a reusable elementary/atomic primitive, register it there:
 
-- Import the component where it's consumed using the `@/` alias.
-- No barrel files — import directly (`import { Foo } from "@/components/elementary/Foo"`).
-- If the component is page-builder-bound, **stop** and switch to `create-content-component` instead.
+1. Add a section wrapper at `apps/ui/src/app/[locale]/dev/showcase/components/sections/<Name>Section.tsx` rendering the component's variants/states.
+2. Add an entry in `apps/ui/src/app/[locale]/dev/showcase/showcaseItems.tsx` with `kind: "atomic"`, an `id`, `label`, and `description`.
 
-## Phase 7 — Verify
+(Page-builder sections appear in the same showcase with `kind: "component"` — handled by `create-content-component`.)
 
-1. `pnpm --filter @repo/ui lint` — no eslint errors.
-2. `pnpm --filter @repo/ui exec tsc --noEmit` — no type errors.
-3. `pnpm --filter @repo/ui dev` → render the consumer page → confirm visual output.
-4. If a test makes sense (pure logic, utility hook), add a `*.test.ts` next to it — use `write-tests` skill.
+## Phase 6 — Verify
 
-## Checklist
-
-- [ ] Category chosen, file in correct dir
-- [ ] Naming matches category convention (kebab for `ui/`, Pascal elsewhere; `App` prefix for forms)
-- [ ] `"use client"` present only if needed
-- [ ] `cn()` used for class merging
-- [ ] Props typed (no `any`)
-- [ ] Design tokens used (no raw hex colors)
-- [ ] `pnpm --filter @repo/ui lint && tsc --noEmit` clean
-- [ ] Consumer renders OK in dev
+1. `pnpm --filter @repo/ui lint`
+2. `pnpm --filter @repo/ui exec tsc --noEmit`
+3. `pnpm --filter @repo/ui dev` → render the consumer (or `/dev/showcase`) → confirm visual output.
+4. Pure logic or a utility hook? Add a `*.test.ts` next to it — use `write-tests`.
 
 ## Notes
 
-- **No Storybook in this starter.** Don't scaffold `.stories.tsx`. Visual review happens in the running app or Playwright visual tests.
-- **No `forwardRef` for non-primitive components.** Only `ui/` primitives that need ref forwarding (for Radix / shadcn composition).
-- **Page-builder sections live elsewhere.** Components rendered from Strapi dynamic zones are stack-coupled and use a different scaffold — switch to `create-content-component`.
-- **shadcn upgrades.** When updating a shadcn primitive, re-run the CLI rather than hand-editing — keeps diffs reviewable against upstream.
+- **Page-builder sections live elsewhere** — components rendered from Strapi dynamic zones use a different scaffold; switch to `create-content-component`.
+- **shadcn upgrades** — re-run the CLI rather than hand-editing, to keep diffs reviewable against upstream. Official refs: [docs](https://ui.shadcn.com/docs), [components](https://ui.shadcn.com/docs/components), [Tailwind v4](https://ui.shadcn.com/docs/tailwind-v4), [LLM docs](https://ui.shadcn.com/llms.txt).
+- **React / Next.js standards** — apply the vendored `vercel-react-best-practices`, `next-best-practices`, and `frontend-design` skills (in `.agents/skills/`) for performance, RSC boundaries, and visual design.

@@ -1,77 +1,33 @@
 ---
 name: add-locale
-description: "Use when adding a new language/locale to the application — e.g. \"add language\", \"add locale\", \"new language\", \"new translation\", \"internationalization\". Touches Strapi admin config, Next.js i18n routing, and translation files."
+description: 'Use when adding a new language/locale to the application — e.g. "add language", "add locale", "new language", "new translation", "internationalization". Touches Strapi admin config, Next.js i18n routing, and translation files.'
 ---
 
-Add a new language/locale to the application. Involves Strapi admin config, Next.js i18n routing, and translation files.
+# Add Locale
 
-## Input Validation
-
-Before proceeding, validate inputs:
-
-- **Locale code**: must be valid ISO 639-1 (2 letters, lowercase, e.g. `de`, `fr`, `sk`). Reject uppercase or invalid codes.
-- **Locale name**: capitalized, no special characters (e.g. `German`, `French`, `Slovak`).
-
-If invalid format provided, ask user to correct before proceeding.
+Add a new language/locale across both apps. For the full file map and how i18n is wired, see `apps/docs/docs/reference/internationalization.md`.
 
 ## Inputs
 
-Ask the user for:
+Ask the user for both, then validate before proceeding:
 
-- **Locale code**: ISO 639-1 code (e.g. `de`, `fr`, `sk`)
-- **Locale name**: human-readable name (e.g. `German`, `French`, `Slovak`)
+- **Locale code** — ISO 639-1, two lowercase letters (e.g. `de`, `fr`, `sk`). Reject uppercase or invalid codes.
+- **Locale name** — capitalized, no special characters (e.g. `German`).
 
 ## Steps
 
-### 1. Create locale translation file
+1. **Translation catalog** — Copy `apps/ui/locales/en.json` to `apps/ui/locales/{code}.json`. Keep the keys identical; translate the values (or leave English and flag them for translation). Existing catalogs for reference: `en.json`, `cs.json`.
 
-Copy `apps/ui/locales/en.json` to `apps/ui/locales/{locale}.json`.
+2. **Routing** — In `apps/ui/src/lib/navigation.ts`, add `{code}` to `routing.locales`, keeping the array alphabetical:
 
-The file structure must match `en.json` exactly — same keys, translated values. Initially copy as-is and mark values for translation.
+   ```ts
+   locales: ["cs", "en", "{code}"],
+   ```
 
-Existing locales for reference: `en.json`, `cs.json`.
+   This is the only code change. The `[locale]` segment, `generateStaticParams`, the dynamic catalog import in `apps/ui/src/lib/i18n.ts`, and the `Locale` type (derived from `routing.locales` in `apps/ui/src/types/global.d.ts`) all pick up the new locale automatically.
 
-### 2. Update routing config
+3. **Strapi + content** — these are manual; tell the user:
+   - Enable the locale: Strapi admin → Settings → Internationalization → Add new locale.
+   - Translate localized content for each i18n-enabled content type, plus single types (Navbar, Footer) and any localized seed/demo content.
 
-Edit `apps/ui/src/lib/navigation.ts`.
-
-Add the new locale code to the `locales` array:
-
-```typescript
-export const routing = defineRouting({
-  locales: ["cs", "en", "{locale}"],
-  defaultLocale: "en",
-  localePrefix: "as-needed",
-})
-```
-
-Keep the array sorted alphabetically.
-
-### 3. Update i18n config (if needed)
-
-The i18n config at `apps/ui/src/lib/i18n.ts` uses dynamic imports and automatically picks up new locale files:
-
-```typescript
-messages: (
-  await (locale === "en"
-    ? import("../../locales/en.json")
-    : import(`../../locales/${locale}.json`))
-).default,
-```
-
-No changes needed unless you want HMR support for the new locale during development (currently only `en` has HMR via static import).
-
-### 4. Manual steps (inform user)
-
-After the automated steps complete, inform the user:
-
-> The translation file and routing config are set up. You need to manually:
->
-> 1. **Enable locale in Strapi**: Go to Settings > Internationalization > Add new locale > select {locale}
-> 2. **Translate content**: For each content type with i18n enabled, switch to the new locale in Strapi admin and translate
-
-## Notes
-
-- The `[locale]` route segment in `apps/ui/src/app/[locale]/` handles locale routing automatically via `next-intl`
-- `generateStaticParams` in the root layout iterates `routing.locales` — new locale pages are generated automatically
-- The `localePrefix: "as-needed"` setting means the default locale (`en`) has no prefix, all others get `/{locale}/` prefix
+   See `apps/docs/docs/reference/internationalization.md` (Creating Localized Content) for details.
