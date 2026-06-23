@@ -55,5 +55,6 @@ If nothing fits, say so plainly and hand off to `create-content-component`, nami
 ## See also
 
 - `create-content-component` — build a new section when there's no match.
+- `copy-component` — replicate a section from a description/screenshot/code (runs this skill as its reuse-check).
 - `add-ui-component` — generic (non page-builder) UI primitives.
 - `apps/docs/docs/page-builder/introduction.md`, `apps/docs/docs/ui/built-in-pages/showcase.md`.

@@ -20,7 +20,8 @@ Add a new page-builder section to both Strapi (component schema + dynamic-zone e
 
 ## Routing — which skill do you actually want?
 
-- **This skill (`create-content-component`)** — Strapi-driven page section rendered through the page builder's dynamic zone.
+- **This skill (`create-content-component`)** — Strapi-driven page section, built from an explicit attribute spec.
+- **`copy-component`** — replicate a section from a reference (description, screenshot, or HTML/code); it derives the spec and delegates here.
 - **`add-content-type`** — needs its own DB table + REST endpoint (Article, Product, etc.).
 - **`add-ui-component`** — generic React UI (Button, Container) not driven by Strapi data.
 
