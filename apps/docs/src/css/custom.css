@@ -235,6 +235,24 @@
   font-size: 1.1rem;
 }
 
+.homeWhyActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.homeButtonDark {
+  background: #0d0c0e;
+  border-color: #0d0c0e;
+  color: #ffffff;
+}
+
+.homeButtonDark:hover {
+  background: #2b292d;
+  border-color: #2b292d;
+  color: #ffffff;
+}
+
 .homeValueGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
