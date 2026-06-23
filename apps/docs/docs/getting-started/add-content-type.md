@@ -8,6 +8,14 @@ End-to-end recipe for introducing a new Strapi collection (or single type) and e
 
 For a new **dynamic-zone component** (something that goes inside `page.content`), see [Page Builder](../page-builder/introduction.md). This page covers a separate collection.
 
+:::tip Use the AI skill first
+
+Before starting this manual workflow, use the [add-content-type AI skill](../reference/AI/skills/add-content-type.md). It guides the same repo-specific change path and helps catch the related schema, type, UI, test, and review steps in advance.
+
+See [Agent Skills](../reference/AI/skills/overview.md) for the full skills catalog and workflow diagrams.
+
+:::
+
 ## Prerequisites
 
 - Strapi running locally — `pnpm dev:strapi` from the monorepo root.
