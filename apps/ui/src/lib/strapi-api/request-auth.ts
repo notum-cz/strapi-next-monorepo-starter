@@ -52,9 +52,9 @@ export const createStrapiAuthHeader = async ({
     return formatStrapiAuthorizationHeader(userToken)
   }
 
-  const apiToken = isReadOnly
-    ? getEnvVar("STRAPI_REST_READONLY_API_KEY")
-    : getEnvVar("STRAPI_REST_CUSTOM_API_KEY")
+  const apiToken = getEnvVar(
+    isReadOnly ? "STRAPI_REST_READONLY_API_KEY" : "STRAPI_REST_CUSTOM_API_KEY"
+  )
 
   return formatStrapiAuthorizationHeader(apiToken)
 }
@@ -86,7 +86,7 @@ const getStrapiUserTokenFromBetterAuth = async () => {
     return session?.user?.strapiJWT
   }
 
-  // Client side: Make HTTP request to /api/auth/session
+  // Client side: Make HTTP request to /API/auth/session
   const { getSessionCSR } = await import("@/lib/auth-client")
   const { data: session } = await getSessionCSR()
 

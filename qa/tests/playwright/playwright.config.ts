@@ -12,7 +12,7 @@ if (fs.existsSync(envPath)) {
 const mobileViewportsEnabled =
   process.env.MOBILE_VIEWPORTS_TESTING_ENABLED === "true"
 
-const projects: Project[] = [
+const baseProjects: Project[] = [
   {
     name: "chromium",
     use: { ...devices["Desktop Chrome"] },
@@ -31,22 +31,22 @@ const projects: Project[] = [
   },
 ]
 
-if (mobileViewportsEnabled) {
-  projects.push(
-    // Android
-    {
-      name: "Mobile Chrome (Pixel 7)",
-      use: { ...devices["Pixel 7"] },
-    },
-    // iOS
-    {
-      name: "Mobile Safari (iPhone 15)",
-      use: { ...devices["iPhone 15"] },
-    }
-  )
-}
+const mobileProjects: Project[] = mobileViewportsEnabled
+  ? [
+      // Android
+      {
+        name: "Mobile Chrome (Pixel 7)",
+        use: { ...devices["Pixel 7"] },
+      },
+      // iOS
+      {
+        name: "Mobile Safari (iPhone 15)",
+        use: { ...devices["iPhone 15"] },
+      },
+    ]
+  : []
 
-projects.push(
+const specializedProjects: Project[] = [
   {
     name: "visual-chromium",
     testMatch: ["visual/**/*.spec.ts"],
@@ -103,8 +103,14 @@ projects.push(
       screenshot: "off",
       video: "off",
     },
-  }
-)
+  },
+]
+
+const projects: Project[] = [
+  ...baseProjects,
+  ...mobileProjects,
+  ...specializedProjects,
+]
 
 export default defineConfig({
   testDir: ".",

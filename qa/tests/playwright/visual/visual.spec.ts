@@ -22,7 +22,8 @@ function prettifySlug(url: string): string {
 function getEnvSlug(baseUrl: string | undefined): string {
   if (!baseUrl) return "unknown"
   try {
-    const hostname = new URL(baseUrl).hostname.replace(/^www\./, "")
+    const url = new URL(baseUrl)
+    const hostname = url.hostname.replace(/^www\./, "")
 
     return hostname.replaceAll(".", "-")
   } catch {

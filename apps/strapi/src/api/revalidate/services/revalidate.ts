@@ -10,7 +10,7 @@ export default () => ({
    * publish/update, by hierarchy jobs after fullPath recalculation, and by
    * the admin "Revalidate cache" button.
    */
-  async run(params: RevalidateNextCacheParams): Promise<RevalidationResponse> {
-    return revalidateNextCache(params)
-  },
+  run: async (
+    params: RevalidateNextCacheParams
+  ): Promise<RevalidationResponse> => revalidateNextCache(params),
 })

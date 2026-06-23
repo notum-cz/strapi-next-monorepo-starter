@@ -9,6 +9,7 @@ export const OnlyCursive = Mark.create({
 export const HeadingWithSEOTag = Heading.extend({
   addAttributes() {
     return {
+      // eslint-disable-next-line unicorn/no-this-outside-of-class -- Tiptap extension API exposes parent attributes through `this`.
       ...this.parent?.(),
       tag: { default: null },
     }
@@ -18,6 +19,7 @@ export const HeadingWithSEOTag = Heading.extend({
 export const StrapiImage = Image.extend({
   addAttributes() {
     return {
+      // eslint-disable-next-line unicorn/no-this-outside-of-class -- Tiptap extension API exposes parent attributes through `this`.
       ...this.parent?.(),
       "data-asset-id": { default: null },
       "data-align": { default: null },

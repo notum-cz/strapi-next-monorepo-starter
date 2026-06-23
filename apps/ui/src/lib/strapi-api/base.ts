@@ -23,6 +23,21 @@ export const API_ENDPOINTS: Partial<Record<UID.ContentType, string>> = {
 } as const
 
 export default abstract class BaseStrapiClient {
+  private async parseResponse(response: Response) {
+    const contentType = response.headers.get("content-type")
+    if (contentType?.includes("application/json")) {
+      return {
+        contentType,
+        json: await response.json(),
+      }
+    }
+
+    return {
+      contentType,
+      text: await response.text(),
+    }
+  }
+
   public async fetchAPI(
     path: string,
     params: AppLocalizedParams<Record<string, unknown>> = {},
@@ -33,9 +48,7 @@ export default abstract class BaseStrapiClient {
       path,
       {
         ...params,
-        ...(options?.doNotAddLocaleQueryParams
-          ? {}
-          : { locale: params.locale }),
+        ...(!options?.doNotAddLocaleQueryParams && { locale: params.locale }),
       },
       requestInit,
       options
@@ -175,7 +188,9 @@ export default abstract class BaseStrapiClient {
         )
     )
 
-    return Promise.all(otherPages).then((res) => ({
+    const res = await Promise.all(otherPages)
+
+    return {
       data: [firstPage.data, ...res.map((page) => page.data)].flat(),
       meta: {
         pagination: {
@@ -185,7 +200,7 @@ export default abstract class BaseStrapiClient {
           total: firstPage.meta.pagination.total,
         },
       },
-    }))
+    }
   }
 
   /**
@@ -284,20 +299,5 @@ export default abstract class BaseStrapiClient {
     throw new Error(
       `Endpoint for UID "${uid}" not found. Extend API_ENDPOINTS in lib/api/client.ts.`
     )
-  }
-
-  private async parseResponse(response: Response) {
-    const contentType = response.headers.get("content-type")
-    if (contentType?.includes("application/json")) {
-      return {
-        contentType,
-        json: await response.json(),
-      }
-    }
-
-    return {
-      contentType,
-      text: await response.text(),
-    }
   }
 }

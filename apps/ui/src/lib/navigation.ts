@@ -28,7 +28,7 @@ export const {
 export const redirect: typeof _redirect = _redirect
 
 /**
- * Function to check if a given link belongs to the same application - it is internal link.
+ * Function to check if a given link belongs to the same app - it is internal link.
  *
  * @param link
  * @returns true if the link is internal, false otherwise
@@ -37,8 +37,9 @@ export const isAppLink = (link: string): boolean => {
   try {
     const baseUrl = getEnvVar("APP_PUBLIC_URL", true) as string
     const url = new URL(link, baseUrl)
+    const base = new URL(baseUrl)
 
-    return url.hostname === new URL(baseUrl).hostname
+    return url.hostname === base.hostname
   } catch {
     return false
   }
@@ -60,8 +61,10 @@ export const createPublicFullPath = (
     isDefaultLocale ? null : locale
   )
 
+  const url = new URL(path, baseUrl)
+
   // new URL("/", baseUrl) always adds a trailing slash for root paths — strip it
-  return new URL(path, baseUrl).toString().replace(/\/$/, "")
+  return url.href.replace(/\/$/, "")
 }
 
 export const formatHref = (href: string | undefined | null): string => {

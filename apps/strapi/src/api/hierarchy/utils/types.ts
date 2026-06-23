@@ -13,5 +13,5 @@ export type FullPathChange = {
   slug: string
   oldFullPath: string | null
   newFullPath: string
-  redirect: { source: string; destination: string } | null
+  redirect: null | { source: string; destination: string }
 }

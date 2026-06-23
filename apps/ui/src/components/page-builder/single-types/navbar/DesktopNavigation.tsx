@@ -26,12 +26,12 @@ export function DesktopNavigation({ navbarItems }: DesktopNavigationProps) {
 
           return (
             <NavigationMenuItem key={item.id} className="relative">
-              {item.isCategoryLink && item?.link ? (
+              {item.isCategoryLink && item.link ? (
                 <StrapiLink
                   component={item.link}
                   className={cn(navigationMenuTriggerStyle())}
                 >
-                  {item?.link?.label}
+                  {item.link.label}
                 </StrapiLink>
               ) : hasSubItems ? (
                 <NavigationMenuTrigger

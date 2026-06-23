@@ -9,6 +9,7 @@ import { useTranslatedZod } from "@/hooks/useTranslatedZod"
 import { setupLibraries } from "@/lib/general-helpers"
 
 // Setup libraries in client environment
+// eslint-disable-next-line unicorn/no-top-level-side-effects
 setupLibraries()
 
 const queryClient = new QueryClient()

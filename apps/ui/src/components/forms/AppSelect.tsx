@@ -21,7 +21,10 @@ import {
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
 
-type Props = {
+type Props = Omit<
+  React.SelectHTMLAttributes<HTMLSelectElement>,
+  "className"
+> & {
   readonly name: string
   readonly options: { label: string; value: string }[]
   readonly label?: React.ReactNode
@@ -29,7 +32,7 @@ type Props = {
   readonly containerClassName?: string
   readonly fieldClassName?: string
   readonly description?: React.ReactNode
-} & Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "className">
+}
 
 export function AppSelect({
   name,

@@ -207,8 +207,12 @@ function normalizeError(error: unknown): Error {
     typeof error.message === "string"
   ) {
     const normalizedError = new Error(error.message)
-    normalizedError.name =
-      "name" in error && typeof error.name === "string" ? error.name : "Error"
+    Object.defineProperty(normalizedError, "name", {
+      value:
+        "name" in error && typeof error.name === "string"
+          ? error.name
+          : "Error",
+    })
 
     return normalizedError
   }

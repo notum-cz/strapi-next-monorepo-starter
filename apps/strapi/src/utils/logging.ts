@@ -11,7 +11,7 @@ const logging = createLogging({
 })
 
 /**
- * Main Strapi application logger for custom server code. Prefer this over
+ * Main Strapi app logger for custom server code. Prefer this over
  * console.* when adding new code so logs are structured and trace-correlated.
  */
 export const logger = logging.logger

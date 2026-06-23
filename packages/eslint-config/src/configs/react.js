@@ -92,7 +92,7 @@ const config = [
       "react/style-prop-object": "error",
       "react/void-dom-elements-no-children": "error",
 
-      // jsx specifics
+      // JSX specifics
       "react/jsx-boolean-value": [
         "error",
         "never",

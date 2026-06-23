@@ -76,12 +76,14 @@ export async function POST(request: Request) {
     tags: [...tagsToRevalidate],
   })
 
+  const revalidatedAt = new Date()
+
   return Response.json({
     uid,
     revalidated: true,
     fullPaths: [...pathsToRevalidate],
     tags: [...tagsToRevalidate],
-    at: new Date().toISOString(),
+    at: revalidatedAt.toISOString(),
   })
 }
 

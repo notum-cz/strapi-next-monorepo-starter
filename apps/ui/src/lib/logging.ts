@@ -19,7 +19,7 @@ const logging = createLogging({
 })
 
 /**
- * Main application logger. Prefer this over console.* in server-side code so
+ * Main app logger. Prefer this over console.* in server-side code so
  * logs are structured, redactable, and trace-correlated.
  */
 export const logger = logging.logger

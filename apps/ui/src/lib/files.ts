@@ -1,5 +1,5 @@
 export const downloadBlob = (blob: Blob, fileName: string) => {
-  const fileUrl = globalThis.URL.createObjectURL(blob)
+  const fileUrl = URL.createObjectURL(blob)
   const link = document.createElement("a")
   link.href = fileUrl
   link.download = fileName
@@ -9,6 +9,6 @@ export const downloadBlob = (blob: Blob, fileName: string) => {
 }
 
 export const openBlobInNewTab = (blob: Blob) => {
-  const file = globalThis.URL.createObjectURL(blob)
+  const file = URL.createObjectURL(blob)
   window.open(file, "_blank")
 }

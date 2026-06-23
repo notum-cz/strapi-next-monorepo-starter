@@ -43,7 +43,8 @@ test.describe("AXE accessibility", () => {
         "Missing BASE_URL environment variable"
       ).toBeTruthy()
 
-      const site = new URL(pathname, resolvedBaseUrl).toString()
+      const siteUrl = new URL(pathname, resolvedBaseUrl)
+      const site = siteUrl.href
       const warningOnlySite = WARNING_ONLY_PATHS.has(pathname)
       const config = PATH_CONFIGS[pathname]
       const warningRuleIds = new Set([

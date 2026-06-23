@@ -36,7 +36,7 @@ export const validateAdminToken = async (
     // Pin the algorithm to the admin session default (HS256). Without this,
     // jsonwebtoken accepts any algorithm the secret can verify, opening the
     // door to algorithm-confusion / `alg: none` forgeries. This also rejects
-    // expired tokens (jwt throws TokenExpiredError on a past `exp`).
+    // expired tokens (JWT throws TokenExpiredError on a past `exp`).
     decoded = jwt.verify(token, strapi.config.get("admin.auth.secret"), {
       algorithms: ["HS256"],
     }) as AdminTokenPayload

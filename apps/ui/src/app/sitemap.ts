@@ -38,7 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 }
 
 /**
- * Fetches all entries in a given collection - by default this is api::page.page
+ * Fetches all entries in a given collection - by default this is API::page.page
  * and generates sitemap entries for a single locale
  * @param locale locale to retrieve (must be defined in routing `@/lib/navigation`)
  * @returns Sitemap entries for a single locale
@@ -89,7 +89,7 @@ async function generateLocalizedSitemap(
    * alongside mapping of changeFrequency
    */
   return Object.entries(pageEntities).reduce((acc, [uid, pages]) => {
-    pages.forEach((page) => {
+    for (const page of pages) {
       if (page.fullPath) {
         acc.push({
           url: createPublicFullPath(page.fullPath, String(page.locale)),
@@ -98,7 +98,7 @@ async function generateLocalizedSitemap(
             entityChangeFrequency[uid as PageEntityUID] ?? "monthly",
         })
       }
-    })
+    }
 
     return acc
   }, [] as MetadataRoute.Sitemap)

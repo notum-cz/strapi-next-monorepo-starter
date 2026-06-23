@@ -54,12 +54,19 @@ export async function POST(request: Request) {
 
   const outcome = await purgeCdnCache([...pathsToPurge])
 
-  const responseBody = {
-    purged: outcome.ok,
-    paths: [...pathsToPurge],
-    at: new Date().toISOString(),
-    ...(outcome.reason ? { message: outcome.reason } : {}),
-  }
+  const purgedAt = new Date()
+  const responseBody = outcome.reason
+    ? {
+        purged: outcome.ok,
+        paths: [...pathsToPurge],
+        at: purgedAt.toISOString(),
+        message: outcome.reason,
+      }
+    : {
+        purged: outcome.ok,
+        paths: [...pathsToPurge],
+        at: purgedAt.toISOString(),
+      }
 
   if (!outcome.ok) {
     return Response.json(responseBody, { status: 502 })

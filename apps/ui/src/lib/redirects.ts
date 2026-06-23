@@ -83,16 +83,17 @@ function cacheRedirects(redirects: RedirectRecord[]) {
 // Refresh failures should not break navigation. If Strapi is temporarily down,
 // keep serving the last known redirect list until a later refresh succeeds.
 function refreshRedirects() {
-  redirectFetchPromise ??= fetchRedirects()
-    .then(cacheRedirects)
-    .catch((error: unknown) => {
+  redirectFetchPromise ??= (async () => {
+    try {
+      return cacheRedirects(await fetchRedirects())
+    } catch (error: unknown) {
       logError(error, "[redirects] Failed to refresh redirect cache")
 
       return redirectCache?.redirects ?? []
-    })
-    .finally(() => {
+    } finally {
       redirectFetchPromise = undefined
-    })
+    }
+  })()
 
   return redirectFetchPromise
 }

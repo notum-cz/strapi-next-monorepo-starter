@@ -25,7 +25,9 @@ interface ImgproxyOptions {
 }
 
 function isSvg(url: string): boolean {
-  return new URL(url, "http://n").pathname.endsWith(".svg")
+  const parsedUrl = new URL(url, "http://n")
+
+  return parsedUrl.pathname.endsWith(".svg")
 }
 
 export function isImgproxyEnabled() {
@@ -65,9 +67,11 @@ function imgproxyUrl(sourceUrl: string, options: ImgproxyOptions = {}): string {
   // points to the container itself — not the host where Strapi runs.
   // Replace with host.docker.internal so imgproxy can reach Strapi.
   // In production, Strapi URLs are absolute (https://...) and unaffected.
+  /* eslint-disable unicorn/prefer-https -- local Strapi/imgproxy development URLs use HTTP. */
   const resolvedSource = sourceUrl
     .replace("http://127.0.0.1:", "http://host.docker.internal:")
     .replace("http://localhost:", "http://host.docker.internal:")
+  /* eslint-enable unicorn/prefer-https */
 
   // return `${IMGPROXY_URL}/${processing}/plain/${encodeURIComponent(resolvedSource)}@${format}`
 

@@ -59,7 +59,11 @@ try {
   }
   process.exitCode = 1
 } finally {
-  await strapi?.destroy?.().catch(() => {})
+  try {
+    await strapi?.destroy?.()
+  } catch {
+    // Ignore cleanup errors after the primary seed check result is known.
+  }
 }
 
 async function loadStrapi() {

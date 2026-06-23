@@ -20,7 +20,7 @@ export function SocialButtons({ strapiUrl }: { strapiUrl: string }) {
         className="w-full cursor-pointer"
         onClick={() => {
           const connectUrl = new URL("/api/connect/github", strapiUrl)
-          globalThis.location.href = connectUrl.toString()
+          location.assign(connectUrl.href)
         }}
       >
         <svg
