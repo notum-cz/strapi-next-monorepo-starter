@@ -4,15 +4,18 @@ Monorepo starter with Strapi v5 CMS, Next.js 16 UI, Docusaurus docs, pnpm worksp
 
 ## Workspaces
 
-| Path                     | Description                                                  |
-| ------------------------ | ------------------------------------------------------------ |
-| `apps/ui`                | Next.js 16 App Router, React 19, TailwindCSS v4, shadcn/ui   |
-| `apps/strapi`            | Strapi v5 CMS with PostgreSQL through Docker                 |
-| `apps/docs`              | Docusaurus documentation site                                |
-| `packages/strapi-types`  | Auto-generated TypeScript types from Strapi schemas          |
-| `packages/design-system` | Shared TailwindCSS tokens, CKEditor and TipTap editor styles |
-| `packages/shared-data`   | Shared constants and types                                   |
-| `qa/tests/playwright`    | E2E, accessibility, SEO, visual, and Lighthouse tests        |
+| Path                     | Description                                                             |
+| ------------------------ | ----------------------------------------------------------------------- |
+| `apps/ui`                | Next.js 16 App Router, React 19, TailwindCSS v4, shadcn/ui              |
+| `apps/strapi`            | Strapi v5 CMS with PostgreSQL through Docker                            |
+| `apps/docs`              | Docusaurus documentation site (port 3300)                               |
+| `packages/strapi-types`  | Auto-generated TypeScript types from Strapi schemas                     |
+| `packages/design-system` | Shared TailwindCSS tokens, CKEditor and TipTap editor styles            |
+| `packages/shared-data`   | Shared constants and types                                              |
+| `packages/logging`       | Structured pino logging + OpenTelemetry trace context (`@repo/logging`) |
+| `qa/tests/playwright`    | E2E, accessibility, SEO, visual, and Lighthouse tests                   |
+
+Config-only workspaces (`@repo/eslint-config`, `@repo/typescript-config`, `@repo/semantic-release-config`) are omitted from the table.
 
 ## Essential Commands
 
@@ -29,18 +32,11 @@ pnpm typecheck        # Typecheck all packages
 pnpm test             # Vitest in all apps
 ```
 
-See [Commands Reference](apps/docs/docs/reference/commands.md) for the full command list, package filters, testing commands, and cleanup scripts.
+See [Commands Reference](apps/docs/docs/reference/commands.md) for the full command list, package filters, worktrees, testing, and cleanup scripts.
 
-## Critical Workflow
+## Generated types
 
-After any Strapi schema or component change, regenerate and sync shared types from the monorepo root:
-
-```bash
-pnpm generate:types
-pnpm sync-types
-```
-
-This updates `@repo/strapi-types`. Forgetting this can cause silent type mismatches between Strapi schemas and UI code.
+`@repo/strapi-types` is generated from the Strapi schemas and **regenerates automatically when Strapi restarts** after a schema or component change — no manual step in normal dev. If you need fresh types without restarting Strapi, run `pnpm generate:types`. See [Strapi Types](apps/docs/docs/reference/packages/strapi-types.md).
 
 ## Documentation Routing
 
@@ -48,7 +44,7 @@ Start with [Documentation Overview](apps/docs/docs/getting-started/features.md) 
 
 Use these pages for common coding-agent tasks:
 
-- [Commands Reference](apps/docs/docs/reference/commands.md) — Root scripts, package filters, tests, and cleanup commands
+- [Commands Reference](apps/docs/docs/reference/commands.md) — Root scripts, package filters, worktrees, tests, and cleanup commands
 - [Workflow](apps/docs/docs/reference/workflow.md) — Git hooks, branch naming, Conventional Commits, env vars in commits, and release notes
 - [Quick Start](apps/docs/docs/getting-started/quick-start.md) — Local setup flow
 - [Add Content Type](apps/docs/docs/getting-started/add-content-type.md) — Strapi schema-to-UI implementation workflow
@@ -62,6 +58,7 @@ Use these pages for common coding-agent tasks:
 - [Design System](apps/docs/docs/design-system/overview.md) — Tokens, typography, rich text styles, and CMS component design guidance
 - [Testing](apps/docs/docs/reference/testing/overview.md) — Unit, Playwright, accessibility, visual, SEO, and Lighthouse coverage
 - [Deployment](apps/docs/docs/reference/deployment/overview.md) — GitHub Actions, Heroku, Vercel, and Docker notes
+- [AI Skills](apps/docs/docs/reference/AI/skills/overview.md) — Agent skills catalog, per-skill What/How/When, and [workflow diagrams](apps/docs/docs/reference/AI/skills/overview.md#workflows)
 
 ## Commits
 
@@ -81,20 +78,8 @@ When adding environment variables, mention them in the commit body as `env.VARIA
 
 ## Agent skills
 
-Reusable agent instructions live in [`.claude/skills/`](./.claude/skills/). Claude Code auto-discovers them from this directory.
+Reusable agent instructions live in [`.claude/skills/`](./.claude/skills/) — the single source of truth, auto-discovered by Claude Code. A committed symlink at [`.agents/skills/`](./.agents/skills/) exposes the same set to any agent following the [agentskills.io](https://agentskills.io) standard (Codex, Copilot CLI, Gemini). Vendored community skills are installed via `skills.sh` and tracked in [`skills-lock.json`](./skills-lock.json).
 
-See [`.claude/skills/README.md`](./.claude/skills/README.md) for the authoring guide and the catalog of shipped skills.
+See [`.claude/skills/README.md`](./.claude/skills/README.md) for the authoring guide and full catalog, and the [AI → Skills docs](apps/docs/docs/reference/AI/skills/overview.md) (with [workflow diagrams](apps/docs/docs/reference/AI/skills/overview.md#workflows)) for what each skill does and how they chain. Worktree-based isolation is wired through the `start-work` skill.
 
-## Worktrees
-
-Multi-branch development uses git worktrees driven by [`worktree.config.json`](./worktree.config.json). Worktrees land at `<repo-root>/../.worktrees/<branch-slug>` (sibling, never nested).
-
-```bash
-pnpm worktree:create <branch> [base]   # default base: dev (falls back to main)
-pnpm worktree:setup   <path>           # re-apply manifest to an existing worktree
-pnpm worktree:cleanup <path-or-branch> # remove worktree; refuses unmerged unless --force
-```
-
-The manifest declares files to copy (env files), files to symlink, and `postSetup` commands (e.g. `pnpm install`). Adding a new env file = edit JSON, not scripts. Scripts live at [`scripts/worktree/`](./scripts/worktree/) and resolve the canonical repo root, so they work from a bare repo or from any worktree.
-
-The `fix-issue` skill calls these scripts when starting new work.
+This file (`CLAUDE.md`) is mirrored as `AGENTS.md` (a symlink) for non-Claude agents; the same pairing exists in `apps/ui` and `apps/strapi`.

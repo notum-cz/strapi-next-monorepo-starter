@@ -4,12 +4,12 @@ Skills are reusable agent instructions for tasks in this repo. Claude Code auto-
 
 ## Where skills live (one folder, two paths)
 
-`.claude/skills/` is the **single source of truth** — every skill (repo-authored and vendored) is a real directory here. `.agents/skills/` is a **symlink to it** (`.agents/skills -> ../.claude/skills`), so cross-runtime agents (Codex, Copilot CLI, Gemini) see the exact same set as Claude Code.
+`.claude/skills/` is the **single source of truth** — every skill (repo-authored and vendored) is a real directory here, auto-discovered by Claude Code. A committed symlink at `.agents/skills/` (`.agents/skills -> ../.claude/skills`) exposes the same set to any agent following the [agentskills.io](https://agentskills.io) standard — Codex, Copilot CLI, Gemini — which discover skills from `.agents/skills/` directly. Both paths resolve to the same files.
 
 - **Repo-authored skills** — hand-written here (`make-pr`, `create-content-component`, …).
 - **Vendored skills** — community skills installed with `skills.sh` (`npx skills add …`), tracked in `skills-lock.json` at the repo root (`find-skills`, `frontend-design`, `next-best-practices`, `vercel-react-best-practices`). `npx skills add/update` writes through the `.agents/skills` symlink into this folder; the lockfile records each one's source + content hash. Keep their `LICENSE`/`metadata.json` files.
 
-> Windows note: the `.agents/skills` symlink needs `git config core.symlinks true` (and Developer Mode) to materialize on clone. Claude Code is unaffected — it reads the real `.claude/skills`.
+> **Windows note:** the `.agents/skills` symlink needs `git config core.symlinks true` (and Developer Mode) once per clone to materialize. Claude Code is unaffected — it reads the real `.claude/skills` — but agentskills.io-standard agents miss the directory until the symlink resolves.
 
 ## Layout
 

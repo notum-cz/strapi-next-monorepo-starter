@@ -26,7 +26,7 @@ await client.fetchOneByFullPath("api::page.page", fullPath, {
 })
 ```
 
-Use `populateOverrides` in `config/plugins.ts` only for project-specific relation shapes that should not use the generated default.
+Use `populateOverrides` in `config/plugins/smart-populate.ts` only for project-specific relation shapes that should not use the generated default.
 
 ## Localization
 
@@ -52,7 +52,7 @@ Or manually:
 3. Generate types: `pnpm generate:types`
 4. Create React component in `apps/ui` — see [apps/ui/AGENTS.md](../ui/AGENTS.md)
 
-Full workflow: [Page Builder docs](../docs/docs/content-system/page-builder.md#adding-new-components)
+Full workflow: [Page Builder docs](../docs/docs/page-builder/introduction.md#adding-new-components)
 
 ## Page Hierarchy
 
@@ -71,10 +71,10 @@ Pages use parent-child relations. `fullPath` is recalculated on demand via the H
 - `GET /api/hierarchy/pending-changes` — List pending fullPath changes
 - `POST /api/hierarchy/recalculate` — Apply changes + create redirects
 
-See [Pages Hierarchy docs](../docs/docs/content-system/pages-hierarchy.md) for content editor workflow.
+See [Pages Hierarchy docs](../docs/docs/page-builder/pages-hierarchy.md) for content editor workflow.
 
 ## Related Documentation
 
-- [Strapi Schemas](../docs/docs/content-system/strapi-schemas.md) — Schema attributes, localization, lifecycle hooks
-- [Page Builder](../docs/docs/content-system/page-builder.md) — Component registry and rendering
-- [Pages Hierarchy](../docs/docs/content-system/pages-hierarchy.md) — URL structure and redirects
+- [Strapi Schemas](../docs/docs/strapi/strapi-schemas.md) — Schema attributes, localization, lifecycle hooks
+- [Page Builder](../docs/docs/page-builder/introduction.md) — Component registry and rendering
+- [Pages Hierarchy](../docs/docs/page-builder/pages-hierarchy.md) — URL structure and redirects
