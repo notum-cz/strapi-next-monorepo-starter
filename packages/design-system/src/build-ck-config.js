@@ -54,7 +54,7 @@ const colorVars = allVars
 const fontSizeVars = allVars
   // eslint-disable-next-line sonarjs/slow-regex
   .filter((v) => /^--text-\w+(?!.*--)$/.test(v.name))
-  .map((v) => ({ model: `${v.value}`, title: v.name.replaceAll("--", "") }))
+  .map((v) => ({ model: v.value, title: v.name.replaceAll("--", "") }))
 
 // Write output files
 fs.writeFileSync(
