@@ -39,9 +39,11 @@ updates:
   - package-ecosystem: "npm"
     target-branch: "dev"
     versioning-strategy: "increase"
+    # apps/strapi and apps/docs are handled by a dedicated entry below
+    # (they must stay on React 18), so they are intentionally excluded here.
     directories:
       - "/"
-      - "/apps/*"
+      - "/apps/ui"
       - "/packages/*"
     schedule:
       interval: "daily"
@@ -78,6 +80,67 @@ updates:
           - "@types/react-dom"
           - "@strapi/*"
         update-types: ["patch", "minor", "major"]
+    commit-message:
+      include: scope
+      prefix: "chore"
+    labels:
+      - "update-dependencies"
+      - "auto-generated"
+      - "ready-for-review"
+
+  # ─────────────────────────────────────────────
+  # React-18-pinned apps (Strapi v5 admin + Docusaurus 3)
+  # Separate npm entry so the React-major ignore below is scoped ONLY to
+  # these apps — apps/ui (handled above) keeps receiving React 19+ updates.
+  # ─────────────────────────────────────────────
+  - package-ecosystem: "npm"
+    target-branch: "dev"
+    versioning-strategy: "increase"
+    directories:
+      - "/apps/strapi"
+      - "/apps/docs"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 3
+      semver-minor-days: 5
+    allow:
+      - dependency-type: "direct"
+    groups:
+      # React stays on v18 here — patch/minor only (majors are ignored below)
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+        update-types: ["patch", "minor"]
+      strapi:
+        patterns:
+          - "@strapi/*"
+        update-types: ["patch", "minor", "major"]
+      all-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+          - "@strapi/*"
+        update-types: ["patch", "minor", "major"]
+    # Keep React on v18 — Strapi v5 admin and Docusaurus 3 require it.
+    # Never auto-bump React (or its types) to a new major.
+    ignore:
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react-dom"
+        update-types: ["version-update:semver-major"]
     commit-message:
       include: scope
       prefix: "chore"
