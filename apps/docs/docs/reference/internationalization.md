@@ -156,7 +156,7 @@ See [Strapi API Client](../ui/strapi-api-client.md) for the typed client API.
 
 ## Adding A Locale
 
-Use the bundled `.agents/skills/add-locale` instructions. A locale change usually touches both apps:
+Use the bundled `.claude/skills/add-locale` instructions. A locale change usually touches both apps:
 
 - Strapi admin locale and i18n content setup
 - UI routing locale list

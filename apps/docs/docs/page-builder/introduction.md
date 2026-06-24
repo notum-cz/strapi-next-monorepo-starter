@@ -162,11 +162,13 @@ The real implementation also handles fetching, locale setup, structured data, an
 
 ## Adding New Components
 
-Use the `create-content-component` skill:
+New page-builder sections should be added through the AI skills workflow so the CMS fields, frontend rendering, reuse checks, tests, and review steps stay connected.
 
-```
-/create-content-component
-```
+Start with [Agent Skills](../reference/AI/skills/overview.md) for the full workflow. For page-builder work, the main entry points are:
+
+- [find-component](../reference/AI/skills/find-component.md) — check whether an existing section already fits.
+- [copy-component](../reference/AI/skills/copy-component.md) — reproduce a section from a screenshot, description, or code snippet.
+- [create-content-component](../reference/AI/skills/create-content-component.md) — add a new CMS-driven section when nothing existing matches.
 
 ## Related Documentation
 

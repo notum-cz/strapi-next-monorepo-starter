@@ -25,19 +25,19 @@ const valueItems = [
     label: "Editable pages",
     title: "Content teams compose pages in Strapi",
     description:
-      "Dynamic-zone sections map directly to typed React components, so page structure can change without rebuilding the UI foundation.",
+      "Dynamic-zone sections map to typed React components, and AI skills help find, copy, or create page-builder sections.",
   },
   {
     label: "Typed delivery",
     title: "Generated types connect Strapi and the UI",
     description:
-      "Schemas, shared packages, and API clients are documented as one flow, so frontend changes stay predictable.",
+      "Schemas, shared packages, API clients, and AI-assisted workflows are documented as one flow, so frontend changes stay predictable.",
   },
   {
     label: "Project baseline",
     title: "Common production setup is already wired",
     description:
-      "Cache revalidation, auth, localization, preview, SEO, media, testing, deployment notes, and docs live in one monorepo from the start.",
+      "Cache revalidation, auth, localization, preview, SEO, media, testing, AI skills, deployment notes, and docs live in one monorepo from the start.",
   },
 ]
 
@@ -87,12 +87,20 @@ export default function Home(): JSX.Element {
                 documentation into one practical foundation for content-driven
                 projects.
               </p>
-              <Link
-                className="button button--secondary"
-                to="/docs/getting-started/features"
-              >
-                View features
-              </Link>
+              <div className="homeWhyActions">
+                <Link
+                  className="button button--secondary"
+                  to="/docs/getting-started/features"
+                >
+                  View features
+                </Link>
+                <Link
+                  className="button button--primary homeButtonDark"
+                  to="/docs/reference/AI/skills"
+                >
+                  AI Skills
+                </Link>
+              </div>
             </div>
 
             <div className="homeValueGrid" aria-label="Starter value summary">

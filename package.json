@@ -59,7 +59,10 @@
     "transfer:strapi": "turbo run transfer --filter=@repo/strapi",
     "typecheck": "turbo run typecheck",
     "typecheck:strapi": "turbo run typecheck --filter=@repo/strapi",
-    "typecheck:ui": "turbo run typecheck --filter=@repo/ui"
+    "typecheck:ui": "turbo run typecheck --filter=@repo/ui",
+    "worktree:cleanup": "scripts/worktree/cleanup.sh",
+    "worktree:create": "scripts/worktree/create.sh",
+    "worktree:setup": "scripts/worktree/setup.sh"
   },
   "devDependencies": {
     "@commitlint/cli": "20.5.3",

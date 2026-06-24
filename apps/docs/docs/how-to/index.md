@@ -97,6 +97,26 @@ See [Quick Start: Regenerate the Strapi API token](../getting-started/quick-star
 </details>
 
 <details>
+<summary>How does this starter support AI agents?</summary>
+
+The starter ships agent-facing instructions and tools as part of the repo, so compatible coding agents can understand common project workflows before editing files.
+
+The main support points are:
+
+- **Agent skills** live in `.claude/skills/` and are exposed through `.agents/skills/` for agents that follow the agentskills.io convention.
+- **Repo guidance** lives in root `CLAUDE.md` / `AGENTS.md`, so agents start from the same project rules and docs entry points.
+- **Workflow skills** cover common tasks such as starting work, adding content types, creating page-builder sections, writing tests, reviewing branches, and opening PRs.
+- **Worktree scripts** let agents create isolated branch workspaces with copied env files and shared package setup.
+- **Strapi MCP** is enabled by default in development, so an MCP-capable agent can inspect Strapi schemas and seed local content through `http://localhost:1337/mcp` with an API token. Outside development, opt in with `STRAPI_MCP_ENABLED=true`.
+- **Docs pages** describe the skill catalog and workflow diagrams, so humans and agents use the same reference.
+
+Use the relevant AI skill before starting repo-specific work. For example, use `add-content-type` before adding a new collection, `create-content-component` before adding a page-builder section, and `start-work` before opening an isolated worktree.
+
+See [Agent Skills](../reference/AI/skills/overview.md), [Strapi MCP](../reference/AI/strapi-mcp.md), [Commands Reference: Worktrees](../reference/commands.md#worktrees), and the root `CLAUDE.md` / `AGENTS.md` guidance.
+
+</details>
+
+<details>
 <summary>How to add a new Strapi content type that the UI can fetch?</summary>
 
 Use the short checklist:

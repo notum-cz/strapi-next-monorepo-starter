@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # Features
 
-This starter is built around a Strapi-managed page builder and a typed Next.js UI. It gives teams a working foundation for content, rendering, auth, media, workflow, and docs before project-specific features begin.
+This starter is built around a Strapi-managed page builder, reusable AI skills, and a typed Next.js UI. It gives teams a working foundation for content, rendering, auth, media, workflow, and docs before project-specific features begin.
 
 ## Stack
 
@@ -68,6 +68,7 @@ Shared code lives in [`packages/*`](../reference/packages/overview.md).
 ## Development Workflow
 
 - **[Monorepo scripts](../reference/commands.md)** — Turbo runs app and package tasks from the root.
+- **[AI skills and workflows](../reference/AI/skills/overview.md)** — agent-ready skills cover common tasks such as starting work, adding page-builder sections, writing tests, reviewing changes, and opening PRs.
 - **[Shared packages](../reference/packages/overview.md)** — design tokens, path helpers, generated Strapi types, lint config, TypeScript config, and release config live in `packages/*`.
 - **[Code quality](../reference/workflow.md)** — ESLint, Prettier, Lefthook, Commitizen, and Conventional Commits are included.
 - **[Internationalization](../reference/internationalization.md)** — UI messages and Strapi content locales are documented together.
