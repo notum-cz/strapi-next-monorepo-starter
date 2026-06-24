@@ -13,6 +13,7 @@ updates:
   # GitHub Actions
   # ─────────────────────────────────────────────
   - package-ecosystem: "github-actions"
+    target-branch: "dev"
     directory: "/"
     schedule:
       interval: "daily"
@@ -36,6 +37,7 @@ updates:
   # Dependabot does not support group-by for npm packages, so we have to group by dependency-name - it does not update pnpm-lock.yaml correctly
   # ─────────────────────────────────────────────
   - package-ecosystem: "npm"
+    target-branch: "dev"
     versioning-strategy: "increase"
     directories:
       - "/"
@@ -88,6 +90,7 @@ updates:
   # Docker base images (apps/ui, apps/strapi)
   # ─────────────────────────────────────────────
   - package-ecosystem: "docker"
+    target-branch: "dev"
     directories:
       - "/apps/ui"
       - "/apps/strapi"
