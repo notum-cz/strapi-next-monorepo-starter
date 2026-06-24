@@ -67,11 +67,9 @@ const REVALIDATE_CONFIG: Record<
       label: REVALIDATE_LABEL,
       successMessage: `Revalidated page cache at "${fullPath}".`,
       errorMessage: "Failed to revalidate page cache.",
-      payload: {
-        uid,
-        fullPaths: [fullPath],
-        ...(locale ? { locale } : {}),
-      },
+      payload: locale
+        ? { uid, fullPaths: [fullPath], locale }
+        : { uid, fullPaths: [fullPath] },
     }
   },
   "api::navbar.navbar": tagBasedAction("navbar"),

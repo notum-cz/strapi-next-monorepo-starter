@@ -61,7 +61,7 @@ export function StrapiBasicImage({
 
   const requestedWidth = propWidth ?? component?.width
   const requestedHeight = propHeight ?? component?.height
-  const ratio = media?.width && media?.height ? media.width / media.height : 0
+  const ratio = media?.width && media.height ? media.width / media.height : 0
 
   const width =
     requestedWidth ??

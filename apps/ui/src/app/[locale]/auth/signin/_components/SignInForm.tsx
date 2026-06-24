@@ -64,7 +64,7 @@ function SuspensedSignInForm({ strapiUrl }: { strapiUrl?: string }) {
       onSuccess: () => {
         // Use full page navigation to ensure session is reloaded
         // This is more reliable than client-side navigation for session updates
-        globalThis.location.href = callbackUrl
+        location.assign(callbackUrl)
       },
       onError: (error) => {
         const errorMessage = error?.message
@@ -79,9 +79,9 @@ function SuspensedSignInForm({ strapiUrl }: { strapiUrl?: string }) {
             errorMessage?.includes(key) ?? false
         )
 
-        const displayMessage = errorKey
-          ? errorMap[errorKey]
-          : (errorMessage ?? t("errors.unexpectedError"))
+        const displayMessage =
+          (errorKey ? errorMap[errorKey] : errorMessage) ??
+          t("errors.unexpectedError")
 
         toast.error(displayMessage)
       },
@@ -121,7 +121,7 @@ function SuspensedSignInForm({ strapiUrl }: { strapiUrl?: string }) {
           disabled={signInMutation.isPending}
           className="w-full cursor-pointer"
         >
-          {signInMutation.isPending ? t("signingIn") : t("submit")}
+          {t(signInMutation.isPending ? "signingIn" : "submit")}
         </Button>
 
         {strapiUrl && <SocialButtons strapiUrl={strapiUrl} />}

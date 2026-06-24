@@ -51,8 +51,11 @@ export default {
         const configData = await configRequest.json()
 
         // Set the variable to the window object so it can be accessed globally
-        // @ts-expect-error untyped global
-        globalThis.ADMIN_PANEL_CONFIG = configData
+        Object.defineProperty(globalThis, "ADMIN_PANEL_CONFIG", {
+          value: configData,
+          configurable: true,
+          writable: true,
+        })
 
         // Set data-theme attribute on document element so that we can potentially include CSS themes
         document.documentElement.dataset.theme =

@@ -1,6 +1,6 @@
 import { Button, Divider, Flex, Modal, Typography } from "@strapi/design-system"
 import { useFetchClient, useNotification } from "@strapi/strapi/admin"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 type FullPathChange = {
   documentId: string
@@ -8,7 +8,7 @@ type FullPathChange = {
   slug: string
   oldFullPath: string | null
   newFullPath: string
-  redirect: { source: string; destination: string } | null
+  redirect: null | { source: string; destination: string }
 }
 
 function WarningAlert({ children }: { children: React.ReactNode }) {
@@ -96,16 +96,53 @@ function HierarchyPanel() {
 
   useEffect(() => {
     let cancelled = false
-    fetchChanges().then((result) => {
+    const updateChanges = async () => {
+      const result = await fetchChanges()
+
       if (!cancelled) {
         setChanges(result)
       }
-    })
+    }
+
+    void updateChanges()
 
     return () => {
       cancelled = true
     }
   }, [fetchChanges])
+
+  if (changes === null) {
+    return null
+  }
+
+  // Group changes by locale so the confirmation modal can render one chip per
+  // locale with its change count.
+  const groupedChanges = new Map<string, FullPathChange[]>()
+  for (const change of changes) {
+    const localeChanges = groupedChanges.get(change.locale) ?? []
+    localeChanges.push(change)
+    groupedChanges.set(change.locale, localeChanges)
+  }
+  const changesByLocale = Array.from(groupedChanges)
+
+  const openModal = () => {
+    // Reset the locale filter to "all selected" each time the modal opens.
+    setSelectedLocales(new Set(changes.map((change) => change.locale)))
+    setIsModalOpen(true)
+  }
+
+  const toggleLocale = (locale: string) => {
+    setSelectedLocales((prev) => {
+      const next = new Set(prev)
+      if (next.has(locale)) {
+        next.delete(locale)
+      } else {
+        next.add(locale)
+      }
+
+      return next
+    })
+  }
 
   const runRecalculation = async () => {
     if (isRunning) {
@@ -142,42 +179,6 @@ function HierarchyPanel() {
     } finally {
       setIsRunning(false)
     }
-  }
-
-  // Group changes by locale so the confirmation modal can render one chip per
-  // locale with its change count.
-  const changesByLocale = useMemo(() => {
-    const grouped = new Map<string, FullPathChange[]>()
-    for (const change of changes ?? []) {
-      const localeChanges = grouped.get(change.locale) ?? []
-      localeChanges.push(change)
-      grouped.set(change.locale, localeChanges)
-    }
-
-    return [...grouped.entries()]
-  }, [changes])
-
-  const openModal = () => {
-    // Reset the locale filter to "all selected" each time the modal opens.
-    setSelectedLocales(new Set((changes ?? []).map((change) => change.locale)))
-    setIsModalOpen(true)
-  }
-
-  const toggleLocale = (locale: string) => {
-    setSelectedLocales((prev) => {
-      const next = new Set(prev)
-      if (next.has(locale)) {
-        next.delete(locale)
-      } else {
-        next.add(locale)
-      }
-
-      return next
-    })
-  }
-
-  if (changes === null) {
-    return null
   }
 
   return (

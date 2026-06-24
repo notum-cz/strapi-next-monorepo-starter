@@ -23,7 +23,7 @@ export function OAuthProvider({
       {
         onSuccess: () => {
           // Redirect on success
-          globalThis.location.href = `/${locale}`
+          location.assign(`/${locale}`)
         },
         onError: (error) => {
           const errorMessage = error?.message

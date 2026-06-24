@@ -6,7 +6,7 @@ import { hashStringSHA256 } from "@/lib/crypto"
 import { useRouter } from "@/lib/navigation"
 
 /**
- * This component reloads the application when an update from Strapi is reported. This is useful for the sidebar preview
+ * This component reloads the app when an update from Strapi is reported. This is useful for the sidebar preview
  * in case of Growth or EE plans.
  */
 function StrapiPreviewWindowChangeListener({

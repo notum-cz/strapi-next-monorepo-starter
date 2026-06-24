@@ -38,9 +38,13 @@ async function importLogging(
       SHOW_NON_BLOCKING_ERRORS: false,
     }
 
-    return name in env ? env[name] : defaults[name]
+    return Object.hasOwn(env, name) ? env[name] : defaults[name]
   })
-  globalThis.__LOG_DESTINATION__ = destination
+  Object.defineProperty(globalThis, "__LOG_DESTINATION__", {
+    value: destination,
+    configurable: true,
+    writable: true,
+  })
 
   const logging = await import("./logging")
 

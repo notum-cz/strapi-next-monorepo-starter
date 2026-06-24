@@ -12,11 +12,14 @@ export default function robots(): MetadataRoute.Robots {
   }
 
   const baseUrl = getEnvVar("APP_PUBLIC_URL")
+  if (!baseUrl) {
+    return { rules: { userAgent: "*", allow: "/" } }
+  }
+
+  const sitemapUrl = new URL("./sitemap.xml", baseUrl)
 
   return {
     rules: { userAgent: "*", allow: "/" },
-    ...(baseUrl
-      ? { sitemap: new URL("./sitemap.xml", baseUrl).toString() }
-      : {}),
+    sitemap: sitemapUrl.href,
   }
 }

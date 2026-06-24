@@ -8,6 +8,16 @@ function isHerokuBaseUrl(url: string): boolean {
   return url.includes("heroku")
 }
 
+function normalizePath(url: string): string {
+  try {
+    const parsedUrl = new URL(url)
+
+    return parsedUrl.pathname.replace(/\/$/, "") || "/"
+  } catch {
+    return url
+  }
+}
+
 async function expectAttrNonEmpty(page: Page, selector: string, attr: string) {
   const el = page.locator(selector)
   const count = await el.count()
@@ -214,14 +224,6 @@ for (const path of PATHS) {
             .getAttribute("href")) ?? ""
         const currentUrl = page.url()
 
-        const normalizePath = (url: string) => {
-          try {
-            return new URL(url).pathname.replace(/\/$/, "") || "/"
-          } catch {
-            return url
-          }
-        }
-
         const canonicalPath = normalizePath(href)
         const currentPath = normalizePath(currentUrl)
 
@@ -287,7 +289,7 @@ for (const path of PATHS) {
           const heading = headings.nth(i)
 
           const tagName = await heading.evaluate((el) => el.tagName)
-          const level = Number.parseInt(tagName[1], 10)
+          const level = Number(tagName[1])
           const text = ((await heading.textContent()) ?? "").trim()
 
           expect(
@@ -339,7 +341,7 @@ for (const path of PATHS) {
           )
         ).toBeGreaterThan(0)
 
-        contents.forEach((content, i) => {
+        for (const [i, content] of contents.entries()) {
           try {
             JSON.parse(content)
           } catch (e) {
@@ -353,10 +355,11 @@ for (const path of PATHS) {
                 `Index: ${i}`,
                 `Error: ${message}`,
                 `Snippet: ${snippet}`,
-              ].join("\n")
+              ].join("\n"),
+              { cause: e }
             )
           }
-        })
+        }
       })
 
       test("JSON-LD schemas should have @context and @type", async ({
@@ -365,7 +368,7 @@ for (const path of PATHS) {
         const ld = page.locator("script[type='application/ld+json']")
         const contents = await ld.allTextContents()
 
-        contents.forEach((content, i) => {
+        for (const [i, content] of contents.entries()) {
           let data: unknown
           try {
             data = JSON.parse(content)
@@ -375,7 +378,7 @@ for (const path of PATHS) {
 
           const schemas = Array.isArray(data) ? data : [data]
 
-          schemas.forEach((schema, j) => {
+          for (const [j, schema] of schemas.entries()) {
             const s = schema as Record<string, unknown>
 
             expect(
@@ -395,8 +398,8 @@ for (const path of PATHS) {
                 `Script index: ${i}, schema index: ${j}`,
               ].join("\n")
             ).toBeTruthy()
-          })
-        })
+          }
+        }
       })
 
       test("JSON-LD should be present in raw HTML (not only JS-injected)", async ({
@@ -465,14 +468,11 @@ for (const path of PATHS) {
           ).toMatch(/^https?:\/\//)
         }
 
-        const currentPath =
-          new URL(page.url()).pathname.replace(/\/$/, "") || "/"
+        const currentPath = normalizePath(page.url())
 
         const selfRef = entries.find(({ href }) => {
           try {
-            return (
-              (new URL(href).pathname.replace(/\/$/, "") || "/") === currentPath
-            )
+            return normalizePath(href) === currentPath
           } catch {
             return false
           }

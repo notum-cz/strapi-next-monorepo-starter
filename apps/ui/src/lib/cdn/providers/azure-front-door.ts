@@ -23,7 +23,7 @@ interface ImdsTokenResponse {
   token_type: string
 }
 
-let cachedToken: { value: string; expiresAt: number } | null = null
+let cachedToken: null | { value: string; expiresAt: number } = null
 
 async function getArmToken(clientId: string): Promise<string | null> {
   if (cachedToken && Date.now() < cachedToken.expiresAt) {
@@ -43,7 +43,7 @@ async function getArmToken(clientId: string): Promise<string | null> {
   url.searchParams.set("resource", ARM_RESOURCE)
   url.searchParams.set("client_id", clientId)
 
-  const res = await fetch(url.toString(), {
+  const res = await fetch(url.href, {
     headers: { "X-IDENTITY-HEADER": imdsHeader },
   })
 

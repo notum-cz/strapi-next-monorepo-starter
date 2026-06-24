@@ -53,7 +53,7 @@ export function RegisterForm() {
 
           if (!ENABLE_EMAIL_CONFIRMATION) {
             // Use full page navigation to ensure session is reloaded
-            globalThis.location.href = "/"
+            location.assign("/")
           }
         },
         onError: (error) => {

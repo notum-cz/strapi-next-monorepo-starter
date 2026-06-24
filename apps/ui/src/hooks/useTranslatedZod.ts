@@ -21,11 +21,7 @@ function resolveSizeMessage(
       : `${prefix}.string.${sizeKey}`
   }
 
-  if (
-    issue.origin === "number" ||
-    issue.origin === "int" ||
-    issue.origin === "bigint"
-  ) {
+  if (["number", "int", "bigint"].includes(issue.origin)) {
     return issue.exact === true
       ? `${prefix}.number.exact`
       : `${prefix}.number.${sizeKey}`

@@ -19,14 +19,14 @@ function ActivateAccount() {
   const params = useSearchParams()
 
   const code = params.get("code") as string
-  const name = params.get("name") as string
-  const email = params.get("email") as string
-
-  const title = [t("welcome"), name].join(", ")
 
   if (formToggled) {
     return <SetPasswordForm code={code} accountActivation />
   }
+
+  const name = params.get("name") as string
+  const email = params.get("email") as string
+  const title = [t("welcome"), name].join(", ")
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-12">

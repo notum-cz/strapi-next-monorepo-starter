@@ -136,7 +136,10 @@ function shouldRevalidate(
     return true
   }
 
-  if (action === "publish" || action === "unpublish" || action === "delete") {
+  if (
+    action !== undefined &&
+    ["publish", "unpublish", "delete"].includes(action)
+  ) {
     return true
   }
 
@@ -146,11 +149,8 @@ function shouldRevalidate(
 
 function isWriteAction(action: string | undefined): boolean {
   return (
-    action === "create" ||
-    action === "update" ||
-    action === "delete" ||
-    action === "publish" ||
-    action === "unpublish"
+    action !== undefined &&
+    ["create", "update", "delete", "publish", "unpublish"].includes(action)
   )
 }
 
