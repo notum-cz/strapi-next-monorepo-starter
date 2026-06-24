@@ -1,0 +1,11 @@
+{
+  "label": "Page Builder",
+  "position": 2,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Page Builder",
+    "description": "How Strapi pages are composed from dynamic-zone components and rendered in the UI."
+  }
+}

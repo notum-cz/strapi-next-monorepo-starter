@@ -24,6 +24,8 @@ export const basicAuth = (req: NextRequest): NextResponse | null => {
   }
 
   try {
+    // Uint8Array.fromBase64() is not in the project's TS lib target yet.
+    // eslint-disable-next-line unicorn/prefer-uint8array-base64
     const credentials = atob(authHeader.substring(6))
     const [username, password] = credentials.split(":")
 

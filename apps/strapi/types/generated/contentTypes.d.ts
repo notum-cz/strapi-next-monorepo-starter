@@ -483,12 +483,13 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
   }
 }
 
-export interface ApiInternalJobInternalJob extends Struct.CollectionTypeSchema {
-  collectionName: "internal_jobs"
+export interface ApiHierarchyHierarchy extends Struct.SingleTypeSchema {
+  collectionName: "hierarchies"
   info: {
-    displayName: "InternalJob"
-    pluralName: "internal-jobs"
-    singularName: "internal-job"
+    description: "Page hierarchy management: lists pending fullPath changes and applies them together with redirects."
+    displayName: "Hierarchy"
+    pluralName: "hierarchies"
+    singularName: "hierarchy"
   }
   options: {
     draftAndPublish: false
@@ -497,26 +498,14 @@ export interface ApiInternalJobInternalJob extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime
     createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
-    documentType: Schema.Attribute.String
-    error: Schema.Attribute.String
-    jobType: Schema.Attribute.Enumeration<
-      ["RECALCULATE_FULLPATH", "CREATE_REDIRECT"]
-    > &
-      Schema.Attribute.Required
+    lastRecalculationAt: Schema.Attribute.DateTime
     locale: Schema.Attribute.String & Schema.Attribute.Private
     localizations: Schema.Attribute.Relation<
       "oneToMany",
-      "api::internal-job.internal-job"
+      "api::hierarchy.hierarchy"
     > &
       Schema.Attribute.Private
-    payload: Schema.Attribute.JSON
     publishedAt: Schema.Attribute.DateTime
-    relatedDocumentId: Schema.Attribute.String
-    slug: Schema.Attribute.String
-    state: Schema.Attribute.Enumeration<["pending", "completed", "failed"]> &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<"pending">
-    targetLocale: Schema.Attribute.String
     updatedAt: Schema.Attribute.DateTime
     updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
       Schema.Attribute.Private
@@ -678,7 +667,6 @@ export interface ApiRedirectRedirect extends Struct.CollectionTypeSchema {
       "api::redirect.redirect"
     > &
       Schema.Attribute.Private
-    permanent: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>
     publishedAt: Schema.Attribute.DateTime
     source: Schema.Attribute.String & Schema.Attribute.Required
     updatedAt: Schema.Attribute.DateTime
@@ -1231,7 +1219,7 @@ declare module "@strapi/strapi" {
       "admin::transfer-token-permission": AdminTransferTokenPermission
       "admin::user": AdminUser
       "api::footer.footer": ApiFooterFooter
-      "api::internal-job.internal-job": ApiInternalJobInternalJob
+      "api::hierarchy.hierarchy": ApiHierarchyHierarchy
       "api::navbar.navbar": ApiNavbarNavbar
       "api::page.page": ApiPagePage
       "api::redirect.redirect": ApiRedirectRedirect

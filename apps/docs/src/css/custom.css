@@ -45,3 +45,410 @@
   border-top: 1px solid var(--ifm-toc-border-color);
   font-size: 0.85rem;
 }
+
+/* Underline article links by default. Excludes nav, footer, sidebar, TOC,
+ * pagination buttons, anchor heading icons, and card-style links. */
+.markdown a:not(.hash-link, .card),
+.theme-doc-markdown a:not(.hash-link, .card) {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+.markdown a:not(.hash-link, .card):hover,
+.theme-doc-markdown a:not(.hash-link, .card):hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Footer is rendered with style: "dark" in both light & dark site themes.
+ * Primary color in light theme is near-black, which makes links inside the
+ * dark footer effectively invisible. Force a legible light-on-dark color
+ * and keep the same underline treatment as in-article links. */
+.footer--dark {
+  --ifm-footer-link-color: #d4e1f5;
+  --ifm-footer-link-hover-color: #ebf1fb;
+}
+
+.footer--dark a,
+.footer--dark .footer__link-item,
+.footer--dark .footer__copyright a {
+  color: var(--ifm-footer-link-color);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+.footer--dark a:hover,
+.footer--dark .footer__link-item:hover,
+.footer--dark .footer__copyright a:hover {
+  color: var(--ifm-footer-link-hover-color);
+  text-decoration-thickness: 2px;
+}
+
+.homeHero {
+  min-height: calc(100vh - var(--ifm-navbar-height));
+  padding: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: linear-gradient(180deg, #ffffff 0%, #f7f7f7 58%, #eeeeee 100%);
+}
+
+[data-theme="dark"] .homeHero {
+  background: linear-gradient(180deg, #2b292d 0%, #302e32 58%, #363438 100%);
+}
+
+.homeHeroGrid {
+  width: 100%;
+  min-height: calc(100vh - var(--ifm-navbar-height));
+  display: grid;
+  grid-template-columns:
+    minmax(0.75rem, 0.35fr)
+    minmax(520px, 720px)
+    minmax(1rem, 2rem)
+    minmax(0, 1.25fr);
+  gap: 0;
+  align-items: center;
+}
+
+.homeHeroCopy {
+  grid-column: 2;
+  max-width: 720px;
+  padding: 6rem 0;
+}
+
+.homeHero h1 {
+  max-width: 720px;
+  margin: 0;
+  font-size: 4.15rem;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.homeEyebrow {
+  margin: 0 0 1rem;
+  color: var(--ifm-color-primary);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.homeActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2.4rem;
+}
+
+.homePreview {
+  grid-column: 4;
+  width: 100%;
+  height: min(72vh, 760px);
+  min-height: 520px;
+  justify-self: stretch;
+  margin-right: 0;
+  overflow: hidden;
+  transform: none;
+  transform-origin: center right;
+  background: #ffffff;
+  border: 0;
+  border-left: 1px solid #d1d1d1;
+  border-radius: 8px 0 0 8px;
+  box-shadow:
+    0 34px 90px rgba(43, 41, 45, 0.18),
+    0 8px 24px rgba(43, 41, 45, 0.08);
+}
+
+[data-theme="dark"] .homePreview {
+  background: #3d3d3d;
+  border-color: #5d5d5d;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+}
+
+.homePreview img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left center;
+}
+
+.homeSection {
+  padding: 5.25rem 0;
+}
+
+.homeSection--statement {
+  background: linear-gradient(180deg, #eeeeee 0%, #f7f7f7 44%, #ffffff 100%);
+}
+
+[data-theme="dark"] .homeSection--statement {
+  background: linear-gradient(180deg, #363438 0%, #302e32 44%, #2b292d 100%);
+}
+
+.homeGrid {
+  display: grid;
+  gap: 2rem;
+}
+
+.homeGrid--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.homeSection h2 {
+  margin-top: 0;
+  font-size: 2rem;
+  letter-spacing: 0;
+}
+
+.homeWhy {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: 3rem;
+  align-items: start;
+}
+
+.homeWhyIntro {
+  position: sticky;
+  top: 6rem;
+}
+
+.homeSectionLabel {
+  margin: 0 0 0.75rem;
+  color: var(--ifm-color-primary);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.homeWhyIntro h2,
+.homeDocsHeader h2 {
+  max-width: 760px;
+  margin-bottom: 1rem;
+  font-size: 2.45rem;
+  line-height: 1.08;
+}
+
+.homeWhyIntro p:not(.homeSectionLabel) {
+  max-width: 560px;
+  margin-bottom: 1.5rem;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 1.1rem;
+}
+
+.homeWhyActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.homeButtonDark {
+  background: #0d0c0e;
+  border-color: #0d0c0e;
+  color: #ffffff;
+}
+
+.homeButtonDark:hover {
+  background: #2b292d;
+  border-color: #2b292d;
+  color: #ffffff;
+}
+
+.homeValueGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.homeValueItem {
+  min-height: 260px;
+  padding: 1.35rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f9f9f9 100%);
+  border: 1px solid rgba(209, 209, 209, 0.9);
+  border-radius: 8px;
+  box-shadow: 0 20px 46px rgba(43, 41, 45, 0.07);
+}
+
+[data-theme="dark"] .homeValueItem {
+  background: linear-gradient(180deg, #3d3d3d 0%, #343236 100%);
+  border-color: #5d5d5d;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+}
+
+.homeValueItem p {
+  margin: 0 0 1.75rem;
+  color: var(--ifm-color-primary);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.homeValueItem h3 {
+  margin: 0 0 0.85rem;
+  font-size: 1.28rem;
+  line-height: 1.2;
+}
+
+.homeValueItem span {
+  display: block;
+  color: var(--ifm-color-emphasis-700);
+  line-height: 1.55;
+}
+
+.homeDocsSection {
+  background: linear-gradient(180deg, #ffffff 0%, #f9f9f9 42%, #ffffff 100%);
+}
+
+[data-theme="dark"] .homeDocsSection {
+  background: linear-gradient(180deg, #2b292d 0%, #302e32 42%, #2b292d 100%);
+}
+
+.homeDocsHeader {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+}
+
+.homeCards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.homeCard {
+  display: block;
+  height: 100%;
+  padding: 1.35rem;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfbfb 100%);
+  color: inherit;
+  border: 1px solid rgba(209, 209, 209, 0.9);
+  border-radius: 8px;
+  text-decoration: none;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.homeCard:hover {
+  transform: translateY(-2px);
+  color: inherit;
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 16px 34px rgba(43, 41, 45, 0.1);
+  text-decoration: none;
+}
+
+[data-theme="dark"] .homeCard {
+  background: linear-gradient(180deg, #3d3d3d 0%, #343236 100%);
+  border-color: #5d5d5d;
+}
+
+[data-theme="dark"] .homeCard:hover {
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
+}
+
+.homeCard h3 {
+  margin-top: 0;
+  font-size: 1.15rem;
+}
+
+.homeCard p {
+  margin-bottom: 0;
+  color: var(--ifm-color-emphasis-700);
+}
+
+@media (max-width: 996px) {
+  .homeHeroGrid,
+  .homeGrid--two,
+  .homeWhy,
+  .homeValueGrid,
+  .homeCards {
+    grid-template-columns: 1fr;
+  }
+
+  .homeHero {
+    min-height: auto;
+    padding: 4.25rem 0 4rem;
+  }
+
+  .homeHeroGrid {
+    min-height: auto;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 0 1rem;
+  }
+
+  .homeHeroCopy {
+    grid-column: auto;
+    max-width: none;
+    padding: 0;
+  }
+
+  .homeHero h1 {
+    font-size: 3.35rem;
+  }
+
+  .homePreview {
+    grid-column: auto;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-width: 680px;
+    margin-right: 0;
+    margin-left: 0;
+    margin-right: 0;
+    justify-self: center;
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    transform: none;
+  }
+
+  .homePreview img {
+    height: auto;
+    object-fit: contain;
+  }
+
+  .homeWhyIntro {
+    position: static;
+  }
+
+  .homeValueItem {
+    min-height: auto;
+  }
+}
+
+@media (min-width: 997px) and (max-width: 1500px) {
+  .homeHeroGrid {
+    grid-template-columns:
+      minmax(0.5rem, 0.2fr)
+      minmax(320px, 440px)
+      minmax(0.75rem, 1rem)
+      minmax(660px, 1.8fr);
+  }
+
+  .homeHeroCopy {
+    max-width: 440px;
+  }
+
+  .homeHero h1 {
+    max-width: 440px;
+    font-size: 3.15rem;
+    line-height: 1.02;
+  }
+
+  .homePreview {
+    height: min(58vh, 540px);
+    min-height: 380px;
+  }
+}
+
+@media (max-width: 480px) {
+  .homeHero h1 {
+    font-size: 2.55rem;
+  }
+
+  .homeWhyIntro h2,
+  .homeDocsHeader h2 {
+    font-size: 2rem;
+  }
+}

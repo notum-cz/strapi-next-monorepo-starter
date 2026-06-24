@@ -2,7 +2,7 @@ import cronTasks from "../../cron-tasks"
 
 export default ({ env }) => ({
   proxy: { koa: true },
-  url: env("APP_URL"), // Sets the public URL of the application.
+  url: env("APP_URL"), // Sets the public URL of the app.
   app: {
     keys: env.array("APP_KEYS"),
   },

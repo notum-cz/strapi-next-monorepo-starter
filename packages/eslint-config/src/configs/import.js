@@ -21,7 +21,7 @@ const config = [
         "warn",
         {
           ignore: [
-            String.raw`^@/`, // ignore @/* aliases
+            "^@/", // ignore @/* aliases
             "@(docusaurus|theme)",
           ],
         },

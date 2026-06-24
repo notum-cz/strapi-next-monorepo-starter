@@ -22,6 +22,15 @@ export const env = createEnv({
     STRAPI_REST_READONLY_API_KEY: z.string().optional(),
     STRAPI_REST_CUSTOM_API_KEY: z.string().optional(),
     STRAPI_PREVIEW_SECRET: z.string().optional(),
+    STRAPI_REVALIDATE_SECRET: z.string().optional(),
+    STRAPI_CDN_PURGE_SECRET: z.string().optional(),
+
+    AZURE_SUBSCRIPTION_ID: z.string().optional(),
+    AZURE_RESOURCE_GROUP: z.string().optional(),
+    AZURE_FRONT_DOOR_PROFILE: z.string().optional(),
+    AZURE_MI_CLIENT_ID: z.string().optional(),
+    IDENTITY_ENDPOINT: z.string().optional(),
+    IDENTITY_HEADER: z.string().optional(),
 
     NEXT_OUTPUT: z.string().optional(),
 
@@ -31,6 +40,13 @@ export const env = createEnv({
     SENTRY_ORG: z.string().optional(),
     SENTRY_PROJECT: z.string().optional(),
     SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING: z.string().optional(),
+
+    // Observability — see packages/logging and src/lib/telemetry
+    OTEL_SERVICE_NAME: z.string().optional(),
+    LOG_LEVEL: z
+      .enum(["trace", "debug", "info", "warn", "error", "fatal", "silent"])
+      .optional(),
+    APPLICATIONINSIGHTS_CONNECTION_STRING: z.string().optional(),
 
     RECAPTCHA_SECRET_KEY: z.string().optional(),
 
@@ -77,6 +93,15 @@ export const env = createEnv({
     STRAPI_REST_READONLY_API_KEY: process.env.STRAPI_REST_READONLY_API_KEY,
     STRAPI_REST_CUSTOM_API_KEY: process.env.STRAPI_REST_CUSTOM_API_KEY,
     STRAPI_PREVIEW_SECRET: process.env.STRAPI_PREVIEW_SECRET,
+    STRAPI_REVALIDATE_SECRET: process.env.STRAPI_REVALIDATE_SECRET,
+    STRAPI_CDN_PURGE_SECRET: process.env.STRAPI_CDN_PURGE_SECRET,
+
+    AZURE_SUBSCRIPTION_ID: process.env.AZURE_SUBSCRIPTION_ID,
+    AZURE_RESOURCE_GROUP: process.env.AZURE_RESOURCE_GROUP,
+    AZURE_FRONT_DOOR_PROFILE: process.env.AZURE_FRONT_DOOR_PROFILE,
+    AZURE_MI_CLIENT_ID: process.env.AZURE_MI_CLIENT_ID,
+    IDENTITY_ENDPOINT: process.env.IDENTITY_ENDPOINT,
+    IDENTITY_HEADER: process.env.IDENTITY_HEADER,
 
     NEXT_OUTPUT: process.env.NEXT_OUTPUT,
 
@@ -87,6 +112,11 @@ export const env = createEnv({
     SENTRY_PROJECT: process.env.SENTRY_PROJECT,
     SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING:
       process.env.SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING,
+
+    OTEL_SERVICE_NAME: process.env.OTEL_SERVICE_NAME,
+    LOG_LEVEL: process.env.LOG_LEVEL,
+    APPLICATIONINSIGHTS_CONNECTION_STRING:
+      process.env.APPLICATIONINSIGHTS_CONNECTION_STRING,
 
     RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY,
 

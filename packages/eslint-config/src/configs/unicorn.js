@@ -24,7 +24,7 @@ export default [
         "error",
         { onlyIfContainsSeparator: true },
       ],
-      "unicorn/prefer-export-from": ["error", { ignoreUsedVariables: true }],
+      "unicorn/prefer-export-from": ["error", { checkUsedVariables: false }],
       "unicorn/prefer-module": "off",
       "unicorn/switch-case-braces": ["error", "avoid"],
       "unicorn/prefer-object-from-entries": "warn",

@@ -21,7 +21,7 @@ const hasTypoClass = (el: Element) =>
   Array.from(el.classList).some((c) => c.startsWith("typo-"))
 
 const getTypoElements = (doc: Document) =>
-  Array.from(doc.querySelectorAll("[class]")).filter(hasTypoClass)
+  Array.from(doc.body.querySelectorAll(":scope [class]")).filter(hasTypoClass)
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- CKEditor (@_sh/strapi-plugin-ckeditor) does not have types for editor itself
 export function StyleChangePlugin(editor: any) {
@@ -31,7 +31,8 @@ export function StyleChangePlugin(editor: any) {
       if (styleCommand) {
         styleCommand.on("execute", () => {
           const html = editor.getData()
-          const doc = new DOMParser().parseFromString(html, "text/html")
+          const parser = new DOMParser()
+          const doc = parser.parseFromString(html, "text/html")
 
           for (const el of getTypoElements(doc)) {
             processElement(el)

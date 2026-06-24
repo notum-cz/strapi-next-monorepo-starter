@@ -1,0 +1,11 @@
+{
+  "label": "AI",
+  "position": 0,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "AI",
+    "description": "Agent-facing tooling shipped with the starter — reusable skills that Claude Code and compatible agents auto-discover."
+  }
+}

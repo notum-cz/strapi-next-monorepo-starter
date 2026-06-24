@@ -24,7 +24,7 @@ export function StrapiAnimatedLogoRow({
       ? Math.max(2, Math.ceil(imagesInViewport / component.logos.length))
       : 2
 
-  const repeatedRows = Array.from({ length: repeatCount }).map((_, i) => ({
+  const repeatedRows = Array.from({ length: repeatCount }, (_, i) => ({
     key: `slideshow-group-${i}`,
     logos: Array.isArray(component.logos) ? component.logos : [],
   }))

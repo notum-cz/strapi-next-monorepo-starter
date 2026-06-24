@@ -2,13 +2,15 @@ import { ROOT_PAGE_PATH } from "@repo/shared-data"
 import { cookies, draftMode } from "next/headers"
 import { hasLocale } from "next-intl"
 
+import { STRAPI_PREVIEW_FRAME_COOKIE } from "@/lib/constants"
 import { getEnvVar } from "@/lib/env-vars"
+import { logger } from "@/lib/logging"
 import { redirect, routing } from "@/lib/navigation"
 
 export async function GET(request: Request) {
   const previewSecret = getEnvVar("STRAPI_PREVIEW_SECRET")
   if (!previewSecret) {
-    console.warn(
+    logger.warn(
       "[STRAPI_PREVIEW]: Preview request received, but [STRAPI_PREVIEW_SECRET] has not been configured. Status: 404."
     )
 
@@ -18,7 +20,7 @@ export async function GET(request: Request) {
   // Check if the provided secret matches our secret key
   const secret = String(searchParams.get("secret"))
   if (secret !== previewSecret) {
-    console.warn(
+    logger.warn(
       "[STRAPI_PREVIEW]: Preview request received, but [secret] does not match [STRAPI_PREVIEW_SECRET]. Status: 401."
     )
 
@@ -62,29 +64,39 @@ export async function GET(request: Request) {
     secure: true,
     sameSite: "none", // Allow cookie in cross-origin iframes
   })
+  // Flag this session as a Strapi preview so the security-headers proxy widens
+  // `frame-ancestors` to allow the Strapi admin to iframe the previewed page.
+  // Set for both draft and published previews — both are framed by Strapi.
+  // Bounded by a short TTL so `frame-ancestors` is not widened indefinitely
+  // after the preview session ends.
+  cookieStore.set({
+    name: STRAPI_PREVIEW_FRAME_COOKIE,
+    value: "1",
+    maxAge: 60 * 60 * 2, // 2 hours
+    httpOnly: true,
+    path: "/",
+    secure: true,
+    sameSite: "none", // Allow cookie in cross-origin iframes
+  })
   // --------------------------------------------------------------------
   // Check if the locale in the request is a correct frontend locale
   const localeParam = String(searchParams.get("locale"))
   const locale = hasLocale(routing.locales, localeParam)
     ? localeParam
     : routing.defaultLocale
-  console.warn(
-    `[STRAPI_PREVIEW]: Preview request generated. ${JSON.stringify({
-      locale,
-      url: {
-        urlParam,
-        processedUrl: `${url}`,
-      },
-      status,
-    })}`
-  )
+  logger.info("[STRAPI_PREVIEW]: Preview request generated.", {
+    locale,
+    url: {
+      urlParam,
+      processedUrl: url,
+    },
+    status,
+  })
 
   // Redirect to the path from the fetched post
-  redirect({ href: `${url}`, locale })
+  redirect({ href: url, locale })
 }
 const validPageStatusKeys = new Set(["draft", "published"])
 const draftModePrerenderCookieKey = "__prerender_bypass"
 
-const validPageUrlRegex = new RegExp(
-  String.raw`^(${ROOT_PAGE_PATH}[a-zA-Z0-9-%]*)+$`
-)
+const validPageUrlRegex = new RegExp(`^(${ROOT_PAGE_PATH}[a-zA-Z0-9-%]*)+$`)

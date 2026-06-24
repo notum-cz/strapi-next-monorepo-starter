@@ -1,4 +1,5 @@
 import { setPluginConfig } from "@_sh/strapi-plugin-ckeditor"
+import { Cloud } from "@strapi/icons"
 import type { StrapiApp } from "@strapi/strapi/admin"
 
 // eslint-disable-next-line import-x/order
@@ -7,7 +8,8 @@ import "@repo/design-system/styles.css"
 
 // eslint-disable-next-line import-x/order
 import { defaultCkEditorConfig, simpleCkEditorConfig } from "./ckeditor/configs"
-import InternalJobs from "./extensions/InternalJobs"
+import DataRevalidate from "./extensions/DataRevalidate"
+import Hierarchy from "./extensions/Hierarchy"
 
 export default {
   config: {
@@ -17,10 +19,19 @@ export default {
     },
   },
   async bootstrap(app: StrapiApp) {
-    app.getPlugin("content-manager").injectComponent("listView", "actions", {
-      name: "InternalJobs",
-      Component: InternalJobs,
-    })
+    app
+      .getPlugin("content-manager")
+      .injectComponent("editView", "right-links", {
+        name: "Hierarchy",
+        Component: Hierarchy,
+      })
+
+    app
+      .getPlugin("content-manager")
+      .injectComponent("editView", "right-links", {
+        name: "DataRevalidate",
+        Component: DataRevalidate,
+      })
 
     const adminPanelConfigEnv = process.env.ADMIN_PANEL_CONFIG_API_AUTH_TOKEN
     if (adminPanelConfigEnv) {
@@ -40,8 +51,11 @@ export default {
         const configData = await configRequest.json()
 
         // Set the variable to the window object so it can be accessed globally
-        // @ts-expect-error untyped global
-        globalThis.ADMIN_PANEL_CONFIG = configData
+        Object.defineProperty(globalThis, "ADMIN_PANEL_CONFIG", {
+          value: configData,
+          configurable: true,
+          writable: true,
+        })
 
         // Set data-theme attribute on document element so that we can potentially include CSS themes
         document.documentElement.dataset.theme =
@@ -65,7 +79,21 @@ export default {
       }
     }
   },
-  register() {
+  register(app: StrapiApp) {
+    app.widgets.register({
+      icon: Cloud,
+      title: {
+        id: "cdn-cache.widget.title",
+        defaultMessage: "CDN cache",
+      },
+      component: async () => {
+        const component = await import("./widgets/CdnCacheWidget")
+
+        return component.default
+      },
+      id: "cdn-cache",
+    })
+
     setPluginConfig({ presets: [defaultCkEditorConfig, simpleCkEditorConfig] })
   },
 }

@@ -6,6 +6,7 @@ import { getTranslations } from "next-intl/server"
 
 import { getEnvVar } from "@/lib/env-vars"
 import { isProduction } from "@/lib/general-helpers"
+import { logger } from "@/lib/logging"
 import {
   getDefaultMetadata,
   getDefaultOgMeta,
@@ -35,7 +36,7 @@ export async function getMetadataFromStrapi({
   const t = await getTranslations({ locale, namespace: "seo" })
   const siteUrl = getEnvVar("APP_PUBLIC_URL")
   if (!siteUrl) {
-    console.warn("APP_PUBLIC_URL is not defined, cannot generate metadata")
+    logger.warn("APP_PUBLIC_URL is not defined, cannot generate metadata")
 
     return null
   }
@@ -68,10 +69,11 @@ export async function getMetadataFromStrapi({
       uid
     )
   } catch (e: unknown) {
-    console.warn(
-      `SEO for ${uid} content type ("${fullPath}") wasn't fetched:`,
-      (e as Error)?.message
-    )
+    logger.warn("SEO metadata could not be fetched", {
+      uid,
+      fullPath,
+      error: (e as Error)?.message,
+    })
 
     return {
       ...defaultMeta,

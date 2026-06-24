@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.0
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -65,50 +65,79 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract environment variables from commit messages
-        id: extract-env-vars
+      - name: Build PR body
+        id: build-body
         if: steps.check-diff.outputs.has-changes == 'true'
         run: |
-          # Extract environment variables from commit bodies between main and dev
-          # Uses %b (body only) to skip subject line which may contain false positives
-          # Look for patterns like env.VARIABLE_NAME or VARIABLE_NAME (CONSTANT_CASE)
-          git log origin/main..origin/dev --format="%b" --no-merges | \
-            grep -oE '(env\.)?[A-Z_][A-Z0-9_]{2,}' | \
-            sed -E 's/^env\.//' | \
-            grep -E '^[A-Z_][A-Z0-9_]{2,}$' | \
-            sed 's/^/- `env./' | \
-            sed 's/$/`/' | \
-            sort -u > env_vars_list.txt
+          BASE=origin/main
+          HEAD_REF=origin/dev
+          RANGE="$BASE..$HEAD_REF"
 
-      - name: Create Pull Request dev → main
-        if: steps.check-diff.outputs.has-changes == 'true' && steps.check-pr.outputs.exists == 'false'
-        run: |
-          COMMITS=$(git log origin/main..origin/dev --pretty=format:"%h - %s (%an, %ar)" --no-merges | head -10)
-          FILES_CHANGED=$(git diff --name-only origin/main origin/dev | head -20)
+          CHANGED=$(git diff --name-only "$BASE" "$HEAD_REF" || true)
+
+          # Env vars this sync introduces/changes: declarations added or modified in a
+          # canonical .env example file (the documented set operators must configure).
+          # Diffing the example files directly avoids the false positives we'd get from
+          # matching every CONSTANT_CASE token in commit messages / code (API, URL, ...).
+          # `|| true` keeps the step green when nothing matched (grep exits non-zero).
+          git diff "$BASE" "$HEAD_REF" -- '*.env.example' '*.env.local.example' \
+            | grep -E '^\+[A-Za-z_][A-Za-z0-9_]*=' \
+            | sed -E 's/^\+([A-Za-z_][A-Za-z0-9_]*)=.*/- `env.\1`/' \
+            | sort -u > env_vars_list.txt || true
 
           cat > pr_body.md << 'EOF'
           ## Development to Production Sync
 
           **Auto-generated PR**: Syncing latest development changes to production environment.
-
-          ### Recent Commits
-          ```
           EOF
-          echo "$COMMITS" >> pr_body.md
-          cat >> pr_body.md << 'EOF'
-          ```
 
-          ### Files Modified
-          EOF
-          echo "$FILES_CHANGED" | sed 's/^/- `/' | sed 's/$/`/' >> pr_body.md
-          # Only add env vars section if variables were found
+          # --- Deploy notes: flag changes that need action on production deploy ---
+          { echo; echo "### Deploy Notes"; } >> pr_body.md
+          RISK=0
+          if printf '%s\n' "$CHANGED" | grep -qE '^apps/strapi/database/migrations/'; then
+            echo "- ⚠️ Strapi **DB migrations** changed — run/verify migrations on deploy" >> pr_body.md; RISK=1
+          fi
+          if printf '%s\n' "$CHANGED" | grep -qE '^apps/strapi/src/.*content-types/.*/schema\.json$'; then
+            echo "- ⚠️ Strapi **content-type schema** changed — review data migration impact" >> pr_body.md; RISK=1
+          fi
+          if printf '%s\n' "$CHANGED" | grep -qE '(^|/)(pnpm-lock\.yaml|package\.json)$'; then
+            echo "- 📦 **Dependencies** changed — clean rebuild needed" >> pr_body.md; RISK=1
+          fi
+          if printf '%s\n' "$CHANGED" | grep -qE '^\.github/workflows/'; then
+            echo "- 🔧 **CI workflows** changed" >> pr_body.md; RISK=1
+          fi
+          if [ "$RISK" = 0 ]; then
+            echo "- ✅ No migration, schema, dependency, or CI changes detected" >> pr_body.md
+          fi
+
+          # --- Environment variable changes ---
           if [ -s env_vars_list.txt ]; then
-            cat >> pr_body.md << 'EOF'
-
-          ### Required Environment Variables
-          EOF
+            { echo; echo "### Environmental Variables Changes"; } >> pr_body.md
             cat env_vars_list.txt >> pr_body.md
           fi
+
+          # --- Areas changed: per app/package blast radius ---
+          AREAS=$(printf '%s\n' "$CHANGED" | awk -F/ 'NF{ if ($1=="apps"||$1=="packages") print $1"/"$2; else if (NF>1) print $1; else print "(root)" }' | sort | uniq -c | sort -rn || true)
+          if [ -n "$AREAS" ]; then
+            { echo; echo "### Areas Changed"; echo; echo "| Area | Files |"; echo "|------|------:|"; } >> pr_body.md
+            printf '%s\n' "$AREAS" | awk '{printf "| %s | %s |\n", $2, $1}' >> pr_body.md
+          fi
+
+          # --- Commits grouped by conventional-commit type ---
+          { echo; echo "### Commits"; } >> pr_body.md
+          if git log "$RANGE" --no-merges --format='%s%n%b' | grep -qE '(^[a-z]+(\([^)]+\))?!:|BREAKING[ -]CHANGE)'; then
+            { echo; echo "> ⚠️ **Contains breaking changes**"; } >> pr_body.md
+          fi
+          emit_group() {
+            if [ -n "$2" ]; then
+              { echo; echo "**$1**"; printf '%s\n' "$2" | sed 's/^/- /'; } >> pr_body.md
+            fi
+          }
+          LOG=$(git log "$RANGE" --no-merges --pretty=format:'%h %s' || true)
+          emit_group "Features" "$(printf '%s\n' "$LOG" | grep -E '^[0-9a-f]+ feat(\([^)]+\))?!?:' || true)"
+          emit_group "Fixes"    "$(printf '%s\n' "$LOG" | grep -E '^[0-9a-f]+ fix(\([^)]+\))?!?:' || true)"
+          emit_group "Other"    "$(printf '%s\n' "$LOG" | grep -vE '^[0-9a-f]+ (feat|fix)(\([^)]+\))?!?:' || true)"
+
           cat >> pr_body.md << 'EOF'
 
           ### Pre-Merge Checklist
@@ -126,6 +155,9 @@ jobs:
           *This PR was created automatically by GitHub Actions*
           EOF
 
+      - name: Create Pull Request dev → main
+        if: steps.check-diff.outputs.has-changes == 'true' && steps.check-pr.outputs.exists == 'false'
+        run: |
           gh pr create \
             --title "Sync: dev → main" \
             --body-file pr_body.md \
@@ -139,49 +171,6 @@ jobs:
       - name: Update existing Pull Request dev → main
         if: steps.check-diff.outputs.has-changes == 'true' && steps.check-pr.outputs.exists == 'true'
         run: |
-          COMMITS=$(git log origin/main..origin/dev --pretty=format:"%h - %s (%an, %ar)" --no-merges | head -10)
-          FILES_CHANGED=$(git diff --name-only origin/main origin/dev | head -20)
-
-          cat > pr_body.md << 'EOF'
-          ## Development to Production Sync
-
-          **Auto-generated PR**: Syncing latest development changes to production environment.
-
-          ### Recent Commits
-          ```
-          EOF
-          echo "$COMMITS" >> pr_body.md
-          cat >> pr_body.md << 'EOF'
-          ```
-
-          ### Files Modified
-          EOF
-          echo "$FILES_CHANGED" | sed 's/^/- `/' | sed 's/$/`/' >> pr_body.md
-          # Only add env vars section if variables were found
-          if [ -s env_vars_list.txt ]; then
-            cat >> pr_body.md << 'EOF'
-
-          ### Required Environment Variables
-          EOF
-            cat env_vars_list.txt >> pr_body.md
-          fi
-          cat >> pr_body.md << 'EOF'
-
-          ### Pre-Merge Checklist
-          - [ ] All CI/CD checks are passing
-          - [ ] Test environment testing completed
-          - [ ] Breaking changes documented (if any)
-          - [ ] All Jira issues are linked and moved to specific column in Jira
-          - [ ] All collections required to backup are set in the repository variables
-
-          ### Merge Instructions
-          - **IMPORTANT: Use "Create a merge commit" when merging**
-          - Do NOT use squash or rebase merge
-
-          ---
-          *This PR was created automatically by GitHub Actions*
-          EOF
-
           gh pr edit ${{ steps.check-pr.outputs.number }} \
             --body-file pr_body.md
         env:

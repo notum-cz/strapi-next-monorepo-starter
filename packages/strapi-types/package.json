@@ -22,7 +22,8 @@
     "sync-types": "cp -r ../../apps/strapi/types/generated ./generated"
   },
   "devDependencies": {
-    "@strapi/strapi": "5.46.0"
+    "@notum-cz/strapi-plugin-smart-populate": "1.0.1",
+    "@strapi/strapi": "5.48.0"
   },
   "engines": {
     "node": "^24.0.0"

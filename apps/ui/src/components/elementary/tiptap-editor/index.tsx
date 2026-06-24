@@ -30,6 +30,7 @@ import type {
 } from "@/components/typography/config"
 import Element from "@/components/typography/element"
 import { safeJSONParse } from "@/lib/general-helpers"
+import { logger } from "@/lib/logging"
 import { formatStrapiMediaUrl } from "@/lib/strapi-helpers"
 import { cn } from "@/lib/styles"
 
@@ -37,11 +38,11 @@ export type TiptapRichTextProps = {
   content?:
     | string
     | JSONContent
+    | null
     | {
         id?: ID
         content?: string | JSONContent | null
       }
-    | null
 
   /** Default variant to be used for text nodes that are not marked with a specific style.
    * If not provided, defaults to "medium".
@@ -94,11 +95,12 @@ export function TiptapRichText({
   const jsonContent = normalizeContent(content)
 
   if (!jsonContent?.type) {
-    console.warn("TiptapRichText: content is not valid:", content)
+    logger.warn("TiptapRichText: content is not valid", { content })
 
     return null
   }
 
+  /* eslint-disable unicorn/prefer-short-arrow-method -- Tiptap mapping API is clearer with named object handlers. */
   return renderToReactElement({
     extensions: [
       StarterKit.configure({ heading: false }),
@@ -267,20 +269,22 @@ export function TiptapRichText({
           const src = formatStrapiMediaUrl(
             node.attrs?.src as string | undefined
           )
+
+          if (!src) {
+            return null
+          }
+
           const alt = (node.attrs?.alt as string) ?? ""
           const title = node.attrs?.title as string | undefined
           const width = node.attrs?.width as number | undefined
           const height = node.attrs?.height as number | undefined
+
           const align = node.attrs?.["data-align"] as
             | "left"
             | "center"
             | "right"
             | null
             | undefined
-
-          if (!src) {
-            return null
-          }
 
           return (
             // eslint-disable-next-line @next/next/no-img-element
@@ -301,6 +305,7 @@ export function TiptapRichText({
       },
     },
   })
+  /* eslint-enable unicorn/prefer-short-arrow-method */
 }
 
 function normalizeContent(
@@ -335,7 +340,7 @@ The user should use bold text in cells they want to appear as header cells. */
 function renderTableCell(ctx: NodeProps<TiptapNode, ReactNode | ReactNode[]>) {
   const { node, children } = ctx
   const style = {
-    // convert colwidth number to css width in px if set
+    // convert colwidth number to CSS width in px if set
     width: node.attrs.colwidth && node.attrs.colwidth + "px",
     verticalAlign: "text-top",
   }

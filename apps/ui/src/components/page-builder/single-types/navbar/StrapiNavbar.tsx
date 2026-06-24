@@ -16,7 +16,8 @@ export function StrapiNavbar({ locale }: { readonly locale: Locale }) {
     return null
   }
 
-  const session = use(getSessionSSR(use(headers())))
+  const requestHeaders = use(headers())
+  const session = use(getSessionSSR(requestHeaders))
 
   return <NavbarInner locale={locale} navbarData={navbar} session={session} />
 }

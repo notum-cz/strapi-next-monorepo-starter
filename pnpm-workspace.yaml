@@ -7,13 +7,18 @@ allowBuilds:
   core-js-pure: true
   esbuild: true
   lefthook: true
+  protobufjs: true
   sharp: true
   unrs-resolver: true
 
-minimumReleaseAge: 5760
+minimumReleaseAge: 4320
+resolutionMode: highest
+minimumReleaseAgeExclude:
+  - "@notum-cz/strapi-plugin-smart-populate@1.0.1"
+  - "nodemailer@9.0.1"
 
 overrides:
-  "@types/react": 19.2.14
+  "@types/react": 19.2.17
   "@types/react-dom": 19.2.3
 
 packageExtensions:

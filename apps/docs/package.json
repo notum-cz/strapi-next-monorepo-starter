@@ -1,30 +1,31 @@
 {
   "name": "@repo/docs",
-  "version": "0.0.0",
   "private": true,
   "scripts": {
     "build": "docusaurus build",
     "clear": "docusaurus clear",
     "docusaurus": "docusaurus",
-    "serve": "docusaurus serve",
-    "start": "docusaurus start"
+    "serve": "docusaurus serve --port 3300",
+    "start": "docusaurus start --port 3300"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.1",
     "@docusaurus/preset-classic": "3.10.1",
-    "@easyops-cn/docusaurus-search-local": "0.55.1",
+    "@docusaurus/theme-mermaid": "3.10.1",
+    "@easyops-cn/docusaurus-search-local": "0.55.2",
     "@mdx-js/react": "3.1.1",
+    "@mermaid-js/layout-elk": "0.2.1",
     "clsx": "2.1.1",
     "prism-react-renderer": "2.4.1",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.10.1",
     "@docusaurus/tsconfig": "3.10.1",
     "@docusaurus/types": "3.10.1",
-    "@types/node": "24.12.2",
-    "typescript": "5.9.3"
+    "@types/node": "24.13.2",
+    "typescript": "6.0.3"
   },
   "engines": {
     "node": "^24.0.0"

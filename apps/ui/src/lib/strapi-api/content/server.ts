@@ -1,5 +1,6 @@
 import "server-only"
 
+import { strapiCacheTag } from "@repo/shared-data"
 import type { UID } from "@repo/strapi-types"
 import { draftMode } from "next/headers"
 import type { Locale } from "next-intl"
@@ -7,33 +8,6 @@ import type { Locale } from "next-intl"
 import { logNonBlockingError } from "@/lib/logging"
 import { PublicStrapiClient } from "@/lib/strapi-api"
 import type { CustomFetchOptions } from "@/types/general"
-
-// ------ Common populate objects
-
-// Populate object for "seo-utilities.seo.json" component
-const seoPopulate = {
-  populate: {
-    metaImage: true,
-    twitter: { populate: { images: true } },
-    og: { populate: { image: true } },
-  },
-}
-
-// Populate object for "utilities.basic-image" component
-const basicImagePopulate = { populate: { media: true } }
-
-// Populate object for "utilities.link" component
-const linkPopulate = {
-  populate: {
-    page: {
-      /** Fields key is not allowed here by Strapi v5 TypeScript types because nested populate (components, dynamic zones, relations inside on) only supports officially documented parameters. Although the REST API accepts fields at runtime for performance reasons, the typings are intentionally conservative and do not model this behavior, so TypeScript rejects it. Thats why we needed to use "as". */
-      fields: ["fullPath"] as ["fullPath"],
-    },
-    decorations: {
-      populate: { leftIcon: basicImagePopulate, rightIcon: basicImagePopulate },
-    },
-  },
-}
 
 // ------ Page fetching functions
 export async function fetchPage(
@@ -51,10 +25,15 @@ export async function fetchPage(
       {
         locale,
         status: dm.isEnabled ? "draft" : "published",
-        populate: { seo: seoPopulate },
-        populateDynamicZone: { content: true },
+        populate: { seo: "smart", content: "smart" },
       },
-      requestInit,
+      {
+        ...requestInit,
+        next: {
+          ...requestInit?.next,
+          revalidate: requestInit?.next?.revalidate ?? 120,
+        },
+      },
       options
     )
   } catch (e: unknown) {
@@ -69,17 +48,23 @@ export async function fetchPage(
 }
 
 export async function fetchAllPages(
-  // eslint-disable-next-line @typescript-eslint/default-param-last
   uid: Extract<UID.ContentType, "api::page.page"> = "api::page.page",
-  locale: Locale
+  locale?: Locale,
+  params?: Record<string, unknown>,
+  requestInit?: RequestInit
 ) {
   try {
-    return await PublicStrapiClient.fetchAll(uid, {
-      locale,
-      fields: ["fullPath", "locale", "updatedAt", "createdAt", "slug"],
-      populate: {},
-      status: "published",
-    })
+    return await PublicStrapiClient.fetchAll(
+      uid,
+      {
+        locale,
+        fields: ["fullPath", "locale", "updatedAt", "createdAt", "slug"],
+        populate: {},
+        status: "published",
+        ...params,
+      },
+      requestInit
+    )
   } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching all pages for locale '${locale}'`,
@@ -105,7 +90,7 @@ export async function fetchSeo(
     return await PublicStrapiClient.fetchOneByFullPath(uid, fullPath, {
       locale,
       populate: {
-        seo: seoPopulate,
+        seo: "smart",
         localizations: true,
       },
     })
@@ -124,22 +109,24 @@ export async function fetchSeo(
 
 export async function fetchNavbar(locale: Locale) {
   try {
-    return await PublicStrapiClient.fetchOne("api::navbar.navbar", undefined, {
-      locale,
-      populate: {
-        logoImage: {
-          populate: {
-            image: basicImagePopulate,
-            link: linkPopulate,
-          },
-        },
-
-        primaryButtons: linkPopulate,
-        navbarItems: {
-          populate: { link: linkPopulate, categoryItems: linkPopulate },
+    return await PublicStrapiClient.fetchOne(
+      "api::navbar.navbar",
+      undefined,
+      {
+        locale,
+        populate: {
+          logoImage: "smart",
+          primaryButtons: "smart",
+          navbarItems: "smart",
         },
       },
-    })
+      {
+        next: {
+          revalidate: 600, // 10 minutes; tag-revalidated on Strapi publish
+          tags: [strapiCacheTag("api::navbar.navbar")],
+        },
+      }
+    )
   } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching navbar for locale '${locale}'`,
@@ -155,16 +142,24 @@ export async function fetchNavbar(locale: Locale) {
 
 export async function fetchFooter(locale: Locale) {
   try {
-    return await PublicStrapiClient.fetchOne("api::footer.footer", undefined, {
-      locale,
-      populate: {
-        sections: { populate: { links: linkPopulate } },
-        logoImage: {
-          populate: { image: basicImagePopulate, link: linkPopulate },
+    return await PublicStrapiClient.fetchOne(
+      "api::footer.footer",
+      undefined,
+      {
+        locale,
+        populate: {
+          sections: "smart",
+          logoImage: "smart",
+          links: "smart",
         },
-        links: linkPopulate,
       },
-    })
+      {
+        next: {
+          revalidate: 600, // 10 minutes; tag-revalidated on Strapi publish
+          tags: [strapiCacheTag("api::footer.footer")],
+        },
+      }
+    )
   } catch (e: unknown) {
     logNonBlockingError({
       message: `Error fetching footer for locale '${locale}'`,
@@ -173,5 +168,42 @@ export async function fetchFooter(locale: Locale) {
         stack: e instanceof Error ? e.stack : undefined,
       },
     })
+  }
+}
+
+// ------ Redirect fetching functions
+
+export async function fetchRedirects() {
+  try {
+    // fetchAll paginates through every page — a redirect list capped at one
+    // page would silently drop redirects beyond the page size (easy to hit
+    // after a site migration).
+    const response = await PublicStrapiClient.fetchAll(
+      "api::redirect.redirect",
+      {
+        status: "published",
+      },
+      {
+        // Redirects are cached in-process by `src/lib/redirects.ts`. Avoid
+        // stacking Next's Data Cache underneath it, because proxy refreshes
+        // should decide freshness from the local stale-while-refresh cache.
+        cache: "no-store",
+      }
+    )
+
+    return response.data
+  } catch (e: unknown) {
+    logNonBlockingError({
+      message: "Error fetching redirects",
+      error: {
+        error: e instanceof Error ? e.message : String(e),
+        stack: e instanceof Error ? e.stack : undefined,
+      },
+    })
+
+    // Rethrow instead of returning [] — the redirect cache must distinguish
+    // "no redirects exist" from "Strapi unreachable". An empty list here would
+    // be cached and wipe the last known good redirects for a full TTL.
+    throw e instanceof Error ? e : new Error(String(e))
   }
 }

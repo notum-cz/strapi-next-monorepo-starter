@@ -1,3 +1,4 @@
+import { strapiCacheTag } from "@repo/shared-data"
 import type { MetadataRoute } from "next"
 import type { Locale } from "next-intl"
 
@@ -37,7 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 }
 
 /**
- * Fetches all entries in a given collection - by default this is api::page.page
+ * Fetches all entries in a given collection - by default this is API::page.page
  * and generates sitemap entries for a single locale
  * @param locale locale to retrieve (must be defined in routing `@/lib/navigation`)
  * @returns Sitemap entries for a single locale
@@ -51,7 +52,32 @@ async function generateLocalizedSitemap(
 
   // Fetch all records for each entity individually
   for (const entityUid of pageEntityUids) {
-    const entityResponse = await fetchAllPages(entityUid, locale)
+    const entityResponse = await fetchAllPages(
+      entityUid,
+      locale,
+      {
+        populate: { seo: true },
+        filters: {
+          $or: [
+            // No seo component configured -> include
+            { seo: { $null: true } },
+            // seo.metaRobots explicitly not set to noindex variants
+            {
+              seo: {
+                metaRobots: {
+                  $notIn: ["noindex", "noindex,nofollow", "noindex,follow"],
+                },
+              },
+            },
+            // seo.metaRobots is null/undefined -> include
+            { seo: { metaRobots: { $null: true } } },
+          ],
+        },
+      },
+      // Cache the page list; the tag invalidates it instantly on page changes,
+      // the TTL is a backstop.
+      { next: { revalidate: 3600, tags: [strapiCacheTag("api::page.page")] } }
+    )
 
     if (entityResponse.data.length > 0) {
       pageEntities[entityUid] = entityResponse.data
@@ -63,7 +89,7 @@ async function generateLocalizedSitemap(
    * alongside mapping of changeFrequency
    */
   return Object.entries(pageEntities).reduce((acc, [uid, pages]) => {
-    pages.forEach((page) => {
+    for (const page of pages) {
       if (page.fullPath) {
         acc.push({
           url: createPublicFullPath(page.fullPath, String(page.locale)),
@@ -72,7 +98,7 @@ async function generateLocalizedSitemap(
             entityChangeFrequency[uid as PageEntityUID] ?? "monthly",
         })
       }
-    })
+    }
 
     return acc
   }, [] as MetadataRoute.Sitemap)

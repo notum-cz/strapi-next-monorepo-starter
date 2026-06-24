@@ -156,7 +156,7 @@ function DataTableSkeleton<TData>({
 }) {
   return (
     <>
-      {Array.from({ length: 2 }).map((_, i) => (
+      {Array.from({ length: 2 }, (_, i) => (
         <SkeletonLine headerGroup={headerGroup} key={`skeleton-${String(i)}`} />
       ))}
     </>

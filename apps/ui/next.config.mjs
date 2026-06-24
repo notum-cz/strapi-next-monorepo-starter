@@ -19,8 +19,15 @@ const nextConfig = {
   },
   reactCompiler: true,
   transpilePackages: ["@repo/design-system"],
+  // pino (via @repo/logging) and the Azure Monitor exporter rely on Node
+  // internals / worker threads that must not be bundled by the server compiler.
+  serverExternalPackages: [
+    "pino",
+    "pino-pretty",
+    "@azure/monitor-opentelemetry",
+  ],
   images: {
-    // See apps/ui/README.md#image-optimization for the full policy.
+    // See apps/UI/README.md#image-optimization for the full policy.
     // Keep global optimization enabled so components can opt in/out.
     // Do not set `unoptimized: true` globally: Next.js applies it to every
     // image and component-level `unoptimized={false}` cannot re-enable loaders.
@@ -57,6 +64,31 @@ const nextConfig = {
       },
     ],
   },
+
+  // Static, build-time-constant security headers applied to every route.
+  // Runtime-dependent headers (Content-Security-Policy with `frame-ancestors`,
+  // and the conditional X-Frame-Options) are set in the proxy instead —
+  // see apps/UI/src/lib/proxies/securityHeaders.ts.
+  headers: async () => [
+    {
+      source: "/:path*",
+      headers: [
+        {
+          key: "Strict-Transport-Security",
+          value: "max-age=63072000; includeSubDomains; preload",
+        },
+        { key: "X-Content-Type-Options", value: "nosniff" },
+        {
+          key: "Referrer-Policy",
+          value: "strict-origin-when-cross-origin",
+        },
+        {
+          key: "Permissions-Policy",
+          value: "camera=(), microphone=(), geolocation=()",
+        },
+      ],
+    },
+  ],
 
   // Turbopack configuration (replaces webpack config)
   // Turbopack has built-in intelligent caching, so no manual cache configuration needed

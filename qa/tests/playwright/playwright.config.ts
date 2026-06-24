@@ -12,7 +12,7 @@ if (fs.existsSync(envPath)) {
 const mobileViewportsEnabled =
   process.env.MOBILE_VIEWPORTS_TESTING_ENABLED === "true"
 
-const projects: Project[] = [
+const baseProjects: Project[] = [
   {
     name: "chromium",
     use: { ...devices["Desktop Chrome"] },
@@ -31,22 +31,56 @@ const projects: Project[] = [
   },
 ]
 
-if (mobileViewportsEnabled) {
-  projects.push(
-    // Android
-    {
-      name: "Mobile Chrome (Pixel 7)",
-      use: { ...devices["Pixel 7"] },
-    },
-    // iOS
-    {
-      name: "Mobile Safari (iPhone 15)",
-      use: { ...devices["iPhone 15"] },
-    }
-  )
-}
+const mobileProjects: Project[] = mobileViewportsEnabled
+  ? [
+      // Android
+      {
+        name: "Mobile Chrome (Pixel 7)",
+        use: { ...devices["Pixel 7"] },
+      },
+      // iOS
+      {
+        name: "Mobile Safari (iPhone 15)",
+        use: { ...devices["iPhone 15"] },
+      },
+    ]
+  : []
 
-projects.push(
+const specializedProjects: Project[] = [
+  {
+    name: "visual-chromium",
+    testMatch: ["visual/**/*.spec.ts"],
+    retries: 0,
+    use: {
+      ...devices["Desktop Chrome"],
+      trace: "off",
+      video: "off",
+      screenshot: "off",
+    },
+  },
+  {
+    name: "visual-firefox",
+    testMatch: ["visual/**/*.spec.ts"],
+    retries: 0,
+    use: {
+      ...devices["Desktop Firefox"],
+      trace: "off",
+      video: "off",
+      screenshot: "off",
+    },
+  },
+  {
+    name: "visual-webkit",
+    testMatch: ["visual/**/*.spec.ts"],
+    retries: 0,
+    use: {
+      ...devices["Desktop Safari"],
+      deviceScaleFactor: 1,
+      trace: "off",
+      video: "off",
+      screenshot: "off",
+    },
+  },
   {
     name: "seo",
     testMatch: ["seo/**/*.spec.ts"],
@@ -69,8 +103,14 @@ projects.push(
       screenshot: "off",
       video: "off",
     },
-  }
-)
+  },
+]
+
+const projects: Project[] = [
+  ...baseProjects,
+  ...mobileProjects,
+  ...specializedProjects,
+]
 
 export default defineConfig({
   testDir: ".",
@@ -78,7 +118,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 3 : undefined,
-  reporter: "html",
+  reporter: [["html", { open: process.env.CI ? "never" : "on-failure" }]],
 
   use: {
     baseURL: process.env.BASE_URL,

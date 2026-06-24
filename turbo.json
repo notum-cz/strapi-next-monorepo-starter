@@ -11,6 +11,9 @@
     "SENTRY_ORG",
     "SENTRY_PROJECT",
     "SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING",
+    "OTEL_SERVICE_NAME",
+    "LOG_LEVEL",
+    "APPLICATIONINSIGHTS_CONNECTION_STRING",
     "CI",
     "MOBILE_VIEWPORTS_TESTING_ENABLED",
     "BASE_URL",
@@ -35,7 +38,17 @@
     "BASIC_AUTH_PASSWORD",
     "IMGPROXY_URL",
     "AUTO_SEED_ENABLED",
-    "AUTO_SEED_MODE"
+    "AUTO_SEED_MODE",
+    "DATABASE_HOST",
+    "CLIENT_URL",
+    "STRAPI_REVALIDATE_SECRET",
+    "STRAPI_CDN_PURGE_SECRET",
+    "AZURE_SUBSCRIPTION_ID",
+    "AZURE_RESOURCE_GROUP",
+    "AZURE_FRONT_DOOR_PROFILE",
+    "AZURE_MI_CLIENT_ID",
+    "IDENTITY_ENDPOINT",
+    "IDENTITY_HEADER"
   ],
   "tasks": {
     "build": {
@@ -61,8 +74,39 @@
     "sync-types": {
       "cache": false
     },
+    "generate:types": {
+      "cache": false
+    },
+    "seed:check": {
+      "cache": false,
+      "persistent": false
+    },
+    "seed:export": {
+      "cache": false,
+      "persistent": false
+    },
+    "seed:import": {
+      "cache": false,
+      "persistent": false
+    },
+    "run:db": {
+      "cache": false,
+      "persistent": false
+    },
+    "run:imgproxy": {
+      "cache": false,
+      "persistent": false
+    },
+    "transfer": {
+      "cache": false,
+      "persistent": false
+    },
     "dev": {
-      "dependsOn": ["@repo/shared-data#build", "@repo/design-system#build"],
+      "dependsOn": [
+        "@repo/shared-data#build",
+        "@repo/design-system#build",
+        "@repo/logging#build"
+      ],
       "cache": false,
       "persistent": true
     },
@@ -99,6 +143,18 @@
       "persistent": false
     },
     "playwright-visual-tests": {
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-visual-update-tests": {
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-visual-tests-docker": {
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-visual-update-snapshots-docker": {
       "cache": false,
       "persistent": false
     }

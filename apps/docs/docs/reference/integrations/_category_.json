@@ -1,0 +1,11 @@
+{
+  "label": "Integrations",
+  "position": 7,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "generated-index",
+    "title": "Integrations",
+    "description": "External service integrations used by the UI and Strapi apps."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "label": "How to...",
+  "position": 8,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "how-to/index"
+  }
+}

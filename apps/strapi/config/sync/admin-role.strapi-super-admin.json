@@ -132,14 +132,10 @@
     {
       "action": "plugin::content-manager.explorer.create",
       "actionParameters": {},
-      "subject": "api::internal-job.internal-job",
+      "subject": "api::hierarchy.hierarchy",
       "properties": {
         "fields": [
-          "jobType",
-          "relatedDocumentId",
-          "payload",
-          "state",
-          "error"
+          "lastRecalculationAt"
         ]
       },
       "conditions": [],
@@ -149,7 +145,7 @@
     {
       "action": "plugin::content-manager.explorer.delete",
       "actionParameters": {},
-      "subject": "api::internal-job.internal-job",
+      "subject": "api::hierarchy.hierarchy",
       "properties": {},
       "conditions": [],
       "documentId": "cpbqamwhmpxkx9bhxjg4nysi",
@@ -158,7 +154,7 @@
     {
       "action": "plugin::content-manager.explorer.publish",
       "actionParameters": {},
-      "subject": "api::internal-job.internal-job",
+      "subject": "api::hierarchy.hierarchy",
       "properties": {},
       "conditions": [],
       "documentId": "gvzr68moobn6lejvgzg4jmau",
@@ -167,14 +163,10 @@
     {
       "action": "plugin::content-manager.explorer.read",
       "actionParameters": {},
-      "subject": "api::internal-job.internal-job",
+      "subject": "api::hierarchy.hierarchy",
       "properties": {
         "fields": [
-          "jobType",
-          "relatedDocumentId",
-          "payload",
-          "state",
-          "error"
+          "lastRecalculationAt"
         ]
       },
       "conditions": [],
@@ -184,14 +176,10 @@
     {
       "action": "plugin::content-manager.explorer.update",
       "actionParameters": {},
-      "subject": "api::internal-job.internal-job",
+      "subject": "api::hierarchy.hierarchy",
       "properties": {
         "fields": [
-          "jobType",
-          "relatedDocumentId",
-          "payload",
-          "state",
-          "error"
+          "lastRecalculationAt"
         ]
       },
       "conditions": [],
@@ -481,7 +469,6 @@
         "fields": [
           "source",
           "destination",
-          "permanent",
           "page"
         ]
       },
@@ -515,7 +502,6 @@
         "fields": [
           "source",
           "destination",
-          "permanent",
           "page"
         ]
       },
@@ -531,7 +517,6 @@
         "fields": [
           "source",
           "destination",
-          "permanent",
           "page"
         ]
       },
