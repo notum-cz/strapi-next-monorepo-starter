@@ -91,6 +91,8 @@ app_url=$(heroku info -a "$app_name" -s | grep web_url | cut -d= -f2 | sed 's/\/
 # Required variables for buildpacks
 heroku config:set -a "$app_name" APP=strapi
 heroku config:set -a "$app_name" WORKSPACE="@repo/strapi"
+# This version must match the version of Turbo used in the monorepo
+heroku config:set -a "$app_name" TURBO_VERSION=2.9.18
 
 # Required variables for Strapi
 # https://docs.strapi.io/cms/deployment/heroku#populate-the-environment-variables
@@ -108,10 +110,12 @@ heroku config:set -a "$app_name" DATABASE_SSL_REJECT_UNAUTHORIZED=false
 # Rest of the variables
 heroku config:set -a "$app_name" TZ=Europe/Prague
 heroku config:set -a "$app_name" NODE_ENV=production
+heroku config:set -a "$app_name" STRAPI_REVALIDATE_SECRET="$(openssl rand -base64 32)"
 
 # Optional - uncomment when needed
 # heroku config:set -a "$app_name" STRAPI_PREVIEW_ENABLED=true
 # heroku config:set -a "$app_name" STRAPI_PREVIEW_SECRET="$(openssl rand -base64 32)"
+# heroku config:set -a "$app_name" STRAPI_CDN_PURGE_SECRET="$(openssl rand -base64 32)"
 # heroku config:set -a "$app_name" AUTO_SEED_ENABLED=true
 # heroku config:set -a "$app_name" AUTO_SEED_MODE=empty
 
@@ -193,6 +197,8 @@ app_url=$(heroku info -a "$app_name" -s | grep web_url | cut -d= -f2 | sed 's/\/
 heroku config:set -a "$app_name" APP=ui
 heroku config:set -a "$app_name" WORKSPACE="@repo/ui"
 heroku config:set -a "$app_name" NEXT_OUTPUT=standalone
+# This version must match the version of Turbo used in the monorepo
+heroku config:set -a "$app_name" TURBO_VERSION=2.9.18
 
 # Required variables for Better Auth, if used
 # heroku config:set -a "$app_name" BETTER_AUTH_SECRET="$(openssl rand -base64 32)"
@@ -209,6 +215,8 @@ heroku config:set -a "$app_name" DEBUG_STRAPI_CLIENT_API_CALLS=false
 # Optional - uncomment when needed
 # heroku config:set -a "$app_name" NEXT_PUBLIC_PREVENT_UNUSED_FUNCTIONS_ERROR_LOGS=true
 # heroku config:set -a "$app_name" STRAPI_PREVIEW_SECRET=this-has-to-be-same-as-in-strapi
+# heroku config:set -a "$app_name" STRAPI_REVALIDATE_SECRET=this-has-to-be-same-as-in-strapi
+# heroku config:set -a "$app_name" STRAPI_CDN_PURGE_SECRET=this-has-to-be-same-as-in-strapi
 
 # Optionally set the backend app URL.
 if [ -n "$api_app_url" ]; then
