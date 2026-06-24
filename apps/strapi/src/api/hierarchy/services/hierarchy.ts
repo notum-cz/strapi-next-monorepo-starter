@@ -16,15 +16,19 @@ import type { FullPathChange, HierarchyPageNode } from "../utils/types"
 
 const PAGE_BATCH_SIZE = 500
 
+// Strapi core services are object factories where methods dispatch to each
+// other via `this` (the merged service instance). That late binding is what
+// lets the service be composed/overridden and lets tests spy on individual
+// methods. `unicorn/no-this-outside-of-class` assumes `this` only belongs in
+// classes, which does not fit this framework pattern.
+/* eslint-disable unicorn/no-this-outside-of-class */
 export default factories.createCoreService(
   "api::hierarchy.hierarchy",
-  ({ strapi }) => {
+  ({ strapi }) => ({
     /**
      * Fetches all published pages of one locale as flat hierarchy nodes.
      */
-    const listPublishedPages = async (
-      locale: string
-    ): Promise<HierarchyPageNode[]> => {
+    async listPublishedPages(locale: string): Promise<HierarchyPageNode[]> {
       const pages: HierarchyPageNode[] = []
       let start = 0
       let hasMore = true
@@ -54,13 +58,13 @@ export default factories.createCoreService(
       }
 
       return pages
-    }
+    },
 
     /**
      * Returns all fullPath changes that have not been applied yet,
      * across all locales.
      */
-    const getPendingChanges = async (): Promise<FullPathChange[]> => {
+    async getPendingChanges(): Promise<FullPathChange[]> {
       const locales: { code: string }[] = await strapi
         .plugin("i18n")
         .service("locales")
@@ -69,12 +73,12 @@ export default factories.createCoreService(
       const changes: FullPathChange[] = []
 
       for (const { code } of locales) {
-        const pages = await listPublishedPages(code)
+        const pages = await this.listPublishedPages(code)
         changes.push(...computeFullPathChanges(pages))
       }
 
       return changes
-    }
+    },
 
     /**
      * Applies all pending changes: updates each page's fullPath (as a system
@@ -82,11 +86,11 @@ export default factories.createCoreService(
      * published redirect from the old path, batch-revalidates the frontend
      * cache, and stamps `lastRecalculationAt`.
      */
-    const applyPendingChanges = async (): Promise<{
+    async applyPendingChanges(): Promise<{
       applied: FullPathChange[]
       failed: { change: FullPathChange; error: string }[]
-    }> => {
-      const changes: FullPathChange[] = await getPendingChanges()
+    }> {
+      const changes: FullPathChange[] = await this.getPendingChanges()
 
       const applied: FullPathChange[] = []
       const failed: { change: FullPathChange; error: string }[] = []
@@ -127,7 +131,7 @@ export default factories.createCoreService(
 
         if (change.redirect) {
           try {
-            const affectedSources = await upsertRedirectWithCompaction(
+            const affectedSources = await this.upsertRedirectWithCompaction(
               change.redirect
             )
             for (const source of affectedSources) {
@@ -157,7 +161,7 @@ export default factories.createCoreService(
       // Revalidate each locale independently so a single failing path set
       // doesn't stop the rest of the revalidation pipeline.
       for (const [locale, paths] of fullPathsByLocale) {
-        await revalidate({
+        await this.revalidate({
           uid: "api::page.page",
           locale,
           fullPaths: [...paths],
@@ -166,7 +170,7 @@ export default factories.createCoreService(
 
       // Redirect sources are already locale-prefixed, so no `locale` here.
       if (redirectSources.size > 0) {
-        await revalidate({
+        await this.revalidate({
           uid: "api::redirect.redirect",
           fullPaths: [...redirectSources],
         })
@@ -174,10 +178,10 @@ export default factories.createCoreService(
 
       // Stamped on every run (even a no-op one): it records when the
       // recalculation last ran, not when changes were last applied.
-      await stampLastRecalculation()
+      await this.stampLastRecalculation()
 
       return { applied, failed }
-    }
+    },
 
     /**
      * Creates the `source -> destination` redirect while keeping the redirect
@@ -194,13 +198,13 @@ export default factories.createCoreService(
      * Returns every redirect source whose target changed so the caller can
      * revalidate them.
      */
-    const upsertRedirectWithCompaction = async ({
+    async upsertRedirectWithCompaction({
       source,
       destination,
     }: {
       source: string
       destination: string
-    }): Promise<string[]> => {
+    }): Promise<string[]> {
       const redirects = strapi.documents("api::redirect.redirect")
       const affectedSources = new Set<string>([source])
 
@@ -248,14 +252,14 @@ export default factories.createCoreService(
         })
       }
 
-      return Array.from(affectedSources)
-    }
+      return [...affectedSources]
+    },
 
-    const revalidate = async (params: {
+    async revalidate(params: {
       uid: string
       locale?: string
       fullPaths: string[]
-    }) => {
+    }) {
       try {
         await strapi.service("api::revalidate.revalidate").run(params)
       } catch (error) {
@@ -264,11 +268,11 @@ export default factories.createCoreService(
           `Revalidation after hierarchy recalculation failed${scope}: ${(error as Error).message}`
         )
       }
-    }
+    },
 
-    const stampLastRecalculation = async () => {
-      const recalculatedAt = new Date()
-      const data = { lastRecalculationAt: recalculatedAt.toISOString() }
+    async stampLastRecalculation() {
+      const now = new Date()
+      const data = { lastRecalculationAt: now.toISOString() }
 
       try {
         const existing = await strapi
@@ -286,15 +290,6 @@ export default factories.createCoreService(
           `Hierarchy: failed to stamp lastRecalculationAt: ${(error as Error).message}`
         )
       }
-    }
-
-    return {
-      listPublishedPages,
-      getPendingChanges,
-      applyPendingChanges,
-      upsertRedirectWithCompaction,
-      revalidate,
-      stampLastRecalculation,
-    }
-  }
+    },
+  })
 )
