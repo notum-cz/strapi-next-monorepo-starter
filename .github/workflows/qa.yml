@@ -130,7 +130,7 @@ jobs:
             ${{ runner.os }}-playwright-
 
       - name: Install Playwright Browsers
-        run: pnpm -F @repo/tests-playwright exec playwright install --with-deps
+        run: pnpm -F @repo/tests-playwright exec playwright install --with-deps chromium
 
       - name: Run Axe tests
         env:
@@ -174,7 +174,7 @@ jobs:
             ${{ runner.os }}-playwright-
 
       - name: Install Playwright Browsers
-        run: pnpm -F @repo/tests-playwright exec playwright install --with-deps
+        run: pnpm -F @repo/tests-playwright exec playwright install --with-deps chromium
 
       - name: Run Playwright SEO tests
         env:
