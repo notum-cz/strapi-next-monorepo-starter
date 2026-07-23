@@ -39,8 +39,8 @@ jobs:
         run: pnpm --filter @repo/docs build
         env:
           NODE_ENV: production
-          DOCUSAURUS_URL: ${{ steps.pages.outputs.origin }}
-          DOCUSAURUS_BASE_URL: ${{ steps.pages.outputs.base_path }}/
+          DOCUSAURUS_URL: ${{ vars.DOCUSAURUS_URL }}
+          DOCUSAURUS_BASE_URL: ${{ vars.DOCUSAURUS_BASE_URL }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5.0.0
