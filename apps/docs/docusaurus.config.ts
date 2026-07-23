@@ -66,8 +66,13 @@ const config: Config = {
           label: "Docs",
         },
         {
-          href: "https://www.notum-dev.cz/",
+          href: "https://strapinextjs.notum.tech",
           label: "Live demo",
+          position: "right",
+        },
+        {
+          href: "https://github.com/notum-cz/strapi-next-monorepo-starter",
+          label: "GitHub",
           position: "right",
         },
       ],

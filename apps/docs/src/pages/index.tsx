@@ -62,7 +62,7 @@ export default function Home(): JSX.Element {
                 >
                   Get started
                 </Link>
-                <a className="button button--secondary button--lg" href="https://www.notum-dev.cz/">
+                <a className="button button--secondary button--lg" href="https://strapinextjs.notum.tech" target="_blank" rel="noopener noreferrer">
                   Live demo
                 </a>
               </div>
