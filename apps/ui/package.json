@@ -59,7 +59,7 @@
     "@tiptap/starter-kit": "3.20.6",
     "@tiptap/static-renderer": "3.20.6",
     "babel-plugin-react-compiler": "1.0.0",
-    "better-auth": "1.6.19",
+    "better-auth": "1.6.22",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "cmdk": "1.1.1",
