@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@notum-cz/strapi-plugin-smart-populate": "1.0.1",
-    "@strapi/strapi": "5.48.0"
+    "@strapi/strapi": "5.51.0"
   },
   "engines": {
     "node": "^24.0.0"
