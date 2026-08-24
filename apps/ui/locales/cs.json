@@ -23,7 +23,6 @@
       "imageUrl": "SEO-TWITTER-IMAGE-URL"
     }
   },
-
   "general": {
     "noOptionsAvailable": "Žádné možnosti k dispozici",
     "search": "Vyhledat",
@@ -34,7 +33,6 @@
     "saveChanges": "Uložit změny",
     "back": "Zpět"
   },
-
   "tables": {
     "previousPage": "Předchozí stránka",
     "nextPage": "Další stránka",
@@ -46,7 +44,6 @@
     "descending": "Sestupně",
     "noData": "Žádná data"
   },
-
   "navbar": {
     "account": "Účet",
     "actions": {
@@ -56,7 +53,6 @@
       "signIn": "Přihlásit se"
     }
   },
-
   "comps": {
     "fileInput": {
       "label": "Vybrat soubor",
@@ -79,7 +75,6 @@
       "confirmClose": "Chcete zavřít dialog? Ztratíte tím všechny rozpracované změny."
     }
   },
-
   "errors": {
     "global": {
       "title": "Nastala neznámá chyba",
@@ -87,25 +82,21 @@
       "invalidContent": "Tenhle obsah se nepodařilo načíst",
       "somethingWentWrong": "Něco se pokazilo 🥺"
     },
-
     "notFound": {
       "title": "Stránka nenalezena",
       "description": "Stránka, kterou hledáte, nebyla nalezena.",
       "solution": "Zkontrolujte prosím, zda jste zadali správnou adresu anebo se vraťte na úvodní stránku.",
       "redirect": "Přejít na úvodní stránku"
     },
-
     "forms": {
       "errorsInForm": "Formulář obsahuje chyby",
       "checkFormForErrors": "Zkontrolujte prosím, zda nechybí žádné hodnoty"
     },
-
     "zodValidation": {
       "invalid_type": "Požadovaný typ je {expected}, zadán byl {received}",
       "invalid_type_received_undefined": "Pole je požadované",
       "invalid_literal": "Nesprávná hodnota, očekává sa {expected}",
       "invalid_union": "Nesprávná hodnota",
-
       "invalid_string": {
         "regex": "Nesprávný formát"
       },
@@ -140,7 +131,6 @@
       }
     }
   },
-
   "contactForm": {
     "name": "Jméno a Přijmení",
     "namePlaceholder": "Jan Novák",
@@ -153,7 +143,6 @@
     "error": "Při odesílání formuláře došlo k chybě, zkuste to prosím znovu",
     "gdprLink": "Informace o zpracování osobních údajů"
   },
-
   "auth": {
     "signIn": {
       "status": {
@@ -174,7 +163,6 @@
       "forgotPassword": "Zapomenuté heslo",
       "createAccount": "Vytvořit účet"
     },
-
     "register": {
       "status": {
         "fail": "Registrace selhala",
@@ -197,7 +185,6 @@
       "signInLinkLinkDescription": "Již máte účet?",
       "signInLink": "Přihlásit se"
     },
-
     "changePassword": {
       "errors": {
         "invalidCurrentPassword": "Současné heslo se neshoduje",
@@ -212,7 +199,6 @@
       "confirmPassword": "Potvrdit nové heslo",
       "submit": "Změnit heslo"
     },
-
     "accountActivation": {
       "successfullySet": "Účet byl úspěšně aktivován. Můžete se přihlásit.",
       "errors": {
@@ -228,7 +214,6 @@
       "password": "Nové heslo",
       "confirmPassword": "Potvrdit heslo"
     },
-
     "resetPassword": {
       "header": "Resetování hesla",
       "description": "Zvolte si nové heslo, které budete používat k přihlašování.",
@@ -239,7 +224,6 @@
         "incorrectCodeProvided": "Neplatný nebo expirovaný kód. Požádejte prosím o obnovení hesla znovu."
       }
     },
-
     "forgotPassword": {
       "passwordChangeEmailSent": "Byl vám zaslán e-mail s instrukcemi pro obnovení hesla.",
       "header": "Zapomenuté heslo",
@@ -250,7 +234,6 @@
         "failedToSendPasswordResetEmail": "Nepodařilo se odeslat email s instrukcemi pro obnovení hesla."
       }
     },
-
     "oauth": {
       "orContinueWith": "Nebo pokračujte s",
       "signingIn": "Přihlašuji vás...",
@@ -262,5 +245,25 @@
       },
       "withGithub": "Přihlásit se přes GitHub"
     }
+  },
+  "demoBanner": {
+    "liveDemo": "Živé Demo",
+    "description": "Toto je živá ukázka šablony Strapi + Next.js.",
+    "landingPage": "Vstupní stránka",
+    "documentation": "Dokumentace"
+  },
+  "guidedTour": {
+    "welcomeTitle": "Vítejte v Živém Demu!",
+    "welcomeDescription": "Toto je prohlídka šablony Strapi + Next.js Monorepo. Pojďme se podívat, co obsahuje.",
+    "navTitle": "Dynamická Navigace",
+    "navDescription": "Tato navigace je plně řízena ze Strapi Single Type. Odkazy, rozbalovací menu a tlačítka můžete měnit přímo v CMS.",
+    "mainTitle": "Sekce Page Builderu",
+    "mainDescription": "Obsah na této stránce je složen pomocí dynamických zón ve Strapi. Každá sekce odpovídá React komponentě v uživatelském rozhraní.",
+    "footerTitle": "Patička Strapi",
+    "footerDescription": "Stejně jako navigace, i patička je Single Type spravovaný ve Strapi.",
+    "nextBtn": "Další",
+    "prevBtn": "Předchozí",
+    "doneBtn": "Hotovo",
+    "progressText": "{{current}} z {{total}}"
   }
 }

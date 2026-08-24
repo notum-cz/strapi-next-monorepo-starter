@@ -1,23 +1,31 @@
 "use client"
 
 import { driver } from "driver.js"
+import { useTranslations } from "next-intl"
 import { useEffect } from "react"
 import "driver.js/dist/driver.css"
 
 export function GuidedTour() {
+  const t = useTranslations("guidedTour")
+
   useEffect(() => {
     const hasSeenTour = localStorage.getItem("hasSeenGuidedTour")
     if (hasSeenTour) return
 
+    let isUnmounting = false
+
     const driverObj = driver({
       showProgress: true,
+      nextBtnText: t("nextBtn"),
+      prevBtnText: t("prevBtn"),
+      doneBtnText: t("doneBtn"),
+      progressText: t("progressText"),
       steps: [
         {
           element: "body",
           popover: {
-            title: "Welcome to the Live Demo!",
-            description:
-              "This is a guided tour of the Strapi + Next.js Monorepo Starter. Let's see what's included.",
+            title: t("welcomeTitle"),
+            description: t("welcomeDescription"),
             side: "top",
             align: "start",
           },
@@ -25,9 +33,8 @@ export function GuidedTour() {
         {
           element: "nav",
           popover: {
-            title: "Dynamic Navbar",
-            description:
-              "This navbar is entirely driven by a Strapi Single Type. You can change links, dropdowns, and buttons directly in the CMS.",
+            title: t("navTitle"),
+            description: t("navDescription"),
             side: "bottom",
             align: "start",
           },
@@ -35,9 +42,8 @@ export function GuidedTour() {
         {
           element: "main",
           popover: {
-            title: "Page Builder Sections",
-            description:
-              "The content on this page is composed using Strapi's dynamic zones. Each section maps directly to a React component in the UI.",
+            title: t("mainTitle"),
+            description: t("mainDescription"),
             side: "top",
             align: "start",
           },
@@ -45,24 +51,33 @@ export function GuidedTour() {
         {
           element: "footer",
           popover: {
-            title: "Strapi Footer",
-            description:
-              "Like the navbar, the footer is a Single Type managed in Strapi.",
+            title: t("footerTitle"),
+            description: t("footerDescription"),
             side: "top",
             align: "start",
           },
         },
       ],
       onDestroyed: () => {
-        localStorage.setItem("hasSeenGuidedTour", "true")
+        if (!isUnmounting) {
+          localStorage.setItem("hasSeenGuidedTour", "true")
+        }
       },
     })
 
     // slight delay to let elements render
-    setTimeout(() => {
-      driverObj.drive()
+    const timeout = setTimeout(() => {
+      if (!isUnmounting) {
+        driverObj.drive()
+      }
     }, 1000)
-  }, [])
+
+    return () => {
+      isUnmounting = true
+      clearTimeout(timeout)
+      driverObj.destroy()
+    }
+  }, [t])
 
   return null
 }
