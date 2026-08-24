@@ -55,15 +55,18 @@ export default function Home(): JSX.Element {
             <div className="homeHeroCopy">
               <p className="homeEyebrow">Strapi + Next.js monorepo</p>
               <h1>Build editable UI pages without rebuilding the foundation.</h1>
-              <div className="homeActions">
+              <div className="homeActions" style={{ gap: '1rem', display: 'flex', flexWrap: 'wrap' }}>
                 <Link
                   className="button button--primary button--lg"
                   to="/docs/getting-started/installation"
                 >
-                  Get started
+                  Read Documentation
                 </Link>
-                <a className="button button--secondary button--lg" href="https://www.notum-dev.cz/">
-                  Live demo
+                <a className="button button--secondary button--lg" href="https://strapinextjs.notum.tech/">
+                  View Live Demo
+                </a>
+                <a className="button button--outline button--secondary button--lg" href="https://github.com/notum-cz/strapi-next-monorepo-starter">
+                  GitHub Repo
                 </a>
               </div>
             </div>
@@ -73,6 +76,45 @@ export default function Home(): JSX.Element {
                 src={pageBuilderImage}
                 alt="Page builder flow from Strapi dynamic zone data through component UID mapping to rendered UI components"
               />
+            </div>
+          </div>
+        </section>
+
+        {/* User Journey Section */}
+        <section className="homeSection" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)' }}>
+          <div className="container">
+            <div className="homeDocsHeader text--center">
+              <p className="homeSectionLabel">User Journey</p>
+              <h2>How to use this starter</h2>
+              <p style={{ maxWidth: '600px', margin: '0 auto 2rem' }}>
+                Whether you are exploring on your own or presenting to a client, this project is split into distinct environments to keep things clear.
+              </p>
+            </div>
+            <div className="row">
+              <div className="col col--6 margin-bottom--lg">
+                <div className="card shadow--md" style={{ height: '100%', padding: '2rem' }}>
+                  <h3>Self-Service Journey</h3>
+                  <p>For developers and technical evaluators who want to build with the starter.</p>
+                  <ul>
+                    <li><strong>Landing Page:</strong> You are here! High level overview.</li>
+                    <li><strong>Documentation:</strong> Detailed guides on architecture and setup.</li>
+                    <li><strong>GitHub Repo:</strong> The open source codebase to clone and start building.</li>
+                  </ul>
+                  <Link className="button button--secondary" to="/docs/getting-started/installation">Go to Docs</Link>
+                </div>
+              </div>
+              <div className="col col--6 margin-bottom--lg">
+                <div className="card shadow--md" style={{ height: '100%', padding: '2rem' }}>
+                  <h3>Sales-Assisted Journey</h3>
+                  <p>For presenting to clients, content editors, and non-technical stakeholders.</p>
+                  <ul>
+                    <li><strong>Live Demo:</strong> See the actual end-result of what the CMS produces.</li>
+                    <li><strong>Interactive Tour:</strong> The live demo includes a guided tour to explain features.</li>
+                    <li><strong>Strapi Admin:</strong> Show the CMS back-office (available locally after setup).</li>
+                  </ul>
+                  <a className="button button--primary" href="https://strapinextjs.notum.tech/">Try Live Demo</a>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -115,22 +157,6 @@ export default function Home(): JSX.Element {
           </div>
         </section>
 
-        <section className="homeSection homeDocsSection">
-          <div className="container">
-            <div className="homeDocsHeader">
-              <p className="homeSectionLabel">Documentation</p>
-              <h2>Start with the docs</h2>
-            </div>
-            <div className="homeCards">
-              {docLinks.map((item) => (
-                <Link className="homeCard" key={item.href} to={item.href}>
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
       </main>
     </Layout>
   )

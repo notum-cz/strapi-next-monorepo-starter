@@ -13,6 +13,8 @@ import StrapiNavbar from "@/components/page-builder/single-types/navbar/StrapiNa
 import { ClientProviders } from "@/components/providers/ClientProviders"
 import { ServerProviders } from "@/components/providers/ServerProviders"
 import TrackingScripts from "@/components/providers/TrackingScripts"
+import { DemoBanner } from "@/components/ui/DemoBanner"
+import { GuidedTour } from "@/components/ui/GuidedTour"
 import { Toaster } from "@/components/ui/sonner"
 import { debugStaticParams } from "@/lib/build"
 import { fontRoboto } from "@/lib/fonts"
@@ -101,7 +103,9 @@ export default async function RootLayout({
         <ServerProviders>
           <StrapiPreviewListener />
           <ClientProviders>
+            <GuidedTour />
             <div className="relative flex min-h-screen flex-col">
+              <DemoBanner />
               <ErrorBoundary showErrorMessage>
                 <StrapiNavbar locale={locale} />
               </ErrorBoundary>
