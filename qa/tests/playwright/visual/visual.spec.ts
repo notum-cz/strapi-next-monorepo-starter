@@ -3,7 +3,7 @@ import fs from "node:fs"
 
 import { expect, test } from "@playwright/test"
 
-import urls from "../helpers/urls-all-components-page.json"
+import urls from "../helpers/urls.json"
 
 const COMPARE_TIMEOUT = 20000
 

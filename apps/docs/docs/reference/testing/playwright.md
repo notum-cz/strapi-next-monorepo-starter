@@ -6,13 +6,14 @@ sidebar_position: 3
 
 The Playwright QA suite validates the deployed or local UI through a browser. It covers end-to-end behavior, accessibility, SEO, visual output, and performance.
 
-| Area          | Tooling                | Location                     |
-| ------------- | ---------------------- | ---------------------------- |
-| Browser QA    | Playwright             | `qa/tests/playwright/e2e`    |
-| Accessibility | Playwright + axe-core  | `qa/tests/playwright/axe`    |
-| SEO           | Playwright             | `qa/tests/playwright/seo`    |
-| Visual        | Playwright screenshots | `qa/tests/playwright/visual` |
-| Performance   | Lighthouse CI          | `qa/tests/playwright/perfo`  |
+| Area               | Tooling                | Location                        |
+| ------------------ | ---------------------- | ------------------------------- |
+| Browser QA — smoke | Playwright             | `qa/tests/playwright/e2e/smoke` |
+| Browser QA — mock  | Playwright             | `qa/tests/playwright/e2e/mock`  |
+| Accessibility      | Playwright + axe-core  | `qa/tests/playwright/axe`       |
+| SEO                | Playwright             | `qa/tests/playwright/seo`       |
+| Visual             | Playwright screenshots | `qa/tests/playwright/visual`    |
+| Performance        | Lighthouse CI          | `qa/tests/playwright/perfo`     |
 
 ## Workspace
 
@@ -20,17 +21,28 @@ The QA workspace is a dedicated pnpm package at `qa/tests/playwright`.
 
 ```text
 qa/tests/playwright/
-├── e2e/                    # end-to-end flows
+├── e2e/
+│   ├── smoke/              # critical-path flows against the real app/backend
+│   └── mock/                # same flows, with the network layer stubbed (see below)
 ├── axe/                    # accessibility checks
 ├── seo/                    # SEO checks
 ├── visual/                 # visual regression checks
 ├── perfo/                  # Lighthouse CI performance checks
-├── helpers/                # shared test utilities
+├── helpers/                # shared test utilities (page objects, fixtures)
 ├── .env.example            # example environment variables
 ├── package.json            # QA package scripts and dependencies
 ├── playwright.config.ts    # Playwright configuration
 └── tsconfig.json           # TypeScript configuration
 ```
+
+### End-to-end: smoke vs mock
+
+`e2e/` specs are split into two kinds, sharing the same page objects from `helpers/pages/`:
+
+- **`e2e/smoke/`** — drives a real browser against the real running app and its real backend. Kept small and critical-path: does the page load, does the core flow complete.
+- **`e2e/mock/`** — drives the browser the same way, but stubs network responses with [Playwright's route mocking](https://playwright.dev/docs/mock) instead of hitting a real backend. Used for backend states that are hard or slow to reproduce for real (a specific error response, a dropped connection), via the shared fixture in `helpers/fixtures.ts` (built on [Playwright's test-fixtures pattern](https://playwright.dev/docs/test-fixtures)).
+
+Run them separately with `pnpm tests:playwright:e2e:smoke` / `pnpm tests:playwright:e2e:mock`, or together with `pnpm tests:playwright:e2e:test`.
 
 ## Environment
 
@@ -65,7 +77,9 @@ pnpm -F @repo/tests-playwright exec playwright install --with-deps
 Run all commands from the monorepo root:
 
 ```bash
-pnpm tests:playwright:e2e:test              # Playwright E2E, headless
+pnpm tests:playwright:e2e:test              # Playwright E2E, headless (smoke + mock)
+pnpm tests:playwright:e2e:smoke             # Playwright E2E, smoke only
+pnpm tests:playwright:e2e:mock              # Playwright E2E, mock only
 pnpm tests:playwright:e2e:test:interactive  # Playwright E2E, UI mode
 pnpm tests:playwright:axe                   # Accessibility checks
 pnpm tests:playwright:seo                   # SEO checks

@@ -134,6 +134,14 @@
       "cache": false,
       "persistent": false
     },
+    "playwright-e2e-smoke-tests": {
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-e2e-mock-tests": {
+      "cache": false,
+      "persistent": false
+    },
     "playwright-seo-tests": {
       "cache": false,
       "persistent": false

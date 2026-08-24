@@ -1,0 +1,37 @@
+parameters:
+  - name: pnpmVersion
+    type: string
+    default: "11.8.0"
+  - name: noFrozenLockfile
+    type: boolean
+    default: false
+
+steps:
+  - bash: echo "##vso[task.setvariable variable=NODE_VERSION]$(cat .nvmrc)"
+    displayName: Read Node version from .nvmrc
+
+  - task: UseNode@1
+    inputs:
+      version: "$(NODE_VERSION)"
+    displayName: Setup Node.js
+
+  - script: corepack enable && corepack prepare pnpm@${{ parameters.pnpmVersion }} --activate
+    displayName: Setup pnpm
+
+  - script: echo "##vso[task.setvariable variable=PNPM_STORE_PATH]$(pnpm store path --silent)"
+    displayName: Resolve pnpm store path
+
+  - task: Cache@2
+    inputs:
+      key: 'pnpm | "$(Agent.OS)" | pnpm-lock.yaml'
+      restoreKeys: |
+        pnpm | "$(Agent.OS)"
+      path: $(PNPM_STORE_PATH)
+    displayName: Cache pnpm store
+
+  - ${{ if eq(parameters.noFrozenLockfile, true) }}:
+      - script: pnpm install --no-frozen-lockfile
+        displayName: Install dependencies
+  - ${{ else }}:
+      - script: pnpm install --frozen-lockfile --prefer-offline
+        displayName: Install dependencies
