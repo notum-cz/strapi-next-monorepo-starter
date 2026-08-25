@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-slug: /reference/testing
+slug: /reference/QA
 ---
 
 # Testing

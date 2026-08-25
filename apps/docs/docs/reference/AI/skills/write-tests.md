@@ -20,4 +20,4 @@ Add or extend tests for a feature or a bug, following the project's existing tes
 
 It uses the test tools already in the project.
 
-See also: [Testing](../../testing/overview.md).
+See also: [Testing](../../QA/overview.md).

@@ -56,7 +56,7 @@ Use these pages for common coding-agent tasks:
 - [Strapi Schemas](apps/docs/docs/strapi/strapi-schemas.md) — Content types, components, relations, localization, and document middlewares
 - [Strapi Types](apps/docs/docs/reference/packages/strapi-types.md) — Generated type utilities and usage patterns
 - [Design System](apps/docs/docs/design-system/overview.md) — Tokens, typography, rich text styles, and CMS component design guidance
-- [Testing](apps/docs/docs/reference/testing/overview.md) — Unit, Playwright, accessibility, visual, SEO, and Lighthouse coverage
+- [Testing](apps/docs/docs/reference/QA/overview.md) — Unit, Playwright, accessibility, visual, SEO, and Lighthouse coverage
 - [Deployment](apps/docs/docs/reference/deployment/overview.md) — GitHub Actions, Heroku, Vercel, and Docker notes
 - [AI Skills](apps/docs/docs/reference/AI/skills/overview.md) — Agent skills catalog, per-skill What/How/When, and [workflow diagrams](apps/docs/docs/reference/AI/skills/overview.md#workflows)
 

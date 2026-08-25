@@ -13,7 +13,7 @@ argument-hint: "[file-or-feature-to-cover]"
 
 Add or extend tests using the starter's existing conventions. Do not introduce new test frameworks. Do not invent new helpers when an existing one fits.
 
-Reference: `apps/docs/docs/reference/testing/overview.md` (layers), `unit-testing.md` (Vitest), `playwright.md` (browser QA).
+Reference: `apps/docs/docs/reference/QA/overview.md` (layers), `unit-testing.md` (Vitest), `playwright.md` (browser QA).
 
 ## Decide the test layer first
 
@@ -239,7 +239,7 @@ Command: <exact command to re-run>
 
 - Do not add new dev dependencies for testing without explicit user request.
 - Do not introduce Jest, Mocha, Cypress, or other competing frameworks. POM is the one exception to "match what's already there" — it's the required pattern for new e2e page-interaction specs even though the existing `test_example.spec.ts` predates it (and the smoke/mock split).
-- No Cucumber/Gherkin runner is wired in either — `qa/docs/test-cases/` (see `write-test-cases`) is documentation, not executable. Don't add a step-definition framework to make it runnable.
+- No Cucumber/Gherkin runner is wired in either — `apps/docs/docs/reference/QA/test-cases/` (see `write-test-cases`) is documentation, not executable. Don't add a step-definition framework to make it runnable.
 - Coverage reports configured in `vitest.config.ts` — don't reconfigure per-test.
 - Strapi tests run in a `node` environment without booting Strapi — keep them fast and focused; isolate logic so it's testable without a running instance.
 - Playwright `MOBILE_VIEWPORTS_TESTING_ENABLED=true` env var opts in mobile projects (see `playwright.config.ts`).

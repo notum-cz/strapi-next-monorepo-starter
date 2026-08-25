@@ -92,7 +92,7 @@ pnpm tests:playwright:visual:update         # Update visual regression snapshots
 pnpm tests:lhci:perfo                       # Lighthouse CI
 ```
 
-See [Playwright Testing](./testing/playwright.md) for browser setup and visual snapshot workflow.
+See [Playwright Testing](./QA/playwright.md) for browser setup and visual snapshot workflow.
 
 ## Worktrees
 

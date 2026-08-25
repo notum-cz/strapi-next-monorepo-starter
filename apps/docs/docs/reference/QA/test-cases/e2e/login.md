@@ -1,9 +1,12 @@
-Feature: Login
+# Login
 
-  Users sign in with their email and password on the sign-in page
-  (`/auth/signin`) to access their account. A successful sign-in returns
-  them to whatever page they were trying to reach before signing in; a
-  failed one keeps them on the sign-in page with an error message.
+Users sign in with their email and password on the sign-in page
+(`/auth/signin`) to access their account. A successful sign-in returns
+them to whatever page they were trying to reach before signing in; a
+failed one keeps them on the sign-in page with an error message.
+
+```gherkin
+Feature: Login
 
   Background:
     Given the user is on the sign-in page
@@ -63,3 +66,4 @@ Feature: Login
     When the user clicks a social sign-in provider's button
     And completes sign-in on that provider's site
     Then the user is redirected to the page they were trying to reach before signing in
+```
