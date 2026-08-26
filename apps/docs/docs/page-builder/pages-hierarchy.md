@@ -28,7 +28,7 @@ The `fullPath` is generated from the `slug` and the `parent` relation field.
 
 Because the `fullPath` is generated automatically, it should never be edited manually. If you need to change the `fullPath`, change the `slug` or the `parent` relation field instead. Change in `fullPath` means, that the page has different URL address and old URL should redirect to the new URL. This is done automatically by creating redirect (`api::redirect.redirect`) records. These two operations are always tied together and run as one action.
 
-These auto-created entries are ordinary records in the **Redirect** collection. See [CMS Redirects](../strapi/cms-redirects) for how redirects are stored and served on the frontend, and how to author one manually.
+These auto-created entries are ordinary records in the **Redirect** collection. See [CMS Redirects](../strapi/cms-redirects.md) for how redirects are stored and served on the frontend, and how to author one manually.
 
 ### How it works
 
@@ -87,7 +87,7 @@ Do one change at a time (e.g. change slug of one page, recalculate, verify resul
 
 - Pending changes are computed live from the current state — there is no job queue. If you revert a slug change before recalculating (`a` → `b` → `a`), the pending change simply disappears and no redirect is created. Multiple renames before recalculating (`a` → `b` → `c`) collapse into a single change and a single redirect (`a` → `c`).
 
-- Renaming a page across several recalculations never leaves a multi-hop redirect chain or a redirect loop behind — the redirect set is compacted automatically so every old URL reaches the current path in a single hop. See [CMS Redirects → Compaction](../strapi/cms-redirects#compaction-no-chains-no-loops) for the details and examples.
+- Renaming a page across several recalculations never leaves a multi-hop redirect chain or a redirect loop behind — the redirect set is compacted automatically so every old URL reaches the current path in a single hop. See [CMS Redirects → Compaction](../strapi/cms-redirects.md#compaction-no-chains-no-loops) for the details and examples.
 
 - Strapi handles every locale separately - page in `en` locale can have different `slug` or even different `parent` relation. That means that changing the `slug` in one locale produces pending changes only for that locale. If you want to change the `slug` in multiple locales, you must manually do same change for every required locale (it isn't a bug).
   - Based on this, the redirects are also created separately for each touched locale and the locale is embedded into `source` and `destination` URLs.
@@ -101,4 +101,4 @@ Do one change at a time (e.g. change slug of one page, recalculate, verify resul
 ## Related Documentation
 
 - [Page Builder](./introduction.md) — Page Builder specific documentation
-- [CMS Redirects](../strapi/cms-redirects) — how the redirects created here are stored and served on the frontend
+- [CMS Redirects](../strapi/cms-redirects.md) — how the redirects created here are stored and served on the frontend
