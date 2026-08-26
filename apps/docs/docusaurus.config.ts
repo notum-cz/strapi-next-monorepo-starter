@@ -57,6 +57,8 @@ const config: Config = {
   ],
 
   themeConfig: {
+    image: "img/page-builder-flow.webp",
+    metadata: [{ property: "og:type", content: "website" }],
     navbar: {
       title: "Strapi Next Starter",
       items: [

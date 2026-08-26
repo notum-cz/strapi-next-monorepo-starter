@@ -47,7 +47,7 @@ export default function Home(): JSX.Element {
   return (
     <Layout
       title="Strapi Next Monorepo Starter"
-      description="Enterprise-ready Strapi v5 and Next.js starter template"
+      description="Enterprise-ready Strapi v5 and Next.js starter template with a visual page builder, Better Auth, structured logging, and Playwright test coverage."
     >
       <main className="home">
         <section className="homeHero">
