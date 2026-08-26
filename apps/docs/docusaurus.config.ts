@@ -30,7 +30,8 @@ const config: Config = {
   tagline: "Enterprise-grade Strapi v5 + Next.js starter template",
   url,
   baseUrl,
-  onBrokenLinks: "warn",
+  trailingSlash: true,
+  onBrokenLinks: "throw",
   favicon: "img/favicon.svg",
 
   i18n: {

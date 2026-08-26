@@ -42,7 +42,7 @@ const valueItems = [
 ]
 
 export default function Home(): JSX.Element {
-  const pageBuilderImage = useBaseUrl("/img/page-builder-flow.png")
+  const pageBuilderImage = useBaseUrl("/img/page-builder-flow.webp")
 
   return (
     <Layout
@@ -72,6 +72,7 @@ export default function Home(): JSX.Element {
               <img
                 src={pageBuilderImage}
                 alt="Page builder flow from Strapi dynamic zone data through component UID mapping to rendered UI components"
+                fetchPriority="high"
               />
             </div>
           </div>

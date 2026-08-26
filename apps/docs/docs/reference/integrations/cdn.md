@@ -8,14 +8,14 @@ When a CDN sits in front of the Next.js app, two things are in play. The CDN reu
 
 ## Cache Headers
 
-A CDN in front of the Next.js app does not need its own cache policy: it reuses each response for as long as the HTTP cache headers Next.js emits allow. Those headers are derived from the page route's `revalidate` (ISR) interval, so the CDN inherits the same freshness window the UI already defines. See [Caching → Full Route Cache and ISR](../../ui/caching#full-route-cache-and-isr) for how the UI sets `revalidate` and the headers it produces.
+A CDN in front of the Next.js app does not need its own cache policy: it reuses each response for as long as the HTTP cache headers Next.js emits allow. Those headers are derived from the page route's `revalidate` (ISR) interval, so the CDN inherits the same freshness window the UI already defines. See [Caching → Full Route Cache and ISR](../../ui/caching.md#full-route-cache-and-isr) for how the UI sets `revalidate` and the headers it produces.
 
-Because the CDN follows those headers, routine content updates do not require a purge — the header-driven TTL and the [Cache Revalidation](../cache-revalidation) pipeline already refresh content.
+Because the CDN follows those headers, routine content updates do not require a purge — the header-driven TTL and the [Cache Revalidation](../cache-revalidation.md) pipeline already refresh content.
 
 ## CDN Purge Flow
 
 :::info Optional, opt-in
-Cache revalidation works without this — see [Cache Revalidation](../cache-revalidation). Purge exists only for incident-time eviction: forcing entries out of the CDN faster than their headers would expire on their own.
+Cache revalidation works without this — see [Cache Revalidation](../cache-revalidation.md). Purge exists only for incident-time eviction: forcing entries out of the CDN faster than their headers would expire on their own.
 :::
 
 CDN cache purging uses a pluggable provider model. The integration is **inert until configured**: `resolveCdnProvider()` (`apps/ui/src/lib/cdn/index.ts`) returns `null` when no provider's environment variables are set, and the **CDN cache** widget on the Strapi homepage reports that no provider is configured.

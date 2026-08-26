@@ -4,7 +4,7 @@ sidebar_position: 5
 
 # CMS Redirects
 
-Editors manage URL redirects as content, without code or a redeploy. Redirects live in the **Redirect** collection (`api::redirect.redirect`) and are applied on the frontend by the Next.js [redirects proxy](../ui/next-proxies#redirects).
+Editors manage URL redirects as content, without code or a redeploy. Redirects live in the **Redirect** collection (`api::redirect.redirect`) and are applied on the frontend by the Next.js [redirects proxy](../ui/next-proxies.md#redirects).
 
 ## The Redirect collection
 
@@ -22,12 +22,12 @@ Both `source` and `destination` carry a locale prefix, so each language variant 
 :::
 
 :::info Always temporary (307)
-There is no permanent/301 option by design. The frontend always issues a `307` temporary redirect so an editor can later fix or remove an entry without clients staying pinned to a stale destination. See [Redirects → Temporary by design](../ui/next-proxies#redirects) for the full reasoning.
+There is no permanent/301 option by design. The frontend always issues a `307` temporary redirect so an editor can later fix or remove an entry without clients staying pinned to a stale destination. See [Redirects → Temporary by design](../ui/next-proxies.md#redirects) for the full reasoning.
 :::
 
 ## How they are applied
 
-The Next.js [redirects proxy](../ui/next-proxies#redirects) matches each incoming request against the published redirect list and issues the redirect before the page renders. Key behaviors handled there:
+The Next.js [redirects proxy](../ui/next-proxies.md#redirects) matches each incoming request against the published redirect list and issues the redirect before the page renders. Key behaviors handled there:
 
 - Same-origin destinations only; the visitor's query string is preserved.
 - Default-locale URLs match with or without the locale prefix.
@@ -44,7 +44,7 @@ To add a redirect by hand:
 
 ## Automatically created redirects
 
-When a page's `slug` or `parent` changes, its `fullPath` (and its children's) changes too, so the old URLs must redirect to the new ones. The page hierarchy flow creates these `api::redirect.redirect` entries for you, locale-aware, via the **Update hierarchy** action in the Hierarchy single type. See [Pages Hierarchy](../page-builder/pages-hierarchy#full-path-generation-and-redirects) for the slug/parent change workflow and how to trigger it.
+When a page's `slug` or `parent` changes, its `fullPath` (and its children's) changes too, so the old URLs must redirect to the new ones. The page hierarchy flow creates these `api::redirect.redirect` entries for you, locale-aware, via the **Update hierarchy** action in the Hierarchy single type. See [Pages Hierarchy](../page-builder/pages-hierarchy.md#full-path-generation-and-redirects) for the slug/parent change workflow and how to trigger it.
 
 ### Compaction: no chains, no loops
 
@@ -80,4 +80,4 @@ Each recalculation reads the currently published redirects and rewrites them as 
 
 ## Cache revalidation
 
-Publishing a redirect path-revalidates its `source` in the Next.js cache, so a page previously cached at that URL is invalidated and the redirect can take over. See [Cache Revalidation](../reference/cache-revalidation) for the full Strapi → UI invalidation flow.
+Publishing a redirect path-revalidates its `source` in the Next.js cache, so a page previously cached at that URL is invalidated and the redirect can take over. See [Cache Revalidation](../reference/cache-revalidation.md) for the full Strapi → UI invalidation flow.
