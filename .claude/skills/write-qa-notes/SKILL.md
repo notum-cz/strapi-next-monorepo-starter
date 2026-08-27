@@ -12,29 +12,36 @@ argument-hint: "[topic]"
 
 # Write QA Notes
 
-Capture QA tribal knowledge as a short Markdown page under `apps/docs/docs/reference/QA/common-knowledge/`, so Docusaurus builds it into the docs site alongside the test cases. This is for things worth not forgetting — an environment quirk, a known flaky check, a workaround, a "why does this look broken but isn't" — not test cases (`write-test-cases`) and not automated test code (`write-tests`).
+Capture QA tribal knowledge as an entry on the single `apps/docs/docs/reference/QA/common-knowledge/index.md` page, so Docusaurus builds it into the docs site alongside the test cases. This is for things worth not forgetting — an environment quirk, a known flaky check, a workaround, a "why does this look broken but isn't" — not test cases (`write-test-cases`) and not automated test code (`write-tests`).
 
-## Where files live
+## Where notes live
 
-One file per topic: `apps/docs/docs/reference/QA/common-knowledge/<topic>.md`, kebab-case (e.g. `staging-cdn-cache-delay.md`). Don't lump unrelated notes into one growing file — a reader looking for "why is staging slow" shouldn't have to scroll past unrelated notes to find it.
+One page, not one file per topic: every note is a `<details>`/`<summary>` accordion entry appended to `apps/docs/docs/reference/QA/common-knowledge/index.md` — the same collapsible-FAQ pattern as [How to...](../../how-to/index.md). Don't create a new `.md` file per topic; add a new `<details>` block to the existing page instead.
 
-If this is the first file in the folder, `_category_.json` already exists (copied from the pattern in `test-cases/`) — nothing else to set up.
+The `_category_.json` in that folder already links the sidebar entry straight to `index.md` (`"link": {"type": "doc", "id": "reference/QA/common-knowledge/index"}`) — nothing else to set up, even for the first note.
 
 ## Writing a note
 
-Keep it short — this is a note, not a report:
+Keep it short — this is a note, not a report. Favor bullets over prose paragraphs; a QA engineer skimming for an answer shouldn't have to parse a paragraph to find it:
 
 ```markdown
-# <Short, searchable title>
+<details>
+<summary><Short, specific gotcha — phrased as what someone would search for></summary>
 
-<1-3 sentences: what to know, and why it matters. If there's a fix or
-workaround, say what it is. If it's a known limitation, say what to
-expect instead of the "correct" behavior.>
+- **Symptom:** what you see that looks wrong.
+- **Not a bug / cause:** why it happens (or that it's expected).
+- **What to do:** the fix or workaround, or what to check instead.
+- **Related:** link to a test case (`../test-cases/...`) or code path (`file.ts:42`) when there is one.
+
+</details>
 ```
 
-- Title the file after what someone would search for, not after when it was written.
-- State the fact plainly before any backstory — a reader wants the answer first.
-- Link to a related test case (`test-cases/...`) or code path (`file.ts:42`-style) when there is one — a note that only makes sense in isolation is easy to misapply later.
-- If a note stops being true (fixed, no longer applicable), delete it or say so at the top — don't leave stale tribal knowledge for the next person to trust.
+Not every note needs all four bullets — skip ones that don't apply (e.g. a pure environment fact has no "symptom"). The point is scannable bullets, not this exact label set.
 
-No tags, no required structure beyond the title — unlike `write-test-cases`, these aren't meant to be machine-parsed or automated later.
+- Title the `<summary>` after what someone would search for, not after when it was written.
+- State the fact plainly before any backstory — a reader wants the answer first.
+- Link to a related test case or code path when there is one — a note that only makes sense in isolation is easy to misapply later.
+- If a note stops being true (fixed, no longer applicable), delete its `<details>` block or say so at the top of it — don't leave stale tribal knowledge for the next person to trust.
+- New entries can go anywhere on the page; there's no required ordering.
+
+No tags, no required structure beyond the accordion and its bullets — unlike `write-test-cases`, these aren't meant to be machine-parsed or automated later.

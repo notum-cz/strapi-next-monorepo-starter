@@ -4,8 +4,7 @@
   "collapsible": true,
   "collapsed": true,
   "link": {
-    "type": "generated-index",
-    "title": "Common Knowledge",
-    "description": "QA tribal knowledge — gotchas, environment quirks, and things worth writing down so they aren't forgotten."
+    "type": "doc",
+    "id": "reference/QA/common-knowledge/index"
   }
 }

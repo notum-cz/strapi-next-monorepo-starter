@@ -2,6 +2,9 @@ import { themes as prismThemes } from "prism-react-renderer"
 import type { Config } from "@docusaurus/types"
 import type * as Preset from "@docusaurus/preset-classic"
 
+import remarkGherkinChecklist from "./src/remark/gherkin-checklist"
+import testPlanManifestPlugin from "./src/plugins/testPlanManifest"
+
 const url = process.env.DOCUSAURUS_URL ?? "https://notum-cz.github.io"
 const baseUrl = process.env.DOCUSAURUS_BASE_URL ?? "/strapi-next-monorepo-starter/"
 
@@ -23,6 +26,7 @@ const config: Config = {
         docsRouteBasePath: "/",
       },
     ],
+    testPlanManifestPlugin,
   ],
   organizationName: "notum-cz",
   projectName: "strapi-next-monorepo-starter",
@@ -46,6 +50,7 @@ const config: Config = {
           sidebarPath: "./sidebars.ts",
           editUrl:
             "https://github.com/notum-cz/strapi-next-monorepo-starter/edit/main/apps/docs/",
+          remarkPlugins: [remarkGherkinChecklist],
         },
         blog: false,
         theme: {

@@ -21,26 +21,33 @@ No Cucumber runner is wired into this repo, and this skill doesn't add one — t
 
 ## Where files live
 
-Mirror the automated test layers in `qa/tests/playwright/`, so a doc and its eventual automated spec are easy to pair up:
+Feature pages live flat, directly under `apps/docs/docs/reference/QA/test-cases/<feature>.md` — no required subfolder per layer or plan. Name the file after the feature or flow it covers, kebab-case (e.g. `homepage.md`). Reuse the same base name as the matching automated spec when one exists or is planned (`homepage.spec.ts` ↔ `homepage.md`).
 
-| Layer                        | Automated tests                  | Test case docs                                               |
-| ---------------------------- | -------------------------------- | ------------------------------------------------------------ |
-| E2E — smoke (real backend)   | `qa/tests/playwright/e2e/smoke/` | `apps/docs/docs/reference/QA/test-cases/e2e/<feature>.md`    |
-| E2E — mock (stubbed backend) | `qa/tests/playwright/e2e/mock/`  | `apps/docs/docs/reference/QA/test-cases/e2e/<feature>.md`    |
-| Accessibility                | `qa/tests/playwright/axe/`       | `apps/docs/docs/reference/QA/test-cases/axe/<feature>.md`    |
-| SEO                          | `qa/tests/playwright/seo/`       | `apps/docs/docs/reference/QA/test-cases/seo/<feature>.md`    |
-| Visual                       | `qa/tests/playwright/visual/`    | `apps/docs/docs/reference/QA/test-cases/visual/<feature>.md` |
-| Performance                  | `qa/tests/playwright/perfo/`     | `apps/docs/docs/reference/QA/test-cases/perfo/<feature>.md`  |
+Scenarios that will run against a real backend and ones that need a stubbed backend for the same feature share one page — the `@smoke`/`@regression`/`@mock` tags (below) say what each scenario is, not the file location.
 
-Name the file after the feature or flow it covers, kebab-case (e.g. `homepage.md`). Reuse the same base name as the matching automated spec when one exists or is planned (`homepage.spec.ts` ↔ `homepage.md`).
+Every manual scenario on every page is automatically covered by the site-wide export on `test-cases/index.md` (see "Interactive checklist" below) — adding a new feature page needs nothing else to show up there.
 
-E2E smoke and mock scenarios for the same feature share one page — the `@smoke`/`@mock` tag (below) says which one a scenario is or will become, not the file location.
+### Test Plans (optional)
 
-**First doc in a new layer folder** (`axe/`, `seo/`, `visual/`, `perfo/` — `e2e/` already has one): also add a `_category_.json` next to it, copied from `test-cases/e2e/_category_.json` with `label` changed to match (e.g. `"Accessibility"`, `"SEO"`, `"Visual"`, `"Performance"`) and `position` set to the next free number after the existing layer folders. Without it, Docusaurus still renders the page, just with a less readable auto-generated folder label.
+A Test Plan is a page that curates a named subset of existing feature pages for a specific purpose (a release regression pass, an accessibility sweep) — it doesn't own or contain those pages, it just references them by id, so the same page can belong to more than one plan. Nothing requires creating one; only add a plan when a QA engineer actually wants a narrower, named view than "everything."
+
+To create one, add a single Markdown page anywhere under `test-cases/` (a flat file is enough — no `_category_.json` or folder needed):
+
+```markdown
+# <Plan Name> Test Plan
+
+<What this plan covers and when a QA engineer runs it.>
+
+<TestPlanExport planId="<plan-id>" planName="<Plan Name> Test Plan" pages={["<pageId>", "<pageId>"]} />
+```
+
+A `pageId` is the target page's path relative to `test-cases/`, without the `.md` extension — `login.md` at the top level is `"login"`; a page nested one level down would be `"subfolder/feature"`. `<TestPlanExport>` is a global component (no import needed, see `apps/docs/src/theme/MDXComponents.tsx`).
+
+**Routing constraint:** don't add custom `slug` frontmatter to a test-case page. The `test-plan-manifest` build plugin (`apps/docs/src/plugins/testPlanManifest.ts`) computes each page's route — and its `pageId` — from its file path to match it up with the browser's `localStorage` results and with `pages` lists in Test Plans. A custom slug would desync all three and silently drop the page from exports.
 
 ## Phase 1 — Locate convention
 
-If `apps/docs/docs/reference/QA/test-cases/<layer>/` already has pages, read one before writing a new one — match its tagging, phrasing, and level of detail. If the folder is empty, follow the template below.
+If `test-cases/` already has pages, read one before writing a new one — match its tagging, phrasing, and level of detail. If the folder is empty, follow the template below.
 
 ## Phase 2 — Write the page
 
@@ -79,6 +86,12 @@ Feature: <business-readable name>
 ````
 
 The `# <name>` heading is the Docusaurus page title (and sidebar label) — don't skip it even though `Feature: <name>` right below repeats it; they serve different renderers. Everything outside the fence is prose for the docs site; everything inside stays valid, copy-pasteable Gherkin.
+
+### Interactive checklist (automatic, don't add it yourself)
+
+Every ` ```gherkin ` block on the rendered docs site automatically gets a Pass/Fail checklist injected right below it — one row per `@manual`-tagged `Scenario`/`Scenario Outline`, labeled with its title and tags. `@automated` scenarios are deliberately left out of this checklist — they're already covered by the Playwright/Vitest spec that runs them, so there's nothing for a human to click through. This is build-time tooling (a remark plugin + `GherkinChecklist` component, see `apps/docs/src/remark/gherkin-checklist.ts`), not something you write into the page. Just author the fenced block as shown above and the checklist appears for free.
+
+Results (pass/fail per scenario) are saved to the viewing QA engineer's browser `localStorage` only — per-device, not shared across the team and not git-versioned. There's no export button on the checklist itself — `test-cases/index.md` renders `<TestPlanExport planId="all" planName="All Test Cases" />` (no `pages` prop, so it covers every page) once for the whole section, with the same component narrower Test Plans use. Nothing to do differently in the Markdown either way.
 
 ### Tags
 

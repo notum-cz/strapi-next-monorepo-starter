@@ -1,3 +1,4 @@
+import type { ReactNode } from "react"
 import Link from "@docusaurus/Link"
 import useBaseUrl from "@docusaurus/useBaseUrl"
 import Layout from "@theme/Layout"
@@ -41,7 +42,7 @@ const valueItems = [
   },
 ]
 
-export default function Home(): JSX.Element {
+export default function Home(): ReactNode {
   const pageBuilderImage = useBaseUrl("/img/page-builder-flow.png")
 
   return (

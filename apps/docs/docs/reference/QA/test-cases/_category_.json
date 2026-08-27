@@ -4,8 +4,7 @@
   "collapsible": true,
   "collapsed": true,
   "link": {
-    "type": "generated-index",
-    "title": "Test Cases",
-    "description": "Gherkin-style test case documentation, one page per feature or flow, mirroring the automated Playwright suites."
+    "type": "doc",
+    "id": "reference/QA/test-cases/index"
   }
 }

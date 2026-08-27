@@ -21,6 +21,8 @@ Testing is split between fast app-level Vitest suites and browser-based QA check
 
 - [Unit Testing](./unit-testing.md) — Vitest tests for Strapi and UI code.
 - [Playwright Testing](./playwright.md) — browser QA, accessibility, SEO, visual regression, and Lighthouse CI.
+- [Test Cases](./test-cases/index.md) — Gherkin-style test case docs with a live Pass/Fail checklist and one-click results export.
+- [Common Knowledge](./common-knowledge/index.md) — QA tribal knowledge: environment quirks, known issues, and workarounds worth not forgetting.
 
 ## What To Test Where
 
