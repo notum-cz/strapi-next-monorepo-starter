@@ -12,7 +12,7 @@ export function tipTapEditorConfig() {
           bold: true,
           italic: true,
           strike: true,
-          mediaLibrary: true,
+          mediaLibrary: { resize: { enabled: true } },
           textColor: true,
           highlightColor: true,
           underline: true,

@@ -46,13 +46,22 @@
           "searchable": false,
           "sortable": false
         }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
       }
     },
     "layouts": {
       "list": [
         "id",
         "title",
-        "socials"
+        "socials",
+        "documentId"
       ],
       "edit": [
         [

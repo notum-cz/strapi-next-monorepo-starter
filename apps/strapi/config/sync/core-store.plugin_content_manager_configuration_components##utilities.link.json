@@ -96,8 +96,7 @@
           "description": "",
           "placeholder": "",
           "visible": true,
-          "editable": true,
-          "mainField": "documentId"
+          "editable": true
         },
         "list": {
           "label": "decorations",
@@ -115,6 +114,12 @@
       }
     },
     "layouts": {
+      "list": [
+        "id",
+        "label",
+        "href",
+        "newTab"
+      ],
       "edit": [
         [
           {
@@ -148,12 +153,6 @@
             "size": 12
           }
         ]
-      ],
-      "list": [
-        "id",
-        "label",
-        "href",
-        "newTab"
       ]
     },
     "uid": "utilities.link",

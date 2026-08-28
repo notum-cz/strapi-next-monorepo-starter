@@ -29,6 +29,46 @@ Presets are configured in `apps/strapi/config/plugins/tiptap.ts`.
 
 Assign a preset per field via `options.preset` in the component schema.
 
+## Images
+
+Images come from the Strapi Media Library and are enabled per preset via `mediaLibrary`. Only the `everything` preset enables it; `minimal`, `baseText`, and `headings` have no image support.
+
+Resizing is off by default. Enable it in `apps/strapi/config/plugins/tiptap.ts`:
+
+```ts
+mediaLibrary: { resize: { enabled: true } },
+```
+
+This adds a drag handle on the image plus width/height inputs and a reset button in the image popover.
+
+| Option                             | Default | Description                            |
+| ---------------------------------- | ------- | -------------------------------------- |
+| `resize.enabled`                   | `false` | Enables resizing or editing dimensions |
+| `resize.minWidth`                  | `50`    | Minimum allowed width in pixels        |
+| `resize.minHeight`                 | `50`    | Minimum allowed height in pixels       |
+| `resize.alwaysPreserveAspectRatio` | `true`  | Locks the aspect ratio while resizing  |
+
+### Persisted attributes
+
+The editor stores these attributes on the ProseMirror `image` node:
+
+| Attribute       | Description                                                      |
+| --------------- | ---------------------------------------------------------------- |
+| `src`           | Media Library URL, resolved through `formatStrapiMediaUrl` in UI |
+| `width`         | Pixel width set by resizing, `null` when untouched               |
+| `height`        | Pixel height set by resizing, `null` when untouched              |
+| `alt`           | Alt text, editable in the image popover                          |
+| `data-align`    | `left`, `center`, `right`, or `null`                             |
+| `data-asset-id` | Media Library asset ID                                           |
+
+`data-align` and `data-asset-id` are non-standard, and `@tiptap/static-renderer` drops attributes the extension does not declare. The UI therefore extends the image extension as `StrapiImage` in `apps/ui/src/components/elementary/tiptap-editor/extensions.tsx` to declare both.
+
+:::note
+The frontend deliberately does **not** pass `resize` to its image extension. In `@tiptap/extension-image`, `width` and `height` are declared unconditionally in `addAttributes()`, and `resize` only gates `addNodeView()` — which `@tiptap/static-renderer` never calls. Passing it would be dead config.
+:::
+
+Rendering lives in the `image` node mapping in `apps/ui/src/components/elementary/tiptap-editor/index.tsx`. It emits a full-width `<figure>` with `mx-auto`/`ml-auto` on the `<img>` handling alignment, and `h-auto max-w-full` so an image wider than the container scales down without distorting.
+
 ## Design Tokens
 
 Colors and theme CSS come from `@repo/design-system/tiptap-color-config.json` and `tiptap-theme.css`, so the editor palette stays in sync with the UI design system. See [`@repo/design-system`](../../reference/packages/design-system.md).

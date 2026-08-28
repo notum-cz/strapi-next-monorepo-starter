@@ -14,6 +14,14 @@ export default ({ env }) => {
         jwt: {
           expiresIn: "30d", // this value is synced with Better Auth session maxAge
         },
+        // Rate limiting for auth/registration endpoints (login, register,
+        // forgot/reset password) to mitigate brute-force and abuse.
+        // https://docs.strapi.io/cms/features/users-permissions#rate-limiting-configuration
+        ratelimit: {
+          enabled: true,
+          interval: 60000, // 1 minute window
+          max: 5, // max 5 requests per window, per user/path/IP
+        },
       },
     },
 

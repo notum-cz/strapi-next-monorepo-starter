@@ -275,7 +275,6 @@ export function TiptapRichText({
           }
 
           const alt = (node.attrs?.alt as string) ?? ""
-          const title = node.attrs?.title as string | undefined
           const width = node.attrs?.width as number | undefined
           const height = node.attrs?.height as number | undefined
 
@@ -286,17 +285,25 @@ export function TiptapRichText({
             | null
             | undefined
 
+          // The figure must stay full width: alignment comes from mx-auto/ml-auto
+          // on the img, which a w-fit figure would collapse and break. The
+          // text-* class covers the inline (unaligned) case.
           return (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              id={id}
-              src={src}
-              alt={alt}
-              title={title ?? undefined}
-              width={width ?? undefined}
-              height={height ?? undefined}
-              className={cn("max-w-full", imageAlignClassName(align))}
-            />
+            <figure id={id} className={textAlignClassName(align)}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={src}
+                alt={alt}
+                // width/height give the browser the intrinsic aspect ratio and
+                // prevent layout shift. h-auto is required next to max-w-full:
+                // without it an image wider than the container gets its width
+                // clamped while the height attribute stays at the editor's
+                // pixel value, rendering it distorted.
+                width={width ?? undefined}
+                height={height ?? undefined}
+                className={cn("h-auto max-w-full", imageAlignClassName(align))}
+              />
+            </figure>
           )
         },
         tableHeader: renderTableCell,

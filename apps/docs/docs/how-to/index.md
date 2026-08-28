@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: Short, practical answers for common Strapi and Next.js project setup, configuration, and maintenance tasks in this monorepo starter template.
 ---
 
 # How to...

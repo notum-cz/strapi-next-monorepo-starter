@@ -6,8 +6,8 @@
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "text",
-      "defaultSortBy": "text",
+      "mainField": "documentId",
+      "defaultSortBy": "documentId",
       "defaultSortOrder": "ASC"
     },
     "metadatas": {
@@ -17,20 +17,6 @@
           "label": "id",
           "searchable": false,
           "sortable": false
-        }
-      },
-      "text": {
-        "edit": {
-          "label": "text",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "text",
-          "searchable": true,
-          "sortable": true
         }
       },
       "logos": {
@@ -46,24 +32,46 @@
           "searchable": false,
           "sortable": false
         }
+      },
+      "title": {
+        "edit": {
+          "label": "title",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "title",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
       }
     },
     "layouts": {
       "list": [
         "id",
-        "text",
-        "logos"
+        "logos",
+        "documentId"
       ],
       "edit": [
         [
           {
-            "name": "text",
-            "size": 6
+            "name": "logos",
+            "size": 12
           }
         ],
         [
           {
-            "name": "logos",
+            "name": "title",
             "size": 12
           }
         ]

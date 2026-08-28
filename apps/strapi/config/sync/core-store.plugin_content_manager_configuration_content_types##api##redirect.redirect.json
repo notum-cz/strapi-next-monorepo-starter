@@ -47,21 +47,6 @@
           "sortable": true
         }
       },
-      "page": {
-        "edit": {
-          "label": "page",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true,
-          "mainField": "title"
-        },
-        "list": {
-          "label": "page",
-          "searchable": true,
-          "sortable": true
-        }
-      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -119,9 +104,23 @@
           "searchable": true,
           "sortable": true
         }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
       }
     },
     "layouts": {
+      "list": [
+        "id",
+        "source",
+        "destination",
+        "createdAt"
+      ],
       "edit": [
         [
           {
@@ -132,19 +131,7 @@
             "name": "destination",
             "size": 6
           }
-        ],
-        [
-          {
-            "name": "page",
-            "size": 6
-          }
         ]
-      ],
-      "list": [
-        "id",
-        "source",
-        "destination",
-        "createdAt"
       ]
     },
     "uid": "api::redirect.redirect"
