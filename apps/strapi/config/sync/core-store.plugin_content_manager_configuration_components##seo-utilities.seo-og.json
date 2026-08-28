@@ -88,6 +88,28 @@
           "searchable": false,
           "sortable": false
         }
+      },
+      "siteName": {
+        "edit": {
+          "label": "siteName",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "siteName",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
       }
     },
     "layouts": {
@@ -121,6 +143,10 @@
         [
           {
             "name": "image",
+            "size": 6
+          },
+          {
+            "name": "siteName",
             "size": 6
           }
         ]

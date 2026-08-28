@@ -125,26 +125,10 @@
           "description": "",
           "placeholder": "",
           "visible": true,
-          "editable": true,
-          "mainField": "metaTitle"
+          "editable": true
         },
         "list": {
           "label": "seo",
-          "searchable": false,
-          "sortable": false
-        }
-      },
-      "redirects": {
-        "edit": {
-          "label": "redirects",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true,
-          "mainField": "source"
-        },
-        "list": {
-          "label": "redirects",
           "searchable": false,
           "sortable": false
         }
@@ -206,9 +190,23 @@
           "searchable": true,
           "sortable": true
         }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
       }
     },
     "layouts": {
+      "list": [
+        "id",
+        "title",
+        "slug",
+        "fullPath"
+      ],
       "edit": [
         [
           {
@@ -253,19 +251,7 @@
             "name": "seo",
             "size": 12
           }
-        ],
-        [
-          {
-            "name": "redirects",
-            "size": 6
-          }
         ]
-      ],
-      "list": [
-        "id",
-        "title",
-        "slug",
-        "fullPath"
       ]
     },
     "uid": "api::page.page"

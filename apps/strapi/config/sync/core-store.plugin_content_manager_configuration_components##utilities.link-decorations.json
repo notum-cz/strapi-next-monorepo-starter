@@ -15,8 +15,8 @@
         "edit": {},
         "list": {
           "label": "id",
-          "searchable": true,
-          "sortable": true
+          "searchable": false,
+          "sortable": false
         }
       },
       "variant": {
@@ -67,8 +67,7 @@
           "description": "",
           "placeholder": "",
           "visible": true,
-          "editable": true,
-          "mainField": "alt"
+          "editable": true
         },
         "list": {
           "label": "leftIcon",
@@ -82,13 +81,26 @@
           "description": "",
           "placeholder": "",
           "visible": true,
-          "editable": true,
-          "mainField": "alt"
+          "editable": true
         },
         "list": {
           "label": "rightIcon",
           "searchable": false,
           "sortable": false
+        }
+      },
+      "disableAnimations": {
+        "edit": {
+          "label": "disableAnimations",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "disableAnimations",
+          "searchable": true,
+          "sortable": true
         }
       },
       "documentId": {
@@ -101,6 +113,12 @@
       }
     },
     "layouts": {
+      "list": [
+        "id",
+        "variant",
+        "size",
+        "hasIcons"
+      ],
       "edit": [
         [
           {
@@ -129,13 +147,13 @@
             "name": "rightIcon",
             "size": 12
           }
+        ],
+        [
+          {
+            "name": "disableAnimations",
+            "size": 4
+          }
         ]
-      ],
-      "list": [
-        "id",
-        "variant",
-        "size",
-        "hasIcons"
       ]
     },
     "uid": "utilities.link-decorations",

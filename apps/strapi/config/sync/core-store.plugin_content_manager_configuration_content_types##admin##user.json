@@ -146,6 +146,21 @@
           "sortable": false
         }
       },
+      "apiTokens": {
+        "edit": {
+          "label": "apiTokens",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "name"
+        },
+        "list": {
+          "label": "apiTokens",
+          "searchable": false,
+          "sortable": false
+        }
+      },
       "blocked": {
         "edit": {
           "label": "blocked",
@@ -231,6 +246,14 @@
           "searchable": true,
           "sortable": true
         }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
       }
     },
     "layouts": {
@@ -284,6 +307,10 @@
         [
           {
             "name": "preferedLanguage",
+            "size": 6
+          },
+          {
+            "name": "apiTokens",
             "size": 6
           }
         ]
