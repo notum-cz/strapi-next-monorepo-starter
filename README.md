@@ -17,8 +17,8 @@ pnpm dev:strapi
 pnpm dev:ui
 ```
 
-For the full setup flow, see the [Quick Start guide](https://notum-cz.github.io/strapi-next-monorepo-starter/docs/getting-started/quick-start).
+For the full setup flow, see the [Quick Start guide](https://strapinextjs.docs.notum.tech/docs/getting-started/quick-start).
 
 ## Documentation
 
-Visit the [full documentation](https://notum-cz.github.io/strapi-next-monorepo-starter) for architecture, setup, and workflow guides.
+Visit the [full documentation](https://strapinextjs.docs.notum.tech) for architecture, setup, and workflow guides.

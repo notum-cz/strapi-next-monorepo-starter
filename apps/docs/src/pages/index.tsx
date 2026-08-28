@@ -42,12 +42,12 @@ const valueItems = [
 ]
 
 export default function Home(): JSX.Element {
-  const pageBuilderImage = useBaseUrl("/img/page-builder-flow.png")
+  const pageBuilderImage = useBaseUrl("/img/page-builder-flow.webp")
 
   return (
     <Layout
       title="Strapi Next Monorepo Starter"
-      description="Enterprise-ready Strapi v5 and Next.js starter template"
+      description="Enterprise-ready Strapi v5 and Next.js starter template with a visual page builder, Better Auth, structured logging, and Playwright test coverage."
     >
       <main className="home">
         <section className="homeHero">
@@ -62,7 +62,7 @@ export default function Home(): JSX.Element {
                 >
                   Get started
                 </Link>
-                <a className="button button--secondary button--lg" href="https://www.notum-dev.cz/">
+                <a className="button button--secondary button--lg" href="https://strapinextjs.notum.tech" target="_blank" rel="noopener noreferrer">
                   Live demo
                 </a>
               </div>
@@ -72,6 +72,7 @@ export default function Home(): JSX.Element {
               <img
                 src={pageBuilderImage}
                 alt="Page builder flow from Strapi dynamic zone data through component UID mapping to rendered UI components"
+                fetchPriority="high"
               />
             </div>
           </div>

@@ -199,7 +199,7 @@ Permissions are scoped manually per content type. Strapi currently does not prov
       <td><code>NEXT_OUTPUT</code></td>
       <td>server</td>
       <td>No</td>
-      <td>Keep undefined for local development, set to <code>standalone</code> for Docker builds, or <code>export</code> for static builds. See <a href="./docker-build">Docker Build</a> and <a href="./next-config">Next Configuration</a>.</td>
+      <td>Keep undefined for local development, set to <code>standalone</code> for Docker builds, or <code>export</code> for static builds. See <a href="/docs/ui/docker-build/">Docker Build</a> and <a href="/docs/ui/next-config/">Next Configuration</a>.</td>
     </tr>
     <tr>
       <td><code>NEXT_PUBLIC_SENTRY_DSN</code></td>
