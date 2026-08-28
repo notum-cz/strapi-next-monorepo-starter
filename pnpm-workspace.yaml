@@ -11,63 +11,11 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
 
-minimumReleaseAge: 4320
+minimumReleaseAge: 2880
 resolutionMode: highest
 minimumReleaseAgeExclude:
   - "@notum-cz/strapi-plugin-smart-populate@1.0.1"
   - "nodemailer@9.0.1"
-
-  # TEMPORARY — everything below is inside the `minimumReleaseAge` quarantine
-  # and is pinned to an exact version on purpose, so that only the releases
-  # reviewed in this PR are let through and any *later* release of the same
-  # package is still quarantined. Drop both groups once the window has passed
-  # (~2026-08-30); `pnpm install` keeps working unchanged afterwards.
-  #
-  # next 16.3.3 (published 2026-08-25) — August 2026 security release:
-  #   unauthenticated RCE in the Image Optimization API via AVIF
-  #   (GHSA-2xp9-vwfh-vxw4) and unauthenticated RCE on Windows hosts
-  #   (CVE-2026-75604). The security fix outweighs the quarantine. The
-  #   `@next/*` entries are the platform binaries next resolves to.
-  - "@next/env@16.3.3"
-  - "@next/swc-darwin-arm64@16.3.3"
-  - "@next/swc-darwin-x64@16.3.3"
-  - "@next/swc-linux-arm64-gnu@16.3.3"
-  - "@next/swc-linux-arm64-musl@16.3.3"
-  - "@next/swc-linux-x64-gnu@16.3.3"
-  - "@next/swc-linux-x64-musl@16.3.3"
-  - "@next/swc-win32-arm64-msvc@16.3.3"
-  - "@next/swc-win32-x64-msvc@16.3.3"
-  - "next@16.3.3"
-  #
-  # @strapi/* 5.52.2 (published 2026-08-26) — latest patch, pinned across
-  # apps/strapi and packages/strapi-types so every Strapi package matches.
-  - "@strapi/admin@5.52.2"
-  - "@strapi/cloud-cli@5.52.2"
-  - "@strapi/content-manager@5.52.2"
-  - "@strapi/content-releases@5.52.2"
-  - "@strapi/content-type-builder@5.52.2"
-  - "@strapi/core@5.52.2"
-  - "@strapi/data-transfer@5.52.2"
-  - "@strapi/database@5.52.2"
-  - "@strapi/email@5.52.2"
-  - "@strapi/generators@5.52.2"
-  - "@strapi/i18n@5.52.2"
-  - "@strapi/logger@5.52.2"
-  - "@strapi/openapi@5.52.2"
-  - "@strapi/permissions@5.52.2"
-  - "@strapi/plugin-sentry@5.52.2"
-  - "@strapi/plugin-users-permissions@5.52.2"
-  - "@strapi/provider-email-mailgun@5.52.2"
-  - "@strapi/provider-email-nodemailer@5.52.2"
-  - "@strapi/provider-email-sendmail@5.52.2"
-  - "@strapi/provider-upload-aws-s3@5.52.2"
-  - "@strapi/provider-upload-local@5.52.2"
-  - "@strapi/review-workflows@5.52.2"
-  - "@strapi/strapi@5.52.2"
-  - "@strapi/types@5.52.2"
-  - "@strapi/typescript-utils@5.52.2"
-  - "@strapi/upload@5.52.2"
-  - "@strapi/utils@5.52.2"
 
 overrides:
   "@types/react": 19.2.18
