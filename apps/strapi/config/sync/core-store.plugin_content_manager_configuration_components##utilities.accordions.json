@@ -46,13 +46,22 @@
           "searchable": true,
           "sortable": true
         }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
       }
     },
     "layouts": {
       "list": [
         "id",
         "question",
-        "answer"
+        "answer",
+        "documentId"
       ],
       "edit": [
         [

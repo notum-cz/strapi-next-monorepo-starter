@@ -61,6 +61,20 @@
           "sortable": true
         }
       },
+      "focalPoint": {
+        "edit": {
+          "label": "focalPoint",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "focalPoint",
+          "searchable": false,
+          "sortable": false
+        }
+      },
       "width": {
         "edit": {
           "label": "width",
@@ -301,6 +315,14 @@
           "searchable": true,
           "sortable": true
         }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
+        }
       }
     },
     "layouts": {
@@ -393,6 +415,12 @@
           {
             "name": "folderPath",
             "size": 6
+          }
+        ],
+        [
+          {
+            "name": "focalPoint",
+            "size": 12
           }
         ]
       ]
