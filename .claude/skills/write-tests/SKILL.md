@@ -13,7 +13,7 @@ argument-hint: "[file-or-feature-to-cover]"
 
 Add or extend tests using the starter's existing conventions. Do not introduce new test frameworks. Do not invent new helpers when an existing one fits.
 
-Reference: `apps/docs/docs/reference/QA/overview.md` (layers), `unit-testing.md` (Vitest), `playwright.md` (browser QA).
+Reference: `apps/docs/docs/reference/QA/overview.md` (layers), `unit-testing.md` (Vitest), `playwright.md` (E2E).
 
 ## Decide the test layer first
 

@@ -6,14 +6,14 @@ sidebar_position: 3
 
 The Playwright QA suite validates the deployed or local UI through a browser. It covers end-to-end behavior, accessibility, SEO, visual output, and performance.
 
-| Area               | Tooling                | Location                        |
-| ------------------ | ---------------------- | ------------------------------- |
-| Browser QA — smoke | Playwright             | `qa/tests/playwright/e2e/smoke` |
-| Browser QA — mock  | Playwright             | `qa/tests/playwright/e2e/mock`  |
-| Accessibility      | Playwright + axe-core  | `qa/tests/playwright/axe`       |
-| SEO                | Playwright             | `qa/tests/playwright/seo`       |
-| Visual             | Playwright screenshots | `qa/tests/playwright/visual`    |
-| Performance        | Lighthouse CI          | `qa/tests/playwright/perfo`     |
+| Area          | Tooling                | Location                        |
+| ------------- | ---------------------- | ------------------------------- |
+| E2E — smoke   | Playwright             | `qa/tests/playwright/e2e/smoke` |
+| E2E — mock    | Playwright             | `qa/tests/playwright/e2e/mock`  |
+| Accessibility | Playwright + axe-core  | `qa/tests/playwright/axe`       |
+| SEO           | Playwright             | `qa/tests/playwright/seo`       |
+| Visual        | Playwright screenshots | `qa/tests/playwright/visual`    |
+| Performance   | Lighthouse CI          | `qa/tests/playwright/perfo`     |
 
 ## Workspace
 

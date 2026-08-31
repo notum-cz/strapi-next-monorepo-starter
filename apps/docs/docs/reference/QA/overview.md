@@ -11,7 +11,7 @@ Testing is split between fast app-level Vitest suites and browser-based QA check
 | ------------- | ---------------------- | ---------------------------- |
 | Strapi        | Vitest                 | `apps/strapi/tests`          |
 | UI            | Vitest                 | `apps/ui/**/*.test.ts`       |
-| Browser QA    | Playwright             | `qa/tests/playwright/e2e`    |
+| E2E           | Playwright             | `qa/tests/playwright/e2e`    |
 | Accessibility | Playwright + axe-core  | `qa/tests/playwright/axe`    |
 | SEO           | Playwright             | `qa/tests/playwright/seo`    |
 | Visual        | Playwright screenshots | `qa/tests/playwright/visual` |
@@ -20,7 +20,7 @@ Testing is split between fast app-level Vitest suites and browser-based QA check
 ## References
 
 - [Unit Testing](./unit-testing.md) — Vitest tests for Strapi and UI code.
-- [Playwright Testing](./playwright.md) — browser QA, accessibility, SEO, visual regression, and Lighthouse CI.
+- [Playwright Testing](./playwright.md) — E2E, accessibility, SEO, visual regression, and Lighthouse CI.
 - [Test Cases](./test-cases/index.md) — Gherkin-style test case docs with a live Pass/Fail checklist and one-click results export.
 - [Common Knowledge](./common-knowledge/index.md) — QA tribal knowledge: environment quirks, known issues, and workarounds worth not forgetting.
 
