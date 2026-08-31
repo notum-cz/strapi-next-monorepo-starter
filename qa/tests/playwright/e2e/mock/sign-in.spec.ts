@@ -1,7 +1,7 @@
 // Mocked responses approximate the real sign-in endpoint's error contract
 // (see the strapiAuthPlugin in the UI app's auth setup). Re-check the shape
 // against a real response if this drifts.
-import { expect, test } from "../../helpers/fixtures"
+import { expect, mockTest as test } from "../../helpers/fixtures"
 import { SignInPage } from "../../helpers/pages/SignInPage"
 
 test.describe("Sign in — mocked backend responses", () => {

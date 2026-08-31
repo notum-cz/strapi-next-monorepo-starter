@@ -12,7 +12,7 @@ type MockFixtures = {
   ) => Promise<void>
 }
 
-export const test = base.extend<MockFixtures>({
+export const mockTest = base.extend<MockFixtures>({
   mockJson: async ({ page }, use) => {
     // Playwright's fixture callback parameter, not a React hook.
     // eslint-disable-next-line react-hooks/rules-of-hooks
