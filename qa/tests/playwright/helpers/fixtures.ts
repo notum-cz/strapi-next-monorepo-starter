@@ -20,8 +20,7 @@ export const test = base.extend<MockFixtures>({
       await page.route(url, (route) =>
         route.fulfill({
           status: options.status ?? 200,
-          contentType: "application/json",
-          body: JSON.stringify(body),
+          json: body,
         })
       )
     })
