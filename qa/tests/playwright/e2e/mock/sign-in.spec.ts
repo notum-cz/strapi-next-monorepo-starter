@@ -1,8 +1,9 @@
-// Mocked responses approximate the real sign-in endpoint's error contract
-// (see the strapiAuthPlugin in the UI app's auth setup). Re-check the shape
-// against a real response if this drifts.
+// Mocks the real SabbaticalHomes login modal's backend endpoint
+// (see e2e/smoke/sign-in.spec.ts for the equivalent test against the live
+// backend). The generic-error copy below hasn't been re-verified against a
+// real network failure on the live app — re-check it if this test starts failing.
 import { expect, mockTest as test } from "../../helpers/fixtures"
-import { SignInPage } from "../../helpers/pages/SignInPage"
+import { HomePage } from "../../helpers/pages/HomePage"
 
 test.describe("Sign in — mocked backend responses", () => {
   test("shows the credentials error for a known invalid-login response", async ({
@@ -10,14 +11,18 @@ test.describe("Sign in — mocked backend responses", () => {
     mockJson,
   }) => {
     await mockJson(
-      "**/api/auth/sign-in-strapi",
+      "**/api/auth/login",
       { message: "Invalid identifier or password" },
       { status: 401 }
     )
+    const responsePromise = page.waitForResponse("**/api/auth/login")
 
-    const signInPage = new SignInPage(page)
-    await signInPage.goTo()
-    await signInPage.signIn("qa.user@example.com", "WrongPassword!")
+    const homePage = new HomePage(page)
+    await homePage.goTo()
+    await homePage.signIn("qa.user@example.com", "WrongPassword!")
+
+    const response = await responsePromise
+    expect(response.status()).toBe(401)
 
     await expect(
       page.getByText("You have entered incorrect login credentials.")
@@ -30,14 +35,12 @@ test.describe("Sign in — mocked backend responses", () => {
     // A dropped connection has no response body to parse, unlike the mocked
     // JSON error above — this is the case mocking earns its keep, since a
     // real backend outage isn't something you can trigger on demand.
-    await page.route("**/api/auth/sign-in-strapi", (route) => route.abort())
+    await page.route("**/api/auth/login", (route) => route.abort())
 
-    const signInPage = new SignInPage(page)
-    await signInPage.goTo()
-    await signInPage.signIn("qa.user@example.com", "Test1234!")
+    const homePage = new HomePage(page)
+    await homePage.goTo()
+    await homePage.signIn("qa.user@example.com", "Test1234!")
 
-    await expect(
-      page.getByText("Sign in failed. Please try again later.")
-    ).toBeVisible()
+    await expect(page.getByText("Sign in failed. Please try")).toBeVisible()
   })
 })

@@ -30,7 +30,7 @@ export class SignInPage {
   }
 
   async goTo() {
-    const response = await this.page.goto("/auth/signin", {
+    const response = await this.page.goto("?showLogin=True", {
       waitUntil: "domcontentloaded",
     })
     await this.page.waitForLoadState("networkidle")

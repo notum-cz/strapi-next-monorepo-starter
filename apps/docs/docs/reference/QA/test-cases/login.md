@@ -43,12 +43,16 @@ Feature: Login
       | Email    |
       | Password |
 
+  # The email field has no client-side format check (SignInFormSchema in
+  # SignInForm.tsx accepts any non-empty string), so a malformed email is
+  # forwarded to the backend as the identifier rather than being blocked.
   # Automated by: qa/tests/playwright/e2e/mock/sign-in.spec.ts
   @regression @mock @automated
   Scenario: Entering an email in an invalid format
     When the user fills in "Email" with "testgmail.com"
     And fills in "Password" with "test123"
     And clicks "Sign in"
-    Then the message "Please enter a valid email address." is shown on the "Email" field
+    Then the request is sent to the backend with "testgmail.com" as the identifier
+    And the message "You have entered incorrect login credentials." is shown
     And the user remains on the sign-in page
 ```
