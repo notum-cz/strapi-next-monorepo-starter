@@ -10,11 +10,118 @@ const GLOBAL_WARNING_RULE_IDS = new Set<string>()
 // Selectors to exclude from axe analysis on all pages.
 const GLOBAL_EXCLUDE_SELECTORS: string[] = []
 
-// Per-path configuration for excluding selectors or treating rule IDs as warnings.
+// The suite targets the external strapi.io site (BASE_URL), whose pages we do
+// not own and cannot fix. Every rule id below is a real axe violation reported
+// for that specific path in Step 1; each is downgraded to a per-page warning so
+// the suite reports 🟠 instead of ❌ while still surfacing the findings.
 const PATH_CONFIGS: Record<
   string,
   { excludeSelectors?: string[]; warningRuleIds?: string[] }
-> = {}
+> = {
+  "/": {
+    warningRuleIds: [
+      "color-contrast",
+      "empty-heading",
+      "landmark-unique",
+      "region",
+    ],
+  },
+  "/partners": {
+    warningRuleIds: [
+      "color-contrast",
+      "heading-order",
+      "landmark-one-main",
+      "landmark-unique",
+      "region",
+    ],
+  },
+  "/solutions": {
+    warningRuleIds: [
+      "color-contrast",
+      "heading-order",
+      "landmark-unique",
+      "region",
+    ],
+  },
+  "/blog": {
+    warningRuleIds: [
+      "color-contrast",
+      "heading-order",
+      "landmark-one-main",
+      "landmark-unique",
+      "page-has-heading-one",
+      "region",
+    ],
+  },
+  "/integrations": {
+    warningRuleIds: [
+      "color-contrast",
+      "heading-order",
+      "landmark-one-main",
+      "landmark-unique",
+      "region",
+    ],
+  },
+  "/blog/categories": {
+    warningRuleIds: [
+      "color-contrast",
+      "heading-order",
+      "landmark-one-main",
+      "landmark-unique",
+      "region",
+    ],
+  },
+  "/integrations/react-cms": {
+    warningRuleIds: [
+      "aria-required-parent",
+      "color-contrast",
+      "heading-order",
+      "landmark-one-main",
+      "landmark-unique",
+      "region",
+      "scrollable-region-focusable",
+    ],
+  },
+  "/integrations/tanstack": {
+    warningRuleIds: [
+      "color-contrast",
+      "heading-order",
+      "landmark-one-main",
+      "landmark-unique",
+      "region",
+      "scrollable-region-focusable",
+    ],
+  },
+  "/integrations/vuejs-cms": {
+    warningRuleIds: [
+      "color-contrast",
+      "heading-order",
+      "landmark-one-main",
+      "landmark-unique",
+      "region",
+      "scrollable-region-focusable",
+    ],
+  },
+  "/integrations/nuxtjs-cms": {
+    warningRuleIds: [
+      "color-contrast",
+      "heading-order",
+      "landmark-one-main",
+      "landmark-unique",
+      "region",
+      "scrollable-region-focusable",
+    ],
+  },
+  "/integrations/astro": {
+    warningRuleIds: [
+      "color-contrast",
+      "landmark-one-main",
+      "landmark-unique",
+      "region",
+      "scrollable-region-focusable",
+    ],
+  },
+}
 
 const PATHS = [...urls]
 

@@ -114,6 +114,10 @@ const projects: Project[] = [
 
 export default defineConfig({
   testDir: ".",
+  // Store snapshots in a per-system subfolder (e.g. .../visual.spec.ts-snapshots/darwin/…)
+  // instead of the default flat layout with the platform baked into each filename.
+  snapshotPathTemplate:
+    "{snapshotDir}/{testFileDir}/{testFileName}-snapshots/{platform}/{arg}{-projectName}{ext}",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

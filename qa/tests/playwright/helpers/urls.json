@@ -1,1 +1,12 @@
-["/"]
+[
+  "/",
+  "/partners",
+  "/solutions",
+  "/blog",
+  "/integrations",
+  "/integrations/react-cms",
+  "/integrations/tanstack",
+  "/integrations/vuejs-cms",
+  "/integrations/nuxtjs-cms",
+  "/integrations/astro"
+]
