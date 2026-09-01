@@ -13,7 +13,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLAYWRIGHT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-PLAYWRIGHT_VERSION="1.59.1"
+PLAYWRIGHT_VERSION="1.61.0"
 if [[ $# -eq 0 ]]; then
   PROJECTS=("visual-chromium" "visual-firefox")
 else

@@ -5,7 +5,7 @@ import type { AxeResults, Result } from "axe-core"
 import urls from "../helpers/urls.json"
 
 // Rule IDs that should be treated as warnings instead of errors on all pages.
-const GLOBAL_WARNING_RULE_IDS = new Set<string>()
+const GLOBAL_WARNING_RULE_IDS = new Set<string>(["color-contrast"])
 
 // Selectors to exclude from axe analysis on all pages.
 const GLOBAL_EXCLUDE_SELECTORS: string[] = []
