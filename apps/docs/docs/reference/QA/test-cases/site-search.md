@@ -18,7 +18,8 @@ Feature: Site Search
     Then a search dialog opens with the placeholder "Search the site…"
     And the message "Start typing to search." is shown
 
-  @smoke @manual
+  # Automated by: qa/tests/playwright/e2e/smoke/search.spec.ts
+  @smoke @automated
   Scenario: Searching returns results grouped by content type
     Given the search dialog is open
     When the user types "headless cms" into the search field
@@ -33,11 +34,20 @@ Feature: Site Search
     Then the user is taken to the Strapi pricing page
     And the search dialog closes
 
-  @regression @manual
+  # Automated by: qa/tests/playwright/e2e/mock/search.spec.ts
+  @mock @automated
   Scenario: A query with no matches shows an empty message
     Given the search dialog is open
     When the user types "zzzxqwv9quux" into the search field
     Then the message "No results found." is shown
+
+  # Automated by: qa/tests/playwright/e2e/mock/search.spec.ts
+  @mock @automated
+  Scenario: No results are surfaced when the search backend is unreachable
+    Given the search dialog is open
+    And the search backend is unreachable
+    When the user types "headless cms" into the search field
+    Then no result options are shown
 
   @regression @manual
   Scenario: A loading indicator is shown while results are fetched
