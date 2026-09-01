@@ -119,7 +119,8 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 3 : undefined,
   reporter: [["html", { open: process.env.CI ? "never" : "on-failure" }]],
-
+  snapshotPathTemplate:
+    "{snapshotDir}/{testFileDir}/{testFileName}-snapshots/{platform}/{arg}{-projectName}{ext}",
   use: {
     baseURL: process.env.BASE_URL,
 

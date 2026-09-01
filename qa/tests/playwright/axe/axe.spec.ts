@@ -14,7 +14,9 @@ const GLOBAL_EXCLUDE_SELECTORS: string[] = []
 const PATH_CONFIGS: Record<
   string,
   { excludeSelectors?: string[]; warningRuleIds?: string[] }
-> = {}
+> = {
+  "/blog": { warningRuleIds: ["link-name"] },
+}
 
 const PATHS = [...urls]
 

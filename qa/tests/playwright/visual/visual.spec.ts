@@ -38,7 +38,9 @@ test.describe("Visual Regression", () => {
       await page.route("**/*", (route, request) => {
         const type = request.resourceType()
 
-        if (["font", "document", "stylesheet", "image"].includes(type)) {
+        if (
+          ["font", "document", "stylesheet", "image", "script"].includes(type)
+        ) {
           route.continue()
         } else {
           route.abort()
