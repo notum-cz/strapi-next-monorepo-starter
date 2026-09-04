@@ -55,8 +55,8 @@ COPY --from=prepare /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
 # Installation with caching and frozen-lockfile
 RUN \
-    --mount=type=cache,id=pnpm,target=/pnpm/store \
-    pnpm install --frozen-lockfile --prefer-offline --ignore-scripts
+  --mount=type=cache,id=pnpm,target=/pnpm/store \
+  pnpm install --frozen-lockfile --prefer-offline --ignore-scripts
 
 # Build the project and its dependencies
 COPY --from=prepare /app/out/full/ .
@@ -73,9 +73,12 @@ ENV BETTER_AUTH_SECRET=dummy-build-secret
 ARG APP_PUBLIC_URL
 ARG STRAPI_URL
 ARG STRAPI_REST_READONLY_API_KEY # Sensitive data should not be used in the ARG or ENV commands!
+
+ARG GTM_ID
 ENV APP_PUBLIC_URL=${APP_PUBLIC_URL}
 ENV STRAPI_URL=${STRAPI_URL}
 ENV STRAPI_REST_READONLY_API_KEY=${STRAPI_REST_READONLY_API_KEY}
+ENV GTM_ID=${GTM_ID}
 
 RUN turbo run build
 
