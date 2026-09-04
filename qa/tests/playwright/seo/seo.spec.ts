@@ -1,8 +1,10 @@
 import { expect, test, type Page } from "@playwright/test"
 
+import { flattenUrls } from "../helpers/flatten-urls"
+
 import urls from "../helpers/urls.json"
 
-const PATHS = [...urls]
+const PATHS = flattenUrls(urls.seo)
 
 function isHerokuBaseUrl(url: string): boolean {
   return url.includes("heroku")

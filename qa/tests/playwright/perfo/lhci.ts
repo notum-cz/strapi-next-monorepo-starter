@@ -5,6 +5,8 @@ import { spawnSync } from "node:child_process"
 import fs from "node:fs"
 import path from "node:path"
 
+import { flattenUrls } from "../helpers/flatten-urls"
+
 import urls from "../helpers/urls.json"
 
 const BASE_URL = process.env.BASE_URL
@@ -13,11 +15,13 @@ if (!BASE_URL) {
   throw new Error("Missing BASE_URL environment variable")
 }
 
-if (!Array.isArray(urls) || urls.length === 0) {
-  throw new Error("No sites found in sites.json")
+const perfoUrls = flattenUrls(urls.perfo.dev)
+
+if (perfoUrls.length === 0) {
+  throw new Error("No sites found in urls.json")
 }
 
-const fullUrls = urls.map((p) => `${BASE_URL}${p}`)
+const fullUrls = perfoUrls.map((p) => `${BASE_URL}${p}`)
 
 const CWD = path.resolve("perfo")
 const LHCI_OUTPUT_DIR = path.join(CWD, ".lighthouseci")
@@ -87,10 +91,14 @@ function buildHistoryEntries(): HistoryEntry[] {
   })
 }
 
-const TABLE_HEADER = [
-  "| Date | URL | Performance | Accessibility | Best Practices | SEO |",
-  "| --- | --- | --- | --- | --- | --- |",
-].join("\n")
+const ROW_HEADER =
+  "| Date | Performance | Accessibility | Best Practices | SEO |"
+const ROW_SEPARATOR = "| --- | --- | --- | --- | --- |"
+
+interface Section {
+  url: string
+  rows: string[]
+}
 
 function formatCell(value: number | null): string {
   return value === null ? "–" : String(value)
@@ -99,7 +107,6 @@ function formatCell(value: number | null): string {
 function formatRow(entry: HistoryEntry): string {
   const cells = [
     entry.date,
-    entry.url,
     formatCell(entry.performance),
     formatCell(entry.accessibility),
     formatCell(entry.bestPractices),
@@ -109,19 +116,67 @@ function formatRow(entry: HistoryEntry): string {
   return `| ${cells.join(" | ")} |`
 }
 
+// Parses the file's per-URL "## <url>" sections back into their row lines, so
+// a new run's results land next to that page's existing history instead of
+// just being appended at the end of the file.
+function parseSections(content: string): Section[] {
+  const sections: Section[] = []
+  let current: Section | null = null
+
+  for (const line of content.split("\n")) {
+    const heading = /^## (.+)$/.exec(line)
+
+    if (heading) {
+      current = { url: heading[1], rows: [] }
+      sections.push(current)
+      continue
+    }
+
+    if (!current || !line.startsWith("|")) continue
+    if (line === ROW_HEADER || line === ROW_SEPARATOR) continue
+
+    current.rows.push(line)
+  }
+
+  return sections
+}
+
+function serializeSections(sections: Section[]): string {
+  return (
+    sections
+      .map((section) =>
+        [
+          `## ${section.url}`,
+          "",
+          ROW_HEADER,
+          ROW_SEPARATOR,
+          ...section.rows,
+        ].join("\n")
+      )
+      .join("\n\n") + "\n"
+  )
+}
+
 const entries = buildHistoryEntries()
 
-const hasHeader =
-  fs.existsSync(HISTORY_FILE) &&
-  fs.readFileSync(HISTORY_FILE, "utf8").trim() !== ""
+const existingContent = fs.existsSync(HISTORY_FILE)
+  ? fs.readFileSync(HISTORY_FILE, "utf8")
+  : ""
 
-fs.appendFileSync(
-  HISTORY_FILE,
-  (hasHeader ? "" : `${TABLE_HEADER}\n`) +
-    entries.map(formatRow).join("\n") +
-    "\n"
-)
+const sections = parseSections(existingContent)
+
+for (const entry of entries) {
+  const section = sections.find((s) => s.url === entry.url)
+
+  if (section) {
+    section.rows.push(formatRow(entry))
+  } else {
+    sections.push({ url: entry.url, rows: [formatRow(entry)] })
+  }
+}
+
+fs.writeFileSync(HISTORY_FILE, serializeSections(sections))
 
 console.log(`\nLighthouse trend (${entries.length} page(s)):`)
 console.table(entries)
-console.log(`Appended results to ${path.relative(process.cwd(), HISTORY_FILE)}`)
+console.log(`Updated ${path.relative(process.cwd(), HISTORY_FILE)}`)

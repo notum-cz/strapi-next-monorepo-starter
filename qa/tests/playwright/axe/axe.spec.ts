@@ -2,6 +2,8 @@ import AxeBuilder from "@axe-core/playwright"
 import { expect, test } from "@playwright/test"
 import type { AxeResults, Result } from "axe-core"
 
+import { flattenUrls } from "../helpers/flatten-urls"
+
 import urls from "../helpers/urls.json"
 
 // Rule IDs that should be treated as warnings instead of errors on all pages.
@@ -16,7 +18,7 @@ const PATH_CONFIGS: Record<
   { excludeSelectors?: string[]; warningRuleIds?: string[] }
 > = {}
 
-const PATHS = [...urls]
+const PATHS = flattenUrls(urls.axe)
 
 test.describe("AXE accessibility", () => {
   test.beforeAll(() => {

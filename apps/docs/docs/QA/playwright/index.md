@@ -35,6 +35,30 @@ qa/tests/playwright/
 └── tsconfig.json           # TypeScript configuration
 ```
 
+### Page lists per environment
+
+`helpers/urls.json` holds the pages each suite checks, split by environment:
+
+```json
+{
+  "seo": { "dev": ["/"], "staging": ["/"], "prod": ["/"] },
+  "axe": { "dev": ["/"], "staging": ["/"], "prod": ["/"] },
+  "visual": { "dev": ["/"], "staging": ["/"], "prod": ["/"] },
+  "perfo": { "dev": ["/"], "staging": ["/"], "prod": ["/"] }
+}
+```
+
+Each suite gets its full page list — every environment, deduped — via `helpers/flatten-urls.ts`, which recursively collects every string leaf however deeply `urls.json` is nested (env, brand, region, ...):
+
+```typescript
+import { flattenUrls } from "../helpers/flatten-urls"
+import urls from "../helpers/urls.json"
+
+const PATHS = flattenUrls(urls.seo)
+```
+
+To cover a new page, add it to the right suite's list for the environment(s) where it should run — it's picked up automatically, no spec file changes needed.
+
 ### End-to-end: smoke vs mock
 
 `e2e/` specs are split into two kinds, sharing the same page objects from `helpers/pages/`:
@@ -187,6 +211,6 @@ Commit baseline updates only with the related UI change.
 
 `pnpm tests:lhci:perfo` runs Lighthouse CI (`lhci collect`) against every URL in `helpers/urls.json` and writes raw reports to `qa/tests/playwright/perfo/.lighthouseci/` (gitignored, one Lighthouse run per URL).
 
-Each run also appends one row per URL to `qa/tests/playwright/perfo/lighthouse-history.md` — a committed, append-only Markdown table with the category scores (performance, accessibility, best practices, SEO) for that page. Being plain Markdown, it renders as a readable table directly on GitHub and diffs cleanly in PRs (new rows only).
+Each run also records its results in `qa/tests/playwright/perfo/lighthouse-history.md` — a committed Markdown file with one `## <url>` section per page, each holding its own table of category scores (performance, accessibility, best practices, SEO) over time. A new run's row lands under that page's existing section instead of at the end of the file, so a page's trend always stays together. Being plain Markdown, it renders as readable tables directly on GitHub and diffs cleanly in PRs (new rows only).
 
 In CI, the `lhci_perfo` job in `qa.yml` runs `tests:lhci:perfo` and, on success, opens (or updates) a pull request containing the updated `lighthouse-history.md` via `peter-evans/create-pull-request`, targeting the branch that triggered the run. This avoids pushing directly to a protected branch — someone still reviews and merges the trend update like any other change. Trigger it manually via the QA workflow with the **LHCI Performance tests** checkbox and a `base_url` value.

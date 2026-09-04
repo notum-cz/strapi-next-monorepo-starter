@@ -306,6 +306,7 @@ jobs:
           branch: qa/lighthouse-trend-update
           delete-branch: true
           title: "chore(qa): update Lighthouse trend history"
+          labels: QA, auto-generated
           body: |
             Automated update of the Lighthouse performance trend log (`qa/tests/playwright/perfo/lighthouse-history.md`) from a manual QA workflow run.
 
