@@ -294,6 +294,12 @@ jobs:
       - name: Open PR with Lighthouse trend history
         if: success()
         uses: peter-evans/create-pull-request@v8.1.1
+        env:
+          # peter-evans/create-pull-request commits on an internal branch with a
+          # generated name that never matches this repo's <type>/STAR-<n>-<desc>
+          # branch-naming convention, which would otherwise fail Lefthook's
+          # pre-commit hook (scripts/validate-branch-name.sh).
+          LEFTHOOK: "0"
         with:
           add-paths: qa/tests/playwright/perfo/lighthouse-history.md
           commit-message: "chore(tests-playwright): record Lighthouse trend results"
