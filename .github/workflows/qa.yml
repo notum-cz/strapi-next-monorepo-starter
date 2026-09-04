@@ -213,6 +213,12 @@ jobs:
       - name: Setup pnpm with cache
         uses: ./.github/actions/setup-pnpm
 
+      - name: Resolve Playwright version
+        id: playwright_version
+        run: |
+          VERSION="$(node -p "require('./qa/tests/playwright/node_modules/@playwright/test/package.json').version")"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
       - name: Check for baseline snapshots
         id: baseline_check
         run: |
@@ -230,14 +236,12 @@ jobs:
         uses: actions/cache@v6.0.0
         with:
           path: /tmp/docker-playwright-cache
-          # Playwright Docker image version has to match the @playwright/test version in qa/tests/playwright/package.json
-          key: docker-playwright-v1.61.0-noble
+          key: docker-playwright-v${{ steps.playwright_version.outputs.version }}-noble
 
       - name: Load or pull Playwright Docker image
         if: steps.baseline_check.outputs.has_baselines == 'true'
-        # Playwright Docker image version has to match the @playwright/test version in qa/tests/playwright/package.json
         run: |
-          IMAGE="mcr.microsoft.com/playwright:v1.61.0-noble"
+          IMAGE="mcr.microsoft.com/playwright:v${{ steps.playwright_version.outputs.version }}-noble"
           CACHE_FILE="/tmp/docker-playwright-cache/playwright.tar"
           if [[ -f "$CACHE_FILE" ]]; then
             echo "Loading Docker image from cache..."

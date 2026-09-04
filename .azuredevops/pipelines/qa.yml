@@ -43,6 +43,8 @@ variables:
   - group: qa-pipeline-vars # must define a BASE_URL variable
   - name: CI
     value: "true"
+  - name: NPM_CONFIG_IGNORE_SCRIPTS
+    value: "true"
 
 pool:
   vmImage: "ubuntu-latest"
@@ -74,7 +76,6 @@ jobs:
 
   - job: e2e
     displayName: "Playwright E2E tests"
-    dependsOn: set_run_name
     condition: and(succeeded(), eq(${{ parameters.run_e2e }}, true))
     timeoutInMinutes: 30
     steps:
@@ -137,7 +138,6 @@ jobs:
 
   - job: axe
     displayName: "Playwright AXE tests"
-    dependsOn: set_run_name
     condition: and(succeeded(), eq(${{ parameters.run_axe }}, true))
     timeoutInMinutes: 15
     steps:
@@ -192,7 +192,6 @@ jobs:
 
   - job: seo
     displayName: "Playwright SEO tests"
-    dependsOn: set_run_name
     condition: and(succeeded(), eq(${{ parameters.run_seo }}, true))
     timeoutInMinutes: 30
     steps:
@@ -247,7 +246,6 @@ jobs:
 
   - job: visual
     displayName: "Playwright Visual tests"
-    dependsOn: set_run_name
     condition: and(succeeded(), eq(${{ parameters.run_visual }}, true))
     timeoutInMinutes: 15
     steps:
@@ -255,6 +253,11 @@ jobs:
         fetchDepth: 1
 
       - template: ../templates/steps/setup-pnpm.yaml
+
+      - bash: |
+          VERSION="$(node -p "require('./qa/tests/playwright/node_modules/@playwright/test/package.json').version")"
+          echo "##vso[task.setvariable variable=PLAYWRIGHT_VERSION]$VERSION"
+        displayName: Resolve Playwright version
 
       - bash: |
           set -e
@@ -280,15 +283,13 @@ jobs:
       - task: Cache@2
         condition: and(succeeded(), eq(variables['HAS_BASELINES'], 'true'))
         inputs:
-          # Playwright Docker image version has to match the @playwright/test version in qa/tests/playwright/package.json
-          key: '"docker-playwright-v1.61.0-noble"'
+          key: '"docker-playwright-v$(PLAYWRIGHT_VERSION)-noble"'
           path: /tmp/docker-playwright-cache
         displayName: Cache Playwright Docker image
 
       - bash: |
           set -e
-          # Playwright Docker image version has to match the @playwright/test version in qa/tests/playwright/package.json
-          IMAGE="mcr.microsoft.com/playwright:v1.61.0-noble"
+          IMAGE="mcr.microsoft.com/playwright:v$(PLAYWRIGHT_VERSION)-noble"
           CACHE_FILE="/tmp/docker-playwright-cache/playwright.tar"
           if [ -f "$CACHE_FILE" ]; then
             echo "Loading Docker image from cache..."
@@ -326,7 +327,6 @@ jobs:
 
   - job: lhci_perfo
     displayName: "LHCI Performance tests"
-    dependsOn: set_run_name
     # LHCI never runs on scheduled (cron) builds, regardless of parameter defaults.
     condition: and(succeeded(), eq(${{ parameters.run_lhci_perfo }}, true), ne(variables['Build.Reason'], 'Schedule'))
     timeoutInMinutes: 15
