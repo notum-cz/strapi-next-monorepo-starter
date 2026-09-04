@@ -53,7 +53,7 @@ Map changed files to surfaces:
 
 ## Phase 3 — Validate the build
 
-From the review worktree, in parallel where independent (command + suite reference: `apps/docs/docs/reference/commands.md`, `apps/docs/docs/reference/QA/overview.md`):
+From the review worktree, in parallel where independent (command + suite reference: `apps/docs/docs/reference/commands.md`, `apps/docs/docs/QA/overview.md`):
 
 ```bash
 pnpm install --frozen-lockfile --prefer-offline

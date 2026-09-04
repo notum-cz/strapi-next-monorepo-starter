@@ -1,15 +1,17 @@
-# Deep dive: Page Object Model and Smoke vs Mock
+---
+sidebar_position: 3
+---
 
-Presenting material — Exercise 7 and the intro talk.
+# Page Object Model and Smoke vs Mock
 
 ## Why a Page Object (POM)
 
-- Without one, every test repeats the same locators/navigation
-- A label/text change = fix in every test that copy-pasted it
-- POM = "how to interact with this page," written once
-- One file per page: `qa/tests/playwright/helpers/pages/<Page>Page.ts`
-- Tests read like a sentence (`registerPage.register(email, password, confirmation)`), not CSS/role soup
-- Shared by both the smoke **and** mock test of the same page
+- Without one, every test repeats the same locators/navigation.
+- A label/text change = fix in every test that copy-pasted it.
+- POM = "how to interact with this page," written once.
+- One file per page: `qa/tests/playwright/helpers/pages/<Page>Page.ts`.
+- Tests read like a sentence (`registerPage.register(email, password, confirmation)`), not CSS/role soup.
+- Shared by both the smoke **and** mock test of the same page.
 
 ## Anatomy of a POM
 
@@ -57,16 +59,15 @@ export class RegisterPage {
 
 ## Why no assertions in a POM
 
-- POM = "how," spec = "what should be true"
-- A failed `expect()` in a POM → the error points at the helper file, not the specific test
-- The POM can't be reused when a different spec needs the **opposite** outcome from the same action
-  - example: a mock test expects an error, a smoke test expects a redirect with no error
-- Rule: locators + interactions live in the POM, `expect()` always only in the spec file
+- POM = "how," spec = "what should be true."
+- A failed `expect()` in a POM → the error points at the helper file, not the specific test.
+- The POM can't be reused when a different spec needs the **opposite** outcome from the same action — example: a mock test expects an error, a smoke test expects a redirect with no error.
+- Rule: locators + interactions live in the POM, `expect()` always only in the spec file.
 
 ## Smoke vs Mock
 
-- Both live in `e2e/`, both use the same POM
-- The only difference: what answers on the other end of the network
+- Both live in `e2e/`, both use the same POM.
+- The only difference: what answers on the other end of the network.
 
 |                 | **Smoke** (`e2e/smoke/`)   | **Mock** (`e2e/mock/`)                                       |
 | --------------- | -------------------------- | ------------------------------------------------------------ |
@@ -78,16 +79,16 @@ export class RegisterPage {
 
 ## Which one to pick
 
-- Default = smoke
-- Mock only when the real backend can't reliably produce that response on demand
-- Don't write the same scenario as both smoke and mock at once
+- Default = smoke.
+- Mock only when the real backend can't reliably produce that response on demand.
+- Don't write the same scenario as both smoke and mock at once.
 
 ## Mocking — the mechanics
 
 Two building blocks:
 
-- `page.route(urlPattern, handler)` — intercept any request matching this URL instead of sending it for real
-- `route.fulfill({ status, json })` — answer it yourself, as if you were the server
+- `page.route(urlPattern, handler)` — intercept any request matching this URL instead of sending it for real.
+- `route.fulfill({ status, json })` — answer it yourself, as if you were the server.
 
 `mockJson` is just those two, wrapped into one reusable call.
 
@@ -120,11 +121,11 @@ test("shows an error when the email is already taken", async ({
 
 What happens, in order:
 
-1. `mockJson(...)` — sets the trap, nothing sent yet
-2. `goTo()` + `register(...)` — form submits, the real request fires
-3. Playwright catches it, returns the fake 400 response instead of the real backend
-4. App reacts as if it were real — shows the toast
-5. `expect(...)` confirms the toast appeared
+1. `mockJson(...)` — sets the trap, nothing sent yet.
+2. `goTo()` + `register(...)` — form submits, the real request fires.
+3. Playwright catches it, returns the fake 400 response instead of the real backend.
+4. App reacts as if it were real — shows the toast.
+5. `expect(...)` confirms the toast appeared.
 
 The email value doesn't matter — the response is fully faked either way.
 
@@ -178,7 +179,7 @@ import { expect, mockTest as test } from "../../helpers/fixtures"
 
 ## Most common mistakes (most frequent first)
 
-1. Mock registered only after the click/submit
-2. Wrong URL written into the mock — looks identical to #1, verify the real endpoint
-3. `expect()` snuck into the POM "just this once"
-4. The same error scenario written as both smoke and mock at the same time
+1. Mock registered only after the click/submit.
+2. Wrong URL written into the mock — looks identical to #1, verify the real endpoint.
+3. `expect()` snuck into the POM "just this once."
+4. The same error scenario written as both smoke and mock at the same time.

@@ -1,5 +1,5 @@
 /**
- * Scans apps/docs/docs/reference/QA/test-cases/**\/*.md at build time and
+ * Scans apps/docs/docs/QA/test-cases/**\/*.md at build time and
  * exposes every manual scenario, across every page, as a flat list keyed by
  * pageId (the file's path relative to test-cases/, without extension).
  * TestPlanExport (src/components/TestPlanExport) reads this via
@@ -23,7 +23,7 @@ import type { LoadContext, Plugin } from "@docusaurus/types"
 
 import { extractChecklistBlocks, type Scenario } from "../lib/gherkin"
 
-const TEST_CASES_DIR = path.join("docs", "reference", "QA", "test-cases")
+const TEST_CASES_DIR = path.join("docs", "QA", "test-cases")
 const DOCS_ROUTE_BASE_PATH = "docs"
 
 export interface ManifestEntry {

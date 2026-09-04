@@ -1,10 +1,10 @@
 {
-  "label": "Workshop",
-  "position": 6,
+  "label": "Playwright Testing",
+  "position": 3,
   "collapsible": true,
   "collapsed": true,
   "link": {
     "type": "doc",
-    "id": "reference/QA/workshop/index"
+    "id": "QA/playwright/index"
   }
 }

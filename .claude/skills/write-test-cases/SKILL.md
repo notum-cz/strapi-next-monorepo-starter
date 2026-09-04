@@ -5,7 +5,7 @@ description: >
   e.g. "write test case", "add TC", "document test scenario", "gherkin
   feature", "test case documentation". Produces Given/When/Then
   scenarios as Markdown pages under
-  apps/docs/docs/reference/QA/test-cases/ — not automated test
+  apps/docs/docs/QA/test-cases/ — not automated test
   code (use `write-tests` for that). For QA tribal-knowledge notes
   (not test cases), see `write-qa-notes` instead.
 argument-hint: "[feature-or-flow]"
@@ -13,7 +13,7 @@ argument-hint: "[feature-or-flow]"
 
 # Write Test Cases
 
-Document test cases as Gherkin scenarios, written as Markdown pages under `apps/docs/docs/reference/QA/test-cases/` so Docusaurus builds them into browsable docs. Each page has to work for **three readers at once**: a human skimming the rendered docs site, a human reading the raw Markdown/Gherkin, and whoever (person or agent) turns a scenario into an automated test afterward. No reader gets sacrificed for the others — see "Write for every reader" below.
+Document test cases as Gherkin scenarios, written as Markdown pages under `apps/docs/docs/QA/test-cases/` so Docusaurus builds them into browsable docs. Each page has to work for **three readers at once**: a human skimming the rendered docs site, a human reading the raw Markdown/Gherkin, and whoever (person or agent) turns a scenario into an automated test afterward. No reader gets sacrificed for the others — see "Write for every reader" below.
 
 Reference: [Gherkin reference](https://cucumber.io/docs/gherkin/reference).
 
@@ -21,7 +21,7 @@ No Cucumber runner is wired into this repo, and this skill doesn't add one — t
 
 ## Where files live
 
-Feature pages live flat, directly under `apps/docs/docs/reference/QA/test-cases/<feature>.md` — no required subfolder per layer or plan. Name the file after the feature or flow it covers, kebab-case (e.g. `homepage.md`). Reuse the same base name as the matching automated spec when one exists or is planned (`homepage.spec.ts` ↔ `homepage.md`).
+Feature pages live flat, directly under `apps/docs/docs/QA/test-cases/<feature>.md` — no required subfolder per layer or plan. Name the file after the feature or flow it covers, kebab-case (e.g. `homepage.md`). Reuse the same base name as the matching automated spec when one exists or is planned (`homepage.spec.ts` ↔ `homepage.md`).
 
 Scenarios that will run against a real backend and ones that need a stubbed backend for the same feature share one page — the `@smoke`/`@regression`/`@mock` tags (below) say what each scenario is, not the file location.
 

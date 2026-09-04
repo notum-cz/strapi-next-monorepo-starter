@@ -4,7 +4,7 @@ sidebar_position: 21
 
 # write-test-cases
 
-Document test cases as Gherkin scenarios, written as Markdown pages under `apps/docs/docs/reference/QA/test-cases/` so Docusaurus builds them into the docs site, mirroring the layers used by the automated Playwright suites (`e2e`, `axe`, `seo`, `visual`, `perfo`). This is QA documentation, not automated test code — for that, see `write-tests`. For freeform tribal-knowledge notes instead of test cases, see `write-qa-notes`.
+Document test cases as Gherkin scenarios, written as Markdown pages under `apps/docs/docs/QA/test-cases/` so Docusaurus builds them into the docs site, mirroring the layers used by the automated Playwright suites (`e2e`, `axe`, `seo`, `visual`, `perfo`). This is QA documentation, not automated test code — for that, see `write-tests`. For freeform tribal-knowledge notes instead of test cases, see `write-qa-notes`.
 
 ## Use it when
 
@@ -18,4 +18,4 @@ Document test cases as Gherkin scenarios, written as Markdown pages under `apps/
 - Gives QA/product a reviewable artifact that doesn't require reading test code — steps quote the exact on-screen copy (button labels, messages) and use concrete example data, so they read naturally and double as ready-made input for whoever automates the scenario.
 - Tracks which scenarios are still manual (`@manual`) vs already automated (`@automated`), with a comment linking to the spec that implements each automated one.
 
-See also: [Testing](../../QA/overview.md), [Gherkin reference](https://cucumber.io/docs/gherkin/reference).
+See also: [Testing](../../../QA/overview.md), [Gherkin reference](https://cucumber.io/docs/gherkin/reference).

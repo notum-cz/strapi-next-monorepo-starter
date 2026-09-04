@@ -276,6 +276,9 @@ jobs:
     name: LHCI Performance tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v7.0.0
@@ -287,6 +290,20 @@ jobs:
         env:
           BASE_URL: ${{ env.BASE_URL }}
         run: pnpm tests:lhci:perfo
+
+      - name: Open PR with Lighthouse trend history
+        if: success()
+        uses: peter-evans/create-pull-request@v8.1.1
+        with:
+          add-paths: qa/tests/playwright/perfo/lighthouse-history.md
+          commit-message: "chore(tests-playwright): record Lighthouse trend results"
+          branch: qa/lighthouse-trend-update
+          delete-branch: true
+          title: "chore(qa): update Lighthouse trend history"
+          body: |
+            Automated update of the Lighthouse performance trend log (`qa/tests/playwright/perfo/lighthouse-history.md`) from a manual QA workflow run.
+
+            Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
       - name: Pack LHCI reports
         if: always()

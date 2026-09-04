@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 1
 ---
 
 # Playwright Testing
@@ -90,6 +90,39 @@ pnpm tests:playwright:visual:docker:update  # Update Linux snapshots via Docker
 pnpm tests:lhci:perfo                       # Lighthouse CI performance checks
 ```
 
+## Accessibility Testing
+
+`axe/axe.spec.ts` runs [axe-core](https://github.com/dequelabs/axe-core) via `@axe-core/playwright`, one test per page from `helpers/urls.json`.
+
+The suite distinguishes a hard failure from a known, accepted warning:
+
+```typescript
+const PATH_CONFIGS: Record<string, { warningRuleIds?: string[] }> = {
+  "/auth/signin": { warningRuleIds: ["landmark-one-main", "region"] },
+}
+```
+
+- A known, not-fixed-today violation on a specific page → add its rule ID to that page's `warningRuleIds` in `PATH_CONFIGS` (not globally).
+- An element axe should ignore entirely on a page → that page's `excludeSelectors`.
+- A violation that applies everywhere → the file-level `GLOBAL_WARNING_RULE_IDS` / `GLOBAL_EXCLUDE_SELECTORS`.
+
+## SEO Testing
+
+`seo/seo.spec.ts` checks title, meta description, robots, canonical URL, heading hierarchy, structured data (JSON-LD), Open Graph tags, and hreflang — one `test.describe` block per page from `helpers/urls.json`:
+
+```typescript
+test.describe("Title", () => {
+  test("should exist and be non-empty", async ({ page }) => {
+    const title = (await page.title()).trim()
+    expect(title).not.toBe("")
+  })
+})
+```
+
+- New page to cover → add one entry to `helpers/urls.json`; every check runs against it automatically.
+- New check → a new `test.describe` block inside the suite's `for (const path of PATHS)` loop.
+- Production-only checks (robots, Heroku references) `test.skip` themselves automatically on other environments.
+
 ## Visual Regression
 
 Visual regression tests compare screenshots of the application against previously committed baseline images to detect unintended visual changes.
@@ -149,3 +182,11 @@ pnpm tests:playwright:visual:docker
 The `visual` job in `qa.yml` runs on a Linux runner and compares against committed baseline snapshots. Trigger it manually via the QA workflow with the **Visual tests** checkbox and a `base_url` value.
 
 Commit baseline updates only with the related UI change.
+
+## Lighthouse Performance
+
+`pnpm tests:lhci:perfo` runs Lighthouse CI (`lhci collect`) against every URL in `helpers/urls.json` and writes raw reports to `qa/tests/playwright/perfo/.lighthouseci/` (gitignored, one Lighthouse run per URL).
+
+Each run also appends one row per URL to `qa/tests/playwright/perfo/lighthouse-history.md` — a committed, append-only Markdown table with the category scores (performance, accessibility, best practices, SEO) for that page. Being plain Markdown, it renders as a readable table directly on GitHub and diffs cleanly in PRs (new rows only).
+
+In CI, the `lhci_perfo` job in `qa.yml` runs `tests:lhci:perfo` and, on success, opens (or updates) a pull request containing the updated `lighthouse-history.md` via `peter-evans/create-pull-request`, targeting the branch that triggered the run. This avoids pushing directly to a protected branch — someone still reviews and merges the trend update like any other change. Trigger it manually via the QA workflow with the **LHCI Performance tests** checkbox and a `base_url` value.

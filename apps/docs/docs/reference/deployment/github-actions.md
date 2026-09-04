@@ -134,6 +134,6 @@ The workflow configures GitHub Pages, builds Docusaurus with `DOCUSAURUS_URL` an
 
 ## Related Documentation
 
-- [Testing](../QA/overview.md)
+- [Testing](../../QA/overview.md)
 - [Git Hooks and Conventions](../workflow.md)
 - [`@repo/semantic-release-config`](../packages/semantic-release-config.md)
