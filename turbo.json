@@ -122,7 +122,7 @@
       "dependsOn": ["^build"],
       "cache": true
     },
-    "axe-test": {
+    "playwright-axe-test": {
       "cache": false,
       "persistent": false
     },
@@ -131,6 +131,14 @@
       "persistent": false
     },
     "playwright-e2e-tests": {
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-e2e-smoke-tests": {
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-e2e-mock-tests": {
       "cache": false,
       "persistent": false
     },

@@ -1,0 +1,10 @@
+{
+  "label": "Test Cases",
+  "position": 4,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "QA/test-cases/index"
+  }
+}

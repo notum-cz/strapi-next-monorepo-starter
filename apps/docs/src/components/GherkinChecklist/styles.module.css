@@ -1,0 +1,209 @@
+.checklist {
+  margin: 1rem 0 1.5rem;
+  padding: 1rem 1.15rem;
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 10px;
+  box-shadow: 0 12px 28px rgba(43, 41, 45, 0.06);
+}
+
+[data-theme="dark"] .checklist {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.65rem;
+}
+
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.passBadge {
+  color: #1b5e20;
+  background: rgba(46, 125, 50, 0.14);
+}
+
+[data-theme="dark"] .passBadge {
+  color: #81c784;
+  background: rgba(129, 199, 132, 0.16);
+}
+
+.failBadge {
+  color: #b71c1c;
+  background: rgba(198, 40, 40, 0.14);
+}
+
+[data-theme="dark"] .failBadge {
+  color: #ef9a9a;
+  background: rgba(239, 154, 154, 0.16);
+}
+
+.untestedBadge {
+  color: var(--ifm-color-emphasis-700);
+  background: var(--ifm-color-emphasis-200);
+}
+
+.reset {
+  flex-shrink: 0;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-700);
+  background: transparent;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    border-color 140ms ease,
+    color 140ms ease,
+    background 140ms ease;
+}
+
+.reset:hover {
+  color: var(--ifm-color-emphasis-900);
+  background: var(--ifm-color-emphasis-100);
+  border-color: var(--ifm-color-emphasis-500);
+}
+
+.progressBar {
+  display: flex;
+  height: 6px;
+  margin-bottom: 0.9rem;
+  overflow: hidden;
+  background: var(--ifm-color-emphasis-200);
+  border-radius: 999px;
+}
+
+.progressPass,
+.progressFail {
+  height: 100%;
+  transition: width 200ms ease;
+}
+
+.progressPass {
+  background: #2e7d32;
+}
+
+.progressFail {
+  background: #c62828;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.5rem;
+  border-radius: 6px;
+  transition: background 140ms ease;
+}
+
+.item:hover {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.itemLabel {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.title {
+  font-size: 0.92rem;
+}
+
+.tags {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.4rem;
+}
+
+.statusButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ifm-color-emphasis-600);
+  background: transparent;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    color 140ms ease,
+    background 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.statusButton:hover {
+  color: var(--ifm-color-emphasis-900);
+  border-color: var(--ifm-color-emphasis-500);
+}
+
+.statusButton.pass:hover {
+  color: #2e7d32;
+  border-color: #2e7d32;
+}
+
+[data-theme="dark"] .statusButton.pass:hover {
+  color: #81c784;
+  border-color: #81c784;
+}
+
+.statusButton.fail:hover {
+  color: #c62828;
+  border-color: #c62828;
+}
+
+[data-theme="dark"] .statusButton.fail:hover {
+  color: #ef9a9a;
+  border-color: #ef9a9a;
+}
+
+.statusButton.pass.active {
+  color: #ffffff;
+  background: #2e7d32;
+  border-color: #2e7d32;
+  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.35);
+}
+
+.statusButton.fail.active {
+  color: #ffffff;
+  background: #c62828;
+  border-color: #c62828;
+  box-shadow: 0 2px 8px rgba(198, 40, 40, 0.35);
+}

@@ -1,0 +1,367 @@
+trigger: none
+pr: none
+name: QA-Tests-$(Date:yyyyMMdd)
+appendCommitMessageToRunName: false
+
+# Uncomment the schedule trigger to run tests automatically on weekdays.
+# schedules:
+  # Runs at 00:00 UTC on weekdays (02:00 CEST).
+  # - cron: "0 0 * * 1-5"
+
+parameters:
+  - name: run_e2e
+    displayName: "E2E tests"
+    type: boolean
+    default: false
+
+  - name: run_axe
+    displayName: "AXE tests"
+    type: boolean
+    default: false
+
+  - name: run_seo
+    displayName: "SEO tests"
+    type: boolean
+    default: false
+
+  - name: run_lhci_perfo
+    displayName: "LHCI Performance tests"
+    type: boolean
+    default: false
+
+  - name: run_visual
+    displayName: "Visual tests"
+    type: boolean
+    default: false
+
+  - name: base_url
+    displayName: "Base URL to test against (must include protocol). Leave empty to use the default BASE_URL variable."
+    type: string
+    default: ""
+
+variables:
+  - group: qa-pipeline-vars # must define a BASE_URL variable
+  - name: CI
+    value: "true"
+  - name: NPM_CONFIG_IGNORE_SCRIPTS
+    value: "true"
+
+pool:
+  vmImage: "ubuntu-latest"
+
+jobs:
+  - job: set_run_name
+    displayName: Set run name
+    steps:
+      - bash: |
+          set -e
+          if [ "$(Build.Reason)" = "Schedule" ]; then
+            LABEL="SCHEDULED"
+          else
+            LABELS=()
+            [ "${{ parameters.run_e2e }}" = "True" ] && LABELS+=("E2E")
+            [ "${{ parameters.run_axe }}" = "True" ] && LABELS+=("AXE")
+            [ "${{ parameters.run_seo }}" = "True" ] && LABELS+=("SEO")
+            [ "${{ parameters.run_lhci_perfo }}" = "True" ] && LABELS+=("Perfo")
+            [ "${{ parameters.run_visual }}" = "True" ] && LABELS+=("Visual")
+            LABEL=$(IFS=', '; echo "${LABELS[*]}")
+          fi
+          BASE_URL_INPUT="${{ parameters.base_url }}"
+          if [ -z "$BASE_URL_INPUT" ]; then
+            BASE_URL_INPUT="default-baseurl"
+          fi
+          SAFE_BASE_URL=$(echo "$BASE_URL_INPUT" | sed -E 's#^[a-zA-Z]+://##; s#[/:\\"'"'"'<>|?@*]+#-#g')
+          echo "##vso[build.updatebuildnumber][$LABEL] QA - $SAFE_BASE_URL"
+        displayName: Compute run name
+
+  - job: e2e
+    displayName: "Playwright E2E tests"
+    condition: and(succeeded(), eq(${{ parameters.run_e2e }}, true))
+    timeoutInMinutes: 30
+    steps:
+      - checkout: self
+        fetchDepth: 1
+
+      - template: ../templates/steps/setup-pnpm.yaml
+
+      - script: |
+          set -e
+          RESOLVED_BASE_URL="${{ parameters.base_url }}"
+          if [ -z "$RESOLVED_BASE_URL" ]; then
+            RESOLVED_BASE_URL="$(BASE_URL)"
+          fi
+          echo "##vso[task.setvariable variable=BASE_URL]$RESOLVED_BASE_URL"
+        displayName: Resolve BASE_URL
+
+      - task: Cache@2
+        inputs:
+          key: 'playwright | "$(Agent.OS)" | pnpm-lock.yaml'
+          restoreKeys: |
+            playwright | "$(Agent.OS)"
+          path: $(HOME)/.cache/ms-playwright
+        displayName: Cache Playwright browsers
+
+      - bash: |
+          set -eux
+          pnpm -F @repo/tests-playwright exec playwright install --with-deps
+        displayName: "Install Playwright browsers"
+
+      - bash: |
+          pnpm tests:playwright:e2e:test
+        displayName: "Run Playwright E2E tests"
+        env:
+          BASE_URL: $(BASE_URL)
+          CI: "true"
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish Playwright report"
+        condition: failed()
+        inputs:
+          pathToPublish: "qa/tests/playwright/playwright-report"
+          artifactName: "playwright-report"
+          publishLocation: "Container"
+
+      - bash: |
+          set -e
+          mkdir -p "$(Build.ArtifactStagingDirectory)/traces"
+          cd qa/tests/playwright
+          find test-results -name 'trace.zip' | tar -cf - -T - | tar -xf - -C "$(Build.ArtifactStagingDirectory)/traces"
+        displayName: Collect Playwright traces
+        condition: failed()
+
+      - task: PublishBuildArtifacts@1
+        condition: failed()
+        inputs:
+          pathToPublish: "$(Build.ArtifactStagingDirectory)/traces"
+          artifactName: "playwright-traces"
+          publishLocation: "Container"
+
+  - job: axe
+    displayName: "Playwright AXE tests"
+    condition: and(succeeded(), eq(${{ parameters.run_axe }}, true))
+    timeoutInMinutes: 15
+    steps:
+      - checkout: self
+        fetchDepth: 1
+
+      - template: ../templates/steps/setup-pnpm.yaml
+
+      - script: |
+          set -e
+          RESOLVED_BASE_URL="${{ parameters.base_url }}"
+          if [ -z "$RESOLVED_BASE_URL" ]; then
+            RESOLVED_BASE_URL="$(BASE_URL)"
+          fi
+          echo "##vso[task.setvariable variable=BASE_URL]$RESOLVED_BASE_URL"
+        displayName: Resolve BASE_URL
+
+      - task: Cache@2
+        inputs:
+          key: 'playwright | "$(Agent.OS)" | pnpm-lock.yaml'
+          restoreKeys: |
+            playwright | "$(Agent.OS)"
+          path: $(HOME)/.cache/ms-playwright
+        displayName: Cache Playwright browsers
+
+      - bash: |
+          set -eux
+          pnpm -F @repo/tests-playwright exec playwright install --with-deps
+        displayName: "Install Playwright browsers"
+
+      - bash: |
+          pnpm tests:playwright:axe
+        displayName: "Run Axe tests"
+        env:
+          BASE_URL: $(BASE_URL)
+          CI: "true"
+
+      - bash: |
+          tar -czf axe-reports-$(Build.BuildId).tgz \
+            -C qa/tests/playwright \
+            playwright-report
+        displayName: "Pack Axe reports"
+        condition: failed()
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish Axe report"
+        condition: failed()
+        inputs:
+          pathToPublish: "axe-reports-$(Build.BuildId).tgz"
+          artifactName: "axe-report"
+          publishLocation: "Container"
+
+  - job: seo
+    displayName: "Playwright SEO tests"
+    condition: and(succeeded(), eq(${{ parameters.run_seo }}, true))
+    timeoutInMinutes: 30
+    steps:
+      - checkout: self
+        fetchDepth: 1
+
+      - template: ../templates/steps/setup-pnpm.yaml
+
+      - script: |
+          set -e
+          RESOLVED_BASE_URL="${{ parameters.base_url }}"
+          if [ -z "$RESOLVED_BASE_URL" ]; then
+            RESOLVED_BASE_URL="$(BASE_URL)"
+          fi
+          echo "##vso[task.setvariable variable=BASE_URL]$RESOLVED_BASE_URL"
+        displayName: Resolve BASE_URL
+
+      - task: Cache@2
+        inputs:
+          key: 'playwright | "$(Agent.OS)" | pnpm-lock.yaml'
+          restoreKeys: |
+            playwright | "$(Agent.OS)"
+          path: $(HOME)/.cache/ms-playwright
+        displayName: Cache Playwright browsers
+
+      - bash: |
+          set -eux
+          pnpm -F @repo/tests-playwright exec playwright install --with-deps
+        displayName: "Install Playwright browsers"
+
+      - bash: |
+          pnpm tests:playwright:seo
+        displayName: "Run Playwright SEO tests"
+        env:
+          BASE_URL: $(BASE_URL)
+          CI: "true"
+
+      - bash: |
+          tar -czf seo-reports-$(Build.BuildId).tgz \
+            -C qa/tests/playwright \
+            playwright-report
+        displayName: "Pack SEO reports"
+        condition: failed()
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish SEO report"
+        condition: failed()
+        inputs:
+          pathToPublish: "seo-reports-$(Build.BuildId).tgz"
+          artifactName: "seo-report"
+          publishLocation: "Container"
+
+  - job: visual
+    displayName: "Playwright Visual tests"
+    condition: and(succeeded(), eq(${{ parameters.run_visual }}, true))
+    timeoutInMinutes: 15
+    steps:
+      - checkout: self
+        fetchDepth: 1
+
+      - template: ../templates/steps/setup-pnpm.yaml
+
+      - bash: |
+          VERSION="$(node -p "require('./qa/tests/playwright/node_modules/@playwright/test/package.json').version")"
+          echo "##vso[task.setvariable variable=PLAYWRIGHT_VERSION]$VERSION"
+        displayName: Resolve Playwright version
+
+      - bash: |
+          set -e
+          if find qa/tests/playwright/visual/visual.spec.ts-snapshots -type f -name '*.png' 2>/dev/null | grep -q .; then
+            echo "Baseline snapshots found."
+            echo "##vso[task.setvariable variable=HAS_BASELINES]true"
+          else
+            echo "No baseline snapshots found under qa/tests/playwright/visual/visual.spec.ts-snapshots - skipping visual regression run."
+            echo "##vso[task.setvariable variable=HAS_BASELINES]false"
+          fi
+        displayName: Check for baseline snapshots
+
+      - script: |
+          set -e
+          RESOLVED_BASE_URL="${{ parameters.base_url }}"
+          if [ -z "$RESOLVED_BASE_URL" ]; then
+            RESOLVED_BASE_URL="$(BASE_URL)"
+          fi
+          echo "##vso[task.setvariable variable=BASE_URL]$RESOLVED_BASE_URL"
+        condition: and(succeeded(), eq(variables['HAS_BASELINES'], 'true'))
+        displayName: Resolve BASE_URL
+
+      - task: Cache@2
+        condition: and(succeeded(), eq(variables['HAS_BASELINES'], 'true'))
+        inputs:
+          key: '"docker-playwright-v$(PLAYWRIGHT_VERSION)-noble"'
+          path: /tmp/docker-playwright-cache
+        displayName: Cache Playwright Docker image
+
+      - bash: |
+          set -e
+          IMAGE="mcr.microsoft.com/playwright:v$(PLAYWRIGHT_VERSION)-noble"
+          CACHE_FILE="/tmp/docker-playwright-cache/playwright.tar"
+          if [ -f "$CACHE_FILE" ]; then
+            echo "Loading Docker image from cache..."
+            docker load -i "$CACHE_FILE"
+          else
+            echo "Pulling Docker image..."
+            docker pull "$IMAGE"
+            mkdir -p /tmp/docker-playwright-cache
+            docker save "$IMAGE" -o "$CACHE_FILE"
+          fi
+        condition: and(succeeded(), eq(variables['HAS_BASELINES'], 'true'))
+        displayName: Load or pull Playwright Docker image
+
+      - script: pnpm tests:playwright:visual:docker
+        condition: and(succeeded(), eq(variables['HAS_BASELINES'], 'true'))
+        displayName: Run Visual tests
+        env:
+          BASE_URL: $(BASE_URL)
+          CI: "true"
+
+      - bash: |
+          tar -czf visual-reports-$(Build.BuildId).tgz \
+            -C qa/tests/playwright \
+            playwright-report
+        displayName: "Pack Visual reports"
+        condition: failed()
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish Visual report"
+        condition: failed()
+        inputs:
+          pathToPublish: "visual-reports-$(Build.BuildId).tgz"
+          artifactName: "visual-report"
+          publishLocation: "Container"
+
+  - job: lhci_perfo
+    displayName: "LHCI Performance tests"
+    # LHCI never runs on scheduled (cron) builds, regardless of parameter defaults.
+    condition: and(succeeded(), eq(${{ parameters.run_lhci_perfo }}, true), ne(variables['Build.Reason'], 'Schedule'))
+    timeoutInMinutes: 15
+    steps:
+      - checkout: self
+        fetchDepth: 1
+
+      - template: ../templates/steps/setup-pnpm.yaml
+
+      - script: |
+          set -e
+          RESOLVED_BASE_URL="${{ parameters.base_url }}"
+          if [ -z "$RESOLVED_BASE_URL" ]; then
+            RESOLVED_BASE_URL="$(BASE_URL)"
+          fi
+          echo "##vso[task.setvariable variable=BASE_URL]$RESOLVED_BASE_URL"
+        displayName: Resolve BASE_URL
+
+      - bash: |
+          pnpm tests:lhci:perfo
+        displayName: "Run LHCI Performance tests"
+        env:
+          BASE_URL: $(BASE_URL)
+          CI: "true"
+
+      - bash: |
+          tar -czf lhci-perfo-reports-$(Build.BuildId).tgz \
+            -C qa/tests/playwright/perfo/.lighthouseci .
+        displayName: "Pack LHCI reports"
+        condition: always()
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish LHCI report"
+        condition: always()
+        inputs:
+          pathToPublish: "lhci-perfo-reports-$(Build.BuildId).tgz"
+          artifactName: "perfo-report"
+          publishLocation: "Container"

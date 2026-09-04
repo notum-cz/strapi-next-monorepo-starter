@@ -72,7 +72,7 @@ Shared code lives in [`packages/*`](../reference/packages/overview.md).
 - **[Shared packages](../reference/packages/overview.md)** — design tokens, path helpers, generated Strapi types, lint config, TypeScript config, and release config live in `packages/*`.
 - **[Code quality](../reference/workflow.md)** — ESLint, Prettier, Lefthook, Commitizen, and Conventional Commits are included.
 - **[Internationalization](../reference/internationalization.md)** — UI messages and Strapi content locales are documented together.
-- **[Testing and QA](../reference/testing/overview.md)** — Vitest, Playwright, axe, visual tests, SEO checks, and Lighthouse CI are covered.
+- **[Testing and QA](../QA/overview.md)** — Vitest, Playwright, axe, visual tests, SEO checks, and Lighthouse CI are covered.
 - **[Deployment](../reference/deployment/overview.md)** — GitHub Actions, Heroku, Vercel, and Docker deployment notes are documented.
 - **[Design system](../design-system/overview.md)** — shared tokens, typography, rich text styling, and CMS component design rules are documented.
 - **Integrations** — [Observability](../reference/integrations/logging.md) (structured logging, Azure Monitor, Sentry), [reCAPTCHA](../reference/integrations/recaptcha.md), and [CDN / Azure Front Door](../reference/integrations/cdn.md) setup have dedicated reference pages.
