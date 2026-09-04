@@ -47,8 +47,10 @@ function frameAncestorsFromEnv(): string | null {
  * The baseline below is intentionally strict — it only allows this app's own
  * origin plus Strapi media over HTTPS. If you add third-party scripts/services
  * (analytics, tag managers, embeds, captchas), allowlist their origins in the
- * relevant directive. Commented examples for a Google Tag Manager / Analytics /
- * Ads setup are left inline as a starting point — uncomment and adjust as needed.
+ * relevant directive. Google Tag Manager and Analytics are already allowlisted
+ * for `TrackingScripts`, as is unpkg for the cookie banner loaded by GTM's
+ * "Cookie Consent v2" template; commented Google Ads examples are left inline
+ * as a starting point — uncomment and adjust as needed.
  */
 function buildCsp({
   frameAncestors,
@@ -65,14 +67,21 @@ function buildCsp({
     [
       "script-src 'self' 'unsafe-inline'",
       ...(isDevelopment ? ["'unsafe-eval'"] : []),
-      // Example — Google Tag Manager / Analytics / Ads (uncomment if used):
-      // "https://www.googletagmanager.com",
-      // "https://www.google-analytics.com",
+      // Google Tag Manager / Analytics
+      "https://www.googletagmanager.com",
+      "https://www.google-analytics.com",
+      // Cookie banner library, loaded by the "Cookie Consent v2" GTM community
+      // template (see its "Injects scripts" permission).
+      "https://unpkg.com",
+      // Example — Google Ads (uncomment if used):
       // "https://www.googleadservices.com",
       // "https://pagead2.googlesyndication.com",
       // "https://googleads.g.doubleclick.net",
     ].join(" "),
-    "style-src 'self' 'unsafe-inline'",
+    // 'unsafe-inline' covers the <style> block the cookie banner injects at
+    // runtime; unpkg is listed because the same library may load its stylesheet
+    // as a separate file.
+    "style-src 'self' 'unsafe-inline' https://unpkg.com",
     // imgproxy, blob storage and Strapi media are all served over HTTPS.
     [
       "img-src 'self' data: blob: https:",
@@ -81,18 +90,19 @@ function buildCsp({
     "font-src 'self' data:",
     [
       "connect-src 'self'",
-      // Example — Google Analytics / Ads (uncomment if used):
-      // "https://*.google-analytics.com",
-      // "https://*.analytics.google.com",
-      // "https://*.googletagmanager.com",
+      // Google Analytics
+      "https://*.google-analytics.com",
+      "https://*.analytics.google.com",
+      "https://*.googletagmanager.com",
+      // Example — Google Ads (uncomment if used):
       // "https://www.googleadservices.com",
       // "https://pagead2.googlesyndication.com",
       // "https://*.doubleclick.net",
       // "https://www.google.com",
     ].join(" "),
-    // Example — add framed third parties (e.g. tag manager preview) here:
-    // "frame-src 'self' https://www.googletagmanager.com https://bid.g.doubleclick.net https://td.doubleclick.net",
-    "frame-src 'self'",
+    // GTM's <noscript> fallback iframe. Add further framed third parties (e.g.
+    // "https://bid.g.doubleclick.net https://td.doubleclick.net" for Ads) here.
+    "frame-src 'self' https://www.googletagmanager.com",
     "worker-src 'self' blob:",
     [
       "media-src 'self' blob: https:",

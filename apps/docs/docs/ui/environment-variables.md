@@ -162,6 +162,14 @@ Permissions are scoped manually per content type. Strapi currently does not prov
       <td>reCAPTCHA v3 verification.</td>
     </tr>
     <tr>
+      <td><code>GTM_ID</code></td>
+      <td>server</td>
+      <td>No</td>
+      <td>
+        Google Tag Manager container ID (<code>GTM-XXXXXXX</code>).
+      </td>
+    </tr>
+    <tr>
       <td>
         <code>SENTRY_AUTH_TOKEN</code><br />
         <code>SENTRY_ORG</code><br />
