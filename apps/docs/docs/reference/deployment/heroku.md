@@ -127,7 +127,7 @@ fi
 ```
 
 :::warning Uploaded media
-Heroku dyno filesystems are ephemeral. Use [S3](../../strapi/plugins/upload-providers#aws-s3), [Azure Blob Storage](../../strapi/plugins/upload-providers#azure-blob-storage), or [another external upload provider](../../strapi/plugins/upload-providers) for Strapi media. Uploaded files stored on the dyno can disappear after restarts, rebuilds, or dyno moves.
+Heroku dyno filesystems are ephemeral. Use [S3](../../strapi/plugins/upload-providers.md#aws-s3), [Azure Blob Storage](../../strapi/plugins/upload-providers.md#azure-blob-storage), or [another external upload provider](../../strapi/plugins/upload-providers.md) for Strapi media. Uploaded files stored on the dyno can disappear after restarts, rebuilds, or dyno moves.
 :::
 
 The repository currently includes `apps/strapi/Procfile`:

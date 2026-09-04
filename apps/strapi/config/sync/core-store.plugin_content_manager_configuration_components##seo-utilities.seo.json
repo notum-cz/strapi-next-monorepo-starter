@@ -117,34 +117,6 @@
           "sortable": true
         }
       },
-      "siteName": {
-        "edit": {
-          "label": "siteName",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "siteName",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "email": {
-        "edit": {
-          "label": "email",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "email",
-          "searchable": true,
-          "sortable": true
-        }
-      },
       "canonicalUrl": {
         "edit": {
           "label": "canonicalUrl",
@@ -185,6 +157,14 @@
           "label": "structuredData",
           "searchable": false,
           "sortable": false
+        }
+      },
+      "documentId": {
+        "edit": {},
+        "list": {
+          "label": "documentId",
+          "searchable": true,
+          "sortable": true
         }
       }
     },
@@ -232,17 +212,9 @@
           {
             "name": "applicationName",
             "size": 6
-          },
-          {
-            "name": "siteName",
-            "size": 6
           }
         ],
         [
-          {
-            "name": "email",
-            "size": 6
-          },
           {
             "name": "canonicalUrl",
             "size": 6
