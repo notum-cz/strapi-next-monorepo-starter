@@ -4,7 +4,7 @@ sidebar_position: 22
 
 # write-qa-notes
 
-Capture QA tribal knowledge — environment quirks, known issues, workarounds — as short Markdown pages under `apps/docs/docs/QA/common-knowledge/`. This is freeform notes, not test cases (`write-test-cases`) and not automated test code (`write-tests`).
+Capture QA tribal knowledge — environment quirks, known issues, workarounds — as accordion entries on the single `apps/docs/docs/QA/common-knowledge/index.md` page. This is freeform notes, not test cases (`write-test-cases`) and not automated test code (`write-tests`).
 
 ## Use it when
 
@@ -15,6 +15,6 @@ Capture QA tribal knowledge — environment quirks, known issues, workarounds �
 
 - Stops the same gotcha from being rediscovered from scratch by the next person.
 - Keeps tribal knowledge out of people's heads and out of ephemeral chat history.
-- Gives each topic its own short, searchable page instead of one sprawling notes file.
+- Keeps every note in one shared, searchable page instead of scattering topics across many small files.
 
 See also: [Testing](../../../QA/overview.md), `write-test-cases`.

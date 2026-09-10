@@ -1,21 +1,27 @@
-import React, { type ReactNode, useEffect, useMemo, useState } from "react"
+import React, {
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import BrowserOnly from "@docusaurus/BrowserOnly"
 import Link from "@docusaurus/Link"
 import { usePluginData } from "@docusaurus/useGlobalData"
 import clsx from "clsx"
 
+import {
+  type ChecklistState,
+  type Scenario,
+  emptyChecklistState,
+  gherkinStorageKey,
+  parseChecklistState,
+  scenarioKey,
+} from "@site/src/lib/gherkin"
+import { deleteImage, getImageDataUrl } from "@site/src/lib/imageStore"
+
 import { buildPlanReport, slugify } from "./buildPlanReport"
 import styles from "./styles.module.css"
-
-interface Scenario {
-  type: string
-  title: string
-  tags: string[]
-}
-
-type Status = "pass" | "fail" | null
-
-type Results = Record<number, Status>
 
 interface ManifestEntry {
   pageId: string
@@ -35,45 +41,143 @@ interface TestPlanExportProps {
   pages?: string[]
 }
 
-function readResults(storageKey: string): Results {
+function readResults(
+  storageKey: string,
+  scenarios: Scenario[]
+): ChecklistState {
   try {
-    const raw = window.localStorage.getItem(storageKey)
-    return raw ? JSON.parse(raw) : {}
+    return parseChecklistState(
+      window.localStorage.getItem(storageKey),
+      scenarios
+    )
   } catch {
     // localStorage unavailable (private mode, disabled cookies, etc.) —
     // the plan still renders, it just can't read anyone's saved results.
-    return {}
+    return emptyChecklistState()
   }
 }
 
-function countStatuses(scenarios: Scenario[], results: Results) {
+// The export is a self-contained downloadable HTML file — it can't rely
+// on the exporting browser's IndexedDB being around later, so every image
+// id gets resolved to an inlined data URL before buildPlanReport ever
+// touches it.
+async function resolveImages(state: ChecklistState): Promise<ChecklistState> {
+  const resolveIds = async (ids: string[]) => {
+    const dataUrls = await Promise.all(ids.map((id) => getImageDataUrl(id)))
+    return dataUrls.filter((url): url is string => !!url)
+  }
+
+  const generalImages = await resolveIds(state.generalImages)
+  const itemEntries = await Promise.all(
+    Object.entries(state.items).map(async ([key, item]) => [
+      key,
+      { ...item, images: await resolveIds(item.images) },
+    ])
+  )
+
+  return {
+    general: state.general,
+    generalImages,
+    items: Object.fromEntries(itemEntries),
+  }
+}
+
+const FOCUSABLE_SELECTOR =
+  'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+
+/**
+ * Focus handling for the export/reset confirm dialogs: moves focus into
+ * the dialog when it opens, traps Tab/Shift+Tab inside it while open, and
+ * restores focus to whatever triggered it (the Export/Reset button) once
+ * it closes — without this, a keyboard user tabbing through the page
+ * while the dialog is open lands on background controls it shouldn't.
+ */
+function useDialogFocus(open: boolean) {
+  const dialogRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<Element | null>(null)
+
+  useEffect(() => {
+    if (!open) return
+
+    triggerRef.current = document.activeElement
+    dialogRef.current?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)?.focus()
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Tab" || !dialogRef.current) return
+
+      const focusables = Array.from(
+        dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+      )
+      if (focusables.length === 0) return
+
+      const first = focusables[0]
+      const last = focusables[focusables.length - 1]
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown)
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown)
+      if (triggerRef.current instanceof HTMLElement) {
+        triggerRef.current.focus()
+      }
+    }
+  }, [open])
+
+  return dialogRef
+}
+
+function countStatuses(scenarios: Scenario[], state: ChecklistState) {
   let pass = 0
   let fail = 0
-  scenarios.forEach((_, i) => {
-    if (results[i] === "pass") pass += 1
-    else if (results[i] === "fail") fail += 1
+  scenarios.forEach((scenario) => {
+    const status = state.items[scenarioKey(scenario)]?.status
+    if (status === "pass") pass += 1
+    else if (status === "fail") fail += 1
   })
   return { pass, fail, untested: scenarios.length - pass - fail }
 }
 
-function ExportImpl({ planId, planName, pages }: TestPlanExportProps): ReactNode {
+function ExportImpl({
+  planId,
+  planName,
+  pages,
+}: TestPlanExportProps): ReactNode {
   const manifest = usePluginData("test-plan-manifest") as TestPlanManifest
   const entries = useMemo(
-    () => (pages ? manifest.filter((entry) => pages.includes(entry.pageId)) : manifest),
+    () =>
+      pages
+        ? manifest.filter((entry) => pages.includes(entry.pageId))
+        : manifest,
     [manifest, pages]
   )
 
-  const [resultsByEntry, setResultsByEntry] = useState<Results[]>([])
+  const [resultsByEntry, setResultsByEntry] = useState<ChecklistState[]>([])
 
   useEffect(() => {
     setResultsByEntry(
-      entries.map((entry) => readResults(`gherkin-checklist:${entry.path}:${entry.blockIndex}`))
+      entries.map((entry) =>
+        readResults(
+          gherkinStorageKey(entry.path, entry.blockIndex),
+          entry.scenarios
+        )
+      )
     )
   }, [entries])
 
   const totals = entries.reduce(
     (acc, entry, i) => {
-      const counts = countStatuses(entry.scenarios, resultsByEntry[i] ?? {})
+      const counts = countStatuses(
+        entry.scenarios,
+        resultsByEntry[i] ?? emptyChecklistState()
+      )
       return {
         pass: acc.pass + counts.pass,
         fail: acc.fail + counts.fail,
@@ -86,6 +190,8 @@ function ExportImpl({ planId, planName, pages }: TestPlanExportProps): ReactNode
 
   const [exportConfirmOpen, setExportConfirmOpen] = useState(false)
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false)
+  const exportDialogRef = useDialogFocus(exportConfirmOpen)
+  const resetDialogRef = useDialogFocus(resetConfirmOpen)
 
   useEffect(() => {
     if (!exportConfirmOpen && !resetConfirmOpen) return
@@ -99,15 +205,20 @@ function ExportImpl({ planId, planName, pages }: TestPlanExportProps): ReactNode
     return () => document.removeEventListener("keydown", onKeyDown)
   }, [exportConfirmOpen, resetConfirmOpen])
 
-  const performExport = () => {
+  const performExport = async () => {
     const generatedAt = new Date()
+    const resolvedStates = await Promise.all(
+      entries.map((_, i) =>
+        resolveImages(resultsByEntry[i] ?? emptyChecklistState())
+      )
+    )
     const html = buildPlanReport({
       planName: planName ?? planId,
       features: entries.map((entry, i) => ({
         featureName: entry.featureName,
         pageUrl: `${window.location.origin}${entry.path}`,
         scenarios: entry.scenarios,
-        results: resultsByEntry[i] ?? {},
+        state: resolvedStates[i],
       })),
       generatedAt,
     })
@@ -127,24 +238,31 @@ function ExportImpl({ planId, planName, pages }: TestPlanExportProps): ReactNode
     if (totals.untested > 0) {
       setExportConfirmOpen(true)
     } else {
-      performExport()
+      void performExport()
     }
   }
 
   const confirmExport = () => {
     setExportConfirmOpen(false)
-    performExport()
+    void performExport()
   }
 
   const performReset = () => {
+    const imageIds = resultsByEntry.flatMap((state) => [
+      ...state.generalImages,
+      ...Object.values(state.items).flatMap((item) => item.images),
+    ])
     entries.forEach((entry) => {
       try {
-        window.localStorage.removeItem(`gherkin-checklist:${entry.path}:${entry.blockIndex}`)
+        window.localStorage.removeItem(
+          gherkinStorageKey(entry.path, entry.blockIndex)
+        )
       } catch {
         // ignore — see readResults
       }
     })
-    setResultsByEntry(entries.map(() => ({})))
+    setResultsByEntry(entries.map(() => emptyChecklistState()))
+    imageIds.forEach((id) => void deleteImage(id))
   }
 
   const handleResetClick = () => {
@@ -179,10 +297,18 @@ function ExportImpl({ planId, planName, pages }: TestPlanExportProps): ReactNode
           </span>
         </span>
         <span className={styles.headerActions}>
-          <button type="button" className={styles.export} onClick={handleExportClick}>
+          <button
+            type="button"
+            className={styles.export}
+            onClick={handleExportClick}
+          >
             Export results
           </button>
-          <button type="button" className={styles.export} onClick={handleResetClick}>
+          <button
+            type="button"
+            className={styles.export}
+            onClick={handleResetClick}
+          >
             Reset
           </button>
         </span>
@@ -199,16 +325,24 @@ function ExportImpl({ planId, planName, pages }: TestPlanExportProps): ReactNode
       </div>
       <ul className={styles.list}>
         {entries.map((entry, i) => {
-          const counts = countStatuses(entry.scenarios, resultsByEntry[i] ?? {})
+          const counts = countStatuses(
+            entry.scenarios,
+            resultsByEntry[i] ?? emptyChecklistState()
+          )
           return (
-            <li key={`${entry.pageId}:${entry.blockIndex}`} className={styles.item}>
+            <li
+              key={`${entry.pageId}:${entry.blockIndex}`}
+              className={styles.item}
+            >
               <Link to={entry.path} className={styles.featureLink}>
                 {entry.featureName}
               </Link>
               <span className={styles.itemCounts}>
                 <span className={styles.passCount}>{counts.pass} pass</span>
                 <span className={styles.failCount}>{counts.fail} fail</span>
-                <span className={styles.untestedCount}>{counts.untested} untested</span>
+                <span className={styles.untestedCount}>
+                  {counts.untested} untested
+                </span>
               </span>
             </li>
           )
@@ -221,15 +355,19 @@ function ExportImpl({ planId, planName, pages }: TestPlanExportProps): ReactNode
           role="presentation"
         >
           <div
+            ref={exportDialogRef}
             className={styles.dialog}
             role="alertdialog"
             aria-modal="true"
             aria-labelledby="test-plan-export-confirm-title"
             onClick={(event) => event.stopPropagation()}
           >
-            <p id="test-plan-export-confirm-title" className={styles.dialogText}>
-              {totals.untested} scenario{totals.untested === 1 ? "" : "s"} still untested.
-              Export anyway?
+            <p
+              id="test-plan-export-confirm-title"
+              className={styles.dialogText}
+            >
+              {totals.untested} scenario{totals.untested === 1 ? "" : "s"} still
+              untested. Export anyway?
             </p>
             <div className={styles.dialogActions}>
               <button
@@ -239,7 +377,11 @@ function ExportImpl({ planId, planName, pages }: TestPlanExportProps): ReactNode
               >
                 Cancel
               </button>
-              <button type="button" className={styles.exportConfirm} onClick={confirmExport}>
+              <button
+                type="button"
+                className={styles.exportConfirm}
+                onClick={confirmExport}
+              >
                 Export anyway
               </button>
             </div>
@@ -253,6 +395,7 @@ function ExportImpl({ planId, planName, pages }: TestPlanExportProps): ReactNode
           role="presentation"
         >
           <div
+            ref={resetDialogRef}
             className={styles.dialog}
             role="alertdialog"
             aria-modal="true"
@@ -261,8 +404,9 @@ function ExportImpl({ planId, planName, pages }: TestPlanExportProps): ReactNode
           >
             <p id="test-plan-reset-confirm-title" className={styles.dialogText}>
               This clears {totals.pass + totals.fail} result
-              {totals.pass + totals.fail === 1 ? "" : "s"} ({totals.pass} pass, {totals.fail} fail)
-              back to untested. This can't be undone. Reset anyway?
+              {totals.pass + totals.fail === 1 ? "" : "s"} ({totals.pass} pass,{" "}
+              {totals.fail} fail) back to untested. This can't be undone. Reset
+              anyway?
             </p>
             <div className={styles.dialogActions}>
               <button
@@ -272,7 +416,11 @@ function ExportImpl({ planId, planName, pages }: TestPlanExportProps): ReactNode
               >
                 Cancel
               </button>
-              <button type="button" className={styles.resetConfirm} onClick={confirmReset}>
+              <button
+                type="button"
+                className={styles.resetConfirm}
+                onClick={confirmReset}
+              >
                 Reset anyway
               </button>
             </div>

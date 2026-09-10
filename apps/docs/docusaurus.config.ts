@@ -27,6 +27,20 @@ const config: Config = {
       },
     ],
     testPlanManifestPlugin,
+    [
+      require.resolve("@docusaurus/plugin-client-redirects"),
+      {
+        // QA/overview.md used to live at this slug — Docusaurus doesn't
+        // redirect changed slugs on its own, so a bookmark/external link
+        // to the old URL would otherwise 404.
+        redirects: [
+          {
+            to: "/docs/QA/",
+            from: "/docs/reference/testing",
+          },
+        ],
+      },
+    ],
   ],
   organizationName: "notum-cz",
   projectName: "strapi-next-monorepo-starter",

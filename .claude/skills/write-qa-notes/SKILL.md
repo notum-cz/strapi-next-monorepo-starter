@@ -16,7 +16,7 @@ Capture QA tribal knowledge as an entry on the single `apps/docs/docs/QA/common-
 
 ## Where notes live
 
-One page, not one file per topic: every note is a `<details>`/`<summary>` accordion entry appended to `apps/docs/docs/QA/common-knowledge/index.md` — the same collapsible-FAQ pattern as [How to...](../../how-to/index.md). Don't create a new `.md` file per topic; add a new `<details>` block to the existing page instead.
+One page, not one file per topic: every note is a `<details>`/`<summary>` accordion entry appended to `apps/docs/docs/QA/common-knowledge/index.md` — the same collapsible-FAQ pattern as [How to...](../../../apps/docs/docs/how-to/index.md). Don't create a new `.md` file per topic; add a new `<details>` block to the existing page instead.
 
 The `_category_.json` in that folder already links the sidebar entry straight to `index.md` (`"link": {"type": "doc", "id": "QA/common-knowledge/index"}`) — nothing else to set up, even for the first note.
 

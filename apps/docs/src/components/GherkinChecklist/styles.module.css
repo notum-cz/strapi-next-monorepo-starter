@@ -11,6 +11,34 @@
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
 }
 
+/* Sections — the checklist is a stack of clearly bounded blocks (status,
+   overall notes, tag filter, scenario list) rather than one flat pile of
+   controls. Each one but the last carries its own bottom rule. */
+.statusSection,
+.section {
+  padding-bottom: 0.85rem;
+  margin-bottom: 0.85rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.sectionLabel {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ifm-color-emphasis-600);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Status: pass/fail/untested + reset, and the progress bar underneath. */
 .header {
   display: flex;
   flex-wrap: wrap;
@@ -87,7 +115,6 @@
 .progressBar {
   display: flex;
   height: 6px;
-  margin-bottom: 0.9rem;
   overflow: hidden;
   background: var(--ifm-color-emphasis-200);
   border-radius: 999px;
@@ -107,31 +134,271 @@
   background: #c62828;
 }
 
+/* Tag filter row: a label, the chips, and (conditionally) a clear link,
+   all on one line that wraps as a unit on narrow screens. */
+.tagFilter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.tagChips {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.tagChip {
+  padding: 0.28rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  color: var(--ifm-color-emphasis-700);
+  background: var(--ifm-color-emphasis-100);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    color 140ms ease,
+    background 140ms ease,
+    border-color 140ms ease;
+}
+
+.tagChip:hover {
+  border-color: var(--ifm-color-emphasis-500);
+  background: var(--ifm-color-emphasis-200);
+}
+
+/* Selected reuses the same green as the Pass button/badge — one
+   consistent "this is active/on" color across the checklist, instead of
+   introducing a second (blue) accent just for tag selection. */
+.tagChipActive,
+.tagChipActive:hover {
+  color: #2e7d32;
+  background: rgba(46, 125, 50, 0.12);
+  border: 1.5px solid #2e7d32;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .tagChipActive,
+[data-theme="dark"] .tagChipActive:hover {
+  color: #81c784;
+  background: rgba(129, 199, 132, 0.16);
+  border-color: #81c784;
+}
+
+.tagClear {
+  flex-shrink: 0;
+  padding: 0.3rem 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-600);
+  white-space: nowrap;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.tagClear:hover {
+  color: var(--ifm-color-emphasis-900);
+}
+
+/* Notes — the general one above the list and each scenario's own share
+   this look. A note that's empty and untouched stays collapsed behind
+   a toggle so the list underneath isn't cluttered by default. */
+.noteField {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0.35rem;
+}
+
+.attachButton {
+  flex-shrink: 0;
+  align-self: flex-start;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-600);
+  background: transparent;
+  border: 1px dashed var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    color 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease;
+}
+
+.attachButton:hover {
+  color: var(--ifm-color-emphasis-900);
+  background: var(--ifm-color-emphasis-100);
+  border-color: var(--ifm-color-emphasis-500);
+}
+
+/* Sits next to Pass/Fail (.statusButton) in the same row, so it matches
+   their height/shape instead of looking like a smaller, secondary control. */
+.noteToggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ifm-color-emphasis-600);
+  background: transparent;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    color 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease;
+}
+
+.noteToggle:hover {
+  color: var(--ifm-color-emphasis-900);
+  background: var(--ifm-color-emphasis-100);
+  border-color: var(--ifm-color-emphasis-500);
+}
+
+.fileInput {
+  display: none;
+}
+
+.thumbRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.thumb {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+}
+
+.thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbRemove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 16px;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.55);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.thumbRemove:hover {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.generalComment {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  font: inherit;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--ifm-font-color-base);
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  resize: none;
+  overflow: hidden;
+}
+
+.generalComment::placeholder {
+  color: var(--ifm-color-emphasis-500);
+}
+
+/* Scenario list */
 .list {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+.empty {
+  padding: 0.75rem 0.5rem;
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
 .item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.5rem 0.5rem;
-  border-radius: 6px;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.65rem 0.4rem;
   transition: background 140ms ease;
+}
+
+.item + .item {
+  border-top: 1px solid var(--ifm-color-emphasis-200);
 }
 
 .item:hover {
   background: var(--ifm-color-emphasis-100);
 }
 
-.itemLabel {
+.itemRow {
   display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.itemText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
   min-width: 0;
+}
+
+.itemRight {
+  display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.comment {
+  width: 100%;
+  padding: 0.3rem 0.6rem;
+  font: inherit;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--ifm-font-color-base);
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  resize: none;
+  overflow: hidden;
+}
+
+.comment::placeholder {
+  color: var(--ifm-color-emphasis-500);
 }
 
 .title {
@@ -139,9 +406,21 @@
 }
 
 .tags {
-  font-family: var(--ifm-font-family-monospace);
-  font-size: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.tagBadge {
+  padding: 0.05rem 0.45rem;
+  font-size: 0.68rem;
+  font-weight: 600;
   color: var(--ifm-color-emphasis-600);
+  text-transform: capitalize;
+  white-space: nowrap;
+  background: var(--ifm-color-emphasis-100);
+  border: 1px solid transparent;
+  border-radius: 999px;
 }
 
 .actions {
@@ -206,4 +485,15 @@
   background: #c62828;
   border-color: #c62828;
   box-shadow: 0 2px 8px rgba(198, 40, 40, 0.35);
+}
+
+@media (max-width: 480px) {
+  .itemRow {
+    flex-direction: column;
+  }
+
+  .itemRight {
+    align-items: flex-start;
+    width: 100%;
+  }
 }

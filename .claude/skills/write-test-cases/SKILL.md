@@ -67,7 +67,7 @@ Feature: <business-readable name>
   Background:
     Given <precondition every scenario below actually needs>
 
-  @smoke @manual
+  @smoke @manual @priority-high @severity-blocker
   Scenario: <short, specific outcome>
     Given <initial context, with concrete example data if the scenario needs any>
     When the user clicks "<exact visible button/link text>"
@@ -93,11 +93,18 @@ Every ` ```gherkin ` block on the rendered docs site automatically gets a Pass/F
 
 Results (pass/fail per scenario) are saved to the viewing QA engineer's browser `localStorage` only — per-device, not shared across the team and not git-versioned. There's no export button on the checklist itself — `test-cases/index.md` renders `<TestPlanExport planId="all" planName="All Test Cases" />` (no `pages` prop, so it covers every page) once for the whole section, with the same component narrower Test Plans use. Nothing to do differently in the Markdown either way.
 
+Each row also has a free-text note field (multi-line, so a tester can write more than one line or a short list), plus one general note field above the whole checklist for observations that apply to the page as a whole rather than one scenario. Both accept screenshots — pasted from the clipboard or attached from disk — stored in the browser's IndexedDB (not localStorage, which is too small for images) and shown as thumbnails under the note. Exporting via `<TestPlanExport>` inlines every attached screenshot into the downloaded HTML report, so it stays a single self-contained file. None of this needs anything from the Markdown either — same as the checklist itself, it's rendered by the `GherkinChecklist` component for free.
+
+The checklist also lets a tester filter its rows by tag (chips built from whatever tags actually appear on the page — nothing to configure). The exported HTML report carries the same filter: every scenario's tags land in a `data-tags` attribute and a small inline `<script>` (no framework, since the report has to run standalone outside Docusaurus) toggles row/section visibility client-side, so the downloaded file stays usable on its own rather than just a static dump.
+
 ### Tags
 
 - `@smoke` / `@regression` — run scope. Smoke = small critical-path set. Regression = broader coverage.
 - `@mock` — for an E2E scenario, marks it as one that needs (or already has) a stubbed backend response rather than the real one — see `write-tests`' smoke-vs-mock split. Combine with `@smoke`/`@regression` as needed (e.g. `@smoke @mock` for a critical-path check that still needs a specific stubbed response). Not applicable outside E2E.
 - `@manual` / `@automated` — implementation status. New scenarios start `@manual`.
+- `@priority-high` / `@priority-medium` / `@priority-low` — how urgently this scenario needs testing (or re-testing after a change), independent of how bad a failure would be. High = test first, every time (core, high-traffic paths); low = test last, or only when there's time (edge cases, rarely-hit flows).
+- `@severity-blocker` / `@severity-major` / `@severity-minor` — how bad it actually is in production if this scenario's behavior breaks. Blocker = no workaround, breaks a core flow for everyone; major = broken but a workaround exists or only some users/environments are affected; minor = cosmetic, doesn't block the user.
+- Priority and severity are independent axes, not a single "how important" scale — a scenario can be `@priority-high @severity-minor` (worth checking on every run, but a failure is cosmetic) or `@priority-low @severity-blocker` (rarely exercised, but catastrophic if it breaks). Both tags are optional — add them once a QA engineer actually wants that scenario ranked; don't retrofit every existing page just to fill them in.
 - When a scenario gets automated, flip the tag to `@automated` and add a comment line above it pointing at the spec — under `e2e/smoke/` or `e2e/mock/` depending on the `@mock` tag:
 
   ```gherkin

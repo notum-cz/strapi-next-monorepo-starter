@@ -15,7 +15,7 @@ if (!BASE_URL) {
   throw new Error("Missing BASE_URL environment variable")
 }
 
-const perfoUrls = flattenUrls(urls.perfo.dev)
+const perfoUrls = flattenUrls(urls.perfo)
 
 if (perfoUrls.length === 0) {
   throw new Error("No sites found in urls.json")

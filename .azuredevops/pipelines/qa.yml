@@ -66,13 +66,15 @@ jobs:
             [ "${{ parameters.run_visual }}" = "True" ] && LABELS+=("Visual")
             LABEL=$(IFS=', '; echo "${LABELS[*]}")
           fi
-          BASE_URL_INPUT="${{ parameters.base_url }}"
+          BASE_URL_INPUT="$PARAM_BASE_URL"
           if [ -z "$BASE_URL_INPUT" ]; then
             BASE_URL_INPUT="default-baseurl"
           fi
           SAFE_BASE_URL=$(echo "$BASE_URL_INPUT" | sed -E 's#^[a-zA-Z]+://##; s#[/:\\"'"'"'<>|?@*]+#-#g')
           echo "##vso[build.updatebuildnumber][$LABEL] QA - $SAFE_BASE_URL"
         displayName: Compute run name
+        env:
+          PARAM_BASE_URL: ${{ parameters.base_url }}
 
   - job: e2e
     displayName: "Playwright E2E tests"
@@ -86,12 +88,15 @@ jobs:
 
       - script: |
           set -e
-          RESOLVED_BASE_URL="${{ parameters.base_url }}"
+          RESOLVED_BASE_URL="$PARAM_BASE_URL"
           if [ -z "$RESOLVED_BASE_URL" ]; then
-            RESOLVED_BASE_URL="$(BASE_URL)"
+            RESOLVED_BASE_URL="$FALLBACK_BASE_URL"
           fi
           echo "##vso[task.setvariable variable=BASE_URL]$RESOLVED_BASE_URL"
         displayName: Resolve BASE_URL
+        env:
+          PARAM_BASE_URL: ${{ parameters.base_url }}
+          FALLBACK_BASE_URL: $(BASE_URL)
 
       - task: Cache@2
         inputs:
@@ -148,12 +153,15 @@ jobs:
 
       - script: |
           set -e
-          RESOLVED_BASE_URL="${{ parameters.base_url }}"
+          RESOLVED_BASE_URL="$PARAM_BASE_URL"
           if [ -z "$RESOLVED_BASE_URL" ]; then
-            RESOLVED_BASE_URL="$(BASE_URL)"
+            RESOLVED_BASE_URL="$FALLBACK_BASE_URL"
           fi
           echo "##vso[task.setvariable variable=BASE_URL]$RESOLVED_BASE_URL"
         displayName: Resolve BASE_URL
+        env:
+          PARAM_BASE_URL: ${{ parameters.base_url }}
+          FALLBACK_BASE_URL: $(BASE_URL)
 
       - task: Cache@2
         inputs:
@@ -202,12 +210,15 @@ jobs:
 
       - script: |
           set -e
-          RESOLVED_BASE_URL="${{ parameters.base_url }}"
+          RESOLVED_BASE_URL="$PARAM_BASE_URL"
           if [ -z "$RESOLVED_BASE_URL" ]; then
-            RESOLVED_BASE_URL="$(BASE_URL)"
+            RESOLVED_BASE_URL="$FALLBACK_BASE_URL"
           fi
           echo "##vso[task.setvariable variable=BASE_URL]$RESOLVED_BASE_URL"
         displayName: Resolve BASE_URL
+        env:
+          PARAM_BASE_URL: ${{ parameters.base_url }}
+          FALLBACK_BASE_URL: $(BASE_URL)
 
       - task: Cache@2
         inputs:
@@ -272,13 +283,16 @@ jobs:
 
       - script: |
           set -e
-          RESOLVED_BASE_URL="${{ parameters.base_url }}"
+          RESOLVED_BASE_URL="$PARAM_BASE_URL"
           if [ -z "$RESOLVED_BASE_URL" ]; then
-            RESOLVED_BASE_URL="$(BASE_URL)"
+            RESOLVED_BASE_URL="$FALLBACK_BASE_URL"
           fi
           echo "##vso[task.setvariable variable=BASE_URL]$RESOLVED_BASE_URL"
         condition: and(succeeded(), eq(variables['HAS_BASELINES'], 'true'))
         displayName: Resolve BASE_URL
+        env:
+          PARAM_BASE_URL: ${{ parameters.base_url }}
+          FALLBACK_BASE_URL: $(BASE_URL)
 
       - task: Cache@2
         condition: and(succeeded(), eq(variables['HAS_BASELINES'], 'true'))
@@ -338,12 +352,15 @@ jobs:
 
       - script: |
           set -e
-          RESOLVED_BASE_URL="${{ parameters.base_url }}"
+          RESOLVED_BASE_URL="$PARAM_BASE_URL"
           if [ -z "$RESOLVED_BASE_URL" ]; then
-            RESOLVED_BASE_URL="$(BASE_URL)"
+            RESOLVED_BASE_URL="$FALLBACK_BASE_URL"
           fi
           echo "##vso[task.setvariable variable=BASE_URL]$RESOLVED_BASE_URL"
         displayName: Resolve BASE_URL
+        env:
+          PARAM_BASE_URL: ${{ parameters.base_url }}
+          FALLBACK_BASE_URL: $(BASE_URL)
 
       - bash: |
           pnpm tests:lhci:perfo

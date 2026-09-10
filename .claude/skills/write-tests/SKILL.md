@@ -70,7 +70,7 @@ Pure HTTP checks (status code, redirect location, JSON body via the `request` fi
 - **`e2e/smoke/`** — drives the browser against the real running app and its real backend. Small, critical-path set: does the page load, does the core flow complete. This is what plain e2e specs were before the split; `test_example.spec.ts` is that older, pre-POM style.
 - **`e2e/mock/`** — drives the browser but stubs the network layer with [Playwright's route mocking](https://playwright.dev/docs/mock), via the shared fixture in `qa/tests/playwright/helpers/fixtures.ts` (built with [Playwright's test-fixtures pattern](https://playwright.dev/docs/test-fixtures)). Use it for backend states that are hard or slow to produce for real — a specific error shape, a dropped connection, data that would need seeding — not to re-test something the real backend already exercises for free in a smoke spec. If a scenario doesn't need a specific stubbed response, it belongs in `smoke/`, not `mock/`.
 
-`qa/tests/playwright/helpers/fixtures.ts` exports a `test`/`expect` pair extended with a `mockJson` fixture (fulfills a route with a JSON body/status, no real request made). Import from there instead of `@playwright/test` in a mock spec. For a non-JSON case (e.g. simulating a dropped connection), call `page.route(url, (route) => route.abort())` directly — the fixture doesn't need to cover everything Playwright's routing API already does.
+`qa/tests/playwright/helpers/fixtures.ts` exports `mockTest` (a `@playwright/test` `test` extended with a `mockJson` fixture — fulfills a route with a JSON body/status, no real request made) and re-exports `expect`. Import `mockTest as test` from there instead of `@playwright/test` in a mock spec — matches `sign-in.spec.ts`, the reference. For a non-JSON case (e.g. simulating a dropped connection), call `page.route(url, (route) => route.abort())` directly — the fixture doesn't need to cover everything Playwright's routing API already does.
 
 #### POM class template
 
@@ -141,11 +141,11 @@ Use `test.beforeEach` to construct the POM and navigate once a file has more tha
 
 #### Spec file template — mock
 
-Same POM, imported from `test`/`expect` re-exported by the fixtures file instead of `@playwright/test` directly, so `mockJson` is available on the test context:
+Same POM, imported alongside `mockTest as test` and `expect` from the fixtures file instead of `@playwright/test` directly, so `mockJson` is available on the test context:
 
 ```typescript
 import { ExamplePage } from "../../helpers/pages/ExamplePage"
-import { expect, test } from "../../helpers/fixtures"
+import { expect, mockTest as test } from "../../helpers/fixtures"
 
 test.describe("Example page — mocked backend", () => {
   test("shows an error when the backend rejects the request", async ({
