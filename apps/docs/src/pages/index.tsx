@@ -98,6 +98,52 @@ export default function Home(): JSX.Element {
           </div>
         </section>
 
+        <section id="user-journey" className="homeSection" style={{ backgroundColor: 'var(--ifm-color-emphasis-100)' }}>
+          <div className="container">
+            <div className="homeDocsHeader">
+              <p className="homeSectionLabel">User Journey</p>
+              <h2>How to use this starter</h2>
+              <p style={{ maxWidth: '560px', color: 'var(--ifm-color-emphasis-700)', fontSize: '1.1rem', marginBottom: '1.5rem' }}>
+                Whether you are exploring on your own or presenting to a client, this project is split into distinct environments to keep things clear.
+              </p>
+            </div>
+            <div className="row">
+              <div className="col col--6 margin-bottom--lg">
+                <div className="card shadow--md" style={{ height: '100%', padding: '2rem' }}>
+                  <h3>Devs: Run Locally</h3>
+                  <p>Explore the code, test customizations, and experience the page builder firsthand.</p>
+                  <ul>
+                    <li>
+                      <strong>Landing Page:</strong> You are here! High level overview.
+                    </li>
+                    <li>
+                      <strong><Link to="/docs/category/getting-started">Documentation</Link>:</strong> Detailed guides on architecture and setup.
+                    </li>
+                  </ul>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginTop: 'auto' }}>
+                    <Link className="button button--primary" to="https://github.com/notum-cz/strapi-next-monorepo-starter" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>Open GitHub repository <IconExternalLink width="13" height="13" /></Link>
+                    <Link className="button button--secondary" to="/docs/category/getting-started">Open documentation</Link>
+                  </div>
+                </div>
+              </div>
+              <div className="col col--6 margin-bottom--lg">
+                <div className="card shadow--md" style={{ height: '100%', padding: '2rem' }}>
+                  <h3>Explore: Check the Live DEMO</h3>
+                  <p>For presenting to clients, content editors, and non-technical stakeholders.</p>
+                  <ul>
+                    <li><strong>Live Demo:</strong> See the actual end-result of what the Strapi Next.js Starter produces.</li>
+                    <li><strong>Tailored demo:</strong> Once you need a more customized sample, contact us and we will set it up for you.</li>
+                  </ul>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginTop: 'auto' }}>
+                    <Link className="button button--primary" to="https://strapinextjs.notum.tech/" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>Try Live Demo <IconExternalLink width="13" height="13" /></Link>
+                    <Link className="button button--secondary" to="https://www.notum.tech/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>Contact us <IconExternalLink width="13" height="13" /></Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section className="homeSection homeSection--statement">
           <div className="container homeWhy">
             <div className="homeWhyIntro">
