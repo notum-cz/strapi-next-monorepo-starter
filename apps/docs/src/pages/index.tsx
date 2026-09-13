@@ -1,6 +1,7 @@
 import Link from "@docusaurus/Link"
 import useBaseUrl from "@docusaurus/useBaseUrl"
 import Layout from "@theme/Layout"
+import IconExternalLink from "@theme/Icon/ExternalLink"
 
 const docLinks = [
   {
@@ -55,16 +56,35 @@ export default function Home(): JSX.Element {
             <div className="homeHeroCopy">
               <p className="homeEyebrow">Strapi + Next.js monorepo</p>
               <h1>Build editable UI pages without rebuilding the foundation.</h1>
-              <div className="homeActions">
-                <Link
-                  className="button button--primary button--lg"
-                  to="/docs/getting-started/installation"
-                >
-                  Get started
-                </Link>
-                <a className="button button--secondary button--lg" href="https://strapinextjs.notum.tech" target="_blank" rel="noopener noreferrer">
-                  Live demo
-                </a>
+              <div style={{ marginTop: '2.4rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                <div style={{ display: 'flex' }}>
+                  <Link
+                    className="button button--primary button--lg"
+                    to="/docs/category/getting-started"
+                  >
+                    Read Documentation
+                  </Link>
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+                  {/* Note: The Live DEMO URL is about to change to https://demo.strapinextjs.notum.tech/ */}
+                  <Link className="button button--secondary button--lg" to="https://strapinextjs.notum.tech/" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                    View Live Demo <IconExternalLink width="13" height="13" />
+                  </Link>
+                  <Link className="button button--secondary button--lg" to="https://github.com/notum-cz/strapi-next-monorepo-starter" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                    GitHub Repository <IconExternalLink width="13" height="13" />
+                  </Link>
+                </div>
+
+                <div style={{ marginTop: '0.5rem', display: 'flex' }}>
+                  <Link
+                    className="button button--link"
+                    to="#user-journey"
+                    style={{ padding: 0, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M19 12l-7 7-7-7" /></svg>
+                    More Information
+                  </Link>
+                </div>
               </div>
             </div>
 
