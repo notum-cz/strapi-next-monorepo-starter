@@ -14,14 +14,13 @@ allowBuilds:
 minimumReleaseAge: 2880
 resolutionMode: highest
 minimumReleaseAgeExclude:
-  - "@notum-cz/strapi-plugin-smart-populate@1.0.1"
   - "nodemailer@9.0.1"
 
 overrides:
   "@types/react": 19.2.18
   "@types/react-dom": 19.2.4
-  "@codemirror/state": 6.7.1
-  "@codemirror/view": 6.43.9
+  "@codemirror/state": 6.7.4
+  "@codemirror/view": 6.43.11
   # Transitive-only security bumps. None of these is a direct dependency of a
   # workspace package, so they can only be raised through an override:
   #   postcss   - restricts previous-source-map loading to the `opts.from`
@@ -38,11 +37,17 @@ overrides:
   #   @hono/...  - fixes serve-static path traversal on Windows via an encoded
   #               backslash (patched in 1.19.15). Held at 1.x on purpose: the
   #               2.x line is a major the MCP SDK has not moved to.
+  #   happy-dom - fixes unsanitized export names being interpolated as executable
+  #               code in ECMAScriptModuleCompiler (20.8.8) and page-origin
+  #               cookies leaking into cross-origin `fetch` (20.8.9). Reached via
+  #               vitest, which allows any ^20. `@tiptap/html` also requires
+  #               ^20.8.9 as an optional peer, so this doubles as the peer fix.
   # Drop each entry once every parent resolves to the patched version on its own.
   postcss: 8.5.26
   dompurify: 3.4.14
   hono: 4.13.4
   "@hono/node-server": 1.19.17
+  happy-dom: 20.8.9
 
 packageExtensions:
   "@hookform/resolvers":
