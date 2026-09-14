@@ -13,8 +13,7 @@ allowBuilds:
 
 minimumReleaseAge: 2880
 resolutionMode: highest
-minimumReleaseAgeExclude:
-  - "nodemailer@9.0.1"
+minimumReleaseAgeExclude: []
 
 overrides:
   "@types/react": 19.2.18
@@ -48,6 +47,26 @@ overrides:
   hono: 4.13.4
   "@hono/node-server": 1.19.17
   happy-dom: 20.8.9
+  # Security bumps that apps/ui and apps/strapi already pin directly, but which
+  # Strapi pins to an older EXACT version in its own dependency tree. An exact
+  # pin can never float up, so without an override the patched release reaches
+  # only the workspace packages and the Strapi runtime keeps the vulnerable copy:
+  #   sharp      - `@strapi/upload` pins 0.35.3, which bundles the vulnerable
+  #                libheif (GHSA-rgj7-g3m4-5g8c). This is Strapi's image
+  #                processing path, so the advisory is live in the CMS.
+  #   nodemailer - `@strapi/provider-email-nodemailer` and
+  #                `@strapi/provider-email-sendmail` pin 9.0.1, which is older
+  #                than the 9.0.5 apps/strapi pinned. Leaves the addressparser
+  #                ReDoS (GHSA-2x7j-588g-ccc2) and the resolveContent access
+  #                bypass (GHSA-8m3c-c648-2xjj) reachable on the real email path.
+  #   qs         - `@strapi/admin`, `@strapi/core`, `@strapi/upload` and
+  #                `@strapi/permissions` all pin 6.15.3, keeping the array-limit
+  #                bypass (GHSA-x5fp-wj9c-mxmx) in the admin request chain.
+  # Each is a patch/minor within the major Strapi already depends on. Drop each
+  # entry once Strapi ships a release that pins the patched version itself.
+  sharp: 0.35.4
+  nodemailer: 9.1.1
+  qs: 6.16.0
 
 packageExtensions:
   "@hookform/resolvers":
