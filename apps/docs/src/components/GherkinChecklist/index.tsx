@@ -204,95 +204,112 @@ function ChecklistImpl({
     }
   }, [storageKey, parsed])
 
-  const persist = (next: ChecklistState) => {
-    setState(next)
-    try {
-      window.localStorage.setItem(storageKey, JSON.stringify(next))
-    } catch {
-      // ignore — see above
-    }
+  // Takes an updater (not a precomputed value) so callers always build the
+  // next state from whatever is actually latest — several image adds can
+  // fire close together (e.g. attaching multiple files, each awaiting its
+  // own saveImage()), and deriving each one from a `state` closure captured
+  // before those awaits would let a later call silently clobber an earlier
+  // one's addition instead of building on it.
+  const persist = (updater: (prev: ChecklistState) => ChecklistState) => {
+    setState((prev) => {
+      const next = updater(prev)
+      try {
+        window.localStorage.setItem(storageKey, JSON.stringify(next))
+      } catch {
+        // ignore — see above
+      }
+      return next
+    })
   }
 
   const setStatus = (key: string, status: ChecklistStatus) =>
-    persist({
-      ...state,
+    persist((prev) => ({
+      ...prev,
       items: {
-        ...state.items,
+        ...prev.items,
         [key]: {
-          comment: state.items[key]?.comment ?? "",
-          images: state.items[key]?.images ?? [],
-          status: state.items[key]?.status === status ? null : status,
+          comment: prev.items[key]?.comment ?? "",
+          images: prev.items[key]?.images ?? [],
+          status: prev.items[key]?.status === status ? null : status,
         },
       },
-    })
+    }))
 
   const setComment = (key: string, comment: string) =>
-    persist({
-      ...state,
+    persist((prev) => ({
+      ...prev,
       items: {
-        ...state.items,
+        ...prev.items,
         [key]: {
-          status: state.items[key]?.status ?? null,
-          images: state.items[key]?.images ?? [],
+          status: prev.items[key]?.status ?? null,
+          images: prev.items[key]?.images ?? [],
           comment,
         },
       },
-    })
+    }))
 
   const addImage = (key: string, id: string) =>
-    persist({
-      ...state,
+    persist((prev) => ({
+      ...prev,
       items: {
-        ...state.items,
+        ...prev.items,
         [key]: {
-          status: state.items[key]?.status ?? null,
-          comment: state.items[key]?.comment ?? "",
-          images: [...(state.items[key]?.images ?? []), id],
+          status: prev.items[key]?.status ?? null,
+          comment: prev.items[key]?.comment ?? "",
+          images: [...(prev.items[key]?.images ?? []), id],
         },
       },
-    })
+    }))
 
   const removeImage = (key: string, id: string) => {
-    const existing = state.items[key]
-    if (!existing) return
-    persist({
-      ...state,
-      items: {
-        ...state.items,
-        [key]: {
-          ...existing,
-          images: existing.images.filter((imageId) => imageId !== id),
+    persist((prev) => {
+      const existing = prev.items[key]
+      if (!existing) return prev
+      return {
+        ...prev,
+        items: {
+          ...prev.items,
+          [key]: {
+            ...existing,
+            images: existing.images.filter((imageId) => imageId !== id),
+          },
         },
-      },
+      }
     })
     void deleteImage(id)
   }
 
-  const setGeneral = (general: string) => persist({ ...state, general })
+  const setGeneral = (general: string) =>
+    persist((prev) => ({ ...prev, general }))
 
   const addGeneralImage = (id: string) =>
-    persist({ ...state, generalImages: [...state.generalImages, id] })
+    persist((prev) => ({
+      ...prev,
+      generalImages: [...prev.generalImages, id],
+    }))
 
   const removeGeneralImage = (id: string) => {
-    persist({
-      ...state,
-      generalImages: state.generalImages.filter((imageId) => imageId !== id),
-    })
+    persist((prev) => ({
+      ...prev,
+      generalImages: prev.generalImages.filter((imageId) => imageId !== id),
+    }))
     void deleteImage(id)
   }
 
   const reset = () => {
-    const imageIds = [
-      ...state.generalImages,
-      ...Object.values(state.items).flatMap((item) => item.images),
-    ]
-    setState(emptyChecklistState())
-    try {
-      window.localStorage.removeItem(storageKey)
-    } catch {
-      // ignore — see above
-    }
-    imageIds.forEach((id) => void deleteImage(id))
+    setState((prev) => {
+      const imageIds = [
+        ...prev.generalImages,
+        ...Object.values(prev.items).flatMap((item) => item.images),
+      ]
+      try {
+        window.localStorage.removeItem(storageKey)
+      } catch {
+        // ignore — see above
+      }
+      imageIds.forEach((id) => void deleteImage(id))
+      return emptyChecklistState()
+    })
   }
 
   // Read through scenarioKey() rather than Object.values(state.items) so a

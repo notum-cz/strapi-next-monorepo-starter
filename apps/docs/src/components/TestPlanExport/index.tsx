@@ -134,6 +134,21 @@ function useDialogFocus(open: boolean) {
   return dialogRef
 }
 
+// Pass/fail counts alone understate what Reset would destroy — a
+// scenario can carry a comment or attached screenshots while still
+// sitting "untested" (no Pass/Fail clicked), and the general note/images
+// aren't tied to any scenario at all. Anything here is state a tester
+// would lose without warning if Reset skipped confirmation.
+function hasAnyData(state: ChecklistState): boolean {
+  if (state.general.trim() || state.generalImages.length > 0) return true
+  return Object.values(state.items).some(
+    (item) =>
+      item.status !== null ||
+      item.comment.trim() !== "" ||
+      item.images.length > 0
+  )
+}
+
 function countStatuses(scenarios: Scenario[], state: ChecklistState) {
   let pass = 0
   let fail = 0
@@ -266,7 +281,7 @@ function ExportImpl({
   }
 
   const handleResetClick = () => {
-    if (totals.pass + totals.fail > 0) {
+    if (resultsByEntry.some(hasAnyData)) {
       setResetConfirmOpen(true)
     } else {
       performReset()
@@ -403,10 +418,9 @@ function ExportImpl({
             onClick={(event) => event.stopPropagation()}
           >
             <p id="test-plan-reset-confirm-title" className={styles.dialogText}>
-              This clears {totals.pass + totals.fail} result
-              {totals.pass + totals.fail === 1 ? "" : "s"} ({totals.pass} pass,{" "}
-              {totals.fail} fail) back to untested. This can't be undone. Reset
-              anyway?
+              This clears every saved result, note, and screenshot for this plan
+              ({totals.pass} pass, {totals.fail} fail back to untested). This
+              can't be undone. Reset anyway?
             </p>
             <div className={styles.dialogActions}>
               <button

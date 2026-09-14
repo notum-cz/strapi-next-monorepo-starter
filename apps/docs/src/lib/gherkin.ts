@@ -71,9 +71,38 @@ export function extractScenarios(code: string): Scenario[] {
 // Only manual scenarios need a human to click through them — automated ones
 // are already covered by the Playwright/Vitest spec that runs them.
 export function extractManualScenarios(code: string): Scenario[] {
-  return extractScenarios(code).filter((scenario) =>
+  const manual = extractScenarios(code).filter((scenario) =>
     scenario.tags.includes("@manual")
   )
+  assertUniqueScenarioKeys(manual)
+  return manual
+}
+
+/**
+ * scenarioKey() identifies a scenario by type+title so a checklist result
+ * survives scenarios being added, removed, or reordered elsewhere in the
+ * block (see scenarioKey's own doc comment). That only works if titles are
+ * actually unique — two @manual scenarios sharing a title would otherwise
+ * share one result, silently showing one scenario's Pass/Fail, note, and
+ * screenshots on the other. Failing the build here, at the same point
+ * that assigns the identity, is simpler and more robust than inventing a
+ * synthetic id (which would just reintroduce a milder version of the
+ * position-fragility scenarioKey exists to avoid).
+ */
+function assertUniqueScenarioKeys(scenarios: Scenario[]): void {
+  const seen = new Set<string>()
+  for (const scenario of scenarios) {
+    const key = scenarioKey(scenario)
+    if (seen.has(key)) {
+      throw new Error(
+        `Duplicate @manual scenario "${scenario.title}" (${scenario.type}) — ` +
+          "scenario titles must be unique within a Feature so each one keeps " +
+          "its own Pass/Fail result, note, and screenshots instead of sharing " +
+          "another scenario's."
+      )
+    }
+    seen.add(key)
+  }
 }
 
 /**

@@ -74,27 +74,32 @@ export async function saveImage(file: Blob): Promise<string> {
   const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`
 
   const db = await openDb()
-  await new Promise<void>((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, "readwrite")
-    tx.objectStore(STORE_NAME).put(resized, id)
-    tx.oncomplete = () => resolve()
-    tx.onerror = () => reject(tx.error)
-  })
-  db.close()
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, "readwrite")
+      tx.objectStore(STORE_NAME).put(resized, id)
+      tx.oncomplete = () => resolve()
+      tx.onerror = () => reject(tx.error)
+    })
+  } finally {
+    db.close()
+  }
 
   return id
 }
 
 export async function getImageBlob(id: string): Promise<Blob | undefined> {
   const db = await openDb()
-  const blob = await new Promise<Blob | undefined>((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, "readonly")
-    const request = tx.objectStore(STORE_NAME).get(id)
-    request.onsuccess = () => resolve(request.result as Blob | undefined)
-    request.onerror = () => reject(request.error)
-  })
-  db.close()
-  return blob
+  try {
+    return await new Promise<Blob | undefined>((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, "readonly")
+      const request = tx.objectStore(STORE_NAME).get(id)
+      request.onsuccess = () => resolve(request.result as Blob | undefined)
+      request.onerror = () => reject(request.error)
+    })
+  } finally {
+    db.close()
+  }
 }
 
 export async function getImageDataUrl(id: string): Promise<string | undefined> {
@@ -111,11 +116,14 @@ export async function getImageDataUrl(id: string): Promise<string | undefined> {
 
 export async function deleteImage(id: string): Promise<void> {
   const db = await openDb()
-  await new Promise<void>((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, "readwrite")
-    tx.objectStore(STORE_NAME).delete(id)
-    tx.oncomplete = () => resolve()
-    tx.onerror = () => reject(tx.error)
-  })
-  db.close()
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, "readwrite")
+      tx.objectStore(STORE_NAME).delete(id)
+      tx.oncomplete = () => resolve()
+      tx.onerror = () => reject(tx.error)
+    })
+  } finally {
+    db.close()
+  }
 }
