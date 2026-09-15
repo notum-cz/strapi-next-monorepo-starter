@@ -28,7 +28,11 @@ Use for any Strapi images. It:
 - Calculates missing width/height from the media aspect ratio
 - Bypasses imgproxy for SVGs
 
-`formatStrapiMediaUrl()` returns absolute storage URLs as-is. Relative local Strapi paths such as `/uploads/...` are resolved with `STRAPI_URL` on the server; on the client, where `STRAPI_URL` is not readable, they are resolved against the host the UI itself is served from (port 1337). Keep `STRAPI_URL` on that same host locally — `localhost` and `127.0.0.1` are different origins, and mixing them makes the client URL disagree with the server-rendered one.
+`formatStrapiMediaUrl()` returns absolute storage URLs as-is. Relative local Strapi paths such as `/uploads/...` are resolved with `STRAPI_URL` on the server. Client components cannot read `STRAPI_URL`, so when the UI is served from a loopback host they mirror that host on port 1337 — browsing `http://localhost:3000` yields `http://localhost:1337/uploads/...`. In deployed browsers this branch is never reached; relative upload paths are returned unchanged.
+
+:::warning Keep `STRAPI_URL` on the host you browse
+Because the client mirrors the browser's host, `STRAPI_URL` must use the same host you open the app and the Strapi admin on. `localhost` and `127.0.0.1` are different origins: mixing them makes the client disagree with the server (hydration mismatch on every media element) and breaks [Strapi preview](./built-in-api-routes/preview.md)'s auto-refresh, which matches the admin's origin against `STRAPI_URL`.
+:::
 
 When `IMGPROXY_URL` is set, it delegates to `ImgproxyImage`. Next.js generates responsive `srcSet` from `deviceSizes`; the loader rewrites each entry into an imgproxy URL:
 

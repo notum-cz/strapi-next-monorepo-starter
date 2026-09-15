@@ -1,6 +1,5 @@
+import { LOCAL_STRAPI_PORT, LOCAL_UI_HOSTNAMES } from "@/lib/constants"
 import { getEnvVar } from "@/lib/env-vars"
-
-const LOCAL_STRAPI_PORT = "1337"
 
 /**
  * Formats a Strapi media URL for use in the UI.
@@ -34,9 +33,7 @@ export const formatStrapiMediaUrl = (
     // `localhost` and `127.0.0.1` are different origins, so pinning one here
     // while STRAPI_URL uses the other makes the client disagree with the server
     // and React reports a hydration mismatch on every media element.
-    const isLocalhostUi = ["localhost", "127.0.0.1", "[::1]", "::1"].includes(
-      window.location.hostname
-    )
+    const isLocalhostUi = LOCAL_UI_HOSTNAMES.includes(window.location.hostname)
     if (isLocalhostUi) {
       const { hostname, protocol } = window.location
 
