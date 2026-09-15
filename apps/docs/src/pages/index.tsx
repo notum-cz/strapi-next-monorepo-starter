@@ -81,7 +81,7 @@ export default function Home(): JSX.Element {
                     to="#user-journey"
                     style={{ padding: 0, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                   >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M19 12l-7 7-7-7" /></svg>
+                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M19 12l-7 7-7-7" /></svg>
                     More Information
                   </Link>
                 </div>
@@ -114,7 +114,7 @@ export default function Home(): JSX.Element {
                   <p>Explore the code, test customizations, and experience the page builder firsthand.</p>
                   <ul>
                     <li>
-                      <strong>Landing Page:</strong> You are here! High level overview.
+                      <strong>Landing Page:</strong> You are here! High-level overview.
                     </li>
                     <li>
                       <strong><Link to="/docs/category/getting-started">Documentation</Link>:</strong> Detailed guides on architecture and setup.
