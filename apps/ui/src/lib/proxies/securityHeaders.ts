@@ -1,6 +1,10 @@
 import type { NextRequest, NextResponse } from "next/server"
 
-import { STRAPI_PREVIEW_FRAME_COOKIE } from "@/lib/constants"
+import {
+  LOCAL_STRAPI_ORIGINS,
+  LOCAL_UI_HOSTNAMES,
+  STRAPI_PREVIEW_FRAME_COOKIE,
+} from "@/lib/constants"
 import { getEnvVar } from "@/lib/env-vars"
 
 /**
@@ -76,7 +80,7 @@ function buildCsp({
     // imgproxy, blob storage and Strapi media are all served over HTTPS.
     [
       "img-src 'self' data: blob: https:",
-      ...(allowLocalStrapiMedia ? ["http://127.0.0.1:1337"] : []),
+      ...(allowLocalStrapiMedia ? LOCAL_STRAPI_ORIGINS : []),
     ].join(" "),
     "font-src 'self' data:",
     [
@@ -96,7 +100,7 @@ function buildCsp({
     "worker-src 'self' blob:",
     [
       "media-src 'self' blob: https:",
-      ...(allowLocalStrapiMedia ? ["http://127.0.0.1:1337"] : []),
+      ...(allowLocalStrapiMedia ? LOCAL_STRAPI_ORIGINS : []),
     ].join(" "),
     "object-src 'none'",
     frameAncestors
@@ -123,9 +127,7 @@ export function withSecurityHeaders(
   // traffic gets frame-ancestors 'none' and never sees STRAPI_URL.
   const isPreview = req.cookies.has(STRAPI_PREVIEW_FRAME_COOKIE)
   const frameAncestors = isPreview ? frameAncestorsFromEnv() : null
-  const isLocalhostUi = ["localhost", "127.0.0.1", "::1"].includes(
-    req.nextUrl.hostname
-  )
+  const isLocalhostUi = LOCAL_UI_HOSTNAMES.includes(req.nextUrl.hostname)
 
   res.headers.set(
     "Content-Security-Policy",
