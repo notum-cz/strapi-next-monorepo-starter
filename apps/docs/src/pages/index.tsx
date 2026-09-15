@@ -1,3 +1,4 @@
+import type { ReactNode } from "react"
 import Link from "@docusaurus/Link"
 import useBaseUrl from "@docusaurus/useBaseUrl"
 import Layout from "@theme/Layout"
@@ -7,17 +8,20 @@ const docLinks = [
   {
     href: "/docs/getting-started/installation",
     title: "Installation",
-    description: "Install prerequisites, clone the template, and prepare the workspace.",
+    description:
+      "Install prerequisites, clone the template, and prepare the workspace.",
   },
   {
     href: "/docs/getting-started/quick-start",
     title: "Quick Start",
-    description: "Run Strapi and the UI locally with seeded content and API tokens.",
+    description:
+      "Run Strapi and the UI locally with seeded content and API tokens.",
   },
   {
     href: "/docs/getting-started/features",
     title: "Features",
-    description: "See what is included across UI, Strapi, auth, workflow, and QA.",
+    description:
+      "See what is included across UI, Strapi, auth, workflow, and QA.",
   },
 ]
 
@@ -42,7 +46,7 @@ const valueItems = [
   },
 ]
 
-export default function Home(): JSX.Element {
+export default function Home(): ReactNode {
   const pageBuilderImage = useBaseUrl("/img/page-builder-flow.webp")
 
   return (
@@ -145,7 +149,7 @@ export default function Home(): JSX.Element {
         </section>
 
         <section className="homeSection homeSection--statement">
-          <div className="container homeWhy">
+          <div className="homeWhy container">
             <div className="homeWhyIntro">
               <p className="homeSectionLabel">Why this starter</p>
               <h2>Start from a working content platform, not a blank repo.</h2>
