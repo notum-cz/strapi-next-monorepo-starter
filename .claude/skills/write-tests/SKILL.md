@@ -42,7 +42,6 @@ Before writing, read **one existing test in the same layer** to mirror style:
 - Strapi service-with-mocked-`strapi`-global ref: `apps/strapi/tests/revalidate.test.ts` (`vi.stubGlobal("strapi", …)`)
 - Playwright e2e/smoke ref: `qa/tests/playwright/e2e/smoke/homepage.spec.ts`
 - Playwright e2e/mock ref: `qa/tests/playwright/e2e/mock/sign-in.spec.ts`
-- `qa/tests/playwright/e2e/test_example.spec.ts` predates the smoke/mock split and the POM convention — it still runs (matched by the broad `e2e` test-path pattern), but don't copy its direct `page.goto` style into a new spec.
 - Playwright visual ref: `qa/tests/playwright/visual/visual.spec.ts`
 - Playwright axe ref: `qa/tests/playwright/axe/axe.spec.ts`
 - Playwright seo ref: `qa/tests/playwright/seo/seo.spec.ts`
@@ -67,7 +66,7 @@ Pure HTTP checks (status code, redirect location, JSON body via the `request` fi
 
 #### Smoke vs mock — which folder
 
-- **`e2e/smoke/`** — drives the browser against the real running app and its real backend. Small, critical-path set: does the page load, does the core flow complete. This is what plain e2e specs were before the split; `test_example.spec.ts` is that older, pre-POM style.
+- **`e2e/smoke/`** — drives the browser against the real running app and its real backend. Small, critical-path set: does the page load, does the core flow complete.
 - **`e2e/mock/`** — drives the browser but stubs the network layer with [Playwright's route mocking](https://playwright.dev/docs/mock), via the shared fixture in `qa/tests/playwright/helpers/fixtures.ts` (built with [Playwright's test-fixtures pattern](https://playwright.dev/docs/test-fixtures)). Use it for backend states that are hard or slow to produce for real — a specific error shape, a dropped connection, data that would need seeding — not to re-test something the real backend already exercises for free in a smoke spec. If a scenario doesn't need a specific stubbed response, it belongs in `smoke/`, not `mock/`.
 
 `qa/tests/playwright/helpers/fixtures.ts` exports `mockTest` (a `@playwright/test` `test` extended with a `mockJson` fixture — fulfills a route with a JSON body/status, no real request made) and re-exports `expect`. Import `mockTest as test` from there instead of `@playwright/test` in a mock spec — matches `sign-in.spec.ts`, the reference. For a non-JSON case (e.g. simulating a dropped connection), call `page.route(url, (route) => route.abort())` directly — the fixture doesn't need to cover everything Playwright's routing API already does.
@@ -238,7 +237,7 @@ Command: <exact command to re-run>
 ## Notes
 
 - Do not add new dev dependencies for testing without explicit user request.
-- Do not introduce Jest, Mocha, Cypress, or other competing frameworks. POM is the one exception to "match what's already there" — it's the required pattern for new e2e page-interaction specs even though the existing `test_example.spec.ts` predates it (and the smoke/mock split).
+- Do not introduce Jest, Mocha, Cypress, or other competing frameworks. POM is the required pattern for every new e2e page-interaction spec — see "Playwright — e2e (Page Object Model)" above.
 - No Cucumber/Gherkin runner is wired in either — `apps/docs/docs/QA/test-cases/` (see `write-test-cases`) is documentation, not executable. Don't add a step-definition framework to make it runnable.
 - Coverage reports configured in `vitest.config.ts` — don't reconfigure per-test.
 - Strapi tests run in a `node` environment without booting Strapi — keep them fast and focused; isolate logic so it's testable without a running instance.

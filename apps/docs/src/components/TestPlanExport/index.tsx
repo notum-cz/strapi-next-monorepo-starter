@@ -62,8 +62,13 @@ function readResults(
 // id gets resolved to an inlined data URL before buildPlanReport ever
 // touches it.
 async function resolveImages(state: ChecklistState): Promise<ChecklistState> {
+  // A rejected getImageDataUrl() (a transient IndexedDB error, private-mode
+  // restrictions, ...) shouldn't cost the whole export — catch it per-image
+  // so Promise.all can't abort the entire performExport() over one bad read.
   const resolveIds = async (ids: string[]) => {
-    const dataUrls = await Promise.all(ids.map((id) => getImageDataUrl(id)))
+    const dataUrls = await Promise.all(
+      ids.map((id) => getImageDataUrl(id).catch(() => undefined))
+    )
     return dataUrls.filter((url): url is string => !!url)
   }
 

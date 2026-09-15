@@ -342,6 +342,12 @@ jobs:
   - job: lhci_perfo
     displayName: "LHCI Performance tests"
     # LHCI never runs on scheduled (cron) builds, regardless of parameter defaults.
+    # This job only publishes the raw .lighthouseci report as a build artifact
+    # for this run — it does NOT commit qa/tests/playwright/perfo/lighthouse-history.md
+    # back to the repo, so the trend file this run produces is discarded with the
+    # ephemeral agent workspace. Trend tracking (the auto-PR that updates that
+    # file) only runs via the GitHub Actions qa.yml workflow's "Open PR with
+    # Lighthouse trend history" step — there's no Azure DevOps equivalent wired up.
     condition: and(succeeded(), eq(${{ parameters.run_lhci_perfo }}, true), ne(variables['Build.Reason'], 'Schedule'))
     timeoutInMinutes: 15
     steps:

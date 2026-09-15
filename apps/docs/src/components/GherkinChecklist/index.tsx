@@ -151,6 +151,7 @@ function NoteField({
         ref={ref}
         rows={1}
         className={className}
+        aria-label={placeholder}
         placeholder={placeholder}
         value={value}
         onChange={(event) => onChange(event.target.value)}
