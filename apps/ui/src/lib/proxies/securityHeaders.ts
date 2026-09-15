@@ -41,6 +41,11 @@ function frameAncestorsFromEnv(): string | null {
   return unique.length > 0 ? unique.join(" ") : null
 }
 
+// Local Strapi is reachable as either host and browsers treat them as distinct
+// origins, so a CSP pinning one of them blocks media whenever STRAPI_URL or the
+// address bar uses the other. Development only — gated by allowLocalStrapiMedia.
+const LOCAL_STRAPI_ORIGINS = ["http://127.0.0.1:1337", "http://localhost:1337"]
+
 /**
  * Builds the Content-Security-Policy.
  *
@@ -76,7 +81,7 @@ function buildCsp({
     // imgproxy, blob storage and Strapi media are all served over HTTPS.
     [
       "img-src 'self' data: blob: https:",
-      ...(allowLocalStrapiMedia ? ["http://127.0.0.1:1337"] : []),
+      ...(allowLocalStrapiMedia ? LOCAL_STRAPI_ORIGINS : []),
     ].join(" "),
     "font-src 'self' data:",
     [
@@ -96,7 +101,7 @@ function buildCsp({
     "worker-src 'self' blob:",
     [
       "media-src 'self' blob: https:",
-      ...(allowLocalStrapiMedia ? ["http://127.0.0.1:1337"] : []),
+      ...(allowLocalStrapiMedia ? LOCAL_STRAPI_ORIGINS : []),
     ].join(" "),
     "object-src 'none'",
     frameAncestors
