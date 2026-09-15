@@ -2,6 +2,9 @@ import { themes as prismThemes } from "prism-react-renderer"
 import type { Config } from "@docusaurus/types"
 import type * as Preset from "@docusaurus/preset-classic"
 
+import remarkGherkinChecklist from "./src/remark/gherkin-checklist"
+import testPlanManifestPlugin from "./src/plugins/testPlanManifest"
+
 const url = process.env.DOCUSAURUS_URL ?? "https://notum-cz.github.io"
 const baseUrl = process.env.DOCUSAURUS_BASE_URL ?? "/strapi-next-monorepo-starter/"
 
@@ -21,6 +24,21 @@ const config: Config = {
         indexDocs: true,
         indexBlog: false,
         docsRouteBasePath: "/",
+      },
+    ],
+    testPlanManifestPlugin,
+    [
+      require.resolve("@docusaurus/plugin-client-redirects"),
+      {
+        // QA/overview.md used to live at this slug — Docusaurus doesn't
+        // redirect changed slugs on its own, so a bookmark/external link
+        // to the old URL would otherwise 404.
+        redirects: [
+          {
+            to: "/docs/QA/",
+            from: "/docs/reference/testing",
+          },
+        ],
       },
     ],
   ],
@@ -47,6 +65,7 @@ const config: Config = {
           sidebarPath: "./sidebars.ts",
           editUrl:
             "https://github.com/notum-cz/strapi-next-monorepo-starter/edit/main/apps/docs/",
+          remarkPlugins: [remarkGherkinChecklist],
         },
         blog: false,
         theme: {
@@ -87,7 +106,7 @@ const config: Config = {
     prism: {
       theme: prismThemes.oneLight,
       darkTheme: prismThemes.oneDark,
-      additionalLanguages: ["bash", "json", "typescript"],
+      additionalLanguages: ["bash", "json", "typescript", "gherkin"],
     },
   } satisfies Preset.ThemeConfig,
 }
