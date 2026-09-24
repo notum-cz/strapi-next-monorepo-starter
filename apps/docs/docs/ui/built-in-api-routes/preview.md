@@ -27,6 +27,15 @@ The `sameSite: "none"` cookie rewrite is required for Strapi's iframe-embedded p
 Preview requests return an error unless `STRAPI_PREVIEW_SECRET` is configured and the `secret` query param matches it.
 :::
 
+:::warning `STRAPI_URL` must match the admin origin
+The preview iframe auto-refreshes on save via a `postMessage` from the Strapi
+admin, and `StrapiPreviewListener` only accepts messages whose origin matches
+`STRAPI_URL`. Locally, `http://localhost:1337` and `http://127.0.0.1:1337` are
+**different origins**: if `STRAPI_URL` uses one and you open the admin on the
+other, every update message is dropped and the iframe silently stays stale —
+nothing is logged. Set `STRAPI_URL` to the origin you actually browse.
+:::
+
 :::tip Draft mode
 Draft previews depend on Next.js draft mode cookies. The route adjusts the draft-mode cookie so preview can work inside Strapi's iframe preview flow.
 :::

@@ -55,6 +55,6 @@ export const config = {
 
     // Skip all paths that should not be internationalized
 
-    "/((?!_next|_vercel|api|images|robots.txt|favicon.ico|sitemap).*)",
+    "/((?!_next|_vercel|api|images|robots.txt|favicon|apple-touch-icon|sitemap).*)",
   ],
 }
