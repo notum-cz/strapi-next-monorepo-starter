@@ -97,6 +97,11 @@ const config: Config = {
           label: "GitHub",
           position: "right",
         },
+        {
+          href: "https://www.notum.tech/contact",
+          label: "Contact Us",
+          position: "right",
+        },
       ],
     },
     footer: {
