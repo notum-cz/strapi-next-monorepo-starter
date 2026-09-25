@@ -19,7 +19,13 @@ export const registerDraftFullPath = ({ strapi }: { strapi: Core.Strapi }) => {
       context.uid === PAGE_UID &&
       (context.action === "create" || context.action === "update")
     ) {
-      await stampDraftFullPath(strapi, context.uid, result)
+      try {
+        await stampDraftFullPath(strapi, context.uid, result)
+      } catch (error) {
+        strapi.log.error(
+          `draftFullPath: failed to stamp fullPath: ${(error as Error).message}`
+        )
+      }
     }
 
     return result
@@ -64,6 +70,17 @@ async function stampDraftFullPath(
   // Same rule as computeFullPathChanges in the hierarchy API utils
   const fullPath = normalizePageFullPath([draft.parent?.fullPath, draft.slug])
   if (fullPath === draft.fullPath) {
+    return
+  }
+
+  // The direct write below bypasses the `unique` validation, so check it here
+  // (draft and published rows of other documents in the same locale)
+  const conflict = await strapi.db
+    .connection("pages")
+    .where({ full_path: fullPath, locale })
+    .whereNot({ document_id: documentId })
+    .first("id")
+  if (conflict) {
     return
   }
 

@@ -7,9 +7,11 @@ type Doc = Record<string, unknown> | null
 const buildMiddleware = ({
   published = null,
   draft = null,
+  conflict = null,
 }: {
   published?: Doc
   draft?: Doc
+  conflict?: Doc
 }) => {
   const useMock = vi.fn()
   const findOne = vi.fn(async ({ status }: { status: string }) =>
@@ -17,8 +19,11 @@ const buildMiddleware = ({
   )
   const updateMock = vi.fn()
   const whereNull = vi.fn(() => ({ update: updateMock }))
-  const where = vi.fn(() => ({ whereNull }))
+  const first = vi.fn(async () => conflict)
+  const whereNot = vi.fn(() => ({ first }))
+  const where = vi.fn(() => ({ whereNull, whereNot }))
   const connection = vi.fn(() => ({ where }))
+  const logError = vi.fn()
 
   registerDraftFullPath({
     strapi: {
@@ -27,6 +32,7 @@ const buildMiddleware = ({
         { use: useMock }
       ),
       db: { connection },
+      log: { error: logError },
     } as never,
   })
 
@@ -39,6 +45,7 @@ const buildMiddleware = ({
     connection,
     where,
     updateMock,
+    logError,
   }
 }
 
@@ -105,6 +112,30 @@ describe("draft fullPath middleware", () => {
     await middleware(pageContext, async () => ({ documentId: "doc5" }))
 
     expect(updateMock).not.toHaveBeenCalled()
+  })
+
+  it("skips when another page already uses the fullPath", async () => {
+    const { middleware, updateMock } = buildMiddleware({
+      draft: { slug: "about", parent: null },
+      conflict: { id: 99 },
+    })
+    const result = { documentId: "doc6", locale: "en" }
+
+    await middleware(pageContext, async () => result)
+
+    expect(updateMock).not.toHaveBeenCalled()
+    expect(result).not.toHaveProperty("fullPath")
+  })
+
+  it("returns the save result and logs when stamping fails", async () => {
+    const { middleware, findOne, logError } = buildMiddleware({})
+    findOne.mockRejectedValueOnce(new Error("db down"))
+    const result = { documentId: "doc7", locale: "en" }
+
+    await expect(middleware(pageContext, async () => result)).resolves.toBe(
+      result
+    )
+    expect(logError).toHaveBeenCalledWith(expect.stringContaining("db down"))
   })
 
   it("passes non-page UIDs through", async () => {
