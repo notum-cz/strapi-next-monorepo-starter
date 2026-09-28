@@ -1,0 +1,551 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+#
+# CodeRabbit configuration: Strapi + Next.js monorepo starter
+# Docs: https://docs.coderabbit.ai/reference/configuration
+#
+# ─── Where this file applies ──────────────────────────────────────────────────
+# PR reviews (GitHub app): everything in this file.
+# Local CLI (`cr review`, the Claude Code plugin): reads this file from the repo root.
+#   `profile`, `path_filters`, `path_instructions`, `tools`, and `knowledge_base.code_guidelines`
+#   shape local reviews. Walkthrough, labels, `auto_review`, `pre_merge_checks`, and
+#   `finishing_touches` only exist on a PR.
+# This file is self-contained on purpose: forks and derived projects outside the org still get
+# the full setup. Inside an org that has a central `coderabbit` repo, add `inheritance: true`
+# only if you want the org settings merged in. Without it, this file replaces them.
+#
+# ─── Checks ───────────────────────────────────────────────────────────────────
+#   cr config validate                       # validate against the official schema (CLI)
+#   @coderabbitai configuration              # PR comment: resolved config, with sources
+#   @coderabbitai run pre-merge checks       # PR comment: re-run the checks after edits
+#
+# ─── Adding an app or package ─────────────────────────────────────────────────
+# When you add `apps/<name>` or `packages/<name>`, walk through the sections marked [EXTEND]:
+#   0. pnpm-workspace.yaml    check that a `packages` glob matches the directory. Nested
+#                             directories like `packages/<group>/<pkg>` are NOT matched by `packages/*`
+#   1. labeling_instructions  add a scope label: `- label: "<name>"` + "The PR touches apps/<name>."
+#   2. path_filters           exclude its build output and generated files (`!apps/<name>/dist/**`)
+#   3. path_instructions      add ONE entry for the workspace root. Say what it is, what it
+#                             depends on, and which rules are specific to it. Rules that already
+#                             match by glob (all TS files, all components, all tests) don't need
+#                             repeating. Use the template at the end of path_instructions.
+#   4. code_guidelines        if the workspace has a docs page, map it with `files` + `applyTo`
+#                             so it is only loaded for reviews that touch that workspace
+#   5. code_generation        if it uses a different test runner, add a unit_tests entry
+# Architecture and conventions go in the workspace's AGENTS.md / CLAUDE.md. CodeRabbit reads
+# those files automatically for their own subtree, so don't copy them here. This file only holds
+# what a reviewer must flag.
+#
+# Limits: tone_instructions ≤ 250 chars · each path instruction ≤ 20k chars ·
+#         ≤ 50 guideline files read per review · ≤ 50 custom checks · ≤ 20 custom recipes
+
+language: "en-US"
+early_access: false
+tone_instructions: "Be direct and technical. No praise, no padding. Lead with the defect and its impact. Prioritize correctness, security, type safety, performance, accessibility."
+
+reviews:
+  profile: "assertive"
+  request_changes_workflow: true # needed so pre_merge_checks in `error` mode can block merges
+
+  # ── Walkthrough ──────────────────────────────────────────────────────────────
+  high_level_summary: true
+  collapse_walkthrough: true
+  changed_files_summary: true
+  sequence_diagrams: true
+  estimate_code_review_effort: true
+  review_details: true
+  poem: false
+  in_progress_fortune: false
+  enable_prompt_for_ai_agents: true # adds the "Prompt for AI agents" block (used by the resolve-review-suggestions skill)
+
+  # ── Linking ──────────────────────────────────────────────────────────────────
+  assess_linked_issues: true
+  related_issues: true
+  related_prs: true
+
+  # ── Labels [EXTEND] ──────────────────────────────────────────────────────────
+  # Type labels follow Conventional Commits, and only one applies per PR (mutually_exclusive_groups).
+  # Scope labels map 1:1 to workspaces, and several can apply.
+  suggested_labels: true
+  auto_apply_labels: false
+  labeling_instructions:
+    # type
+    - label: "feat"
+      instructions: "The PR adds new user-facing functionality."
+    - label: "fix"
+      instructions: "The PR fixes a bug."
+    - label: "refactor"
+      instructions: "The PR restructures code without changing observable behavior."
+    - label: "perf"
+      instructions: "The PR's main purpose is a performance improvement."
+    - label: "chore"
+      instructions: "Dependency updates, config, tooling, or maintenance with no user-facing impact."
+    - label: "docs"
+      instructions: "The PR only changes documentation (apps/docs, READMEs, AGENTS.md/CLAUDE.md)."
+    - label: "test"
+      instructions: "The PR only adds or changes tests."
+    - label: "ci"
+      instructions: "The PR only changes CI/CD (.github/workflows, .github/actions, .azuredevops)."
+    # impact
+    - label: "breaking-change"
+      instructions: "The PR removes or renames an exported symbol of a workspace package, an API route, an env var, a URL, or a Strapi field, or changes a schema in a way that is not backward compatible."
+    - label: "schema-change"
+      instructions: "The PR changes a Strapi content-type or component schema (apps/strapi/src/**/schema.json, apps/strapi/src/components/**)."
+    - label: "security"
+      instructions: "The PR changes authentication, authorization, Strapi roles/permissions (config/sync/*role*), security headers, secrets handling, or proxy routes."
+    - label: "dependencies"
+      instructions: "The PR changes package.json dependencies or the pnpm catalog."
+    # scope, one per workspace
+    - label: "ui"
+      instructions: "The PR touches apps/ui."
+    - label: "strapi"
+      instructions: "The PR touches apps/strapi or packages/strapi-plugins."
+    - label: "docs-site"
+      instructions: "The PR touches apps/docs (the Docusaurus site itself: config, theme, components)."
+    - label: "strapi-types"
+      instructions: "The PR touches packages/strapi-types."
+    - label: "design-system"
+      instructions: "The PR touches packages/design-system."
+    - label: "shared-data"
+      instructions: "The PR touches packages/shared-data."
+    - label: "logging"
+      instructions: "The PR touches packages/logging."
+    - label: "tooling"
+      instructions: "The PR touches packages/eslint-config, packages/typescript-config, turbo.json, pnpm-workspace.yaml, lefthook.yml, or scripts/."
+    - label: "release"
+      instructions: "The PR touches packages/semantic-release-config, .github/workflows/release.yml, or commitlint.config.js, meaning it changes how versions and releases are produced."
+    - label: "qa"
+      instructions: "The PR touches qa/."
+    - label: "ai-skills"
+      instructions: "The PR touches .claude/skills, AGENTS.md, or CLAUDE.md."
+  mutually_exclusive_groups:
+    type: ["feat", "fix", "refactor", "perf", "chore", "docs", "test", "ci"]
+
+  suggested_reviewers: true
+  auto_assign_reviewers: false # .github/CODEOWNERS handles assignment
+
+  # ── Auto review ──────────────────────────────────────────────────────────────
+  auto_review:
+    enabled: true
+    auto_incremental_review: true
+    auto_pause_after_reviewed_commits: 10 # resume with `@coderabbitai resume`
+    drafts: false
+    base_branches: # regexes; the default branch is always reviewed
+      - "^dev(elop)?$"
+      - "^staging$"
+      - "^release/.*"
+      - "^hotfix/.*"
+    ignore_title_keywords:
+      - "WIP"
+      - "DO NOT MERGE"
+      - "DO NOT REVIEW"
+    labels:
+      - "!wip"
+      - "!skip-review"
+    ignore_usernames:
+      - "dependabot[bot]"
+      - "renovate[bot]"
+
+  # ── Pre-merge checks ─────────────────────────────────────────────────────────
+  # All checks start in `warning` mode. Move a check to `error` once it no longer produces false
+  # positives. Custom checks need the Team plan or higher. Try a new check on a PR before
+  # committing it:
+  #   @coderabbitai evaluate custom pre-merge check --name "<name>" --instructions "<text>"
+  pre_merge_checks:
+    override_requested_reviewers_only: true
+    docstrings:
+      mode: "off" # TS + ESLint cover this, and a coverage % is noise
+    title:
+      mode: "warning"
+      requirements: "Conventional Commits, as enforced by commitlint (`@commitlint/config-conventional` + pnpm scopes): `type(scope): subject`. type is one of feat, fix, perf, refactor, docs, test, build, ci, chore, revert, style. The optional scope is a workspace package name (for example `ui`, `strapi`, `design-system`). Imperative, lowercase subject, no trailing period, at most 72 chars. Append `!` for breaking changes. semantic-release turns the squash title into the changelog."
+    description:
+      mode: "warning"
+    issue_assessment:
+      mode: "warning"
+    custom_checks:
+      - name: "Environment variables wired"
+        mode: "warning"
+        instructions: |
+          Pass if the PR introduces no new environment variable.
+          For every new env var, pass only if ALL of the following hold, and otherwise list what is missing per variable:
+          1. apps/ui: declared and validated in `apps/ui/src/env.mjs` (t3-oss env). Browser-exposed vars use the `NEXT_PUBLIC_` prefix and are not secrets.
+          2. apps/strapi: added to `apps/strapi/.env.example` and read through `env()` in `config/**`.
+          3. qa: added to `qa/tests/playwright/.env.example`.
+          4. If it affects build output, listed in `turbo.json` (`globalEnv` or the task's `env`).
+          5. Documented on the matching page: `apps/docs/docs/ui/environment-variables.md` or `apps/docs/docs/strapi/environment-variables.md`.
+          6. Named in CONSTANT_CASE in the PR description or a commit body, so the Auto PR workflow surfaces it.
+      - name: "Destructive Strapi schema change"
+        mode: "warning"
+        instructions: |
+          Pass if no file under `apps/strapi/src/api/**/content-types/**/schema.json` or `apps/strapi/src/components/**/*.json` changes.
+          Fail if an attribute, component, or content type is renamed or removed, if an attribute's type changes, or if `required`/`unique` is added to an existing attribute. Strapi treats a rename as drop + create and deletes existing data on the next start.
+          The check still passes if the PR adds a data migration under `apps/strapi/database/migrations/**` that preserves the data, or if the PR description explicitly accepts the data loss and says why.
+      - name: "Page-builder component wired"
+        mode: "warning"
+        instructions: |
+          Pass if the PR adds no new Strapi component to a dynamic zone.
+          For each new component UID added to a dynamic zone in a content-type schema, pass only if ALL of the following hold:
+          1. A React component renders it and is registered by UID in `apps/ui/src/components/page-builder/index.tsx`. A missing registration fails silently at runtime.
+          2. Its populate shape is covered: `"smart"` populate, or an explicit populate entry.
+          3. `packages/strapi-types/generated/**` includes the new component, meaning the types were regenerated and committed.
+      - name: "Breaking change documented"
+        mode: "warning"
+        instructions: |
+          Pass if the PR makes no breaking change.
+          A breaking change is: a removed or renamed export from `packages/**`, a changed request or response shape of an `apps/ui/src/app/api/**` route or a Strapi API, a removed or renamed env var, a changed URL/route structure, or a removed Strapi field.
+          If the PR makes one, pass only if the title has `!` or the PR description has a "Breaking changes" section with the migration path.
+      - name: "Docs kept in sync"
+        mode: "warning"
+        instructions: |
+          Pass if the PR changes no user-facing developer contract.
+          If the PR changes any of the following, pass only if the matching page in `apps/docs/docs/**`, or the relevant AGENTS.md/CLAUDE.md, is updated in the same PR:
+          - root `package.json` scripts: `reference/commands.md`
+          - ports, env vars, or setup steps: `getting-started/*`
+          - built-in API routes (`apps/ui/src/app/api/**`): `ui/built-in-api-routes/*`
+          - a workspace package's public API: `reference/packages/*`
+          - skills in `.claude/skills/**`: `reference/AI/skills/*`
+          Name each stale page.
+
+  # ── Finishing touches (on-demand actions from the PR walkthrough) ────────────
+  finishing_touches:
+    docstrings:
+      enabled: true
+    unit_tests:
+      enabled: true
+    simplify:
+      enabled: true
+    custom:
+      - name: "update docs"
+        instructions: |
+          Update the Docusaurus docs in `apps/docs/docs/**` to match the changes in this PR.
+          - Edit existing pages first. Create a new page only if no existing page covers the topic, and register it in `apps/docs/sidebars.ts`.
+          - Update commands, env var tables, file paths, ports, and code snippets to match the code exactly.
+          - If a skill in `.claude/skills/**` changed, update its page in `reference/AI/skills/`.
+          - Don't rewrite prose that the PR doesn't affect.
+
+  # ── Excluded from review [EXTEND] ────────────────────────────────────────────
+  # Excluded files are also skipped in CodeRabbit's sparse checkout. Exclude generated or
+  # vendored code, not code you want reviewed lightly (use path_instructions for that).
+  path_filters:
+    # lockfiles and build output
+    - "!**/pnpm-lock.yaml"
+    - "!**/package-lock.json"
+    - "!**/yarn.lock"
+    - "!**/node_modules/**"
+    - "!**/.next/**"
+    - "!**/.turbo/**"
+    - "!**/.docusaurus/**"
+    - "!**/dist/**"
+    - "!**/build/**"
+    - "!**/out/**"
+    - "!**/coverage/**"
+    - "!**/*.min.{js,css}"
+    - "!**/*.map"
+    - "!**/next-env.d.ts"
+    # binaries and media
+    - "!**/*.{png,jpg,jpeg,gif,webp,avif,ico,svg,woff,woff2,ttf,otf,mp4,pdf}"
+    # test artifacts
+    - "!**/*.snap"
+    - "!**/__snapshots__/**"
+    - "!**/*-snapshots/**" # Playwright visual baselines
+    - "!qa/**/test-results/**"
+    - "!qa/**/playwright-report/**"
+    # Strapi generated and data
+    - "!apps/strapi/types/generated/**"
+    - "!apps/strapi/public/uploads/**"
+    - "!apps/strapi/seed/**"
+    - "!apps/strapi/config/sync/core-store.plugin_content_manager_configuration*" # admin list/edit layouts
+    - "!**/import_*.log"
+    # vendored agent skills (installed via skills.sh, tracked in skills-lock.json)
+    - "!.claude/skills/find-skills/**"
+    - "!.claude/skills/frontend-design/**"
+    - "!.claude/skills/next-best-practices/**"
+    - "!.claude/skills/vercel-react-best-practices/**"
+    # packages/strapi-types/generated is NOT excluded: its diff is how schema changes are verified.
+
+  # ── Path instructions [EXTEND] ───────────────────────────────────────────────
+  # Order: cross-cutting → apps → packages → QA → infra. Several entries can match the same file,
+  # and all of them apply, so keep workspace entries free of rules a glob entry already covers.
+  path_instructions:
+    # ════ Cross-cutting ═══════════════════════════════════════════════════════
+    - path: "**/*.{ts,tsx,mts,cts}"
+      instructions: |
+        TypeScript across the monorepo.
+        - No `any`, no non-null `!` assertions, and no `as` casts that bypass type checking without a justifying comment. Prefer `unknown` plus narrowing, or `satisfies`.
+        - Strapi-derived types come from `@repo/strapi-types` (`Data.ContentType<...>`, `Data.Component<...>`, and so on). Flag hand-written types that duplicate a generated content-type or component.
+        - A non-Strapi type used by more than one workspace belongs in `@repo/shared-data`, not copied between apps. A single-use type can stay local.
+        - Promises must be awaited or explicitly handled. Flag floating promises and `async` callbacks passed to `forEach`.
+        - Logging goes through `@repo/logging` (`logger`, `logError`, `withSpan`), not `console.*` in app code. Never log secrets, tokens, cookies, passwords, or PII.
+        - Imports between workspaces use `@repo/*` package names, never relative paths that cross a workspace boundary.
+
+    - path: "**/package.json"
+      instructions: |
+        - New dependencies: is one needed at all? Flag a dependency that duplicates an existing one or something the platform or stdlib already does.
+        - Workspace deps use `workspace:*`.
+        - Runtime deps go in `dependencies`, and build, test, and type-only deps in `devDependencies`.
+        - A new or renamed root script must be reflected in `apps/docs/docs/reference/commands.md`.
+
+    # ════ apps/ui (Next.js 16 App Router, React 19, Tailwind v4, shadcn/ui) ═══
+    - path: "apps/ui/src/app/**/*.{ts,tsx}"
+      instructions: |
+        Next.js 16 App Router routes.
+        - Server Components are the default. `"use client"` only for state, effects, event handlers, or browser APIs, and pushed to leaf components.
+        - `params`, `searchParams`, `cookies()`, and `headers()` are async and must be awaited.
+        - Fetch data in Server Components through the Strapi clients in `src/lib/strapi-api/`, never with raw `fetch` to Strapi and never in `useEffect`. Parallelize independent fetches.
+        - Routing: `[locale]/[[...rest]]` renders every CMS page. Pass locale from the URL to every Strapi query. New static routes must not shadow CMS slugs unintentionally.
+        - Caching and revalidation: any change to `revalidate`, fetch cache tags, or `"use cache"` must stay consistent with `src/lib/cache-paths.ts` and the `/api/strapi-revalidate` flow. Flag per-user data that could end up in a shared cache.
+        - Pages driven by CMS content use `generateMetadata` (helpers in `src/lib/metadata`).
+        - `error.tsx` / `not-found.tsx` must not leak internal error details.
+
+    - path: "apps/ui/src/app/api/**"
+      instructions: |
+        Route handlers are a trust boundary.
+        - Validate every input (params, query, body) with zod. Check auth and authorization before doing any work.
+        - `public-proxy` / `private-proxy` hide the Strapi URL and credentials. Check that the path allowlist and method restrictions can't be bypassed (path traversal, `..`, encoded slashes, open proxying to arbitrary hosts).
+        - `strapi-revalidate` / `cdn-purge` / `preview` must verify their secret with `hasValidBearerToken` (`src/lib/verify-bearer-token.ts`, constant-time). Flag hand-rolled `===` token comparisons, and any action taken before the token is verified.
+        - Never return stack traces or upstream error bodies to the client. Set correct status codes and `Cache-Control`.
+
+    - path: "apps/ui/src/components/**/*.tsx"
+      instructions: |
+        React components.
+        - Named function declarations, one component per file (`react/no-multi-comp`).
+        - Variants use `cva`, and conditional classes use `cn()`. No string-concatenated class names.
+        - No hard-coded colors, spacing, or font sizes. Use `@repo/design-system` tokens and the Tailwind theme.
+        - Use Radix only through the shadcn wrappers in `components/ui/`, never `@radix-ui/*` directly.
+        - WCAG 2.1 AA: keyboard reachable, accessible names, meaningful `alt` (or `alt=""` if decorative), `button`/`a` instead of clickable `div`/`span`, visible focus, sufficient contrast.
+        - Images go through the image helpers (`src/lib/imgproxy.ts`, `next/image`), and internal links use `next/link` or the i18n navigation helpers in `src/lib/navigation.ts`.
+        - Flag unnecessary `useEffect` (derived state, event handling), unstable or missing `key`s, and effects without cleanup.
+
+    - path: "apps/ui/src/components/page-builder/**"
+      instructions: |
+        Page-builder renderers for Strapi dynamic zones.
+        - Every component is registered by its Strapi UID in `page-builder/index.tsx`. An unregistered UID renders nothing and gives no error.
+        - Props are typed from `@repo/strapi-types` (`Data.Component<"sections.x">`), not redeclared.
+        - Every CMS field can be null or empty. Handle missing optional fields without crashing or rendering broken markup.
+        - Render rich text through the shared CKEditor/TipTap renderers, never `dangerouslySetInnerHTML` on unsanitized CMS HTML.
+
+    - path: "apps/ui/src/lib/**"
+      instructions: |
+        UI infrastructure.
+        - `strapi-api/`: `PublicStrapiClient` (read-only API token) for public content, `PrivateStrapiClient` (user JWT) for authenticated data. Never use the private client or a user token in cached or public paths.
+        - `auth.ts` / `auth-client.ts` (Better Auth + Strapi JWT): session and token handling must not expose the Strapi JWT to client JS beyond what's intended. Check cookie flags (httpOnly, secure, sameSite) and expiry handling.
+        - `proxies/` (Next.js proxy middleware): order and matchers matter. Check that `securityHeaders`, `basicAuth`, `authGuard`, and redirects still cover every intended route and don't loop.
+        - Pure helpers here are expected to have a colocated `*.test.ts`.
+
+    - path: "apps/ui/src/env.mjs"
+      instructions: "The single source of truth for UI env vars. Every var gets a zod schema. Server-only vars must never be moved to `client`. Defaults must be safe for production, never placeholders like `changeme`."
+
+    - path: "apps/ui/locales/*.json"
+      instructions: "next-intl messages. Every key added or removed must be added or removed in ALL locale files (en, cs, ...). Keep ICU placeholders identical across locales. Flag keys that no code references anymore."
+
+    - path: "apps/ui/next.config.mjs"
+      instructions: "Changes affect every route. Check `images.remotePatterns` (no wildcard hosts), headers, redirects and rewrites, and Sentry wrapping. Changes to `cacheHandler` or `output` need a deployment note."
+
+    # ════ apps/strapi (Strapi v5, PostgreSQL) ═════════════════════════════════
+    - path: "apps/strapi/src/**/*.{ts,js}"
+      instructions: |
+        Strapi v5 backend.
+        - Use the Document Service API (`strapi.documents(uid)`). Flag new `strapi.entityService` (v4) calls, and raw `strapi.db.query` where the Document Service would do.
+        - Cross-cutting content logic lives in Document Service middlewares (`src/documentMiddlewares/`, registered in `src/index.ts`). DB lifecycles (`src/lifeCycles/`) are only for admin/user entities. v5 lifecycles fire once per locale and draft/publish row, so check for duplicated side effects.
+        - Every document query must handle `locale` and `status` ('draft' | 'published') deliberately. Flag code that can return drafts to the public API.
+        - Keep controllers thin and put logic in services. Validate input and sanitize output (`validateQuery`, `sanitizeOutput`). Never bypass policies or users-permissions.
+        - Side effects on publish (revalidation, CDN purge) must be failure-tolerant. A failed revalidate call must not fail the publish.
+        - Types from `@repo/strapi-types` regenerate when Strapi restarts. Flag hand edits to generated types, not a missing manual step.
+
+    - path: "apps/strapi/src/{api,components}/**/*.json"
+      instructions: |
+        Strapi content-type and component schemas.
+        - Renaming or removing an attribute drops the column and its data. Flag every rename, removal, or type change, and ask about a migration.
+        - Images use the `utilities.basic-image` component, not a raw `{ "type": "media" }`. Exceptions: `seo-utilities/*` and `utilities/basic-image` itself.
+        - `pluginOptions.i18n.localized`: set it deliberately on the content type AND per attribute. Translatable copy is localized. Slugs, relations, and structural toggles usually are not.
+        - Relations: check cardinality and direction. Use `inversedBy`/`mappedBy` only when both sides must navigate.
+        - Adding `required`/`unique` to an existing attribute can fail on existing rows.
+        - A component added to a dynamic zone needs a page-builder renderer in apps/ui (see the custom pre-merge check).
+        - Naming follows sibling components in the same category (elements, forms, layout, sections, seo-utilities, shared, utilities).
+
+    - path: "apps/strapi/config/**/*.ts"
+      instructions: |
+        Strapi config.
+        - All secrets and URLs come from `env()` / `env.int()` / `env.bool()`, with safe defaults. Never hard-coded.
+        - `middlewares.ts`: CORS origins, CSP, and body limits must not be loosened to wildcards.
+        - `plugins.ts`: new plugins must be documented in `apps/docs/docs/strapi/plugins/`.
+        - `cron-tasks.ts`: jobs must be idempotent and safe to run on more than one instance.
+
+    - path: "apps/strapi/config/sync/**"
+      instructions: |
+        config-sync exports, applied to every environment on deploy.
+        - Role files (`*role*.json`, users-permissions): treat as security-critical. Flag any permission newly granted to `public` or `authenticated`, and any `find`/`findOne` on a content type that has private fields.
+        - Other files: check that the change was intended, not an accidental local admin tweak.
+
+    - path: "apps/strapi/database/migrations/**"
+      instructions: |
+        Data migrations run once, in production.
+        - Must be idempotent and safe to re-run. Must handle every locale and both draft and published rows.
+        - Batch large tables, with no unbounded full-table loads.
+        - Flag irreversible operations that have no backup or restore note.
+
+    - path: "apps/strapi/src/admin/**"
+      instructions: "Strapi admin panel customizations. Use `@strapi/design-system` components and the admin theme, not shadcn/Tailwind. Admin translations (`cs.ts`, ...) must stay in sync with the keys used."
+
+    - path: "packages/strapi-plugins/**"
+      instructions: |
+        Local Strapi v5 plugins (`server/`, `admin/`, `strapi-server`/`strapi-admin` exports, built with `@strapi/sdk-plugin`).
+        - Server routes need explicit policies/auth config. The plugin must build and run without importing code from apps/strapi.
+        - Workspace membership: pnpm-workspace.yaml matches `packages/*`, so nested plugins (`packages/strapi-plugins/<plugin>`) are NOT workspace packages. If apps/strapi depends on one through `workspace:*`, or the PR relies on turbo/pnpm running its scripts, pnpm-workspace.yaml must include `packages/strapi-plugins/*`. Flag the mismatch.
+        - Peer dependency ranges (`react`, `react-dom`, `react-router-dom`, `@strapi/strapi`) must be compatible with the versions apps/strapi actually uses.
+
+    # ════ apps/docs (Docusaurus) ══════════════════════════════════════════════
+    - path: "apps/docs/docs/**/*.{md,mdx}"
+      instructions: |
+        Developer documentation.
+        - Commands, paths, env var names, ports, and versions must match the code. Stale docs are defects.
+        - New pages must be registered in `apps/docs/sidebars.ts`. Relative links must resolve.
+        - Skip wording and style nitpicks.
+
+    # ════ packages ════════════════════════════════════════════════════════════
+    - path: "packages/strapi-types/**"
+      instructions: |
+        `generated/**` is produced from the Strapi schemas. Never suggest manual edits. Review only that it matches the schema changes in the same PR: a schema change without regenerated types, or regenerated types without a schema change, are both defects.
+        `src/**` holds hand-written helper types. Review those normally.
+
+    - path: "packages/design-system/**"
+      instructions: |
+        Shared Tailwind v4 tokens, typography, and CKEditor/TipTap editor styles used by every app.
+        - Renaming or removing a token is a breaking change. Find its usages in apps/ui.
+        - Color and font token changes must stay in sync with the rich-text editor styles, so content looks the same in the Strapi editor and on the site.
+        - No app-specific overrides in this package.
+
+    - path: "packages/shared-data/**"
+      instructions: "Framework-agnostic shared constants and types. No Next.js, React, or Strapi imports. Strapi-derived types belong in `@repo/strapi-types`, not here. A removed or renamed export is breaking, so check both apps."
+
+    - path: "packages/logging/**"
+      instructions: "`@repo/logging`: pino + OpenTelemetry. Keep `traceId`/`spanId` on every entry. Levels must mean something: error = actionable, warn = degraded, info = significant event. Redaction must cover auth headers, cookies, and tokens. The Azure exporter (`azure.ts`) stays optional and must not load unless configured."
+
+    - path: "packages/{eslint-config,typescript-config}/**"
+      instructions: "Shared lint and TS config for every workspace. Loosening a rule (turning it off, or error → warn) needs a reason in the PR. Flag a rule change that would make `pnpm lint` or `pnpm typecheck` fail on untouched code."
+
+    - path: "{packages/semantic-release-config/**,.github/workflows/release.yml}"
+      instructions: |
+        Release pipeline. semantic-release runs on every push to `main` and publishes GitHub releases, so a mistake here ships a wrong version or skips a release. Treat every change as high impact.
+        - `branches`: changing it changes which branch releases, and can produce prerelease or duplicate tags.
+        - `releaseRules` / commit-analyzer: check the version bump for each commit type. Every `type` used in a rule must be allowed by commitlint (`@commitlint/config-conventional`), or no commit can ever trigger that rule. Flag rules that turn a breaking change into less than a major bump, or that make `chore`/`docs` release unintentionally.
+        - Plugins: order matters (analyzer → notes → publish). Adding `@semantic-release/npm` or `git` changes what gets published or committed back. The workflow's `permissions` and tokens must match.
+        - Workflow: needs `fetch-depth: 0`, needs `contents: write` scoped to the release job only, and must not run on `pull_request`.
+        - Require a dry-run note in the PR (`pnpm exec semantic-release --dry-run --extends @repo/semantic-release-config`) that shows the expected next version.
+
+    - path: "pnpm-workspace.yaml"
+      instructions: |
+        - `packages` globs decide which directories are workspace packages. A new app or package directory that no glob matches (for example a nested `packages/<group>/<pkg>`) won't be installed, linked, or run by turbo. Flag it.
+        - `overrides` entries need a comment saying why they exist and when to drop them. `minimumReleaseAgeExclude` entries must be pinned to an exact version.
+        - Adding a package to `allowBuilds` lets its install scripts run. Ask for the reason.
+
+    # ════ QA ══════════════════════════════════════════════════════════════════
+    - path: "qa/tests/playwright/**/*.ts"
+      instructions: |
+        Playwright e2e, visual, axe, SEO, and Lighthouse tests.
+        - Page Object Model: selectors and multi-step interactions live in page objects and fixtures, not inline in specs.
+        - Use semantic locators (`getByRole`, `getByLabel`, `getByText`). CSS/XPath only as a last resort, with a comment.
+        - No `waitForTimeout`. Use web-first assertions (`await expect(locator).toBeVisible()`).
+        - Keep smoke tests (real Strapi) and mock tests separate. Tests are isolated, order-independent, and never depend on unseeded CMS content.
+        - axe tests assert zero violations. Visual snapshots have descriptive names.
+
+    - path: "apps/docs/docs/QA/test-cases/**"
+      instructions: "Gherkin test cases. One behavior per scenario, declarative Given/When/Then (describe what, not which button), no UI implementation details. Scenario names must match the Playwright tests that automate them."
+
+    # ════ Infra ═══════════════════════════════════════════════════════════════
+    - path: ".github/{workflows,actions}/**/*.{yml,yaml}"
+      instructions: |
+        GitHub Actions.
+        - Pin third-party actions to a full commit SHA, with the version in a comment. Set least-privilege `permissions:`.
+        - Never interpolate untrusted input (`github.event.*.title|body`, `github.head_ref`) into `run:`. Pass it through `env:`.
+        - `pull_request_target`: never check out and run PR code with secrets available.
+        - Check that `concurrency`, `needs`, `if:`, and path filters don't silently skip required jobs. Use the composite actions in `.github/actions/` instead of duplicating setup steps.
+
+    - path: ".azuredevops/**/*.{yml,yaml}"
+      instructions: "Azure DevOps pipelines. Secrets come from variable groups or Key Vault, never inline. Pin task versions (`Task@2`). Check that `dependsOn` and `condition` don't skip stages. Changes to shared templates affect every pipeline that uses them."
+
+    - path: "turbo.json"
+      instructions: "An env var that affects build output must be in `globalEnv` or the task's `env`, or builds get stale cache hits. `dependsOn` must reflect real dependencies, and `outputs` must cover every artifact."
+
+    - path: "**/{Dockerfile,docker-compose*.yml}"
+      instructions: "Multi-stage build, non-root runtime user, pinned base image tags, no secrets in build args or layers, and a matching `.dockerignore` that excludes `node_modules`, `.env*`, and `.git`."
+
+    - path: "{lefthook.yml,commitlint.config.js,scripts/**}"
+      instructions: "Git hooks and repo scripts run on every contributor's machine. They must be POSIX `sh` compatible (macOS + Linux), non-interactive, and fast. A change to the branch or commit rules must be reflected in `apps/docs/docs/reference/workflow.md`."
+
+    - path: ".claude/skills/**/SKILL.md"
+      instructions: "Agent skill. The frontmatter `description` states WHEN to trigger, with concrete trigger phrases. Paths, commands, and file names the skill references must exist in the repo. A new or changed skill must be reflected in `.claude/skills/README.md` and `apps/docs/docs/reference/AI/skills/`."
+
+    # ════ Template for a new workspace (copy, uncomment, fill in) ═════════════
+    # - path: "apps/<name>/**"            # or "packages/<name>/**"
+    #   instructions: |
+    #     <One line: what this workspace is and who consumes it.>
+    #     - <Rule a reviewer must enforce that the global entries don't already cover.>
+    #     - <Boundary: what it must NOT import or depend on.>
+    #     - <What counts as a breaking change here.>
+
+  # ── Tools ────────────────────────────────────────────────────────────────────
+  # All tools are enabled by default and only run on matching files. Only overrides are listed.
+  # Put deterministic rules in ESLint (packages/eslint-config), not ast-grep, so they also run
+  # locally and in CI.
+  tools:
+    eslint:
+      enabled: true # uses the repo's flat configs
+    biome:
+      enabled: false # the repo uses ESLint + Prettier; Biome contradicts that setup
+    oxc:
+      enabled: false # same reason
+    languagetool:
+      enabled: false # grammar nitpicks on docs, mostly noise
+
+chat:
+  auto_reply: true
+  art: false
+
+knowledge_base:
+  web_search:
+    enabled: true
+  learnings:
+    scope: local # a derived client project must not share learnings with other orgs' repos
+  issues:
+    scope: local
+  pull_requests:
+    scope: local
+  # ── Code guidelines [EXTEND] ─────────────────────────────────────────────────
+  # AGENTS.md / CLAUDE.md (root, apps/ui, apps/strapi) are read automatically. The entries below
+  # map docs pages to the code they describe, so a page is only loaded when that code changes
+  # (at most 50 guideline files per review).
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - files: "apps/docs/docs/page-builder/*.md"
+        applyTo: "apps/ui/src/components/page-builder/**,apps/strapi/src/components/**,apps/strapi/src/api/page/**"
+      - files: "apps/docs/docs/strapi/strapi-schemas.md,apps/docs/docs/getting-started/add-content-type.md"
+        applyTo: "apps/strapi/src/**/*.json"
+      - files: "apps/docs/docs/ui/strapi-api-client.md"
+        applyTo: "apps/ui/src/lib/strapi-api/**,apps/ui/src/app/api/*-proxy/**"
+      - files: "apps/docs/docs/auth/ui/*.md"
+        applyTo: "apps/ui/src/lib/auth*.ts,apps/ui/src/app/**/auth/**"
+      - files: "apps/docs/docs/ui/caching.md,apps/docs/docs/reference/cache-revalidation.md"
+        applyTo: "apps/ui/src/lib/cache-paths.ts,apps/ui/src/app/api/strapi-revalidate/**,apps/strapi/src/documentMiddlewares/revalidate.ts"
+      - files: "apps/docs/docs/ui/next-proxies.md"
+        applyTo: "apps/ui/src/proxy.ts,apps/ui/src/lib/proxies/**"
+      - files: "apps/docs/docs/design-system/*.md"
+        applyTo: "packages/design-system/**,apps/ui/src/components/**"
+      - files: "apps/docs/docs/QA/playwright/*.md"
+        applyTo: "qa/**"
+      - files: "apps/docs/docs/reference/workflow.md"
+        applyTo: ".github/**,lefthook.yml,commitlint.config.js,scripts/**"
+      - files: "apps/docs/docs/reference/packages/semantic-release-config.md,apps/docs/docs/reference/workflow.md"
+        applyTo: "packages/semantic-release-config/**,.github/workflows/release.yml,commitlint.config.js"
+      - files: "apps/docs/docs/reference/packages/overview.md"
+        applyTo: "pnpm-workspace.yaml,packages/*/package.json"
+
+code_generation:
+  unit_tests:
+    path_instructions: # [EXTEND] when a workspace uses a different runner
+      - path: "apps/{ui,strapi}/**/*.{ts,tsx}"
+        instructions: "Vitest (see the workspace's vitest.config.ts). apps/ui: colocate as `*.test.ts` next to the source. apps/strapi: put tests in `apps/strapi/tests/`. Mock network, time, and Strapi services at the boundary. Follow the style of the existing tests. No snapshot tests."
+      - path: "packages/**/*.ts"
+        instructions: "Vitest, colocated `*.test.ts`. Test the public exports only."
+      - path: "qa/tests/playwright/**"
+        instructions: "Playwright with the existing page objects and fixtures, semantic locators, and web-first assertions. Put it in the right project (e2e, visual, axe, seo)."
