@@ -48,7 +48,9 @@ These auto-created entries are ordinary records in the **Redirect** collection. 
    - revalidates the frontend cache for all touched paths and redirect sources in one batch,
    - stamps `lastRecalculationAt` on the Hierarchy single type.
 
-Newly published pages (no previous `fullPath`) get their path calculated without creating any redirect.
+Pages that have never been published get their `fullPath` stamped on every draft save (from the parent's `fullPath` and the page's own `slug`), so they can be previewed before going live. On first publish, the published version copies that `fullPath`, so a new page is live at its address right away and Update hierarchy shows nothing pending for it. Once a page is published, draft saves no longer touch its `fullPath` — renames go through the flow above and create redirects.
+
+If a newly published page has no `fullPath` (e.g. it was imported), Update hierarchy calculates it without creating any redirect.
 
 ### Workflow example
 
