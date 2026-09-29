@@ -73,23 +73,26 @@ async function stampDraftFullPath(
     return
   }
 
+  // `strapi.db.query` (not the raw knex connection) so both queries join the
+  // surrounding transaction — admin Publish wraps create/update + publish in
+  // one, and a raw write would miss the uncommitted draft or block on its lock.
+
   // The direct write below bypasses the `unique` validation, so check it here
   // (draft and published rows of other documents in the same locale)
-  const conflict = await strapi.db
-    .connection("pages")
-    .where({ full_path: fullPath, locale })
-    .whereNot({ document_id: documentId })
-    .first("id")
+  const conflict = await strapi.db.query(uid).findOne({
+    select: ["id"],
+    where: { fullPath, locale, documentId: { $ne: documentId } },
+  })
   if (conflict) {
     return
   }
 
-  // Direct DB write: skips lifecycles and the revalidate middleware
-  await strapi.db
-    .connection("pages")
-    .where({ document_id: documentId, locale })
-    .whereNull("published_at")
-    .update({ full_path: fullPath })
+  // Query Engine write: skips document middlewares (revalidate) and the
+  // page's beforeUpdate lifecycle (updateMany fires beforeUpdateMany only)
+  await strapi.db.query(uid).updateMany({
+    where: { documentId, locale, publishedAt: null },
+    data: { fullPath },
+  })
 
   doc.fullPath = fullPath
 }

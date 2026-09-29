@@ -18,11 +18,10 @@ const buildMiddleware = ({
     status === "published" ? published : draft
   )
   const updateMock = vi.fn()
-  const whereNull = vi.fn(() => ({ update: updateMock }))
-  const first = vi.fn(async () => conflict)
-  const whereNot = vi.fn(() => ({ first }))
-  const where = vi.fn(() => ({ whereNull, whereNot }))
-  const connection = vi.fn(() => ({ where }))
+  const query = vi.fn(() => ({
+    findOne: vi.fn(async () => conflict),
+    updateMany: updateMock,
+  }))
   const logError = vi.fn()
 
   registerDraftFullPath({
@@ -31,7 +30,7 @@ const buildMiddleware = ({
         vi.fn(() => ({ findOne })),
         { use: useMock }
       ),
-      db: { connection },
+      db: { query },
       log: { error: logError },
     } as never,
   })
@@ -42,8 +41,7 @@ const buildMiddleware = ({
       next: () => Promise<unknown>
     ) => Promise<unknown>,
     findOne,
-    connection,
-    where,
+    query,
     updateMock,
     logError,
   }
@@ -53,7 +51,7 @@ const pageContext = { uid: "api::page.page", action: "create" }
 
 describe("draft fullPath middleware", () => {
   it("stamps /<slug> on a new root page", async () => {
-    const { middleware, connection, where, updateMock } = buildMiddleware({
+    const { middleware, query, updateMock } = buildMiddleware({
       draft: { slug: "about", parent: null },
     })
     const result = { documentId: "doc1", locale: "en" }
@@ -62,9 +60,11 @@ describe("draft fullPath middleware", () => {
       result
     )
 
-    expect(connection).toHaveBeenCalledWith("pages")
-    expect(where).toHaveBeenCalledWith({ document_id: "doc1", locale: "en" })
-    expect(updateMock).toHaveBeenCalledWith({ full_path: "/about" })
+    expect(query).toHaveBeenCalledWith("api::page.page")
+    expect(updateMock).toHaveBeenCalledWith({
+      where: { documentId: "doc1", locale: "en", publishedAt: null },
+      data: { fullPath: "/about" },
+    })
     expect(result).toMatchObject({ fullPath: "/about" })
   })
 
@@ -76,7 +76,9 @@ describe("draft fullPath middleware", () => {
 
     await middleware({ ...pageContext, action: "update" }, async () => result)
 
-    expect(updateMock).toHaveBeenCalledWith({ full_path: "/about/team" })
+    expect(updateMock).toHaveBeenCalledWith(
+      expect.objectContaining({ data: { fullPath: "/about/team" } })
+    )
     expect(result).toMatchObject({ fullPath: "/about/team" })
   })
 
