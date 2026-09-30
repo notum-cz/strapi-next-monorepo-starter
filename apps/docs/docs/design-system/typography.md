@@ -129,21 +129,21 @@ Reusable typography classes are defined in:
 packages/design-system/src/custom-styles.css
 ```
 
-Typography styles should be defined per variant with Tailwind utilities. Put font family, font weight, spacing, and related properties directly on the variant when they are part of that variant's visual contract.
+Register each typography variant with Tailwind’s `@utility` directive so Tailwind tooling can recognize it for class suggestions and `@apply`. Put font family, font weight, spacing, and related properties directly on the variant when they are part of that variant's visual contract.
 
 Simplified examples:
 
 ```css
-.typo-h1 {
+@utility typo-h1 {
   @apply mb-2 text-4xl md:text-5xl lg:text-6xl;
 }
 
-.typo-p-medium {
+@utility typo-p-medium {
   @apply mb-0.5 text-sm;
 }
 ```
 
-Typography variants should also work inside rich text output. That is why the selectors can include CKEditor, TipTap, raw heading tags, and `.typo-*` classes.
+Reuse these utilities with `@apply` in the existing selector groups for CKEditor, TipTap, raw heading tags, and `.typo-*` classes. Keep these groups to preserve their cascade priority and ensure stored CMS content receives styles even when Tailwind does not detect its classes in source files.
 
 When changing selector groups, preserve class names so CKEditor content, TipTap content, frontend rich text, and the Typography component keep matching.
 
@@ -157,7 +157,7 @@ Example structure:
 .ck-editor__main .ck-content h1,
 .ck-editor__main .ck-content .typo-h1,
 .typo-h1 {
-  @apply mb-2 text-6xl;
+  @apply typo-h1;
 }
 ```
 
