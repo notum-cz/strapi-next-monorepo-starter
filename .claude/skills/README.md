@@ -86,6 +86,7 @@ Currently shipped:
 | `review-pr`                   | stack-agnostic  | Review a PR (or local branch vs `dev`) with parallel review subagents.   |
 | `resolve-review-suggestions`  | stack-agnostic  | Use authenticated `gh` to implement unresolved GitHub PR review threads. |
 | `validate-branch-refs`        | stack-agnostic  | Validate and update stale references/claims in docs, comments, config.   |
+| `docs-changelog`              | stack-coupled   | Draft a changelog from commits and audit docs for code-change gaps.      |
 | `write-tests`                 | stack-agnostic  | Generate or extend Vitest / Playwright tests for a target.               |
 | `write-test-cases`            | stack-agnostic  | Document test cases as Gherkin pages under `apps/docs/.../QA/`.          |
 | `write-qa-notes`              | stack-agnostic  | Capture QA tribal knowledge as Markdown notes under `apps/docs/.../QA/`. |
@@ -109,11 +110,11 @@ Currently shipped:
 
 ## Stack-coupled vs stack-agnostic
 
-| Type            | Examples                                                                                                                                                                                                                                                                      |
-| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Stack-agnostic  | `start-work`, `make-pr`, `review-pr`, `resolve-review-suggestions`, `validate-branch-refs`, `write-tests`, `write-test-cases`, `write-qa-notes`                                                                                                                               |
-| Stack-coupled   | `add-content-type`, `add-ui-component`, `strapi-schema-check`, `add-locale`, `create-content-component`, `copy-component`, `find-component`, `consolidate-patterns`, `seed-content`, `remove-sentry`, `remove-azure-monitor`, `remove-cache-revalidation`, `remove-cdn-purge` |
-| Helper/vendored | `find-skills`, `frontend-design`, `next-best-practices`, `vercel-react-best-practices`                                                                                                                                                                                        |
+| Type            | Examples                                                                                                                                                                                                                                                                                        |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Stack-agnostic  | `start-work`, `make-pr`, `review-pr`, `resolve-review-suggestions`, `validate-branch-refs`, `write-tests`, `write-test-cases`, `write-qa-notes`                                                                                                                                                 |
+| Stack-coupled   | `add-content-type`, `add-ui-component`, `strapi-schema-check`, `add-locale`, `create-content-component`, `copy-component`, `find-component`, `consolidate-patterns`, `seed-content`, `remove-sentry`, `remove-azure-monitor`, `remove-cache-revalidation`, `remove-cdn-purge`, `docs-changelog` |
+| Helper/vendored | `find-skills`, `frontend-design`, `next-best-practices`, `vercel-react-best-practices`                                                                                                                                                                                                          |
 
 Stack-agnostic skills may move to a shared plugin later; stack-coupled stay in the starter.
 Helper/vendored skills are installed into the same directory but usually act as supporting rubrics or ecosystem tools rather than starter-specific implementation workflows.
