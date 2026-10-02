@@ -92,7 +92,7 @@ async function generateLocalizedSitemap(
     for (const page of pages) {
       if (page.fullPath) {
         acc.push({
-          url: createPublicFullPath(page.fullPath, String(page.locale)),
+          url: createPublicFullPath(page.fullPath, page.locale as Locale),
           lastModified: page.updatedAt ?? page.createdAt ?? undefined,
           changeFrequency:
             entityChangeFrequency[uid as PageEntityUID] ?? "monthly",
