@@ -19,8 +19,12 @@ const styles = [
   `
   .ck {
     --ck-editor-max-width: 1366px;
-    --ck-editor-min-height: 800px;
+    --ck-editor-min-height: 84px;
     --ck-editor-max-height: 1000px;
+  }
+  .ck.ck-content.ck-editor__editable{
+    padding-bottom: 32px!important;
+    padding-top: 32px!important;
   }
   `,
 ].join("\n")

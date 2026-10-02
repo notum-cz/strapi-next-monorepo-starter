@@ -14,14 +14,29 @@
   @apply mb-5;
 }
 
-.ck-editor-rich-text-page img,
-.ck-editor-rich-text-page table,
+.ck-editor-ui img,
+.ck-editor-ui table,
 .tip-tap-editor-wrapper img,
 .tip-tap-editor-wrapper table {
-  @apply max-w-full;
+  @apply max-h-full max-w-full;
 }
 
 /* We needed to rewrite default Strapi ck editor styling, that's why we used important */
 .ck-style-grid .ck-disabled {
   display: none !important;
+}
+
+.ck-editor-ui,
+.ck .ck-editor__main {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply mt-0! mb-4! pt-0! last:mb-0!;
+  }
+  p {
+    @apply mt-0! mb-2! pt-0! last:mb-0!;
+  }
 }

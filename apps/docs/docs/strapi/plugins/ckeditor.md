@@ -23,11 +23,8 @@ return (
   <CkEditorRenderer
     htmlContent={component.content}
     className="mx-auto w-full max-w-[1296px] px-4 py-8"
-    variant="page"
   />
 )
 ```
-
-`variant` can be `"page"` or `"blog"`.
 
 Custom CKEditor plugins and heading styles live in `apps/strapi/src/admin/ckeditor`. Typography variant guidance lives in [Typography](/docs/design-system/typography).
