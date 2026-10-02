@@ -1,0 +1,25 @@
+{
+  "kind": "singleType",
+  "collectionName": "seo_configurations",
+  "info": {
+    "singularName": "seo-configuration",
+    "pluralName": "seo-configurations",
+    "displayName": "SEO Configuration"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "robotsConfiguration": {
+      "type": "component",
+      "component": "seo-utilities.robots-configuration",
+      "repeatable": false
+    },
+    "globalMetadata": {
+      "type": "component",
+      "component": "seo-utilities.global-metadata",
+      "repeatable": false
+    }
+  }
+}

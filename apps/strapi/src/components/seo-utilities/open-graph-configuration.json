@@ -1,0 +1,10 @@
+{
+  "collectionName": "components_seo_utilities_open_graph_configurations",
+  "info": {
+    "displayName": "Open Graph Configuration"
+  },
+  "options": {},
+  "attributes": {
+    "siteName": { "type": "string" }
+  }
+}

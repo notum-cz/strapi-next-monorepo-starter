@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_seo_utilities_robots_rules",
+  "info": {
+    "displayName": "Robots Rule",
+    "description": "Enter one path per line in allowPaths and disallowPaths."
+  },
+  "options": {},
+  "attributes": {
+    "userAgent": { "type": "string", "required": true, "default": "*" },
+    "allowPaths": { "type": "text" },
+    "disallowPaths": { "type": "text" }
+  }
+}
