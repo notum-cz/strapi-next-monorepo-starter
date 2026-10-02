@@ -48,10 +48,10 @@ Optional but recommended — the icon shown for the component in the admin build
 
 Two rich-text editors are configured — both are `customField`s. **Never use Strapi's raw `richtext`.** When you just need a rich-text block, reuse an existing `utilities.*` component rather than redeclaring the field.
 
-| Editor   | `customField`                    | presets                                         | reusable component                                         | stored as        | renderer                                                   |
-| -------- | -------------------------------- | ----------------------------------------------- | ---------------------------------------------------------- | ---------------- | ---------------------------------------------------------- |
-| CKEditor | `plugin::ckeditor5.CKEditor`     | `defaultCkEditor` (full), `simpleCkEditor`      | `utilities.ck-editor-content` / `utilities.ck-editor-text` | HTML             | `CKEditorRenderer` (`@/components/elementary/ck-editor`)   |
-| TipTap   | `plugin::tiptap-editor.RichText` | `everything`, `baseText`, `headings`, `minimal` | `utilities.tip-tap-rich-text`                              | ProseMirror JSON | `TiptapRichText` (`@/components/elementary/tiptap-editor`) |
+| Editor   | `customField`                    | presets                                         | reusable component            | stored as        | renderer                                                   |
+| -------- | -------------------------------- | ----------------------------------------------- | ----------------------------- | ---------------- | ---------------------------------------------------------- |
+| CKEditor | `plugin::ckeditor5.CKEditor`     | `defaultCkEditor` (full), `simpleCkEditor`      | `utilities.ck-editor-content` | HTML             | `CKEditorRenderer` (`@/components/elementary/ck-editor`)   |
+| TipTap   | `plugin::tiptap-editor.RichText` | `everything`, `baseText`, `headings`, `minimal` | `utilities.tip-tap-rich-text` | ProseMirror JSON | `TiptapRichText` (`@/components/elementary/tiptap-editor`) |
 
 Declare an inline customField only when rich text is one field of a larger component:
 

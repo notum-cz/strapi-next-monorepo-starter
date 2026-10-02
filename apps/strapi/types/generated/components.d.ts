@@ -410,22 +410,6 @@ export interface UtilitiesCkEditorContent extends Struct.ComponentSchema {
   }
 }
 
-export interface UtilitiesCkEditorText extends Struct.ComponentSchema {
-  collectionName: "components_utilities_ck_editor_texts"
-  info: {
-    displayName: "CkEditorText"
-  }
-  attributes: {
-    content: Schema.Attribute.RichText &
-      Schema.Attribute.CustomField<
-        "plugin::ckeditor5.CKEditor",
-        {
-          preset: "simpleCkEditor"
-        }
-      >
-  }
-}
-
 export interface UtilitiesImageWithLink extends Struct.ComponentSchema {
   collectionName: "components_utilities_image_with_links"
   info: {
@@ -522,7 +506,7 @@ export interface UtilitiesTipTapRichText extends Struct.ComponentSchema {
 }
 
 declare module "@strapi/strapi" {
-  export module Public {
+  export namespace Public {
     export interface ComponentSchemas {
       "elements.footer-item": ElementsFooterItem
       "forms.contact-form": FormsContactForm
@@ -547,7 +531,6 @@ declare module "@strapi/strapi" {
       "utilities.accordions": UtilitiesAccordions
       "utilities.basic-image": UtilitiesBasicImage
       "utilities.ck-editor-content": UtilitiesCkEditorContent
-      "utilities.ck-editor-text": UtilitiesCkEditorText
       "utilities.image-with-link": UtilitiesImageWithLink
       "utilities.link": UtilitiesLink
       "utilities.link-decorations": UtilitiesLinkDecorations
