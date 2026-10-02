@@ -1,0 +1,27 @@
+.ck-editor__main .image,
+.ck-content .image {
+  @apply mb-0!;
+}
+
+.ck-editor__main,
+.ck-content {
+  word-break: break-word;
+}
+
+.ck-content iframe[src^="https://www.youtube.com"] {
+  width: 100%;
+  aspect-ratio: 16/9;
+  @apply mb-5;
+}
+
+.ck-editor-rich-text-page img,
+.ck-editor-rich-text-page table,
+.tip-tap-editor-wrapper img,
+.tip-tap-editor-wrapper table {
+  @apply max-w-full;
+}
+
+/* We needed to rewrite default Strapi ck editor styling, that's why we used important */
+.ck-style-grid .ck-disabled {
+  display: none !important;
+}

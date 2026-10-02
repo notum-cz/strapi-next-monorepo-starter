@@ -1,69 +1,79 @@
+/* Typography classes */
 @utility typo-h1 {
-  @apply mb-2 text-4xl md:text-5xl lg:text-6xl;
+  @apply mb-2 font-sans text-4xl md:text-5xl lg:text-6xl;
 }
 
 @utility typo-h2 {
-  @apply mb-1.5 text-3xl md:text-4xl lg:text-5xl;
+  @apply mb-1.5 font-sans text-3xl md:text-4xl lg:text-5xl;
 }
 
 @utility typo-h3 {
-  @apply mb-1 text-2xl md:text-3xl lg:text-4xl;
+  @apply mb-1 font-sans text-2xl md:text-3xl lg:text-4xl;
 }
 
 @utility typo-h4 {
-  @apply mb-1 text-xl md:text-2xl lg:text-3xl;
+  @apply mb-1 font-sans text-xl md:text-2xl lg:text-3xl;
 }
 
 @utility typo-h5 {
-  @apply mb-1 text-lg md:text-xl lg:text-2xl;
+  @apply mb-1 font-sans text-lg md:text-xl lg:text-2xl;
 }
 
 @utility typo-h6 {
-  @apply mb-1 text-base md:text-lg lg:text-xl;
+  @apply mb-1 font-sans text-base md:text-lg lg:text-xl;
 }
 
 @utility typo-p-medium {
-  @apply mb-0.5 text-sm;
+  @apply mb-0.5 font-sans text-sm;
 }
 
 @utility typo-p-large {
-  @apply mb-0.5 text-lg;
+  @apply mb-0.5 font-sans text-lg;
 }
 
 @utility typo-p-small {
-  @apply mb-0.5 text-xs;
+  @apply mb-0.5 font-sans text-xs;
 }
 
-.ck-editor__main .image,
-.ck-content .image {
-  @apply mb-0!;
+/* Defaults for base elements */
+@layer base {
+  h1 {
+    @apply typo-h1;
+  }
+
+  h2 {
+    @apply typo-h2;
+  }
+
+  h3 {
+    @apply typo-h3;
+  }
+
+  h4 {
+    @apply typo-h4;
+  }
+
+  h5 {
+    @apply typo-h5;
+  }
+
+  h6 {
+    @apply typo-h6;
+  }
+
+  p {
+    @apply typo-p-medium;
+  }
 }
 
-.ck-editor__main {
-  @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
-}
-.ck-editor__main,
-.ck-content {
-  word-break: break-word;
-}
-
-.ck-editor-rich-text-page p {
-  @apply text-gray-600 dark:text-gray-400;
-}
-
-.ck-content iframe[src^="https://www.youtube.com"] {
-  width: 100%;
-  aspect-ratio: 16/9;
-  @apply mb-5;
-}
-
+/* Typography applied in CKEditor, TipTap editor wrappers and Strapi */
 .ck-editor-rich-text-page h1,
 .ck-editor-rich-text-page .typo-h1,
 .ck-editor__main .ck-content h1,
 .ck-editor__main .ck-content .typo-h1,
+.ck .ck-style-grid__button__preview .typo-h1,
 .tip-tap-editor-wrapper h1,
-.tip-tap-editor-wrapper .typo-h1,
-h1 {
+.tip-tap-editor-wrapper .typo-h1 {
   @apply typo-h1;
 }
 
@@ -71,9 +81,9 @@ h1 {
 .ck-editor-rich-text-page .typo-h2,
 .ck-editor__main .ck-content h2,
 .ck-editor__main .ck-content .typo-h2,
+.ck .ck-style-grid__button__preview .typo-h2,
 .tip-tap-editor-wrapper h2,
-.tip-tap-editor-wrapper .typo-h2,
-h2 {
+.tip-tap-editor-wrapper .typo-h2 {
   @apply typo-h2;
 }
 
@@ -81,9 +91,9 @@ h2 {
 .ck-editor-rich-text-page .typo-h3,
 .ck-editor__main .ck-content h3,
 .ck-editor__main .ck-content .typo-h3,
+.ck .ck-style-grid__button__preview .typo-h3,
 .tip-tap-editor-wrapper h3,
-.tip-tap-editor-wrapper .typo-h3,
-h3 {
+.tip-tap-editor-wrapper .typo-h3 {
   @apply typo-h3;
 }
 
@@ -91,9 +101,9 @@ h3 {
 .ck-editor-rich-text-page .typo-h4,
 .ck-editor__main .ck-content h4,
 .ck-editor__main .ck-content .typo-h4,
+.ck .ck-style-grid__button__preview .typo-h4,
 .tip-tap-editor-wrapper h4,
-.tip-tap-editor-wrapper .typo-h4,
-h4 {
+.tip-tap-editor-wrapper .typo-h4 {
   @apply typo-h4;
 }
 
@@ -101,9 +111,9 @@ h4 {
 .ck-editor-rich-text-page .typo-h5,
 .ck-editor__main .ck-content h5,
 .ck-editor__main .ck-content .typo-h5,
+.ck .ck-style-grid__button__preview .typo-h5,
 .tip-tap-editor-wrapper h5,
-.tip-tap-editor-wrapper .typo-h5,
-h5 {
+.tip-tap-editor-wrapper .typo-h5 {
   @apply typo-h5;
 }
 
@@ -111,9 +121,9 @@ h5 {
 .ck-editor-rich-text-page .typo-h6,
 .ck-editor__main .ck-content h6,
 .ck-editor__main .ck-content .typo-h6,
+.ck .ck-style-grid__button__preview .typo-h6,
 .tip-tap-editor-wrapper h6,
-.tip-tap-editor-wrapper .typo-h6,
-h6 {
+.tip-tap-editor-wrapper .typo-h6 {
   @apply typo-h6;
 }
 
@@ -122,6 +132,7 @@ h6 {
 .ck-editor-rich-text-page .typo-p-medium,
 .ck-editor__main .ck-content p,
 .ck-editor__main .ck-content .typo-p-medium,
+.ck .ck-style-grid__button__preview .typo-p-medium,
 .tip-tap-editor-wrapper p,
 .tip-tap-editor-wrapper .typo-p-medium {
   @apply typo-p-medium;
@@ -129,17 +140,14 @@ h6 {
 
 .ck-editor-rich-text-page .typo-p-large,
 .ck-editor__main .ck-content .typo-p-large,
+.ck .ck-style-grid__button__preview .typo-p-large,
 .tip-tap-editor-wrapper .typo-p-large {
   @apply typo-p-large;
 }
 
 .ck-editor-rich-text-page .typo-p-small,
 .ck-editor__main .ck-content .typo-p-small,
+.ck .ck-style-grid__button__preview .typo-p-small,
 .tip-tap-editor-wrapper .typo-p-small {
   @apply typo-p-small;
-}
-
-/* We needed to rewrite default Strapi ck editor styling, that's why we used important */
-.ck-style-grid .ck-disabled {
-  display: none !important;
 }

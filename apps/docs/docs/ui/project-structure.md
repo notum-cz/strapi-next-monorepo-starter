@@ -67,7 +67,7 @@ Add new components with:
 pnpm dlx shadcn@latest add accordion
 ```
 
-Config lives in `apps/ui/components.json`. Theme tokens live in `apps/ui/src/styles/globals.css` and `@repo/design-system/theme.css`.
+Config lives in `apps/ui/components.json`. Shared color tokens and dark-mode overrides live in `packages/design-system/src/styles/colors.css`; the remaining tokens, including the Next.js font binding with a fallback for Strapi, live in `packages/design-system/src/styles/theme.css`. The app's `src/styles/globals.css` imports `@repo/design-system/source-styles.css` and adds application styles.
 
 For shared tokens and global styling rules, see [Tokens And Global Styles](/docs/design-system/tokens-and-global-styles). For reusable component variants and states, see [CMS And Components](/docs/design-system/cms-and-components).
 
