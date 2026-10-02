@@ -4,6 +4,8 @@ import type { StrapiApp } from "@strapi/strapi/admin"
 
 // eslint-disable-next-line import-x/order
 import { cs } from "./cs"
+
+// @ts-expect-error: This is a custom import for the Strapi admin panel, which is not typed.
 import "@repo/design-system/styles.css"
 
 // eslint-disable-next-line import-x/order

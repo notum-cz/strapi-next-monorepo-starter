@@ -14,9 +14,11 @@ Do not let both editors become active content-authoring paths unless the project
 
 Relevant files:
 
-- `packages/design-system/src/custom-styles.css`
-- `packages/design-system/src/build-ck-config.js`
-- `packages/design-system/src/build-tiptap-config.js`
+- `packages/design-system/src/fonts.css`
+- `packages/design-system/src/styles/typography.css`
+- `packages/design-system/src/styles/shared.css`
+- `packages/design-system/src/scripts/build-ck-config.js`
+- `packages/design-system/src/scripts/build-tiptap-config.js`
 - `apps/strapi/config/plugins.ts`
 - `apps/strapi/config/plugins/tiptap.ts`
 - `apps/strapi/src/admin/ckeditor/configs.ts`
@@ -56,25 +58,30 @@ CKEditor is configured closer to WYSIWYG preview behavior. TipTap should be trea
 Shared rich text styles live in:
 
 ```text
-packages/design-system/src/custom-styles.css
+packages/design-system/src/styles/typography.css
+packages/design-system/src/styles/shared.css
 ```
 
-This file contains the shared styling contract for:
+These files contain the shared styling contract for:
 
 - CKEditor content.
 - TipTap content wrappers.
 - Typography classes such as `.typo-h1` and `.typo-p-medium`.
-- List and media behavior.
+- CKEditor image spacing, word wrapping, and YouTube embeds.
 - Selected Strapi editor overrides.
 
 Keep typography class names consistent with [Typography](/docs/design-system/typography). The same `.typo-*` classes should work in frontend components, frontend-rendered rich text, and editor previews.
+
+CKEditor style-menu previews use `.ck .ck-style-grid__button__preview .typo-*` selectors for each typography variant, following the AxiCom pattern. Each typography utility applies the shared font family through `font-sans`. Include these selectors when adding variants so the style menu displays the same typography rules as editor content.
+
+Both editors use local Roboto through `packages/design-system/src/fonts.css`, included in the compiled CSS imported by `apps/strapi/src/admin/app.tsx`. The build copies font files to `dist/fonts` so Vite can resolve their URLs. CKEditor's serialized CSS excludes `@font-face` rules; those declarations reach the admin through the CSS import.
 
 ## CKEditor Config
 
 Generated CKEditor config comes from:
 
 ```text
-packages/design-system/src/build-ck-config.js
+packages/design-system/src/scripts/build-ck-config.js
 ```
 
 It provides color options, font-size options, and serialized Strapi editor CSS. The generated exports are listed in [Tokens And Global Styles](/docs/design-system/tokens-and-global-styles#build-outputs).
@@ -110,7 +117,7 @@ The goal is to give editors the tools needed for the field, not a full page edit
 Generated TipTap config comes from:
 
 ```text
-packages/design-system/src/build-tiptap-config.js
+packages/design-system/src/scripts/build-tiptap-config.js
 ```
 
 The outputs are imported by the Strapi TipTap plugin config:
