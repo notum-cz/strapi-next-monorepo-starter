@@ -1,6 +1,5 @@
 import { ROOT_PAGE_PATH } from "@repo/shared-data"
 import { notFound } from "next/navigation"
-import type { Locale } from "next-intl"
 import { use } from "react"
 
 import StrapiPageView from "@/components/layouts/StrapiPageView"
@@ -10,6 +9,7 @@ import { isDevelopment } from "@/lib/general-helpers"
 import { getMetadataFromStrapi } from "@/lib/metadata"
 import { isValidLocale } from "@/lib/navigation"
 import { fetchAllPages } from "@/lib/strapi-api/content/server"
+import type { ExtendedPageProps } from "@/types/next"
 
 // Static/ISR page — no access to headers(), cookies(), or searchParams.
 // Use /[locale]/dynamic/[[...rest]] for pages that need runtime context.
@@ -39,6 +39,10 @@ export async function generateStaticParams({
   // retrieve locales - this is being passed from root layout.tsx's generateStaticParams
   params: { locale: string }
 }) {
+  if (!isValidLocale(locale)) {
+    return []
+  }
+
   if (isDevelopment()) {
     debugStaticParams([], "[[...rest]]", { isDevelopment: true })
 
@@ -46,11 +50,11 @@ export async function generateStaticParams({
     return [{ locale: "en" }]
   }
 
-  const results = await fetchAllPages("api::page.page", locale as Locale)
+  const results = await fetchAllPages("api::page.page", locale)
 
   const params =
     results?.data.map((page) => ({
-      locale: (page.locale ?? locale) as Locale,
+      locale: page.locale ?? locale,
       rest:
         page.fullPath === ROOT_PAGE_PATH
           ? []
@@ -70,7 +74,7 @@ export async function generateStaticParams({
 
   // statically generated apps with output: 'export' require at least one entry (even invalid)
   // within the dynamic segment to avoid build errors
-  const fallbackPath = createFallbackPath(locale as Locale, {
+  const fallbackPath = createFallbackPath(locale, {
     rest: ["fallback"],
   })
 
@@ -78,7 +82,7 @@ export async function generateStaticParams({
 }
 
 export async function generateMetadata(
-  props: PageProps<"/[locale]/[[...rest]]">
+  props: ExtendedPageProps<"/[locale]/[[...rest]]">
 ) {
   const params = await props.params
   const locale = params.locale
@@ -92,7 +96,7 @@ export async function generateMetadata(
 }
 
 export default function StaticStrapiPage(
-  props: PageProps<"/[locale]/[[...rest]]">
+  props: ExtendedPageProps<"/[locale]/[[...rest]]">
 ) {
   const params = use(props.params)
   if (!isValidLocale(params.locale)) {
@@ -101,6 +105,5 @@ export default function StaticStrapiPage(
 
   // `props.searchParams`` can't be accessed here because this is statically generated page
   // and searchParams are not available during build time
-
   return <StrapiPageView params={params} />
 }
