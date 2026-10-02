@@ -12,12 +12,7 @@ For editor choice, shared rich text styles, presets, and frontend renderer guida
 
 ## Components
 
-Strapi components:
-
-- `utilities.ck-editor-content`
-- `utilities.ck-editor-text`
-
-They use different toolbars, but share the same rendering approach.
+`utilities.ck-editor-content` provides a reusable rich text block with the `defaultCkEditor` preset. Other components can use inline CKEditor fields with either `defaultCkEditor` or `simpleCkEditor`, depending on the toolbar they need.
 
 ## UI Rendering
 
