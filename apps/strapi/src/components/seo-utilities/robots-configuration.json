@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_seo_utilities_robots_configurations",
+  "info": {
+    "displayName": "Robots Configuration",
+    "description": "Site-wide robots.txt rules shared across locales."
+  },
+  "options": {},
+  "attributes": {
+    "rules": {
+      "type": "component",
+      "component": "seo-utilities.robots-rule",
+      "repeatable": true
+    }
+  }
+}

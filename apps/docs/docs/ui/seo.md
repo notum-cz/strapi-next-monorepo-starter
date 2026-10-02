@@ -4,48 +4,46 @@ sidebar_position: 11
 
 # SEO
 
-The UI generates SEO output at runtime from Strapi content and app config.
+`getMetadataFromStrapi()` combines page SEO, global configuration, and technical defaults. Paths below are relative to `apps/ui/src`.
 
-Base path: `apps/ui/src`
+| Output        | Implementation                                                              |
+| ------------- | --------------------------------------------------------------------------- |
+| Page metadata | `lib/metadata/index.ts`                                                     |
+| JSON-LD       | `components/page-builder/components/seo-utilities/StrapiStructuredData.tsx` |
+| Sitemap       | `app/sitemap.ts`                                                            |
+| Robots        | `app/robots.ts`                                                             |
 
-| Output                    | File                                                 |
-| ------------------------- | ---------------------------------------------------- |
-| Page `<head>` metadata    | `lib/metadata/index.ts`                              |
-| Structured data (JSON-LD) | `components/page-builder/components/seo-utilities/*` |
-| `sitemap.xml`             | `app/sitemap.ts`                                     |
-| `robots.txt`              | `app/robots.ts`                                      |
+## Configuration and fallbacks
 
-## SEO
+The non-localized `SEO Configuration` single type (`/api/seo-configuration`) contains:
 
-Page metadata is generated with `getMetadataFromStrapi()`. The static and dynamic Strapi page routes call it from `generateMetadata()`, resolve the current route to a Strapi `fullPath`, and build Next.js metadata from the page `seo` component.
+| Component             | Fields                                                                                                          |
+| --------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `globalMetadata`      | `openGraphConfiguration.siteName`, `twitterConfiguration` (`siteId`, `creator`, `creatorId`), `applicationName` |
+| `robotsConfiguration` | Repeatable rules: `userAgent`, `allowPaths`, `disallowPaths`                                                    |
 
-`seo` is an attribute/component on the Strapi page content type. Content editors fill these fields in Strapi, and the UI maps them to Next.js metadata.
+Create this configuration once for the site. `fetchGlobalMetadata()` and `fetchRobotsConfiguration()` load their respective components independently.
 
-![Strapi page SEO component](/img/seo-strapi-component.png)
+Page-level SEO controls titles, descriptions, images, `metaRobots`, and `structuredData`. Blank or whitespace-only SEO strings use fallbacks. For missing titles, the fallback order is social title → SEO title → page title. Missing titles, descriptions, images, global names, and account fields are omitted. Technical defaults are `website` for Open Graph, `summary` for Twitter, and `index, follow` for production page metadata. There are no SEO translation placeholders. The page-level `og.type` selects `website` or `article`. `seo.structuredData` is rendered separately as JSON-LD.
 
-The helper merges Strapi values with locale-aware defaults, including title, description, robots settings, canonical URL, Open Graph, and Twitter metadata.
+## Canonical URLs and hreflang
 
-Structured data is rendered separately as JSON-LD by `StrapiStructuredData` from the page `seo.structuredData` field.
+Canonical and Open Graph URLs use `APP_PUBLIC_URL`, the page path, and the locale. The default locale has no URL prefix.
+
+Hreflangs use each published translation's own `fullPath`, include the current language, and add `x-default` when the default-language version exists. next-intl's automatic alternate Link headers are disabled to avoid advertising unverified translations.
 
 ## Sitemap
 
-`app/sitemap.ts` generates `sitemap.xml` from Strapi pages. It fetches all published page entries per locale with `fetchAllPages()`, converts each `fullPath` to a public URL, and uses Strapi timestamps for `lastModified`.
+The sitemap lists published pages with public URLs and Strapi timestamps, excluding `noindex` variants and `none`. To support another pageable collection, extend `pageEntityUids` in `sitemap.ts` and `fetchAllPages()`.
 
-To include more pageable collections in the sitemap, add their UIDs to `pageEntityUids` in `sitemap.ts` and make sure `fetchAllPages()` supports them.
-
-The sitemap returns an empty list when the app is not production or development, or when `APP_PUBLIC_URL` is not configured.
-
-### Access
-
-Access to `/sitemap.xml` is gated by the `authSitemap` proxy in `lib/proxies/authSitemap.ts`, wired into the middleware chain in `proxy.ts`:
-
-- In **production** and **local development** the sitemap is unrestricted (so search engines can crawl it, and it stays easy to inspect locally).
-- In **non-production deployments** (e.g. staging/preview) the request must include the `?allow-sitemap=yes` query parameter; otherwise it returns `404`. This keeps those sitemaps out of search indexes while still allowing on-demand inspection.
-
-The proxy requires no environment variables. Note that `/sitemap.xml` is listed explicitly in the middleware `matcher` so the proxy runs for it.
+Production and local development allow access. Other environments require `?allow-sitemap=yes` to bypass the `authSitemap` proxy's 404 response, but the generator still returns an empty list outside production/development. Missing `APP_PUBLIC_URL` also produces an empty sitemap.
 
 ## Robots
 
-`app/robots.ts` generates `robots.txt`.
+Production reads `robotsConfiguration`. Enter one path per line in `allowPaths` and `disallowPaths`; blank lines and surrounding whitespace are ignored. Missing or empty rules allow all crawlers. The sitemap URL is included when `APP_PUBLIC_URL` is configured.
 
-Production allows all crawlers and includes the sitemap URL when `APP_PUBLIC_URL` is configured. Non-production environments disallow all crawlers so testing and staging deployments are not indexed.
+Non-production and Basic Auth-protected environments return `Disallow: /` before fetching CMS rules. Page-level `metaRobots` is configured separately; `none` means `noindex, nofollow`.
+
+## Migration notes
+
+Before upgrading an existing deployment, preserve names and account identifiers from the removed page-level fields and enter them in SEO Configuration. Manual canonical and Open Graph URL overrides are replaced by generated URLs. The unused `keywords` field is removed.

@@ -15,15 +15,6 @@
     "description": {
       "type": "string"
     },
-    "siteId": {
-      "type": "string"
-    },
-    "creator": {
-      "type": "string"
-    },
-    "creatorId": {
-      "type": "string"
-    },
     "images": {
       "allowedTypes": ["images"],
       "type": "media",
