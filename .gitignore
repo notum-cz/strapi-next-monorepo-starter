@@ -50,6 +50,9 @@ next-env.d.ts
 .claude/settings.local.json
 .claude/plans/
 .claude/reviews/
+.claude/skills/docs-changelog/last-run.json
+.claude/skills/docs-changelog/last-audit.md
+.claude/skills/docs-changelog/last-changelog-draft.md
 .worktrees/
 PLAN.md
 
