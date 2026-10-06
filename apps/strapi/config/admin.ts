@@ -40,9 +40,11 @@ export default ({ env }) => {
           ) {
             return null
           }
+          // Pass `status` through: the Document Service defaults to "published",
+          // so a draft-only (never published) page would otherwise find no row.
           const document = await strapi
             .documents(uid)
-            .findOne({ documentId, locale })
+            .findOne({ documentId, locale, status })
           const pathname = (document as { fullPath?: string })?.fullPath // not all collections have the fullPath attribute
           // Disable preview if the pathname is not found
           if (!pathname) {
