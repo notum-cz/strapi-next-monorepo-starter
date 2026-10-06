@@ -1,6 +1,6 @@
+import { Mark } from "@tiptap/core"
 import Heading from "@tiptap/extension-heading"
 import Image from "@tiptap/extension-image"
-import { Mark } from "@tiptap/react"
 
 export const OnlyCursive = Mark.create({
   name: "onlyCursive",
