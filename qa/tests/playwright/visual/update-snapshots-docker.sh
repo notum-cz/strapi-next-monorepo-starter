@@ -13,7 +13,12 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PLAYWRIGHT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-PLAYWRIGHT_VERSION="1.59.1"
+# Match the Docker image to the actually installed @playwright/test version
+PLAYWRIGHT_VERSION="$(node -e "console.log(require('$PLAYWRIGHT_DIR/node_modules/@playwright/test/package.json').version)")"
+if [[ -z "$PLAYWRIGHT_VERSION" ]]; then
+  echo "ERROR: Could not resolve installed @playwright/test version. Run 'pnpm install' first."
+  exit 1
+fi
 if [[ $# -eq 0 ]]; then
   PROJECTS=("visual-chromium" "visual-firefox")
 else

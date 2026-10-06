@@ -3,7 +3,9 @@ import fs from "node:fs"
 
 import { expect, test } from "@playwright/test"
 
-import urls from "../helpers/urls-all-components-page.json"
+import { flattenUrls } from "../helpers/flatten-urls"
+
+import urls from "../helpers/urls.json"
 
 const COMPARE_TIMEOUT = 20000
 
@@ -32,7 +34,7 @@ function getEnvSlug(baseUrl: string | undefined): string {
 }
 
 test.describe("Visual Regression", () => {
-  for (const url of urls) {
+  for (const url of flattenUrls(urls.visual)) {
     test(`Compare snapshot for ${url}`, async ({ page }, testInfo) => {
       // abort non essential requests to speed up tests
       await page.route("**/*", (route, request) => {

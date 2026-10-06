@@ -46,9 +46,10 @@ on:
         type: boolean
         default: false
       base_url:
-        description: Base URL to test against (must include protocol)
+        description: "Base URL to test against (must include protocol). Leave empty to use the default BASE_URL variable."
         type: string
-        required: true
+        required: false
+        default: ""
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
@@ -92,7 +93,8 @@ jobs:
           BASE_URL: ${{ env.BASE_URL }}
         run: pnpm tests:playwright:e2e:test
 
-      - uses: actions/upload-artifact@v7.0.1
+      - name: Publish Playwright report
+        uses: actions/upload-artifact@v7.0.1
         if: failure()
         with:
           name: playwright-report
@@ -144,7 +146,8 @@ jobs:
             -C qa/tests/playwright \
             playwright-report
 
-      - uses: actions/upload-artifact@v7.0.1
+      - name: Publish Axe report
+        uses: actions/upload-artifact@v7.0.1
         if: failure()
         with:
           name: axe-report
@@ -188,42 +191,12 @@ jobs:
             -C qa/tests/playwright \
             playwright-report
 
-      - uses: actions/upload-artifact@v7.0.1
+      - name: Publish SEO report
+        uses: actions/upload-artifact@v7.0.1
         if: failure()
         with:
           name: seo-report
           path: seo-reports-${{ github.run_id }}.tgz
-          retention-days: 7
-          if-no-files-found: warn
-
-  lhci_perfo:
-    if: ${{ inputs.run_lhci_perfo }}
-    name: LHCI Performance tests
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7.0.1
-
-      - name: Setup pnpm with cache
-        uses: ./.github/actions/setup-pnpm
-
-      - name: Run LHCI Performance tests
-        env:
-          BASE_URL: ${{ env.BASE_URL }}
-        run: pnpm tests:lhci:perfo
-
-      - name: Pack LHCI reports
-        if: always()
-        run: |
-          tar -czf lhci-perfo-reports-${{ github.run_id }}.tgz \
-            -C qa/tests/playwright/perfo/.lighthouseci .
-
-      - uses: actions/upload-artifact@v7.0.1
-        if: always()
-        with:
-          name: perfo-report
-          path: lhci-perfo-reports-${{ github.run_id }}.tgz
           retention-days: 7
           if-no-files-found: warn
 
@@ -240,16 +213,35 @@ jobs:
       - name: Setup pnpm with cache
         uses: ./.github/actions/setup-pnpm
 
+      - name: Resolve Playwright version
+        id: playwright_version
+        run: |
+          VERSION="$(node -p "require('./qa/tests/playwright/node_modules/@playwright/test/package.json').version")"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Check for baseline snapshots
+        id: baseline_check
+        run: |
+          if find qa/tests/playwright/visual/visual.spec.ts-snapshots -type f -name '*.png' 2>/dev/null | grep -q .; then
+            echo "Baseline snapshots found."
+            echo "has_baselines=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No baseline snapshots found under qa/tests/playwright/visual/visual.spec.ts-snapshots - skipping visual regression run."
+            echo "has_baselines=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Cache Playwright Docker image
         id: docker-cache
+        if: steps.baseline_check.outputs.has_baselines == 'true'
         uses: actions/cache@v6.1.0
         with:
           path: /tmp/docker-playwright-cache
-          key: docker-playwright-v1.59.1-noble
+          key: docker-playwright-v${{ steps.playwright_version.outputs.version }}-noble
 
       - name: Load or pull Playwright Docker image
+        if: steps.baseline_check.outputs.has_baselines == 'true'
         run: |
-          IMAGE="mcr.microsoft.com/playwright:v1.59.1-noble"
+          IMAGE="mcr.microsoft.com/playwright:v${{ steps.playwright_version.outputs.version }}-noble"
           CACHE_FILE="/tmp/docker-playwright-cache/playwright.tar"
           if [[ -f "$CACHE_FILE" ]]; then
             echo "Loading Docker image from cache..."
@@ -262,6 +254,7 @@ jobs:
           fi
 
       - name: Run Visual tests
+        if: steps.baseline_check.outputs.has_baselines == 'true'
         env:
           BASE_URL: ${{ env.BASE_URL }}
         run: pnpm tests:playwright:visual:docker
@@ -273,10 +266,67 @@ jobs:
             -C qa/tests/playwright \
             playwright-report
 
-      - uses: actions/upload-artifact@v7.0.1
+      - name: Publish Visual report
+        uses: actions/upload-artifact@v7.0.1
         if: failure()
         with:
           name: visual-report
           path: visual-reports-${{ github.run_id }}.tgz
+          retention-days: 7
+          if-no-files-found: warn
+
+  lhci_perfo:
+    if: ${{ inputs.run_lhci_perfo }}
+    name: LHCI Performance tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7.0.1
+
+      - name: Setup pnpm with cache
+        uses: ./.github/actions/setup-pnpm
+
+      - name: Run LHCI Performance tests
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
+        run: pnpm tests:lhci:perfo
+
+      - name: Open PR with Lighthouse trend history
+        if: success()
+        uses: peter-evans/create-pull-request@v8.1.1
+        env:
+          # peter-evans/create-pull-request commits on an internal branch with a
+          # generated name that never matches this repo's <type>/STAR-<n>-<desc>
+          # branch-naming convention, which would otherwise fail Lefthook's
+          # pre-commit hook (scripts/validate-branch-name.sh).
+          LEFTHOOK: "0"
+        with:
+          add-paths: qa/tests/playwright/perfo/lighthouse-history.md
+          commit-message: "chore(tests-playwright): record Lighthouse trend results"
+          branch: qa/lighthouse-trend-update
+          delete-branch: true
+          title: "chore(qa): update Lighthouse trend history"
+          labels: QA, auto-generated
+          body: |
+            Automated update of the Lighthouse performance trend log (`qa/tests/playwright/perfo/lighthouse-history.md`) from a manual QA workflow run.
+
+            Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Pack LHCI reports
+        if: always()
+        run: |
+          tar -czf lhci-perfo-reports-${{ github.run_id }}.tgz \
+            -C qa/tests/playwright/perfo/.lighthouseci .
+
+      - name: Publish LHCI report
+        uses: actions/upload-artifact@v7.0.1
+        if: always()
+        with:
+          name: perfo-report
+          path: lhci-perfo-reports-${{ github.run_id }}.tgz
           retention-days: 7
           if-no-files-found: warn
