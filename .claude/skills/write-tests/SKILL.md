@@ -117,8 +117,10 @@ Specs live one level deeper than before (`e2e/smoke/`, `e2e/mock/`), so the impo
 import { expect, test } from "@playwright/test"
 
 import { ExamplePage } from "../../helpers/pages/ExamplePage"
+import { tags } from "../../helpers/test-groups"
 
-test.describe("Example page", () => {
+// The page's feature group from TEST_GROUPS.
+test.describe("Example page", tags("homepage"), () => {
   let examplePage: ExamplePage
 
   test.beforeEach(async ({ page }) => {
@@ -145,8 +147,9 @@ Same POM, imported alongside `mockTest as test` and `expect` from the fixtures f
 ```typescript
 import { ExamplePage } from "../../helpers/pages/ExamplePage"
 import { expect, mockTest as test } from "../../helpers/fixtures"
+import { tags } from "../../helpers/test-groups"
 
-test.describe("Example page — mocked backend", () => {
+test.describe("Example page — mocked backend", tags("homepage"), () => {
   test("shows an error when the backend rejects the request", async ({
     page,
     mockJson,

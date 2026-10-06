@@ -19,9 +19,14 @@ if (!BASE_URL) {
 const groups = selectedGroups()
 
 // LHCI is not Playwright, so the config's tag filter never reaches it.
-const PATHS = urlsByGroup(urls.perfo)
-  .filter(({ group }) => !groups || groups.includes(group))
-  .map(({ path }) => path)
+// A Set, because two selected groups may list the same page.
+const PATHS = [
+  ...new Set(
+    urlsByGroup(urls.perfo)
+      .filter(({ group }) => !groups || groups.includes(group))
+      .map(({ path }) => path)
+  ),
+]
 
 const CWD = path.resolve("perfo")
 const LHCI_OUTPUT_DIR = path.join(CWD, ".lighthouseci")
@@ -35,6 +40,8 @@ async function assertPagesExist(paths: string[]): Promise<void> {
   const failed: string[] = []
   for (const p of paths) {
     const response = await fetch(`${BASE_URL}${p}`)
+    // Only the status is needed. An unread body keeps the connection open.
+    await response.body?.cancel()
     if (!response.ok) failed.push(`${p} (${response.status})`)
   }
 
