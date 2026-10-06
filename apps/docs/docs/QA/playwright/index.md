@@ -35,29 +35,86 @@ qa/tests/playwright/
 └── tsconfig.json           # TypeScript configuration
 ```
 
-### Page lists per environment
+### Test groups
 
-`helpers/urls.json` holds the pages each suite checks, split by environment:
+Every test carries a feature tag (`@homepage`, `@auth`, …). `helpers/test-groups.ts` lists the groups and says which of them are live on each environment:
 
-```json
-{
-  "seo": { "dev": ["/"], "staging": ["/"], "prod": ["/"] },
-  "axe": { "dev": ["/"], "staging": ["/"], "prod": ["/"] },
-  "visual": { "dev": ["/"], "staging": ["/"], "prod": ["/"] },
-  "perfo": { "dev": ["/"], "staging": ["/"], "prod": ["/"] }
+```typescript
+export const TEST_GROUPS = ["homepage", "auth"] as const
+
+export const ENV_GROUPS: Record<TestEnv, readonly TestGroup[] | "all"> = {
+  dev: "all",
+  stg: "all",
+  prod: "all",
 }
 ```
 
-Each suite gets its full page list — every environment, deduped — via `helpers/flatten-urls.ts`, which recursively collects every string leaf however deeply `urls.json` is nested (env, brand, region, ...):
+Every environment runs every group by default. Narrow an environment to a list (`prod: ["homepage"]`) once a feature is deployed there later than on the others.
 
-```typescript
-import { flattenUrls } from "../helpers/flatten-urls"
-import urls from "../helpers/urls.json"
+`playwright.config.ts` turns the selection into its `grep`, so only tests tagged with a selected group run:
 
-const PATHS = flattenUrls(urls.seo)
+| Situation                              | Groups that run                         |
+| -------------------------------------- | --------------------------------------- |
+| `QA_GROUPS` set (`QA_GROUPS=homepage`) | exactly those, on any environment       |
+| `QA_GROUPS` unset or `auto`            | `ENV_GROUPS` for the environment tested |
+| local host (`localhost`, docker)       | every group                             |
+
+The environment comes from the `BASE_URL` hostname: a `dev` or `stg`/`staging` segment. A segment is a hostname part delimited by `-` or `.`. Any other host counts as production (`www.example.com`, but also a preview domain such as `*.vercel.app`), so an unrecognised domain never runs `@no-prod` tests. Only `localhost`, `127.0.0.1`, `[::1]` and `host.docker.internal` are local. An unknown name in `QA_GROUPS` fails the run with the list of valid ones.
+
+```bash
+QA_GROUPS=homepage pnpm tests:playwright:axe
 ```
 
-To cover a new page, add it to the right suite's list for the environment(s) where it should run — it's picked up automatically, no spec file changes needed.
+| Group      | E2E specs        | `urls.json` suites      |
+| ---------- | ---------------- | ----------------------- |
+| `homepage` | `smoke/homepage` | seo, axe, visual, perfo |
+| `auth`     | `mock/sign-in`   |                         |
+
+A describe with several tags runs when any of them is selected.
+
+- **Promoting a feature** → add its group to `ENV_GROUPS` for the next environment. One line in a PR.
+- **New spec** → give every top-level `test.describe` a group tag with `tags("homepage")` from `helpers/test-groups.ts` (`tags("auth", "no-prod")` for several). The first name must be a group. A nested test that only has to stay off production takes `NO_PROD` instead, because its describe already carries the group. Never put `NO_PROD` on a top-level describe, where it leaves the tests with no group. `tags()` throws on an unknown name while the spec file loads, so a typo fails every run instead of silently dropping the test from stg, prod and `QA_GROUPS` runs. Don't write `{ tag: … }` by hand. Nothing checks it, so a typo there silently drops the test. An untagged test still never runs while a selection is active, so check with `pnpm exec playwright test --list --grep-invert "@(?!no-prod)[a-z]"` against a dev or localhost `BASE_URL`, which must find nothing.
+- **New group** → add it to `TEST_GROUPS`, to `ENV_GROUPS` where it is live, and to the `groups` parameter values in `.azuredevops/pipelines/qa.yml`. The GitHub Actions `groups` input is free text and needs no change.
+
+The package scripts pass `--pass-with-no-tests`, so a selection with nothing in one suite (only `auth` for AXE, say) keeps the job green. LHCI is not Playwright and filters `urls.perfo` by the same selection itself.
+
+### Against production
+
+A spec that cannot pass on production, or must not change data there, gets `"no-prod"` in its `tags(…)`, with a one-line comment saying why. `playwright.config.ts` sets `grepInvert: /@no-prod/` whenever the environment resolves to `prod`, so the filter applies to local runs and the VS Code extension as well, not only to the pipeline. A feature that is simply not deployed on production yet needs no tag, because its group is missing from `ENV_GROUPS.prod`. LHCI is not Playwright and ignores the tag.
+
+### Page lists
+
+`helpers/urls.json` holds the pages each generated suite (`seo`, `axe`, `visual`, `perfo`) checks, keyed by group. A group is one list for every environment, or one list per environment when the content differs:
+
+```json
+{
+  "axe": {
+    "homepage": ["/"],
+    "blog": {
+      "dev": ["/blog", "/blog/draft-article"],
+      "stg": ["/blog", "/blog/draft-article"],
+      "prod": ["/blog", "/blog/published-article"]
+    }
+  }
+}
+```
+
+`urlsByGroup` from `helpers/flatten-urls.ts` returns each path with its group, so every generated test is tagged:
+
+```typescript
+import { urlsByGroup } from "../helpers/flatten-urls"
+import { tags } from "../helpers/test-groups"
+import urls from "../helpers/urls.json"
+
+const PATHS = urlsByGroup(urls.seo)
+
+for (const { group, path } of PATHS) {
+  test.describe(`SEO checks on ${path}`, tags(group), () => {
+```
+
+A group split per environment contributes the list for the environment tested, or every list merged and deduped for a local host. A group missing an environment's key has no pages there. A group key outside `TEST_GROUPS`, or an environment key other than `dev`, `stg` and `prod`, makes `urlsByGroup` throw when the suite loads. TypeScript would not catch either, since an object imported from JSON skips excess property checks. Without the check a mistyped key silently leaves that group or environment with no pages, and the job passes with zero tests. `BASE_URL` is required and must include the scheme (`https://…`). When it is unset or can't be parsed, the suites throw an error asking you to fill it in `.env`.
+
+To cover a new page, add it under its group in the right suite. It is picked up automatically, no spec file changes needed.
 
 ### End-to-end: smoke vs mock
 
@@ -143,9 +200,10 @@ test.describe("Title", () => {
 })
 ```
 
-- New page to cover → add one entry to `helpers/urls.json`; every check runs against it automatically.
-- New check → a new `test.describe` block inside the suite's `for (const path of PATHS)` loop.
-- Production-only checks (robots, Heroku references) `test.skip` themselves automatically on other environments.
+- New page to cover → add it under its group in `helpers/urls.json`. Every check runs against it automatically.
+- New check → a new `test.describe` block inside the suite's `for (const { group, path } of PATHS)` loop.
+- Production-only checks (robots, Heroku references) `test.skip` themselves on every environment that does not [resolve to production](#test-groups), including local runs.
+- A page that does not answer with a 2xx status fails every check with its status, as in AXE, visual and LHCI.
 
 ## Visual Regression
 
@@ -209,7 +267,7 @@ Commit baseline updates only with the related UI change.
 
 ## Lighthouse Performance
 
-`pnpm tests:lhci:perfo` runs Lighthouse CI (`lhci collect`) against every URL in `helpers/urls.json` and writes raw reports to `qa/tests/playwright/perfo/.lighthouseci/` (gitignored, one Lighthouse run per URL).
+`pnpm tests:lhci:perfo` runs Lighthouse CI (`lhci collect`) against the `urls.perfo` pages in `helpers/urls.json` for the selected [test groups](#test-groups) and writes raw reports to `qa/tests/playwright/perfo/.lighthouseci/` (gitignored, one Lighthouse run per URL). When no page matches the selection it says so and exits successfully.
 
 Each run also records its results in `qa/tests/playwright/perfo/lighthouse-history.md` — a committed Markdown file with one `## <url>` section per page, each holding its own table of category scores (performance, accessibility, best practices, SEO) over time. A new run's row lands under that page's existing section instead of at the end of the file, so a page's trend always stays together. Being plain Markdown, it renders as readable tables directly on GitHub and diffs cleanly in PRs (new rows only).
 

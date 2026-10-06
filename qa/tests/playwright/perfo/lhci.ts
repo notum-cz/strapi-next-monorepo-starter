@@ -5,7 +5,8 @@ import { spawnSync } from "node:child_process"
 import fs from "node:fs"
 import path from "node:path"
 
-import { flattenUrls } from "../helpers/flatten-urls"
+import { urlsByGroup } from "../helpers/flatten-urls"
+import { selectedGroups } from "../helpers/test-groups"
 
 import urls from "../helpers/urls.json"
 
@@ -15,40 +16,60 @@ if (!BASE_URL) {
   throw new Error("Missing BASE_URL environment variable")
 }
 
-const perfoUrls = flattenUrls(urls.perfo)
+const groups = selectedGroups()
 
-if (perfoUrls.length === 0) {
-  throw new Error("No sites found in urls.json")
-}
-
-const fullUrls = perfoUrls.map((p) => `${BASE_URL}${p}`)
+// LHCI is not Playwright, so the config's tag filter never reaches it.
+const PATHS = urlsByGroup(urls.perfo)
+  .filter(({ group }) => !groups || groups.includes(group))
+  .map(({ path }) => path)
 
 const CWD = path.resolve("perfo")
 const LHCI_OUTPUT_DIR = path.join(CWD, ".lighthouseci")
 const HISTORY_FILE = path.join(CWD, "lighthouse-history.md")
 
-fs.mkdirSync(CWD, { recursive: true })
+/**
+ * Throws when a page does not answer with a 2xx status. Lighthouse would
+ * otherwise score the 404 page and record it in the history as that URL.
+ */
+async function assertPagesExist(paths: string[]): Promise<void> {
+  const failed: string[] = []
+  for (const p of paths) {
+    const response = await fetch(`${BASE_URL}${p}`)
+    if (!response.ok) failed.push(`${p} (${response.status})`)
+  }
 
-// Start from a clean output directory so this run's report doesn't mix with
-// leftovers from a previous local run.
-fs.rmSync(LHCI_OUTPUT_DIR, { recursive: true, force: true })
-fs.mkdirSync(LHCI_OUTPUT_DIR, { recursive: true })
+  if (failed.length > 0) {
+    throw new Error(`Pages did not respond with 2xx: ${failed.join(", ")}`)
+  }
+}
 
-const args = [
-  "lhci",
-  "collect",
-  ...fullUrls.flatMap((url) => ["--url", url]),
-  "--numberOfRuns=1",
-]
+/** Runs `lhci collect` once per path into a freshly emptied output directory. */
+function collect(paths: string[]): void {
+  const fullUrls = paths.map((p) => `${BASE_URL}${p}`)
 
-// eslint-disable-next-line sonarjs/no-os-command-from-path
-const result = spawnSync("pnpm", args, {
-  stdio: "inherit",
-  cwd: CWD,
-})
+  fs.mkdirSync(CWD, { recursive: true })
 
-if (result.status !== 0) {
-  throw new Error(`LHCI failed with status ${result.status ?? 1}`)
+  // Start from a clean output directory so this run's report doesn't mix with
+  // leftovers from a previous local run.
+  fs.rmSync(LHCI_OUTPUT_DIR, { recursive: true, force: true })
+  fs.mkdirSync(LHCI_OUTPUT_DIR, { recursive: true })
+
+  const args = [
+    "lhci",
+    "collect",
+    ...fullUrls.flatMap((url) => ["--url", url]),
+    "--numberOfRuns=1",
+  ]
+
+  // eslint-disable-next-line sonarjs/no-os-command-from-path
+  const result = spawnSync("pnpm", args, {
+    stdio: "inherit",
+    cwd: CWD,
+  })
+
+  if (result.status !== 0) {
+    throw new Error(`LHCI failed with status ${result.status ?? 1}`)
+  }
 }
 
 interface LighthouseResult {
@@ -157,26 +178,48 @@ function serializeSections(sections: Section[]): string {
   )
 }
 
-const entries = buildHistoryEntries()
+/** Appends this run's scores to the per-URL sections of the history file. */
+function writeHistory(): void {
+  const entries = buildHistoryEntries()
 
-const existingContent = fs.existsSync(HISTORY_FILE)
-  ? fs.readFileSync(HISTORY_FILE, "utf8")
-  : ""
+  const existingContent = fs.existsSync(HISTORY_FILE)
+    ? fs.readFileSync(HISTORY_FILE, "utf8")
+    : ""
 
-const sections = parseSections(existingContent)
+  const sections = parseSections(existingContent)
 
-for (const entry of entries) {
-  const section = sections.find((s) => s.url === entry.url)
+  for (const entry of entries) {
+    const section = sections.find((s) => s.url === entry.url)
 
-  if (section) {
-    section.rows.push(formatRow(entry))
-  } else {
-    sections.push({ url: entry.url, rows: [formatRow(entry)] })
+    if (section) {
+      section.rows.push(formatRow(entry))
+    } else {
+      sections.push({ url: entry.url, rows: [formatRow(entry)] })
+    }
   }
+
+  fs.writeFileSync(HISTORY_FILE, serializeSections(sections))
+
+  console.log(`\nLighthouse trend (${entries.length} page(s)):`)
+  console.table(entries)
+  console.log(`Updated ${path.relative(process.cwd(), HISTORY_FILE)}`)
 }
 
-fs.writeFileSync(HISTORY_FILE, serializeSections(sections))
+async function main(): Promise<void> {
+  if (PATHS.length === 0) {
+    console.log(
+      `No LHCI pages for the selected groups (${groups?.join(", ") ?? "all"}), nothing to run.`
+    )
 
-console.log(`\nLighthouse trend (${entries.length} page(s)):`)
-console.table(entries)
-console.log(`Updated ${path.relative(process.cwd(), HISTORY_FILE)}`)
+    return
+  }
+
+  await assertPagesExist(PATHS)
+  collect(PATHS)
+  writeHistory()
+}
+
+// tsx runs this package as CommonJS, which has no top-level await. A rejection
+// still exits non-zero.
+// eslint-disable-next-line unicorn/prefer-top-level-await
+main()
