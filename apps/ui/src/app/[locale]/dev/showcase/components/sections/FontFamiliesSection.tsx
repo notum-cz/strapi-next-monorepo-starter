@@ -9,8 +9,8 @@ function FontFamiliesSection() {
         <Typography variant="heading6">Typography showcase example</Typography>
       </ManualItem>
       <Typography variant="small">
-        We use font Roboto for both: headings and body text - it is imported
-        Google Font
+        Headings and body text use the local Roboto variable font from the
+        shared design system.
       </Typography>
     </div>
   )
