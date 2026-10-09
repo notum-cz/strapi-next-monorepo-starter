@@ -59,9 +59,10 @@ docker run --rm \
   -v "playwright_node_modules:/playwright/node_modules" \
   -w /playwright \
   -e BASE_URL="$BASE_URL" \
+  -e QA_GROUPS="${QA_GROUPS:-}" \
   -e CI=true \
   "mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble" \
-  bash -c "npm install --silent --no-package-lock && npx playwright test visual/visual.spec.ts --update-snapshots ${PROJECT_FLAGS[*]}"
+  bash -c "npm install --silent --no-package-lock && npx playwright test visual/visual.spec.ts --update-snapshots --pass-with-no-tests ${PROJECT_FLAGS[*]}"
 
 echo ""
 echo "Snapshots saved to:"

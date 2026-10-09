@@ -1,14 +1,14 @@
 import { expect, test, type Page } from "@playwright/test"
 
-import { flattenUrls } from "../helpers/flatten-urls"
+import { urlsByGroup } from "../helpers/flatten-urls"
+import { resolveTestEnv, tags } from "../helpers/test-groups"
 
 import urls from "../helpers/urls.json"
 
-const PATHS = flattenUrls(urls.seo)
+const PATHS = urlsByGroup(urls.seo)
 
-function isHerokuBaseUrl(url: string): boolean {
-  return url.includes("heroku")
-}
+// The same rule as the @no-prod filter: any host that is not dev, staging or local.
+const IS_PROD = resolveTestEnv() === "prod"
 
 function normalizePath(url: string): string {
   try {
@@ -56,10 +56,15 @@ async function expectAttrNonEmpty(page: Page, selector: string, attr: string) {
 
 test.describe.configure({ mode: "parallel" })
 
-for (const path of PATHS) {
-  test.describe(`SEO checks on ${path}`, () => {
+for (const { group, path } of PATHS) {
+  test.describe(`SEO checks on ${path}`, tags(group), () => {
     test.beforeEach(async ({ page }) => {
-      await page.goto(path, { waitUntil: "domcontentloaded" })
+      const response = await page.goto(path, { waitUntil: "domcontentloaded" })
+      // Fails every check with the status instead of a misleading "missing H1".
+      expect(
+        response?.ok(),
+        `${path} responded with ${response?.status()}`
+      ).toBe(true)
       await page.waitForLoadState("networkidle")
     })
 
@@ -139,11 +144,9 @@ for (const path of PATHS) {
 
     test.describe("Robots", () => {
       test("should not have noindex directive", async ({ page }) => {
-        const baseUrl = process.env.BASE_URL
-
         test.skip(
-          !baseUrl || isHerokuBaseUrl(baseUrl),
-          "Robots noindex check skipped on Heroku (dev/staging/preview) environments"
+          !IS_PROD,
+          "Robots noindex check runs only on production (dev, staging and local may be noindex)"
         )
 
         const robots = page.locator("meta[name='robots']")
@@ -497,12 +500,7 @@ for (const path of PATHS) {
       test('HTML and canonical should not contain "heroku" on PROD', async ({
         page,
       }) => {
-        const baseUrl = process.env.BASE_URL
-
-        test.skip(
-          !baseUrl || isHerokuBaseUrl(baseUrl),
-          'Heroku reference check runs only when baseURL does not contain "heroku"'
-        )
+        test.skip(!IS_PROD, "Heroku reference check runs only on production")
 
         const html = await page.content()
 

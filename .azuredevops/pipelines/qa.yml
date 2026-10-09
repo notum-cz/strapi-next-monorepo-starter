@@ -5,8 +5,8 @@ appendCommitMessageToRunName: false
 
 # Uncomment the schedule trigger to run tests automatically on weekdays.
 # schedules:
-  # Runs at 00:00 UTC on weekdays (02:00 CEST).
-  # - cron: "0 0 * * 1-5"
+# Runs at 00:00 UTC on weekdays (02:00 CEST).
+# - cron: "0 0 * * 1-5"
 
 parameters:
   - name: run_e2e
@@ -39,12 +39,26 @@ parameters:
     type: string
     default: ""
 
+  - name: groups
+    displayName: "Test groups (auto = what helpers/test-groups.ts lists for the target env)"
+    type: stringList
+    default:
+      - auto
+    values:
+      - auto
+      - homepage
+      - auth
+
 variables:
   - group: qa-pipeline-vars # must define a BASE_URL variable
   - name: CI
     value: "true"
   - name: NPM_CONFIG_IGNORE_SCRIPTS
     value: "true"
+  # Non-secret pipeline variables reach every script as env vars, so Playwright
+  # and LHCI read QA_GROUPS directly. "auto" means the env default.
+  - name: QA_GROUPS
+    value: ${{ join(',', parameters.groups) }}
 
 pool:
   vmImage: "ubuntu-latest"
@@ -71,7 +85,7 @@ jobs:
             BASE_URL_INPUT="default-baseurl"
           fi
           SAFE_BASE_URL=$(echo "$BASE_URL_INPUT" | sed -E 's#^[a-zA-Z]+://##; s#[/:\\"'"'"'<>|?@*]+#-#g')
-          echo "##vso[build.updatebuildnumber][$LABEL] QA - $SAFE_BASE_URL"
+          echo "##vso[build.updatebuildnumber][$LABEL] QA - $SAFE_BASE_URL - $(QA_GROUPS)"
         displayName: Compute run name
         env:
           PARAM_BASE_URL: ${{ parameters.base_url }}

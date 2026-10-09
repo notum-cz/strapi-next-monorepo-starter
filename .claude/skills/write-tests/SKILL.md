@@ -117,8 +117,10 @@ Specs live one level deeper than before (`e2e/smoke/`, `e2e/mock/`), so the impo
 import { expect, test } from "@playwright/test"
 
 import { ExamplePage } from "../../helpers/pages/ExamplePage"
+import { tags } from "../../helpers/test-groups"
 
-test.describe("Example page", () => {
+// The page's feature group from TEST_GROUPS.
+test.describe("Example page", tags("homepage"), () => {
   let examplePage: ExamplePage
 
   test.beforeEach(async ({ page }) => {
@@ -145,8 +147,9 @@ Same POM, imported alongside `mockTest as test` and `expect` from the fixtures f
 ```typescript
 import { ExamplePage } from "../../helpers/pages/ExamplePage"
 import { expect, mockTest as test } from "../../helpers/fixtures"
+import { tags } from "../../helpers/test-groups"
 
-test.describe("Example page — mocked backend", () => {
+test.describe("Example page — mocked backend", tags("homepage"), () => {
   test("shows an error when the backend rejects the request", async ({
     page,
     mockJson,
@@ -177,7 +180,10 @@ Set up the route mock **before** navigating/triggering the request it intercepts
 
 ### Playwright — visual, axe, seo
 
-- **Visual**: reads its path list from `qa/tests/playwright/helpers/urls.json`, shared by every Playwright suite (see `visual.spec.ts`). If no baseline snapshot exists yet for a page/browser combination, the spec creates one and skips comparison for that run instead of failing — inspect a newly created baseline before committing it. Update existing baselines only when the change is intentional: `pnpm tests:playwright:visual:update` (local OS) or `pnpm tests:playwright:visual:docker:update` (Linux, commit-ready — matches what CI compares against).
+- **Feature groups**: every Playwright test belongs to a feature group (`homepage`, `auth`, … listed in `TEST_GROUPS` in `qa/tests/playwright/helpers/test-groups.ts`). Give every top-level `test.describe` its tag with `tags("homepage")` from `helpers/test-groups.ts`, or several names when it needs more (`tags("auth", "no-prod")`). The first name must be a group. A nested test that only has to stay off production takes `NO_PROD` from the same file, because its describe already carries the group. Never write `{ tag: … }` by hand. Only `tags()` throws on a mistyped group while the spec loads, and nothing else checks a hand-written tag. `playwright.config.ts` runs only the groups selected by `QA_GROUPS` or, by default, by `ENV_GROUPS` for the target environment, so an untagged test silently never runs once an environment is narrowed. Audit with `BASE_URL=http://localhost:3000 QA_GROUPS= pnpm -F @repo/tests-playwright exec playwright test --list --pass-with-no-tests --grep-invert "@(homepage|auth)(?![\w-])"` from the monorepo root, which must list `Total: 0 tests`. The alternation lists `TEST_GROUPS`, so the audit counts only a feature-group tag, not any `@` word such as an email in a title. The localhost `BASE_URL` and the empty `QA_GROUPS` (which also beats one set in `.env`) switch that config filter off for the check, because a CLI `--grep` does not replace it and an untagged test would be filtered out before the audit sees it. A new feature gets a new group in `TEST_GROUPS`, in `ENV_GROUPS` where it is live, in the `groups` parameter of `.azuredevops/pipelines/qa.yml`, and in the alternation of this audit command (here and in `apps/docs/docs/QA/playwright/index.md`).
+- **Page lists**: `seo`, `axe`, `visual` and `perfo` read their paths from `qa/tests/playwright/helpers/urls.json`, keyed by group. A group is one list for every environment, or `{ "dev": [...], "stg": [...], "prod": [...] }` when the content differs. Always resolve them with `urlsByGroup(urls.<suite>)` from `helpers/flatten-urls.ts` and tag each generated test with its `group`. Never index a key directly (`urls.axe.homepage`). It throws when `BASE_URL` is unset. To cover a new page, add it under its group in `urls.json` — no spec change.
+- **Production (`@no-prod`)**: a spec that cannot pass on production or must not change data there gets `"no-prod"` in the `tags(…)` of its `test` or `test.describe`, with a one-line comment saying why. `playwright.config.ts` leaves those out whenever `BASE_URL` resolves to production, locally and in the pipeline. A feature that is simply not deployed on production yet needs no tag, because its group is missing from `ENV_GROUPS.prod`.
+- **Visual**: see `visual.spec.ts`. If no baseline snapshot exists yet for a page/browser combination, the spec creates one and skips comparison for that run instead of failing — inspect a newly created baseline before committing it. Update existing baselines only when the change is intentional: `pnpm tests:playwright:visual:update` (local OS) or `pnpm tests:playwright:visual:docker:update` (Linux, commit-ready — matches what CI compares against).
 - **Axe**: add per-page exceptions via `GLOBAL_WARNING_RULE_IDS` / `PATH_CONFIGS` in `axe.spec.ts` rather than skipping a page outright — a known, unfixable violation becomes a warning, not a silent gap.
 - **SEO**: mirror `seo.spec.ts`'s per-page `test.describe` blocks (Title, Meta description, Robots, Canonical, H1, Heading hierarchy, Structured data, Open Graph).
 - Do not hardcode ports/hosts — always resolve via `BASE_URL` / `baseURL`.
