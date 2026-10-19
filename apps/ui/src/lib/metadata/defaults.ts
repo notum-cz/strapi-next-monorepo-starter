@@ -1,18 +1,18 @@
+import type { Data } from "@repo/strapi-types"
 import type { Metadata } from "next"
 import type { Locale } from "next-intl"
-import type { getTranslations } from "next-intl/server"
 
-import { routing } from "@/lib/navigation"
+import { createPublicFullPath } from "@/lib/navigation"
 
-type TranslateFn = Awaited<ReturnType<typeof getTranslations>>
-
-export function getDefaultMetadata(siteUrl: string, t: TranslateFn) {
+export function getDefaultMetadata(
+  siteUrl: string,
+  applicationName?: string,
+  title?: string
+): Metadata {
   return {
-    title: t("metaTitle"),
-    description: t("metaDescription"),
-    keywords: t("keywords"),
-    robots: t("metaRobots"),
-    applicationName: t("applicationName"),
+    title: title?.trim() || undefined,
+    robots: { index: false, follow: false },
+    applicationName: applicationName?.trim() || undefined,
 
     icons: {
       icon: [
@@ -23,35 +23,33 @@ export function getDefaultMetadata(siteUrl: string, t: TranslateFn) {
     },
 
     metadataBase: new URL(siteUrl),
-  } as Metadata
+  }
 }
 
 export function getDefaultOgMeta(
-  locale: Locale | undefined,
+  locale: Locale,
   fullPath: string | undefined,
-  t: TranslateFn
+  configuration?: Data.Component<"seo-utilities.open-graph-configuration"> | null,
+  title?: string
 ): Metadata["openGraph"] {
   return {
     type: "website",
     locale: locale,
-    siteName: t("og.siteName"),
-    title: t("og.title"),
-    description: t("og.description"),
-    images: [t("og.image")],
-    url: [routing.defaultLocale !== locale ? locale : null, fullPath ?? ""]
-      .filter(Boolean)
-      .join("/"),
+    siteName: configuration?.siteName?.trim() || undefined,
+    title: title?.trim() || undefined,
+    url: fullPath ? createPublicFullPath(fullPath, locale) : undefined,
   }
 }
 
-export function getDefaultTwitterMeta(t: TranslateFn): Metadata["twitter"] {
+export function getDefaultTwitterMeta(
+  configuration?: Data.Component<"seo-utilities.twitter-configuration"> | null,
+  title?: string
+): Metadata["twitter"] {
   return {
-    card: t("twitter.card"),
-    title: t("twitter.title"),
-    description: t("twitter.description"),
-    siteId: t("twitter.siteId"),
-    creator: t("twitter.creator"),
-    creatorId: t("twitter.creatorId"),
-    images: [t("twitter.imageUrl")],
-  } as Metadata["twitter"]
+    card: "summary",
+    title: title?.trim() || undefined,
+    siteId: configuration?.siteId?.trim() || undefined,
+    creator: configuration?.creator?.trim() || undefined,
+    creatorId: configuration?.creatorId?.trim() || undefined,
+  }
 }

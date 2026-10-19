@@ -89,9 +89,13 @@ export async function fetchSeo(
   try {
     return await PublicStrapiClient.fetchOneByFullPath(uid, fullPath, {
       locale,
+      status: "published",
       populate: {
         seo: "smart",
-        localizations: true,
+        localizations: {
+          fields: ["locale", "fullPath"],
+          filters: { publishedAt: { $notNull: true } },
+        },
       },
     })
   } catch (e: unknown) {
@@ -102,6 +106,66 @@ export async function fetchSeo(
         stack: e instanceof Error ? e.stack : undefined,
       },
     })
+  }
+}
+
+// Both configuration fetchers are locale-independent and populate only their branch.
+// Saves invalidate their shared cache tag; the ten-minute TTL is a fallback.
+export async function fetchGlobalMetadata() {
+  try {
+    const response = await PublicStrapiClient.fetchOne(
+      "api::seo-configuration.seo-configuration",
+      undefined,
+      {
+        fields: ["id"],
+        populate: {
+          globalMetadata: "smart",
+        },
+      },
+      {
+        next: {
+          revalidate: 600,
+          tags: [strapiCacheTag("api::seo-configuration.seo-configuration")],
+        },
+      }
+    )
+
+    return response.data?.globalMetadata ?? null
+  } catch (error: unknown) {
+    logNonBlockingError({
+      message: "Error fetching global metadata",
+      error: { error: error instanceof Error ? error.message : String(error) },
+    })
+
+    return null
+  }
+}
+
+export async function fetchRobotsConfiguration() {
+  try {
+    const response = await PublicStrapiClient.fetchOne(
+      "api::seo-configuration.seo-configuration",
+      undefined,
+      {
+        fields: ["id"],
+        populate: { robotsConfiguration: "smart" },
+      },
+      {
+        next: {
+          revalidate: 600,
+          tags: [strapiCacheTag("api::seo-configuration.seo-configuration")],
+        },
+      }
+    )
+
+    return response.data?.robotsConfiguration ?? null
+  } catch (error: unknown) {
+    logNonBlockingError({
+      message: "Error fetching robots configuration",
+      error: { error: error instanceof Error ? error.message : String(error) },
+    })
+
+    return null
   }
 }
 

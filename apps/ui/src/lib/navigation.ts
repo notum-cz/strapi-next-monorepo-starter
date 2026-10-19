@@ -13,6 +13,8 @@ export const routing = defineRouting({
   defaultLocale: "en",
 
   localePrefix: "as-needed",
+  // Metadata uses published Strapi translations and their actual fullPath.
+  alternateLinks: false,
 })
 
 // https://next-intl-docs.vercel.app/docs/routing/navigation

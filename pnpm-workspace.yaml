@@ -18,6 +18,8 @@ minimumReleaseAgeExclude:
   - "nodemailer@9.0.1"
 
 overrides:
+  # Strapi type generation loads the shared Prettier plugins, which use 3.8.4.
+  "@strapi/typescript-utils>prettier": 3.8.4
   "@types/react": 19.2.18
   "@types/react-dom": 19.2.4
   "@codemirror/state": 6.7.1

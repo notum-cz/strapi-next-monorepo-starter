@@ -38,6 +38,12 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: "/apple-touch-icon.png", sizes: "256x256" }],
   },
+  openGraph: {
+    title: { template: "%s | Notum", default: "" },
+  },
+  twitter: {
+    title: { template: "%s | Notum", default: "" },
+  },
 }
 
 export default async function RootLayout({

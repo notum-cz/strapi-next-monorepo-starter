@@ -61,48 +61,6 @@
           "sortable": true
         }
       },
-      "siteId": {
-        "edit": {
-          "label": "siteId",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "siteId",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "creator": {
-        "edit": {
-          "label": "creator",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "creator",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "creatorId": {
-        "edit": {
-          "label": "creatorId",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "creatorId",
-          "searchable": true,
-          "sortable": true
-        }
-      },
       "images": {
         "edit": {
           "label": "images",
@@ -147,20 +105,6 @@
         [
           {
             "name": "description",
-            "size": 6
-          },
-          {
-            "name": "siteId",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "creator",
-            "size": 6
-          },
-          {
-            "name": "creatorId",
             "size": 6
           }
         ],

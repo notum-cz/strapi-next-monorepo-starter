@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_seo_utilities_twitter_configurations",
+  "info": {
+    "displayName": "Twitter/X Configuration",
+    "description": "Account metadata shared by all pages and locales."
+  },
+  "options": {},
+  "attributes": {
+    "siteId": { "type": "string" },
+    "creator": { "type": "string" },
+    "creatorId": { "type": "string" }
+  }
+}

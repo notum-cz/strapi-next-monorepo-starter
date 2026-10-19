@@ -25,7 +25,10 @@ export const metaRobots: Record<
     index: false,
     follow: false,
   },
-  none: {},
+  none: {
+    index: false,
+    follow: false,
+  },
   noarchive: {
     noarchive: true,
   },

@@ -65,7 +65,12 @@ async function generateLocalizedSitemap(
             {
               seo: {
                 metaRobots: {
-                  $notIn: ["noindex", "noindex,nofollow", "noindex,follow"],
+                  $notIn: [
+                    "noindex",
+                    "noindex,nofollow",
+                    "noindex,follow",
+                    "none",
+                  ],
                 },
               },
             },
