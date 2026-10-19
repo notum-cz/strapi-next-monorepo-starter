@@ -5,6 +5,7 @@ import PageList from "@/app/[locale]/dev/pages-overview/components/PageList"
 import Typography from "@/components/typography"
 import { logNonBlockingError } from "@/lib/logging"
 import { PublicStrapiClient } from "@/lib/strapi-api"
+import type { ExtendedPageProps } from "@/types/next"
 
 async function fetchAllPages(locale: Locale) {
   try {
@@ -28,8 +29,8 @@ async function fetchAllPages(locale: Locale) {
 
 export default async function PagesOverviewPage({
   params,
-}: PageProps<"/[locale]/dev/pages-overview">) {
-  const { locale } = (await params) as { locale: Locale }
+}: ExtendedPageProps<"/[locale]/dev/pages-overview">) {
+  const { locale } = await params
   setRequestLocale(locale)
 
   const response = await fetchAllPages(locale)

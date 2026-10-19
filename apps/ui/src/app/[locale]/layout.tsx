@@ -74,7 +74,7 @@ export default async function RootLayout({
   ]
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         <Script id="csr-config" strategy="beforeInteractive">
           {`

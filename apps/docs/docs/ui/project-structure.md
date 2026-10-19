@@ -28,6 +28,12 @@ Base path: `apps/ui/src`
 | `types`                   | Type definitions.                                                                                                                           |
 | `../locales`              | next-intl message catalogs.                                                                                                                 |
 
+## Page Props
+
+Use `ExtendedPageProps<"/[locale]/auth">` from `@/types/next` to infer parameters from the route and type `locale` as `Locale`. The optional second generic extends query parameters, for example `ExtendedPageProps<"/[locale]/auth/reset-password", { code?: string | string[] }>`. Keep runtime locale checks and narrow query values before use.
+
+The UI `typecheck` command generates Next.js route types before checking TypeScript. Run it when adding routes or when generated types are missing during development.
+
 ## Strapi API
 
 Shared Strapi client code lives in `lib/strapi-api`. The base clients are kept in `base.ts`, `public.ts`, and `private.ts`; request authorization helpers live in `request-auth.ts`.

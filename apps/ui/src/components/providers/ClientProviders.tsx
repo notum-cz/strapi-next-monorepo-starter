@@ -5,6 +5,7 @@ import { ThemeProvider } from "next-themes"
 import type React from "react"
 import { z } from "zod"
 
+import { useRepeatedAnchorScroll } from "@/hooks/useRepeatedAnchorScroll"
 import { useTranslatedZod } from "@/hooks/useTranslatedZod"
 import { setupLibraries } from "@/lib/general-helpers"
 
@@ -20,6 +21,7 @@ export function ClientProviders({
   readonly children: React.ReactNode
 }) {
   useTranslatedZod(z)
+  useRepeatedAnchorScroll()
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
