@@ -1,0 +1,88 @@
+{
+  "$comment": "Maps code directories/files to related doc pages (relative to apps/docs/docs/). Used by the docs-changelog skill to detect documentation gaps when code changes but docs don't.",
+  "apps/ui/src/app/": [
+    "ui/project-structure.md"
+  ],
+  "apps/ui/src/app/[locale]/auth/": [
+    "auth/ui/authentication.md"
+  ],
+  "apps/ui/src/app/api/": [
+    "ui/built-in-api-routes/"
+  ],
+  "apps/ui/src/app/api/strapi-revalidate/": [
+    "reference/cache-revalidation.md"
+  ],
+  "apps/ui/src/components/page-builder/": [
+    "page-builder/introduction.md"
+  ],
+  "apps/ui/src/components/elementary/": [
+    "ui/built-in-pages/components-overview.md"
+  ],
+  "apps/ui/src/lib/strapi-api/": [
+    "ui/strapi-api-client.md"
+  ],
+  "apps/ui/src/lib/cache-paths.ts": [
+    "ui/caching.md",
+    "reference/cache-revalidation.md"
+  ],
+  "apps/ui/src/lib/cdn/": [
+    "reference/integrations/cdn.md"
+  ],
+  "apps/ui/src/lib/recaptcha.ts": [
+    "reference/integrations/recaptcha.md"
+  ],
+  "apps/ui/next.config.mjs": [
+    "ui/next-config.md"
+  ],
+  "apps/ui/src/env.mjs": [
+    "ui/environment-variables.md"
+  ],
+  "apps/ui/src/lib/proxies/": [
+    "ui/next-proxies.md",
+    "ui/built-in-api-routes/private-proxy.md",
+    "ui/built-in-api-routes/public-proxy.md"
+  ],
+  "apps/ui/src/lib/telemetry/": [
+    "reference/integrations/logging.md"
+  ],
+  "apps/strapi/src/api/": [
+    "strapi/strapi-schemas.md",
+    "getting-started/add-content-type.md"
+  ],
+  "apps/strapi/src/components/": [
+    "strapi/strapi-schemas.md",
+    "page-builder/introduction.md"
+  ],
+  "apps/strapi/config/plugins": [
+    "strapi/plugins/overview.md"
+  ],
+  "apps/strapi/config/env/": [
+    "strapi/environment-variables.md"
+  ],
+  "packages/logging/": [
+    "reference/packages/logging.md",
+    "reference/integrations/logging.md"
+  ],
+  "packages/design-system/": [
+    "design-system/overview.md",
+    "reference/packages/design-system.md"
+  ],
+  "packages/strapi-types/": [
+    "reference/packages/strapi-types.md"
+  ],
+  "packages/shared-data/": [
+    "reference/packages/shared-data.md"
+  ],
+  "packages/semantic-release-config/": [
+    "reference/packages/semantic-release-config.md"
+  ],
+  ".claude/skills/": [
+    "reference/AI/skills/"
+  ],
+  "qa/tests/playwright/": [
+    "QA/playwright/index.md"
+  ],
+  "lefthook.yml": [
+    "reference/workflow.md"
+  ]
+}
