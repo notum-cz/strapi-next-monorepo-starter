@@ -18,8 +18,8 @@ minimumReleaseAgeExclude: []
 overrides:
   "@types/react": 19.2.18
   "@types/react-dom": 19.2.4
-  "@codemirror/state": 6.7.4
-  "@codemirror/view": 6.43.11
+  "@codemirror/state": 6.7.6
+  "@codemirror/view": 6.43.14
   # Transitive-only security bumps. None of these is a direct dependency of a
   # workspace package, so they can only be raised through an override:
   #   postcss   - restricts previous-source-map loading to the `opts.from`
@@ -36,6 +36,11 @@ overrides:
   #   @hono/...  - fixes serve-static path traversal on Windows via an encoded
   #               backslash (patched in 1.19.15). Held at 1.x on purpose: the
   #               2.x line is a major the MCP SDK has not moved to.
+  #   shell-quote - fixes a critical injection in `quote()` where crafted input
+  #               escapes the quoting it is supposed to produce (1.11.0), on top
+  #               of the earlier quadratic-complexity DoS in `parse()` (1.9.0).
+  #               Reached via the webpack/react-dev-utils chain in apps/docs,
+  #               which allows any ^1.x.
   #   happy-dom - fixes unsanitized export names being interpolated as executable
   #               code in ECMAScriptModuleCompiler (20.8.8) and page-origin
   #               cookies leaking into cross-origin `fetch` (20.8.9). Reached via
@@ -47,6 +52,7 @@ overrides:
   hono: 4.13.4
   "@hono/node-server": 1.19.17
   happy-dom: 20.8.9
+  shell-quote: 1.12.0
   # Security bumps that apps/ui and apps/strapi already pin directly, but which
   # Strapi pins to an older EXACT version in its own dependency tree. An exact
   # pin can never float up, so without an override the patched release reaches
