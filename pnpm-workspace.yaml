@@ -60,6 +60,9 @@ overrides:
   #   sharp      - `@strapi/upload` pins 0.35.3, which bundles the vulnerable
   #                libheif (GHSA-rgj7-g3m4-5g8c). This is Strapi's image
   #                processing path, so the advisory is live in the CMS.
+  #                Held at 0.35.5, not 0.35.4: GHSA-wq5f-xc86-pv6w (high) is a
+  #                use-after-free in the bundled librsvg reachable through SVG
+  #                decoding, and its patched range starts at 0.35.5.
   #   nodemailer - `@strapi/provider-email-nodemailer` and
   #                `@strapi/provider-email-sendmail` pin 9.0.1 exactly, on the
   #                real email path. Raised across the 9.x -> 10.x major on
@@ -76,7 +79,7 @@ overrides:
   # sharp and qs stay within the major Strapi already depends on; nodemailer
   # deliberately does not, for the reason given above. Drop each entry once
   # Strapi ships a release that pins the patched version itself.
-  sharp: 0.35.4
+  sharp: 0.35.5
   nodemailer: 10.1.3
   qs: 6.16.0
 
