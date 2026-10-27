@@ -39,7 +39,7 @@
     "@repo/design-system": "workspace:*",
     "@repo/logging": "workspace:*",
     "@repo/shared-data": "workspace:*",
-    "@sentry/nextjs": "10.58.0",
+    "@sentry/nextjs": "10.75.2",
     "@t3-oss/env-nextjs": "0.13.11",
     "@tanstack/react-query": "5.101.0",
     "@tanstack/react-table": "8.21.3",
