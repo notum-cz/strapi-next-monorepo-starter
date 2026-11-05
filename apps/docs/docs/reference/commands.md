@@ -90,9 +90,13 @@ pnpm tests:playwright:visual:docker         # Visual regression in Docker/Linux
 pnpm tests:playwright:visual:docker:update  # Update Linux visual snapshots in Docker
 pnpm tests:playwright:visual:update         # Update visual regression snapshots
 pnpm tests:lhci:perfo                       # Lighthouse CI
+pnpm tests:k6:load:smoke                    # k6 load test, 1 visit/s for 1 minute
+pnpm tests:k6:load:average                  # k6 load test, normal traffic
+pnpm tests:k6:load:spike                    # k6 load test, campaign launch (5× surge)
+pnpm tests:k6:load:breakpoint               # k6 load test, find the limit and check recovery
 ```
 
-See [Playwright Testing](../QA/playwright/index.md) for browser setup and visual snapshot workflow.
+See [Playwright Testing](../QA/playwright/index.md) for browser setup and visual snapshot workflow, and [Load Testing (k6)](../QA/playwright/load-testing.md) for load profiles.
 
 ## Worktrees
 

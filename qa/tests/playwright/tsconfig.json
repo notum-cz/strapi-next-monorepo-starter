@@ -10,5 +10,7 @@
     "esModuleInterop": true,
     "noEmit": true
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts"],
+  // load/ runs in the k6 runtime, not Node — it has its own tsconfig.
+  "exclude": ["node_modules", "load"]
 }

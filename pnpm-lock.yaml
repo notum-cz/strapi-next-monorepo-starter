@@ -669,6 +669,9 @@ importers:
       '@playwright/test':
         specifier: 1.61.0
         version: 1.61.0
+      '@types/k6':
+        specifier: 2.3.1
+        version: 2.3.1
       '@types/node':
         specifier: 24.13.2
         version: 24.13.2
@@ -8407,6 +8410,9 @@ packages:
 
   '@types/jsonwebtoken@9.0.10':
     resolution: {integrity: sha512-asx5hIG9Qmf/1oStypjanR7iKTv0gXQ1Ov/jfrX6kS/EO0OFni8orbmGCn0672NHR3kXHwpAwR+B368ZGN/2rA==}
+
+  '@types/k6@2.3.1':
+    resolution: {integrity: sha512-3zbIAfQXvSDsA3ZaKC7+eczsvx1hGtL8o68iYEssOmTEmg0MuoCwZ45aAI3jDm0JtlhJZaQAszrie+M1xaqK7g==}
 
   '@types/keygrip@1.0.6':
     resolution: {integrity: sha512-lZuNAY9xeJt7Bx4t4dx0rYCDqGPW8RXhQZK1td7d4H6E9zYbLoOtjBvfwdTKpsyxQI/2jv+armjX/RW+ZNpXOQ==}
@@ -30949,6 +30955,8 @@ snapshots:
     dependencies:
       '@types/ms': 2.1.0
       '@types/node': 24.13.2
+
+  '@types/k6@2.3.1': {}
 
   '@types/keygrip@1.0.6': {}
 

@@ -146,6 +146,11 @@
       "cache": false,
       "persistent": false
     },
+    "k6-load-test": {
+      "cache": false,
+      "persistent": false,
+      "passThroughEnv": ["LOAD_*"]
+    },
     "lhci-perfo-check": {
       "cache": false,
       "persistent": false

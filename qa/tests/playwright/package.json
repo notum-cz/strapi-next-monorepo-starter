@@ -7,6 +7,7 @@
   "author": "",
   "main": "index.js",
   "scripts": {
+    "k6-load-test": "K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_PORT=-1 K6_WEB_DASHBOARD_EXPORT=load/report.html k6 run load/load-test.ts",
     "lhci-perfo-check": "tsx perfo/lhci.ts",
     "lint": "eslint -c ../../../eslint.config.mjs './**/*.{js,ts,jsx,tsx,cjs,mjs}'",
     "lint:fix": "pnpm lint --fix",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@lhci/cli": "0.15.1",
     "@playwright/test": "1.61.0",
+    "@types/k6": "2.3.1",
     "@types/node": "24.13.2",
     "dotenv": "17.4.2",
     "eslint-plugin-playwright": "2.10.4",
