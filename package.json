@@ -47,7 +47,6 @@
     "test:ci": "turbo run test",
     "test:strapi": "turbo run test --filter=@repo/strapi",
     "test:ui": "turbo run test --filter=@repo/ui",
-    "tests:k6:load": "turbo run k6-load-test --filter=@repo/tests-playwright",
     "tests:k6:load:average": "LOAD_PROFILE=average turbo run k6-load-test --filter=@repo/tests-playwright",
     "tests:k6:load:breakpoint": "LOAD_PROFILE=breakpoint turbo run k6-load-test --filter=@repo/tests-playwright",
     "tests:k6:load:smoke": "LOAD_PROFILE=smoke turbo run k6-load-test --filter=@repo/tests-playwright",

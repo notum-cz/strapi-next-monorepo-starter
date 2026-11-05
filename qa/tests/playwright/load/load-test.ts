@@ -16,7 +16,7 @@ import { flattenUrls } from "../helpers/flatten-urls.ts"
 
 // ─── Settings ────────────────────────────────────────────────────────────────
 // Defaults for every run. Override any of them for one run from the command
-// line, e.g. `LOAD_PROFILE=spike LOAD_RPS=20 pnpm tests:k6:load`.
+// line, e.g. `LOAD_RPS=20 pnpm tests:k6:load:spike`.
 const SETTINGS = {
   /** smoke | average | spike | breakpoint (see PROFILES below). Override: LOAD_PROFILE */
   profile: "smoke",
