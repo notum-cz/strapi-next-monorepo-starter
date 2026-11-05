@@ -29,7 +29,7 @@ Pick before writing. Wrong layer = wasted test.
 | Visual regression                                                                  | **Playwright visual**          | `qa/tests/playwright/visual/*.spec.ts`                                                                                           |
 | Accessibility                                                                      | **Playwright axe**             | `qa/tests/playwright/axe/*.spec.ts`                                                                                              |
 | SEO meta, head, robots                                                             | **Playwright seo**             | `qa/tests/playwright/seo/*.spec.ts`                                                                                              |
-| Throughput / latency under traffic (web or Strapi API)                             | **k6 load**                    | `qa/tests/playwright/load/web.ts` — runs in k6, not Node (no npm packages, `.ts` import extensions)                              |
+| Throughput / latency under traffic (web pages)                                     | **k6 load**                    | `qa/tests/playwright/load/load-test.ts` — runs in k6, not Node (no npm packages, `.ts` import extensions)                        |
 
 Unit > integration > e2e. Push tests down the pyramid when behavior allows.
 
@@ -46,7 +46,7 @@ Before writing, read **one existing test in the same layer** to mirror style:
 - Playwright visual ref: `qa/tests/playwright/visual/visual.spec.ts`
 - Playwright axe ref: `qa/tests/playwright/axe/axe.spec.ts`
 - Playwright seo ref: `qa/tests/playwright/seo/seo.spec.ts`
-- k6 load ref: `qa/tests/playwright/load/web.ts` (extend it rather than adding files; new load shapes go in `PROFILES`)
+- k6 load ref: `qa/tests/playwright/load/load-test.ts` (extend it rather than adding files; new load shapes go in `PROFILES`)
 
 Match imports, helper usage, describe/it nesting, naming.
 

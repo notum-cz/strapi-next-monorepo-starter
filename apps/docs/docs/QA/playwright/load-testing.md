@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # Load Testing (k6)
 
-Simulates visitors to see how the site behaves under traffic. It uses [Grafana k6](https://grafana.com/docs/k6/latest/), and the whole test is one TypeScript file: `qa/tests/playwright/load/web.ts`.
+Simulates visitors to see how the site behaves under traffic. It uses [Grafana k6](https://grafana.com/docs/k6/latest/), and the whole test is one TypeScript file: `qa/tests/playwright/load/load-test.ts`.
 
 This is an on-demand tool, not a routine check. Reach for it when you need one of two answers:
 
@@ -24,7 +24,7 @@ LOAD_RPS=20 pnpm tests:k6:load:spike    # override a setting for one run
 
 The test runs from your machine, but the load goes to `BASE_URL` from `qa/tests/playwright/.env`, the same variable the other suites use. It visits the pages listed under `load` in `helpers/urls.json`, taking them in turn.
 
-Settings live in the `SETTINGS` object at the top of `load/web.ts`. Change the defaults there, or override them for one run on the command line:
+Settings live in the `SETTINGS` object at the top of `load/load-test.ts`. Change the defaults there, or override them for one run on the command line:
 
 | Variable        | Default | Meaning                                                                |
 | --------------- | ------- | ---------------------------------------------------------------------- |
