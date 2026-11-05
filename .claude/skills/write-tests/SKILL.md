@@ -3,9 +3,9 @@ name: write-tests
 description: >
   Use when asked to add or extend automated tests — e.g. "write test",
   "add test", "cover X with tests", "reproduce with a test", "test
-  this", "e2e test", "playwright test". Covers Vitest (apps/ui,
-  apps/strapi) and Playwright (qa/tests/playwright: e2e, visual, axe,
-  seo).
+  this", "e2e test", "playwright test", "load test", "k6". Covers
+  Vitest (apps/ui, apps/strapi), Playwright (qa/tests/playwright: e2e,
+  visual, axe, seo) and the k6 load test (qa/tests/playwright/load).
 argument-hint: "[file-or-feature-to-cover]"
 ---
 
@@ -29,6 +29,7 @@ Pick before writing. Wrong layer = wasted test.
 | Visual regression                                                                  | **Playwright visual**          | `qa/tests/playwright/visual/*.spec.ts`                                                                                           |
 | Accessibility                                                                      | **Playwright axe**             | `qa/tests/playwright/axe/*.spec.ts`                                                                                              |
 | SEO meta, head, robots                                                             | **Playwright seo**             | `qa/tests/playwright/seo/*.spec.ts`                                                                                              |
+| Throughput / latency under traffic (web or Strapi API)                             | **k6 load**                    | `qa/tests/playwright/load/web.ts` — runs in k6, not Node (no npm packages, `.ts` import extensions)                              |
 
 Unit > integration > e2e. Push tests down the pyramid when behavior allows.
 
@@ -45,6 +46,7 @@ Before writing, read **one existing test in the same layer** to mirror style:
 - Playwright visual ref: `qa/tests/playwright/visual/visual.spec.ts`
 - Playwright axe ref: `qa/tests/playwright/axe/axe.spec.ts`
 - Playwright seo ref: `qa/tests/playwright/seo/seo.spec.ts`
+- k6 load ref: `qa/tests/playwright/load/web.ts` (extend it rather than adding files; new load shapes go in `PROFILES`)
 
 Match imports, helper usage, describe/it nesting, naming.
 
@@ -211,6 +213,7 @@ Run only the relevant package, not the whole monorepo, while iterating.
 | Update visual snapshots (local OS)             | `pnpm tests:playwright:visual:update`                               |
 | Update visual snapshots (Docker, commit-ready) | `pnpm tests:playwright:visual:docker:update`                        |
 | LHCI performance collect                       | `pnpm tests:lhci:perfo`                                             |
+| k6 load                                        | `pnpm tests:k6:load:smoke` / `:average` / `:spike` / `:breakpoint`  |
 | All workspace tests                            | `pnpm test`                                                         |
 
 Playwright requires a running app (`pnpm dev` or built+started). If e2e fails with connection refused, start the app first.
@@ -229,7 +232,7 @@ Print:
 ```
 Tests added: <n>
 Files: <paths>
-Layer: vitest-ui | vitest-strapi | playwright-e2e-smoke | playwright-e2e-mock | playwright-visual | playwright-axe | playwright-seo
+Layer: vitest-ui | vitest-strapi | playwright-e2e-smoke | playwright-e2e-mock | playwright-visual | playwright-axe | playwright-seo | k6-load
 Result: pass
 Command: <exact command to re-run>
 ```
