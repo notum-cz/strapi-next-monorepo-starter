@@ -179,7 +179,13 @@ export default function () {
         ? "recovery"
         : "load"
   }
-  const res = http.get(`${BASE_URL}${path}`, { tags })
+  const res = http.get(`${BASE_URL}${path}`, {
+    // Ask for compression like every browser does. Without it k6 downloads
+    // pages uncompressed (~6× bigger) and the run measures bandwidth, not the
+    // site. k6 decompresses the response itself.
+    headers: { "Accept-Encoding": "gzip, br" },
+    tags,
+  })
 
   check(res, {
     "status 200": (r) => r.status === 200,
