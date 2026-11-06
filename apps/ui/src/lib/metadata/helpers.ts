@@ -76,20 +76,26 @@ export const getMetaRobots = (
  * Builds the public path of a page in the given locale. Routing uses
  * `localePrefix: "as-needed"`, so the default locale is served without a
  * prefix (`/en/about` 307-redirects to `/about`). Canonical and hreflang URLs
- * must point at the final URL, never at a redirect.
+ * must point at the final URL, never at a redirect. An explicit default-locale
+ * prefix (e.g. in a CMS override) is dropped first, so other locales are
+ * applied to the locale-independent path (`/en/x` → `/cs/x`, not `/cs/en/x`).
  */
 const getLocalizedPagePath = (path: string, locale: string) => {
-  const prefixedPath = normalizePageFullPath([path], locale)
+  const defaultLocaleRoot = `/${routing.defaultLocale}`
+  let localeIndependentPath = normalizePageFullPath([path])
 
-  if (locale !== routing.defaultLocale) {
-    return prefixedPath
+  if (localeIndependentPath === defaultLocaleRoot) {
+    localeIndependentPath = "/"
+  } else if (localeIndependentPath.startsWith(`${defaultLocaleRoot}/`)) {
+    localeIndependentPath = localeIndependentPath.slice(
+      defaultLocaleRoot.length
+    )
   }
 
-  const localeRoot = `/${locale}`
-
-  return prefixedPath === localeRoot
-    ? "/"
-    : prefixedPath.slice(localeRoot.length)
+  return normalizePageFullPath(
+    [localeIndependentPath],
+    locale === routing.defaultLocale ? null : locale
+  )
 }
 
 export const getMetaAlternates = ({

@@ -100,6 +100,20 @@ describe("getMetaAlternates", () => {
     ).toEqual({ cs: "/cs/o-nas", en: "/about", "x-default": "/about" })
   })
 
+  it("applies other locales to a default-locale-prefixed CMS override", () => {
+    expect(
+      getMetaAlternates({
+        seo: { canonicalUrl: "/en/landing" } as never,
+        fullPath: "/o-nas",
+        locale: "cs",
+        localizations: [localization("en", "/about")],
+      })
+    ).toEqual({
+      canonical: "/cs/landing",
+      languages: { cs: "/cs/landing", en: "/landing", "x-default": "/landing" },
+    })
+  })
+
   it("lets a CMS canonical override drive every locale", () => {
     expect(
       getMetaAlternates({
