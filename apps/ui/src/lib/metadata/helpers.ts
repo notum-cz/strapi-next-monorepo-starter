@@ -72,6 +72,26 @@ export const getMetaRobots = (
     : robotsString
 }
 
+/**
+ * Builds the public path of a page in the given locale. Routing uses
+ * `localePrefix: "as-needed"`, so the default locale is served without a
+ * prefix (`/en/about` 307-redirects to `/about`). Canonical and hreflang URLs
+ * must point at the final URL, never at a redirect.
+ */
+const getLocalizedPagePath = (path: string, locale: string) => {
+  const prefixedPath = normalizePageFullPath([path], locale)
+
+  if (locale !== routing.defaultLocale) {
+    return prefixedPath
+  }
+
+  const localeRoot = `/${locale}`
+
+  return prefixedPath === localeRoot
+    ? "/"
+    : prefixedPath.slice(localeRoot.length)
+}
+
 export const getMetaAlternates = ({
   seo,
   fullPath,
@@ -95,34 +115,26 @@ export const getMetaAlternates = ({
         continue
       }
 
-      languages[localization.locale] = normalizePageFullPath(
-        [canonicalUrl],
+      // Slugs are localized: without a CMS override, use the version's own path
+      languages[localization.locale] = getLocalizedPagePath(
+        seo?.canonicalUrl ?? localization.fullPath ?? canonicalUrl,
         localization.locale
       )
     }
 
-    // If you are on defaultLocale, it should point to the en version too
-    if (locale === routing.defaultLocale) {
-      languages[routing.defaultLocale] = normalizePageFullPath(
-        [canonicalUrl],
-        routing.defaultLocale
-      )
-    }
+    // hreflang must be self-referencing: Strapi `localizations` lists only the
+    // other locales, so add the current one explicitly
+    languages[locale] = getLocalizedPagePath(canonicalUrl, locale)
 
-    // x-default should be added to point to defaultLocale version if exists
-    if (
-      locale === routing.defaultLocale ||
-      localizations.some((lang) => lang.locale === routing.defaultLocale)
-    ) {
-      languages["x-default"] = normalizePageFullPath(
-        [canonicalUrl],
-        routing.defaultLocale
-      )
+    // x-default should point to the defaultLocale version if it exists
+    const defaultLocalePath = languages[routing.defaultLocale]
+    if (defaultLocalePath) {
+      languages["x-default"] = defaultLocalePath
     }
   }
 
   const canonical = canonicalUrl
-    ? normalizePageFullPath([canonicalUrl], locale)
+    ? getLocalizedPagePath(canonicalUrl, locale)
     : undefined
 
   return {

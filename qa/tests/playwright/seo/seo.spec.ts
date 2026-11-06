@@ -198,11 +198,13 @@ for (const path of PATHS) {
           ].join("\n")
         ).toMatch(/^https?:\/\//)
 
-        const res = await page.request.get(href)
+        // Don't follow redirects: a canonical pointing at a redirect is an SEO
+        // issue (e.g. `/en` → `/` with next-intl `localePrefix: "as-needed"`).
+        const res = await page.request.get(href, { maxRedirects: 0 })
         expect(
           res.ok(),
           [
-            "Canonical URL not reachable",
+            "Canonical URL not reachable or redirects",
             `URL: ${page.url()}`,
             `Canonical href: "${href}"`,
             `HTTP status: ${res.status()}`,
