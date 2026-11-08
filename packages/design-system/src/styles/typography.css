@@ -152,3 +152,11 @@
 .tip-tap-editor-wrapper .typo-p-small {
   @apply typo-p-small;
 }
+
+/*
+  typo-* set font-normal, and TipTap (always) and CKEditor (for styled cells)
+  wrap table cell text in <p>/<hN>. Let those inherit the header cell's weight.
+*/
+th :is(p, h1, h2, h3, h4, h5, h6) {
+  font-weight: inherit !important;
+}

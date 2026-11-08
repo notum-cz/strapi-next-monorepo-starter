@@ -12,7 +12,11 @@ For editor choice, shared rich text styles, presets, and frontend renderer guida
 
 ## Components
 
-`utilities.ck-editor-content` provides a reusable rich text block with the `defaultCkEditor` preset. Other components can use inline CKEditor fields with either `defaultCkEditor` or `simpleCkEditor`, depending on the toolbar they need.
+`utilities.ck-editor-content` provides a reusable rich text block with the `defaultCkEditor` preset. Other components can use inline CKEditor fields with one of these presets, depending on the toolbar they need:
+
+- `defaultCkEditor` — full toolbar for long-form rich text.
+- `titleCkEditor` — headings, styles, font color, and alignment. Use for short title fields.
+- `descriptionCkEditor` — the title toolbar plus lists and links. Use for short descriptions.
 
 ## UI Rendering
 

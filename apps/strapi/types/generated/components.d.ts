@@ -61,7 +61,7 @@ export interface SectionsAnimatedLogoRow extends Struct.ComponentSchema {
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "titleCkEditor"
         }
       >
   }
@@ -130,7 +130,7 @@ export interface SectionsFeaturesList extends Struct.ComponentSchema {
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "descriptionCkEditor"
         }
       >
     features: Schema.Attribute.Component<
@@ -144,7 +144,7 @@ export interface SectionsFeaturesList extends Struct.ComponentSchema {
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "titleCkEditor"
         }
       >
   }
@@ -174,7 +174,7 @@ export interface SectionsHero extends Struct.ComponentSchema {
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "descriptionCkEditor"
         }
       >
     links: Schema.Attribute.Component<"utilities.link", true>
@@ -182,21 +182,21 @@ export interface SectionsHero extends Struct.ComponentSchema {
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "descriptionCkEditor"
         }
       >
     tag: Schema.Attribute.RichText &
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "titleCkEditor"
         }
       >
     title: Schema.Attribute.RichText &
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "titleCkEditor"
         }
       >
   }
@@ -322,7 +322,7 @@ export interface SharedFigure extends Struct.ComponentSchema {
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "descriptionCkEditor"
         }
       >
     number: Schema.Attribute.BigInteger
@@ -353,7 +353,7 @@ export interface SharedImageWithTitleAndDescription
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "descriptionCkEditor"
         }
       >
     image: Schema.Attribute.Component<"utilities.basic-image", false>
@@ -361,7 +361,7 @@ export interface SharedImageWithTitleAndDescription
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "titleCkEditor"
         }
       >
   }
