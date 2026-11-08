@@ -86,6 +86,8 @@ packages/design-system/src/scripts/build-ck-config.js
 
 It provides color options, font-size options, and serialized Strapi editor CSS. The generated exports are listed in [Tokens And Global Styles](/docs/design-system/tokens-and-global-styles#build-outputs).
 
+Following AxiCom, the generator converts standalone `rem` values in text-size tokens (`--text-*`) and spacing tokens (`--spacing`, `--spacing-*`) to pixels using `1rem = 16px`. These values are scoped to `.ck` in `styles-strapi.json`, so Strapi's root font size does not shrink editor text or spacing. Font-size options use the same conversion. Frontend CSS retains its original units; unitless line heights and other token groups remain unchanged. Rebuild the design system and restart Strapi after changing these tokens.
+
 :::caution Font Sizes In CKEditor
 CKEditor font-size options need concrete values in the generated config. Responsive typography tokens can still exist in CSS, but the editor dropdown cannot represent them as responsive values.
 :::

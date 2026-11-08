@@ -12,12 +12,10 @@ function CkEditorRenderer({
   htmlContent,
   className,
   locale: passedLocale,
-  variant = "page",
 }: {
   htmlContent?: string | null
   className?: string
   locale?: Locale
-  variant?: "page" | "blog"
 }) {
   const currentLocale = useLocale()
   const locale = passedLocale ?? currentLocale
@@ -33,7 +31,7 @@ function CkEditorRenderer({
 
   return htmlContent ? (
     <div
-      className={cn(`ck-editor-rich-text-${variant}`, className)}
+      className={cn("ck-editor-ui", className)}
       dangerouslySetInnerHTML={{
         __html: processHtmlContent(htmlContent, locale),
       }}

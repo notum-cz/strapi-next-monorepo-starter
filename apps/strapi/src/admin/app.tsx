@@ -9,7 +9,11 @@ import { cs } from "./cs"
 import "@repo/design-system/styles.css"
 
 // eslint-disable-next-line import-x/order
-import { defaultCkEditorConfig, simpleCkEditorConfig } from "./ckeditor/configs"
+import {
+  defaultCkEditorConfig,
+  descriptionCkEditorConfig,
+  titleCkEditorConfig,
+} from "./ckeditor/configs"
 import DataRevalidate from "./extensions/DataRevalidate"
 import Hierarchy from "./extensions/Hierarchy"
 
@@ -96,6 +100,12 @@ export default {
       id: "cdn-cache",
     })
 
-    setPluginConfig({ presets: [defaultCkEditorConfig, simpleCkEditorConfig] })
+    setPluginConfig({
+      presets: [
+        defaultCkEditorConfig,
+        descriptionCkEditorConfig,
+        titleCkEditorConfig,
+      ],
+    })
   },
 }

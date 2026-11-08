@@ -39,6 +39,28 @@ const fontSizeOutputJsonPath = path.resolve(
   "../../dist/ckeditor-fontSize-config.json"
 )
 
+const textSizeVarRegex = /^--text-\w+$/
+const spacingVarRegex = /^--spacing(?:-[\w-]+)?$/
+
+const remToPx = (value) => {
+  const remValue = value.trim().match(/^(-?(?:\d+(?:\.\d+)?|\.\d+))rem$/)
+
+  if (!remValue) {
+    return value
+  }
+
+  // Match the frontend's 16px root size independently of Strapi's root size.
+  return `${Number(remValue[1]) * 16}px`
+}
+
+const getStrapiVarValue = ({ name, value }) => {
+  if (textSizeVarRegex.test(name) || spacingVarRegex.test(name)) {
+    return remToPx(value)
+  }
+
+  return value
+}
+
 // First collect all CSS variables
 const allVars = []
 // eslint-disable-next-line sonarjs/slow-regex
@@ -59,9 +81,11 @@ const colorVars = allVars
   }))
 
 const fontSizeVars = allVars
-  // eslint-disable-next-line sonarjs/slow-regex
-  .filter((v) => /^--text-\w+(?!.*--)$/.test(v.name))
-  .map((v) => ({ model: v.value, title: v.name.replaceAll("--", "") }))
+  .filter((v) => textSizeVarRegex.test(v.name))
+  .map((v) => ({
+    model: getStrapiVarValue(v),
+    title: v.name.replaceAll("--", ""),
+  }))
 
 // Write output files
 fs.writeFileSync(
@@ -82,7 +106,7 @@ const themeCssFilePath = path.resolve(
 fs.writeFileSync(
   themeCssFilePath,
   JSON.stringify(
-    `.ck { ${allVars.map((v) => `${v.name}: ${v.value};`).join("\n")} } \n ${customStylesCssContent}`,
+    `.ck { ${allVars.map((v) => `${v.name}: ${getStrapiVarValue(v)};`).join("\n")} } \n ${customStylesCssContent}`,
     null,
     2
   ),

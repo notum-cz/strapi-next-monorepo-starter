@@ -15,28 +15,28 @@
       "type": "customField",
       "customField": "plugin::ckeditor5.CKEditor",
       "options": {
-        "preset": "defaultCkEditor"
+        "preset": "descriptionCkEditor"
       }
     },
     "tag": {
       "type": "customField",
       "customField": "plugin::ckeditor5.CKEditor",
       "options": {
-        "preset": "defaultCkEditor"
+        "preset": "titleCkEditor"
       }
     },
     "note": {
       "type": "customField",
       "customField": "plugin::ckeditor5.CKEditor",
       "options": {
-        "preset": "defaultCkEditor"
+        "preset": "descriptionCkEditor"
       }
     },
     "title": {
       "type": "customField",
       "customField": "plugin::ckeditor5.CKEditor",
       "options": {
-        "preset": "defaultCkEditor"
+        "preset": "titleCkEditor"
       }
     }
   }

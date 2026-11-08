@@ -183,8 +183,8 @@ Example structure:
   }
 }
 
-.ck-editor-rich-text-page h1,
-.ck-editor-rich-text-page .typo-h1,
+.ck-editor-ui h1,
+.ck-editor-ui .typo-h1,
 .ck-editor__main .ck-content h1,
 .ck-editor__main .ck-content .typo-h1,
 .ck .ck-style-grid__button__preview .typo-h1,
