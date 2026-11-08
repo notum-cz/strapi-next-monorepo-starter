@@ -13,15 +13,13 @@ allowBuilds:
 
 minimumReleaseAge: 2880
 resolutionMode: highest
-minimumReleaseAgeExclude:
-  - "@notum-cz/strapi-plugin-smart-populate@1.0.1"
-  - "nodemailer@9.0.1"
+minimumReleaseAgeExclude: []
 
 overrides:
   "@types/react": 19.2.18
   "@types/react-dom": 19.2.4
-  "@codemirror/state": 6.7.1
-  "@codemirror/view": 6.43.9
+  "@codemirror/state": 6.7.6
+  "@codemirror/view": 6.43.14
   # Transitive-only security bumps. None of these is a direct dependency of a
   # workspace package, so they can only be raised through an override:
   #   postcss   - restricts previous-source-map loading to the `opts.from`
@@ -38,11 +36,45 @@ overrides:
   #   @hono/...  - fixes serve-static path traversal on Windows via an encoded
   #               backslash (patched in 1.19.15). Held at 1.x on purpose: the
   #               2.x line is a major the MCP SDK has not moved to.
+  #   shell-quote - fixes a critical injection in `quote()` where crafted input
+  #               escapes the quoting it is supposed to produce (1.11.0), on top
+  #               of the earlier quadratic-complexity DoS in `parse()` (1.9.0).
+  #               Reached via the webpack/react-dev-utils chain in apps/docs,
+  #               which allows any ^1.x.
+  #   happy-dom - fixes unsanitized export names being interpolated as executable
+  #               code in ECMAScriptModuleCompiler (20.8.8) and page-origin
+  #               cookies leaking into cross-origin `fetch` (20.8.9). Reached via
+  #               vitest, which allows any ^20. `@tiptap/html` also requires
+  #               ^20.8.9 as an optional peer, so this doubles as the peer fix.
   # Drop each entry once every parent resolves to the patched version on its own.
   postcss: 8.5.26
   dompurify: 3.4.14
   hono: 4.13.4
   "@hono/node-server": 1.19.17
+  happy-dom: 20.8.9
+  shell-quote: 1.12.0
+  # Two more security overrides. Neither parent can float up on its own:
+  #   nodemailer - `@strapi/provider-email-nodemailer` and
+  #                `@strapi/provider-email-sendmail` pin 9.0.1 EXACTLY, on the
+  #                real email path, and an exact pin never floats up. Raised
+  #                across the 9.x -> 10.x major on purpose: the 9 line ends at
+  #                9.1.1 and still carries GHSA-6vj9-mwq6-2f5v and
+  #                GHSA-8vvx-rff5-p5rq, whose only patched line is 10.0.2+;
+  #                10.x itself needs >= 10.0.6 for GHSA-v53p-9fqp-m79j. The
+  #                provider touches only createTransport/sendMail/verify, which
+  #                the major leaves unchanged, and nodemailer 10 needs
+  #                node >= 20 (repo is ^24). Held at 10.1.3: later 10.1.x are
+  #                inside `minimumReleaseAge`.
+  #                Drop once Strapi ships a release pinning 10.x itself.
+  #   qs         - NOT about Strapi: 5.58.0 pins 6.16.0 on its own. The stale
+  #                copy comes from body-parser 1.20.6 <- express 4.22.2, reached
+  #                through @docusaurus/core (webpack-dev-server) and @lhci/cli,
+  #                which still resolve 6.15.3 and leave the array-limit bypass
+  #                (GHSA-x5fp-wj9c-mxmx) in the tree. Verified: removing this
+  #                entry brings qs@6.15.3 straight back.
+  #                Drop once Docusaurus and @lhci/cli ship a patched express.
+  nodemailer: 10.1.3
+  qs: 6.16.0
 
 packageExtensions:
   "@hookform/resolvers":
