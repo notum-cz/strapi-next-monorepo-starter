@@ -156,7 +156,13 @@
 /*
   typo-* set font-normal, and TipTap (always) and CKEditor (for styled cells)
   wrap table cell text in <p>/<hN>. Let those inherit the header cell's weight.
+  Specificity (0,3,1) beats the editor rules above, up to
+  `.ck-editor__main .ck-content .typo-h1` (0,3,0), without !important,
+  so an explicit inline font-weight still wins.
 */
-th :is(p, h1, h2, h3, h4, h5, h6) {
-  font-weight: inherit !important;
+th :is(p, h1, h2, h3, h4, h5, h6),
+:is(.ck-editor-ui, .tip-tap-editor-wrapper, .ck-editor__main .ck-content)
+  th
+  :is(p, h1, h2, h3, h4, h5, h6, [class*="typo-"]) {
+  font-weight: inherit;
 }
