@@ -17,7 +17,6 @@ import { Toaster } from "@/components/ui/sonner"
 import { debugStaticParams } from "@/lib/build"
 import { fontRoboto } from "@/lib/fonts"
 import { isValidLocale, routing } from "@/lib/navigation"
-import { cn } from "@/lib/styles"
 
 export function generateStaticParams() {
   const locales = routing.locales.map((locale) => ({ locale }))
@@ -74,7 +73,11 @@ export default async function RootLayout({
   ]
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html
+      lang={locale}
+      className={fontRoboto.variable}
+      suppressHydrationWarning
+    >
       <head>
         <Script id="csr-config" strategy="beforeInteractive">
           {`
@@ -92,12 +95,7 @@ export default async function RootLayout({
        `}
         </Script>
       </head>
-      <body
-        className={cn(
-          "min-h-screen font-sans antialiased",
-          fontRoboto.variable
-        )}
-      >
+      <body className="min-h-screen font-sans antialiased">
         <TrackingScripts />
         <ServerProviders>
           <StrapiPreviewListener />

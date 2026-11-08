@@ -19,8 +19,12 @@ const styles = [
   `
   .ck {
     --ck-editor-max-width: 1366px;
-    --ck-editor-min-height: 800px;
+    --ck-editor-min-height: 84px;
     --ck-editor-max-height: 1000px;
+  }
+  .ck.ck-content.ck-editor__editable{
+    padding-bottom: 32px!important;
+    padding-top: 32px!important;
   }
   `,
 ].join("\n")
@@ -75,27 +79,48 @@ const editorConfigDefaults = {
   },
 }
 
-export const simpleCkEditorConfig: Preset = {
+export const titleCkEditorConfig: Preset = {
   ...defaultHtmlPreset,
-  name: "simpleCkEditor",
-  description: "Simple CkEditor Config",
+  name: "titleCkEditor",
+  description: "Title CkEditor Config",
   styles,
   editorConfig: {
     ...editorConfigDefaults,
     // very simple toolbar
     balloonToolbar: balloonToolbar,
     toolbar: [
-      "showBlocks",
-      "|",
       "heading",
       "style",
       "|",
       "fontColor",
-      "fontBackgroundColor",
       "|",
       "alignment",
+      "|",
+      "undo",
+      "redo",
+    ],
+  },
+}
+
+export const descriptionCkEditorConfig: Preset = {
+  ...defaultHtmlPreset,
+  name: "descriptionCkEditor",
+  description: "Description CkEditor Config",
+  styles,
+  editorConfig: {
+    ...editorConfigDefaults,
+    // very simple toolbar
+    balloonToolbar: balloonToolbar,
+    toolbar: [
+      "heading",
+      "style",
+      "|",
+      "fontColor",
+      "|",
+      "alignment",
+      "bulletedList",
+      "numberedList",
       "link",
-      "SourceEditing",
       "|",
       "undo",
       "redo",
