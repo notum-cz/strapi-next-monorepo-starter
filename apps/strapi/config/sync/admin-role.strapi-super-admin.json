@@ -672,22 +672,14 @@
           "seo.metaTitle",
           "seo.metaDescription",
           "seo.metaImage",
-          "seo.keywords",
           "seo.twitter.card",
           "seo.twitter.title",
           "seo.twitter.description",
-          "seo.twitter.siteId",
-          "seo.twitter.creator",
-          "seo.twitter.creatorId",
           "seo.twitter.images",
           "seo.og.title",
           "seo.og.description",
-          "seo.og.url",
           "seo.og.type",
           "seo.og.image",
-          "seo.og.siteName",
-          "seo.applicationName",
-          "seo.canonicalUrl",
           "seo.metaRobots",
           "seo.structuredData"
         ],
@@ -744,22 +736,14 @@
           "seo.metaTitle",
           "seo.metaDescription",
           "seo.metaImage",
-          "seo.keywords",
           "seo.twitter.card",
           "seo.twitter.title",
           "seo.twitter.description",
-          "seo.twitter.siteId",
-          "seo.twitter.creator",
-          "seo.twitter.creatorId",
           "seo.twitter.images",
           "seo.og.title",
           "seo.og.description",
-          "seo.og.url",
           "seo.og.type",
           "seo.og.image",
-          "seo.og.siteName",
-          "seo.applicationName",
-          "seo.canonicalUrl",
           "seo.metaRobots",
           "seo.structuredData"
         ],
@@ -788,22 +772,14 @@
           "seo.metaTitle",
           "seo.metaDescription",
           "seo.metaImage",
-          "seo.keywords",
           "seo.twitter.card",
           "seo.twitter.title",
           "seo.twitter.description",
-          "seo.twitter.siteId",
-          "seo.twitter.creator",
-          "seo.twitter.creatorId",
           "seo.twitter.images",
           "seo.og.title",
           "seo.og.description",
-          "seo.og.url",
           "seo.og.type",
           "seo.og.image",
-          "seo.og.siteName",
-          "seo.applicationName",
-          "seo.canonicalUrl",
           "seo.metaRobots",
           "seo.structuredData"
         ],
@@ -870,6 +846,84 @@
         "fields": [
           "source",
           "destination"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "cztnw71ns07p1s99pcrf8dzq",
+      "action": "plugin::content-manager.explorer.create",
+      "actionParameters": {},
+      "subject": "api::seo-configuration.seo-configuration",
+      "properties": {
+        "fields": [
+          "robotsConfiguration.rules.userAgent",
+          "robotsConfiguration.rules.allowPaths",
+          "robotsConfiguration.rules.disallowPaths",
+          "globalMetadata.openGraphConfiguration.siteName",
+          "globalMetadata.twitterConfiguration.siteId",
+          "globalMetadata.twitterConfiguration.creator",
+          "globalMetadata.twitterConfiguration.creatorId",
+          "globalMetadata.applicationName"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "phr7b9rq9s368ybu3omxgyzt",
+      "action": "plugin::content-manager.explorer.delete",
+      "actionParameters": {},
+      "subject": "api::seo-configuration.seo-configuration",
+      "properties": {},
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "lpc3s4q4wm5rapngaawr9tfn",
+      "action": "plugin::content-manager.explorer.publish",
+      "actionParameters": {},
+      "subject": "api::seo-configuration.seo-configuration",
+      "properties": {},
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "soreklnjcf9ws7i2m4nayc22",
+      "action": "plugin::content-manager.explorer.read",
+      "actionParameters": {},
+      "subject": "api::seo-configuration.seo-configuration",
+      "properties": {
+        "fields": [
+          "robotsConfiguration.rules.userAgent",
+          "robotsConfiguration.rules.allowPaths",
+          "robotsConfiguration.rules.disallowPaths",
+          "globalMetadata.openGraphConfiguration.siteName",
+          "globalMetadata.twitterConfiguration.siteId",
+          "globalMetadata.twitterConfiguration.creator",
+          "globalMetadata.twitterConfiguration.creatorId",
+          "globalMetadata.applicationName"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "vl01v1bnys73dasuwm0sq5m6",
+      "action": "plugin::content-manager.explorer.update",
+      "actionParameters": {},
+      "subject": "api::seo-configuration.seo-configuration",
+      "properties": {
+        "fields": [
+          "robotsConfiguration.rules.userAgent",
+          "robotsConfiguration.rules.allowPaths",
+          "robotsConfiguration.rules.disallowPaths",
+          "globalMetadata.openGraphConfiguration.siteName",
+          "globalMetadata.twitterConfiguration.siteId",
+          "globalMetadata.twitterConfiguration.creator",
+          "globalMetadata.twitterConfiguration.creatorId",
+          "globalMetadata.applicationName"
         ]
       },
       "conditions": [],

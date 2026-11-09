@@ -11,7 +11,8 @@ export function getDefaultMetadata(
 ): Metadata {
   return {
     title: title?.trim() || undefined,
-    robots: { index: false, follow: false },
+    // Production default; non-production is forced to noindex by getMetaRobots.
+    robots: { index: true, follow: true },
     applicationName: applicationName?.trim() || undefined,
 
     icons: {

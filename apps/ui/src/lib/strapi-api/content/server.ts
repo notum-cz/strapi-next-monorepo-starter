@@ -109,6 +109,20 @@ export async function fetchSeo(
   }
 }
 
+// A single type that has never been saved returns 404. For SEO Configuration that
+// means "not configured yet", so callers fall back to defaults without logging.
+const isNotFoundError = (error: unknown) => {
+  if (!(error instanceof Error)) {
+    return false
+  }
+
+  try {
+    return JSON.parse(error.message)?.status === 404
+  } catch {
+    return false
+  }
+}
+
 // Both configuration fetchers are locale-independent and populate only their branch.
 // Saves invalidate their shared cache tag; the ten-minute TTL is a fallback.
 export async function fetchGlobalMetadata() {
@@ -132,6 +146,10 @@ export async function fetchGlobalMetadata() {
 
     return response.data?.globalMetadata ?? null
   } catch (error: unknown) {
+    if (isNotFoundError(error)) {
+      return null
+    }
+
     logNonBlockingError({
       message: "Error fetching global metadata",
       error: { error: error instanceof Error ? error.message : String(error) },
@@ -160,6 +178,10 @@ export async function fetchRobotsConfiguration() {
 
     return response.data?.robotsConfiguration ?? null
   } catch (error: unknown) {
+    if (isNotFoundError(error)) {
+      return null
+    }
+
     logNonBlockingError({
       message: "Error fetching robots configuration",
       error: { error: error instanceof Error ? error.message : String(error) },
