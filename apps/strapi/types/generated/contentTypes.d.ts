@@ -610,7 +610,6 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         "sections.statistics",
         "sections.features-list",
         "sections.cta-banner",
-        "utilities.ck-editor-text",
         "utilities.tip-tap-rich-text",
       ]
     > &

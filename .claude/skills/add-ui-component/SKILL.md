@@ -51,7 +51,7 @@ Post-install fixup (review generated files):
 
 1. `cn()` import must be `@/lib/styles`, not the upstream default `@/lib/utils` — the most common breakage on upgrades.
 2. Radix: both the unified `radix-ui` and scoped `@radix-ui/react-*` packages coexist here — match the sibling, don't force-convert.
-3. Tokens: CSS vars live in `apps/ui/src/styles/globals.css` + `packages/design-system/src/theme.css`; prefer them over shadcn defaults. No `tailwind.config.js` — never create one.
+3. Tokens: shared colors live in `packages/design-system/src/styles/colors.css`, and other tokens live in `packages/design-system/src/styles/theme.css`. The UI imports `@repo/design-system/source-styles.css` through `apps/ui/src/styles/globals.css`. Reuse these tokens instead of introducing shadcn defaults. Do not create a `tailwind.config.js` file.
 4. Keep `"use client"` on interactive primitives.
 5. If the file already exists in `components/ui/`, diff and merge — don't overwrite.
 

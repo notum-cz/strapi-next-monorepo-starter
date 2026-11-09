@@ -18,7 +18,7 @@ export const fontWeightVariants = {
   medium: "font-medium",
   normal: "font-normal",
   light: "font-light",
-  extraLight: "font-extraLight",
+  extraLight: "font-extralight",
   thin: "font-thin",
 }
 
