@@ -10,6 +10,7 @@ import {
   getDefaultMetadata,
   getDefaultOgMeta,
   getDefaultTwitterMeta,
+  resolvePageTitle,
 } from "@/lib/metadata/defaults"
 import {
   getMetaAlternates,
@@ -44,8 +45,8 @@ export async function getMetadataFromStrapi({
     fullPath ? fetchSeo(uid, fullPath, locale) : undefined,
   ])
   const applicationName = configuration?.applicationName?.trim()
-  // Title priority: social override → SEO title → page title.
-  const pageTitle = response?.data?.title?.trim()
+  // Title priority: social override → SEO title → page title → applicationName.
+  const pageTitle = resolvePageTitle(response?.data?.title, applicationName)
   const defaultMeta: Metadata = getDefaultMetadata(
     siteUrl,
     applicationName,

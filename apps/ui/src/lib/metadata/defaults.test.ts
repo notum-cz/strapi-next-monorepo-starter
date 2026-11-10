@@ -9,6 +9,7 @@ vi.mock("@/lib/navigation", () => ({
 import {
   getDefaultMetadata,
   getRootTitleMetadata,
+  resolvePageTitle,
 } from "@/lib/metadata/defaults"
 import { getMetaRobots } from "@/lib/metadata/helpers"
 
@@ -50,4 +51,20 @@ describe("root title templates", () => {
       })
     }
   )
+})
+
+describe("page title fallback", () => {
+  it("uses the trimmed page title", () => {
+    expect(resolvePageTitle(" About ", "Acme")).toBe("About")
+  })
+
+  // Absolute, so the layout's "%s | Acme" template doesn't produce "Acme | Acme".
+  it("falls back to the application name as an absolute title", () => {
+    expect(resolvePageTitle(undefined, "Acme")).toEqual({ absolute: "Acme" })
+    expect(resolvePageTitle(" ", " Acme ")).toEqual({ absolute: "Acme" })
+  })
+
+  it("has no title when neither is set", () => {
+    expect(resolvePageTitle(null, " ")).toBeUndefined()
+  })
 })
