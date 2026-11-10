@@ -116,11 +116,19 @@ const isNotFoundError = (error: unknown) => {
     return false
   }
 
+  let parsed: unknown
   try {
-    return JSON.parse(error.message)?.status === 404
+    parsed = JSON.parse(error.message)
   } catch {
     return false
   }
+
+  return (
+    typeof parsed === "object" &&
+    parsed !== null &&
+    "status" in parsed &&
+    parsed.status === 404
+  )
 }
 
 // Both configuration fetchers are locale-independent and populate only their branch.
