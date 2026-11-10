@@ -27,6 +27,23 @@ export function getDefaultMetadata(
   }
 }
 
+/**
+ * Root-layout title templates. The brand suffix comes from SEO Configuration's
+ * `applicationName`; without one, page titles render as-is. Pages that set no
+ * title fall back to `applicationName`.
+ */
+export function getRootTitleMetadata(
+  applicationName?: string | null
+): Pick<Metadata, "title" | "openGraph" | "twitter"> {
+  const name = applicationName?.trim()
+  const title = {
+    template: name ? `%s | ${name}` : "%s",
+    default: name ?? "",
+  }
+
+  return { title, openGraph: { title }, twitter: { title } }
+}
+
 export function getDefaultOgMeta(
   locale: Locale,
   fullPath: string | undefined,

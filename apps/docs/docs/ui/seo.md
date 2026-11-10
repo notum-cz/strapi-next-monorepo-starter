@@ -24,6 +24,8 @@ The non-localized `SEO Configuration` single type (`/api/seo-configuration`) con
 
 Create this configuration once for the site. `fetchGlobalMetadata()` and `fetchRobotsConfiguration()` load their respective components independently.
 
+`applicationName` also sets the site-wide title suffix. The root layout renders page, Open Graph, and Twitter titles as `Page title | <applicationName>`. Pages without a title fall back to `applicationName`. If it is empty, titles render without a suffix.
+
 Page-level SEO controls titles, descriptions, images, `metaRobots`, and `structuredData`. Blank or whitespace-only SEO strings use fallbacks. For missing titles, the fallback order is social title → SEO title → page title. Missing titles, descriptions, images, global names, and account fields are omitted. Technical defaults are `website` for Open Graph, `summary` for Twitter, and `index, follow` for production page metadata. There are no SEO translation placeholders. The page-level `og.type` selects `website` or `article`. `seo.structuredData` is rendered separately as JSON-LD.
 
 ## Canonical URLs and hreflang
