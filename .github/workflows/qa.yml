@@ -297,7 +297,7 @@ jobs:
 
       - name: Open PR with Lighthouse trend history
         if: success()
-        uses: peter-evans/create-pull-request@v8.1.1
+        uses: peter-evans/create-pull-request@v8.1.2
         env:
           # peter-evans/create-pull-request commits on an internal branch with a
           # generated name that never matches this repo's <type>/STAR-<n>-<desc>
