@@ -26,7 +26,7 @@ Empty placeholders: `packages/prettier-config/` and `packages/strapi-plugin-tipt
 ### `pnpm-workspace.yaml`
 
 - Globs: `packages/*`, `apps/*`, `qa/**`.
-- `minimumReleaseAge: 5760` makes pnpm reject dependency versions younger than four days.
+- `minimumReleaseAge: 2880` makes pnpm reject dependency versions younger than two days. Dependabot security updates bypass it, so their PRs fail CI until the new versions are two days old. Re-run CI after that.
 - `allowBuilds` whitelists native build scripts such as `sharp`, `esbuild`, and `@parcel/watcher`.
 - `overrides` pins shared dependency versions where needed.
 
