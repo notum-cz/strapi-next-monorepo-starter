@@ -32,6 +32,8 @@ const CWD = path.resolve("perfo")
 const LHCI_OUTPUT_DIR = path.join(CWD, ".lighthouseci")
 const HISTORY_FILE = path.join(CWD, "lighthouse-history.md")
 
+const PREFLIGHT_TIMEOUT_MS = 30_000
+
 /**
  * Throws when a page does not answer with a 2xx status. Lighthouse would
  * otherwise score the 404 page and record it in the history as that URL.
@@ -39,10 +41,22 @@ const HISTORY_FILE = path.join(CWD, "lighthouse-history.md")
 async function assertPagesExist(paths: string[]): Promise<void> {
   const failed: string[] = []
   for (const p of paths) {
-    const response = await fetch(`${BASE_URL}${p}`)
-    // Only the status is needed. An unread body keeps the connection open.
-    await response.body?.cancel()
-    if (!response.ok) failed.push(`${p} (${response.status})`)
+    try {
+      // A host that accepts the connection but never answers would otherwise
+      // hold the job until the pipeline timeout.
+      const response = await fetch(`${BASE_URL}${p}`, {
+        signal: AbortSignal.timeout(PREFLIGHT_TIMEOUT_MS),
+      })
+      // Only the status is needed. An unread body keeps the connection open.
+      await response.body?.cancel()
+      if (!response.ok) failed.push(`${p} (${response.status})`)
+    } catch (error) {
+      const reason =
+        error instanceof Error && error.name === "TimeoutError"
+          ? `no response within ${PREFLIGHT_TIMEOUT_MS / 1000} s`
+          : String(error)
+      failed.push(`${p} (${reason})`)
+    }
   }
 
   if (failed.length > 0) {
@@ -221,12 +235,17 @@ async function main(): Promise<void> {
     return
   }
 
-  await assertPagesExist(PATHS)
-  collect(PATHS)
-  writeHistory()
+  try {
+    await assertPagesExist(PATHS)
+    collect(PATHS)
+    writeHistory()
+  } catch (error) {
+    console.error(error)
+    process.exitCode = 1
+  }
 }
 
-// tsx runs this package as CommonJS, which has no top-level await. A rejection
-// still exits non-zero.
+// tsx runs this package as CommonJS, which has no top-level await. main()
+// handles its own errors, so the promise never rejects.
 // eslint-disable-next-line unicorn/prefer-top-level-await
-main()
+void main()

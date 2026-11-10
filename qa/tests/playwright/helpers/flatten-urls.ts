@@ -24,7 +24,10 @@ function assertBaseUrl(baseUrl = process.env.BASE_URL): void {
     )
   }
 
-  if (!URL.parse(baseUrl)) {
+  // URL.parse also accepts e.g. `mailto:`, which has no host to test or to
+  // resolve the environment from.
+  const url = URL.parse(baseUrl)
+  if (!url || !["http:", "https:"].includes(url.protocol) || !url.hostname) {
     throw new Error(
       `BASE_URL "${baseUrl}" is not a valid URL. Please fill BASE_URL in qa/tests/playwright/.env with the scheme, e.g. https://staging.example.com.`
     )
