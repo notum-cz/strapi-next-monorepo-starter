@@ -17,6 +17,12 @@ type DataCollection = NonNullable<
 
 const PII_HEADER_DENYLIST = ["forwarded", "-ip", "remote-", "via", "-user"]
 
+// Deny terms are case-insensitive substrings, added to the SDK's built-in
+// list, which already covers token, secret, password, key, auth and session.
+// These cover the account activation and password reset links
+// (`/auth/activate?code=…&email=…&name=…`).
+const SENSITIVE_QUERY_PARAMS = [...PII_HEADER_DENYLIST, "code", "email", "name"]
+
 export const sentryDataCollection = {
   userInfo: false,
   cookies: false,
@@ -25,7 +31,7 @@ export const sentryDataCollection = {
     response: { deny: PII_HEADER_DENYLIST },
   },
   httpBodies: [],
-  urlQueryParams: { deny: PII_HEADER_DENYLIST },
+  urlQueryParams: { deny: SENSITIVE_QUERY_PARAMS },
   genAI: { inputs: false, outputs: false },
   databaseQueryData: false,
   queues: false,

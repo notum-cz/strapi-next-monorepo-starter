@@ -43,8 +43,11 @@ Keep the original remote only when you intentionally work on the upstream starte
 
 ```bash
 nvm use
+npm install -g pnpm@12.18.0
 pnpm install
 ```
+
+Node.js 25 and later no longer bundle Corepack. Install pnpm once for each Node.js version you switch to with `nvm`. Without it, `pnpm` is missing or resolves to a copy installed under another Node.js version. Use the version in the root `package.json` `packageManager` field.
 
 `pnpm install` triggers `postinstall` which:
 

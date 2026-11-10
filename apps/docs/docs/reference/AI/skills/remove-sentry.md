@@ -16,4 +16,10 @@ Remove Sentry error tracking from both the frontend and Strapi while keeping str
 - Simplifies error-tracking setup when the project uses another tool or none.
 - Keeps regular application logging in place.
 
+## What it removes
+
+- UI: the `@sentry/nextjs` dependency and the telemetry provider in `apps/ui/src/lib/telemetry/providers/sentry.ts`. Also its shared `dataCollection` baseline (`sentry-data-collection.ts`), the browser init in `apps/ui/src/instrumentation-client.ts`, the `onRequestError` hook in `instrumentation.ts`, and the `withSentryConfig` wrapper (imported from `@sentry/nextjs/config`) in `next.config.mjs`. Error boundaries switch from `Sentry.captureException` to `console.error`.
+- Strapi: `@strapi/plugin-sentry` and its plugin config.
+- Docs and environment examples that mention Sentry.
+
 Use [remove-azure-monitor](./remove-azure-monitor.md) separately if Azure telemetry should also go.
