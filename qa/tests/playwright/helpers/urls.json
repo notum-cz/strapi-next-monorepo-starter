@@ -1,22 +1,30 @@
 {
   "seo": {
-    "dev": ["/"],
-    "staging": ["/"],
-    "prod": ["/"]
+    "homepage": {
+      "dev": ["/"],
+      "stg": ["/"],
+      "prod": ["/"]
+    }
   },
   "axe": {
-    "dev": ["/"],
-    "staging": ["/"],
-    "prod": ["/"]
+    "homepage": {
+      "dev": ["/"],
+      "stg": ["/"],
+      "prod": ["/"]
+    }
   },
   "visual": {
-    "dev": ["/"],
-    "staging": ["/"],
-    "prod": ["/"]
+    "homepage": {
+      "dev": ["/"],
+      "stg": ["/"],
+      "prod": ["/"]
+    }
   },
   "perfo": {
-    "dev": ["/"],
-    "staging": ["/"],
-    "prod": ["/"]
+    "homepage": {
+      "dev": ["/"],
+      "stg": ["/"],
+      "prod": ["/"]
+    }
   }
 }

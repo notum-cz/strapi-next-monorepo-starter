@@ -3,8 +3,9 @@
 // against a real response if this drifts.
 import { expect, mockTest as test } from "../../helpers/fixtures"
 import { SignInPage } from "../../helpers/pages/SignInPage"
+import { tags } from "../../helpers/test-groups"
 
-test.describe("Sign in — mocked backend responses", () => {
+test.describe("Sign in — mocked backend responses", tags("auth"), () => {
   test("shows the credentials error for a known invalid-login response", async ({
     page,
     mockJson,

@@ -18,12 +18,14 @@ on:
       run_lhci_perfo: { type: boolean, default: false }
       run_visual: { type: boolean, default: false }
       base_url: { type: string, required: false, default: "" }
+      groups: { type: string, required: false, default: auto }
 ```
 
 - Only `workflow_dispatch` is active — nothing runs on its own until someone (or a cron) starts it.
 - Every suite defaults to `false` — an empty checkbox set runs the shell, not a job.
 - Empty `base_url` → falls back to the repo/environment variable `BASE_URL` (Settings → Actions → Variables).
-- `run-name` is built from the checked inputs (`[E2E, AXE] QA – https://staging...`) — a scannable run list.
+- `groups` picks the [test groups](./index.md#test-groups) to run, comma-separated (`homepage,auth`). `auto` runs what `ENV_GROUPS` in `qa/tests/playwright/helpers/test-groups.ts` lists for the target environment. The workflow exports it as `QA_GROUPS`, which `turbo.json` lists in `globalEnv` so Turborepo passes it to the test task. A suite with no test for the picked groups passes with zero tests.
+- `run-name` is built from the checked inputs and the groups (`[E2E, AXE] QA – https://staging... – auto`) — a scannable run list.
 
 ## Job structure
 
@@ -65,7 +67,7 @@ concurrency:
 
 1. Actions → **QA** → **Run workflow**.
 2. Pick the branch — determines the version of `qa.yml` and the test code.
-3. Check the suites, fill in `base_url`.
+3. Check the suites, fill in `base_url`, and leave `groups` on `auto` or list the groups to run.
 4. Run, watch in parallel, artifacts from the run summary.
 
 ## Cron schedule (commented out)

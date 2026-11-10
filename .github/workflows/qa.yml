@@ -16,7 +16,7 @@ run-name: >-
     github.event_name != 'schedule' && (inputs.run_e2e || inputs.run_axe || inputs.run_seo) && inputs.run_lhci_perfo && ', Perfo' || ''
   }}${{
     github.event_name != 'schedule' && (inputs.run_e2e || inputs.run_axe || inputs.run_seo || inputs.run_lhci_perfo) && inputs.run_visual && ', Visual' || ''
-  }}] QA – ${{ inputs.base_url || vars.BASE_URL || 'missing-base-url' }}
+  }}] QA – ${{ inputs.base_url || vars.BASE_URL || 'missing-base-url' }} – ${{ inputs.groups || 'auto' }}
 
 on:
   # Uncomment the schedule trigger to run tests automatically on weekdays.
@@ -50,6 +50,11 @@ on:
         type: string
         required: false
         default: ""
+      groups:
+        description: "Test groups, comma-separated (homepage, auth). auto = what helpers/test-groups.ts lists for the target env."
+        type: string
+        required: false
+        default: auto
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
@@ -62,6 +67,8 @@ env:
   CI: true
   NPM_CONFIG_IGNORE_SCRIPTS: "true"
   BASE_URL: ${{ inputs.base_url || vars.BASE_URL }}
+  # Read by playwright.config.ts and perfo/lhci.ts. Empty on a scheduled run, which means auto.
+  QA_GROUPS: ${{ inputs.groups }}
 
 jobs:
   e2e:
