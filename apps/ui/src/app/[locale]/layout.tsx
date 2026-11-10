@@ -16,8 +16,9 @@ import TrackingScripts from "@/components/providers/TrackingScripts"
 import { Toaster } from "@/components/ui/sonner"
 import { debugStaticParams } from "@/lib/build"
 import { fontRoboto } from "@/lib/fonts"
+import { getRootTitleMetadata } from "@/lib/metadata/defaults"
 import { isValidLocale, routing } from "@/lib/navigation"
-import { cn } from "@/lib/styles"
+import { fetchGlobalMetadata } from "@/lib/strapi-api/content/server"
 
 export function generateStaticParams() {
   const locales = routing.locales.map((locale) => ({ locale }))
@@ -26,18 +27,20 @@ export function generateStaticParams() {
   return locales
 }
 
-export const metadata: Metadata = {
-  title: {
-    template: "%s | Notum",
-    default: "",
-  },
-  icons: {
-    icon: [
-      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
-      { url: "/favicon.ico", sizes: "16x16 32x32 48x48" },
-    ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "256x256" }],
-  },
+export async function generateMetadata(): Promise<Metadata> {
+  // Cached and tag-invalidated; returns null until SEO Configuration is saved.
+  const globalMetadata = await fetchGlobalMetadata()
+
+  return {
+    ...getRootTitleMetadata(globalMetadata?.applicationName),
+    icons: {
+      icon: [
+        { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+        { url: "/favicon.ico", sizes: "16x16 32x32 48x48" },
+      ],
+      apple: [{ url: "/apple-touch-icon.png", sizes: "256x256" }],
+    },
+  }
 }
 
 export default async function RootLayout({
@@ -74,7 +77,12 @@ export default async function RootLayout({
   ]
 
   return (
-    <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth">
+    <html
+      lang={locale}
+      className={fontRoboto.variable}
+      suppressHydrationWarning
+      data-scroll-behavior="smooth"
+    >
       <head>
         <Script id="csr-config" strategy="beforeInteractive">
           {`
@@ -92,12 +100,7 @@ export default async function RootLayout({
        `}
         </Script>
       </head>
-      <body
-        className={cn(
-          "min-h-screen font-sans antialiased",
-          fontRoboto.variable
-        )}
-      >
+      <body className="min-h-screen font-sans antialiased">
         <TrackingScripts />
         <ServerProviders>
           <StrapiPreviewListener />

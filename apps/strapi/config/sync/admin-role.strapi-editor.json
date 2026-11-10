@@ -162,15 +162,10 @@
           "seo.metaTitle",
           "seo.metaDescription",
           "seo.metaImage",
-          "seo.keywords",
           "seo.twitter.card",
           "seo.twitter.title",
           "seo.twitter.description",
-          "seo.twitter.siteId",
-          "seo.twitter.creator",
-          "seo.twitter.creatorId",
           "seo.twitter.images",
-          "seo.applicationName",
           "seo.metaRobots"
         ]
       },
@@ -190,15 +185,10 @@
           "seo.metaTitle",
           "seo.metaDescription",
           "seo.metaImage",
-          "seo.keywords",
           "seo.twitter.card",
           "seo.twitter.title",
           "seo.twitter.description",
-          "seo.twitter.siteId",
-          "seo.twitter.creator",
-          "seo.twitter.creatorId",
           "seo.twitter.images",
-          "seo.applicationName",
           "seo.metaRobots"
         ]
       },
@@ -218,16 +208,71 @@
           "seo.metaTitle",
           "seo.metaDescription",
           "seo.metaImage",
-          "seo.keywords",
           "seo.twitter.card",
           "seo.twitter.title",
           "seo.twitter.description",
-          "seo.twitter.siteId",
-          "seo.twitter.creator",
-          "seo.twitter.creatorId",
           "seo.twitter.images",
-          "seo.applicationName",
           "seo.metaRobots"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "1kl16j7rbmuh7msz1kv6pkoa",
+      "action": "plugin::content-manager.explorer.create",
+      "actionParameters": {},
+      "subject": "api::seo-configuration.seo-configuration",
+      "properties": {
+        "fields": [
+          "robotsConfiguration.rules.userAgent",
+          "robotsConfiguration.rules.allowPaths",
+          "robotsConfiguration.rules.disallowPaths",
+          "globalMetadata.openGraphConfiguration.siteName",
+          "globalMetadata.twitterConfiguration.siteId",
+          "globalMetadata.twitterConfiguration.creator",
+          "globalMetadata.twitterConfiguration.creatorId",
+          "globalMetadata.applicationName"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "ix7fcgjcfwn3sprvwo181rk4",
+      "action": "plugin::content-manager.explorer.read",
+      "actionParameters": {},
+      "subject": "api::seo-configuration.seo-configuration",
+      "properties": {
+        "fields": [
+          "robotsConfiguration.rules.userAgent",
+          "robotsConfiguration.rules.allowPaths",
+          "robotsConfiguration.rules.disallowPaths",
+          "globalMetadata.openGraphConfiguration.siteName",
+          "globalMetadata.twitterConfiguration.siteId",
+          "globalMetadata.twitterConfiguration.creator",
+          "globalMetadata.twitterConfiguration.creatorId",
+          "globalMetadata.applicationName"
+        ]
+      },
+      "conditions": [],
+      "locale": null
+    },
+    {
+      "documentId": "xkaush6smv0m0o80od6mt8yf",
+      "action": "plugin::content-manager.explorer.update",
+      "actionParameters": {},
+      "subject": "api::seo-configuration.seo-configuration",
+      "properties": {
+        "fields": [
+          "robotsConfiguration.rules.userAgent",
+          "robotsConfiguration.rules.allowPaths",
+          "robotsConfiguration.rules.disallowPaths",
+          "globalMetadata.openGraphConfiguration.siteName",
+          "globalMetadata.twitterConfiguration.siteId",
+          "globalMetadata.twitterConfiguration.creator",
+          "globalMetadata.twitterConfiguration.creatorId",
+          "globalMetadata.applicationName"
         ]
       },
       "conditions": [],

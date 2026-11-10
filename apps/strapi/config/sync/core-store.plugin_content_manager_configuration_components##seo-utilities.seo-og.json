@@ -47,20 +47,6 @@
           "sortable": true
         }
       },
-      "url": {
-        "edit": {
-          "label": "url",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "url",
-          "searchable": true,
-          "sortable": true
-        }
-      },
       "type": {
         "edit": {
           "label": "type",
@@ -89,20 +75,6 @@
           "sortable": false
         }
       },
-      "siteName": {
-        "edit": {
-          "label": "siteName",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "siteName",
-          "searchable": true,
-          "sortable": true
-        }
-      },
       "documentId": {
         "edit": {},
         "list": {
@@ -116,8 +88,7 @@
       "list": [
         "id",
         "title",
-        "description",
-        "url"
+        "description"
       ],
       "edit": [
         [
@@ -132,10 +103,6 @@
         ],
         [
           {
-            "name": "url",
-            "size": 6
-          },
-          {
             "name": "type",
             "size": 6
           }
@@ -143,10 +110,6 @@
         [
           {
             "name": "image",
-            "size": 6
-          },
-          {
-            "name": "siteName",
             "size": 6
           }
         ]
