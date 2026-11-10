@@ -550,6 +550,18 @@
   --ck-content-media-style-spacing: 1.5em;
 }
 
+/*
+ * Auto margins only center or block-align a figure that shrinks to its
+ * content. `.ck-content` already makes every `figure.table` a table box. On
+ * the frontend, apply that only to block-aligned tables, so unaligned tables
+ * keep their current full-width layout.
+ */
+.ck-editor-ui figure.table.table-style-align-center:not(.layout-table),
+.ck-editor-ui figure.table.table-style-block-align-left:not(.layout-table),
+.ck-editor-ui figure.table.table-style-block-align-right:not(.layout-table) {
+  display: table;
+}
+
 .ck-content .table.table-style-align-left,
 .ck-editor-ui .table.table-style-align-left {
   float: left;
