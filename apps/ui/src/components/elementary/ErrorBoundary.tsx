@@ -26,7 +26,6 @@ function ErrorBoundaryFallback({
 }) {
   const [hidden, setHidden] = useState(false)
   // Hooks must run unconditionally, so this stays before the early exit.
-
   const t = useTranslations("errors.global")
 
   if (hidden) {

@@ -10,7 +10,6 @@ import { useTranslatedZod } from "@/hooks/useTranslatedZod"
 import { setupLibraries } from "@/lib/general-helpers"
 
 // Setup libraries in client environment
-
 setupLibraries()
 
 const queryClient = new QueryClient()

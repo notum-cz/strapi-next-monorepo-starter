@@ -25,7 +25,6 @@ export const basicAuth = (req: NextRequest): NextResponse | null => {
 
   try {
     // Uint8Array.fromBase64() is not in the project's TS lib target yet.
-
     const credentials = atob(authHeader.substring(6))
     const [username, password] = credentials.split(":")
 
