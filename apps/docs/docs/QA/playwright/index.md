@@ -37,7 +37,7 @@ qa/tests/playwright/
 
 ### Test groups
 
-Every test carries a feature tag (`@homepage`, `@auth`, …). `helpers/test-groups.ts` lists the groups and says which of them are live on each environment:
+Every test carries a feature tag such as `@homepage` or `@auth`. `helpers/test-groups.ts` lists the groups and which of them are live on each environment:
 
 ```typescript
 export const TEST_GROUPS = ["homepage", "auth"] as const
@@ -49,7 +49,7 @@ export const ENV_GROUPS: Record<TestEnv, readonly TestGroup[] | "all"> = {
 }
 ```
 
-Every environment runs every group by default. Narrow an environment to a list (`prod: ["homepage"]`) once a feature is deployed there later than on the others.
+By default every environment runs every group. When a feature reaches production later than dev and staging, narrow that environment to a list, for example `prod: ["homepage"]`, and add the group once it is deployed there.
 
 `playwright.config.ts` turns the selection into its `grep`, so only tests tagged with a selected group run:
 
@@ -59,32 +59,57 @@ Every environment runs every group by default. Narrow an environment to a list (
 | `QA_GROUPS` unset or `auto`            | `ENV_GROUPS` for the environment tested |
 | local host (`localhost`, docker)       | every group                             |
 
-The environment comes from the `BASE_URL` hostname: a `dev` or `stg`/`staging` segment. A segment is a hostname part delimited by `-` or `.`. Any other host counts as production (`www.example.com`, but also a preview domain such as `*.vercel.app`), so an unrecognised domain never runs `@no-prod` tests. Only `localhost`, `127.0.0.1`, `[::1]` and `host.docker.internal` are local. An unknown name in `QA_GROUPS` fails the run with the list of valid ones.
-
 ```bash
 QA_GROUPS=homepage pnpm tests:playwright:axe
 ```
+
+An unknown name in `QA_GROUPS` fails the run and lists the valid ones. A describe with several tags runs when any of them is selected.
+
+The environment comes from the `BASE_URL` hostname. A `dev` segment means dev and a `stg` or `staging` segment means staging, where a segment is a part of the hostname between `-` or `.` characters. `localhost`, `127.0.0.1`, `[::1]` and `host.docker.internal` are local. Every other host counts as production, including preview domains such as `*.vercel.app`, so an unrecognised domain never runs `@no-prod` tests.
 
 | Group      | E2E specs        | `urls.json` suites      |
 | ---------- | ---------------- | ----------------------- |
 | `homepage` | `smoke/homepage` | seo, axe, visual, perfo |
 | `auth`     | `mock/sign-in`   |                         |
 
-A describe with several tags runs when any of them is selected.
+The package scripts pass `--pass-with-no-tests`, so a suite with nothing in the selection (AXE with only `auth`, say) still passes. LHCI is not Playwright; it filters `urls.perfo` by the same selection itself.
 
-- **Promoting a feature** → add its group to `ENV_GROUPS` for the next environment. One line in a PR.
-- **New spec** → give every top-level `test.describe` a group tag with `tags("homepage")` from `helpers/test-groups.ts` (`tags("auth", "no-prod")` for several). The first name must be a group. A nested test that only has to stay off production takes `NO_PROD` instead, because its describe already carries the group. Never put `NO_PROD` on a top-level describe, where it leaves the tests with no group. `tags()` throws on an unknown name while the spec file loads, so a typo fails every run instead of silently dropping the test from stg, prod and `QA_GROUPS` runs. Don't write `{ tag: … }` by hand. Nothing checks it, so a typo there silently drops the test. An untagged test still never runs while a selection is active, so check with `BASE_URL=http://localhost:3000 QA_GROUPS= pnpm -F @repo/tests-playwright exec playwright test --list --pass-with-no-tests --grep-invert "@(homepage|auth)(?![\w-])"` from the monorepo root, which must list `Total: 0 tests`. The alternation lists `TEST_GROUPS`, so the audit counts only a feature-group tag, not any `@` word such as an email in a title. The localhost `BASE_URL` and the empty `QA_GROUPS` (which also beats one set in `.env`) switch the group filter in `playwright.config.ts` off for the check. A CLI `--grep` does not replace it.
-- **New group** → add it to `TEST_GROUPS`, to `ENV_GROUPS` where it is live, to the `groups` parameter values in `.azuredevops/pipelines/qa.yml`, and to the alternation of the audit command above (and in the `write-tests` skill). The GitHub Actions `groups` input is free text and needs no change.
+#### Tagging a spec
 
-The package scripts pass `--pass-with-no-tests`, so a selection with nothing in one suite (only `auth` for AXE, say) keeps the job green. LHCI is not Playwright and filters `urls.perfo` by the same selection itself.
+- Tag every top-level `test.describe` with `tags("homepage")` from `helpers/test-groups.ts`. For more than one tag, list them: `tags("auth", "no-prod")`. The first name must be a group.
+- A nested test that only has to stay off production takes `NO_PROD` from the same file, because its describe already carries the group. Never put `NO_PROD` on a top-level describe: its tests would have no group.
+- Don't write `{ tag: … }` by hand. `tags()` throws on an unknown name while the spec file loads, so a typo fails every run. A hand-written tag has no such check, and a typo there silently drops the test from staging, production and `QA_GROUPS` runs.
+
+#### Checking for untagged tests
+
+While a group selection is active, an untagged test never runs. To find one, run this from the monorepo root; it must print `Total: 0 tests`:
+
+```bash
+BASE_URL=http://localhost:3000 QA_GROUPS= pnpm -F @repo/tests-playwright exec playwright test --list --pass-with-no-tests --grep-invert "@(homepage|auth)(?![\w-])"
+```
+
+The localhost `BASE_URL` and the empty `QA_GROUPS`, which also overrides a value in `.env`, turn off the group filter in `playwright.config.ts`. That matters because a `--grep` on the command line does not replace the config filter, which would hide an untagged test from the check. The alternation lists `TEST_GROUPS`, so only a feature-group tag counts, not any other `@` word such as an email address in a test title.
+
+#### Adding a group
+
+Add the new group to:
+
+1. `TEST_GROUPS`
+2. `ENV_GROUPS`, for each environment where it is live
+3. the `groups` parameter values in `.azuredevops/pipelines/qa.yml`
+4. the alternation in the audit command above, here and in the `write-tests` skill
+
+The GitHub Actions `groups` input is free text and needs no change.
 
 ### Against production
 
-A spec that cannot pass on production, or must not change data there, gets `"no-prod"` in its `tags(…)`, with a one-line comment saying why. `playwright.config.ts` sets `grepInvert: /@no-prod/` whenever the environment resolves to `prod`, so the filter applies to local runs and the VS Code extension as well, not only to the pipeline. A feature that is simply not deployed on production yet needs no tag, because its group is missing from `ENV_GROUPS.prod`. LHCI is not Playwright and ignores the tag.
+A spec that cannot pass on production, or must not change data there, gets `"no-prod"` in its `tags(…)`, with a one-line comment saying why. Whenever the environment resolves to `prod`, `playwright.config.ts` sets `grepInvert: /@no-prod/`. Because the filter lives in the config, it also applies to local runs and the VS Code extension, not only to the pipeline. LHCI never sees Playwright tags, so `@no-prod` does not affect it.
+
+A feature that is not deployed on production yet needs no tag; leave its group out of `ENV_GROUPS.prod` instead.
 
 ### Page lists
 
-`helpers/urls.json` holds the pages each generated suite (`seo`, `axe`, `visual`, `perfo`) checks, keyed by group. A group is one list for every environment, or one list per environment when the content differs:
+`helpers/urls.json` holds the pages that the `seo`, `axe`, `visual` and `perfo` suites check, keyed by group. A group has one list for every environment, or one list per environment when the content differs:
 
 ```json
 {
@@ -112,9 +137,13 @@ for (const { group, path } of PATHS) {
   test.describe(`SEO checks on ${path}`, tags(group), () => {
 ```
 
-A group split per environment contributes the list for the environment tested, or every list merged and deduped for a local host. A group missing an environment's key has no pages there. A group key outside `TEST_GROUPS`, or an environment key other than `dev`, `stg` and `prod`, makes `urlsByGroup` throw when the suite loads. TypeScript would not catch either, since an object imported from JSON skips excess property checks. Without the check a mistyped key silently leaves that group or environment with no pages, and the job passes with zero tests. `BASE_URL` is required and must include the scheme (`https://…`). When it is unset or can't be parsed, the suites throw an error asking you to fill it in `.env`.
+For a group split per environment, a run uses the list for the environment under test. A local run merges every list and removes duplicates. If a group has no key for an environment, it has no pages there.
 
-To cover a new page, add it under its group in the right suite. It is picked up automatically, no spec file changes needed.
+`urlsByGroup` throws when the suite loads if a group key is not in `TEST_GROUPS` or an environment key is not `dev`, `stg` or `prod`. TypeScript can't catch these typos, because an object imported from JSON skips excess property checks. Without the check, a mistyped key would leave that group or environment with no pages, and the job would pass with zero tests.
+
+`BASE_URL` is required and must be an `http://` or `https://` URL. When it is missing or invalid, the suites throw an error asking you to set it in `.env`.
+
+To cover a new page, add it under its group in the right suite. The suites pick it up automatically; no spec file changes are needed.
 
 ### End-to-end: smoke vs mock
 
