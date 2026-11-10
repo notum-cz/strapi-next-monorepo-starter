@@ -5,7 +5,7 @@ slug: /reference/packages
 
 # Packages
 
-Shared workspace code lives in `packages`. Packages are wired through `pnpm-workspace.yaml` and run on Node `^24.0.0`.
+Shared workspace code lives in `packages`. Packages are wired through `pnpm-workspace.yaml` and run on Node `^26.0.0`.
 
 ## Active Packages
 

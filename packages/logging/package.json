@@ -30,11 +30,11 @@
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "@types/node": "^24.19.2",
+    "@types/node": "^26.6.6",
     "pino-pretty": "^13.2.0",
     "typescript": "6.0.3"
   },
   "engines": {
-    "node": "^24.0.0"
+    "node": "^26.0.0"
   }
 }

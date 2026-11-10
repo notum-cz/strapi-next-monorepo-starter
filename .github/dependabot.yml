@@ -99,7 +99,7 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "react-router-dom"
         update-types: ["version-update:semver-major"]
-      # Node types must match the Node runtime major (engines: ^24).
+      # Node types must match the Node runtime major (engines: ^26).
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
     commit-message:
@@ -131,7 +131,7 @@ updates:
       - "update-dependencies"
       - "auto-generated"
       - "ready-for-review"
-    # Stay on the Node 24 LTS line — never auto-bump the runtime major.
+    # Stay on the Node 26 LTS line — never auto-bump the runtime major.
     # Runtime-major moves are a platform decision, not a routine dep bump.
     ignore:
       - dependency-name: "node"

@@ -71,7 +71,7 @@
     "zod": "4.6.7"
   },
   "devDependencies": {
-    "@types/node": "24.19.2",
+    "@types/node": "26.6.6",
     "@types/react": "18.3.31",
     "@types/react-dom": "18.3.7",
     "typescript": "6.0.3",
@@ -79,7 +79,7 @@
     "vitest": "5.1.0"
   },
   "engines": {
-    "node": "^24.0.0"
+    "node": "^26.0.0"
   },
   "strapi": {
     "uuid": "@repo/strapi"
