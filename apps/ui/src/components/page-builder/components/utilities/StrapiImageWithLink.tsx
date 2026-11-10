@@ -7,9 +7,7 @@ import { type StrapiLinkProps, StrapiLink } from "./StrapiLink"
 
 interface Props {
   readonly component:
-    | Data.Component<"utilities.image-with-link">
-    | undefined
-    | null
+    Data.Component<"utilities.image-with-link"> | undefined | null
   readonly imageProps?: Omit<BasicImageProps, "component">
   readonly linkProps?: Omit<StrapiLinkProps, "component" | "children">
 }

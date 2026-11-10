@@ -63,7 +63,7 @@ const getStrapiVarValue = ({ name, value }) => {
 
 // First collect all CSS variables
 const allVars = []
-// eslint-disable-next-line sonarjs/slow-regex
+// eslint-disable-next-line sonarjs/super-linear-regex -- build-time only, input is our own theme CSS
 const allVarRegex = /(--[\w-]+)\s*:\s*([^;]+);/g
 
 let match

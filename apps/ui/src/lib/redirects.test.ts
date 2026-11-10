@@ -151,6 +151,7 @@ describe("redirect helpers", () => {
         },
       ])
       .mockReturnValueOnce(
+        // eslint-disable-next-line unicorn/prefer-promise-with-resolvers -- ES2024 API; the UI tsconfig targets ES2022 libs
         new Promise((resolve) => {
           resolveRefresh = resolve
         })

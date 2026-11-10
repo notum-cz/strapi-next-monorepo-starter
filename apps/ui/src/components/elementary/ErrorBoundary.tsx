@@ -26,7 +26,7 @@ function ErrorBoundaryFallback({
 }) {
   const [hidden, setHidden] = useState(false)
   // Hooks must run unconditionally, so this stays before the early exit.
-  // eslint-disable-next-line unicorn/no-declarations-before-early-exit
+
   const t = useTranslations("errors.global")
 
   if (hidden) {

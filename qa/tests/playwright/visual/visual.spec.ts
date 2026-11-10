@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-commented-code */
 import fs from "node:fs"
 
 import { expect, test } from "@playwright/test"

@@ -16,71 +16,53 @@ resolutionMode: highest
 minimumReleaseAgeExclude: []
 
 overrides:
-  # Strapi type generation formats its output with its own Prettier (3.6.2 as
-  # of @strapi/typescript-utils 5.58.0) but loads the repo's shared Prettier
-  # plugins, which need 3.8.4; without this override `generate:types` fails
-  # with "e.charAt is not a function". Drop it once @strapi/typescript-utils
-  # depends on Prettier >= the root `prettier` version.
-  "@strapi/typescript-utils>prettier": 3.8.4
-  "@types/react": 19.2.18
-  "@types/react-dom": 19.2.4
+  # Single copy of the React 19 types across the workspace (Strapi and
+  # Docusaurus run React 18 at runtime but share the UI's type definitions).
+  "@types/react": 19.3.0
+  "@types/react-dom": 19.3.0
+  # CodeMirror breaks when two copies of state/view load (Strapi admin editors).
   "@codemirror/state": 6.7.6
-  "@codemirror/view": 6.43.14
-  # Transitive-only security bumps. None of these is a direct dependency of a
-  # workspace package, so they can only be raised through an override:
-  #   postcss   - restricts previous-source-map loading to the `opts.from`
-  #               folder and fixes prototype hijacking in `postcss.fromJSON()`
-  #               (8.5.17/8.5.18/8.5.23). Reached via the Tailwind and webpack
-  #               chains, which allow any ^8.4.
-  #   dompurify - fixes hook removal, clone-guard bypass and DOM clobbering
-  #               via `ownerDocument` during IN_PLACE sanitization (3.4.13).
-  #               Reached via mermaid in apps/docs.
-  #   hono      - fixes cross-user SSR data disclosure in `memo()`, a Connection
-  #               header leak in the proxy helper and ReDoS in the language and
-  #               CORS middlewares (all patched in 4.12.34). Reached via
-  #               @modelcontextprotocol/sdk, which allows any ^4.11.4.
-  #   @hono/...  - fixes serve-static path traversal on Windows via an encoded
-  #               backslash (patched in 1.19.15). Held at 1.x on purpose: the
-  #               2.x line is a major the MCP SDK has not moved to.
-  #   shell-quote - fixes a critical injection in `quote()` where crafted input
-  #               escapes the quoting it is supposed to produce (1.11.0), on top
-  #               of the earlier quadratic-complexity DoS in `parse()` (1.9.0).
-  #               Reached via the webpack/react-dev-utils chain in apps/docs,
-  #               which allows any ^1.x.
-  #   happy-dom - fixes unsanitized export names being interpolated as executable
-  #               code in ECMAScriptModuleCompiler (20.8.8) and page-origin
-  #               cookies leaking into cross-origin `fetch` (20.8.9). Reached via
-  #               vitest, which allows any ^20. `@tiptap/html` also requires
-  #               ^20.8.9 as an optional peer, so this doubles as the peer fix.
-  # Drop each entry once every parent resolves to the patched version on its own.
-  postcss: 8.5.26
-  dompurify: 3.4.14
-  hono: 4.13.4
-  "@hono/node-server": 1.19.17
-  happy-dom: 20.8.9
-  shell-quote: 1.12.0
-  # Two more security overrides. Neither parent can float up on its own:
-  #   nodemailer - `@strapi/provider-email-nodemailer` and
-  #                `@strapi/provider-email-sendmail` pin 9.0.1 EXACTLY, on the
-  #                real email path, and an exact pin never floats up. Raised
-  #                across the 9.x -> 10.x major on purpose: the 9 line ends at
-  #                9.1.1 and still carries GHSA-6vj9-mwq6-2f5v and
-  #                GHSA-8vvx-rff5-p5rq, whose only patched line is 10.0.2+;
-  #                10.x itself needs >= 10.0.6 for GHSA-v53p-9fqp-m79j. The
-  #                provider touches only createTransport/sendMail/verify, which
-  #                the major leaves unchanged, and nodemailer 10 needs
-  #                node >= 20 (repo is ^24). Held at 10.1.3: later 10.1.x are
-  #                inside `minimumReleaseAge`.
-  #                Drop once Strapi ships a release pinning 10.x itself.
-  #   qs         - NOT about Strapi: 5.58.0 pins 6.16.0 on its own. The stale
-  #                copy comes from body-parser 1.20.6 <- express 4.22.2, reached
-  #                through @docusaurus/core (webpack-dev-server) and @lhci/cli,
-  #                which still resolve 6.15.3 and leave the array-limit bypass
-  #                (GHSA-x5fp-wj9c-mxmx) in the tree. Verified: removing this
-  #                entry brings qs@6.15.3 straight back.
-  #                Drop once Docusaurus and @lhci/cli ship a patched express.
-  nodemailer: 10.1.3
-  qs: 6.16.0
+  "@codemirror/view": 6.43.15
+  # The OpenTelemetry JS SDK 2.x line (pulled in by @sentry/*, @azure/monitor-*
+  # and @repo/logging) peers `@opentelemetry/api <1.10.0`, but `^1.9` ranges float
+  # to 1.10. Keep one 1.9.x copy until those parents move to SDK 3.x.
+  "@opentelemetry/api": 1.9.1
+  # @docusaurus/theme-mermaid accepts `mermaid >=11.6.0`, which floats to the
+  # breaking 12.x line (new layout/colours, `defaultRenderer` removed) while
+  # @mermaid-js/layout-elk 0.2 peers ^11. Hold 11.x until Docusaurus moves to 12.
+  # 11.17.2 also fixes the 11.15 advisories (GHSA-rhh3/6x64/3rrr/2v8p/c4c3).
+  mermaid: 11.17.2
+  # ── Security floors ────────────────────────────────────────────────────────
+  # Each entry uses a `<fixed` selector, so it only lifts vulnerable copies and
+  # never drags a newer pin down. They exist because a parent pins the
+  # vulnerable version (exactly or with `~`), so the copy cannot float up on its
+  # own. Drop an entry once its parent ships a patched pin.
+  #   ckeditor5  - @_sh/strapi-plugin-ckeditor 8.0.0 pins `~48.4.0`, open to
+  #                GHSA-rh54-vffm-5fvp (XSS, high) and GHSA-v6mg-96c6-gmpq.
+  #                Fixed in 48.5.1. (The 47.7.x line is CKEditor's paid LTS
+  #                edition and refuses to load with the GPL key.)
+  "ckeditor5@<48.5.1": 48.5.3
+  #   nodemailer - @strapi/provider-email-nodemailer and -sendmail 5.61 pin
+  #                10.0.9 exactly, open to GHSA-4g23/39m8 (10.0.10),
+  #                GHSA-4ffr/g73g (10.0.13) and GHSA-8c8m/m943/85x2 (10.1.4).
+  "nodemailer@<10.1.4": 10.4.0
+  #   dompurify  - @_sh/strapi-plugin-ckeditor 8.0.0 pins 3.4.12 exactly, open to
+  #                GHSA-cg2g-xh64-v4q7 (critical), GHSA-mrv2-3pqr-j5jr (high)
+  #                and three lower ones. Fixed in 3.4.17.
+  "dompurify@<3.4.17": 3.4.17
+  #   lodash     - @strapi/design-system 2.2.0 pins 4.17.23 exactly, open to
+  #                GHSA-r5fr-rjxr-66jc (`_.template` code injection, high) and
+  #                GHSA-f23m-r3pf-42rh. Fixed in 4.18.1.
+  "lodash@<4.18.1": 4.18.1
+  #   zod        - the AI SDK under @strapi/content-type-builder resolves 4.4.3,
+  #                open to GHSA-mrhx-c7xc-m3w5 (memory exhaustion, high). Fixed in
+  #                4.6.6. Scoped to 4.x: Strapi's own zod 3.25 has no patched 3.x.
+  "zod@>=4.0.0 <4.6.6": 4.6.7
+  #   happy-dom  - @tiptap/html (server-side HTML rendering in apps/ui) and vitest
+  #                still resolve 20.8.9, open to GHSA-834v-8h66-3h79 (host code
+  #                execution) and GHSA-c8p4-j97h-3vg8 (SSRF), both high and fixed
+  #                only in 21.x. Both parents already accept ^21.0.4.
+  "happy-dom@<21.0.4": 21.0.4
 
 packageExtensions:
   "@hookform/resolvers":
@@ -115,7 +97,7 @@ packageExtensions:
 
 peerDependencyRules:
   allowedVersions:
-    eslint: ^9.39.0
+    eslint: ^10.0.0
     react: ">=18 <20"
     react-dom: ">=18 <20"
     styled-components: ">=6.0.0 <7"

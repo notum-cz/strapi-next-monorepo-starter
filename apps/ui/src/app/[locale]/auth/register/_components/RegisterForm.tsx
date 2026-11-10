@@ -53,6 +53,7 @@ export function RegisterForm() {
 
           if (!ENABLE_EMAIL_CONFIRMATION) {
             // Use full page navigation to ensure session is reloaded
+            // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- intentional full reload
             location.assign("/")
           }
         },

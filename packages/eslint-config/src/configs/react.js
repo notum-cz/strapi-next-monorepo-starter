@@ -1,3 +1,4 @@
+import { fixupPluginRules } from "@eslint/compat"
 import jsxAlly from "eslint-plugin-jsx-a11y"
 import reactPlugin from "eslint-plugin-react"
 import hooksPlugin from "eslint-plugin-react-hooks"
@@ -16,7 +17,9 @@ const config = [
       },
     },
     plugins: {
-      react: reactPlugin,
+      // eslint-plugin-react 7.x still calls the context APIs ESLint 10 removed
+      // (context.getFilename etc.). Drop the wrapper once it supports v10.
+      react: fixupPluginRules(reactPlugin),
       "jsx-a11y": jsxAlly,
       "react-refresh": reactRefresh,
     },
