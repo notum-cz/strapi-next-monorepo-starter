@@ -81,6 +81,7 @@ export default async function RootLayout({
       lang={locale}
       className={fontRoboto.variable}
       suppressHydrationWarning
+      data-scroll-behavior="smooth"
     >
       <head>
         <Script id="csr-config" strategy="beforeInteractive">
