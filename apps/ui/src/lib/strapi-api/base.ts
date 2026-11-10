@@ -20,6 +20,7 @@ export const API_ENDPOINTS: Partial<Record<UID.ContentType, string>> = {
   "api::navbar.navbar": "/navbar",
   "api::subscriber.subscriber": "/subscribers",
   "api::redirect.redirect": "/redirects",
+  "api::seo-configuration.seo-configuration": "/seo-configuration",
 } as const
 
 export default abstract class BaseStrapiClient {

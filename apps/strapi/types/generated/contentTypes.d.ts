@@ -687,6 +687,42 @@ export interface ApiRedirectRedirect extends Struct.CollectionTypeSchema {
   }
 }
 
+export interface ApiSeoConfigurationSeoConfiguration
+  extends Struct.SingleTypeSchema {
+  collectionName: "seo_configurations"
+  info: {
+    displayName: "SEO Configuration"
+    pluralName: "seo-configurations"
+    singularName: "seo-configuration"
+  }
+  options: {
+    draftAndPublish: false
+  }
+  attributes: {
+    createdAt: Schema.Attribute.DateTime
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+    globalMetadata: Schema.Attribute.Component<
+      "seo-utilities.global-metadata",
+      false
+    >
+    locale: Schema.Attribute.String & Schema.Attribute.Private
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::seo-configuration.seo-configuration"
+    > &
+      Schema.Attribute.Private
+    publishedAt: Schema.Attribute.DateTime
+    robotsConfiguration: Schema.Attribute.Component<
+      "seo-utilities.robots-configuration",
+      false
+    >
+    updatedAt: Schema.Attribute.DateTime
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private
+  }
+}
+
 export interface ApiSubscriberSubscriber extends Struct.CollectionTypeSchema {
   collectionName: "subscribers"
   info: {
@@ -1235,6 +1271,7 @@ declare module "@strapi/strapi" {
       "api::navbar.navbar": ApiNavbarNavbar
       "api::page.page": ApiPagePage
       "api::redirect.redirect": ApiRedirectRedirect
+      "api::seo-configuration.seo-configuration": ApiSeoConfigurationSeoConfiguration
       "api::subscriber.subscriber": ApiSubscriberSubscriber
       "plugin::content-releases.release": PluginContentReleasesRelease
       "plugin::content-releases.release-action": PluginContentReleasesReleaseAction

@@ -16,6 +16,12 @@ resolutionMode: highest
 minimumReleaseAgeExclude: []
 
 overrides:
+  # Strapi type generation formats its output with its own Prettier (3.6.2 as
+  # of @strapi/typescript-utils 5.58.0) but loads the repo's shared Prettier
+  # plugins, which need 3.8.4; without this override `generate:types` fails
+  # with "e.charAt is not a function". Drop it once @strapi/typescript-utils
+  # depends on Prettier >= the root `prettier` version.
+  "@strapi/typescript-utils>prettier": 3.8.4
   "@types/react": 19.2.18
   "@types/react-dom": 19.2.4
   "@codemirror/state": 6.7.6
