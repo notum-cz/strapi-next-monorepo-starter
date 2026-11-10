@@ -1,11 +1,16 @@
-import type { Locale } from "next-intl"
+import { notFound } from "next/navigation"
 import { setRequestLocale } from "next-intl/server"
+
+import { isValidLocale } from "@/lib/navigation"
 
 export default async function AuthLayout({
   children,
   params,
 }: LayoutProps<"/[locale]/auth">) {
-  const { locale } = (await params) as { locale: Locale }
+  const { locale } = await params
+  if (!isValidLocale(locale)) {
+    notFound()
+  }
 
   setRequestLocale(locale)
 
