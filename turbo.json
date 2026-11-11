@@ -152,9 +152,10 @@
       "persistent": false,
       "passThroughEnv": ["LOAD_*"]
     },
-    "lhci-perfo-check": {
+    "k6-web-vitals": {
       "cache": false,
-      "persistent": false
+      "persistent": false,
+      "passThroughEnv": ["VITALS_*"]
     },
     "playwright-visual-tests": {
       "cache": false,

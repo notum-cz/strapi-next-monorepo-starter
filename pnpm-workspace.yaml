@@ -74,11 +74,11 @@ overrides:
   #                Drop once Strapi ships a release pinning 10.x itself.
   #   qs         - NOT about Strapi: 5.58.0 pins 6.16.0 on its own. The stale
   #                copy comes from body-parser 1.20.6 <- express 4.22.2, reached
-  #                through @docusaurus/core (webpack-dev-server) and @lhci/cli,
+  #                through @docusaurus/core (webpack-dev-server),
   #                which still resolve 6.15.3 and leave the array-limit bypass
   #                (GHSA-x5fp-wj9c-mxmx) in the tree. Verified: removing this
   #                entry brings qs@6.15.3 straight back.
-  #                Drop once Docusaurus and @lhci/cli ship a patched express.
+  #                Drop once Docusaurus ships a patched express.
   nodemailer: 10.1.3
   qs: 6.16.0
 

@@ -15,7 +15,7 @@ on:
       run_e2e: { type: boolean, default: false }
       run_axe: { type: boolean, default: false }
       run_seo: { type: boolean, default: false }
-      run_lhci_perfo: { type: boolean, default: false }
+      run_web_vitals: { type: boolean, default: false }
       run_visual: { type: boolean, default: false }
       base_url: { type: string, required: false, default: "" }
       groups: { type: string, required: false, default: auto }
@@ -29,7 +29,7 @@ on:
 
 ## Job structure
 
-- 5 jobs: `e2e`, `axe`, `seo`, `visual`, `lhci_perfo`.
+- 5 jobs: `e2e`, `axe`, `seo`, `visual`, `web_vitals`.
 - Each gated by `if: ${{ inputs.run_X }}`, no `needs:` between them → they run in parallel.
 - Unchecked = _skipped_, not failed.
 - Shared steps: checkout → setup-pnpm → cache/install Playwright → the same `pnpm tests:playwright:...` command as locally → upload report on failure.
@@ -53,7 +53,7 @@ concurrency:
 | `axe`        | `axe-report`                             | tarball                                               |
 | `seo`        | `seo-report`                             | tarball                                               |
 | `visual`     | `visual-report`                          | only if a comparison actually ran                     |
-| `lhci_perfo` | `perfo-report`                           | `if: always()` — even on a green run                  |
+| `web_vitals` | `web-vitals-report`                      | `if: always()` — even on a green run                  |
 
 - `retention-days: 7`, `if-no-files-found: warn` — nothing to upload ≠ failure.
 
@@ -84,7 +84,7 @@ concurrency:
 
 **Decide before enabling:**
 
-- Which suites run nightly (not the whole Visual+Lighthouse combo — slowest).
+- Which suites run nightly (not Visual — the slowest).
 - `vars.BASE_URL` must point at something stable (no one types it in by hand).
 - How a failure gets noticed (the default email is easy to miss → Slack/Teams).
 - Multiple `cron:` entries are fine (nightly smoke + weekly full run).

@@ -13,12 +13,12 @@ import http from "k6/http"
 import type { Options, Scenario } from "k6/options"
 
 import {
-  assertKnown,
-  ENV_GROUPS,
-  TEST_ENVS,
-  TEST_GROUPS,
-  type TestEnv,
-} from "../helpers/test-groups.ts"
+  baseUrl,
+  hostOf,
+  pagesFor,
+  pageUrl,
+  testEnv,
+} from "../helpers/k6/target.ts"
 
 // ─── Settings ────────────────────────────────────────────────────────────────
 // Defaults for every run. Override any of them for one run from the command
@@ -40,109 +40,10 @@ const RPS = Number(__ENV.LOAD_RPS || SETTINGS.rps)
 const DURATION = __ENV.LOAD_DURATION || SETTINGS.duration
 const P95_MS = Number(__ENV.LOAD_P95_MS || SETTINGS.p95Ms)
 
-/** KEY=value pairs from ../.env (k6 can't load it on its own). */
-function readDotEnv(): Record<string, string> {
-  let content: string
-  try {
-    content = open("../.env")
-  } catch {
-    return {}
-  }
-  const vars: Record<string, string> = {}
-  for (const line of content.split("\n")) {
-    const separator = line.indexOf("=")
-    if (separator < 1 || line.trimStart().startsWith("#")) continue
-
-    const value = line.slice(separator + 1).trim()
-    const unquoted = /^(["']).*\1$/.test(value) ? value.slice(1, -1) : value
-    vars[line.slice(0, separator).trim()] = unquoted
-  }
-
-  return vars
-}
-
-const DOT_ENV = readDotEnv()
-const BASE_URL = (__ENV.BASE_URL || DOT_ENV.BASE_URL || "").replace(/\/$/, "")
-if (!BASE_URL) throw new Error("Set BASE_URL in qa/tests/playwright/.env")
-
-const HOST = BASE_URL.replace(/^\w+:\/\//, "")
-  .split(/[/:?#]/, 1)[0]
-  .toLowerCase()
-
-/**
- * The environment under test — the same rule as resolveTestEnv() in
- * helpers/test-groups.ts, which needs Node's URL: a `dev` or `stg`/`staging`
- * hostname segment, else production; `undefined` for a local host.
- */
-function testEnv(): TestEnv | undefined {
-  if (
-    ["localhost", "127.0.0.1", "[::1]", "host.docker.internal"].includes(HOST)
-  ) {
-    return undefined
-  }
-  if (/(^|[-.])dev([-.]|$)/.test(HOST)) return "dev"
-  if (/(^|[-.])(stg|staging)([-.]|$)/.test(HOST)) return "stg"
-
-  return "prod"
-}
-
-const ENV = testEnv()
-
-type GroupUrls = string[] | Partial<Record<TestEnv, string[]>>
-
-/**
- * The "load" pages to visit, picked like every other suite does it
- * (helpers/flatten-urls.ts and selectedGroups() in helpers/test-groups.ts):
- * groups from QA_GROUPS, else what ENV_GROUPS lists for the environment, and
- * each group's pages for that environment — or everything for a local host.
- * A mistyped group or environment fails the run instead of testing nothing.
- */
-function loadPaths(): string[] {
-  const suite = (JSON.parse(open("../helpers/urls.json")).load ?? {}) as Record<
-    string,
-    GroupUrls
-  >
-  const groups = Object.keys(suite)
-  assertKnown(groups, TEST_GROUPS, 'group under "load" in helpers/urls.json')
-  for (const group of groups) {
-    const urls = suite[group]
-    if (!Array.isArray(urls)) {
-      assertKnown(
-        Object.keys(urls),
-        TEST_ENVS,
-        `environment in helpers/urls.json group "load.${group}"`
-      )
-    }
-  }
-
-  const picked = (__ENV.QA_GROUPS || DOT_ENV.QA_GROUPS || "")
-    .split(/[\s,;]+/)
-    .filter((group) => group && group !== "auto")
-  assertKnown(picked, TEST_GROUPS, "group in QA_GROUPS")
-  const envGroups = ENV ? ENV_GROUPS[ENV] : "all"
-  const selected: readonly string[] | undefined =
-    picked.length > 0 ? picked : envGroups === "all" ? undefined : envGroups
-
-  return [
-    ...new Set(
-      groups
-        .filter((group) => !selected || selected.includes(group))
-        .flatMap((group) => {
-          const urls = suite[group]
-          if (Array.isArray(urls)) return urls
-
-          return ENV ? (urls[ENV] ?? []) : Object.values(urls).flat()
-        })
-    ),
-  ]
-}
-
-const PATHS = loadPaths()
-if (PATHS.length === 0) {
-  throw new Error(
-    `No "load" pages for ${ENV ?? "a local run"}${__ENV.QA_GROUPS || DOT_ENV.QA_GROUPS ? ` and QA_GROUPS=${__ENV.QA_GROUPS || DOT_ENV.QA_GROUPS}` : ""} in helpers/urls.json`
-  )
-}
+const BASE_URL = baseUrl()
+const HOST = hostOf(BASE_URL)
+const ENV = testEnv(BASE_URL)
+const PATHS = pagesFor("load", BASE_URL)
 
 // Visitors keep arriving at the set rate even when the site slows down
 // (ramping-arrival-rate), like real traffic does.
@@ -253,7 +154,7 @@ export default function () {
         ? "recovery"
         : "load"
   }
-  const res = http.get(`${BASE_URL}${path}`, {
+  const res = http.get(pageUrl(BASE_URL, path), {
     // Ask for compression like every browser does. Without it k6 downloads
     // pages uncompressed (~6× bigger) and the run measures bandwidth, not the
     // site. k6 decompresses the response itself.

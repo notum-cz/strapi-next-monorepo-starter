@@ -24,8 +24,8 @@ parameters:
     type: boolean
     default: false
 
-  - name: run_lhci_perfo
-    displayName: "LHCI Performance tests"
+  - name: run_web_vitals
+    displayName: "Core Web Vitals (k6)"
     type: boolean
     default: false
 
@@ -56,7 +56,7 @@ variables:
   - name: NPM_CONFIG_IGNORE_SCRIPTS
     value: "true"
   # Non-secret pipeline variables reach every script as env vars, so Playwright
-  # and LHCI read QA_GROUPS directly. "auto" means the env default.
+  # and the k6 scripts read QA_GROUPS directly. "auto" means the env default.
   - name: QA_GROUPS
     value: ${{ join(',', parameters.groups) }}
 
@@ -76,7 +76,7 @@ jobs:
             [ "${{ parameters.run_e2e }}" = "True" ] && LABELS+=("E2E")
             [ "${{ parameters.run_axe }}" = "True" ] && LABELS+=("AXE")
             [ "${{ parameters.run_seo }}" = "True" ] && LABELS+=("SEO")
-            [ "${{ parameters.run_lhci_perfo }}" = "True" ] && LABELS+=("Perfo")
+            [ "${{ parameters.run_web_vitals }}" = "True" ] && LABELS+=("Vitals")
             [ "${{ parameters.run_visual }}" = "True" ] && LABELS+=("Visual")
             LABEL=$(IFS=', '; echo "${LABELS[*]}")
           fi
@@ -353,20 +353,20 @@ jobs:
           artifactName: "visual-report"
           publishLocation: "Container"
 
-  - job: lhci_perfo
-    displayName: "LHCI Performance tests"
-    # LHCI never runs on scheduled (cron) builds, regardless of parameter defaults.
-    # This job only publishes the raw .lighthouseci report as a build artifact
-    # for this run — it does NOT commit qa/tests/playwright/perfo/lighthouse-history.md
-    # back to the repo, so the trend file this run produces is discarded with the
-    # ephemeral agent workspace. Trend tracking (the auto-PR that updates that
-    # file) only runs via the GitHub Actions qa.yml workflow's "Open PR with
-    # Lighthouse trend history" step — there's no Azure DevOps equivalent wired up.
-    condition: and(succeeded(), eq(${{ parameters.run_lhci_perfo }}, true), ne(variables['Build.Reason'], 'Schedule'))
-    timeoutInMinutes: 15
+  - job: web_vitals
+    displayName: "Core Web Vitals (k6)"
+    condition: and(succeeded(), eq(${{ parameters.run_web_vitals }}, true), ne(variables['Build.Reason'], 'Schedule'))
+    timeoutInMinutes: 20
+    variables:
+      K6_VERSION: "2.3.0"
+      HISTORY_BRANCH: qa/web-vitals-history
+      HISTORY_FILE: qa/tests/playwright/perfo/web-vitals-history.md
     steps:
       - checkout: self
         fetchDepth: 1
+        # Lets the job push the trend row. The build service needs Contribute
+        # and Create branch on this repository.
+        persistCredentials: true
 
       - template: ../templates/steps/setup-pnpm.yaml
 
@@ -382,23 +382,75 @@ jobs:
           PARAM_BASE_URL: ${{ parameters.base_url }}
           FALLBACK_BASE_URL: $(BASE_URL)
 
+      # The hosted ubuntu image ships Google Chrome, which the k6 browser module uses.
       - bash: |
-          pnpm tests:lhci:perfo
-        displayName: "Run LHCI Performance tests"
+          set -e
+          K6_DIR="$(Agent.ToolsDirectory)/k6-$(K6_VERSION)"
+          mkdir -p "$K6_DIR"
+          curl -fsSL "https://github.com/grafana/k6/releases/download/v$(K6_VERSION)/k6-v$(K6_VERSION)-linux-amd64.tar.gz" \
+            | tar -xz --strip-components=1 -C "$K6_DIR" "k6-v$(K6_VERSION)-linux-amd64/k6"
+          "$K6_DIR/k6" version
+          echo "##vso[task.prependpath]$K6_DIR"
+        displayName: "Install k6"
+
+      # The trend lives on its own branch, never in dev. Bring in what's there
+      # so the run appends to it; the first run starts the file.
+      - bash: |
+          if git fetch --depth=1 origin "$(HISTORY_BRANCH)"; then
+            git show "FETCH_HEAD:$(HISTORY_FILE)" > "$(HISTORY_FILE)" || rm -f "$(HISTORY_FILE)"
+          else
+            echo "No $(HISTORY_BRANCH) branch yet, this run starts the history."
+          fi
+        displayName: "Fetch Core Web Vitals history"
+
+      - bash: |
+          pnpm tests:k6:vitals
+        displayName: "Run Core Web Vitals"
         env:
           BASE_URL: $(BASE_URL)
           CI: "true"
 
-      - bash: |
-          tar -czf lhci-perfo-reports-$(Build.BuildId).tgz \
-            -C qa/tests/playwright/perfo/.lighthouseci .
-        displayName: "Pack LHCI reports"
-        condition: always()
-
       - task: PublishBuildArtifacts@1
-        displayName: "Publish LHCI report"
+        displayName: "Publish Core Web Vitals report"
         condition: always()
         inputs:
-          pathToPublish: "lhci-perfo-reports-$(Build.BuildId).tgz"
-          artifactName: "perfo-report"
+          pathToPublish: "qa/tests/playwright/perfo/report.html"
+          artifactName: "web-vitals-report"
           publishLocation: "Container"
+
+      # A failing run is part of the trend too. Two runs at once can't both
+      # push: the second fails with a non-fast-forward error and can be re-run.
+      - bash: |
+          set -e
+          if [ ! -f "$(HISTORY_FILE)" ]; then
+            echo "The test wrote no history, nothing to record."
+            exit 0
+          fi
+          INVESTIGATIONS="$(dirname "$(HISTORY_FILE)")/investigations"
+          # Move this run's files aside: switching branches must not touch them.
+          mkdir -p "$(Agent.TempDirectory)/web-vitals/investigations"
+          cp "$(HISTORY_FILE)" "$(Agent.TempDirectory)/web-vitals/history.md"
+          cp "$INVESTIGATIONS"/*.md "$(Agent.TempDirectory)/web-vitals/investigations/" 2>/dev/null || true
+          rm -f "$(HISTORY_FILE)" "$INVESTIGATIONS"/*.md
+          git config user.name "Azure Pipelines"
+          git config user.email "azure-pipelines@noreply.local"
+          if git fetch --depth=1 origin "$(HISTORY_BRANCH)"; then
+            git switch -C "$(HISTORY_BRANCH)" FETCH_HEAD
+          else
+            # First run: a branch holding nothing but the history and investigations.
+            git switch --orphan "$(HISTORY_BRANCH)"
+          fi
+          mkdir -p "$INVESTIGATIONS"
+          cp "$(Agent.TempDirectory)/web-vitals/history.md" "$(HISTORY_FILE)"
+          cp "$(Agent.TempDirectory)/web-vitals/investigations/"*.md "$INVESTIGATIONS/" 2>/dev/null || true
+          # -f: these files are gitignored on code branches, tracked only here.
+          git add -f "$(HISTORY_FILE)" "$INVESTIGATIONS"
+          git commit -m "chore(qa): record Core Web Vitals for $BASE_URL" \
+            -m "Run: $(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)" \
+            || { echo "No new rows to record."; exit 0; }
+          git push origin "$(HISTORY_BRANCH)"
+        displayName: "Save Core Web Vitals history"
+        condition: succeededOrFailed()
+        env:
+          BASE_URL: $(BASE_URL)
+          LEFTHOOK: "0"

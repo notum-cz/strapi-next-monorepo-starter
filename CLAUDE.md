@@ -13,7 +13,7 @@ Monorepo starter with Strapi v5 CMS, Next.js 16 UI, Docusaurus docs, pnpm worksp
 | `packages/design-system` | Shared TailwindCSS tokens, CKEditor and TipTap editor styles            |
 | `packages/shared-data`   | Shared constants and types                                              |
 | `packages/logging`       | Structured pino logging + OpenTelemetry trace context (`@repo/logging`) |
-| `qa/tests/playwright`    | E2E, accessibility, SEO, visual, and Lighthouse tests                   |
+| `qa/tests/playwright`    | E2E, accessibility, SEO, visual, Core Web Vitals, and load tests        |
 
 Config-only workspaces (`@repo/eslint-config`, `@repo/typescript-config`, `@repo/semantic-release-config`) are omitted from the table.
 
@@ -56,7 +56,7 @@ Use these pages for common coding-agent tasks:
 - [Strapi Schemas](apps/docs/docs/strapi/strapi-schemas.md) — Content types, components, relations, localization, and document middlewares
 - [Strapi Types](apps/docs/docs/reference/packages/strapi-types.md) — Generated type utilities and usage patterns
 - [Design System](apps/docs/docs/design-system/overview.md) — Tokens, typography, rich text styles, and CMS component design guidance
-- [Testing](apps/docs/docs/QA/overview.md) — Unit, Playwright, accessibility, visual, SEO, and Lighthouse coverage
+- [Testing](apps/docs/docs/QA/overview.md) — Unit, Playwright, accessibility, visual, SEO, Core Web Vitals, and load coverage
 - [Deployment](apps/docs/docs/reference/deployment/overview.md) — GitHub Actions, Heroku, Vercel, and Docker notes
 - [AI Skills](apps/docs/docs/reference/AI/skills/overview.md) — Agent skills catalog, per-skill What/How/When, and [workflow diagrams](apps/docs/docs/reference/AI/skills/overview.md#workflows)
 
