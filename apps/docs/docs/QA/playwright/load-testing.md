@@ -22,7 +22,7 @@ pnpm tests:k6:load:breakpoint           # push until it breaks, then check recov
 LOAD_RPS=20 pnpm tests:k6:load:spike    # override a setting for one run
 ```
 
-The test runs from your machine, but the load goes to `BASE_URL` from `qa/tests/playwright/.env`, the same variable the other suites use. It visits the pages listed under `load` in `helpers/urls.json`, taking them in turn.
+The test runs from your machine, but the load goes to `BASE_URL` from `qa/tests/playwright/.env`, the same variable the other suites use. It visits the pages listed under `load` in `helpers/urls.json`, taking them in turn. Pages are picked the same way as in the other suites ([test groups](./index.md#test-groups)): the groups in `QA_GROUPS`, else those `ENV_GROUPS` enables for the environment read from `BASE_URL`, with each group's pages for that environment; a local `BASE_URL` gets every group and environment.
 
 Settings live in the `SETTINGS` object at the top of `load/load-test.ts`. Change the defaults there, or override them for one run on the command line:
 

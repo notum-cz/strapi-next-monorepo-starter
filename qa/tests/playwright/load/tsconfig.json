@@ -12,5 +12,5 @@
     "allowImportingTsExtensions": true,
     "skipLibCheck": true
   },
-  "include": ["./*.ts", "../helpers/flatten-urls.ts"]
+  "include": ["./*.ts", "../helpers/test-groups.ts"]
 }
