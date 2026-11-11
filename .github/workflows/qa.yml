@@ -6,16 +6,16 @@ run-name: >-
     inputs.run_e2e && 'E2E' ||
     inputs.run_axe && 'AXE' ||
     inputs.run_seo && 'SEO' ||
-    inputs.run_lhci_perfo && 'Perfo' ||
+    inputs.run_web_vitals && 'Vitals' ||
     inputs.run_visual && 'Visual'
   }}${{
     github.event_name != 'schedule' && inputs.run_e2e && inputs.run_axe && ', AXE' || ''
   }}${{
     github.event_name != 'schedule' && (inputs.run_e2e || inputs.run_axe) && inputs.run_seo && ', SEO' || ''
   }}${{
-    github.event_name != 'schedule' && (inputs.run_e2e || inputs.run_axe || inputs.run_seo) && inputs.run_lhci_perfo && ', Perfo' || ''
+    github.event_name != 'schedule' && (inputs.run_e2e || inputs.run_axe || inputs.run_seo) && inputs.run_web_vitals && ', Vitals' || ''
   }}${{
-    github.event_name != 'schedule' && (inputs.run_e2e || inputs.run_axe || inputs.run_seo || inputs.run_lhci_perfo) && inputs.run_visual && ', Visual' || ''
+    github.event_name != 'schedule' && (inputs.run_e2e || inputs.run_axe || inputs.run_seo || inputs.run_web_vitals) && inputs.run_visual && ', Visual' || ''
   }}] QA – ${{ inputs.base_url || vars.BASE_URL || 'missing-base-url' }} – ${{ inputs.groups || 'auto' }}
 
 on:
@@ -37,8 +37,8 @@ on:
         description: SEO tests
         type: boolean
         default: false
-      run_lhci_perfo:
-        description: LHCI Performance tests
+      run_web_vitals:
+        description: Core Web Vitals (k6)
         type: boolean
         default: false
       run_visual:
@@ -67,7 +67,7 @@ env:
   CI: true
   NPM_CONFIG_IGNORE_SCRIPTS: "true"
   BASE_URL: ${{ inputs.base_url || vars.BASE_URL }}
-  # Read by playwright.config.ts and perfo/lhci.ts. Empty on a scheduled run, which means auto.
+  # Read by playwright.config.ts and the k6 scripts (helpers/k6/target.ts). Empty on a scheduled run, which means auto.
   QA_GROUPS: ${{ inputs.groups }}
 
 jobs:
@@ -282,14 +282,22 @@ jobs:
           retention-days: 7
           if-no-files-found: warn
 
-  lhci_perfo:
-    if: ${{ inputs.run_lhci_perfo }}
-    name: LHCI Performance tests
+  web_vitals:
+    if: ${{ inputs.run_web_vitals }}
+    name: Core Web Vitals (k6)
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     permissions:
+      # Pushes the trend row to the qa/web-vitals-history branch.
       contents: write
-      pull-requests: write
+    # Runs queue instead of racing, so no history row gets lost on push.
+    concurrency:
+      group: web-vitals-history
+      cancel-in-progress: false
+    env:
+      HISTORY_BRANCH: qa/web-vitals-history
+      HISTORY_FILE: qa/tests/playwright/perfo/web-vitals-history.md
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v7.0.1
@@ -297,43 +305,63 @@ jobs:
       - name: Setup pnpm with cache
         uses: ./.github/actions/setup-pnpm
 
-      - name: Run LHCI Performance tests
+      - name: Setup k6 with browser support
+        uses: grafana/setup-k6-action@v1.2.2
+        with:
+          k6-version: "2.3.0"
+          browser: true
+
+      # The trend lives on its own branch, never in dev. Bring in what's there
+      # so the run appends to it; the first run starts the file.
+      - name: Fetch Core Web Vitals history
+        run: |
+          if git fetch --depth=1 origin "$HISTORY_BRANCH"; then
+            git show "FETCH_HEAD:$HISTORY_FILE" > "$HISTORY_FILE" || rm -f "$HISTORY_FILE"
+          else
+            echo "No $HISTORY_BRANCH branch yet, this run starts the history."
+          fi
+
+      - name: Run Core Web Vitals
         env:
           BASE_URL: ${{ env.BASE_URL }}
-        run: pnpm tests:lhci:perfo
+        run: pnpm tests:k6:vitals
 
-      - name: Open PR with Lighthouse trend history
-        if: success()
-        uses: peter-evans/create-pull-request@v8.1.2
+      # A failing run is part of the trend too, so this runs on failure as well.
+      - name: Save Core Web Vitals history
+        if: ${{ !cancelled() && hashFiles(env.HISTORY_FILE) != '' }}
         env:
-          # peter-evans/create-pull-request commits on an internal branch with a
-          # generated name that never matches this repo's <type>/STAR-<n>-<desc>
-          # branch-naming convention, which would otherwise fail Lefthook's
-          # pre-commit hook (scripts/validate-branch-name.sh).
           LEFTHOOK: "0"
-        with:
-          add-paths: qa/tests/playwright/perfo/lighthouse-history.md
-          commit-message: "chore(tests-playwright): record Lighthouse trend results"
-          branch: qa/lighthouse-trend-update
-          delete-branch: true
-          title: "chore(qa): update Lighthouse trend history"
-          labels: QA, auto-generated
-          body: |
-            Automated update of the Lighthouse performance trend log (`qa/tests/playwright/perfo/lighthouse-history.md`) from a manual QA workflow run.
-
-            Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-      - name: Pack LHCI reports
-        if: always()
         run: |
-          tar -czf lhci-perfo-reports-${{ github.run_id }}.tgz \
-            -C qa/tests/playwright/perfo/.lighthouseci .
+          INVESTIGATIONS="$(dirname "$HISTORY_FILE")/investigations"
+          # Move this run's files aside: switching branches must not touch them.
+          mkdir -p "$RUNNER_TEMP/web-vitals/investigations"
+          cp "$HISTORY_FILE" "$RUNNER_TEMP/web-vitals/history.md"
+          cp "$INVESTIGATIONS"/*.md "$RUNNER_TEMP/web-vitals/investigations/" 2>/dev/null || true
+          rm -f "$HISTORY_FILE" "$INVESTIGATIONS"/*.md
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git fetch --depth=1 origin "$HISTORY_BRANCH"; then
+            git switch -C "$HISTORY_BRANCH" FETCH_HEAD
+          else
+            # First run: a branch holding nothing but the history and investigations.
+            git switch --orphan "$HISTORY_BRANCH"
+          fi
+          mkdir -p "$INVESTIGATIONS"
+          cp "$RUNNER_TEMP/web-vitals/history.md" "$HISTORY_FILE"
+          cp "$RUNNER_TEMP/web-vitals/investigations/"*.md "$INVESTIGATIONS/" 2>/dev/null || true
+          # -f: these files are gitignored on code branches, tracked only here.
+          git add -f "$HISTORY_FILE" "$INVESTIGATIONS"
+          git commit -m "chore(qa): record Core Web Vitals for $BASE_URL" \
+            -m "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            || { echo "No new rows to record."; exit 0; }
+          git push origin "$HISTORY_BRANCH"
 
-      - name: Publish LHCI report
+      - name: Publish Core Web Vitals report
         uses: actions/upload-artifact@v7.0.2
+        # The report is the result, pass or fail.
         if: always()
         with:
-          name: perfo-report
-          path: lhci-perfo-reports-${{ github.run_id }}.tgz
+          name: web-vitals-report
+          path: qa/tests/playwright/perfo/report.html
           retention-days: 7
           if-no-files-found: warn

@@ -15,13 +15,14 @@ Testing is split between fast app-level Vitest suites and browser-based QA check
 | Accessibility | Playwright + axe-core  | `qa/tests/playwright/axe`    |
 | SEO           | Playwright             | `qa/tests/playwright/seo`    |
 | Visual        | Playwright screenshots | `qa/tests/playwright/visual` |
-| Performance   | Lighthouse CI          | `qa/tests/playwright/perfo`  |
+| Web Vitals    | k6 browser             | `qa/tests/playwright/perfo`  |
 | Load          | k6 (TypeScript)        | `qa/tests/playwright/load`   |
 
 ## References
 
 - [Unit Testing](./unit-testing.md) — Vitest tests for Strapi and UI code.
-- [Playwright Testing](./playwright/index.md) — E2E, accessibility, SEO, visual regression, and Lighthouse CI.
+- [Playwright Testing](./playwright/index.md) — E2E, accessibility, SEO, and visual regression.
+- [Core Web Vitals (k6)](./playwright/web-vitals.md) — LCP, CLS, FCP and TTFB per page, on an emulated phone.
 - [Load Testing (k6)](./playwright/load-testing.md) — simulated visitor traffic: does the site hold, where does it break, does it recover.
 - [GitHub Actions QA Pipeline](./playwright/ci-pipeline.md) — how the `qa.yml` workflow triggers, runs, and reports.
 - [Page Object Model and Smoke vs Mock](./playwright/pom-and-test-types.md) — POM conventions and when to use a mocked backend.
@@ -35,5 +36,5 @@ Testing is split between fast app-level Vitest suites and browser-based QA check
 - Use axe tests for accessibility regressions.
 - Use SEO tests for metadata, robots, sitemap, and page structure.
 - Use visual tests for layout/component regressions.
-- Use Lighthouse CI for performance budgets and high-level page quality.
+- Use k6 Core Web Vitals to check how fast pages feel to a visitor.
 - Use k6 load tests to check that the site holds expected traffic, on STG before a launch with a traffic peak.

@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Playwright Testing
 
-The Playwright QA suite validates the deployed or local UI through a browser. It covers end-to-end behavior, accessibility, SEO, visual output, and performance. The same workspace also hosts the k6 load tests, which run outside a browser.
+The Playwright QA suite validates the deployed or local UI through a browser. It covers end-to-end behavior, accessibility, SEO, and visual output. The same workspace also hosts the k6 scripts: Core Web Vitals and load tests.
 
 | Area          | Tooling                | Location                        |
 | ------------- | ---------------------- | ------------------------------- |
@@ -13,7 +13,7 @@ The Playwright QA suite validates the deployed or local UI through a browser. It
 | Accessibility | Playwright + axe-core  | `qa/tests/playwright/axe`       |
 | SEO           | Playwright             | `qa/tests/playwright/seo`       |
 | Visual        | Playwright screenshots | `qa/tests/playwright/visual`    |
-| Performance   | Lighthouse CI          | `qa/tests/playwright/perfo`     |
+| Web Vitals    | k6 browser             | `qa/tests/playwright/perfo`     |
 | Load          | k6 (TypeScript)        | `qa/tests/playwright/load`      |
 
 ## Workspace
@@ -28,7 +28,7 @@ qa/tests/playwright/
 ├── axe/                    # accessibility checks
 ├── seo/                    # SEO checks
 ├── visual/                 # visual regression checks
-├── perfo/                  # Lighthouse CI performance checks
+├── perfo/                  # k6 Core Web Vitals (see Core Web Vitals)
 ├── load/                   # k6 load tests (see Load Testing)
 ├── helpers/                # shared test utilities (page objects, fixtures)
 ├── .env.example            # example environment variables
@@ -74,7 +74,7 @@ The environment comes from the `BASE_URL` hostname. A `dev` segment means dev an
 | `homepage` | `smoke/homepage` | seo, axe, visual, perfo, load |
 | `auth`     | `mock/sign-in`   |                               |
 
-The package scripts pass `--pass-with-no-tests`, so a suite with nothing in the selection (AXE with only `auth`, say) still passes. LHCI is not Playwright; it filters `urls.perfo` by the same selection itself.
+The package scripts pass `--pass-with-no-tests`, so a suite with nothing in the selection (AXE with only `auth`, say) still passes. The k6 scripts (Core Web Vitals and load tests) are not Playwright; they pick their `urls.perfo` and `urls.load` pages by the same selection themselves (`helpers/k6/target.ts`).
 
 #### Tagging a spec
 
@@ -199,14 +199,14 @@ pnpm tests:playwright:visual                # Visual regression checks
 pnpm tests:playwright:visual:update         # Update visual snapshots
 pnpm tests:playwright:visual:docker         # Visual regression checks via Docker (CI-compatible)
 pnpm tests:playwright:visual:docker:update  # Update Linux snapshots via Docker
-pnpm tests:lhci:perfo                       # Lighthouse CI performance checks
+pnpm tests:k6:vitals                        # k6 Core Web Vitals (LCP, CLS, FCP, TTFB)
 pnpm tests:k6:load:smoke                    # k6 load test, 1 visit/s for 1 minute
 pnpm tests:k6:load:average                  # k6 load test, normal traffic
 pnpm tests:k6:load:spike                    # k6 load test, campaign launch (5× surge)
 pnpm tests:k6:load:breakpoint               # k6 load test, find the limit and check recovery
 ```
 
-Load testing has its own page: [Load Testing (k6)](./load-testing.md).
+The k6 scripts have their own pages: [Core Web Vitals (k6)](./web-vitals.md) and [Load Testing (k6)](./load-testing.md).
 
 ## Accessibility Testing
 
@@ -240,7 +240,7 @@ test.describe("Title", () => {
 - New page to cover → add it under its group in `helpers/urls.json`. Every check runs against it automatically.
 - New check → a new `test.describe` block inside the suite's `for (const { group, path } of PATHS)` loop.
 - Production-only checks (robots, Heroku references) `test.skip` themselves on every environment that does not [resolve to production](#test-groups), including local runs.
-- A page that does not answer with a 2xx status fails every check with its status, as in AXE, visual and LHCI.
+- A page that does not answer with a 2xx status fails every check with its status, as in AXE, visual and Core Web Vitals.
 
 ## Visual Regression
 
@@ -302,10 +302,6 @@ The `visual` job in `qa.yml` runs on a Linux runner and compares against committ
 
 Commit baseline updates only with the related UI change.
 
-## Lighthouse Performance
+## Core Web Vitals
 
-`pnpm tests:lhci:perfo` runs Lighthouse CI (`lhci collect`) against the `urls.perfo` pages in `helpers/urls.json` for the selected [test groups](#test-groups) and writes raw reports to `qa/tests/playwright/perfo/.lighthouseci/` (gitignored, one Lighthouse run per URL). When no page matches the selection it says so and exits successfully.
-
-Each run also records its results in `qa/tests/playwright/perfo/lighthouse-history.md` — a committed Markdown file with one `## <url>` section per page, each holding its own table of category scores (performance, accessibility, best practices, SEO) over time. A new run's row lands under that page's existing section instead of at the end of the file, so a page's trend always stays together. Being plain Markdown, it renders as readable tables directly on GitHub and diffs cleanly in PRs (new rows only).
-
-In CI, the `lhci_perfo` job in `qa.yml` runs `tests:lhci:perfo` and, on success, opens (or updates) a pull request containing the updated `lighthouse-history.md` via `peter-evans/create-pull-request`, targeting the branch that triggered the run. This avoids pushing directly to a protected branch — someone still reviews and merges the trend update like any other change. Trigger it manually via the QA workflow with the **LHCI Performance tests** checkbox and a `base_url` value.
+Page speed is measured with k6, not Lighthouse. See [Core Web Vitals (k6)](./web-vitals.md).

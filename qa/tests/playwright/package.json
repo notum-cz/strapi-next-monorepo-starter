@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "k6-load-test": "K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_PORT=-1 K6_WEB_DASHBOARD_EXPORT=load/report.html k6 run load/load-test.ts",
-    "lhci-perfo-check": "tsx perfo/lhci.ts",
+    "k6-web-vitals": "K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_PERIOD=1s K6_WEB_DASHBOARD_PORT=-1 K6_WEB_DASHBOARD_EXPORT=perfo/report.html k6 run perfo/web-vitals.ts",
     "lint": "eslint -c ../../../eslint.config.mjs './**/*.{js,ts,jsx,tsx,cjs,mjs}'",
     "lint:fix": "pnpm lint --fix",
     "playwright-axe-test": "playwright test --project=axe --pass-with-no-tests",
@@ -29,7 +29,6 @@
     "get-sitemap-links": "1.1.0"
   },
   "devDependencies": {
-    "@lhci/cli": "0.15.1",
     "@playwright/test": "1.61.0",
     "@types/k6": "2.3.1",
     "@types/node": "24.13.2",
