@@ -4,10 +4,16 @@ import path from "node:path"
 import { defineConfig, devices, type Project } from "@playwright/test"
 import dotenv from "dotenv"
 
+import { groupsGrep, resolveTestEnv } from "./helpers/test-groups"
+
 const envPath = path.resolve(__dirname, ".env")
 if (fs.existsSync(envPath)) {
   dotenv.config({ path: envPath, override: false })
 }
+
+// Filtering here rather than in the pipeline also covers local runs and the
+// VS Code extension, so a @no-prod spec can never touch production by accident.
+const targetsProd = resolveTestEnv() === "prod"
 
 const mobileViewportsEnabled =
   process.env.MOBILE_VIEWPORTS_TESTING_ENABLED === "true"
@@ -118,6 +124,9 @@ export default defineConfig({
     "{snapshotDir}/{testFileDir}/{testFileName}-snapshots/{platform}/{arg}{-projectName}{ext}",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
+  // Feature groups from helpers/test-groups.ts. An untagged test never runs while this is set.
+  grep: groupsGrep(),
+  grepInvert: targetsProd ? /@no-prod/ : undefined,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 3 : undefined,
   reporter: [["html", { open: process.env.CI ? "never" : "on-failure" }]],

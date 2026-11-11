@@ -1,12 +1,17 @@
-import type { Locale } from "next-intl"
+import { notFound } from "next/navigation"
 import { setRequestLocale } from "next-intl/server"
 import { use } from "react"
+
+import { isValidLocale } from "@/lib/navigation"
 
 export default function Layout({
   children,
   params,
 }: LayoutProps<"/[locale]/dynamic/[[...rest]]">) {
-  const { locale } = use(params) as { locale: Locale }
+  const { locale } = use(params)
+  if (!isValidLocale(locale)) {
+    notFound()
+  }
 
   setRequestLocale(locale)
 

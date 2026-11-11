@@ -2,7 +2,8 @@ import AxeBuilder from "@axe-core/playwright"
 import { expect, test } from "@playwright/test"
 import type { AxeResults, Result } from "axe-core"
 
-import { flattenUrls } from "../helpers/flatten-urls"
+import { urlsByGroup } from "../helpers/flatten-urls"
+import { tags } from "../helpers/test-groups"
 
 import urls from "../helpers/urls.json"
 
@@ -18,7 +19,7 @@ const PATH_CONFIGS: Record<
   { excludeSelectors?: string[]; warningRuleIds?: string[] }
 > = {}
 
-const PATHS = flattenUrls(urls.axe)
+const PATHS = urlsByGroup(urls.axe)
 
 test.describe("AXE accessibility", () => {
   test.beforeAll(() => {
@@ -27,8 +28,8 @@ test.describe("AXE accessibility", () => {
     }
   })
 
-  for (const pathname of PATHS) {
-    test(`Check ${pathname}`, async ({ page, baseURL }) => {
+  for (const { group, path: pathname } of PATHS) {
+    test(`Check ${pathname}`, tags(group), async ({ page, baseURL }) => {
       const resolvedBaseUrl = baseURL ?? process.env.BASE_URL
 
       expect(
@@ -48,10 +49,15 @@ test.describe("AXE accessibility", () => {
         ...(config?.excludeSelectors ?? []),
       ]
 
-      await page.goto(site, {
+      const response = await page.goto(site, {
         waitUntil: "domcontentloaded",
         timeout: 20000,
       })
+      // Without it a missing page passes as an accessible 404 page.
+      expect(
+        response?.ok(),
+        `${site} responded with ${response?.status()}`
+      ).toBe(true)
       await page.waitForLoadState("networkidle")
 
       const results: AxeResults = await excludeSelectors

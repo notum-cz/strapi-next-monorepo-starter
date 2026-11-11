@@ -1,10 +1,9 @@
-import { normalizePageFullPath } from "@repo/shared-data"
 import type { Data } from "@repo/strapi-types"
 import type { Metadata } from "next"
 import type { Locale } from "next-intl"
 
 import { metaRobots } from "@/lib/metadata/constants"
-import { routing } from "@/lib/navigation"
+import { createPublicFullPath, isValidLocale, routing } from "@/lib/navigation"
 import type { StrapiLocalization } from "@/types/api"
 import type { NextMetadataTwitterCard, SocialMetadata } from "@/types/general"
 
@@ -16,10 +15,10 @@ export const preprocessSocialMetadata = (
   const ogSeo = seo?.og
 
   const card = ["summary", "summary_large_image", "player", "app"].includes(
-    String(twitterSeo?.card)
+    String(twitterSeo?.card?.trim())
   )
-    ? (String(twitterSeo?.card) as NextMetadataTwitterCard)
-    : "summary"
+    ? (twitterSeo?.card?.trim() as NextMetadataTwitterCard)
+    : undefined
 
   const ogImage = ogSeo?.image ?? seo?.metaImage
   const twitterImages =
@@ -28,18 +27,19 @@ export const preprocessSocialMetadata = (
   return {
     twitter: {
       card,
-      title: twitterSeo?.title ?? seo?.metaTitle ?? undefined,
-      description: twitterSeo?.description ?? seo?.metaDescription ?? undefined,
-      siteId: twitterSeo?.siteId ?? undefined,
-      creator: twitterSeo?.creator ?? undefined,
-      creatorId: twitterSeo?.creatorId ?? undefined,
+      title: twitterSeo?.title?.trim() || seo?.metaTitle?.trim() || undefined,
+      description:
+        twitterSeo?.description?.trim() ||
+        seo?.metaDescription?.trim() ||
+        undefined,
       images: twitterImages?.map((img) => img?.url),
     },
     openGraph: {
-      siteName: ogSeo?.siteName ?? undefined,
-      title: ogSeo?.title ?? seo?.metaTitle ?? undefined,
-      description: ogSeo?.description ?? seo?.metaDescription ?? undefined,
-      url: ogSeo?.url ?? canonicalUrl ?? undefined,
+      type: ogSeo?.type ?? undefined,
+      title: ogSeo?.title?.trim() || seo?.metaTitle?.trim() || undefined,
+      description:
+        ogSeo?.description?.trim() || seo?.metaDescription?.trim() || undefined,
+      url: canonicalUrl,
       images: ogImage
         ? [
             {
@@ -57,7 +57,10 @@ export const preprocessSocialMetadata = (
 export const seoMergeCustomizer = (
   defaultValue: unknown,
   strapiValue: unknown
-) => strapiValue ?? defaultValue
+) =>
+  typeof strapiValue === "string" && !strapiValue.trim()
+    ? defaultValue
+    : (strapiValue ?? defaultValue)
 
 export const getMetaRobots = (
   robotsString?: string | Metadata["robots"] | null,
@@ -73,60 +76,43 @@ export const getMetaRobots = (
 }
 
 export const getMetaAlternates = ({
-  seo,
   fullPath,
   locale,
   localizations,
 }: {
-  seo: Data.Component<"seo-utilities.seo"> | null | undefined
   fullPath: string | null
   locale: Locale
   localizations?: StrapiLocalization[]
 }) => {
-  const canonicalUrl = seo?.canonicalUrl ?? fullPath ?? ""
-  let languages: Record<string, string> | undefined
+  if (!fullPath) {
+    return
+  }
 
-  if (Array.isArray(localizations)) {
-    languages = {}
+  const canonical = createPublicFullPath(fullPath, locale)
+  const languages: Record<string, string> = { [locale]: canonical }
 
-    // Only available languages should be added as alternates
-    for (const localization of localizations) {
-      if (!localization.locale) {
-        continue
-      }
-
-      languages[localization.locale] = normalizePageFullPath(
-        [canonicalUrl],
-        localization.locale
-      )
-    }
-
-    // If you are on defaultLocale, it should point to the en version too
-    if (locale === routing.defaultLocale) {
-      languages[routing.defaultLocale] = normalizePageFullPath(
-        [canonicalUrl],
-        routing.defaultLocale
-      )
-    }
-
-    // x-default should be added to point to defaultLocale version if exists
+  // fetchSeo only populates published translations. Each translation can have
+  // a different slug or parent hierarchy, so use its own fullPath.
+  for (const localization of localizations ?? []) {
     if (
-      locale === routing.defaultLocale ||
-      localizations.some((lang) => lang.locale === routing.defaultLocale)
+      !isValidLocale(localization.locale) ||
+      !localization.fullPath ||
+      localization.locale === locale
     ) {
-      languages["x-default"] = normalizePageFullPath(
-        [canonicalUrl],
-        routing.defaultLocale
-      )
+      continue
     }
+
+    languages[localization.locale] = createPublicFullPath(
+      localization.fullPath,
+      localization.locale
+    )
   }
 
-  const canonical = canonicalUrl
-    ? normalizePageFullPath([canonicalUrl], locale)
-    : undefined
-
-  return {
-    canonical,
-    languages,
+  // x-default should be added to point to defaultLocale version if exists
+  const defaultLanguageUrl = languages[routing.defaultLocale]
+  if (defaultLanguageUrl) {
+    languages["x-default"] = defaultLanguageUrl
   }
+
+  return { canonical, languages }
 }

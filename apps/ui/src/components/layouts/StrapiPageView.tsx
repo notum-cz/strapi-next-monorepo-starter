@@ -6,23 +6,21 @@ import { use } from "react"
 
 import { Breadcrumbs } from "@/components/elementary/Breadcrumbs"
 import { Container } from "@/components/elementary/Container"
-import { ErrorBoundary } from "@/components/elementary/ErrorBoundary"
-import { PageContentComponents } from "@/components/page-builder"
 import StrapiStructuredData from "@/components/page-builder/components/seo-utilities/StrapiStructuredData"
-import { logger } from "@/lib/logging"
+import { StrapiDynamicZoneRenderer } from "@/components/page-builder/StrapiDynamicZoneRenderer"
 import { fetchPage } from "@/lib/strapi-api/content/server"
 import { cn } from "@/lib/styles"
 
 interface Props {
   params: {
-    locale: string
+    locale: Locale
     rest?: string[]
   }
   searchParams?: Record<string, string | string[] | undefined>
 }
 
 export default function StrapiPageView({ params, searchParams }: Props) {
-  const locale = params.locale as Locale
+  const { locale } = params
 
   setRequestLocale(locale)
 
@@ -40,7 +38,7 @@ export default function StrapiPageView({ params, searchParams }: Props) {
     <>
       <StrapiStructuredData structuredData={data?.seo?.structuredData} />
 
-      <main className={cn("flex w-full flex-col overflow-hidden")}>
+      <main id="top" className={cn("flex w-full flex-col overflow-hidden")}>
         <Container className="mb-10 md:mb-20">
           <Breadcrumbs
             breadcrumbs={response?.meta?.breadcrumbs}
@@ -49,37 +47,12 @@ export default function StrapiPageView({ params, searchParams }: Props) {
           />
         </Container>
 
-        {content
-          .filter((comp) => comp != null)
-          .map((comp) => {
-            const name = comp.__component
-            const id = comp.id
-            const key = `${name}-${id}`
-            const Component = PageContentComponents[name]
-            if (Component == null) {
-              logger.warn("Unknown page-builder component", { name, id })
-
-              return (
-                <div key={key} className="font-medium text-red-500">
-                  Component &quot;{key}&quot; is not implemented on the
-                  frontend.
-                </div>
-              )
-            }
-
-            return (
-              <ErrorBoundary key={key}>
-                <div className={cn("mb-20 md:mb-32 lg:mb-40")}>
-                  <Component
-                    component={comp}
-                    pageParams={params}
-                    page={restPageData}
-                    searchParams={searchParams}
-                  />
-                </div>
-              </ErrorBoundary>
-            )
-          })}
+        <StrapiDynamicZoneRenderer
+          dynamicZone={content}
+          page={restPageData}
+          params={params}
+          searchParams={searchParams}
+        />
       </main>
     </>
   )

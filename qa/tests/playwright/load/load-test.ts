@@ -12,8 +12,6 @@ import exec from "k6/execution"
 import http from "k6/http"
 import type { Options, Scenario } from "k6/options"
 
-import { flattenUrls } from "../helpers/flatten-urls.ts"
-
 // ─── Settings ────────────────────────────────────────────────────────────────
 // Defaults for every run. Override any of them for one run from the command
 // line, e.g. `LOAD_RPS=20 pnpm tests:k6:load:spike`.
@@ -61,7 +59,39 @@ const BASE_URL = (__ENV.BASE_URL || readDotEnv().BASE_URL || "").replace(
 )
 if (!BASE_URL) throw new Error("Set BASE_URL in qa/tests/playwright/.env")
 
-const PATHS = flattenUrls(JSON.parse(open("../helpers/urls.json")).load ?? [])
+const HOST = BASE_URL.replace(/^\w+:\/\//, "")
+  .split(/[/:?#]/, 1)[0]
+  .toLowerCase()
+const IS_LOCAL = ["localhost", "127.0.0.1", "host.docker.internal"].includes(
+  HOST
+)
+type LoadEnv = "dev" | "stg" | "prod"
+type LoadUrls = Record<string, string[] | Partial<Record<LoadEnv, string[]>>>
+
+function loadEnvironment(): LoadEnv | undefined {
+  if (IS_LOCAL) return undefined
+  if (/(^|[-.])dev([-.]|$)/.test(HOST)) return "dev"
+  if (/(^|[-.])(stg|staging)([-.]|$)/.test(HOST)) return "stg"
+
+  return "prod"
+}
+
+function loadPaths(urls: LoadUrls, env: LoadEnv | undefined): string[] {
+  return Array.from(
+    new Set(
+      Object.values(urls).flatMap((groupUrls) => {
+        if (Array.isArray(groupUrls)) return groupUrls
+
+        return env ? (groupUrls[env] ?? []) : Object.values(groupUrls).flat()
+      })
+    )
+  )
+}
+
+const PATHS = loadPaths(
+  (JSON.parse(open("../helpers/urls.json")).load ?? {}) as LoadUrls,
+  loadEnvironment()
+)
 if (PATHS.length === 0) throw new Error('No pages under "load" in urls.json')
 
 // Visitors keep arriving at the set rate even when the site slows down
@@ -118,12 +148,6 @@ if (!Object.hasOwn(PROFILES, PROFILE)) {
 // dev / stg / staging segment — the same rule as resolveTestEnv() in the
 // test-groups work. Production needs LOAD_ALLOW_PROD=true on the command line
 // for that one run; deliberately not a SETTINGS value, so it never stays on.
-const HOST = BASE_URL.replace(/^\w+:\/\//, "")
-  .split(/[/:?#]/, 1)[0]
-  .toLowerCase()
-const IS_LOCAL = ["localhost", "127.0.0.1", "host.docker.internal"].includes(
-  HOST
-)
 const IS_NON_PROD = IS_LOCAL || /(^|[-.])(dev|stg|staging)([-.]|$)/.test(HOST)
 const ALLOW_PROD = __ENV.LOAD_ALLOW_PROD === "true"
 if (!IS_NON_PROD && !ALLOW_PROD) {

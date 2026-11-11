@@ -5,12 +5,13 @@ import { use } from "react"
 import StrapiPageView from "@/components/layouts/StrapiPageView"
 import { getMetadataFromStrapi } from "@/lib/metadata"
 import { isValidLocale } from "@/lib/navigation"
+import type { ExtendedPageProps } from "@/types/next"
 
 // Force dynamic rendering (SSR) for this route
 export const dynamic = "force-dynamic"
 
 export async function generateMetadata(
-  props: PageProps<"/[locale]/dynamic/[[...rest]]">
+  props: ExtendedPageProps<"/[locale]/dynamic/[[...rest]]">
 ) {
   const params = await props.params
   const locale = params.locale
@@ -24,7 +25,7 @@ export async function generateMetadata(
 }
 
 export default function DynamicStrapiPage(
-  props: PageProps<"/[locale]/dynamic/[[...rest]]">
+  props: ExtendedPageProps<"/[locale]/dynamic/[[...rest]]">
 ) {
   const params = use(props.params)
   if (!isValidLocale(params.locale)) {

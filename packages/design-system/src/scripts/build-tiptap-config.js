@@ -10,7 +10,7 @@ const path = require("node:path")
 
 // --- tiptap-color-config.json ---
 
-const stylesPath = path.resolve(__dirname, "../dist/styles.css")
+const stylesPath = path.resolve(__dirname, "../../dist/styles.css")
 const stylesCss = fs.readFileSync(stylesPath, "utf8")
 
 // This is only running during buildtime and depends on the theme.
@@ -38,23 +38,27 @@ const colorConfig = allVars
   }))
 
 fs.writeFileSync(
-  path.resolve(__dirname, "../dist/tiptap-color-config.json"),
+  path.resolve(__dirname, "../../dist/tiptap-color-config.json"),
   JSON.stringify(colorConfig, null, 2),
   "utf8"
 )
 
 // --- tiptap-theme.css ---
 
-const themePath = path.resolve(__dirname, "theme.css")
-const themeContent = fs.readFileSync(themePath, "utf8")
+const inner = ["colors.css", "theme.css"]
+  .map((file) => {
+    const themeContent = fs.readFileSync(
+      path.resolve(__dirname, "../styles", file),
+      "utf8"
+    )
+    const themeMatch = themeContent.match(/@theme\s+static\s*\{([\s\S]*)\}/)
+    if (!themeMatch) {
+      throw new Error(`Could not find @theme static block in ${file}`)
+    }
 
-const themeMatch = themeContent.match(/@theme\s+static\s*\{([\s\S]*)\}/)
-if (!themeMatch) {
-  console.error("Could not find @theme static block in theme.css")
-  throw new Error("Invalid theme.css format")
-}
-
-const inner = themeMatch[1]
+    return themeMatch[1]
+  })
+  .join("\n")
 const lines = inner.split("\n")
 const rootProps = []
 const keyframes = []
@@ -88,7 +92,7 @@ const keyframesBlock =
 const output = `:root {\n${rootProps.join("\n")}\n}\n${keyframesBlock}`
 
 fs.writeFileSync(
-  path.resolve(__dirname, "../dist/tiptap-theme.css"),
+  path.resolve(__dirname, "../../dist/tiptap-theme.css"),
   output,
   "utf8"
 )

@@ -21,6 +21,7 @@ const REVALIDATE_COLLECTIONS: RevalidateCollectionConfig[] = [
   },
   { uid: "api::navbar.navbar", mode: "tag-revalidate" },
   { uid: "api::footer.footer", mode: "tag-revalidate" },
+  { uid: "api::seo-configuration.seo-configuration", mode: "tag-revalidate" },
   {
     uid: "api::redirect.redirect",
     mode: "path-revalidate",

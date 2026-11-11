@@ -83,20 +83,30 @@ export default async function ProfilePage() {
 }
 ```
 
-Use `Locale` from `next-intl` for route params and utility APIs:
+### Route Locale
 
-```tsx
-import type { Locale } from "next-intl"
+| Component | Props type                                                | Locale type                           |
+| --------- | --------------------------------------------------------- | ------------------------------------- |
+| Page      | `ExtendedPageProps<"/[locale]/auth">` from `@/types/next` | `Locale`                              |
+| Layout    | Next.js `LayoutProps<"/[locale]/auth">`                   | `string`, narrowed by `isValidLocale` |
 
-export default async function Layout({
-  children,
-  params,
-}: LayoutProps<"/[locale]">) {
-  const { locale } = (await params) as { locale: Locale }
+Validate URL values in both cases:
 
-  return <html lang={locale}>{children}</html>
+```ts
+import { notFound } from "next/navigation"
+import { setRequestLocale } from "next-intl/server"
+
+import { isValidLocale } from "@/lib/navigation"
+
+// Inside the page or layout:
+const { locale } = await params
+if (!isValidLocale(locale)) {
+  notFound()
 }
+setRequestLocale(locale)
 ```
+
+See [Page Props](../ui/project-structure.md#page-props) for custom search parameters.
 
 ## Content Locales
 

@@ -89,9 +89,13 @@ export async function fetchSeo(
   try {
     return await PublicStrapiClient.fetchOneByFullPath(uid, fullPath, {
       locale,
+      status: "published",
       populate: {
         seo: "smart",
-        localizations: true,
+        localizations: {
+          fields: ["locale", "fullPath"],
+          filters: { publishedAt: { $notNull: true } },
+        },
       },
     })
   } catch (e: unknown) {
@@ -102,6 +106,96 @@ export async function fetchSeo(
         stack: e instanceof Error ? e.stack : undefined,
       },
     })
+  }
+}
+
+// A single type that has never been saved returns 404. For SEO Configuration that
+// means "not configured yet", so callers fall back to defaults without logging.
+const isNotFoundError = (error: unknown) => {
+  if (!(error instanceof Error)) {
+    return false
+  }
+
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(error.message)
+  } catch {
+    return false
+  }
+
+  return (
+    typeof parsed === "object" &&
+    parsed !== null &&
+    "status" in parsed &&
+    parsed.status === 404
+  )
+}
+
+// Both configuration fetchers are locale-independent and populate only their branch.
+// Saves invalidate their shared cache tag; the ten-minute TTL is a fallback.
+export async function fetchGlobalMetadata() {
+  try {
+    const response = await PublicStrapiClient.fetchOne(
+      "api::seo-configuration.seo-configuration",
+      undefined,
+      {
+        fields: ["id"],
+        populate: {
+          globalMetadata: "smart",
+        },
+      },
+      {
+        next: {
+          revalidate: 600,
+          tags: [strapiCacheTag("api::seo-configuration.seo-configuration")],
+        },
+      }
+    )
+
+    return response.data?.globalMetadata ?? null
+  } catch (error: unknown) {
+    if (isNotFoundError(error)) {
+      return null
+    }
+
+    logNonBlockingError({
+      message: "Error fetching global metadata",
+      error: { error: error instanceof Error ? error.message : String(error) },
+    })
+
+    return null
+  }
+}
+
+export async function fetchRobotsConfiguration() {
+  try {
+    const response = await PublicStrapiClient.fetchOne(
+      "api::seo-configuration.seo-configuration",
+      undefined,
+      {
+        fields: ["id"],
+        populate: { robotsConfiguration: "smart" },
+      },
+      {
+        next: {
+          revalidate: 600,
+          tags: [strapiCacheTag("api::seo-configuration.seo-configuration")],
+        },
+      }
+    )
+
+    return response.data?.robotsConfiguration ?? null
+  } catch (error: unknown) {
+    if (isNotFoundError(error)) {
+      return null
+    }
+
+    logNonBlockingError({
+      message: "Error fetching robots configuration",
+      error: { error: error instanceof Error ? error.message : String(error) },
+    })
+
+    return null
   }
 }
 
