@@ -48,7 +48,6 @@ async function handler(
   if (!isReadOnly) {
     const contentType = clonedRequest.headers.get("content-type")
 
-    // eslint-disable-next-line unicorn/prefer-ternary
     if (contentType?.includes("multipart/form-data")) {
       // File upload - preserve FormData as blob
       body = await clonedRequest.blob()

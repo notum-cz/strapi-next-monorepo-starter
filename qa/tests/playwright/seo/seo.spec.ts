@@ -248,6 +248,7 @@ for (const { group, path } of PATHS) {
     })
 
     test.describe("H1 heading", () => {
+      // eslint-disable-next-line sonarjs/assertions-in-tests -- asserts by throwing a diagnostic Error
       test("should exist exactly once and have non-empty text", async ({
         page,
       }) => {
@@ -499,6 +500,7 @@ for (const { group, path } of PATHS) {
     })
 
     test.describe("Heroku references", () => {
+      // eslint-disable-next-line sonarjs/assertions-in-tests -- asserts by throwing a diagnostic Error
       test('HTML and canonical should not contain "heroku" on PROD', async ({
         page,
       }) => {

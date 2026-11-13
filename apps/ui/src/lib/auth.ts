@@ -277,8 +277,7 @@ export const strapiSessionPlugin = customSession(
   async ({ user, session }, ctx) => {
     // if no strapiJWT, return as-is (unauthenticated request)
     const strapiJWT = (user as Record<string, unknown>)?.strapiJWT as
-      | string
-      | undefined
+      string | undefined
     if (!strapiJWT) {
       return { user, session }
     }

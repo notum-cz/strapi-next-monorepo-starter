@@ -30,10 +30,7 @@ export interface AppError {
 }
 
 export type NextMetadataTwitterCard =
-  | "summary"
-  | "summary_large_image"
-  | "player"
-  | "app"
+  "summary" | "summary_large_image" | "player" | "app"
 
 export type SocialMetadata = {
   twitter: Metadata["twitter"]

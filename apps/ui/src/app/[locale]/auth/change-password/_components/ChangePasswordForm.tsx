@@ -138,5 +138,4 @@ const ChangePasswordFormSchema = z
 
 type FormSchemaType = typeof ChangePasswordFormSchema
 
-// eslint-disable-next-line sonarjs/no-hardcoded-passwords
 const changePasswordFormName = "changePasswordForm"

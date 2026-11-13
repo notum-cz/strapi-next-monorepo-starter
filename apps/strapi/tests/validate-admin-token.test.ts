@@ -89,7 +89,7 @@ describe("validateAdminToken", () => {
   })
 
   it("rejects a token forged with the 'none' algorithm", async () => {
-    // eslint-disable-next-line sonarjs/insecure-jwt-token, sonarjs/hardcoded-secret-signatures -- intentionally forging an insecure token to assert it is rejected
+    // eslint-disable-next-line sonarjs/insecure-jwt-token -- intentionally forging an insecure token to assert it is rejected
     const token = jwt.sign({ ...accessPayload, exp: 9999999999 }, "", {
       algorithm: "none",
     })

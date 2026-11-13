@@ -43,7 +43,6 @@ function SuspensedLocaleSwitcher({ locale }: { locale: Locale }) {
       router.replace(
         queryParams.length > 0 ? `${pathname}?${queryParams}` : pathname,
         // Not String#replace — this is the next-intl router's navigation method.
-        // eslint-disable-next-line unicorn/no-unsafe-string-replacement
         { locale }
       )
     })

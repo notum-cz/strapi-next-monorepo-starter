@@ -1,5 +1,5 @@
-import { normalizeFullPaths, readCdnPurgeConfig } from "./helpers"
 import { logError, logger } from "../../../utils/logging"
+import { normalizeFullPaths, readCdnPurgeConfig } from "./helpers"
 
 // Cap how long we wait on the UI purge endpoint so a stalled upstream cannot
 // hang the request (and the admin widget) indefinitely.

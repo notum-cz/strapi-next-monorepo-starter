@@ -64,7 +64,7 @@ export async function redirectsProxy(
 
 function isPrefetchRequest(req: NextRequest) {
   return (
-    req.headers.has("next-router-prefetch") ||
+    req.headers.get("next-router-prefetch") !== null ||
     req.headers.get("purpose") === "prefetch" ||
     req.headers.get("sec-purpose") === "prefetch"
   )

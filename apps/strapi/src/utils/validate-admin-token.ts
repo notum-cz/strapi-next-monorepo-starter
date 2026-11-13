@@ -2,8 +2,7 @@ import type { Core } from "@strapi/strapi"
 import jwt from "jsonwebtoken"
 
 type ValidationResult =
-  | { valid: true; userId: string }
-  | { valid: false; error: string }
+  { valid: true; userId: string } | { valid: false; error: string }
 
 type HeadersLike = Record<string, string | string[] | undefined>
 

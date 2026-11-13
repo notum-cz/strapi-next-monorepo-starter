@@ -67,7 +67,6 @@ describe("imgproxy utilities", () => {
     })
 
     it("rewrites local Strapi source URLs for Docker imgproxy access", () => {
-      /* eslint-disable unicorn/prefer-https -- local Docker imgproxy integration uses HTTP. */
       getEnvVarMock.mockReturnValue("http://localhost:8080")
 
       expect(
@@ -77,7 +76,6 @@ describe("imgproxy utilities", () => {
       ).toBe(
         "http://localhost:8080/rs:fit:420:0/plain/http://host.docker.internal:1337/uploads/image.png@webp"
       )
-      /* eslint-enable unicorn/prefer-https */
     })
   })
 })

@@ -2,13 +2,10 @@
 
 import {
   flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
+  useTable,
   type ColumnDef,
   type HeaderGroup,
+  type RowData,
   type SortingState,
 } from "@tanstack/react-table"
 import { useTranslations } from "next-intl"
@@ -27,9 +24,12 @@ import {
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
 import { DataTablePagination } from "./DataTablePagination"
+import { dataTableFeatures, type DataTableFeatures } from "./features"
 
-interface Props<TData, TValue> {
-  readonly columns: ColumnDef<TData, TValue>[]
+interface Props<TData extends RowData> {
+  // Columns hold mixed value types; `any` is TanStack's documented pattern here.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readonly columns: ColumnDef<DataTableFeatures, TData, any>[]
   readonly data: TData[]
   readonly isLoading?: boolean
   readonly pagination?: "simple" | "extended" | false
@@ -37,14 +37,14 @@ interface Props<TData, TValue> {
   readonly searchAdornment?: ReactNode
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends RowData>({
   columns,
   data,
   isLoading,
   allowSearching,
   pagination,
   searchAdornment,
-}: Props<TData, TValue>) {
+}: Props<TData>) {
   removeThisWhenYouNeedMe("DataTable")
 
   const t = useTranslations()
@@ -52,14 +52,10 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = useState("")
 
-  // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Table returns non-memoizable functions by design
-  const table = useReactTable({
+  const table = useTable({
+    features: dataTableFeatures,
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
     state: {
@@ -149,10 +145,10 @@ export function DataTable<TData, TValue>({
   )
 }
 
-function DataTableSkeleton<TData>({
+function DataTableSkeleton<TData extends RowData>({
   headerGroup,
 }: {
-  headerGroup: HeaderGroup<TData>
+  headerGroup: HeaderGroup<DataTableFeatures, TData>
 }) {
   return (
     <>
@@ -163,10 +159,10 @@ function DataTableSkeleton<TData>({
   )
 }
 
-function SkeletonLine<TData>({
+function SkeletonLine<TData extends RowData>({
   headerGroup,
 }: {
-  headerGroup: HeaderGroup<TData>
+  headerGroup: HeaderGroup<DataTableFeatures, TData>
 }) {
   return (
     <TableBody>

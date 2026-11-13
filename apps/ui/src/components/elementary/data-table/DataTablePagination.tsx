@@ -6,7 +6,7 @@ import {
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon,
 } from "@radix-ui/react-icons"
-import type { Table } from "@tanstack/react-table"
+import type { ReactTable, RowData } from "@tanstack/react-table"
 import { useTranslations } from "next-intl"
 
 import { Button } from "@/components/ui/button"
@@ -19,12 +19,17 @@ import {
 } from "@/components/ui/select"
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 
-interface Props<TData> {
-  readonly table: Table<TData>
+import type { DataTableFeatures } from "./features"
+
+interface Props<TData extends RowData> {
+  readonly table: ReactTable<DataTableFeatures, TData>
   readonly simple?: boolean
 }
 
-export function DataTablePagination<TData>({ table, simple }: Props<TData>) {
+export function DataTablePagination<TData extends RowData>({
+  table,
+  simple,
+}: Props<TData>) {
   removeThisWhenYouNeedMe("DataTablePagination")
 
   const t = useTranslations("tables")
@@ -63,13 +68,13 @@ export function DataTablePagination<TData>({ table, simple }: Props<TData>) {
         <div className="flex items-center space-x-2">
           <p className="text-sm font-medium">{t("rowsPerPage")}</p>
           <Select
-            value={String(table.getState().pagination.pageSize)}
+            value={String(table.state.pagination.pageSize)}
             onValueChange={(value) => {
               table.setPageSize(Number(value))
             }}
           >
             <SelectTrigger className="h-8 w-[70px]">
-              <SelectValue placeholder={table.getState().pagination.pageSize} />
+              <SelectValue placeholder={table.state.pagination.pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
               {[10, 20, 30, 40, 50].map((pageSize) => (
@@ -82,7 +87,7 @@ export function DataTablePagination<TData>({ table, simple }: Props<TData>) {
         </div>
         <div className="flex w-[100px] items-center justify-center text-sm font-medium">
           {t("pageXOfY", {
-            x: table.getState().pagination.pageIndex + 1,
+            x: table.state.pagination.pageIndex + 1,
             y: table.getPageCount(),
           })}
         </div>
