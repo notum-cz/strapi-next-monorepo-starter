@@ -9,7 +9,7 @@ The design system in this repository is shared between Figma/design, the Next.js
 
 Clarify the source of truth first: Figma, the current website, Strapi content, or a documented combination. Align naming across design, code, and CMS early so the same concept is not named differently in every layer.
 
-Shared visual values belong mainly in `packages/design-system/src/theme.css` and `packages/design-system/src/custom-styles.css`. These files affect both the frontend and Strapi editor integrations. See the [`@repo/design-system` package reference](/docs/reference/packages/design-system) for package-level context.
+Shared styles live in `packages/design-system/src/styles`: `colors.css` defines colors, `typography.css` defines typography utilities and rich text typography, `shared.css` contains shared editor rules, and `theme.css` defines the remaining tokens. The `src/styles.css` entry imports Tailwind, `src/fonts.css`, and all four style files. Next.js and Strapi use the local Roboto files in `src/fonts`. These files affect both the frontend and Strapi editor integrations. See the [`@repo/design-system` package reference](/docs/reference/packages/design-system) for package-level context.
 
 Define colors, fonts, spacing, containers, typography, and section-level layout once. Treat tokens, typography classes, rich text styles, and editor config outputs as shared contracts.
 

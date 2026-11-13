@@ -23,10 +23,6 @@
       "required": false,
       "allowedTypes": ["images"]
     },
-    "keywords": {
-      "type": "text",
-      "regex": "[^,]+"
-    },
     "twitter": {
       "type": "component",
       "component": "seo-utilities.seo-twitter",
@@ -36,12 +32,6 @@
       "type": "component",
       "component": "seo-utilities.seo-og",
       "repeatable": false
-    },
-    "applicationName": {
-      "type": "string"
-    },
-    "canonicalUrl": {
-      "type": "string"
     },
     "metaRobots": {
       "type": "enumeration",

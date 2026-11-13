@@ -1,5 +1,4 @@
 import { headers } from "next/headers"
-import type { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
 import { Button } from "@/components/ui/button"
@@ -13,11 +12,12 @@ import {
 } from "@/components/ui/card"
 import { getSessionSSR } from "@/lib/auth"
 import { Link } from "@/lib/navigation"
+import type { ExtendedPageProps } from "@/types/next"
 
 export default async function AuthPage({
   params,
-}: PageProps<"/[locale]/auth">) {
-  const { locale } = (await params) as { locale: Locale }
+}: ExtendedPageProps<"/[locale]/auth">) {
+  const { locale } = await params
 
   setRequestLocale(locale)
 

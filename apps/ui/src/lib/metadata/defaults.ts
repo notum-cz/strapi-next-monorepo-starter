@@ -1,56 +1,95 @@
+import type { Data } from "@repo/strapi-types"
 import type { Metadata } from "next"
 import type { Locale } from "next-intl"
-import type { getTranslations } from "next-intl/server"
 
-import { routing } from "@/lib/navigation"
+import { createPublicFullPath } from "@/lib/navigation"
 
-type TranslateFn = Awaited<ReturnType<typeof getTranslations>>
+type PageTitle = string | undefined | { absolute: string }
 
-export function getDefaultMetadata(siteUrl: string, t: TranslateFn) {
+/**
+ * Page title with the `applicationName` fallback. Next.js resolves an explicit
+ * `title: undefined` to an empty title instead of the layout default, so the
+ * fallback has to be set on the page. It is absolute, so the layout's
+ * `%s | <name>` template doesn't turn it into `<name> | <name>`.
+ */
+export function resolvePageTitle(
+  title?: string | null,
+  applicationName?: string | null
+): PageTitle {
+  const pageTitle = title?.trim()
+  if (pageTitle) {
+    return pageTitle
+  }
+
+  const name = applicationName?.trim()
+
+  return name ? { absolute: name } : undefined
+}
+
+export function getDefaultMetadata(
+  siteUrl: string,
+  applicationName?: string,
+  title?: PageTitle
+): Metadata {
   return {
-    title: t("metaTitle"),
-    description: t("metaDescription"),
-    keywords: t("keywords"),
-    robots: t("metaRobots"),
-    applicationName: t("applicationName"),
+    title,
+    // Production default; non-production is forced to noindex by getMetaRobots.
+    robots: { index: true, follow: true },
+    applicationName: applicationName?.trim() || undefined,
 
     icons: {
       icon: [
-        { url: "/favicon.ico", sizes: "16x16 32x32" },
-        { url: "/favicon.svg", type: "image/svg+xml" },
+        { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+        { url: "/favicon.ico", sizes: "16x16 32x32 48x48" },
       ],
+      apple: [{ url: "/apple-touch-icon.png", sizes: "256x256" }],
     },
 
     metadataBase: new URL(siteUrl),
-  } as Metadata
+  }
+}
+
+/**
+ * Root-layout title templates. The brand suffix comes from SEO Configuration's
+ * `applicationName`; without one, page titles render as-is. Pages that set no
+ * title fall back to `applicationName`.
+ */
+export function getRootTitleMetadata(
+  applicationName?: string | null
+): Pick<Metadata, "title" | "openGraph" | "twitter"> {
+  const name = applicationName?.trim()
+  const title = {
+    template: name ? `%s | ${name}` : "%s",
+    default: name ?? "",
+  }
+
+  return { title, openGraph: { title }, twitter: { title } }
 }
 
 export function getDefaultOgMeta(
-  locale: Locale | undefined,
+  locale: Locale,
   fullPath: string | undefined,
-  t: TranslateFn
+  configuration?: Data.Component<"seo-utilities.open-graph-configuration"> | null,
+  title?: PageTitle
 ): Metadata["openGraph"] {
   return {
     type: "website",
     locale: locale,
-    siteName: t("og.siteName"),
-    title: t("og.title"),
-    description: t("og.description"),
-    images: [t("og.image")],
-    url: [routing.defaultLocale !== locale ? locale : null, fullPath ?? ""]
-      .filter(Boolean)
-      .join("/"),
+    siteName: configuration?.siteName?.trim() || undefined,
+    title,
+    url: fullPath ? createPublicFullPath(fullPath, locale) : undefined,
   }
 }
 
-export function getDefaultTwitterMeta(t: TranslateFn): Metadata["twitter"] {
+export function getDefaultTwitterMeta(
+  configuration?: Data.Component<"seo-utilities.twitter-configuration"> | null,
+  title?: PageTitle
+): Metadata["twitter"] {
   return {
-    card: t("twitter.card"),
-    title: t("twitter.title"),
-    description: t("twitter.description"),
-    siteId: t("twitter.siteId"),
-    creator: t("twitter.creator"),
-    creatorId: t("twitter.creatorId"),
-    images: [t("twitter.imageUrl")],
-  } as Metadata["twitter"]
+    card: "summary",
+    title,
+    siteId: configuration?.siteId?.trim() || undefined,
+    creator: configuration?.creator?.trim() || undefined,
+    creatorId: configuration?.creatorId?.trim() || undefined,
+  }
 }

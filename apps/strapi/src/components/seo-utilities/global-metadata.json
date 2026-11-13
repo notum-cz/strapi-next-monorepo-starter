@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_seo_utilities_global_metadata",
+  "info": {
+    "displayName": "Global Metadata"
+  },
+  "options": {},
+  "attributes": {
+    "openGraphConfiguration": {
+      "type": "component",
+      "component": "seo-utilities.open-graph-configuration",
+      "repeatable": false
+    },
+    "twitterConfiguration": {
+      "type": "component",
+      "component": "seo-utilities.twitter-configuration",
+      "repeatable": false
+    },
+    "applicationName": {
+      "type": "string"
+    }
+  }
+}

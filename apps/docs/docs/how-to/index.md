@@ -259,7 +259,7 @@ pnpm tests:playwright:seo
 pnpm tests:playwright:visual
 ```
 
-See [Testing Overview](../reference/testing/overview.md), [Unit Testing](../reference/testing/unit-testing.md), [Playwright Testing](../reference/testing/playwright.md), and [Commands Reference](../reference/commands.md#testing).
+See [Testing Overview](../QA/overview.md), [Unit Testing](../QA/unit-testing.md), [Playwright Testing](../QA/playwright/index.md), and [Commands Reference](../reference/commands.md#testing).
 
 </details>
 

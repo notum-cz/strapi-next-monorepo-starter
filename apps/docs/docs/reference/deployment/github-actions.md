@@ -22,13 +22,13 @@ Use the shared setup action when adding new workflows so pnpm, Node, and depende
 
 ## Workflows
 
-| Workflow                    | File                            | Trigger                                  | Purpose                                                       |
-| --------------------------- | ------------------------------- | ---------------------------------------- | ------------------------------------------------------------- |
-| CI                          | `.github/workflows/ci.yml`      | Pull requests to `main` or `dev`         | Lint, format-check, unit test, build UI, and build Strapi.    |
-| QA (manual)                 | `.github/workflows/qa.yml`      | Manual `workflow_dispatch`               | Run selected browser QA suites against a supplied `BASE_URL`. |
-| Deploy Docs to GitHub Pages | `.github/workflows/docs.yml`    | Push to `main` touching docs, or manual  | Build Docusaurus and deploy docs to GitHub Pages.             |
-| Release                     | `.github/workflows/release.yml` | Push to `main`                           | Run semantic-release and publish a GitHub release.            |
-| Auto Create Pull Requests   | `.github/workflows/auto-pr.yml` | Push to `dev`, daily schedule, or manual | Create or update a `dev` to `main` pull request.              |
+| Workflow                    | File                            | Trigger                                  | Purpose                                                    |
+| --------------------------- | ------------------------------- | ---------------------------------------- | ---------------------------------------------------------- |
+| CI                          | `.github/workflows/ci.yml`      | Pull requests to `main` or `dev`         | Lint, format-check, unit test, build UI, and build Strapi. |
+| QA (manual)                 | `.github/workflows/qa.yml`      | Manual `workflow_dispatch`               | Run selected E2E suites against a supplied `BASE_URL`.     |
+| Deploy Docs to GitHub Pages | `.github/workflows/docs.yml`    | Push to `main` touching docs, or manual  | Build Docusaurus and deploy docs to GitHub Pages.          |
+| Release                     | `.github/workflows/release.yml` | Push to `main`                           | Run semantic-release and publish a GitHub release.         |
+| Auto Create Pull Requests   | `.github/workflows/auto-pr.yml` | Push to `dev`, daily schedule, or manual | Create or update a `dev` to `main` pull request.           |
 
 ## CI
 
@@ -55,7 +55,7 @@ The CI workflow contains a commented `pnpm build:ui:static` step. Enable it only
 
 ## QA Manual Workflow
 
-`.github/workflows/qa.yml` runs browser QA against an already running environment.
+`.github/workflows/qa.yml` runs E2E against an already running environment.
 
 Manual inputs:
 
@@ -134,6 +134,6 @@ The workflow configures GitHub Pages, builds Docusaurus with `DOCUSAURUS_URL` an
 
 ## Related Documentation
 
-- [Testing](../testing/overview.md)
+- [Testing](../../QA/overview.md)
 - [Git Hooks and Conventions](../workflow.md)
 - [`@repo/semantic-release-config`](../packages/semantic-release-config.md)

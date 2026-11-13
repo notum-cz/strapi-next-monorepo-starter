@@ -4,6 +4,8 @@
 node_modules
 .pnp
 .pnp.js
+# pnpm store, when store-dir resolves inside the repo
+.pnpm-store/
 
 # testing
 coverage

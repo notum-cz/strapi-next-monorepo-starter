@@ -1,6 +1,5 @@
+import { LOCAL_STRAPI_PORT, LOCAL_UI_HOSTNAMES } from "@/lib/constants"
 import { getEnvVar } from "@/lib/env-vars"
-
-const LOCAL_STRAPI_MEDIA_URL = "http://127.0.0.1:1337"
 
 /**
  * Formats a Strapi media URL for use in the UI.
@@ -29,11 +28,16 @@ export const formatStrapiMediaUrl = (
     // Client components cannot read STRAPI_URL. When the UI itself is running
     // on a local host, assume the matching local Strapi instance is on 1337.
     // This also covers `next build && next start`, where NODE_ENV is production.
-    const isLocalhostUi = ["localhost", "127.0.0.1", "::1"].includes(
-      window.location.hostname
-    )
+    //
+    // Mirror the host the UI is served from rather than hard-coding one.
+    // `localhost` and `127.0.0.1` are different origins, so pinning one here
+    // while STRAPI_URL uses the other makes the client disagree with the server
+    // and React reports a hydration mismatch on every media element.
+    const isLocalhostUi = LOCAL_UI_HOSTNAMES.includes(window.location.hostname)
     if (isLocalhostUi) {
-      return `${LOCAL_STRAPI_MEDIA_URL}${imageUrl}`
+      const { hostname, protocol } = window.location
+
+      return `${protocol}//${hostname}:${LOCAL_STRAPI_PORT}${imageUrl}`
     }
 
     // Non-local browser builds should not receive relative Strapi upload URLs.
