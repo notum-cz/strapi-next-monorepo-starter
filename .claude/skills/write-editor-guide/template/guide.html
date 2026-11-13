@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!--
+  Template placeholders, replaced on the first run in a project (see SKILL.md):
+  {{PROJECT_NAME}}  Client-facing project or brand name, e.g. "Acme".
+  {{VERSION}}       Guide version, e.g. "1.0". Bump on every release.
+  {{DATE}}          Month and year of the release, e.g. "November 2026".
+  {{RELEASE}}       What the release shipped, e.g. "Website launch, 4 November 2026".
+  {{LOCALES}}       Content languages in words, e.g. "English (en) and Czech (cs)".
+  Brand tokens live in :root below. Fonts come from the Google Fonts link.
+-->
+<title>{{PROJECT_NAME}} – Strapi Editor How-To Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 20mm 16mm 18mm 16mm; }
+  @page :first { margin: 0; }
+  /* Brand tokens. Defaults follow notum.tech (eerie black, ice blue, Manrope).
+     On a project, set them from its design system (packages/design-system/src/styles). */
+  :root { --brand:#2b292d; --brand-dark:#040608; --brand-light:#f0f4f7; --accent:#7993c6; --accent-dark:#2d4156; --accent-light:#ebf1fb;
+          --font-heading:"Manrope", Arial, sans-serif; --font-body:"Manrope", -apple-system, Arial, sans-serif;
+          --ink:#2b292d; --muted:#6b7280; --line:#e2e5ea; --soft:#f6f7f9; --warn:#fdf6e3; --warnline:#d39b00; }
+  * { box-sizing: border-box; }
+  body { font-family: var(--font-body); color: var(--ink); font-size: 10pt; line-height: 1.55; margin: 0; background:#fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  h1, h2, h3 { font-family: var(--font-heading); }
+  h1 { font-size: 21pt; color: var(--brand); margin: 0 0 12pt; page-break-before: always; padding-bottom: 6pt; border-bottom: 2px solid var(--accent); font-weight: 600; letter-spacing: -.3px; }
+  h1 .num { color: var(--accent-dark); margin-right: 6pt; }
+  h2 { font-size: 13.5pt; color: var(--brand-dark); margin: 18pt 0 5pt; page-break-after: avoid; font-weight: 600; }
+  h3 { font-size: 11.5pt; margin: 12pt 0 3pt; page-break-after: avoid; }
+  p { margin: 4pt 0 6pt; }
+  ul, ol { margin: 3pt 0 7pt; padding-left: 18pt; }
+  li { margin: 1.5pt 0; }
+  li::marker { color: var(--brand); }
+  b, strong { font-weight: 700; }
+  code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 8.4pt; background: var(--soft); color: var(--brand-dark); border-radius: 3px; padding: 0.5pt 3pt; }
+  .ui { font-weight: 700; color: var(--brand-dark); }
+  table { width: 100%; border-collapse: collapse; margin: 6pt 0 10pt; font-size: 9pt; }
+  tr { page-break-inside: avoid; }
+  th { text-align: left; padding: 5pt 7pt; font-weight: 700; background: var(--brand); color: #fff; }
+  td { border-bottom: 1px solid var(--line); padding: 4.5pt 7pt; vertical-align: top; }
+  tr:nth-child(even) td { background: #fafbfc; }
+  td:first-child { font-weight: 700; white-space: nowrap; color: var(--brand-dark); }
+  .box { border-left: 3px solid var(--brand); background: var(--brand-light); padding: 6pt 10pt; margin: 10pt 0; page-break-inside: avoid; border-radius: 0 4px 4px 0; }
+  .box.warn { border-color: var(--warnline); background: var(--warn); }
+  .box.tip { border-color: var(--accent); background: var(--accent-light); }
+  .box b.lbl { display:block; margin-bottom: 1pt; }
+  .comp { margin: 16pt 0; page-break-inside: avoid; }
+  .comp h3 { margin: 0 0 3pt; font-size: 12.5pt; color: var(--brand); padding-left: 8pt; border-left: 3px solid var(--accent); }
+  .comp .pick { font-family: var(--font-body); font-size: 8.5pt; font-weight: 500; color: var(--muted); margin-left: 4pt; }
+  .steps { list-style: none; padding-left: 0; counter-reset: s; }
+  .steps > li { counter-increment: s; position: relative; padding-left: 22pt; margin: 5pt 0; }
+  .steps > li::before { content: counter(s); position: absolute; left: 0; top: 0.5pt; width: 15pt; height: 15pt; border-radius: 50%; border: 1.5px solid var(--brand); color: var(--brand); font-weight: 700; font-size: 8pt; text-align: center; line-height: 12.5pt; }
+  .shot { display:block; width:100%; max-height:92mm; object-fit:cover; object-position:top; border:1px solid var(--line); border-radius: 4px; margin:6pt 0 7pt; }
+  .shot.short { max-height:60mm; }
+  .cap { font-size:8.2pt; color:var(--muted); margin:-3pt 0 8pt; }
+  .muted { color: var(--muted); }
+  .flow { margin: 6pt 0 8pt; font-size: 9.5pt; }
+  .flow span { font-weight: 600; color: var(--brand-dark); }
+  .flow i { color: var(--muted); font-style: normal; margin: 0 4pt; }
+  /* cover: light, in the style of notum.tech (ice-blue rounded panel, dark text) */
+  .cover { width: 210mm; height: 297mm; position: relative; overflow: hidden; background: #fff; color: var(--brand); page-break-after: always; padding: 12mm 12mm 10mm; display:flex; flex-direction:column; }
+  .cover .top { display:flex; align-items:center; justify-content:space-between; height: 14mm; padding: 0 4mm; }
+  .cover .logos { display:flex; align-items:center; gap:5mm; }
+  .cover .logos .brand { height: 7.5mm; }
+  .cover .logos .x { font-size: 20pt; color: var(--muted); font-weight: 400; line-height: 1; }
+  .cover .logos .strapi { display:flex; align-items:center; gap:2mm; }
+  .cover .logos .strapi img { height: 9mm; }
+  .cover .logos .strapi span { font-family: var(--font-body); font-weight: 700; font-size: 18pt; color: #32324d; letter-spacing: -.3px; }
+  .cover .top .doc { font-size: 10pt; color: var(--muted); }
+  .cover .panel { margin-top: 6mm; flex: 1; background: var(--accent-light); border-radius: 32px; padding: 20mm 16mm 16mm; display:flex; flex-direction:column; }
+  .cover .badge { align-self:flex-start; display:inline-flex; align-items:center; gap:6pt; background:#fff; border:1px solid var(--line); border-radius: 500px; padding: 4pt 12pt; font-size: 10.5pt; color: var(--brand); }
+  .cover .badge i { width:1px; height: 9pt; background: var(--line); }
+  .cover .title { font-family: var(--font-heading); font-size: 64pt; font-weight: 500; line-height: 1.04; letter-spacing: -1.5px; margin: 22mm 0 10mm; color: var(--brand); }
+  .cover .sub { font-size: 15pt; color: var(--muted); max-width: 150mm; line-height:1.5; }
+  .cover .meta { margin-top:auto; display:flex; gap: 4mm; }
+  .cover .meta div { flex:1; background: var(--brand); color:#fff; border-radius: 16px; padding: 6mm 7mm; font-size: 10pt; line-height: 1.4; }
+  .cover .meta b { display:block; font-size: 16pt; font-weight: 500; margin-top: 2mm; }
+  .cover .foot { display:flex; justify-content:space-between; align-items:center; font-size: 10pt; color: var(--muted); padding: 7mm 4mm 0; }
+  .cover .foot .notum { display:flex; align-items:center; gap:2.5mm; text-transform:uppercase; letter-spacing:.12em; font-size:7.5pt; }
+  .cover .foot .notum img { height: 5mm; }
+  .toc { columns: 2; column-gap: 12mm; font-size: 10.5pt; }
+  .toc ol { padding-left: 20pt; margin: 0; }
+  .toc li { margin: 0 0 5pt; break-inside: avoid; }
+  .toc li::marker { color: var(--accent-dark); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<section class="cover">
+  <div class="top">
+    <div class="logos">
+      <img class="brand" src="brand/logo.svg" alt="{{PROJECT_NAME}}">
+      <span class="x">&amp;</span>
+      <div class="strapi"><img src="brand/strapi-logo.svg" alt=""><span>Strapi</span></div>
+    </div>
+    <div class="doc">Editor guide</div>
+  </div>
+  <div class="panel">
+    <span class="badge">Strapi CMS<i></i>For content editors</span>
+    <div class="title">Strapi Editor<br>How-To Guide</div>
+    <div class="sub">How to create and maintain pages, navigation, redirects and the rest of the {{PROJECT_NAME}} website content in the Strapi CMS.</div>
+    <div class="meta">
+      <div>Version<b>{{VERSION}}</b></div>
+      <div>Date<b>{{DATE}}</b></div>
+      <div>Release<b>{{RELEASE}}</b></div>
+    </div>
+  </div>
+  <div class="foot">
+    <div>Prepared for the {{PROJECT_NAME}} content team</div>
+    <div class="notum">Built by<img src="brand/notum-logo.svg" alt="Notum"></div>
+  </div>
+</section>
+
+<!-- ============ TOC ============ -->
+<h1 style="page-break-before:avoid">Contents</h1>
+<div class="toc">
+<ol>
+  <li>Strapi basics</li>
+  <li>Where to find what</li>
+  <li>How to create a new page</li>
+  <li>Building a page with sections</li>
+  <li>SEO settings</li>
+  <li>Changing a URL: Update hierarchy</li>
+  <li>Section reference: what each component does</li>
+  <li>Shared fields: links, buttons and images</li>
+  <li>Media Library: images and files</li>
+  <li>The rich text editors</li>
+  <li>Navbar and footer</li>
+  <li>Redirects</li>
+  <li>Form submissions</li>
+  <li>Preview, publishing and cache</li>
+  <li>Checklists and troubleshooting</li>
+</ol>
+</div>
+
+<!-- ============ 1 ============ -->
+<h1><span class="num">01</span>Strapi basics</h1>
+<p>Strapi is the content management system (CMS) behind the {{PROJECT_NAME}} website. Everything an editor changes in Strapi is published to the website automatically. No developer and no deployment are needed.</p>
+
+<h2>Key terms</h2>
+<table>
+  <tr><th>Term</th><th>What it means</th></tr>
+  <tr><td>Content Manager</td><td>The main area in the left sidebar where all content is edited.</td></tr>
+  <tr><td>Collection type</td><td>A list of many entries of the same kind, for example <b>Page</b> or <b>Redirect</b>.</td></tr>
+  <tr><td>Single type</td><td>Exactly one entry for the whole site, for example <b>Navbar</b>, <b>Footer</b>, <b>Hierarchy</b>.</td></tr>
+  <tr><td>Entry</td><td>One item in a collection, for example one page or one redirect.</td></tr>
+  <tr><td>Section / component</td><td>A building block of a page (hero, FAQ, features list…). Pages are made by stacking sections.</td></tr>
+  <tr><td>Dynamic zone</td><td>The <b>Content</b> field on a page where sections are added, reordered and removed.</td></tr>
+  <tr><td>Draft / Published</td><td>Pages and redirects have two states. <b>Save</b> stores a draft that visitors cannot see. <b>Publish</b> makes it live.</td></tr>
+  <tr><td>Media Library</td><td>Central storage for images, videos and files. Every image used on the site lives here.</td></tr>
+  <tr><td>Slug</td><td>The URL part of an entry, for example <code>about-us</code> in <code>/about-us</code>.</td></tr>
+  <tr><td>Full path</td><td>The complete URL of an entry, generated by the system from slugs. Never edit it by hand.</td></tr>
+  <tr><td>Locale</td><td>Language version. The site runs in {{LOCALES}}. Switch the locale in the top right of the edit view. Each language version is edited and published separately.</td></tr>
+</table>
+
+<h2>Save vs. Publish</h2>
+<div class="flow"><span>Edit</span><i>→</i><span><b>Save</b> (draft, invisible)</span><i>→</i><span><b>Preview</b> (optional)</span><i>→</i><span><b>Publish</b> (live on the website)</span></div>
+<ul>
+  <li><b>Save</b> keeps your changes as a draft. The published version on the website stays unchanged.</li>
+  <li><b>Publish</b> pushes the current draft live. The website refreshes the affected pages automatically within moments.</li>
+  <li><b>Unpublish</b> removes the entry from the website but keeps it in Strapi. Use it instead of deleting when you might need the content again.</li>
+  <li>An entry can show <b>Modified</b>: it is published, but there are saved changes that are not live yet. Click <b>Publish</b> again to push them.</li>
+</ul>
+<div class="box warn"><b class="lbl">Navbar, Footer and SEO Configuration have no draft state.</b>Pressing <b>Save</b> on them changes the live website immediately.</div>
+
+<!-- ============ 2 ============ -->
+<h1><span class="num">02</span>Where to find what</h1>
+<p>All of these are in <span class="ui">Content Manager</span> in the left sidebar.</p>
+<table>
+  <tr><th>Content Manager entry</th><th>What it holds</th><th>Website URL</th></tr>
+  <tr><td>Page</td><td>All pages of the website: home, About, Contact, legal pages…</td><td><code>/&lt;slug&gt;</code>, nested pages <code>/&lt;parent&gt;/&lt;slug&gt;</code></td></tr>
+  <tr><td>Redirect</td><td>URL redirects, created by hand or automatically (chapter 12)</td><td>–</td></tr>
+  <tr><td>Subscriber</td><td>Messages and sign-ups sent through the website forms (chapter 13)</td><td>–</td></tr>
+  <tr><td>Navbar <span class="muted">(single)</span></td><td>Logo, top navigation and its buttons</td><td>every page</td></tr>
+  <tr><td>Footer <span class="muted">(single)</span></td><td>Footer logo, link columns, bottom links and copyright</td><td>every page</td></tr>
+  <tr><td>Hierarchy <span class="muted">(single)</span></td><td>The <b>Update hierarchy</b> tool for URL changes (chapter 6)</td><td>–</td></tr>
+  <tr><td>SEO Configuration <span class="muted">(single)</span></td><td>Site-wide SEO defaults: site name for social sharing and robots rules</td><td>–</td></tr>
+</table>
+<p class="muted">Images and files: <span class="ui">Media Library</span> in the left sidebar (chapter 9).</p>
+
+<!-- ============ 3 ============ -->
+<h1><span class="num">03</span>How to create a new page</h1>
+<ol class="steps">
+  <li>Open <span class="ui">Content Manager → Page</span> and click <span class="ui">+ Create new entry</span>.</li>
+  <li>Fill in <b>Title</b>. It is the page name in Strapi and the default label in breadcrumbs.</li>
+  <li>Fill in <b>Slug</b>: lowercase letters, numbers and hyphens only, no slash at the start or end. Example: <code>our-services</code>.</li>
+  <li>Choose the <b>Parent</b> page. A top-level page (<code>/our-services</code>) has the <b>Home</b> page as its parent. A sub-page (<code>/about/team</code>) has <b>About</b> as its parent. The parent defines both the URL and the breadcrumbs.</li>
+  <li>Optional: <b>Breadcrumb title</b>, a shorter label for breadcrumbs when the title is long.</li>
+  <li>In <b>Content</b>, click <span class="ui">Add a component to content</span> and add sections (chapter 4 and 7).</li>
+  <li>Fill in the <b>SEO</b> block (chapter 5). At least the meta title and meta description.</li>
+  <li>Click <span class="ui">Save</span>, then <span class="ui">Open preview</span> to check the draft on the real website design.</li>
+  <li>Click <span class="ui">Publish</span>. The page goes live at its URL right away.</li>
+  <li>Link to it where needed: in the Navbar, Footer, or a button on another page (chapter 11).</li>
+</ol>
+
+<h2>Page fields</h2>
+<table>
+  <tr><th>Field</th><th>Required</th><th>Meaning</th></tr>
+  <tr><td>Title</td><td>yes</td><td>Page name. Used in breadcrumbs and as fallback for SEO title.</td></tr>
+  <tr><td>Breadcrumb title</td><td>no</td><td>Shorter breadcrumb label. Empty = Title is used.</td></tr>
+  <tr><td>Slug</td><td>yes</td><td>URL segment of this page. Pattern <code>a-z 0-9 -</code>. Does not have to be unique when the parent differs.</td></tr>
+  <tr><td>Full path</td><td>auto</td><td>The complete URL, generated by the system. <b>Do not edit.</b></td></tr>
+  <tr><td>Parent</td><td>yes*</td><td>Page this one belongs under. *Every page except Home must have one.</td></tr>
+  <tr><td>Children</td><td>auto</td><td>Pages that have this page as a parent. Read-only overview.</td></tr>
+  <tr><td>Content</td><td>–</td><td>The sections of the page, top to bottom.</td></tr>
+  <tr><td>SEO</td><td>–</td><td>Meta title, description, social image, indexing rules.</td></tr>
+</table>
+
+<div class="box tip"><b class="lbl">Tip: start from an existing page</b>Open a page with a similar layout, use <span class="ui">⋯ → Duplicate</span>, then change Title, Slug and Parent. The copy is a draft and does not affect the original.</div>
+<div class="box warn"><b class="lbl">Changing the slug or parent of a page that is already live</b>The URL does not change immediately. You have to run <b>Update hierarchy</b> (chapter 6), which moves the page and creates a redirect from the old URL.</div>
+
+<!-- ============ 4 ============ -->
+<h1><span class="num">04</span>Building a page with sections</h1>
+<p>The <b>Content</b> field is a stack of sections. The website renders them in the same order, top to bottom.</p>
+<ul>
+  <li><b>Add:</b> click <span class="ui">Add a component to content</span> at the bottom, choose the category (<i>Sections</i>, <i>Forms</i> or <i>Utilities</i>) and the component.</li>
+  <li><b>Reorder:</b> drag the handle on a section, or use the up/down arrows.</li>
+  <li><b>Collapse / expand:</b> click the section header. Collapsed sections show their first text field as a label.</li>
+  <li><b>Delete:</b> the trash icon on the section header.</li>
+  <li><b>Duplicate:</b> the duplicate icon on the section header copies the section including its content.</li>
+</ul>
+
+<h2>Typical page structures</h2>
+<table>
+  <tr><th>Page type</th><th>Suggested sections</th></tr>
+  <tr><td>Homepage</td><td>Hero → Animated Logo Row → Features List → Statistics → CTA Banner</td></tr>
+  <tr><td>Content / info page</td><td>Hero → Rich text (×n) → FAQ → Heading With CTA Button</td></tr>
+  <tr><td>Landing page</td><td>Hero → Image With CTA Button → Features List → Carousel → CTA Banner</td></tr>
+  <tr><td>Contact page</td><td>Hero → Contact Form → FAQ</td></tr>
+  <tr><td>Legal page</td><td>Rich text with an H1 heading</td></tr>
+</table>
+<div class="box"><b class="lbl">One H1 per page</b>Use exactly one main heading (H1) per page, usually in the first section, and H2 for section headings below it. Headings in rich text fields are chosen in the editor's heading dropdown.</div>
+
+<!-- ============ 5 ============ -->
+<h1><span class="num">05</span>SEO settings</h1>
+<p>Every page has an <b>SEO</b> block. It controls how the page appears in Google and when shared on social media.</p>
+<table>
+  <tr><th>Field</th><th>Meaning and recommendation</th></tr>
+  <tr><td>Meta title</td><td>Title shown in Google and in the browser tab. Max <b>60</b> characters. Empty = page Title.</td></tr>
+  <tr><td>Meta description</td><td>Snippet text in Google results. Max <b>160</b> characters. Write a one-sentence summary with the main keyword.</td></tr>
+  <tr><td>Meta image</td><td>Default image for social sharing. Recommended 1200 × 630 px.</td></tr>
+  <tr><td>Meta robots</td><td><code>all</code> (default) lets Google index the page. Use <code>noindex,follow</code> for pages that should not appear in search results (thank-you pages, internal pages).</td></tr>
+  <tr><td>Og / Twitter</td><td>Optional overrides for Facebook/LinkedIn (Open Graph) and X previews. Empty = values above are used.</td></tr>
+  <tr><td>Structured data</td><td>JSON-LD for rich results. Developer field, leave empty unless agreed with Notum.</td></tr>
+</table>
+<p>Site-wide defaults (site name for social previews, robots rules) are in <span class="ui">SEO Configuration</span>. Change them only after agreeing with Notum.</p>
+
+<!-- ============ 6 ============ -->
+<h1><span class="num">06</span>Changing a URL: Update hierarchy</h1>
+<p>When you change the <b>slug</b> or <b>parent</b> of a page that is already published, the URL does not change straight away. The old URL keeps working until you confirm the change in the <b>Hierarchy</b> tool. This protects you from broken links and lost search rankings.</p>
+
+<ol class="steps">
+  <li>Change the <b>Slug</b> (or <b>Parent</b>) of the page and <b>Publish</b> it.</li>
+  <li>Open <span class="ui">Content Manager → Hierarchy</span>. It lists every pending URL change: old path, new path, and the redirect that will be created. Child pages of a moved page are included automatically.</li>
+  <li>Click <span class="ui">Update hierarchy</span>, review the list in the dialog and confirm. Changes are grouped by language.</li>
+  <li>The system updates the URLs, creates a <b>Redirect</b> from each old URL to the new one, and refreshes the website.</li>
+  <li>Check the new URL and that the old URL redirects.</li>
+</ol>
+
+<div class="box tip"><b class="lbl">Good practice</b>
+<ul style="margin:0">
+  <li>Change one page at a time: rename, update hierarchy, verify, then the next one.</li>
+  <li>Prefer low-traffic hours for larger moves.</li>
+  <li>Several renames before updating (<code>a → b → c</code>) collapse into one redirect (<code>a → c</code>). Renaming back before updating cancels the change.</li>
+  <li>Redirect chains and loops are cleaned up automatically. Every old URL always reaches the current one in one step.</li>
+</ul></div>
+<p>New pages do <b>not</b> need this: they go live at their URL on first publish.</p>
+<div class="box warn"><b class="lbl">Never delete auto-created redirects in production</b>They keep old links and Google rankings working.</div>
+
+<!-- ============ 7 ============ -->
+<h1><span class="num">07</span>Section reference: what each component does</h1>
+<p>Components are listed under the name you see in the <b>Add a component</b> picker. Required fields are marked <b>*</b>. Each one has a screenshot from the website. Some screenshots come from the test environment, so their text and images are only examples.</p>
+
+<h2>Heroes and headings</h2>
+
+<div class="comp">
+<h3>Hero <span class="pick">· Sections → Hero</span></h3>
+<p>Centered banner at the top of a page: an optional badge, a title, a description, buttons and a small note below them.</p>
+<img class="shot short" src="shots/hero.jpg" alt="">
+<table>
+<tr><td>Tag</td><td>Small rounded badge above the title, e.g. “New”.</td></tr>
+<tr><td>Title</td><td>Main heading. Set it to Heading 1 in the editor when the hero is the first section.</td></tr>
+<tr><td>Description</td><td>Text under the title.</td></tr>
+<tr><td>Links</td><td>Buttons under the description (chapter 8, Link).</td></tr>
+<tr><td>Note</td><td>Small text under the buttons, e.g. “No credit card required”.</td></tr>
+</table></div>
+
+<div class="comp">
+<h3>Heading With CTA Button <span class="pick">· Sections → HeadingWithCTAButton</span></h3>
+<p>A heading with a short line of text and one button. Good as a call to action between other sections.</p>
+<img class="shot short" src="shots/heading-with-cta-button.jpg" alt="">
+<table>
+<tr><td>Title *</td><td>Heading.</td></tr>
+<tr><td>Sub text</td><td>One line under the heading.</td></tr>
+<tr><td>CTA</td><td>The button (chapter 8, Link).</td></tr>
+</table></div>
+
+<div class="comp">
+<h3>Image With CTA Button <span class="pick">· Sections → ImageWithCTAButton</span></h3>
+<p>An image beside a heading, a short text and one button.</p>
+<img class="shot" src="shots/image-with-cta-button.jpg" alt="">
+<table>
+<tr><td>Title *</td><td>Heading.</td></tr>
+<tr><td>Sub text</td><td>Short text under the heading.</td></tr>
+<tr><td>Image</td><td>The image (chapter 8, Image).</td></tr>
+<tr><td>Link</td><td>The button.</td></tr>
+</table></div>
+
+<h2>Content sections</h2>
+
+<div class="comp">
+<h3>Features List <span class="pick">· Sections → FeaturesList</span></h3>
+<p>A heading, intro text and a set of features, each with an icon or image, a title and a description. Optionally with a large image beside it.</p>
+<img class="shot" src="shots/features-list.jpg" alt="">
+<table>
+<tr><td>Title</td><td>Section heading.</td></tr>
+<tr><td>Description</td><td>Intro text under the heading.</td></tr>
+<tr><td>List style</td><td><code>list</code> (default) = one feature per row. <code>grid</code> = features in columns. <code>boxGrid</code> = features in boxed cards, three per row.</td></tr>
+<tr><td>Features</td><td>The items. Each has an <b>Image</b>, a <b>Title</b> and a <b>Description</b>.</td></tr>
+<tr><td>Main image</td><td>Optional large image beside the list. <b>Position</b>: left or right.</td></tr>
+</table></div>
+
+<div class="comp">
+<h3>Statistics <span class="pick">· Sections → Statistics</span></h3>
+<p>A row of key numbers, each with a short description.</p>
+<img class="shot short" src="shots/statistics.jpg" alt="">
+<table>
+<tr><td>Figures</td><td>The numbers. Each has a <b>Number</b>, an optional <b>Prefix</b> and <b>Suffix</b> (e.g. “+” or “%”) and a <b>Description</b> under it.</td></tr>
+</table></div>
+
+<div class="comp">
+<h3>CTA Banner <span class="pick">· Sections → CTABanner</span></h3>
+<p>A highlighted box with a heading, text and buttons. Optional features with icons sit beside the text.</p>
+<img class="shot" src="shots/cta-banner.jpg" alt="">
+<table>
+<tr><td>Title</td><td>Heading of the banner.</td></tr>
+<tr><td>Description</td><td>Text under the heading.</td></tr>
+<tr><td>Links</td><td>Buttons. One button aligns left, more buttons are centered.</td></tr>
+<tr><td>Features</td><td>Optional items beside the text, each with a small icon, a title and a description.</td></tr>
+</table></div>
+
+<div class="comp">
+<h3>FAQ <span class="pick">· Sections → Faq</span></h3>
+<p>A heading with a list of questions that expand to show their answers.</p>
+<img class="shot" src="shots/faq.jpg" alt="">
+<table>
+<tr><td>Title *</td><td>Heading.</td></tr>
+<tr><td>Sub title</td><td>Line under the heading.</td></tr>
+<tr><td>Accordions</td><td>The questions. Each has a <b>Question</b> * and an <b>Answer</b> * (plain text).</td></tr>
+</table></div>
+
+<h2>Images and logos</h2>
+
+<div class="comp">
+<h3>Carousel <span class="pick">· Sections → Carousel</span></h3>
+<p>An image slider with arrows. Shows one image on mobile and up to three on desktop.</p>
+<img class="shot" src="shots/carousel.jpg" alt="">
+<table>
+<tr><td>Images</td><td>The slides. Each has an <b>Image</b> and an optional <b>Link</b>.</td></tr>
+<tr><td>Radius</td><td>Corner rounding of the images: sm, md, lg, xl or full.</td></tr>
+</table></div>
+
+<div class="comp">
+<h3>Animated Logo Row <span class="pick">· Sections → AnimatedLogoRow</span></h3>
+<p>A heading above an endlessly scrolling row of logos, e.g. clients or partners.</p>
+<img class="shot short" src="shots/animated-logo-row.jpg" alt="">
+<table>
+<tr><td>Title</td><td>Heading above the row.</td></tr>
+<tr><td>Logos</td><td>Logo images. Use files with a transparent background and fill in the Alt text with the company name.</td></tr>
+</table></div>
+
+<h2>Text</h2>
+
+<div class="comp">
+<h3>Rich text <span class="pick">· Utilities → CkEditorContent / TipTapRichText</span></h3>
+<p>Free text with headings, lists, links, images and tables. Use it for articles, legal pages and anything that does not fit a designed section. Both components do the same job with a different editor (chapter 10).</p>
+<img class="shot" src="shots/rich-text.jpg" alt="">
+<table>
+<tr><td>Content</td><td>The text, written in the rich text editor.</td></tr>
+</table></div>
+
+<h2>Forms</h2>
+
+<div class="comp">
+<h3>Contact Form <span class="pick">· Forms → ContactForm</span></h3>
+<p>A contact form with a heading and an intro text. Submitted messages are stored in Strapi (chapter 13).</p>
+<img class="shot" src="shots/contact-form.jpg" alt="">
+<table>
+<tr><td>Title</td><td>Heading above the form.</td></tr>
+<tr><td>Description</td><td>Text under the heading.</td></tr>
+<tr><td>GDPR</td><td>Link to the privacy policy shown at the consent checkbox.</td></tr>
+</table></div>
+
+<div class="comp">
+<h3>Newsletter <span class="pick">· Forms → Newsletter</span></h3>
+<p>An email sign-up form with a heading and an intro text. Sign-ups are stored in Strapi (chapter 13).</p>
+<img class="shot short" src="shots/newsletter-form.jpg" alt="">
+<table>
+<tr><td>Title</td><td>Heading above the form.</td></tr>
+<tr><td>Description</td><td>Text under the heading.</td></tr>
+<tr><td>GDPR</td><td>Link to the privacy policy shown at the consent checkbox.</td></tr>
+</table></div>
+
+<!-- ============ 8 ============ -->
+<h1><span class="num">08</span>Shared fields: links, buttons and images</h1>
+
+<h2>Link</h2>
+<p>Every button and link in sections, the navbar and the footer uses the same Link fields.</p>
+<table>
+<tr><td>Type *</td><td><code>page</code> (default) = a page in Strapi. Recommended for internal links, because the URL updates automatically when the page moves. <code>external</code> = any URL.</td></tr>
+<tr><td>Label *</td><td>Visible text of the link or button.</td></tr>
+<tr><td>New tab *</td><td>Opens the link in a new browser tab. Off by default. Turn it on for external links only.</td></tr>
+<tr><td>Href *</td><td>Type external only: full URL, e.g. <code>https://example.com</code>.</td></tr>
+<tr><td>Page</td><td>Type page only: pick the target page.</td></tr>
+<tr><td>Decorations</td><td>How the link looks (below). Empty = plain text link.</td></tr>
+</table>
+<div class="box warn"><b class="lbl">Linking to a page</b>The target page must be <b>published</b>. A link to an unpublished page does not work on the website.</div>
+
+<h3>Link decorations (button style)</h3>
+<table>
+<tr><td>Variant *</td><td><code>default</code> = solid primary button. <code>outline</code> = bordered button. <code>secondary</code> = light filled button. <code>ghost</code> = text button with hover background. <code>link</code> (default) = underlined text link. <code>destructive</code> = red button, for warnings only.</td></tr>
+<tr><td>Size *</td><td><code>xs</code>, <code>sm</code>, <code>default</code>, <code>lg</code>. The <code>icon…</code> sizes are for icon-only buttons.</td></tr>
+<tr><td>Has icons *</td><td>Enables the left and right icon fields.</td></tr>
+<tr><td>Left / right icon</td><td>Small image shown before or after the label.</td></tr>
+<tr><td>Disable animations</td><td>Turns off the hover animation.</td></tr>
+</table>
+
+<h2>Image</h2>
+<table>
+<tr><td>Media *</td><td>Pick or upload the image in the Media Library (chapter 9).</td></tr>
+<tr><td>Alt</td><td>Short description of the image for screen readers and Google. Empty = the caption or alternative text of the file in the Media Library is used.</td></tr>
+<tr><td>Width / height</td><td>Optional, leave empty. The real size is read from the file.</td></tr>
+<tr><td>Fallback src</td><td>Developer field, leave empty.</td></tr>
+</table>
+
+<!-- ============ 9 ============ -->
+<h1><span class="num">09</span>Media Library: images and files</h1>
+<p>The <span class="ui">Media Library</span> in the left sidebar stores every image, video and file used on the website. A file is uploaded once and can then be picked in any page or section.</p>
+
+<h2>Upload files</h2>
+<ol class="steps">
+  <li>Open <span class="ui">Media Library</span> and the folder the file belongs to.</li>
+  <li>Click <span class="ui">Add new assets</span>.</li>
+  <li>Drag files into the dialog, click <span class="ui">Browse files</span>, or switch to <span class="ui">From URL</span> and paste a link to the file.</li>
+  <li>Optional: click the pencil on a file to fill in its details before uploading (below).</li>
+  <li>Click <span class="ui">Upload assets to the library</span>.</li>
+</ol>
+<p>You can also upload directly from a page: in any image field click <span class="ui">+</span> and then <span class="ui">Add more assets</span>. The file lands in the Media Library as well.</p>
+
+<h2>File details</h2>
+<p>Click a file in the Media Library to open its details.</p>
+<table>
+<tr><td>File name</td><td>Name in the Media Library. Use a short, descriptive name, e.g. <code>team-office-prague.jpg</code>. It is also part of the file's web address.</td></tr>
+<tr><td>Alternative text</td><td>Description of the image for screen readers and Google. Used wherever the image has no own Alt text. <b>Always fill it in</b> unless the image is purely decorative.</td></tr>
+<tr><td>Caption</td><td>Short description of the file. Also used as the image description when the section has no Alt text.</td></tr>
+<tr><td>Location</td><td>Folder of the file. Change it to move the file.</td></tr>
+</table>
+<p>The details view also has buttons to <b>download</b> the file, <b>copy its link</b>, <b>replace</b> it and <b>delete</b> it.</p>
+
+<h2>Replace a file</h2>
+<p>To update an image everywhere it is used (e.g. a new team photo or logo), open it and click <span class="ui">Replace media</span>. Every page that uses it shows the new file, with no need to edit the pages. Then re-publish the pages that use it so the website refreshes them.</p>
+
+<h2>Folders</h2>
+<ul>
+  <li>Click <span class="ui">Add new folder</span> to create one, for example per page or topic (<i>Home</i>, <i>Team</i>, <i>Logos</i>).</li>
+  <li>To move files, select them with the checkbox and click <span class="ui">Move</span>.</li>
+  <li>Folders only help editors find files. They do not change the files' web addresses.</li>
+</ul>
+
+<h2>Find a file</h2>
+<p>Use the search field (by file name), <span class="ui">Filters</span> (type, date, size) and the sort menu. Switch between grid and list view in the top right.</p>
+
+<h2>Delete a file</h2>
+<div class="box warn"><b class="lbl">Check where a file is used before deleting it</b>Deleting is permanent. Pages that still use the file show an empty space instead. Replace the file in those pages first, or use <b>Replace media</b> instead of deleting.</div>
+
+<h2>Recommended formats and sizes</h2>
+<table>
+<tr><th>Type</th><th>Recommendation</th></tr>
+<tr><td>Photos</td><td>JPG or WebP, about 2× the displayed size, max ~2400 px wide for full-width images. The site creates smaller versions for phones and tablets automatically.</td></tr>
+<tr><td>Logos and icons</td><td>SVG, or PNG with a transparent background.</td></tr>
+<tr><td>Social sharing image</td><td>1200 × 630 px, JPG or PNG.</td></tr>
+<tr><td>Documents</td><td>PDF.</td></tr>
+<tr><td>Size limit</td><td>250 MB per file. Keep images well under 1 MB: large images slow the website down.</td></tr>
+</table>
+<div class="box tip"><b class="lbl">Before uploading</b>Crop and resize images on your computer first, and give the file a meaningful name. Strapi cannot crop to a fixed ratio, and renaming later does not change the file's web address.</div>
+
+<!-- ============ 10 ============ -->
+<h1><span class="num">10</span>The rich text editors</h1>
+<p>Titles, descriptions and rich text sections use a visual editor with a toolbar. Short fields (titles, badges) offer only a few options, full fields offer everything below.</p>
+<table>
+<tr><th>Feature</th><th>How to use</th></tr>
+<tr><td>Headings</td><td>Heading dropdown in the toolbar. Use H1 only once per page, H2/H3 inside sections.</td></tr>
+<tr><td>Bold, italic, underline, strike</td><td>Toolbar buttons or Cmd/Ctrl + B / I / U.</td></tr>
+<tr><td>Links</td><td>Select text → link button → paste the URL.</td></tr>
+<tr><td>Lists</td><td>Bulleted and numbered lists.</td></tr>
+<tr><td>Text color, alignment</td><td>Toolbar buttons. Use brand colors sparingly.</td></tr>
+<tr><td>Tables</td><td>Insert table, then add/remove rows and columns.</td></tr>
+<tr><td>Images</td><td>Insert from the Media Library.</td></tr>
+</table>
+<div class="box tip"><b class="lbl">Pasting from Word or Google Docs</b>Paste, then check headings and remove stray formatting. Use <b>Cmd/Ctrl + Shift + V</b> to paste plain text.</div>
+
+<!-- ============ 11 ============ -->
+<h1><span class="num">11</span>Navbar and footer</h1>
+<div class="box warn"><b class="lbl">No drafts here</b>Navbar and Footer changes go live on <b>Save</b>.</div>
+
+<h2>Navbar</h2>
+<img class="shot short" src="shots/navbar.jpg" alt="">
+<table>
+<tr><td>Logo image</td><td>The logo in the top left and the page it links to (usually Home).</td></tr>
+<tr><td>Navbar items</td><td>The main navigation.</td></tr>
+<tr><td>Primary buttons</td><td>Buttons on the right side of the navbar (chapter 8, Link).</td></tr>
+</table>
+<p>Each navigation item is one of two kinds:</p>
+<ul>
+  <li><b>Plain link</b>: turn <b>Is category link</b> on and fill in <b>Link</b>.</li>
+  <li><b>Dropdown</b>: turn <b>Is category link</b> off, fill in <b>Label</b> (the dropdown title) and add links to <b>Category items</b>.</li>
+</ul>
+
+<h2>Footer</h2>
+<img class="shot" src="shots/footer.jpg" alt="">
+<table>
+<tr><td>Logo image</td><td>The footer logo and the page it links to.</td></tr>
+<tr><td>Sections</td><td>Link columns, each with a <b>Title</b> * and a list of links.</td></tr>
+<tr><td>Links</td><td>Links in the bottom bar, e.g. privacy policy and terms.</td></tr>
+<tr><td>Copy right</td><td>Copyright text, e.g. <code>© {{PROJECT_NAME}}. All rights reserved.</code></td></tr>
+</table>
+
+<!-- ============ 12 ============ -->
+<h1><span class="num">12</span>Redirects</h1>
+<p>Redirects send visitors from an old URL to a new one. They are in <span class="ui">Content Manager → Redirect</span>.</p>
+<ul>
+  <li>Redirects for renamed or moved pages are <b>created automatically</b> by <b>Update hierarchy</b> (chapter 6).</li>
+  <li>For anything else, e.g. an old marketing URL, create one by hand:</li>
+</ul>
+<ol class="steps">
+  <li><span class="ui">Redirect → + Create new entry</span>.</li>
+  <li><b>Source</b> *: the old path including the language prefix, e.g. <code>/en/old-page</code>.</li>
+  <li><b>Destination</b> *: the new path on the same site, e.g. <code>/en/new-page</code>.</li>
+  <li><b>Publish</b>. It takes effect within about 2 minutes.</li>
+</ol>
+<p>Each language needs its own redirect. Only published redirects are active. Unpublish or delete one to stop it. Redirects are temporary (HTTP 307) by design, so a wrong one can be fixed without visitors' browsers remembering it.</p>
+
+<!-- ============ 13 ============ -->
+<h1><span class="num">13</span>Form submissions</h1>
+<p>Messages from the Contact Form and sign-ups from the Newsletter form are stored in <span class="ui">Content Manager → Subscriber</span>. Each entry shows the name, email and message the visitor sent.</p>
+<ul>
+  <li>Entries are read-only records. Do not edit them.</li>
+  <li>Delete an entry when the person asks for their data to be removed.</li>
+  <li>To export the list, ask Notum.</li>
+</ul>
+
+<!-- ============ 14 ============ -->
+<h1><span class="num">14</span>Preview, publishing and cache</h1>
+<h2>Preview</h2>
+<p>Pages have an <span class="ui">Open preview</span> button in the edit view. It shows the <b>saved draft</b> in the real website design, so you can check everything before publishing. Switch between <b>Draft</b> and <b>Published</b> to compare. Save first, preview shows only saved changes.</p>
+<p class="muted">A never-published page gets its preview after the first Save.</p>
+
+<h2>When do changes appear?</h2>
+<table>
+<tr><th>Change</th><th>Visible on the website</th></tr>
+<tr><td>Publish / unpublish a page</td><td>Within moments (the site refreshes affected pages automatically).</td></tr>
+<tr><td>Save Navbar / Footer</td><td>Within moments.</td></tr>
+<tr><td>Publish a redirect</td><td>Within about 2 minutes.</td></tr>
+<tr><td>Slug or parent change</td><td>Only after <b>Update hierarchy</b>.</td></tr>
+</table>
+<p>If a change does not show after a few minutes, reload the page with <b>Cmd/Ctrl + Shift + R</b>. If it still does not show, contact Notum with the page URL and the time of publishing.</p>
+
+<!-- ============ 15 ============ -->
+<h1><span class="num">15</span>Checklists and troubleshooting</h1>
+
+<h2>Before publishing a page</h2>
+<ul>
+  <li>Slug is lowercase with hyphens, Parent is set.</li>
+  <li>Exactly one H1 on the page, section headings are H2.</li>
+  <li>Every image has an Alt text.</li>
+  <li>Internal links use type <code>page</code> and have <b>New tab</b> turned off.</li>
+  <li>Linked pages are published.</li>
+  <li>SEO meta title (≤ 60 chars) and meta description (≤ 160 chars) are filled in.</li>
+  <li>Every language version is filled in and published.</li>
+  <li>Checked in Preview on desktop and mobile width.</li>
+</ul>
+
+<h2>Troubleshooting</h2>
+<table>
+<tr><th>Problem</th><th>Cause and fix</th></tr>
+<tr><td>New page shows 404</td><td>The page is not published, or its Parent is wrong. Check the parent (Home for top-level pages) and publish.</td></tr>
+<tr><td>Renamed page still at old URL</td><td>Run <b>Hierarchy → Update hierarchy</b>.</td></tr>
+<tr><td>Page missing in another language</td><td>Each language version is published separately. Switch the locale and publish it.</td></tr>
+<tr><td>Button does not work</td><td>Link type <code>page</code> points to an unpublished page. Publish the target page.</td></tr>
+<tr><td>Image missing on the website</td><td>The file was deleted from the Media Library. Upload it again and pick it in the section.</td></tr>
+<tr><td>Old image still shows after Replace media</td><td>Re-publish the pages that use it, then reload with Cmd/Ctrl + Shift + R.</td></tr>
+<tr><td>Redirect does nothing</td><td>It is not published, or the source path lacks the language prefix. Wait about 2 minutes after publishing.</td></tr>
+<tr><td>Cannot save, field highlighted red</td><td>A required field is empty or the format is wrong (e.g. slug with capitals, URL without https://).</td></tr>
+</table>
+
+<div class="box"><b class="lbl">Support</b>For anything not covered here, contact the Notum team with the page URL, what you changed and a screenshot.</div>
+
+</body>
+</html>

@@ -28,6 +28,7 @@ See the [Workflows](#workflows) section below for diagrams of how these chain to
 | [remove-azure-monitor](./remove-azure-monitor.md)               | Stack-coupled     | Remove the Azure Monitor exporter, keep logging + OTel.                                    |
 | [remove-cache-revalidation](./remove-cache-revalidation.md)     | Stack-coupled     | Uninstall the cache revalidation feature (and CDN purge).                                  |
 | [remove-cdn-purge](./remove-cdn-purge.md)                       | Stack-coupled     | Uninstall only the optional CDN purge layer.                                               |
+| [write-editor-guide](./write-editor-guide.md)                   | Stack-coupled     | Build or update the branded Strapi how-to PDF for client content editors.                  |
 | [start-work](./start-work.md)                                   | Stack-agnostic    | Start work on an issue in an isolated worktree + plan.                                     |
 | [make-pr](./make-pr.md)                                         | Stack-agnostic    | Commit, push, and open a GitHub PR from the branch.                                        |
 | [review-pr](./review-pr.md)                                     | Stack-agnostic    | Review a PR or local branch diff before merge.                                             |
