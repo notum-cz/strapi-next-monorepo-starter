@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Playwright Testing
 
-The Playwright QA suite validates the deployed or local UI through a browser. It covers end-to-end behavior, accessibility, SEO, visual output, and performance.
+The Playwright QA suite validates the deployed or local UI through a browser. It covers end-to-end behavior, accessibility, SEO, visual output, and performance. The same workspace also hosts the k6 load tests, which run outside a browser.
 
 | Area          | Tooling                | Location                        |
 | ------------- | ---------------------- | ------------------------------- |
@@ -14,6 +14,7 @@ The Playwright QA suite validates the deployed or local UI through a browser. It
 | SEO           | Playwright             | `qa/tests/playwright/seo`       |
 | Visual        | Playwright screenshots | `qa/tests/playwright/visual`    |
 | Performance   | Lighthouse CI          | `qa/tests/playwright/perfo`     |
+| Load          | k6 (TypeScript)        | `qa/tests/playwright/load`      |
 
 ## Workspace
 
@@ -28,6 +29,7 @@ qa/tests/playwright/
 ├── seo/                    # SEO checks
 ├── visual/                 # visual regression checks
 ├── perfo/                  # Lighthouse CI performance checks
+├── load/                   # k6 load tests (see Load Testing)
 ├── helpers/                # shared test utilities (page objects, fixtures)
 ├── .env.example            # example environment variables
 ├── package.json            # QA package scripts and dependencies
@@ -67,10 +69,10 @@ An unknown name in `QA_GROUPS` fails the run and lists the valid ones. A describ
 
 The environment comes from the `BASE_URL` hostname. A `dev` segment means dev and a `stg` or `staging` segment means staging, where a segment is a part of the hostname between `-` or `.` characters. `localhost`, `127.0.0.1`, `[::1]` and `host.docker.internal` are local. Every other host counts as production, including preview domains such as `*.vercel.app`, so an unrecognised domain never runs `@no-prod` tests.
 
-| Group      | E2E specs        | `urls.json` suites      |
-| ---------- | ---------------- | ----------------------- |
-| `homepage` | `smoke/homepage` | seo, axe, visual, perfo |
-| `auth`     | `mock/sign-in`   |                         |
+| Group      | E2E specs        | `urls.json` suites            |
+| ---------- | ---------------- | ----------------------------- |
+| `homepage` | `smoke/homepage` | seo, axe, visual, perfo, load |
+| `auth`     | `mock/sign-in`   |                               |
 
 The package scripts pass `--pass-with-no-tests`, so a suite with nothing in the selection (AXE with only `auth`, say) still passes. LHCI is not Playwright; it filters `urls.perfo` by the same selection itself.
 
@@ -109,7 +111,7 @@ A feature that is not deployed on production yet needs no tag; leave its group o
 
 ### Page lists
 
-`helpers/urls.json` holds the pages that the `seo`, `axe`, `visual` and `perfo` suites check, keyed by group. A group has one list for every environment, or one list per environment when the content differs:
+`helpers/urls.json` holds the pages that the `seo`, `axe`, `visual`, `perfo` and `load` suites check, keyed by group. A group has one list for every environment, or one list per environment when the content differs:
 
 ```json
 {
@@ -198,7 +200,13 @@ pnpm tests:playwright:visual:update         # Update visual snapshots
 pnpm tests:playwright:visual:docker         # Visual regression checks via Docker (CI-compatible)
 pnpm tests:playwright:visual:docker:update  # Update Linux snapshots via Docker
 pnpm tests:lhci:perfo                       # Lighthouse CI performance checks
+pnpm tests:k6:load:smoke                    # k6 load test, 1 visit/s for 1 minute
+pnpm tests:k6:load:average                  # k6 load test, normal traffic
+pnpm tests:k6:load:spike                    # k6 load test, campaign launch (5× surge)
+pnpm tests:k6:load:breakpoint               # k6 load test, find the limit and check recovery
 ```
+
+Load testing has its own page: [Load Testing (k6)](./load-testing.md).
 
 ## Accessibility Testing
 

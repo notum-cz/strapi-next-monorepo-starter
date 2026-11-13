@@ -16,11 +16,13 @@ Testing is split between fast app-level Vitest suites and browser-based QA check
 | SEO           | Playwright             | `qa/tests/playwright/seo`    |
 | Visual        | Playwright screenshots | `qa/tests/playwright/visual` |
 | Performance   | Lighthouse CI          | `qa/tests/playwright/perfo`  |
+| Load          | k6 (TypeScript)        | `qa/tests/playwright/load`   |
 
 ## References
 
 - [Unit Testing](./unit-testing.md) — Vitest tests for Strapi and UI code.
 - [Playwright Testing](./playwright/index.md) — E2E, accessibility, SEO, visual regression, and Lighthouse CI.
+- [Load Testing (k6)](./playwright/load-testing.md) — simulated visitor traffic: does the site hold, where does it break, does it recover.
 - [GitHub Actions QA Pipeline](./playwright/ci-pipeline.md) — how the `qa.yml` workflow triggers, runs, and reports.
 - [Page Object Model and Smoke vs Mock](./playwright/pom-and-test-types.md) — POM conventions and when to use a mocked backend.
 - [Test Cases](./test-cases/index.md) — Gherkin-style test case docs with a live Pass/Fail checklist and one-click results export.
@@ -34,3 +36,4 @@ Testing is split between fast app-level Vitest suites and browser-based QA check
 - Use SEO tests for metadata, robots, sitemap, and page structure.
 - Use visual tests for layout/component regressions.
 - Use Lighthouse CI for performance budgets and high-level page quality.
+- Use k6 load tests to check that the site holds expected traffic, on STG before a launch with a traffic peak.

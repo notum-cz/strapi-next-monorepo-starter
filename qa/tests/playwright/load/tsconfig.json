@@ -1,0 +1,16 @@
+{
+  // load/ runs inside k6, not Node — k6 types only. k6 strips types without
+  // checking them; `pnpm typecheck` does the checking.
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022"],
+    "types": ["k6"],
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "skipLibCheck": true
+  },
+  "include": ["./*.ts", "../helpers/test-groups.ts"]
+}
