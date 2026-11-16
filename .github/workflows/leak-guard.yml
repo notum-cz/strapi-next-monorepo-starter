@@ -27,7 +27,15 @@ jobs:
             echo "::error::PRIVATE_PATHS_REGEX secret is not set"
             exit 1
           fi
-          COUNT=$(git ls-files | grep -cE "$PATTERN" || true)
+          # -z keeps paths unquoted. Not piped, so a git failure can't be masked by grep's exit 1.
+          git ls-files -z > "$RUNNER_TEMP/files"
+          # grep exit 1 = no match; anything higher = scan failure.
+          STATUS=0
+          COUNT=$(grep -zcE -e "$PATTERN" "$RUNNER_TEMP/files") || STATUS=$?
+          if [ "$STATUS" -gt 1 ]; then
+            echo "::error::Leak scan failed (exit $STATUS)"
+            exit 1
+          fi
           if [ "$COUNT" -gt 0 ]; then
             echo "::error::$COUNT private path(s) found. Run the leak check locally to see which."
             exit 1
