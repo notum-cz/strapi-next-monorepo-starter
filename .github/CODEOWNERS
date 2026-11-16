@@ -17,14 +17,5 @@
 # Default owner for everything in the repo:
 * @tocosastalo
 
-# Apps
-/apps/ @dominik-juriga
-
-# Packages
-/packages/ @dominik-juriga
-
-# Docs
-/docs/ @dominik-juriga
-
 # QA tests
 /qa/ @mCesnarik

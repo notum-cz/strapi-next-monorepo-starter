@@ -31,9 +31,10 @@ flowchart TB
   subgraph Next["Next.js UI"]
     direction TB
     View["StrapiPageView<br/><code>components/layouts/StrapiPageView.tsx</code>"]:::service
+    Renderer["StrapiDynamicZoneRenderer<br/><code>components/page-builder/StrapiDynamicZoneRenderer.tsx</code>"]:::service
     Registry["PageContentComponents registry<br/><code>__component</code> UID → React component"]:::zone
     React["Rendered page<br/>StrapiHero<br/>StrapiFaq<br/>StrapiContactForm"]:::service
-    View --> Registry --> React
+    View --> Renderer --> Registry --> React
   end
 
   SmartPopulate --> Api --> View
@@ -43,7 +44,7 @@ flowchart TB
 
 1. Editor adds components to page's `content` dynamic zone in Strapi admin
 2. Page is fetched via REST API with deep population (handled by [Smart Population](../strapi/plugins/smart-populate.md))
-3. `StrapiPageView` iterates over the `content` array
+3. `StrapiPageView` passes `content` to `StrapiDynamicZoneRenderer`, which iterates over the array
 4. Each item's `__component` UID is matched against `PageContentComponents` registry
 5. Matching React component renders with full component data as props
 
@@ -126,39 +127,26 @@ Configuration and override examples live in [Smart Population](../strapi/plugins
 
 ## Page Rendering
 
-The rendering logic lives in `StrapiPageView`:
+`StrapiPageView` handles fetching, locale setup, structured data, breadcrumbs, and missing pages. It delegates dynamic-zone rendering to the server component `StrapiDynamicZoneRenderer`:
 
-**`apps/ui/src/components/layouts/StrapiPageView.tsx`**
+**`apps/ui/src/components/page-builder/StrapiDynamicZoneRenderer.tsx`**
 
-```typescript
-// Simplified excerpt
-export default function StrapiPageView({ page, params, searchParams }: Props) {
-  return (
-    <main>
-      {page.content.map((component) => {
-        const Component = PageContentComponents[component.__component]
-
-        if (Component == null) {
-          return <div>Component not implemented</div>
-        }
-
-        return (
-          <ErrorBoundary key={`${component.__component}-${component.id}`}>
-            <Component
-              component={component}
-              page={page}
-              pageParams={params}
-              searchParams={searchParams}
-            />
-          </ErrorBoundary>
-        )
-      })}
-    </main>
-  )
-}
+```tsx
+<StrapiDynamicZoneRenderer
+  dynamicZone={content}
+  page={restPageData}
+  params={params}
+  searchParams={searchParams}
+/>
 ```
 
-The real implementation also handles fetching, locale setup, structured data, and missing pages. The important part is that each dynamic-zone item is resolved through `PageContentComponents` and rendered with its own content data.
+The renderer resolves components through `PageContentComponents`, generates anchor IDs, applies section spacing, and wraps each component in an error boundary. It preserves page context and displays a fallback for unknown component UIDs.
+
+## Section Anchors
+
+Each dynamic-zone component wrapper receives an automatic ID based on its component name: `sections.faq` becomes `a-faq`. Repeated components use `a-faq-2`, `a-faq-3`, and so on. Link to `#a-faq` on the current page or `/page#a-faq` on another page. Reordering repeated components changes which section a numbered anchor targets. The page's main element also provides `#top`.
+
+`ClientProviders` registers `useRepeatedAnchorScroll` once so clicking the current fragment again scrolls back to its target. The root layout declares `data-scroll-behavior="smooth"` for Next.js navigation to work with the global smooth-scroll CSS.
 
 ## Adding New Components
 

@@ -17,6 +17,7 @@
     "CI",
     "MOBILE_VIEWPORTS_TESTING_ENABLED",
     "BASE_URL",
+    "QA_GROUPS",
     "ADMIN_PANEL_CONFIG_API_AUTH_TOKEN",
     "APP_BRAND",
     "APP_URL",
@@ -122,7 +123,7 @@
       "dependsOn": ["^build"],
       "cache": true
     },
-    "axe-test": {
+    "playwright-axe-test": {
       "cache": false,
       "persistent": false
     },
@@ -131,6 +132,14 @@
       "persistent": false
     },
     "playwright-e2e-tests": {
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-e2e-smoke-tests": {
+      "cache": false,
+      "persistent": false
+    },
+    "playwright-e2e-mock-tests": {
       "cache": false,
       "persistent": false
     },

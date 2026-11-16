@@ -12,23 +12,25 @@ Use this checklist when creating a task for initial design-system setup or a lar
 
 ## Tokens And Global Styles
 
-- [ ] Define project color tokens in `packages/design-system/src/theme.css`.
+- [ ] Define project color tokens in `packages/design-system/src/styles/colors.css`.
 - [ ] Decide whether the project supports dark mode or should force/reuse light-mode values.
 - [ ] Confirm OKLCH, hex, RGB, or another color format with the designer and keep it consistent.
 - [ ] Define container widths, breakpoints, max widths, spacing, paddings, shadows, and animation tokens.
 - [ ] Use scalable token names such as `--radius-sm`, `--radius-md`, and `--radius-lg`.
-- [ ] Keep shared design tokens in `theme.css`, and app-specific global styles in `apps/ui/src/styles/globals.css`.
-- [ ] Confirm `globals.css` imports `@repo/design-system/theme.css` and `@repo/design-system/custom-styles.css`.
+- [ ] Keep shared design tokens in `theme.css` and `colors.css`, and app-specific global styles in `apps/ui/src/styles/globals.css`.
+- [ ] Confirm `globals.css` imports `@repo/design-system/source-styles.css`.
 - [ ] Rebuild `@repo/design-system` when generated Strapi or editor outputs need to be updated.
 - [ ] Treat exported design-system tokens, typography classes, and editor config outputs as shared utilities.
 
 ## Fonts And Typography
 
-- [ ] Import all required font weights and styles in `apps/ui/src/lib/fonts.ts`.
-- [ ] For file-based fonts, define the font variable in `packages/design-system/src/theme.css` and export it through the design-system build output.
-- [ ] Attach font variables in `apps/ui/src/app/[locale]/layout.tsx`.
+- [ ] Store shared font files in `packages/design-system/src/fonts` and declare their weights and styles in `packages/design-system/src/fonts.css`.
+- [ ] Load the same files with `next/font/local` in `apps/ui/src/lib/fonts.ts`, including all required weights and styles.
+- [ ] Bind the Next.js font variable in `packages/design-system/src/styles/theme.css`, with a fallback to the shared font family for Strapi.
+- [ ] Attach font variables to `<html>` in `apps/ui/src/app/[locale]/layout.tsx` so shared theme variables resolve them at the document root.
+- [ ] Rebuild `@repo/design-system` after font changes to copy assets into `dist/fonts`, then verify fonts in the frontend and Strapi editors.
 - [ ] Collect all typography variants before component implementation starts.
-- [ ] Define `.typo-*` classes in `packages/design-system/src/custom-styles.css`.
+- [ ] Define `.typo-*` utilities in `packages/design-system/src/styles/typography.css`.
 - [ ] Map typography variants in `apps/ui/src/components/typography/config.ts`.
 - [ ] Confirm `defaultStyles` are correct for `h1`, `h2`, `h3`, `h4`, `h5`, `h6`, and `p`.
 - [ ] Update `apps/strapi/src/admin/ckeditor/headings.ts` when CKEditor should expose changed or new typography variants.
@@ -41,7 +43,7 @@ Use this checklist when creating a task for initial design-system setup or a lar
 - [ ] Define allowed heading levels, text colors, font weights, alignment options, links, lists, images, tables, and embeds.
 - [ ] For CKEditor, confirm Strapi admin preview should match frontend rendering as closely as possible.
 - [ ] For TipTap, define clear presets so editors do not get unsupported formatting freedom.
-- [ ] Update `packages/design-system/src/custom-styles.css` so rich text output, editor previews, and frontend typography stay aligned.
+- [ ] Update `packages/design-system/src/styles/typography.css` and `packages/design-system/src/styles/shared.css` so rich text output, editor previews, and frontend typography stay aligned.
 - [ ] Confirm frontend renderers are correct for the selected editor components.
 
 ## CMS Modeling

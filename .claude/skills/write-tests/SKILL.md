@@ -13,20 +13,22 @@ argument-hint: "[file-or-feature-to-cover]"
 
 Add or extend tests using the starter's existing conventions. Do not introduce new test frameworks. Do not invent new helpers when an existing one fits.
 
-Reference: `apps/docs/docs/reference/testing/overview.md` (layers), `unit-testing.md` (Vitest), `playwright.md` (browser QA).
+Reference: `apps/docs/docs/QA/overview.md` (layers), `unit-testing.md` (Vitest), `playwright/index.md` (E2E).
 
 ## Decide the test layer first
 
 Pick before writing. Wrong layer = wasted test.
 
-| Goal                                                  | Layer                       | Where                                                   |
-| ----------------------------------------------------- | --------------------------- | ------------------------------------------------------- |
-| Pure function / utility / hook (no network, no DOM)   | **Vitest unit** (`apps/ui`) | `*.test.ts` next to source (`apps/ui/src/**/*.test.ts`) |
-| Strapi service / util / schema / middleware behaviour | **Vitest** (`apps/strapi`)  | `apps/strapi/tests/**/*.test.ts`                        |
-| Full browser flow, navigation, user interaction       | **Playwright e2e**          | `qa/tests/playwright/e2e/*.spec.ts`                     |
-| Visual regression                                     | **Playwright visual**       | `qa/tests/playwright/visual/*.spec.ts`                  |
-| Accessibility                                         | **Playwright axe**          | `qa/tests/playwright/axe/*.spec.ts`                     |
-| SEO meta, head, robots                                | **Playwright seo**          | `qa/tests/playwright/seo/*.spec.ts`                     |
+| Goal                                                                               | Layer                          | Where                                                                                                                            |
+| ---------------------------------------------------------------------------------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| Pure function / utility / hook (no network, no DOM)                                | **Vitest unit** (`apps/ui`)    | `*.test.ts` next to source (`apps/ui/src/**/*.test.ts`)                                                                          |
+| Strapi service / util / schema / middleware behaviour                              | **Vitest** (`apps/strapi`)     | `apps/strapi/tests/**/*.test.ts`                                                                                                 |
+| Critical-path browser flow against the real app/backend (POM)                      | **Playwright e2e/smoke**       | spec: `qa/tests/playwright/e2e/smoke/*.spec.ts`, page object: `qa/tests/playwright/helpers/pages/<Page>Page.ts`                  |
+| UI behavior that needs a specific/edge-case backend response (POM + route mocking) | **Playwright e2e/mock**        | spec: `qa/tests/playwright/e2e/mock/*.spec.ts`, same page objects, network stubbed via `qa/tests/playwright/helpers/fixtures.ts` |
+| Pure HTTP check (status/redirect/JSON), no browser needed                          | **Playwright e2e** (`request`) | `qa/tests/playwright/e2e/smoke/*.spec.ts` — no POM, use the `request` fixture directly                                           |
+| Visual regression                                                                  | **Playwright visual**          | `qa/tests/playwright/visual/*.spec.ts`                                                                                           |
+| Accessibility                                                                      | **Playwright axe**             | `qa/tests/playwright/axe/*.spec.ts`                                                                                              |
+| SEO meta, head, robots                                                             | **Playwright seo**             | `qa/tests/playwright/seo/*.spec.ts`                                                                                              |
 
 Unit > integration > e2e. Push tests down the pyramid when behavior allows.
 
@@ -38,9 +40,11 @@ Before writing, read **one existing test in the same layer** to mirror style:
 - Strapi pure-logic ref: `apps/strapi/tests/hierarchy-compute.test.ts`
 - Strapi schema-from-disk ref: `apps/strapi/tests/app.test.ts` (reads `schema.json` directly — no Strapi boot)
 - Strapi service-with-mocked-`strapi`-global ref: `apps/strapi/tests/revalidate.test.ts` (`vi.stubGlobal("strapi", …)`)
-- Playwright e2e ref: `qa/tests/playwright/e2e/test_example.spec.ts`
+- Playwright e2e/smoke ref: `qa/tests/playwright/e2e/smoke/homepage.spec.ts`
+- Playwright e2e/mock ref: `qa/tests/playwright/e2e/mock/sign-in.spec.ts`
 - Playwright visual ref: `qa/tests/playwright/visual/visual.spec.ts`
 - Playwright axe ref: `qa/tests/playwright/axe/axe.spec.ts`
+- Playwright seo ref: `qa/tests/playwright/seo/seo.spec.ts`
 
 Match imports, helper usage, describe/it nesting, naming.
 
@@ -54,14 +58,140 @@ Match imports, helper usage, describe/it nesting, naming.
 - Path alias `@` resolves to `apps/ui/src` (UI tests only).
 - **Strapi tests do not boot Strapi.** Import the unit under test directly and either keep it pure, read `schema.json` from disk (`app.test.ts`), or mock the `strapi` global with `vi.stubGlobal("strapi", …)` (`revalidate.test.ts`). There is no `setupStrapi` helper — do not add a DB or a real instance.
 
-### Playwright
+### Playwright — e2e (Page Object Model)
 
-- Import from `@playwright/test`: `test`, `expect`.
-- Use `test.describe` for grouping.
-- `page.goto("/")` — baseURL configured in `playwright.config.ts`.
-- For visual: `await expect(page).toHaveScreenshot()`. Update snapshots only when intentional via `pnpm tests:playwright:visual:update`.
-- For axe: import existing axe helper if present (read `axe.spec.ts` first).
-- Do not hardcode ports — rely on config.
+Any e2e spec that drives the browser (navigation, clicks, assertions on rendered content) uses the **Page Object Model**, whether it's a smoke or a mock spec. Every page under test gets one POM class in `qa/tests/playwright/helpers/pages/<Page>Page.ts`, shared by both its smoke and mock specs — a page has one POM, not one per test kind.
+
+Pure HTTP checks (status code, redirect location, JSON body via the `request` fixture — no DOM involved) skip the POM entirely.
+
+#### Smoke vs mock — which folder
+
+- **`e2e/smoke/`** — drives the browser against the real running app and its real backend. Small, critical-path set: does the page load, does the core flow complete.
+- **`e2e/mock/`** — drives the browser but stubs the network layer with [Playwright's route mocking](https://playwright.dev/docs/mock), via the shared fixture in `qa/tests/playwright/helpers/fixtures.ts` (built with [Playwright's test-fixtures pattern](https://playwright.dev/docs/test-fixtures)). Use it for backend states that are hard or slow to produce for real — a specific error shape, a dropped connection, data that would need seeding — not to re-test something the real backend already exercises for free in a smoke spec. If a scenario doesn't need a specific stubbed response, it belongs in `smoke/`, not `mock/`.
+
+`qa/tests/playwright/helpers/fixtures.ts` exports `mockTest` (a `@playwright/test` `test` extended with a `mockJson` fixture — fulfills a route with a JSON body/status, no real request made) and re-exports `expect`. Import `mockTest as test` from there instead of `@playwright/test` in a mock spec — matches `sign-in.spec.ts`, the reference. For a non-JSON case (e.g. simulating a dropped connection), call `page.route(url, (route) => route.abort())` directly — the fixture doesn't need to cover everything Playwright's routing API already does.
+
+#### POM class template
+
+```typescript
+import type { Locator, Page } from "@playwright/test"
+
+export class ExamplePage {
+  private readonly page: Page
+
+  readonly heading: Locator
+  readonly editButtons: Locator
+  readonly editFooButton: Locator // editButtons.nth(0)
+
+  constructor(page: Page) {
+    this.page = page
+    this.heading = page.getByRole("heading", { name: "Example", exact: true })
+    this.editButtons = page.getByRole("button", { name: "Edit", exact: true })
+    this.editFooButton = this.editButtons.nth(0)
+  }
+
+  async goTo() {
+    const response = await this.page.goto("/example", {
+      waitUntil: "domcontentloaded",
+    })
+    await this.page.waitForLoadState("networkidle")
+
+    return response
+  }
+}
+```
+
+Rules:
+
+- `import type { Locator, Page }` as a top-level type import, not an inline `{ type Locator }` specifier.
+- Multiple elements with the same accessible name → `.nth(0)`, `.nth(1)`, exposed as named locators (not raw indices in the spec).
+- Dialog locators are scoped: `page.getByRole("dialog").getByRole(...)`, never a bare `page.getByRole(...)` that could match content behind the dialog.
+- POM classes do NOT import `expect` and do NOT define assertion methods — they only expose locators and navigation/interaction methods. Assertions live in the spec.
+- `goTo()` returns the navigation `Response` when the spec needs to assert on it (e.g. a smoke test checking `response?.ok()`); otherwise it can return `void`.
+
+#### Spec file template — smoke
+
+Specs live one level deeper than before (`e2e/smoke/`, `e2e/mock/`), so the import path back to `helpers/` is `../../helpers/...`, not `../helpers/...`.
+
+```typescript
+import { expect, test } from "@playwright/test"
+
+import { ExamplePage } from "../../helpers/pages/ExamplePage"
+import { tags } from "../../helpers/test-groups"
+
+// The page's feature group from TEST_GROUPS.
+test.describe("Example page", tags("homepage"), () => {
+  let examplePage: ExamplePage
+
+  test.beforeEach(async ({ page }) => {
+    examplePage = new ExamplePage(page)
+    await examplePage.goTo()
+  })
+
+  test("shows page heading", async () => {
+    await expect(examplePage.heading).toBeVisible()
+  })
+})
+```
+
+Use `test.beforeEach` to construct the POM and navigate once a file has more than one test. For a single-test file, skip `beforeEach` and construct the POM directly inside the one `test(...)` instead.
+
+- Navigation is handled by `goTo()` on the POM — never call `page.goto()` directly in a new spec.
+- Prefer role-based locators (`getByRole`) over CSS selectors — more resilient to markup changes.
+- Do not hardcode ports/hosts — `baseURL` comes from `BASE_URL` (set in `playwright.config.ts`'s `use.baseURL`).
+
+#### Spec file template — mock
+
+Same POM, imported alongside `mockTest as test` and `expect` from the fixtures file instead of `@playwright/test` directly, so `mockJson` is available on the test context:
+
+```typescript
+import { ExamplePage } from "../../helpers/pages/ExamplePage"
+import { expect, mockTest as test } from "../../helpers/fixtures"
+import { tags } from "../../helpers/test-groups"
+
+test.describe("Example page — mocked backend", tags("homepage"), () => {
+  test("shows an error when the backend rejects the request", async ({
+    page,
+    mockJson,
+  }) => {
+    await mockJson(
+      "**/api/example",
+      { message: "Something went wrong" },
+      { status: 500 }
+    )
+
+    const examplePage = new ExamplePage(page)
+    await examplePage.goTo()
+
+    await expect(page.getByText("Something went wrong")).toBeVisible()
+  })
+})
+```
+
+Set up the route mock **before** navigating/triggering the request it intercepts — a mock registered after the request has already fired does nothing.
+
+#### Checklist when adding a new e2e page
+
+1. Create `qa/tests/playwright/helpers/pages/<Page>Page.ts` with locators + a `goTo()` method. One POM, reused by both its smoke and mock specs.
+2. Decide smoke, mock, or both (see "Smoke vs mock — which folder" above).
+3. Create `qa/tests/playwright/e2e/smoke/<page>.spec.ts` and/or `qa/tests/playwright/e2e/mock/<page>.spec.ts`, importing the POM as `../../helpers/pages/<Page>Page`.
+4. Keep assertions in the spec, not the POM.
+5. If the flow doesn't touch the DOM at all (pure status/redirect/JSON check), skip the POM and use the `request` fixture directly instead.
+
+### Playwright — visual, axe, seo
+
+- **Feature groups**: every Playwright test belongs to a group from `TEST_GROUPS` in `qa/tests/playwright/helpers/test-groups.ts` (`homepage`, `auth`, …). `playwright.config.ts` runs only the groups selected by `QA_GROUPS`, or by `ENV_GROUPS` for the target environment, so an untagged test silently stops running as soon as an environment is narrowed.
+  - Tag every top-level `test.describe` with `tags("homepage")` from `helpers/test-groups.ts`, or `tags("auth", "no-prod")` for more than one tag. The first name must be a group.
+  - A nested test that only has to stay off production takes `NO_PROD` from the same file; its describe already carries the group.
+  - Never write `{ tag: … }` by hand. `tags()` throws on a mistyped name when the spec loads; nothing checks a hand-written tag.
+  - After adding or retagging tests, run this from the monorepo root and expect `Total: 0 tests`: `BASE_URL=http://localhost:3000 QA_GROUPS= pnpm -F @repo/tests-playwright exec playwright test --list --pass-with-no-tests --grep-invert "@(homepage|auth)(?![\w-])"`. The localhost `BASE_URL` and empty `QA_GROUPS` (which overrides `.env`) turn off the config filter, which a CLI `--grep` does not replace. The alternation lists `TEST_GROUPS`, so other `@` words, such as an email in a title, don't count.
+  - A new feature gets a new group in `TEST_GROUPS`, in `ENV_GROUPS` where it is live, in the `groups` parameter of `.azuredevops/pipelines/qa.yml`, and in the audit alternation (here and in `apps/docs/docs/QA/playwright/index.md`).
+- **Page lists**: `seo`, `axe`, `visual` and `perfo` read their paths from `qa/tests/playwright/helpers/urls.json`, keyed by group. A group is one list for every environment, or `{ "dev": [...], "stg": [...], "prod": [...] }` when the content differs. Resolve them with `urlsByGroup(urls.<suite>)` from `helpers/flatten-urls.ts` and tag each generated test with its `group`; never index a key directly (`urls.axe.homepage`). `urlsByGroup` throws when `BASE_URL` is not set. To cover a new page, add it under its group in `urls.json`; no spec change is needed.
+- **Production (`@no-prod`)**: a spec that cannot pass on production, or must not change data there, gets `"no-prod"` in the `tags(…)` of its `test` or `test.describe`, with a one-line comment saying why. `playwright.config.ts` leaves those tests out whenever `BASE_URL` resolves to production, locally and in the pipeline. A feature that is not deployed on production yet needs no tag; its group is simply missing from `ENV_GROUPS.prod`.
+- **Visual**: see `visual.spec.ts`. If no baseline snapshot exists yet for a page/browser combination, the spec creates one and skips comparison for that run instead of failing — inspect a newly created baseline before committing it. Update existing baselines only when the change is intentional: `pnpm tests:playwright:visual:update` (local OS) or `pnpm tests:playwright:visual:docker:update` (Linux, commit-ready — matches what CI compares against).
+- **Axe**: add per-page exceptions via `GLOBAL_WARNING_RULE_IDS` / `PATH_CONFIGS` in `axe.spec.ts` rather than skipping a page outright — a known, unfixable violation becomes a warning, not a silent gap.
+- **SEO**: mirror `seo.spec.ts`'s per-page `test.describe` blocks (Title, Meta description, Robots, Canonical, H1, Heading hierarchy, Structured data, Open Graph).
+- Do not hardcode ports/hosts — always resolve via `BASE_URL` / `baseURL`.
 
 ## Phase 3 — Naming + structure
 
@@ -75,19 +205,24 @@ Match imports, helper usage, describe/it nesting, naming.
 
 Run only the relevant package, not the whole monorepo, while iterating.
 
-| Test                       | Command                                                             |
-| -------------------------- | ------------------------------------------------------------------- |
-| UI unit (all)              | `pnpm test:ui`                                                      |
-| Strapi unit (all)          | `pnpm test:strapi`                                                  |
-| Single Vitest file         | `pnpm --filter @repo/ui exec vitest run <path>` (or `@repo/strapi`) |
-| Vitest watch               | `pnpm --filter @repo/ui test:watch`                                 |
-| Playwright e2e             | `pnpm tests:playwright:e2e:test`                                    |
-| Playwright e2e interactive | `pnpm tests:playwright:e2e:test:interactive`                        |
-| Playwright visual          | `pnpm tests:playwright:visual`                                      |
-| Playwright axe             | `pnpm tests:playwright:axe`                                         |
-| Playwright seo             | `pnpm tests:playwright:seo`                                         |
-| Update visual snapshots    | `pnpm tests:playwright:visual:update`                               |
-| All workspace tests        | `pnpm test`                                                         |
+| Test                                           | Command                                                             |
+| ---------------------------------------------- | ------------------------------------------------------------------- |
+| UI unit (all)                                  | `pnpm test:ui`                                                      |
+| Strapi unit (all)                              | `pnpm test:strapi`                                                  |
+| Single Vitest file                             | `pnpm --filter @repo/ui exec vitest run <path>` (or `@repo/strapi`) |
+| Vitest watch                                   | `pnpm --filter @repo/ui test:watch`                                 |
+| Playwright e2e (smoke + mock)                  | `pnpm tests:playwright:e2e:test`                                    |
+| Playwright e2e smoke only                      | `pnpm tests:playwright:e2e:smoke`                                   |
+| Playwright e2e mock only                       | `pnpm tests:playwright:e2e:mock`                                    |
+| Playwright e2e interactive                     | `pnpm tests:playwright:e2e:test:interactive`                        |
+| Playwright visual                              | `pnpm tests:playwright:visual`                                      |
+| Playwright visual (Docker, Linux-matched)      | `pnpm tests:playwright:visual:docker`                               |
+| Playwright axe                                 | `pnpm tests:playwright:axe`                                         |
+| Playwright seo                                 | `pnpm tests:playwright:seo`                                         |
+| Update visual snapshots (local OS)             | `pnpm tests:playwright:visual:update`                               |
+| Update visual snapshots (Docker, commit-ready) | `pnpm tests:playwright:visual:docker:update`                        |
+| LHCI performance collect                       | `pnpm tests:lhci:perfo`                                             |
+| All workspace tests                            | `pnpm test`                                                         |
 
 Playwright requires a running app (`pnpm dev` or built+started). If e2e fails with connection refused, start the app first.
 
@@ -105,7 +240,7 @@ Print:
 ```
 Tests added: <n>
 Files: <paths>
-Layer: vitest-ui | vitest-strapi | playwright-e2e | playwright-visual | playwright-axe | playwright-seo
+Layer: vitest-ui | vitest-strapi | playwright-e2e-smoke | playwright-e2e-mock | playwright-visual | playwright-axe | playwright-seo
 Result: pass
 Command: <exact command to re-run>
 ```
@@ -113,7 +248,8 @@ Command: <exact command to re-run>
 ## Notes
 
 - Do not add new dev dependencies for testing without explicit user request.
-- Do not introduce Jest, Mocha, Cypress, or other competing frameworks.
+- Do not introduce Jest, Mocha, Cypress, or other competing frameworks. POM is the required pattern for every new e2e page-interaction spec — see "Playwright — e2e (Page Object Model)" above.
+- No Cucumber/Gherkin runner is wired in either — `apps/docs/docs/QA/test-cases/` (see `write-test-cases`) is documentation, not executable. Don't add a step-definition framework to make it runnable.
 - Coverage reports configured in `vitest.config.ts` — don't reconfigure per-test.
 - Strapi tests run in a `node` environment without booting Strapi — keep them fast and focused; isolate logic so it's testable without a running instance.
 - Playwright `MOBILE_VIEWPORTS_TESTING_ENABLED=true` env var opts in mobile projects (see `playwright.config.ts`).

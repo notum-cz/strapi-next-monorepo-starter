@@ -1,29 +1,4 @@
 {
-  "seo": {
-    "metaTitle": "SEO-TITLE",
-    "metaDescription": "SEO-DESCRIPTION",
-    "metaImage": "SEO-IMAGE",
-    "metaRobots": "SEO-ROBOTS",
-    "keywords": "SEO-KEYWORDS",
-    "applicationName": "SEO-APPLICATION-NAME",
-    "og": {
-      "title": "SEO-OG-TITLE",
-      "description": "SEO-OG-DESCRIPTION",
-      "url": "SEO-OG-URL",
-      "siteName": "SEO-OG-SITE-NAME",
-      "image": "SEO-OG-IMAGE"
-    },
-    "twitter": {
-      "card": "SEO-TWITTER-CARD",
-      "title": "SEO-TWITTER-TITLE",
-      "description": "SEO-TWITTER-DESCRIPTION",
-      "siteId": "SEO-TWITTER-SITE-ID",
-      "creator": "SEO-TWITTER-CREATOR",
-      "creatorId": "SEO-TWITTER-CREATOR-ID",
-      "imageUrl": "SEO-TWITTER-IMAGE-URL"
-    }
-  },
-
   "general": {
     "noOptionsAvailable": "Žádné možnosti k dispozici",
     "search": "Vyhledat",

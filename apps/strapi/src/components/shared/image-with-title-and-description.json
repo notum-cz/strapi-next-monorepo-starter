@@ -9,14 +9,14 @@
       "type": "customField",
       "customField": "plugin::ckeditor5.CKEditor",
       "options": {
-        "preset": "defaultCkEditor"
+        "preset": "titleCkEditor"
       }
     },
     "description": {
       "type": "customField",
       "customField": "plugin::ckeditor5.CKEditor",
       "options": {
-        "preset": "defaultCkEditor"
+        "preset": "descriptionCkEditor"
       }
     },
     "image": {

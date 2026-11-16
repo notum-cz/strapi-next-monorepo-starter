@@ -1,1 +1,30 @@
-["/"]
+{
+  "seo": {
+    "homepage": {
+      "dev": ["/"],
+      "stg": ["/"],
+      "prod": ["/"]
+    }
+  },
+  "axe": {
+    "homepage": {
+      "dev": ["/"],
+      "stg": ["/"],
+      "prod": ["/"]
+    }
+  },
+  "visual": {
+    "homepage": {
+      "dev": ["/"],
+      "stg": ["/"],
+      "prod": ["/"]
+    }
+  },
+  "perfo": {
+    "homepage": {
+      "dev": ["/"],
+      "stg": ["/"],
+      "prod": ["/"]
+    }
+  }
+}
