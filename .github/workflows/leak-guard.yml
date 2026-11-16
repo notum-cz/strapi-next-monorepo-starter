@@ -1,0 +1,34 @@
+name: Leak guard
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    # Public repo only; skip fork PRs (no secret access, and outsiders don't have private files).
+    if: >
+      github.repository == 'notum-cz/strapi-next-monorepo-starter' &&
+      (github.event_name == 'push' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Check for private paths
+        env:
+          PATTERN: ${{ secrets.PRIVATE_PATHS_REGEX }}
+        # Prints only the count: public logs would otherwise reveal the pattern.
+        run: |
+          if [ -z "$PATTERN" ]; then
+            echo "::error::PRIVATE_PATHS_REGEX secret is not set"
+            exit 1
+          fi
+          COUNT=$(git ls-files | grep -cE "$PATTERN" || true)
+          if [ "$COUNT" -gt 0 ]; then
+            echo "::error::$COUNT private path(s) found. Run the leak check locally to see which."
+            exit 1
+          fi
