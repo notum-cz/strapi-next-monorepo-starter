@@ -247,5 +247,4 @@ async function main(): Promise<void> {
 
 // tsx runs this package as CommonJS, which has no top-level await. main()
 // handles its own errors, so the promise never rejects.
-// eslint-disable-next-line unicorn/prefer-top-level-await
 void main()

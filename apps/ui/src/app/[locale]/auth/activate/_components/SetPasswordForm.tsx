@@ -140,5 +140,4 @@ const SetPasswordFormSchema = z
 
 type FormSchemaType = typeof SetPasswordFormSchema
 
-// eslint-disable-next-line sonarjs/no-hardcoded-passwords
 const setPasswordFormName = "setPasswordForm"

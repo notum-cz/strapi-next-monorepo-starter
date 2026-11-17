@@ -22,7 +22,8 @@ status=0
 pnpm --silent exec commitlint --edit "$message_file" >"$output" 2>&1 || status=$?
 
 if [ "$status" -ne 0 ]; then
-  input="$(sed -n 's/^.*input: //p' "$output" | head -n 1)"
+  # commitlint >= 21 prints the message on the line after `--- input ---`.
+  input="$(sed -n '/--- input ---/{n;p;q;}' "$output")"
   error="$(sed -n 's/^.*   //p' "$output" | grep '\[[^]]*\]' | head -n 1)"
 
   if [ -n "$input" ] && [ -n "$error" ]; then

@@ -51,7 +51,7 @@ left. If `--dry-run` is passed, report the planned changes instead of editing.
 
 ### 2. UI — browser SDK + instrumentation
 
-- Delete `apps/ui/sentry.client.config.ts`.
+- Delete `apps/ui/src/instrumentation-client.ts` (browser `Sentry.init` + `onRouterTransitionStart`) and `apps/ui/src/lib/telemetry/providers/sentry-data-collection.ts`.
 - In `apps/ui/src/instrumentation.ts`: remove `import * as Sentry from "@sentry/nextjs"` and the `export const onRequestError = Sentry.captureRequestError` line. Keep the `register()` function and its `initializeTelemetry(runtime)` call.
 
 ### 3. UI — error boundaries
@@ -68,7 +68,7 @@ correct there, see the Observability doc's runtime boundaries):
 
 In `apps/ui/next.config.mjs`:
 
-- Remove `import { withSentryConfig } from "@sentry/nextjs"`.
+- Remove `import { withSentryConfig } from "@sentry/nextjs/config"`.
 - Replace the `withConfig` IIFE that wraps `withSentryConfig(...)` with a direct export of the intl-wrapped config:
 
   ```js

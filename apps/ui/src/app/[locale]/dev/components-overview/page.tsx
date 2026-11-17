@@ -1,4 +1,3 @@
-import { uniq } from "lodash"
 import type { Locale } from "next-intl"
 import { setRequestLocale } from "next-intl/server"
 
@@ -38,14 +37,16 @@ export default async function ComponentsOverviewPage({
 
   const pages = response?.data ?? []
 
-  const components = uniq(
-    pages.flatMap(
-      (page) =>
-        page.content?.map(
-          (block: { __component: string }) => block.__component
-        ) ?? []
-    )
-  ).sort((a, b) => a.localeCompare(b))
+  const components = [
+    ...new Set(
+      pages.flatMap(
+        (page) =>
+          page.content?.map(
+            (block: { __component: string }) => block.__component
+          ) ?? []
+      )
+    ),
+  ].sort((a, b) => a.localeCompare(b))
 
   return (
     <>

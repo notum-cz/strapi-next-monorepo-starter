@@ -117,13 +117,9 @@ function HierarchyPanel() {
 
   // Group changes by locale so the confirmation modal can render one chip per
   // locale with its change count.
-  const groupedChanges = new Map<string, FullPathChange[]>()
-  for (const change of changes) {
-    const localeChanges = groupedChanges.get(change.locale) ?? []
-    localeChanges.push(change)
-    groupedChanges.set(change.locale, localeChanges)
-  }
-  const changesByLocale = Array.from(groupedChanges)
+  const changesByLocale = Array.from(
+    Map.groupBy(changes, (change) => change.locale)
+  )
 
   const openModal = () => {
     // Reset the locale filter to "all selected" each time the modal opens.

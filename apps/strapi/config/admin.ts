@@ -1,7 +1,7 @@
 import type { UID } from "@strapi/strapi"
 
-import { microsoftSSOProvider } from "./auth-providers"
 import type { StrapiPreviewConfig } from "../types/internals"
+import { microsoftSSOProvider } from "./auth-providers"
 
 export default ({ env }) => {
   const strapiPreviewConfig: StrapiPreviewConfig = {

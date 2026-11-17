@@ -14,7 +14,7 @@ const stylesPath = path.resolve(__dirname, "../../dist/styles.css")
 const stylesCss = fs.readFileSync(stylesPath, "utf8")
 
 // This is only running during buildtime and depends on the theme.
-// eslint-disable-next-line sonarjs/slow-regex
+// eslint-disable-next-line sonarjs/super-linear-regex -- build-time only, input is our own theme CSS
 const allVarRegex = /(--[\w-]+)\s*:\s*([^;]+);/g
 const allVars = []
 let match
