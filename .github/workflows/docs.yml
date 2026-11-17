@@ -21,6 +21,7 @@ concurrency:
 jobs:
   build:
     name: Build Docusaurus
+    if: github.repository == 'notum-cz/strapi-next-monorepo-starter'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
