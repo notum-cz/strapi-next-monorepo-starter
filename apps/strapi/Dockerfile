@@ -29,8 +29,8 @@ WORKDIR /app
 FROM base AS prepare
 ARG WORKSPACE
 
-# Install turbo globally to prune below
-RUN pnpm add -g turbo@2.11.10
+# Install turbo globally to prune below. Keep in sync with `turbo` in the root package.json.
+RUN pnpm add -g turbo@2.11.11
 
 COPY . .
 
@@ -42,8 +42,8 @@ FROM base AS builder
 
 ARG APP
 
-# Install turbo globally to use during build below
-RUN pnpm add -g turbo@2.11.10
+# Install turbo globally to use during build below. Keep in sync with `turbo` in the root package.json.
+RUN pnpm add -g turbo@2.11.11
 # Install node-gyp globally to build native addons
 RUN pnpm add -g node-gyp
 
