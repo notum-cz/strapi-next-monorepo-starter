@@ -67,7 +67,7 @@ QA_GROUPS=homepage pnpm tests:playwright:axe
 
 An unknown name in `QA_GROUPS` fails the run and lists the valid ones. A describe with several tags runs when any of them is selected.
 
-The environment comes from the `BASE_URL` hostname. A `dev` segment means dev and a `stg` or `staging` segment means staging, where a segment is a part of the hostname between `-` or `.` characters. `localhost`, `127.0.0.1`, `[::1]` and `host.docker.internal` are local. Every other host counts as production, including preview domains such as `*.vercel.app`, so an unrecognised domain never runs `@no-prod` tests.
+The environment comes from the `BASE_URL` hostname. A `dev` segment means dev and a `stg` or `staging` segment means staging, where a segment is a part of a subdomain between `-` or `.` characters. The last two labels never count, so `client.dev` and `dev.to` are production, and so is an IPv6 address other than `[::1]`. `localhost`, `127.0.0.1`, `[::1]` and `host.docker.internal` are local. Every other host counts as production, including preview domains such as `*.vercel.app`, so an unrecognised domain never runs `@no-prod` tests.
 
 | Group      | E2E specs        | `urls.json` suites            |
 | ---------- | ---------------- | ----------------------------- |

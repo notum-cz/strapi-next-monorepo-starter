@@ -82,15 +82,23 @@ export function resolveTestEnv(
 
 /**
  * The environment of a lowercase hostname (`[::1]` keeps its brackets, as
- * `URL` gives it): a `dev` or `stg`/`staging` segment, else production.
- * `undefined` for a local or missing host. Split from resolveTestEnv() for the
- * k6 load test, which has no `URL` to parse `BASE_URL` with.
+ * `URL` gives it): a `dev` or `stg`/`staging` segment in a subdomain, else
+ * production. `undefined` for a local or missing host. Split from
+ * resolveTestEnv() for the k6 load test, which has no `URL` to parse
+ * `BASE_URL` with.
  */
 export function testEnvForHost(host: string | undefined): TestEnv | undefined {
   if (!host || LOCAL_HOSTS.has(host)) return undefined
 
-  if (/(^|[-.])dev([-.]|$)/.test(host)) return "dev"
-  if (/(^|[-.])(stg|staging)([-.]|$)/.test(host)) return "stg"
+  // An IPv6 literal names no environment; its zone ID (`%25-dev-`) must not
+  // pass for one.
+  if (host.startsWith("[")) return "prod"
+
+  // Only subdomain labels count, never the domain itself, so `client.dev` and
+  // `dev.to` stay production.
+  const subdomain = host.split(".").slice(0, -2).join(".")
+  if (/(^|[-.])dev([-.]|$)/.test(subdomain)) return "dev"
+  if (/(^|[-.])(stg|staging)([-.]|$)/.test(subdomain)) return "stg"
 
   // Any other host counts as production, so a domain the segments miss
   // (`www.example.com`) never runs @no-prod tests.

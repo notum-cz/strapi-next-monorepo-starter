@@ -22,7 +22,7 @@ pnpm tests:k6:load:breakpoint           # push until it breaks, then check recov
 LOAD_RPS=20 pnpm tests:k6:load:spike    # override a setting for one run
 ```
 
-The test runs from your machine, but the load goes to `BASE_URL` from `qa/tests/playwright/.env`, the same variable the other suites use. It visits the pages listed under `load` in `helpers/urls.json`, taking them in turn. Pages are picked the same way as in the other suites ([test groups](./index.md#test-groups)): the groups in `QA_GROUPS`, else those `ENV_GROUPS` enables for the environment read from `BASE_URL`, with each group's pages for that environment; a local `BASE_URL` gets every group and environment. Each page must answer `200` itself: redirects are not followed, so list the URL a page lands on.
+The test runs from your machine, but the load goes to `BASE_URL` from `qa/tests/playwright/.env`, the same variable the other suites use. It visits the pages listed under `load` in `helpers/urls.json`, taking them in turn. Pages are picked the same way as in the other suites ([test groups](./index.md#test-groups)): the groups in `QA_GROUPS`, else those `ENV_GROUPS` enables for the environment read from `BASE_URL`, with each group's pages for that environment. A local `BASE_URL` gets every environment's pages, and every group unless `QA_GROUPS` is set. Each page must answer `200` itself: redirects are not followed, so list the URL a page lands on.
 
 Settings live in the `SETTINGS` object at the top of `load/load-test.ts`. Change the defaults there, or override them for one run on the command line:
 
@@ -57,7 +57,7 @@ Visitors keep arriving at the set rate even when the site slows down, the way re
 | Threshold            | Limit         | Crossed means                                                                                                                                  |
 | -------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | `http_req_duration`  | p95 < 1500 ms | The site is too slow: 1 in 20 visitors waited longer than the limit                                                                            |
-| `http_req_failed`    | < 1 %         | Requests failed: 5xx errors, timeouts or refused connections                                                                                   |
+| `http_req_failed`    | < 1 %         | Requests failed: 4xx/5xx errors, timeouts or refused connections                                                                               |
 | `checks`             | > 99 %        | Pages didn't answer `200`, including pages that redirect                                                                                       |
 | `dropped_iterations` | 0             | **Visits that were never sent.** Responses were so slow that k6 ran out of virtual users: the site is overwhelmed, even if few requests failed |
 
@@ -99,7 +99,7 @@ k6 only sees the site from the outside. Pair the time of the slowdown in the rep
 
 A load test only says something about production when the environment matches it: same instance size and count, same database tier, same CDN. Where STG matches production, test STG. Where it doesn't, which is common, testing production before a release gives the real answer.
 
-The test refuses to start unless `BASE_URL` is `localhost` or its hostname has a `dev`, `stg` or `staging` segment (`stg.example.com`, `example-staging.herokuapp.com`). To run against production, agree on it with the client and the hosting provider first, then unlock it for that one run:
+The test refuses to start unless `BASE_URL` is a local host (`localhost`, `127.0.0.1`, `[::1]`, `host.docker.internal`) or a subdomain of its hostname has a `dev`, `stg` or `staging` segment (`stg.example.com`, `example-staging.herokuapp.com`). The domain itself never counts, so `client.dev` is production. To run against production, agree on it with the client and the hosting provider first, then unlock it for that one run:
 
 ```bash
 LOAD_ALLOW_PROD=true pnpm tests:k6:load:smoke

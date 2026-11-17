@@ -40,6 +40,13 @@ const PROFILE = __ENV.LOAD_PROFILE || SETTINGS.profile
 const RPS = Number(__ENV.LOAD_RPS || SETTINGS.rps)
 const DURATION = __ENV.LOAD_DURATION || SETTINGS.duration
 const P95_MS = Number(__ENV.LOAD_P95_MS || SETTINGS.p95Ms)
+// k6 takes whole arrival rates only.
+if (!Number.isSafeInteger(RPS) || RPS < 1) {
+  throw new Error(`LOAD_RPS must be a whole number from 1, got "${RPS}"`)
+}
+if (!Number.isFinite(P95_MS) || P95_MS <= 0) {
+  throw new Error(`LOAD_P95_MS must be a number above 0, got "${P95_MS}"`)
+}
 
 /**
  * KEY=value pairs from ../.env (k6 can't load it on its own). Follows dotenv,
@@ -261,7 +268,7 @@ const ALLOW_PROD = __ENV.LOAD_ALLOW_PROD === "true"
 if (!IS_NON_PROD && !ALLOW_PROD) {
   // Readable line first; the thrown error below arrives wrapped in a stack trace.
   console.error(
-    `⛔ ${HOST} looks like PRODUCTION. Point BASE_URL in qa/tests/playwright/.env at a non-production environment (localhost, dev, stg, staging), or — agreed with the client and the hosting provider — run once with LOAD_ALLOW_PROD=true.`
+    `⛔ ${HOST} looks like PRODUCTION. Point BASE_URL in qa/tests/playwright/.env at a non-production environment (a local host, or a dev / stg / staging subdomain), or — agreed with the client and the hosting provider — run once with LOAD_ALLOW_PROD=true.`
   )
   throw new Error(
     `Refusing to load-test ${HOST}: it looks like production and LOAD_ALLOW_PROD is not "true".`
