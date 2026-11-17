@@ -22,7 +22,7 @@ pnpm tests:k6:load:breakpoint           # push until it breaks, then check recov
 LOAD_RPS=20 pnpm tests:k6:load:spike    # override a setting for one run
 ```
 
-The test runs from your machine, but the load goes to `BASE_URL` from `qa/tests/playwright/.env`, the same variable the other suites use. It visits the pages listed under `load` in `helpers/urls.json`, taking them in turn. Pages are picked the same way as in the other suites ([test groups](./index.md#test-groups)): the groups in `QA_GROUPS`, else those `ENV_GROUPS` enables for the environment read from `BASE_URL`, with each group's pages for that environment; a local `BASE_URL` gets every group and environment.
+The test runs from your machine, but the load goes to `BASE_URL` from `qa/tests/playwright/.env`, the same variable the other suites use. It visits the pages listed under `load` in `helpers/urls.json`, taking them in turn. Pages are picked the same way as in the other suites ([test groups](./index.md#test-groups)): the groups in `QA_GROUPS`, else those `ENV_GROUPS` enables for the environment read from `BASE_URL`, with each group's pages for that environment; a local `BASE_URL` gets every group and environment. Each page must answer `200` itself: redirects are not followed, so list the URL a page lands on.
 
 Settings live in the `SETTINGS` object at the top of `load/load-test.ts`. Change the defaults there, or override them for one run on the command line:
 
@@ -46,7 +46,7 @@ Visitors keep arriving at the set rate even when the site slows down, the way re
 | `spike`      | 1 min at `LOAD_RPS`, jump to 5× within 15 s, hold 3 min, back to normal       | All the thresholds below hold                     |
 | `breakpoint` | 1 min at `LOAD_RPS`, climb to 10× over 10 min, back to normal, 3 min recovery | The last 2 minutes of recovery are back to normal |
 
-`breakpoint` is meant to break the system, so errors during the climb are expected and don't fail the run. Only recovery is judged: once traffic is back to normal, p95 must be under `LOAD_P95_MS` and errors under 1 %. Where it broke is in the report (see below).
+`breakpoint` is meant to break the system, so errors during the climb are expected and don't fail the run. Only recovery is judged: it runs as its own `recovery` scenario for the last 2 minutes, after a minute to settle, and must pass the same thresholds as the other profiles (p95 under `LOAD_P95_MS`, errors under 1 %, pages answering `200`, no dropped visits). Where it broke is in the report (see below).
 
 ## How to read the result
 
@@ -58,7 +58,7 @@ Visitors keep arriving at the set rate even when the site slows down, the way re
 | -------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | `http_req_duration`  | p95 < 1500 ms | The site is too slow: 1 in 20 visitors waited longer than the limit                                                                            |
 | `http_req_failed`    | < 1 %         | Requests failed: 5xx errors, timeouts or refused connections                                                                                   |
-| `checks`             | > 99 %        | Pages didn't answer `200`                                                                                                                      |
+| `checks`             | > 99 %        | Pages didn't answer `200`, including pages that redirect                                                                                       |
 | `dropped_iterations` | 0             | **Visits that were never sent.** Responses were so slow that k6 ran out of virtual users: the site is overwhelmed, even if few requests failed |
 
 ### Good signs
@@ -105,7 +105,7 @@ The test refuses to start unless `BASE_URL` is `localhost` or its hostname has a
 LOAD_ALLOW_PROD=true pnpm tests:k6:load:smoke
 ```
 
-`LOAD_ALLOW_PROD` is deliberately not in `SETTINGS` or `.env`, so it never stays switched on.
+`LOAD_ALLOW_PROD` is deliberately not in `SETTINGS` or `.env`, so it never stays switched on. Because redirects are not followed, a page that redirects to another host (production, say) never sends the load there.
 
 ## Before a heavy run
 

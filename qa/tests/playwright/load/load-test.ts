@@ -17,6 +17,7 @@ import {
   ENV_GROUPS,
   TEST_ENVS,
   TEST_GROUPS,
+  testEnvForHost,
   type TestEnv,
 } from "../helpers/test-groups.ts"
 
@@ -40,7 +41,11 @@ const RPS = Number(__ENV.LOAD_RPS || SETTINGS.rps)
 const DURATION = __ENV.LOAD_DURATION || SETTINGS.duration
 const P95_MS = Number(__ENV.LOAD_P95_MS || SETTINGS.p95Ms)
 
-/** KEY=value pairs from ../.env (k6 can't load it on its own). */
+/**
+ * KEY=value pairs from ../.env (k6 can't load it on its own). Follows dotenv,
+ * which the Playwright suites read the same file with: quotes are removed, and
+ * in an unquoted value `#` starts a comment.
+ */
 function readDotEnv(): Record<string, string> {
   let content: string
   try {
@@ -49,13 +54,17 @@ function readDotEnv(): Record<string, string> {
     return {}
   }
   const vars: Record<string, string> = {}
-  for (const line of content.split("\n")) {
+  for (const line of content.split(/\r?\n/)) {
     const separator = line.indexOf("=")
     if (separator < 1 || line.trimStart().startsWith("#")) continue
 
-    const value = line.slice(separator + 1).trim()
-    const unquoted = /^(["']).*\1$/.test(value) ? value.slice(1, -1) : value
-    vars[line.slice(0, separator).trim()] = unquoted
+    const key = line
+      .slice(0, separator)
+      .trim()
+      .replace(/^export\s+/, "")
+    const raw = line.slice(separator + 1).trim()
+    const quoted = /^(["'`])(.*?)\1/.exec(raw)
+    vars[key] = quoted ? quoted[2] : raw.split("#", 1)[0].trim()
   }
 
   return vars
@@ -65,30 +74,32 @@ const DOT_ENV = readDotEnv()
 const BASE_URL = (__ENV.BASE_URL || DOT_ENV.BASE_URL || "").replace(/\/$/, "")
 if (!BASE_URL) throw new Error("Set BASE_URL in qa/tests/playwright/.env")
 
-const HOST = BASE_URL.replace(/^\w+:\/\//, "")
-  .split(/[/:?#]/, 1)[0]
+/**
+ * BASE_URL's hostname, the way `URL` reads it (k6 has no `URL`): without the
+ * scheme, `user:password@` and port; an IPv6 host keeps its brackets.
+ */
+const HOST = BASE_URL.replace(/^[a-z][\w+.-]*:\/\//i, "")
+  .split(/[/?#]/, 1)[0]
+  .replace(/^.*@/, "")
+  .replace(/:\d*$/, "")
   .toLowerCase()
 
-/**
- * The environment under test — the same rule as resolveTestEnv() in
- * helpers/test-groups.ts, which needs Node's URL: a `dev` or `stg`/`staging`
- * hostname segment, else production; `undefined` for a local host.
- */
-function testEnv(): TestEnv | undefined {
-  if (
-    ["localhost", "127.0.0.1", "[::1]", "host.docker.internal"].includes(HOST)
-  ) {
-    return undefined
-  }
-  if (/(^|[-.])dev([-.]|$)/.test(HOST)) return "dev"
-  if (/(^|[-.])(stg|staging)([-.]|$)/.test(HOST)) return "stg"
-
-  return "prod"
-}
-
-const ENV = testEnv()
+/** The environment under test — the rule resolveTestEnv() uses for the other suites. */
+const ENV = testEnvForHost(HOST)
 
 type GroupUrls = string[] | Partial<Record<TestEnv, string[]>>
+
+/** Throws unless `urls` is a list of paths, which the test appends to BASE_URL. */
+function assertPaths(urls: unknown, where: string): asserts urls is string[] {
+  if (
+    !Array.isArray(urls) ||
+    urls.some((path) => typeof path !== "string" || !path.startsWith("/"))
+  ) {
+    throw new Error(
+      `helpers/urls.json "${where}" must be a list of paths starting with "/".`
+    )
+  }
+}
 
 /**
  * The "load" pages to visit, picked like every other suite does it
@@ -98,21 +109,32 @@ type GroupUrls = string[] | Partial<Record<TestEnv, string[]>>
  * A mistyped group or environment fails the run instead of testing nothing.
  */
 function loadPaths(): string[] {
-  const suite = (JSON.parse(open("../helpers/urls.json")).load ?? {}) as Record<
-    string,
-    GroupUrls
-  >
+  const suite: Record<string, unknown> =
+    JSON.parse(open("../helpers/urls.json")).load ?? {}
   const groups = Object.keys(suite)
   assertKnown(groups, TEST_GROUPS, 'group under "load" in helpers/urls.json')
+  const urlsByGroup = new Map<string, GroupUrls>()
   for (const group of groups) {
     const urls = suite[group]
-    if (!Array.isArray(urls)) {
+    if (Array.isArray(urls)) {
+      assertPaths(urls, `load.${group}`)
+    } else if (urls && typeof urls === "object") {
+      const envs = Object.keys(urls)
       assertKnown(
-        Object.keys(urls),
+        envs,
         TEST_ENVS,
         `environment in helpers/urls.json group "load.${group}"`
       )
+      for (const env of envs) {
+        assertPaths(
+          (urls as Record<string, unknown>)[env],
+          `load.${group}.${env}`
+        )
+      }
+    } else {
+      assertPaths(urls, `load.${group}`)
     }
+    urlsByGroup.set(group, urls as GroupUrls)
   }
 
   const picked = (__ENV.QA_GROUPS || DOT_ENV.QA_GROUPS || "")
@@ -128,7 +150,7 @@ function loadPaths(): string[] {
       groups
         .filter((group) => !selected || selected.includes(group))
         .flatMap((group) => {
-          const urls = suite[group]
+          const urls = urlsByGroup.get(group) ?? []
           if (Array.isArray(urls)) return urls
 
           return ENV ? (urls[ENV] ?? []) : Object.values(urls).flat()
@@ -144,48 +166,82 @@ if (PATHS.length === 0) {
   )
 }
 
-// Visitors keep arriving at the set rate even when the site slows down
-// (ramping-arrival-rate), like real traffic does.
-const rate = (stages: { duration: string; target: number }[]): Scenario => ({
-  executor: "ramping-arrival-rate",
-  timeUnit: "1s",
+const VUS = {
   preAllocatedVUs: Math.max(5, RPS * 5),
   maxVUs: Math.max(50, RPS * 50),
+}
+
+// Visitors keep arriving at the set rate even when the site slows down
+// (ramping-arrival-rate), like real traffic does. `startRate` is where the
+// first stage starts from; without it k6 starts from 0.
+const rate = (
+  stages: { duration: string; target: number }[],
+  startRate = 0
+): Scenario => ({
+  executor: "ramping-arrival-rate",
+  timeUnit: "1s",
+  startRate,
+  ...VUS,
   stages,
 })
 
-const PROFILES: Record<string, Scenario> = {
+/** Each profile's k6 scenarios, keyed by scenario name. */
+const PROFILES: Record<string, Record<string, Scenario>> = {
   // 1 page view/s for a minute: checks the script and the target work.
   smoke: {
-    executor: "constant-arrival-rate",
-    rate: 1,
-    timeUnit: "1s",
-    duration: "1m",
-    preAllocatedVUs: 1,
-    maxVUs: 5,
+    smoke: {
+      executor: "constant-arrival-rate",
+      rate: 1,
+      timeUnit: "1s",
+      duration: "1m",
+      preAllocatedVUs: 1,
+      maxVUs: 5,
+    },
   },
   // Normal traffic: ramp up, hold, ramp down.
-  average: rate([
-    { duration: "1m", target: RPS },
-    { duration: DURATION, target: RPS },
-    { duration: "30s", target: 0 },
-  ]),
+  average: {
+    average: rate([
+      { duration: "1m", target: RPS },
+      { duration: DURATION, target: RPS },
+      { duration: "30s", target: 0 },
+    ]),
+  },
   // Campaign launch: sudden 5× surge, then back to normal.
-  spike: rate([
-    { duration: "1m", target: RPS },
-    { duration: "15s", target: RPS * 5 },
-    { duration: "3m", target: RPS * 5 },
-    { duration: "15s", target: RPS },
-    { duration: "1m", target: RPS },
-  ]),
+  spike: {
+    spike: rate(
+      [
+        { duration: "1m", target: RPS },
+        { duration: "15s", target: RPS * 5 },
+        { duration: "3m", target: RPS * 5 },
+        { duration: "15s", target: RPS },
+        { duration: "1m", target: RPS },
+      ],
+      RPS
+    ),
+  },
   // Push until it breaks, then back to normal: where is the limit, and does the
-  // system recover on its own? Pass / fail is judged on recovery only.
-  breakpoint: rate([
-    { duration: "1m", target: RPS }, // baseline
-    { duration: "10m", target: RPS * 10 }, // keep pushing; it breaks somewhere here
-    { duration: "15s", target: RPS }, // drop back to normal traffic
-    { duration: "3m", target: RPS }, // recovery
-  ]),
+  // system recover on its own? Pass / fail is judged on `recovery` only, its
+  // own scenario so that its dropped visits can be counted apart from the
+  // overload's.
+  breakpoint: {
+    breakpoint: rate(
+      [
+        { duration: "1m", target: RPS }, // baseline
+        { duration: "10m", target: RPS * 10 }, // keep pushing; it breaks somewhere here
+        { duration: "15s", target: RPS }, // drop back to normal traffic
+        { duration: "1m", target: RPS }, // let it settle
+      ],
+      RPS
+    ),
+    recovery: {
+      executor: "constant-arrival-rate",
+      rate: RPS,
+      timeUnit: "1s",
+      duration: "2m",
+      startTime: "12m15s", // when `breakpoint` ends: 1m + 10m + 15s + 1m
+      ...VUS,
+    },
+  },
 }
 
 if (!Object.hasOwn(PROFILES, PROFILE)) {
@@ -195,9 +251,11 @@ if (!Object.hasOwn(PROFILES, PROFILE)) {
 }
 
 // Production guard. A host counts as non-production when it is local or has a
-// dev / stg / staging segment — the same rule as resolveTestEnv() in the
-// test-groups work. Production needs LOAD_ALLOW_PROD=true on the command line
-// for that one run; deliberately not a SETTINGS value, so it never stays on.
+// dev / stg / staging segment — the rule resolveTestEnv() uses for the other
+// suites. Production needs LOAD_ALLOW_PROD=true on the command line for that
+// one run; deliberately not a SETTINGS value, so it never stays on. Redirects
+// are not followed (`maxRedirects` below), so no page can send the load on to
+// another host.
 const IS_NON_PROD = ENV !== "prod"
 const ALLOW_PROD = __ENV.LOAD_ALLOW_PROD === "true"
 if (!IS_NON_PROD && !ALLOW_PROD) {
@@ -215,50 +273,37 @@ if (!IS_NON_PROD) {
   )
 }
 
-/**
- * Breakpoint recovery is judged on its last 2 minutes: the recovery stage
- * starts at 1m + 10m + 15s, plus 1 minute to settle.
- */
-const RECOVERY_FROM_MS = (60 + 600 + 15 + 60) * 1000
+/** Breaking any of these fails the run. */
+const thresholds = (scope = ""): Options["thresholds"] => ({
+  [`http_req_failed${scope}`]: ["rate<0.01"],
+  [`http_req_duration${scope}`]: [`p(95)<${P95_MS}`],
+  [`checks${scope}`]: ["rate>0.99"],
+  // Every planned visit must actually be sent. When responses are so slow that
+  // k6 runs out of virtual users, visits are dropped — the site is
+  // overwhelmed, even if few requests "fail".
+  [`dropped_iterations${scope}`]: ["count==0"],
+})
 
 export const options: Options = {
-  scenarios: { [PROFILE]: PROFILES[PROFILE] },
-  // Breaking any of these fails the run.
+  scenarios: PROFILES[PROFILE],
+  // A redirect answers 3xx and fails the `status 200` check instead of being
+  // followed: list the page it lands on, and the load never leaves BASE_URL.
+  maxRedirects: 0,
+  // `breakpoint` is meant to break the system; what counts is that it is back
+  // to normal once traffic is.
   thresholds:
-    PROFILE === "breakpoint"
-      ? {
-          // The system is meant to break under load; what counts is that it
-          // is back to normal once traffic is.
-          "http_req_duration{phase:recovery}": [`p(95)<${P95_MS}`],
-          "http_req_failed{phase:recovery}": ["rate<0.01"],
-        }
-      : {
-          http_req_failed: ["rate<0.01"],
-          http_req_duration: [`p(95)<${P95_MS}`],
-          checks: ["rate>0.99"],
-          // Every planned visit must actually be sent. When responses are so
-          // slow that k6 runs out of virtual users, visits are dropped — the
-          // site is overwhelmed, even if few requests "fail".
-          dropped_iterations: ["count==0"],
-        },
+    PROFILE === "breakpoint" ? thresholds("{scenario:recovery}") : thresholds(),
 }
 
 export default function () {
   // Round-robin, so every page gets an equal share.
   const path = PATHS[exec.scenario.iterationInTest % PATHS.length]
-  const tags: Record<string, string> = { name: path }
-  if (PROFILE === "breakpoint") {
-    tags.phase =
-      exec.instance.currentTestRunDuration >= RECOVERY_FROM_MS
-        ? "recovery"
-        : "load"
-  }
   const res = http.get(`${BASE_URL}${path}`, {
     // Ask for compression like every browser does. Without it k6 downloads
     // pages uncompressed (~6× bigger) and the run measures bandwidth, not the
     // site. k6 decompresses the response itself.
     headers: { "Accept-Encoding": "gzip, br" },
-    tags,
+    tags: { name: path },
   })
 
   check(res, {

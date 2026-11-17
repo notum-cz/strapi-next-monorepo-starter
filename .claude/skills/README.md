@@ -86,7 +86,7 @@ Currently shipped:
 | `review-pr`                   | stack-agnostic  | Review a PR (or local branch vs `dev`) with parallel review subagents.   |
 | `resolve-review-suggestions`  | stack-agnostic  | Use authenticated `gh` to implement unresolved GitHub PR review threads. |
 | `validate-branch-refs`        | stack-agnostic  | Validate and update stale references/claims in docs, comments, config.   |
-| `write-tests`                 | stack-agnostic  | Generate or extend Vitest / Playwright tests for a target.               |
+| `write-tests`                 | stack-agnostic  | Generate or extend Vitest / Playwright / k6 load tests for a target.     |
 | `write-test-cases`            | stack-agnostic  | Document test cases as Gherkin pages under `apps/docs/.../QA/`.          |
 | `write-qa-notes`              | stack-agnostic  | Capture QA tribal knowledge as Markdown notes under `apps/docs/.../QA/`. |
 | `add-content-type`            | stack-coupled   | Scaffold a Strapi v5 collection or single type + reminders.              |

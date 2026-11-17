@@ -21,7 +21,7 @@
     "playwright-visual-tests-docker": "bash visual/compare-snapshots-docker.sh visual-chromium visual-firefox",
     "playwright-visual-update-snapshots-docker": "bash visual/update-snapshots-docker.sh visual-chromium visual-firefox",
     "playwright-visual-update-tests": "playwright test --project=visual-chromium --project=visual-firefox --project=visual-webkit --update-snapshots --pass-with-no-tests",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit && tsc --noEmit -p load"
   },
   "dependencies": {
     "@axe-core/playwright": "4.14.0",

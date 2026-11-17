@@ -29,4 +29,8 @@ Playwright tests run by [feature group](../../../QA/playwright/index.md#test-gro
 - For the `seo`, `axe`, `visual` and `perfo` suites, it adds pages under their group in `helpers/urls.json` and reads them with `urlsByGroup`.
 - After adding or retagging tests, it runs the untagged-test check from the [Playwright docs](../../../QA/playwright/index.md#checking-for-untagged-tests).
 
+## k6 load test
+
+For throughput and latency under traffic, the skill extends `qa/tests/playwright/load/load-test.ts` instead of adding files: new pages go under `load` in `helpers/urls.json`, new load shapes go in its `PROFILES`. See [Load Testing (k6)](../../../QA/playwright/load-testing.md).
+
 See also: [Testing](../../../QA/overview.md).

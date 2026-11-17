@@ -71,14 +71,22 @@ const LOCAL_HOSTS = new Set([
 ])
 
 /**
- * The environment under test, read from the `BASE_URL` hostname: a `dev` or
- * `stg`/`staging` segment, else production. `undefined` for a local host and
- * a missing `BASE_URL`.
+ * The environment under test, read from the `BASE_URL` hostname. `undefined`
+ * for a local host and a missing `BASE_URL`.
  */
 export function resolveTestEnv(
   baseUrl = process.env.BASE_URL
 ): TestEnv | undefined {
-  const host = baseUrl ? URL.parse(baseUrl)?.hostname : undefined
+  return testEnvForHost(baseUrl ? URL.parse(baseUrl)?.hostname : undefined)
+}
+
+/**
+ * The environment of a lowercase hostname (`[::1]` keeps its brackets, as
+ * `URL` gives it): a `dev` or `stg`/`staging` segment, else production.
+ * `undefined` for a local or missing host. Split from resolveTestEnv() for the
+ * k6 load test, which has no `URL` to parse `BASE_URL` with.
+ */
+export function testEnvForHost(host: string | undefined): TestEnv | undefined {
   if (!host || LOCAL_HOSTS.has(host)) return undefined
 
   if (/(^|[-.])dev([-.]|$)/.test(host)) return "dev"
