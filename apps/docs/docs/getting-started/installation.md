@@ -8,13 +8,13 @@ Set up the monorepo on a fresh machine.
 
 ## Prerequisites
 
-| Tool                                 | Version  | Why                                                   |
-| ------------------------------------ | -------- | ----------------------------------------------------- |
-| Node.js                              | `24.x`   | Workspace constraint (`engines.node: ^24.0.0`)        |
-| pnpm                                 | `11.1.1` | Workspace manager — pinned via `packageManager` field |
-| Docker                               | latest   | Local Postgres for Strapi (+ optional imgproxy)       |
-| Git                                  | any      | clone + hooks                                         |
-| [nvm](https://github.com/nvm-sh/nvm) | optional | switch Node versions                                  |
+| Tool                                 | Version   | Why                                                   |
+| ------------------------------------ | --------- | ----------------------------------------------------- |
+| Node.js                              | `26.x`    | Workspace constraint (`engines.node: ^26.0.0`)        |
+| pnpm                                 | `12.18.0` | Workspace manager — pinned via `packageManager` field |
+| Docker                               | latest    | Local Postgres for Strapi (+ optional imgproxy)       |
+| Git                                  | any       | clone + hooks                                         |
+| [nvm](https://github.com/nvm-sh/nvm) | optional  | switch Node versions                                  |
 
 Optional but recommended: install VSCode extensions from `.vscode/extensions.json`.
 
@@ -43,8 +43,11 @@ Keep the original remote only when you intentionally work on the upstream starte
 
 ```bash
 nvm use
+npm install -g pnpm@12.18.0
 pnpm install
 ```
+
+Node.js 25 and later no longer bundle Corepack. Install pnpm once for each Node.js version you switch to with `nvm`. Without it, `pnpm` is missing or resolves to a copy installed under another Node.js version. Use the version in the root `package.json` `packageManager` field.
 
 `pnpm install` triggers `postinstall` which:
 

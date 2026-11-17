@@ -1,11 +1,16 @@
 # Please see the documentation for all configuration options:
 # https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 #
+# Dependabot reads this file from the DEFAULT branch (main) only — changes here
+# take effect once they reach main.
+#
 # Security updates additionally require "Dependabot alerts" and
 # "Dependabot security updates" to be enabled in repo Settings → Code security
 # (both already enabled). Security PRs are NOT throttled by
-# open-pull-requests-limit and ignore `cooldown`, so they always land fast —
-# version-update noise is kept low here so security PRs stand out.
+# open-pull-requests-limit, ignore `cooldown` and `target-branch` (they always
+# target the default branch), and bypass pnpm's `minimumReleaseAge` — so CI
+# rejects their lockfile with ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION until the
+# new versions are older than `minimumReleaseAge`. Re-run CI after that window.
 version: 2
 
 updates:
@@ -30,25 +35,27 @@ updates:
       - "ready-for-review"
 
   # ─────────────────────────────────────────────
-  # All npm packages (root monorepo + all apps)
-  # Using `directories` (plural) ensures dependabot
-  # properly updates the root pnpm-lock.yaml for all
-  # workspace packages.
-  # Dependabot does not support group-by for npm packages, so we have to group by dependency-name - it does not update pnpm-lock.yaml correctly
+  # npm — the whole pnpm workspace from the ROOT ONLY.
+  #
+  # Do NOT add workspace subdirectories (/apps/*, /packages/*) here. A job that
+  # starts in a subdirectory does not find the root pnpm-lock.yaml or the
+  # `packageManager` pin, falls back to a guessed pnpm version, and opens PRs
+  # that bump package.json only — CI then fails on
+  # ERR_PNPM_OUTDATED_LOCKFILE. The root job reads pnpm-workspace.yaml and
+  # already covers every workspace package.
+  #
+  # Because there is a single entry, `ignore` applies to every package.
+  # React-major upgrades (apps/ui) are therefore done by hand.
   # ─────────────────────────────────────────────
   - package-ecosystem: "npm"
     target-branch: "dev"
     versioning-strategy: "increase"
-    # apps/strapi and apps/docs are handled by a dedicated entry below
-    # (they must stay on React 18), so they are intentionally excluded here.
-    directories:
-      - "/"
-      - "/apps/ui"
-      - "/packages/*"
+    directory: "/"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 5
-    # Wait out fresh releases before opening PRs (skips the buggy x.0.0 rush)
+    # Wait out fresh releases before opening PRs (skips the buggy x.0.0 rush).
+    # Must stay >= pnpm's `minimumReleaseAge` (2 days) or CI rejects the lockfile.
     cooldown:
       default-days: 3
       semver-minor-days: 5
@@ -62,14 +69,13 @@ updates:
           - "react-dom"
           - "@types/react"
           - "@types/react-dom"
-        update-types: ["patch", "minor", "major"]
+        update-types: ["patch", "minor"]
       # Strapi ecosystem — kept separate for careful review
       strapi:
         patterns:
           - "@strapi/*"
         update-types: ["patch", "minor", "major"]
-      # Everything else bundled into a single PR (grouped by name pattern,
-      # not dependency-type — keeps pnpm-lock.yaml updates correct)
+      # Everything else bundled into a single PR
       all-dependencies:
         patterns:
           - "*"
@@ -80,59 +86,9 @@ updates:
           - "@types/react-dom"
           - "@strapi/*"
         update-types: ["patch", "minor", "major"]
-    commit-message:
-      include: scope
-      prefix: "chore"
-    labels:
-      - "update-dependencies"
-      - "auto-generated"
-      - "ready-for-review"
-
-  # ─────────────────────────────────────────────
-  # React-18-pinned apps (Strapi v5 admin + Docusaurus 3)
-  # Separate npm entry so the React-major ignore below is scoped ONLY to
-  # these apps — apps/ui (handled above) keeps receiving React 19+ updates.
-  # ─────────────────────────────────────────────
-  - package-ecosystem: "npm"
-    target-branch: "dev"
-    versioning-strategy: "increase"
-    directories:
-      - "/apps/strapi"
-      - "/apps/docs"
-    schedule:
-      interval: "daily"
-    open-pull-requests-limit: 5
-    cooldown:
-      default-days: 3
-      semver-minor-days: 5
-    allow:
-      - dependency-type: "direct"
-    groups:
-      # React stays on v18 here — patch/minor only (majors are ignored below)
-      react:
-        patterns:
-          - "react"
-          - "react-dom"
-          - "@types/react"
-          - "@types/react-dom"
-        update-types: ["patch", "minor"]
-      strapi:
-        patterns:
-          - "@strapi/*"
-        update-types: ["patch", "minor", "major"]
-      all-dependencies:
-        patterns:
-          - "*"
-        exclude-patterns:
-          - "react"
-          - "react-dom"
-          - "@types/react"
-          - "@types/react-dom"
-          - "@strapi/*"
-        update-types: ["patch", "minor", "major"]
-    # Keep React on v18 — Strapi v5 admin and Docusaurus 3 require it.
-    # Never auto-bump React (or its types) to a new major.
     ignore:
+      # Strapi v5 admin and Docusaurus 3 require React 18 and react-router-dom 6
+      # (peer deps of @strapi/strapi). apps/ui React majors are done by hand.
       - dependency-name: "react"
         update-types: ["version-update:semver-major"]
       - dependency-name: "react-dom"
@@ -140,6 +96,11 @@ updates:
       - dependency-name: "@types/react"
         update-types: ["version-update:semver-major"]
       - dependency-name: "@types/react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-router-dom"
+        update-types: ["version-update:semver-major"]
+      # Node types must match the Node runtime major (engines: ^26).
+      - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
     commit-message:
       include: scope
@@ -170,7 +131,7 @@ updates:
       - "update-dependencies"
       - "auto-generated"
       - "ready-for-review"
-    # Stay on the Node 24 LTS line — never auto-bump the runtime major.
+    # Stay on the Node 26 LTS line — never auto-bump the runtime major.
     # Runtime-major moves are a platform decision, not a routine dep bump.
     ignore:
       - dependency-name: "node"

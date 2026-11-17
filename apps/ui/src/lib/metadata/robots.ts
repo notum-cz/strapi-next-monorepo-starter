@@ -12,9 +12,7 @@ function splitPaths(value: string | null | undefined) {
 
 export function getRobotsRules(
   configuration:
-    | Data.Component<"seo-utilities.robots-configuration">
-    | null
-    | undefined
+    Data.Component<"seo-utilities.robots-configuration"> | null | undefined
 ): MetadataRoute.Robots["rules"] {
   if (!configuration?.rules?.length) {
     return [{ userAgent: "*", allow: "/" }]

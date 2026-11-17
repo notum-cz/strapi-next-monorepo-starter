@@ -84,5 +84,4 @@ const ForgotPasswordFormSchema = z.object({
 
 type FormSchemaType = typeof ForgotPasswordFormSchema
 
-// eslint-disable-next-line sonarjs/no-hardcoded-passwords
 const forgotPasswordFormName = "forgottenPasswordForm"

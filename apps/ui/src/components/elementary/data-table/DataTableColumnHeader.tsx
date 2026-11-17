@@ -5,7 +5,7 @@ import {
   ArrowUpIcon,
   CaretSortIcon,
 } from "@radix-ui/react-icons"
-import type { Column } from "@tanstack/react-table"
+import type { Column, RowData } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 import { useTranslations } from "next-intl"
 
@@ -19,13 +19,18 @@ import {
 import { removeThisWhenYouNeedMe } from "@/lib/general-helpers"
 import { cn } from "@/lib/styles"
 
-interface Props<TData, TValue> extends React.HTMLAttributes<HTMLDivElement> {
-  readonly column: Column<TData, TValue>
+import type { DataTableFeatures } from "./features"
+
+interface Props<
+  TData extends RowData,
+  TValue,
+> extends React.HTMLAttributes<HTMLDivElement> {
+  readonly column: Column<DataTableFeatures, TData, TValue>
   readonly title: string
   readonly withDropdown?: boolean
 }
 
-export function DataTableColumnHeader<TData, TValue>({
+export function DataTableColumnHeader<TData extends RowData, TValue>({
   column,
   title,
   className,

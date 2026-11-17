@@ -23,20 +23,20 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@axe-core/playwright": "4.11.3",
-    "axe-core": "4.12.1",
+    "@axe-core/playwright": "4.14.0",
+    "axe-core": "4.14.0",
     "get-sitemap-links": "1.1.0"
   },
   "devDependencies": {
-    "@lhci/cli": "0.15.1",
-    "@playwright/test": "1.61.0",
-    "@types/node": "24.13.2",
-    "dotenv": "17.4.2",
-    "eslint-plugin-playwright": "2.10.4",
-    "tsx": "4.22.4",
+    "@lhci/cli": "0.16.0",
+    "@playwright/test": "1.65.0",
+    "@types/node": "26.6.6",
+    "dotenv": "18.0.9",
+    "eslint-plugin-playwright": "2.12.2",
+    "tsx": "4.23.15",
     "typescript": "6.0.3"
   },
   "engines": {
-    "node": "^24.0.0"
+    "node": "^26.0.0"
   }
 }

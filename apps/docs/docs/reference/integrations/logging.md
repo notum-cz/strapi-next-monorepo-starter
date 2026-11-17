@@ -59,7 +59,7 @@ The monorepo has two Sentry integrations:
 
 ### Next.js UI
 
-Sentry is wired as a UI telemetry provider. Server and edge initialization live in `apps/ui/src/lib/telemetry/providers/sentry.ts`, which stays inert until `NEXT_PUBLIC_SENTRY_DSN` is set. Browser initialization stays in `sentry.client.config.ts` (loaded automatically by the Sentry SDK).
+Sentry is wired as a UI telemetry provider. Server and edge initialization live in `apps/ui/src/lib/telemetry/providers/sentry.ts`, which stays inert until `NEXT_PUBLIC_SENTRY_DSN` is set. Browser initialization lives in `apps/ui/src/instrumentation-client.ts`, which Next.js loads automatically under both Turbopack and webpack. All `Sentry.init` calls share the `dataCollection` baseline in `sentry-data-collection.ts`. It keeps the v10 default (no cookies, bodies, user info or DB query data), because `@sentry/nextjs` v11 collects all of those when `dataCollection` is unset.
 
 `error.tsx` and the `<ErrorBoundary />` component report caught errors by calling `Sentry.captureException()` directly. The exported Next config is also wrapped with `withSentryConfig()` for source-map upload and build-time integration.
 
@@ -83,7 +83,8 @@ try {
 Relevant UI files:
 
 - `apps/ui/src/lib/telemetry/providers/sentry.ts` (server + edge init)
-- `apps/ui/sentry.client.config.ts` (browser init)
+- `apps/ui/src/instrumentation-client.ts` (browser init)
+- `apps/ui/src/lib/telemetry/providers/sentry-data-collection.ts` (shared `dataCollection` baseline)
 - `apps/ui/src/instrumentation.ts`
 - `apps/ui/next.config.mjs`
 

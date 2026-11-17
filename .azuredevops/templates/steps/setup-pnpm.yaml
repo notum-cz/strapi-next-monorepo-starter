@@ -17,7 +17,8 @@ steps:
       echo "##vso[task.setvariable variable=PNPM_VERSION]$PNPM_VERSION"
     displayName: Read pnpm version from package.json
 
-  - script: corepack enable && corepack prepare pnpm@$(PNPM_VERSION) --activate
+  # Node >= 25 no longer ships corepack, so install the pinned pnpm with npm.
+  - script: npm install -g pnpm@$(PNPM_VERSION)
     displayName: Setup pnpm
 
   - script: echo "##vso[task.setvariable variable=PNPM_STORE_PATH]$(pnpm store path --silent)"

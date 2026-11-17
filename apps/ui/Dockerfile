@@ -11,12 +11,13 @@ ARG WORKSPACE=@repo/ui
 
 # The reason is that Debian (slim image) uses glibc that has faster runtime performance.
 # https://edu.chainguard.dev/chainguard/chainguard-images/about/images-compiled-programs/glibc-vs-musl/#high-level-differences-between-glibc-and-musl
-FROM node:24-slim AS base
+FROM node:26-slim AS base
 
 # Install pnpm globally
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME/bin:$PNPM_HOME:$PATH"
-RUN corepack enable && corepack prepare pnpm@11.1.1 --activate
+# Node >= 25 no longer ships corepack. Keep in sync with `packageManager` in the root package.json.
+RUN npm install -g pnpm@12.18.0
 
 # Set working directory
 WORKDIR /app
@@ -26,7 +27,7 @@ FROM base AS prepare
 ARG WORKSPACE
 
 # Install turbo globally to prune below
-RUN pnpm add -g turbo@2.9.18
+RUN pnpm add -g turbo@2.11.10
 
 COPY . .
 
@@ -45,7 +46,7 @@ RUN turbo prune ${WORKSPACE} --docker
 FROM base AS builder
 
 # Install turbo globally to use during build below
-RUN pnpm add -g turbo@2.9.18
+RUN pnpm add -g turbo@2.11.10
 
 # First install dependencies (as they change less often)
 COPY .gitignore .gitignore
@@ -80,7 +81,7 @@ ENV STRAPI_REST_READONLY_API_KEY=${STRAPI_REST_READONLY_API_KEY}
 RUN turbo run build
 
 # ---
-FROM node:24-alpine AS runner
+FROM node:26-alpine AS runner
 ARG APP
 
 # Don't run production as root for security reasons
