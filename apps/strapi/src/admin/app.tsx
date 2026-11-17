@@ -4,10 +4,16 @@ import type { StrapiApp } from "@strapi/strapi/admin"
 
 // eslint-disable-next-line import-x/order
 import { cs } from "./cs"
+
+// @ts-expect-error: This is a custom import for the Strapi admin panel, which is not typed.
 import "@repo/design-system/styles.css"
 
 // eslint-disable-next-line import-x/order
-import { defaultCkEditorConfig, simpleCkEditorConfig } from "./ckeditor/configs"
+import {
+  defaultCkEditorConfig,
+  descriptionCkEditorConfig,
+  titleCkEditorConfig,
+} from "./ckeditor/configs"
 import DataRevalidate from "./extensions/DataRevalidate"
 import Hierarchy from "./extensions/Hierarchy"
 
@@ -94,6 +100,12 @@ export default {
       id: "cdn-cache",
     })
 
-    setPluginConfig({ presets: [defaultCkEditorConfig, simpleCkEditorConfig] })
+    setPluginConfig({
+      presets: [
+        defaultCkEditorConfig,
+        descriptionCkEditorConfig,
+        titleCkEditorConfig,
+      ],
+    })
   },
 }

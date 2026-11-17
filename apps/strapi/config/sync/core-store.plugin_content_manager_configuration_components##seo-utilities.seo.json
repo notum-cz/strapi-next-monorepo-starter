@@ -61,20 +61,6 @@
           "sortable": false
         }
       },
-      "keywords": {
-        "edit": {
-          "label": "keywords",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "keywords",
-          "searchable": true,
-          "sortable": true
-        }
-      },
       "twitter": {
         "edit": {
           "label": "twitter",
@@ -101,34 +87,6 @@
           "label": "og",
           "searchable": false,
           "sortable": false
-        }
-      },
-      "applicationName": {
-        "edit": {
-          "label": "applicationName",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "applicationName",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "canonicalUrl": {
-        "edit": {
-          "label": "canonicalUrl",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "canonicalUrl",
-          "searchable": true,
-          "sortable": true
         }
       },
       "metaRobots": {
@@ -190,10 +148,6 @@
           {
             "name": "metaImage",
             "size": 6
-          },
-          {
-            "name": "keywords",
-            "size": 6
           }
         ],
         [
@@ -206,18 +160,6 @@
           {
             "name": "og",
             "size": 12
-          }
-        ],
-        [
-          {
-            "name": "applicationName",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "canonicalUrl",
-            "size": 6
           }
         ],
         [

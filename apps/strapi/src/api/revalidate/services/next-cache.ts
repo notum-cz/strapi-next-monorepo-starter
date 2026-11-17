@@ -1,8 +1,8 @@
 import { strapiCacheTag } from "@repo/shared-data"
 import type { UID } from "@strapi/strapi"
 
-import { normalizeFullPaths, readRevalidationConfig } from "./helpers"
 import { logger } from "../../../utils/logging"
+import { normalizeFullPaths, readRevalidationConfig } from "./helpers"
 
 // Cap how long we wait on the UI revalidate endpoint so a stalled upstream
 // cannot hang the publish path indefinitely.

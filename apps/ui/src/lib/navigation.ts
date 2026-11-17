@@ -13,6 +13,8 @@ export const routing = defineRouting({
   defaultLocale: "en",
 
   localePrefix: "as-needed",
+  // Metadata uses published Strapi translations and their actual fullPath.
+  alternateLinks: false,
 })
 
 // https://next-intl-docs.vercel.app/docs/routing/navigation
@@ -51,7 +53,7 @@ export const isAppLink = (link: string): boolean => {
  */
 export const createPublicFullPath = (
   fullPath: string,
-  locale: string
+  locale: Locale
 ): string => {
   const baseUrl = getEnvVar("APP_PUBLIC_URL", true)!
   const isDefaultLocale = locale === routing.defaultLocale

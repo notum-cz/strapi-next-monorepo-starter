@@ -7,8 +7,7 @@ import type { LifecycleEventType } from "../../../../../types/internals"
 const { ValidationError } = errors
 
 type WriteEvent =
-  | LifecycleEventType<"beforeCreate">
-  | LifecycleEventType<"beforeUpdate">
+  LifecycleEventType<"beforeCreate"> | LifecycleEventType<"beforeUpdate">
 
 /**
  * Resolves the documentId of the page being written.

@@ -1,4 +1,5 @@
 import { normalizePageFullPath } from "@repo/shared-data"
+import type { Locale } from "next-intl"
 
 import { logError, logger } from "@/lib/logging"
 import { fetchRedirects } from "@/lib/strapi-api/content/server"
@@ -23,7 +24,7 @@ let redirectFetchPromise: Promise<RedirectRecord[]> | undefined
 // both normalized candidates while preserving preference order.
 export async function findRedirectForPath(
   path: string,
-  defaultLocale: string
+  defaultLocale: Locale
 ): Promise<RedirectRecord | null> {
   const cached = redirectCache
   const sources = getRedirectSourceCandidates(path, defaultLocale)
@@ -108,7 +109,7 @@ function refreshRedirects() {
 export function buildRedirectDestinationUrl(
   currentUrl: URL,
   destination: string,
-  defaultLocale?: string
+  defaultLocale?: Locale
 ) {
   // Editors type `destination` by hand and some malformed values (e.g.
   // "https://" or a host containing a space) make the URL constructor throw.
@@ -145,7 +146,7 @@ export function buildRedirectDestinationUrl(
   return destinationUrl
 }
 
-function getRedirectSourceCandidates(path: string, defaultLocale: string) {
+function getRedirectSourceCandidates(path: string, defaultLocale: Locale) {
   // Strapi redirect records are stored with locale prefixes, while public
   // default-locale URLs may be unprefixed. Check both forms for default locale.
   return [
@@ -182,7 +183,7 @@ function normalizeRedirectSource(source: string) {
     : normalized
 }
 
-function stripDefaultLocalePrefix(pathname: string, defaultLocale: string) {
+function stripDefaultLocalePrefix(pathname: string, defaultLocale: Locale) {
   const localePrefix = `/${defaultLocale}`
 
   if (pathname === localePrefix) {

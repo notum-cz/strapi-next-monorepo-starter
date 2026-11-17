@@ -4,7 +4,7 @@ import type { Locale } from "next-intl"
 
 import { getEnvVar } from "@/lib/env-vars"
 import { isDevelopment, isProduction } from "@/lib/general-helpers"
-import { createPublicFullPath, routing } from "@/lib/navigation"
+import { createPublicFullPath, isValidLocale, routing } from "@/lib/navigation"
 import { fetchAllPages } from "@/lib/strapi-api/content/server"
 
 // This should be static or dynamic based on build/runtime needs
@@ -65,7 +65,12 @@ async function generateLocalizedSitemap(
             {
               seo: {
                 metaRobots: {
-                  $notIn: ["noindex", "noindex,nofollow", "noindex,follow"],
+                  $notIn: [
+                    "noindex",
+                    "noindex,nofollow",
+                    "noindex,follow",
+                    "none",
+                  ],
                 },
               },
             },
@@ -90,9 +95,10 @@ async function generateLocalizedSitemap(
    */
   return Object.entries(pageEntities).reduce((acc, [uid, pages]) => {
     for (const page of pages) {
-      if (page.fullPath) {
+      // Skip locales the UI doesn't route, so the sitemap never lists a 404.
+      if (page.fullPath && page.locale && isValidLocale(page.locale)) {
         acc.push({
-          url: createPublicFullPath(page.fullPath, String(page.locale)),
+          url: createPublicFullPath(page.fullPath, page.locale),
           lastModified: page.updatedAt ?? page.createdAt ?? undefined,
           changeFrequency:
             entityChangeFrequency[uid as PageEntityUID] ?? "monthly",

@@ -1,7 +1,7 @@
 "use client"
 
 import { useSearchParams } from "next/navigation"
-import { useLocale, useTranslations } from "next-intl"
+import { type Locale, useLocale, useTranslations } from "next-intl"
 import { useEffect } from "react"
 import { toast } from "sonner"
 
@@ -10,7 +10,7 @@ import { useUserMutations } from "@/hooks/useUserMutations"
 export function OAuthProvider({
   params,
 }: {
-  params: { locale: string; provider: string }
+  params: { locale: Locale; provider: string }
 }) {
   const locale = useLocale()
   const t = useTranslations("auth.oauth")
@@ -22,7 +22,8 @@ export function OAuthProvider({
       { accessToken, provider },
       {
         onSuccess: () => {
-          // Redirect on success
+          // Redirect on success (full reload so the new session is picked up)
+          // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- intentional full reload
           location.assign(`/${locale}`)
         },
         onError: (error) => {

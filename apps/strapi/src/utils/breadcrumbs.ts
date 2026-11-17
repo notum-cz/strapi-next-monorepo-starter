@@ -84,8 +84,7 @@ export const getFullPathFromQuery = (ctx: {
 }) => {
   const query = ctx.request.query
   const filters = query?.filters as
-    | Record<string, Record<string, unknown>>
-    | undefined
+    Record<string, Record<string, unknown>> | undefined
   const fullPathFilter = filters?.fullPath
   const fullPath = fullPathFilter ? fullPathFilter["$eq"] : null
 

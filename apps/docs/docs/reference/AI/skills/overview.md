@@ -33,7 +33,9 @@ See the [Workflows](#workflows) section below for diagrams of how these chain to
 | [review-pr](./review-pr.md)                                     | Stack-agnostic    | Review a PR or local branch diff before merge.                                             |
 | [resolve-review-suggestions](./resolve-review-suggestions.md)   | Stack-agnostic    | Use authenticated `gh` to implement unresolved GitHub PR review threads.                   |
 | [validate-branch-refs](./validate-branch-refs.md)               | Stack-agnostic    | Fix stale references/claims a branch's diff left behind.                                   |
-| [write-tests](./write-tests.md)                                 | Stack-agnostic    | Add or extend Vitest / Playwright tests.                                                   |
+| [write-tests](./write-tests.md)                                 | Stack-agnostic    | Add or extend Vitest / Playwright / k6 load tests.                                         |
+| [write-test-cases](./write-test-cases.md)                       | Stack-agnostic    | Document test cases as Gherkin pages under `apps/docs/.../QA/`.                            |
+| [write-qa-notes](./write-qa-notes.md)                           | Stack-agnostic    | Capture QA tribal knowledge as Markdown notes under `apps/docs/.../QA/`.                   |
 | [find-skills](./find-skills.md)                                 | Helper / vendored | Discover and install additional agent skills.                                              |
 | [frontend-design](./frontend-design.md)                         | Helper / vendored | Apply distinctive, subject-specific frontend design direction.                             |
 | [next-best-practices](./next-best-practices.md)                 | Helper / vendored | Apply Next.js App Router, RSC, data, metadata, image, font, script, and bundling guidance. |

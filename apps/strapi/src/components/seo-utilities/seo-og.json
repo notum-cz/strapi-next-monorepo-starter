@@ -12,9 +12,6 @@
     "description": {
       "type": "string"
     },
-    "url": {
-      "type": "string"
-    },
     "type": {
       "type": "enumeration",
       "default": "website",
@@ -24,9 +21,6 @@
       "type": "media",
       "multiple": false,
       "allowedTypes": ["images"]
-    },
-    "siteName": {
-      "type": "string"
     }
   }
 }

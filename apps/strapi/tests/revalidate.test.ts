@@ -45,8 +45,7 @@ const findFetchCall = (
   url: string
 ): [string, RequestInit] | undefined => {
   const call = mock.mock.calls.find(([target]) => target === url) as
-    | [string, RequestInit]
-    | undefined
+    [string, RequestInit] | undefined
 
   return call
 }

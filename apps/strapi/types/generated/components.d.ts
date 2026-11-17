@@ -61,7 +61,7 @@ export interface SectionsAnimatedLogoRow extends Struct.ComponentSchema {
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "titleCkEditor"
         }
       >
   }
@@ -130,7 +130,7 @@ export interface SectionsFeaturesList extends Struct.ComponentSchema {
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "descriptionCkEditor"
         }
       >
     features: Schema.Attribute.Component<
@@ -144,7 +144,7 @@ export interface SectionsFeaturesList extends Struct.ComponentSchema {
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "titleCkEditor"
         }
       >
   }
@@ -174,7 +174,7 @@ export interface SectionsHero extends Struct.ComponentSchema {
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "descriptionCkEditor"
         }
       >
     links: Schema.Attribute.Component<"utilities.link", true>
@@ -182,21 +182,21 @@ export interface SectionsHero extends Struct.ComponentSchema {
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "descriptionCkEditor"
         }
       >
     tag: Schema.Attribute.RichText &
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "titleCkEditor"
         }
       >
     title: Schema.Attribute.RichText &
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "titleCkEditor"
         }
       >
   }
@@ -226,6 +226,62 @@ export interface SectionsStatistics extends Struct.ComponentSchema {
   }
 }
 
+export interface SeoUtilitiesGlobalMetadata extends Struct.ComponentSchema {
+  collectionName: "components_seo_utilities_global_metadata"
+  info: {
+    displayName: "Global Metadata"
+  }
+  attributes: {
+    applicationName: Schema.Attribute.String
+    openGraphConfiguration: Schema.Attribute.Component<
+      "seo-utilities.open-graph-configuration",
+      false
+    >
+    twitterConfiguration: Schema.Attribute.Component<
+      "seo-utilities.twitter-configuration",
+      false
+    >
+  }
+}
+
+export interface SeoUtilitiesOpenGraphConfiguration
+  extends Struct.ComponentSchema {
+  collectionName: "components_seo_utilities_open_graph_configurations"
+  info: {
+    displayName: "Open Graph Configuration"
+  }
+  attributes: {
+    siteName: Schema.Attribute.String
+  }
+}
+
+export interface SeoUtilitiesRobotsConfiguration
+  extends Struct.ComponentSchema {
+  collectionName: "components_seo_utilities_robots_configurations"
+  info: {
+    description: "Site-wide robots.txt rules shared across locales."
+    displayName: "Robots Configuration"
+  }
+  attributes: {
+    rules: Schema.Attribute.Component<"seo-utilities.robots-rule", true>
+  }
+}
+
+export interface SeoUtilitiesRobotsRule extends Struct.ComponentSchema {
+  collectionName: "components_seo_utilities_robots_rules"
+  info: {
+    description: "Enter one path per line in allowPaths and disallowPaths."
+    displayName: "Robots Rule"
+  }
+  attributes: {
+    allowPaths: Schema.Attribute.Text
+    disallowPaths: Schema.Attribute.Text
+    userAgent: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<"*">
+  }
+}
+
 export interface SeoUtilitiesSeo extends Struct.ComponentSchema {
   collectionName: "components_seo_utilities_seos"
   info: {
@@ -234,9 +290,6 @@ export interface SeoUtilitiesSeo extends Struct.ComponentSchema {
     icon: "search"
   }
   attributes: {
-    applicationName: Schema.Attribute.String
-    canonicalUrl: Schema.Attribute.String
-    keywords: Schema.Attribute.Text
     metaDescription: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 160
@@ -276,11 +329,9 @@ export interface SeoUtilitiesSeoOg extends Struct.ComponentSchema {
   attributes: {
     description: Schema.Attribute.String
     image: Schema.Attribute.Media<"images">
-    siteName: Schema.Attribute.String
     title: Schema.Attribute.String
     type: Schema.Attribute.Enumeration<["website", "article"]> &
       Schema.Attribute.DefaultTo<"website">
-    url: Schema.Attribute.String
   }
 }
 
@@ -292,11 +343,8 @@ export interface SeoUtilitiesSeoTwitter extends Struct.ComponentSchema {
   }
   attributes: {
     card: Schema.Attribute.String
-    creator: Schema.Attribute.String
-    creatorId: Schema.Attribute.String
     description: Schema.Attribute.String
     images: Schema.Attribute.Media<"images", true>
-    siteId: Schema.Attribute.String
     title: Schema.Attribute.String
   }
 }
@@ -312,6 +360,20 @@ export interface SeoUtilitiesSocialIcons extends Struct.ComponentSchema {
   }
 }
 
+export interface SeoUtilitiesTwitterConfiguration
+  extends Struct.ComponentSchema {
+  collectionName: "components_seo_utilities_twitter_configurations"
+  info: {
+    description: "Account metadata shared by all pages and locales."
+    displayName: "Twitter/X Configuration"
+  }
+  attributes: {
+    creator: Schema.Attribute.String
+    creatorId: Schema.Attribute.String
+    siteId: Schema.Attribute.String
+  }
+}
+
 export interface SharedFigure extends Struct.ComponentSchema {
   collectionName: "components_shared_figures"
   info: {
@@ -322,7 +384,7 @@ export interface SharedFigure extends Struct.ComponentSchema {
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "descriptionCkEditor"
         }
       >
     number: Schema.Attribute.BigInteger
@@ -353,7 +415,7 @@ export interface SharedImageWithTitleAndDescription
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "descriptionCkEditor"
         }
       >
     image: Schema.Attribute.Component<"utilities.basic-image", false>
@@ -361,7 +423,7 @@ export interface SharedImageWithTitleAndDescription
       Schema.Attribute.CustomField<
         "plugin::ckeditor5.CKEditor",
         {
-          preset: "defaultCkEditor"
+          preset: "titleCkEditor"
         }
       >
   }
@@ -405,22 +467,6 @@ export interface UtilitiesCkEditorContent extends Struct.ComponentSchema {
         "plugin::ckeditor5.CKEditor",
         {
           preset: "defaultCkEditor"
-        }
-      >
-  }
-}
-
-export interface UtilitiesCkEditorText extends Struct.ComponentSchema {
-  collectionName: "components_utilities_ck_editor_texts"
-  info: {
-    displayName: "CkEditorText"
-  }
-  attributes: {
-    content: Schema.Attribute.RichText &
-      Schema.Attribute.CustomField<
-        "plugin::ckeditor5.CKEditor",
-        {
-          preset: "simpleCkEditor"
         }
       >
   }
@@ -522,7 +568,7 @@ export interface UtilitiesTipTapRichText extends Struct.ComponentSchema {
 }
 
 declare module "@strapi/strapi" {
-  export module Public {
+  export namespace Public {
     export interface ComponentSchemas {
       "elements.footer-item": ElementsFooterItem
       "forms.contact-form": FormsContactForm
@@ -537,17 +583,21 @@ declare module "@strapi/strapi" {
       "sections.hero": SectionsHero
       "sections.image-with-cta-button": SectionsImageWithCtaButton
       "sections.statistics": SectionsStatistics
+      "seo-utilities.global-metadata": SeoUtilitiesGlobalMetadata
+      "seo-utilities.open-graph-configuration": SeoUtilitiesOpenGraphConfiguration
+      "seo-utilities.robots-configuration": SeoUtilitiesRobotsConfiguration
+      "seo-utilities.robots-rule": SeoUtilitiesRobotsRule
       "seo-utilities.seo": SeoUtilitiesSeo
       "seo-utilities.seo-og": SeoUtilitiesSeoOg
       "seo-utilities.seo-twitter": SeoUtilitiesSeoTwitter
       "seo-utilities.social-icons": SeoUtilitiesSocialIcons
+      "seo-utilities.twitter-configuration": SeoUtilitiesTwitterConfiguration
       "shared.figure": SharedFigure
       "shared.image-with-config": SharedImageWithConfig
       "shared.image-with-title-and-description": SharedImageWithTitleAndDescription
       "utilities.accordions": UtilitiesAccordions
       "utilities.basic-image": UtilitiesBasicImage
       "utilities.ck-editor-content": UtilitiesCkEditorContent
-      "utilities.ck-editor-text": UtilitiesCkEditorText
       "utilities.image-with-link": UtilitiesImageWithLink
       "utilities.link": UtilitiesLink
       "utilities.link-decorations": UtilitiesLinkDecorations

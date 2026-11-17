@@ -100,7 +100,6 @@ export function TiptapRichText({
     return null
   }
 
-  /* eslint-disable unicorn/prefer-short-arrow-method -- Tiptap mapping API is clearer with named object handlers. */
   return renderToReactElement({
     extensions: [
       StarterKit.configure({ heading: false }),
@@ -279,11 +278,7 @@ export function TiptapRichText({
           const height = node.attrs?.height as number | undefined
 
           const align = node.attrs?.["data-align"] as
-            | "left"
-            | "center"
-            | "right"
-            | null
-            | undefined
+            "left" | "center" | "right" | null | undefined
 
           // The figure must stay full width: alignment comes from mx-auto/ml-auto
           // on the img, which a w-fit figure would collapse and break. The
@@ -312,7 +307,6 @@ export function TiptapRichText({
       },
     },
   })
-  /* eslint-enable unicorn/prefer-short-arrow-method */
 }
 
 function normalizeContent(

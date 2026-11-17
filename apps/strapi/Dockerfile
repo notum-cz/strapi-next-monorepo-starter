@@ -9,14 +9,15 @@
 ARG APP=strapi
 ARG WORKSPACE=@repo/strapi
 
-FROM node:24-alpine AS base
+FROM node:26-alpine AS base
 
 RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev vips-dev git > /dev/null 2>&1
 
 # Install pnpm globally
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME/bin:$PNPM_HOME:$PATH"
-RUN corepack enable && corepack prepare pnpm@11.1.1 --activate
+# Node >= 25 no longer ships corepack. Keep in sync with `packageManager` in the root package.json.
+RUN npm install -g pnpm@12.18.0
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
@@ -29,7 +30,7 @@ FROM base AS prepare
 ARG WORKSPACE
 
 # Install turbo globally to prune below
-RUN pnpm add -g turbo@2.9.18
+RUN pnpm add -g turbo@2.11.10
 
 COPY . .
 
@@ -42,7 +43,7 @@ FROM base AS builder
 ARG APP
 
 # Install turbo globally to use during build below
-RUN pnpm add -g turbo@2.9.18
+RUN pnpm add -g turbo@2.11.10
 # Install node-gyp globally to build native addons
 RUN pnpm add -g node-gyp
 
@@ -73,7 +74,7 @@ RUN turbo run build
 # RUN pnpm prune --prod
 
 # ---
-FROM node:24-alpine AS runner
+FROM node:26-alpine AS runner
 
 RUN apk add --no-cache vips-dev bash
 

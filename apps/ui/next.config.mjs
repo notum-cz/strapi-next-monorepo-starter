@@ -1,4 +1,4 @@
-import { withSentryConfig } from "@sentry/nextjs"
+import { withSentryConfig } from "@sentry/nextjs/config"
 import plugin from "next-intl/plugin"
 
 import { env } from "./src/env.mjs"
@@ -127,16 +127,18 @@ const withConfig = (() => {
     // side errors will fail.
     // tunnelRoute: "/monitoring",
 
-    // Hides source maps from generated client bundles
-    hideSourceMaps: true,
-
     // sourcemaps: {
     //   // To disable sourcemap plugin, set this to true
     //   disable: true
     // }
 
     // Automatically tree-shake Sentry logger statements to reduce bundle size
-    disableLogger: true,
+    // (webpack builds only — Turbopack ignores it)
+    webpack: {
+      treeshake: {
+        removeDebugLogging: true,
+      },
+    },
   })
 
   return config

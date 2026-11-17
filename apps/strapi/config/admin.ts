@@ -1,7 +1,7 @@
 import type { UID } from "@strapi/strapi"
 
-import { microsoftSSOProvider } from "./auth-providers"
 import type { StrapiPreviewConfig } from "../types/internals"
+import { microsoftSSOProvider } from "./auth-providers"
 
 export default ({ env }) => {
   const strapiPreviewConfig: StrapiPreviewConfig = {
@@ -40,9 +40,11 @@ export default ({ env }) => {
           ) {
             return null
           }
+          // Pass `status` through: the Document Service defaults to "published",
+          // so a draft-only (never published) page would otherwise find no row.
           const document = await strapi
             .documents(uid)
-            .findOne({ documentId, locale })
+            .findOne({ documentId, locale, status })
           const pathname = (document as { fullPath?: string })?.fullPath // not all collections have the fullPath attribute
           // Disable preview if the pathname is not found
           if (!pathname) {
