@@ -71,18 +71,41 @@ const LOCAL_HOSTS = new Set([
 ])
 
 /**
- * The environment under test, read from the `BASE_URL` hostname: a `dev` or
- * `stg`/`staging` segment, else production. `undefined` for a local host and
- * a missing `BASE_URL`.
+ * The environment under test, read from the `BASE_URL` hostname. `undefined`
+ * for a local host and a missing `BASE_URL`.
  */
 export function resolveTestEnv(
   baseUrl = process.env.BASE_URL
 ): TestEnv | undefined {
-  const host = baseUrl ? URL.parse(baseUrl)?.hostname : undefined
+  return testEnvForHost(baseUrl ? URL.parse(baseUrl)?.hostname : undefined)
+}
+
+/**
+ * The environment of a lowercase hostname (`[::1]` keeps its brackets, as
+ * `URL` gives it): a `dev` or `stg`/`staging` segment in a subdomain, else
+ * production. `undefined` for a local or missing host. Split from
+ * resolveTestEnv() for the k6 load test, which has no `URL` to parse
+ * `BASE_URL` with.
+ */
+export function testEnvForHost(host: string | undefined): TestEnv | undefined {
   if (!host || LOCAL_HOSTS.has(host)) return undefined
 
-  if (/(^|[-.])dev([-.]|$)/.test(host)) return "dev"
-  if (/(^|[-.])(stg|staging)([-.]|$)/.test(host)) return "stg"
+  // An IPv6 literal names no environment; its zone ID (`%25-dev-`) must not
+  // pass for one.
+  if (host.startsWith("[")) return "prod"
+
+  // Only subdomain labels count, never the domain itself, so `client.dev` and
+  // `dev.to` stay production. A short label before a country code is read as
+  // part of the suffix (`co.uk`, `com.au`), so `example-dev.co.uk` does too; a
+  // host this misreads only ever counts as production.
+  const labels = host.split(".")
+  const suffixLabels =
+    /^[a-z]{2}$/.test(labels.at(-1) ?? "") && (labels.at(-2) ?? "").length <= 3
+      ? 3
+      : 2
+  const subdomain = labels.slice(0, -suffixLabels).join(".")
+  if (/(^|[-.])dev([-.]|$)/.test(subdomain)) return "dev"
+  if (/(^|[-.])(stg|staging)([-.]|$)/.test(subdomain)) return "stg"
 
   // Any other host counts as production, so a domain the segments miss
   // (`www.example.com`) never runs @no-prod tests.

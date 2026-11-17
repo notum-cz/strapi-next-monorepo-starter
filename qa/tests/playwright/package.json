@@ -7,6 +7,7 @@
   "author": "",
   "main": "index.js",
   "scripts": {
+    "k6-load-test": "K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_PORT=-1 K6_WEB_DASHBOARD_EXPORT=load/report.html k6 run load/load-test.ts",
     "lhci-perfo-check": "tsx perfo/lhci.ts",
     "lint": "eslint -c ../../../eslint.config.mjs './**/*.{js,ts,jsx,tsx,cjs,mjs}'",
     "lint:fix": "pnpm lint --fix",
@@ -20,7 +21,7 @@
     "playwright-visual-tests-docker": "bash visual/compare-snapshots-docker.sh visual-chromium visual-firefox",
     "playwright-visual-update-snapshots-docker": "bash visual/update-snapshots-docker.sh visual-chromium visual-firefox",
     "playwright-visual-update-tests": "playwright test --project=visual-chromium --project=visual-firefox --project=visual-webkit --update-snapshots --pass-with-no-tests",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit && tsc --noEmit -p load"
   },
   "dependencies": {
     "@axe-core/playwright": "4.14.0",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@lhci/cli": "0.16.0",
     "@playwright/test": "1.65.0",
+    "@types/k6": "2.3.1",
     "@types/node": "26.6.6",
     "dotenv": "18.0.9",
     "eslint-plugin-playwright": "2.12.2",

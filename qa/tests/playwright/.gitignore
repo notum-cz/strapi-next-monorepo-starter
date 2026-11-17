@@ -9,3 +9,4 @@ node_modules/
 /axe/reports/
 /perfo/.lighthouseci/
 /visual/visual.spec.ts-snapshots/darwin/
+/load/report.html
