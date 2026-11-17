@@ -29,14 +29,14 @@
     "get-sitemap-links": "1.1.0"
   },
   "devDependencies": {
-    "@lhci/cli": "0.16.0",
-    "@playwright/test": "1.65.0",
+    "@lhci/cli": "0.16.1",
+    "@playwright/test": "1.65.1",
     "@types/k6": "2.3.1",
     "@types/node": "26.6.6",
-    "dotenv": "18.0.9",
+    "dotenv": "18.0.10",
     "eslint-plugin-playwright": "2.12.2",
     "tsx": "4.23.15",
-    "typescript": "6.0.3"
+    "typescript": "7.0.2"
   },
   "engines": {
     "node": "^26.0.0"
