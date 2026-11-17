@@ -95,8 +95,15 @@ export function testEnvForHost(host: string | undefined): TestEnv | undefined {
   if (host.startsWith("[")) return "prod"
 
   // Only subdomain labels count, never the domain itself, so `client.dev` and
-  // `dev.to` stay production.
-  const subdomain = host.split(".").slice(0, -2).join(".")
+  // `dev.to` stay production. A short label before a country code is read as
+  // part of the suffix (`co.uk`, `com.au`), so `example-dev.co.uk` does too; a
+  // host this misreads only ever counts as production.
+  const labels = host.split(".")
+  const suffixLabels =
+    /^[a-z]{2}$/.test(labels.at(-1) ?? "") && (labels.at(-2) ?? "").length <= 3
+      ? 3
+      : 2
+  const subdomain = labels.slice(0, -suffixLabels).join(".")
   if (/(^|[-.])dev([-.]|$)/.test(subdomain)) return "dev"
   if (/(^|[-.])(stg|staging)([-.]|$)/.test(subdomain)) return "stg"
 

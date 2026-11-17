@@ -108,6 +108,13 @@ function assertPaths(urls: unknown, where: string): asserts urls is string[] {
   }
 }
 
+/** A plain JSON object. */
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value)
+
+/** QA_GROUPS from the shell, else from .env. An empty shell value still wins, as in selectedGroups(). */
+const QA_GROUPS = __ENV.QA_GROUPS ?? DOT_ENV.QA_GROUPS ?? ""
+
 /**
  * The "load" pages to visit, picked like every other suite does it
  * (helpers/flatten-urls.ts and selectedGroups() in helpers/test-groups.ts):
@@ -116,37 +123,39 @@ function assertPaths(urls: unknown, where: string): asserts urls is string[] {
  * A mistyped group or environment fails the run instead of testing nothing.
  */
 function loadPaths(): string[] {
-  const suite: Record<string, unknown> =
-    JSON.parse(open("../helpers/urls.json")).load ?? {}
+  const urlsJson: unknown = JSON.parse(open("../helpers/urls.json"))
+  const suite = isRecord(urlsJson) ? (urlsJson.load ?? {}) : undefined
+  if (!isRecord(suite)) {
+    throw new Error('helpers/urls.json "load" must be an object of groups.')
+  }
   const groups = Object.keys(suite)
   assertKnown(groups, TEST_GROUPS, 'group under "load" in helpers/urls.json')
   const urlsByGroup = new Map<string, GroupUrls>()
   for (const group of groups) {
-    const urls = suite[group]
-    if (Array.isArray(urls)) {
+    const urls: unknown = suite[group]
+    if (!isRecord(urls)) {
       assertPaths(urls, `load.${group}`)
-    } else if (urls && typeof urls === "object") {
-      const envs = Object.keys(urls)
-      assertKnown(
-        envs,
-        TEST_ENVS,
-        `environment in helpers/urls.json group "load.${group}"`
-      )
-      for (const env of envs) {
-        assertPaths(
-          (urls as Record<string, unknown>)[env],
-          `load.${group}.${env}`
-        )
-      }
-    } else {
-      assertPaths(urls, `load.${group}`)
+      urlsByGroup.set(group, urls)
+      continue
     }
-    urlsByGroup.set(group, urls as GroupUrls)
+    const envs: string[] = Object.keys(urls)
+    assertKnown(
+      envs,
+      TEST_ENVS,
+      `environment in helpers/urls.json group "load.${group}"`
+    )
+    const perEnv: Partial<Record<TestEnv, string[]>> = {}
+    for (const env of envs) {
+      const list = urls[env]
+      assertPaths(list, `load.${group}.${env}`)
+      perEnv[env] = list
+    }
+    urlsByGroup.set(group, perEnv)
   }
 
-  const picked = (__ENV.QA_GROUPS || DOT_ENV.QA_GROUPS || "")
-    .split(/[\s,;]+/)
-    .filter((group) => group && group !== "auto")
+  const picked = QA_GROUPS.split(/[\s,;]+/).filter(
+    (group) => group && group !== "auto"
+  )
   assertKnown(picked, TEST_GROUPS, "group in QA_GROUPS")
   const envGroups = ENV ? ENV_GROUPS[ENV] : "all"
   const selected: readonly string[] | undefined =
@@ -169,7 +178,7 @@ function loadPaths(): string[] {
 const PATHS = loadPaths()
 if (PATHS.length === 0) {
   throw new Error(
-    `No "load" pages for ${ENV ?? "a local run"}${__ENV.QA_GROUPS || DOT_ENV.QA_GROUPS ? ` and QA_GROUPS=${__ENV.QA_GROUPS || DOT_ENV.QA_GROUPS}` : ""} in helpers/urls.json`
+    `No "load" pages for ${ENV ?? "a local run"}${QA_GROUPS ? ` and QA_GROUPS=${QA_GROUPS}` : ""} in helpers/urls.json`
   )
 }
 
@@ -296,6 +305,8 @@ export const options: Options = {
   // A redirect answers 3xx and fails the `status 200` check instead of being
   // followed: list the page it lands on, and the load never leaves BASE_URL.
   maxRedirects: 0,
+  // Only the status is read; k6 still downloads every page and times it.
+  discardResponseBodies: true,
   // `breakpoint` is meant to break the system; what counts is that it is back
   // to normal once traffic is.
   thresholds:

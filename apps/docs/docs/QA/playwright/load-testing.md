@@ -9,7 +9,7 @@ Simulates visitors to see how the site behaves under traffic. It uses [Grafana k
 This is an on-demand tool, not a routine check. Reach for it when you need one of two answers:
 
 - **"Does it hold?"** Prove the system copes with the expected traffic, typically before a release with a traffic peak, such as a launch backed by a campaign. Profiles: `average`, `spike`.
-- **"Where does it break, and does it come back?"** Find the limit and check the system recovers on its own, or chase a performance problem that only shows under load. Profile: `breakpoint`.
+- **"Where does it break, and does it come back?"** Find the limit (up to 10× `LOAD_RPS`; raise `LOAD_RPS` if it holds) and check the system recovers on its own, or chase a performance problem that only shows under load. Profile: `breakpoint`.
 
 ## Run
 
@@ -99,7 +99,7 @@ k6 only sees the site from the outside. Pair the time of the slowdown in the rep
 
 A load test only says something about production when the environment matches it: same instance size and count, same database tier, same CDN. Where STG matches production, test STG. Where it doesn't, which is common, testing production before a release gives the real answer.
 
-The test refuses to start unless `BASE_URL` is a local host (`localhost`, `127.0.0.1`, `[::1]`, `host.docker.internal`) or a subdomain of its hostname has a `dev`, `stg` or `staging` segment (`stg.example.com`, `example-staging.herokuapp.com`). The domain itself never counts, so `client.dev` is production. To run against production, agree on it with the client and the hosting provider first, then unlock it for that one run:
+The test refuses to start unless `BASE_URL` is a local host (`localhost`, `127.0.0.1`, `[::1]`, `host.docker.internal`) or a subdomain of its hostname has a `dev`, `stg` or `staging` segment (`stg.example.com`, `example-staging.herokuapp.com`). The domain itself never counts, so `client.dev` and `example-dev.co.uk` are production. To run against production, agree on it with the client and the hosting provider first, then unlock it for that one run:
 
 ```bash
 LOAD_ALLOW_PROD=true pnpm tests:k6:load:smoke
