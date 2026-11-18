@@ -59,7 +59,7 @@
     "@tiptap/starter-kit": "3.33.1",
     "@tiptap/static-renderer": "3.33.1",
     "babel-plugin-react-compiler": "1.0.0",
-    "better-auth": "1.7.24",
+    "better-auth": "1.7.25",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "cmdk": "1.1.1",
@@ -102,7 +102,7 @@
     "eslint-plugin-jsx-a11y": "6.10.2",
     "postcss": "8.5.33",
     "tailwindcss": "4.3.5",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "vite": "8.3.8",
     "vitest": "5.1.0"
   },
