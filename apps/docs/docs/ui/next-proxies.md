@@ -140,7 +140,7 @@ Security headers are split by how they are computed:
 
 ### Content-Security-Policy
 
-The baseline CSP is intentionally strict: it allows this app's own origin plus Strapi media over `https` (and the local Strapi origin in development). To allow a third-party service (analytics, tag manager, embeds, captcha), add its origin to the relevant directive in `buildCsp`. Commented examples for a Google Tag Manager / Analytics / Ads setup are left inline as a starting point.
+The baseline CSP is intentionally strict: it allows this app's own origin plus Strapi media over `https` (and the local Strapi origin in development). To allow a third-party service (analytics, tag manager, embeds, captcha), add its origin to the relevant directive in `buildCsp`. Google Tag Manager and Google Analytics are already allowlisted (`script-src`, `connect-src`, `frame-src`) for the `TrackingScripts` component, and `https://unpkg.com` (`script-src`, `style-src`) for the cookie consent banner that the GTM container loads through the "Cookie Consent v2" community template. Commented Google Ads examples are left inline as a starting point.
 
 ### Preview Framing
 

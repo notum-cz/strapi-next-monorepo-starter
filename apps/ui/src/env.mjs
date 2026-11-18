@@ -50,6 +50,8 @@ export const env = createEnv({
 
     RECAPTCHA_SECRET_KEY: z.string().optional(),
 
+    GTM_ID: z.string().optional(),
+
     BASIC_AUTH_ENABLED: optionalZodBoolean(),
     BASIC_AUTH_USERNAME: z.string().optional(),
     BASIC_AUTH_PASSWORD: z.string().optional(),
@@ -119,6 +121,8 @@ export const env = createEnv({
       process.env.APPLICATIONINSIGHTS_CONNECTION_STRING,
 
     RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY,
+
+    GTM_ID: process.env.GTM_ID,
 
     BASIC_AUTH_ENABLED: process.env.BASIC_AUTH_ENABLED,
     BASIC_AUTH_USERNAME: process.env.BASIC_AUTH_USERNAME,
