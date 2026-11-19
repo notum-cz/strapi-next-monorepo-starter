@@ -102,6 +102,7 @@ Currently shipped:
 | `remove-azure-monitor`        | stack-coupled   | Remove the Azure Monitor telemetry exporter, keeping logging intact.     |
 | `remove-cache-revalidation`   | stack-coupled   | Uninstall the Next.js cache revalidation feature (and CDN purge).        |
 | `remove-cdn-purge`            | stack-coupled   | Uninstall the optional CDN purge integration only.                       |
+| `write-editor-guide`          | stack-coupled   | Build or update the branded Strapi how-to PDF for client editors.        |
 | `find-skills`                 | helper/vendored | Discover and install additional agent skills via the Skills CLI.         |
 | `frontend-design`             | helper/vendored | Apply distinctive visual design guidance for frontend work.              |
 | `next-best-practices`         | helper/vendored | Apply Next.js App Router, RSC, data, metadata, and bundling guidance.    |
@@ -109,11 +110,11 @@ Currently shipped:
 
 ## Stack-coupled vs stack-agnostic
 
-| Type            | Examples                                                                                                                                                                                                                                                                      |
-| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Stack-agnostic  | `start-work`, `make-pr`, `review-pr`, `resolve-review-suggestions`, `validate-branch-refs`, `write-tests`, `write-test-cases`, `write-qa-notes`                                                                                                                               |
-| Stack-coupled   | `add-content-type`, `add-ui-component`, `strapi-schema-check`, `add-locale`, `create-content-component`, `copy-component`, `find-component`, `consolidate-patterns`, `seed-content`, `remove-sentry`, `remove-azure-monitor`, `remove-cache-revalidation`, `remove-cdn-purge` |
-| Helper/vendored | `find-skills`, `frontend-design`, `next-best-practices`, `vercel-react-best-practices`                                                                                                                                                                                        |
+| Type            | Examples                                                                                                                                                                                                                                                                                            |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Stack-agnostic  | `start-work`, `make-pr`, `review-pr`, `resolve-review-suggestions`, `validate-branch-refs`, `write-tests`, `write-test-cases`, `write-qa-notes`                                                                                                                                                     |
+| Stack-coupled   | `add-content-type`, `add-ui-component`, `strapi-schema-check`, `add-locale`, `create-content-component`, `copy-component`, `find-component`, `consolidate-patterns`, `seed-content`, `remove-sentry`, `remove-azure-monitor`, `remove-cache-revalidation`, `remove-cdn-purge`, `write-editor-guide` |
+| Helper/vendored | `find-skills`, `frontend-design`, `next-best-practices`, `vercel-react-best-practices`                                                                                                                                                                                                              |
 
 Stack-agnostic skills may move to a shared plugin later; stack-coupled stay in the starter.
 Helper/vendored skills are installed into the same directory but usually act as supporting rubrics or ecosystem tools rather than starter-specific implementation workflows.
