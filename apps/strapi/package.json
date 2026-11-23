@@ -55,10 +55,10 @@
     "@strapi/provider-upload-aws-s3": "5.62.0",
     "@strapi/strapi": "5.62.0",
     "@strapi/utils": "5.62.0",
-    "ckeditor5": "48.5.3",
+    "ckeditor5": "49.1.0",
     "jsonwebtoken": "9.0.3",
     "lodash": "4.18.1",
-    "nodemailer": "10.5.0",
+    "nodemailer": "10.6.0",
     "passport-azure-ad-oauth2": "0.0.4",
     "pg": "8.23.1",
     "qs": "6.17.1",
@@ -74,9 +74,9 @@
     "@types/node": "26.6.6",
     "@types/react": "18.3.31",
     "@types/react-dom": "18.3.7",
-    "typescript": "6.0.3",
-    "vite": "6.4.5",
-    "vitest": "5.1.0"
+    "typescript": "7.0.2",
+    "vite": "8.3.8",
+    "vitest": "5.1.1"
   },
   "engines": {
     "node": "^26.0.0"
