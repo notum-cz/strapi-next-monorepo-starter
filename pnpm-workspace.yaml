@@ -73,10 +73,6 @@ overrides:
   #                ten high advisories (SSRF, credential leaks, prototype
   #                pollution). The 0.x line is fixed in 0.33.0.
   "axios@<0.33.0": 0.35.0
-  #   basic-ftp  - get-uri 6 (proxy-agent under Lighthouse CI) depends on ^5,
-  #                open to GHSA-c475-qrg2-pj4r (high) and two medium ones. Fixed
-  #                in 6.2.4, which get-uri 8 already uses.
-  "basic-ftp@<6.2.4": 6.2.6
   #   serialize-javascript - copy-webpack-plugin and css-minimizer-webpack-plugin
   #                (docs build) depend on ^6, open to GHSA-5c6j-r48x-rmvq (RCE,
   #                high), GHSA-qj8w-gfj5-8c6v and GHSA-m5mm-p8h7-m29v. Fixed in 7.1.3.

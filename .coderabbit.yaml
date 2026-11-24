@@ -441,7 +441,7 @@ reviews:
     # ════ QA ══════════════════════════════════════════════════════════════════
     - path: "qa/tests/playwright/**/*.ts"
       instructions: |
-        Playwright e2e, visual, axe, SEO, and Lighthouse tests.
+        Playwright e2e, visual, axe, and SEO tests, plus k6 scripts (load/, perfo/) that run in k6, not Node.
         - Page Object Model: selectors and multi-step interactions live in page objects and fixtures, not inline in specs.
         - Use semantic locators (`getByRole`, `getByLabel`, `getByText`). CSS/XPath only as a last resort, with a comment.
         - No `waitForTimeout`. Use web-first assertions (`await expect(locator).toBeVisible()`).

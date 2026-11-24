@@ -223,7 +223,7 @@ Run only the relevant package, not the whole monorepo, while iterating.
 | Playwright seo                                 | `pnpm tests:playwright:seo`                                         |
 | Update visual snapshots (local OS)             | `pnpm tests:playwright:visual:update`                               |
 | Update visual snapshots (Docker, commit-ready) | `pnpm tests:playwright:visual:docker:update`                        |
-| LHCI performance collect                       | `pnpm tests:lhci:perfo`                                             |
+| k6 Core Web Vitals                             | `pnpm tests:k6:vitals`                                              |
 | k6 load                                        | `pnpm tests:k6:load:smoke` / `:average` / `:spike` / `:breakpoint`  |
 | All workspace tests                            | `pnpm test`                                                         |
 

@@ -3,10 +3,18 @@ pr: none
 name: QA-Tests-$(Date:yyyyMMdd)
 appendCommitMessageToRunName: false
 
-# Uncomment the schedule trigger to run tests automatically on weekdays.
+# Uncomment the schedule trigger to run tests automatically.
 # schedules:
+# Core Web Vitals once a week: Mondays at 03:00 UTC (05:00 CEST). The
+# web_vitals job and the run name match this displayName, so keep them in sync.
+# - cron: "0 3 * * 1"
+#   displayName: Weekly Core Web Vitals
+#   # Run even when nothing was committed since the last run: the site changes
+#   # through Strapi content, not only through code.
+#   always: true
 # Runs at 00:00 UTC on weekdays (02:00 CEST).
 # - cron: "0 0 * * 1-5"
+#   displayName: Weekday QA
 
 parameters:
   - name: run_e2e
@@ -24,8 +32,8 @@ parameters:
     type: boolean
     default: false
 
-  - name: run_lhci_perfo
-    displayName: "LHCI Performance tests"
+  - name: run_web_vitals
+    displayName: "Core Web Vitals (k6)"
     type: boolean
     default: false
 
@@ -56,7 +64,7 @@ variables:
   - name: NPM_CONFIG_IGNORE_SCRIPTS
     value: "true"
   # Non-secret pipeline variables reach every script as env vars, so Playwright
-  # and LHCI read QA_GROUPS directly. "auto" means the env default.
+  # and the k6 scripts read QA_GROUPS directly. "auto" means the env default.
   - name: QA_GROUPS
     value: ${{ join(',', parameters.groups) }}
 
@@ -69,14 +77,16 @@ jobs:
     steps:
       - bash: |
           set -e
-          if [ "$(Build.Reason)" = "Schedule" ]; then
+          if [ "$CRON_SCHEDULE" = "Weekly Core Web Vitals" ]; then
+            LABEL="SCHEDULED Vitals"
+          elif [ "$(Build.Reason)" = "Schedule" ]; then
             LABEL="SCHEDULED"
           else
             LABELS=()
             [ "${{ parameters.run_e2e }}" = "True" ] && LABELS+=("E2E")
             [ "${{ parameters.run_axe }}" = "True" ] && LABELS+=("AXE")
             [ "${{ parameters.run_seo }}" = "True" ] && LABELS+=("SEO")
-            [ "${{ parameters.run_lhci_perfo }}" = "True" ] && LABELS+=("Perfo")
+            [ "${{ parameters.run_web_vitals }}" = "True" ] && LABELS+=("Vitals")
             [ "${{ parameters.run_visual }}" = "True" ] && LABELS+=("Visual")
             LABEL=$(IFS=', '; echo "${LABELS[*]}")
           fi
@@ -89,6 +99,8 @@ jobs:
         displayName: Compute run name
         env:
           PARAM_BASE_URL: ${{ parameters.base_url }}
+          # Set only on a scheduled run; a manual run leaves the literal macro.
+          CRON_SCHEDULE: $(Build.CronSchedule.DisplayName)
 
   - job: e2e
     displayName: "Playwright E2E tests"
@@ -353,20 +365,25 @@ jobs:
           artifactName: "visual-report"
           publishLocation: "Container"
 
-  - job: lhci_perfo
-    displayName: "LHCI Performance tests"
-    # LHCI never runs on scheduled (cron) builds, regardless of parameter defaults.
-    # This job only publishes the raw .lighthouseci report as a build artifact
-    # for this run — it does NOT commit qa/tests/playwright/perfo/lighthouse-history.md
-    # back to the repo, so the trend file this run produces is discarded with the
-    # ephemeral agent workspace. Trend tracking (the auto-PR that updates that
-    # file) only runs via the GitHub Actions qa.yml workflow's "Open PR with
-    # Lighthouse trend history" step — there's no Azure DevOps equivalent wired up.
-    condition: and(succeeded(), eq(${{ parameters.run_lhci_perfo }}, true), ne(variables['Build.Reason'], 'Schedule'))
-    timeoutInMinutes: 15
+  - job: web_vitals
+    displayName: "Core Web Vitals (k6)"
+    # By hand, or from the weekly schedule above (not the weekday one).
+    condition: |
+      and(succeeded(), or(
+        and(eq(${{ parameters.run_web_vitals }}, true), ne(variables['Build.Reason'], 'Schedule')),
+        eq(variables['Build.CronSchedule.DisplayName'], 'Weekly Core Web Vitals')
+      ))
+    timeoutInMinutes: 20
+    variables:
+      K6_VERSION: "2.3.0"
+      HISTORY_BRANCH: qa/web-vitals-history
+      HISTORY_FILE: qa/tests/playwright/perfo/web-vitals-history.md
     steps:
       - checkout: self
         fetchDepth: 1
+        # Lets the job push the trend row. The build service needs Contribute
+        # and Create branch on this repository.
+        persistCredentials: true
 
       - template: ../templates/steps/setup-pnpm.yaml
 
@@ -382,23 +399,110 @@ jobs:
           PARAM_BASE_URL: ${{ parameters.base_url }}
           FALLBACK_BASE_URL: $(BASE_URL)
 
+      # The hosted ubuntu image ships Google Chrome, which the k6 browser module uses.
       - bash: |
-          pnpm tests:lhci:perfo
-        displayName: "Run LHCI Performance tests"
+          set -e
+          K6_DIR="$(Agent.ToolsDirectory)/k6-$(K6_VERSION)"
+          mkdir -p "$K6_DIR"
+          curl -fsSL "https://github.com/grafana/k6/releases/download/v$(K6_VERSION)/k6-v$(K6_VERSION)-linux-amd64.tar.gz" \
+            | tar -xz --strip-components=1 -C "$K6_DIR" "k6-v$(K6_VERSION)-linux-amd64/k6"
+          "$K6_DIR/k6" version
+          echo "##vso[task.prependpath]$K6_DIR"
+        displayName: "Install k6"
+
+      # The trend lives on its own branch, never in dev. Bring in what's there
+      # so the run appends to it; the first run starts the file. HISTORY_BASE
+      # remembers which commit the run builds on, for the Save step.
+      - bash: |
+          set -e
+          # Exit code 2 = the branch doesn't exist yet. Any other failure must
+          # stop the job: taken for "no history", it would push a history
+          # holding only this run's rows.
+          status=0
+          git ls-remote --exit-code --heads origin "$(HISTORY_BRANCH)" > /dev/null || status=$?
+          if [ "$status" -eq 2 ]; then
+            echo "No $(HISTORY_BRANCH) branch yet, this run starts the history."
+            echo "##vso[task.setvariable variable=HISTORY_BASE]none"
+            exit 0
+          elif [ "$status" -ne 0 ]; then
+            echo "Couldn't read $(HISTORY_BRANCH) (git ls-remote exited $status)." >&2
+            exit 1
+          fi
+          git fetch --depth=1 origin "$(HISTORY_BRANCH)"
+          echo "##vso[task.setvariable variable=HISTORY_BASE]$(git rev-parse FETCH_HEAD)"
+          git show "FETCH_HEAD:$(HISTORY_FILE)" > "$(HISTORY_FILE)" || rm -f "$(HISTORY_FILE)"
+        displayName: "Fetch Core Web Vitals history"
+
+      - bash: |
+          pnpm tests:k6:vitals
+        displayName: "Run Core Web Vitals"
         env:
           BASE_URL: $(BASE_URL)
           CI: "true"
+          # Ubuntu 24.04 agents block the user namespaces Chrome's sandbox
+          # needs, so Chrome aborts at launch without this.
+          K6_BROWSER_ARGS: no-sandbox
 
+      # PublishBuildArtifacts fails on a missing file, and k6 writes no report
+      # when it stops at start-up (bad BASE_URL, no browser).
       - bash: |
-          tar -czf lhci-perfo-reports-$(Build.BuildId).tgz \
-            -C qa/tests/playwright/perfo/.lighthouseci .
-        displayName: "Pack LHCI reports"
+          if [ -f qa/tests/playwright/perfo/report.html ]; then
+            echo "##vso[task.setvariable variable=HAS_VITALS_REPORT]true"
+          else
+            echo "No report.html, nothing to publish."
+          fi
+        displayName: "Check for Core Web Vitals report"
         condition: always()
 
       - task: PublishBuildArtifacts@1
-        displayName: "Publish LHCI report"
-        condition: always()
+        displayName: "Publish Core Web Vitals report"
+        condition: and(always(), eq(variables['HAS_VITALS_REPORT'], 'true'))
         inputs:
-          pathToPublish: "lhci-perfo-reports-$(Build.BuildId).tgz"
-          artifactName: "perfo-report"
+          pathToPublish: "qa/tests/playwright/perfo/report.html"
+          artifactName: "web-vitals-report"
           publishLocation: "Container"
+
+      # A failing run is part of the trend too. Azure doesn't queue runs: if
+      # another run recorded in the meantime, this one stops instead of
+      # overwriting its rows, and can be re-run.
+      - bash: |
+          set -e
+          if [ ! -f "$(HISTORY_FILE)" ]; then
+            echo "The test wrote no history, nothing to record."
+            exit 0
+          fi
+          INVESTIGATIONS="$(dirname "$(HISTORY_FILE)")/investigations"
+          # A separate worktree, so the checkout under test stays as it is.
+          WORKTREE="$(Agent.TempDirectory)/web-vitals-history"
+          git config user.name "Azure Pipelines"
+          git config user.email "azure-pipelines@noreply.local"
+          # The history file holds the rows up to HISTORY_BASE plus this run's.
+          # If another run recorded in the meantime, writing it would drop that
+          # run's rows, so stop instead: a re-run picks them up.
+          if [ "$HISTORY_BASE" = none ]; then
+            # First run: a branch holding nothing but the history and investigations.
+            # If the branch appeared meanwhile, the push below is rejected.
+            git worktree add --orphan -b "$(HISTORY_BRANCH)" "$WORKTREE"
+          else
+            git fetch --depth=1 origin "$(HISTORY_BRANCH)"
+            if [ "$(git rev-parse FETCH_HEAD)" != "$HISTORY_BASE" ]; then
+              echo "$(HISTORY_BRANCH) moved during this run; re-run the job to record on top of it." >&2
+              exit 1
+            fi
+            git worktree add -B "$(HISTORY_BRANCH)" "$WORKTREE" FETCH_HEAD
+          fi
+          mkdir -p "$WORKTREE/$INVESTIGATIONS"
+          cp "$(HISTORY_FILE)" "$WORKTREE/$(HISTORY_FILE)"
+          cp "$INVESTIGATIONS"/*.md "$WORKTREE/$INVESTIGATIONS/" 2>/dev/null || true
+          cd "$WORKTREE"
+          # -f: these files are gitignored on code branches, tracked only here.
+          git add -f "$(HISTORY_FILE)" "$INVESTIGATIONS"
+          git commit -m "chore(qa): record Core Web Vitals for $BASE_URL" \
+            -m "Run: $(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)" \
+            || { echo "No new rows to record."; exit 0; }
+          git push origin "$(HISTORY_BRANCH)"
+        displayName: "Save Core Web Vitals history"
+        condition: succeededOrFailed()
+        env:
+          BASE_URL: $(BASE_URL)
+          LEFTHOOK: "0"

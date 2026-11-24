@@ -51,7 +51,7 @@
     "tests:k6:load:breakpoint": "LOAD_PROFILE=breakpoint turbo run k6-load-test --filter=@repo/tests-playwright",
     "tests:k6:load:smoke": "LOAD_PROFILE=smoke turbo run k6-load-test --filter=@repo/tests-playwright",
     "tests:k6:load:spike": "LOAD_PROFILE=spike turbo run k6-load-test --filter=@repo/tests-playwright",
-    "tests:lhci:perfo": "turbo run lhci-perfo-check --filter=@repo/tests-playwright",
+    "tests:k6:vitals": "turbo run k6-web-vitals --filter=@repo/tests-playwright",
     "tests:playwright:axe": "turbo run playwright-axe-test --filter=@repo/tests-playwright",
     "tests:playwright:e2e:mock": "turbo run playwright-e2e-mock-tests --filter=@repo/tests-playwright",
     "tests:playwright:e2e:smoke": "turbo run playwright-e2e-smoke-tests --filter=@repo/tests-playwright",

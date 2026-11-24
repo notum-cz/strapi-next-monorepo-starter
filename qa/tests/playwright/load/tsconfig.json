@@ -12,5 +12,5 @@
     "allowImportingTsExtensions": true,
     "skipLibCheck": true
   },
-  "include": ["./*.ts", "../helpers/test-groups.ts"]
+  "include": ["./*.ts", "../helpers/test-groups.ts", "../helpers/k6/*.ts"]
 }
