@@ -63,7 +63,7 @@ export function baseUrl(): string {
   const url = (setting("BASE_URL") ?? "").replace(/\/$/, "")
   if (!url) throw new Error("Set BASE_URL in qa/tests/playwright/.env")
   // Without a protocol every visit fails ("Cannot navigate to invalid URL").
-  if (!/^https?:\/\//.test(url)) {
+  if (!/^https?:\/\//i.test(url)) {
     throw new Error(
       `BASE_URL must start with http:// or https://, got "${url}"`
     )
@@ -72,18 +72,35 @@ export function baseUrl(): string {
   return url
 }
 
+/** A dotted-decimal IPv4 address the way `URL` writes it: four parts, 0–255, no leading zeros. */
+const CANONICAL_IPV4 =
+  /^(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/
+
 /**
  * The hostname of a URL, the way `URL` reads it (k6 has no `URL`): without
  * the scheme, `user:password@` and port, lower-cased; an IPv6 host keeps its
- * brackets.
+ * brackets. Any spelling of the IPv6 loopback becomes `[::1]`, as `URL` writes
+ * it. An IPv4 address `URL` would rewrite (`127.1`, `0x7f.0.0.1`,
+ * `2130706433`) is rejected: k6 can't normalize it, and a different spelling
+ * would pick a different environment than the Node suites do.
  */
 export function hostOf(url: string): string {
-  return url
+  const host = url
     .replace(/^[a-z][\w+.-]*:\/\//i, "")
     .split(/[/?#]/, 1)[0]
     .replace(/^.*@/, "")
     .replace(/:\d*$/, "")
     .toLowerCase()
+  if (/^\[[0:]*:0*1\]$/.test(host)) return "[::1]"
+
+  const numeric = /^(?:0x[\da-f]*|\d+)(?:\.(?:0x[\da-f]*|\d+)){0,3}\.?$/
+  if (numeric.test(host) && !CANONICAL_IPV4.test(host)) {
+    throw new Error(
+      `Write the IP address in BASE_URL as four decimal parts (e.g. 127.0.0.1), got "${host}"`
+    )
+  }
+
+  return host
 }
 
 /** The environment under test — the rule resolveTestEnv() uses for the other suites. */
@@ -119,7 +136,7 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value)
 
 /** QA_GROUPS from the shell, else from .env. An empty shell value still wins, as in selectedGroups(). */
-const QA_GROUPS = __ENV.QA_GROUPS ?? DOT_ENV.QA_GROUPS ?? ""
+export const QA_GROUPS = __ENV.QA_GROUPS ?? DOT_ENV.QA_GROUPS ?? ""
 
 /**
  * The pages of `suite` in helpers/urls.json, picked like every other suite

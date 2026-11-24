@@ -295,11 +295,13 @@ jobs:
     permissions:
       # Pushes the trend row to the qa/web-vitals-history branch.
       contents: write
-    # Runs queue instead of racing. The Save step also refuses to write when
-    # the branch moved during the run, so no history row is ever overwritten.
+    # Runs queue instead of racing; `queue: max` keeps every pending run (up
+    # to 100) instead of only the newest. The Save step also refuses to write
+    # when the branch moved during the run, so no history row is overwritten.
     concurrency:
       group: web-vitals-history
       cancel-in-progress: false
+      queue: max
     env:
       HISTORY_BRANCH: qa/web-vitals-history
       HISTORY_FILE: qa/tests/playwright/perfo/web-vitals-history.md
@@ -312,7 +314,7 @@ jobs:
         uses: ./.github/actions/setup-pnpm
 
       - name: Setup k6 with browser support
-        uses: grafana/setup-k6-action@v1.2.2
+        uses: grafana/setup-k6-action@43b9fc21641a76002687994433dd586f56e791b1 # v1.2.2
         with:
           k6-version: "2.3.0"
           browser: true

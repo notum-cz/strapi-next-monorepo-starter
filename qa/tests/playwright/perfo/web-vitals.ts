@@ -12,11 +12,17 @@
  * See apps/docs/docs/QA/playwright/web-vitals.md.
  */
 import { check } from "k6"
-import { browser } from "k6/browser"
+import { browser, type Page } from "k6/browser"
 import exec from "k6/execution"
 import type { Options } from "k6/options"
 
-import { baseUrl, pagesFor, pageUrl } from "../helpers/k6/target.ts"
+import {
+  baseUrl,
+  hostOf,
+  pagesFor,
+  pageUrl,
+  QA_GROUPS,
+} from "../helpers/k6/target.ts"
 import {
   explain,
   investigate,
@@ -37,6 +43,12 @@ const SETTINGS = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const RUNS = Number(__ENV.VITALS_RUNS || SETTINGS.runs)
+// Visits are counted out of the iteration number, so only whole numbers work.
+if (!Number.isSafeInteger(RUNS) || RUNS < 1) {
+  throw new Error(
+    `VITALS_RUNS must be a whole number from 1, got "${__ENV.VITALS_RUNS}"`
+  )
+}
 
 /** Lighthouse's mobile "slow 4G", as applied through DevTools (bytes/s). */
 const SLOW_4G = {
@@ -56,27 +68,35 @@ const DEVICES = {
       isMobile: true,
       hasTouch: true,
     },
+    // Sites that pick their variant by User-Agent must serve the mobile one.
+    mobileUserAgent: true,
     throttle: true,
   },
   desktop: {
     label: "🖥️ desktop",
     description: "desktop, no throttling",
     context: { viewport: { width: 1350, height: 940 } },
+    mobileUserAgent: false,
     throttle: false,
   },
 }
+
+/** Lighthouse's mobile User-Agent (a Moto G Power), with the running Chrome's major version. */
+const mobileUserAgent = () =>
+  `Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${browser.version().split(".", 1)[0]}.0.0.0 Mobile Safari/537.36`
 type Mode = keyof typeof DEVICES
 
 const MODES = (__ENV.VITALS_MODES || SETTINGS.modes)
   .split(",")
   .map((mode) => mode.trim())
   .filter(Boolean)
-if (MODES.length === 0 || MODES.some((mode) => !Object.hasOwn(DEVICES, mode))) {
+const isMode = (mode: string): mode is Mode => Object.hasOwn(DEVICES, mode)
+const DEVICE_MODES = MODES.filter(isMode)
+if (MODES.length === 0 || DEVICE_MODES.length !== MODES.length) {
   throw new Error(
     `VITALS_MODES must list ${Object.keys(DEVICES).join(" and/or ")}, got "${MODES.join(",")}"`
   )
 }
-const DEVICE_MODES = MODES as Mode[]
 /**
  * Append this run to perfo/web-vitals-history.md — locally and in CI.
  * Locally the file is gitignored, a personal log; CI pushes its copy to the
@@ -100,6 +120,8 @@ const VITALS = [
   { metric: "browser_web_vital_ttfb", label: "TTFB", good: 800, poor: 1800 }, // Time to First Byte, ms
 ]
 
+const VISITS = DEVICE_MODES.length * PATHS.length * RUNS
+
 export const options: Options = {
   scenarios: {
     vitals: {
@@ -107,14 +129,19 @@ export const options: Options = {
       vus: 1,
       // Sequential (one browser at a time): a second Chrome running alongside
       // would compete for CPU and skew the throttled phone numbers.
-      iterations: DEVICE_MODES.length * PATHS.length * RUNS,
+      iterations: VISITS,
       maxDuration: "15m",
       options: { browser: { type: "chromium" } },
     },
   },
   // One set of limits per page and device, so nothing hides behind an average.
   thresholds: {
+    // A threshold on a vital that got no samples still passes (k6 can't count
+    // a Trend), so missing data fails the run here instead: every visit must
+    // finish (not cut off by maxDuration or an error), and each loaded page
+    // must have reported its vitals (the `vitals reported` check).
     checks: ["rate==1"],
+    iterations: [`count==${VISITS}`],
     ...Object.fromEntries(
       DEVICE_MODES.flatMap((mode) =>
         PATHS.flatMap((path) =>
@@ -131,6 +158,20 @@ export const options: Options = {
   summaryTrendStats: ["avg", "min", "med", "max", "p(95)", "count"],
 }
 
+/**
+ * Whether the page has what k6 turns into its LCP, FCP and TTFB samples. CLS
+ * needs no check: it is always reported, 0 included.
+ */
+const VITALS_REPORTED_SCRIPT = `() => {
+  const nav = performance.getEntriesByType("navigation")[0];
+  return Boolean(window.__vitalsDiag && window.__vitalsDiag.lcp)
+    && performance.getEntriesByName("first-contentful-paint").length > 0
+    && Boolean(nav && nav.responseStart > 0);
+}`
+
+/** How long a loaded page may take to go network idle before the visit moves on. */
+const NETWORK_IDLE_MS = 15_000
+
 /** Name of the check that a visit loaded, one per page and device. */
 const loadCheck = (mode: string, path: string) => `status 200 · ${mode} ${path}`
 
@@ -145,11 +186,31 @@ export default async function () {
   exec.vu.metrics.tags.mode = mode
 
   // A fresh context per visit: empty cache and cookies, like a first visit.
-  const context = await browser.newContext(device.context)
-  // Watches the LCP element, layout shifts and long tasks from the first byte.
-  await context.addInitScript(OBSERVE_SCRIPT)
-  const page = await context.newPage()
+  const context = await browser.newContext(
+    device.mobileUserAgent
+      ? { ...device.context, userAgent: mobileUserAgent() }
+      : device.context
+  )
+  // The context closes whatever fails below, page set-up and page.close()
+  // included, so no context is left open in the shared browser.
+  try {
+    // Watches the LCP element, layout shifts and long tasks from the first byte.
+    await context.addInitScript(OBSERVE_SCRIPT)
+    const page = await context.newPage()
+    await visitPage(page, mode, path, visit)
+  } finally {
+    await context.close()
+  }
+}
 
+/** One visit: load the page, check it, collect the clues. */
+async function visitPage(
+  page: Page,
+  mode: Mode,
+  path: string,
+  visit: number
+): Promise<void> {
+  const device = DEVICES[mode]
   try {
     if (device.throttle) {
       await page.throttleCPU({ rate: 4 })
@@ -159,18 +220,31 @@ export default async function () {
     // error: otherwise the run ends green with nothing measured.
     let response: Awaited<ReturnType<typeof page.goto>> = null
     try {
+      // The response at `load`: a page that keeps polling never goes network
+      // idle, and waiting for it would time the visit out.
       response = await page.goto(pageUrl(BASE_URL, path), {
-        waitUntil: "networkidle",
+        waitUntil: "load",
       })
     } catch (error) {
       console.error(`${mode} ${path}: ${String(error)}`)
     }
     check(response, { [loadCheck(mode, path)]: (r) => r?.status() === 200 })
-    if (response) await recordDiagnostics(page, mode, path)
+    if (response) {
+      // Give late images (the LCP candidate, say) time to arrive, but no
+      // longer than NETWORK_IDLE_MS: a page that never goes quiet moves on.
+      try {
+        await page.waitForLoadState("networkidle", { timeout: NETWORK_IDLE_MS })
+      } catch {
+        // Still busy after NETWORK_IDLE_MS: measure what is there.
+      }
+      // A vital without samples would pass its threshold (see `iterations`).
+      const reported = (await page.evaluate(VITALS_REPORTED_SCRIPT)) === true
+      check(reported, { [`vitals reported · ${mode} ${path}`]: (r) => r })
+      await recordDiagnostics(page, mode, path, visit)
+    }
   } finally {
-    // Closing the page reports the final LCP and CLS.
+    // Closing the page reports the final LCP and CLS, before its context closes.
     await page.close()
-    await context.close()
   }
 }
 
@@ -292,6 +366,9 @@ function format(label: string, value: number): string {
     : `${Math.round(value)} ms`
 }
 
+/** Single-quoted for the shell, so `&`, `?` or `$` in a value stay literal. */
+const quote = (value: string) => `'${value.replaceAll("'", String.raw`'\''`)}'`
+
 /** Google's limit for a vital, in the same units the summary shows. */
 function limit(label: string, value: number): string {
   return label === "CLS" ? `≤ ${value}` : `≤ ${format(label, value)}`
@@ -321,12 +398,13 @@ export function handleSummary(data: SummaryData): Record<string, string> {
       ).map(({ label }) => label)
     )
 
-    // A visit that didn't load (timeout, 404, 500) fails the row even when
-    // the median of the other visits is green.
+    // A planned visit that didn't load (timeout, 404, 500) or never ran (the
+    // run was cut short) fails the row even when the median of the others is
+    // green.
     const visits = data.root_group.checks.find(
       ({ name }) => name === loadCheck(mode, path)
     )
-    const failedVisits = visits?.fails ?? RUNS
+    const failedVisits = RUNS - Math.min(visits?.passes ?? 0, RUNS)
 
     return {
       mode,
@@ -352,8 +430,11 @@ export function handleSummary(data: SummaryData): Record<string, string> {
   const now = new Date()
   const date = now.toISOString().slice(0, 16).replace("T", " ")
   const target = BASE_URL.replace(/^\w+:\/\//, "")
-  const host = target.split("/", 1)[0]
-  const investigationName = `${now.toISOString().slice(0, 16).replace(":", "-")}Z_${host}.md`
+  // A file name that works on every OS: no port colon, no IPv6 brackets.
+  const host = hostOf(BASE_URL).replaceAll(/[^\w.-]+/g, "-")
+  // Seconds plus a random id, so two runs against one host never share a file.
+  const runId = Math.random().toString(36).slice(2, 8)
+  const investigationName = `${now.toISOString().slice(0, 19).replaceAll(":", "-")}Z_${host}_${runId}.md`
   const investigationPath = `${INVESTIGATIONS_DIR}/${investigationName}`
   const writeInvestigation = record && failing.length > 0
 
@@ -380,7 +461,7 @@ export function handleSummary(data: SummaryData): Record<string, string> {
         `${DEVICES[mode].label} · ${path} — why it isn't 🟢`,
         ...(failedVisits > 0
           ? [
-              `  ${failedVisits} of ${RUNS} visit(s) didn't load with status 200`,
+              `  ${failedVisits} of ${RUNS} visit(s) didn't load with status 200 or didn't run`,
             ]
           : []),
         ...explain(clues, notGreen, DEVICES[mode].throttle).map(
@@ -430,6 +511,13 @@ export function handleSummary(data: SummaryData): Record<string, string> {
 
   // ── Investigation ───────────────────────────────────────────────────────────
   const modesUsed = [...new Set(failing.map(({ mode }) => mode))]
+  const reproduce = [
+    `BASE_URL=${quote(BASE_URL)}`,
+    `VITALS_MODES=${modesUsed.join(",")}`,
+    `VITALS_RUNS=${RUNS}`,
+    ...(QA_GROUPS ? [`QA_GROUPS=${quote(QA_GROUPS)}`] : []),
+    "pnpm tests:k6:vitals",
+  ].join(" ")
   const investigation = [
     `# Core Web Vitals investigation — ${date} UTC`,
     "",
@@ -461,7 +549,7 @@ export function handleSummary(data: SummaryData): Record<string, string> {
           "",
           ...(failedVisits > 0
             ? [
-                `**Didn't load:** ${failedVisits} of ${RUNS} visit(s) didn't return status 200 (timeout, error page or redirect). Check the run log for the error.`,
+                `**Didn't load:** ${failedVisits} of ${RUNS} visit(s) didn't return status 200 (timeout, error page or redirect) or didn't run (the run was cut short). Check the run log for the error.`,
                 "",
               ]
             : []),
@@ -497,7 +585,7 @@ export function handleSummary(data: SummaryData): Record<string, string> {
     ),
     "## For a coding agent",
     "",
-    `- **Reproduce:** from the repository root run \`BASE_URL=${BASE_URL} VITALS_MODES=${modesUsed.join(",")} pnpm tests:k6:vitals\`. It appends a new row to \`qa/tests/playwright/perfo/web-vitals-history.md\`; compare it with this run.`,
+    `- **Reproduce:** from the repository root run \`${reproduce}\`. It appends a new row to \`qa/tests/playwright/perfo/web-vitals-history.md\`; compare it with this run.`,
     "- **[Content · Strapi]** items are fixed in the CMS (Media Library, page content), not in code. Hand them to whoever edits the content, or change them through the Strapi admin.",
     "- **[Code]** items usually live in `apps/ui/src/components/page-builder/components/sections/` (the section that renders the element), `apps/ui/src/components/page-builder/components/utilities/StrapiBasicImage.tsx` and `apps/ui/src/components/elementary/images/` (images), `apps/ui/src/lib/fonts.ts` (fonts) and the root layout in `apps/ui/src/app/` (scripts, CSS).",
     "- **[Infra]** items are about hosting, caching and redirects: response headers (`x-nextjs-cache`, CDN cache status), redirect rules, Strapi response times.",

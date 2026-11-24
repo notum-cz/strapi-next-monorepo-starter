@@ -10,7 +10,7 @@
  *
  * k6 hands `handleSummary` nothing but metrics and checks, and only checks
  * carry text. So every clue travels as the name of a passing check:
- * `ⓘ <mode> <page> <key>: <value>`. They never fail the run.
+ * `ⓘ <mode> <page> #<visit> <key>: <value>`. They never fail the run.
  */
 import { check } from "k6"
 
@@ -40,10 +40,17 @@ const COLLECT_SCRIPT = String.raw`() => {
     try {
       const u = new URL(url, location.href);
       const nextImage = u.pathname === "/_next/image" && u.searchParams.get("url");
-      const path = nextImage ? "/_next/image?url=" + nextImage : u.pathname;
+      // The source image's host and path only: its query (signed-URL tokens)
+      // and credentials must not end up in the history pushed to Git.
+      let source = "";
+      if (nextImage) {
+        const s = new URL(nextImage, location.href);
+        source = s.origin === location.origin ? s.pathname : s.host + s.pathname;
+      }
+      const path = nextImage ? "/_next/image?url=" + source : u.pathname;
       const shown = u.origin === location.origin ? path : u.host + path;
       return shown.length > 110 ? shown.slice(0, 107) + "…" : shown;
-    } catch (_) { return String(url).slice(0, 110); }
+    } catch (_) { return String(url).split(/[?#]/)[0].slice(0, 110); }
   };
   const describe = (el) => {
     if (!el || !el.tagName) return null;
@@ -58,7 +65,12 @@ const COLLECT_SCRIPT = String.raw`() => {
   };
   // Media that comes out of the CMS: Strapi uploads, directly or through an
   // image proxy (Next.js /_next/image or imgproxy) that carries the source URL.
-  const fromCms = (url) => /\/uploads\/|\/asset-library\/|\/api\/upload/.test(decodeURIComponent(url || ""));
+  // A malformed %-escape must not throw: that would drop every clue of the visit.
+  const fromCms = (url) => {
+    let decoded = url || "";
+    try { decoded = decodeURIComponent(decoded); } catch (_) {}
+    return /\/uploads\/|\/asset-library\/|\/api\/upload/.test(decoded);
+  };
   const kind = (e) => {
     const n = e.name.split("?")[0].toLowerCase();
     if (e.initiatorType === "script" || /\.m?js$/.test(n)) return "js";
@@ -152,29 +164,44 @@ const COLLECT_SCRIPT = String.raw`() => {
   };
 }`
 
-type Diagnostics = Record<string, string | number | null>
-
 const PREFIX = "ⓘ "
 
 /** Collects the clues of one visit and records them as passing checks. */
 export async function recordDiagnostics(
   page: { evaluate: (script: string) => Promise<unknown> },
   mode: string,
-  path: string
+  path: string,
+  visit: number
 ): Promise<void> {
-  let diag: Diagnostics
+  let diag: unknown
   try {
-    diag = (await page.evaluate(COLLECT_SCRIPT)) as Diagnostics
+    diag = await page.evaluate(COLLECT_SCRIPT)
   } catch {
     return // diagnostics are best effort; the vitals themselves still count
   }
+  // Anything but a plain object (the page navigated away, say) has no clues.
+  if (typeof diag !== "object" || diag === null || Array.isArray(diag)) return
+
   for (const [key, value] of Object.entries(diag)) {
-    if (value === null || value === "") continue
-    check(true, { [`${PREFIX}${mode} ${path} ${key}: ${value}`]: () => true })
+    // Only text and numbers are clues; skip empty and unexpected values.
+    if (
+      typeof value === "number"
+        ? !Number.isFinite(value)
+        : typeof value !== "string" || value === ""
+    ) {
+      continue
+    }
+    check(true, {
+      [`${PREFIX}${mode} ${path} #${visit} ${key}: ${value}`]: () => true,
+    })
   }
 }
 
-/** One page × device worth of clues: numbers as their median, text as the most common value. */
+/**
+ * One page × device worth of clues: numbers as their median, text as the most
+ * common value. The LCP fields (`lcp…`) only come from the visits that saw the
+ * most common LCP element, so they all describe the same element.
+ */
 export interface Clues {
   number: (key: string) => number | undefined
   text: (key: string) => string | undefined
@@ -185,29 +212,54 @@ export function readClues(
   mode: string,
   path: string
 ): Clues {
-  const values = new Map<string, { value: string; count: number }[]>()
-  const start = `${PREFIX}${mode} ${path} `
+  /** Each visit's clues, by visit number, and the same in a list. */
+  const visits = new Map<string, Map<string, string>>()
+  const visitClues: Map<string, string>[] = []
+  const start = `${PREFIX}${mode} ${path} #`
   for (const { name, passes } of checks) {
-    if (!name.startsWith(start)) continue
+    if (!name.startsWith(start) || passes === 0) continue
     const rest = name.slice(start.length)
-    const separator = rest.indexOf(": ")
-    const key = rest.slice(0, separator)
-    const value = rest.slice(separator + 2)
-    values.set(key, [...(values.get(key) ?? []), { value, count: passes }])
+    const space = rest.indexOf(" ")
+    const separator = rest.indexOf(": ", space)
+    if (space === -1 || separator === -1) continue
+    const visit = rest.slice(0, space)
+    let clues = visits.get(visit)
+    if (!clues) {
+      clues = new Map<string, string>()
+      visits.set(visit, clues)
+      visitClues.push(clues)
+    }
+    clues.set(rest.slice(space + 1, separator), rest.slice(separator + 2))
   }
+
+  const mostCommon = (values: string[]) => {
+    const counts = new Map<string, number>()
+    for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1)
+
+    return [...counts].sort((a, b) => b[1] - a[1])[0]?.[0]
+  }
+  const lcpElement = mostCommon(
+    visitClues.flatMap((clues) => clues.get("lcpElement") ?? [])
+  )
+  const valuesOf = (key: string) =>
+    visitClues
+      .filter(
+        (clues) =>
+          !key.startsWith("lcp") ||
+          lcpElement === undefined ||
+          clues.get("lcpElement") === lcpElement
+      )
+      .flatMap((clues) => clues.get(key) ?? [])
 
   return {
     number: (key) => {
-      const all = (values.get(key) ?? [])
-        .flatMap(({ value, count }) =>
-          Array.from({ length: count }, () => Number(value))
-        )
+      const all = valuesOf(key)
+        .map(Number)
         .sort((a, b) => a - b)
 
       return all.length === 0 ? undefined : all[Math.floor(all.length / 2)]
     },
-    text: (key) =>
-      [...(values.get(key) ?? [])].sort((a, b) => b.count - a.count)[0]?.value,
+    text: (key) => mostCommon(valuesOf(key)),
   }
 }
 
@@ -284,8 +336,15 @@ function lcpFindings(clues: Clues): string[] {
   const natural = clues.text("lcpNatural")
   const rendered = clues.text("lcpRendered")
 
+  const element = clues.text("lcpElement")
+  if (element === undefined) {
+    return [
+      "**LCP element:** not reported — Chrome recorded no LCP entry the page could read, so its cause can't be told from this run",
+    ]
+  }
+
   return [
-    `**LCP element:** \`${clues.text("lcpElement") ?? "not reported"}\``,
+    `**LCP element:** \`${element}\``,
     ...(isImage
       ? [
           `  - source: \`${clues.text("lcpUrl")}\`${fromCms ? " — **uploaded through the CMS (Strapi media)**" : ""}`,
@@ -352,7 +411,10 @@ function lcpPart(clues: Clues, notGreen: Set<string>): Part {
   const renderedWidth = Number((rendered ?? "").split("×", 1)[0])
 
   const findings = lcpFindings(clues)
-  if (!notGreen.has("LCP")) return { findings, recommendations: [] }
+  // Unknown element: no image or text advice, the fallback recommendation applies.
+  if (!notGreen.has("LCP") || clues.text("lcpElement") === undefined) {
+    return { findings, recommendations: [] }
+  }
 
   const recommendations: Recommendation[] = []
   if (!isImage) {

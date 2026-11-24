@@ -55,7 +55,7 @@ A graph report is saved to `qa/tests/playwright/perfo/report.html` (gitignored, 
 
 ## Trend history and investigations
 
-Every run appends one row per page and device to `qa/tests/playwright/perfo/web-vitals-history.md`, so you can follow how each page develops. Old rows are never removed. When a run isn't all green, it also writes an **investigation** to `qa/tests/playwright/perfo/investigations/<date>_<host>.md`, and the history row links to it:
+Every run appends one row per page and device to `qa/tests/playwright/perfo/web-vitals-history.md`, so you can follow how each page develops. Old rows are never removed. When a run isn't all green, it also writes an **investigation** to `qa/tests/playwright/perfo/investigations/<date>_<host>_<run id>.md`, and the history row links to it:
 
 ```md
 ## /
