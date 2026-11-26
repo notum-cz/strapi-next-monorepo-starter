@@ -3,9 +3,10 @@ name: write-tests
 description: >
   Use when asked to add or extend automated tests — e.g. "write test",
   "add test", "cover X with tests", "reproduce with a test", "test
-  this", "e2e test", "playwright test", "load test", "k6". Covers
-  Vitest (apps/ui, apps/strapi), Playwright (qa/tests/playwright: e2e,
-  visual, axe, seo) and the k6 load test (qa/tests/playwright/load).
+  this", "e2e test", "playwright test", "load test", "k6", "web vitals".
+  Covers Vitest (apps/ui, apps/strapi), Playwright (qa/tests/playwright:
+  e2e, visual, axe, seo) and the k6 load and Core Web Vitals tests
+  (qa/tests/playwright/load, qa/tests/playwright/perfo).
 argument-hint: "[file-or-feature-to-cover]"
 ---
 
@@ -30,6 +31,7 @@ Pick before writing. Wrong layer = wasted test.
 | Accessibility                                                                      | **Playwright axe**             | `qa/tests/playwright/axe/*.spec.ts`                                                                                              |
 | SEO meta, head, robots                                                             | **Playwright seo**             | `qa/tests/playwright/seo/*.spec.ts`                                                                                              |
 | Throughput / latency under traffic (web pages)                                     | **k6 load**                    | `qa/tests/playwright/load/load-test.ts` — runs in k6, not Node (no npm packages, `.ts` import extensions)                        |
+| LCP / CLS / FCP / TTFB of a page (Core Web Vitals)                                 | **k6 Web Vitals**              | `qa/tests/playwright/perfo/web-vitals.ts` — k6 browser module; pages come from `perfo` in `helpers/urls.json`                    |
 
 Unit > integration > e2e. Push tests down the pyramid when behavior allows.
 
@@ -47,6 +49,7 @@ Before writing, read **one existing test in the same layer** to mirror style:
 - Playwright axe ref: `qa/tests/playwright/axe/axe.spec.ts`
 - Playwright seo ref: `qa/tests/playwright/seo/seo.spec.ts`
 - k6 load ref: `qa/tests/playwright/load/load-test.ts` (extend it rather than adding files; new load shapes go in `PROFILES`)
+- k6 Web Vitals ref: `qa/tests/playwright/perfo/web-vitals.ts` (extend it rather than adding files; a new page only needs an entry under `perfo` in `urls.json`)
 
 Match imports, helper usage, describe/it nesting, naming.
 
@@ -188,7 +191,7 @@ Set up the route mock **before** navigating/triggering the request it intercepts
   - Never write `{ tag: … }` by hand. `tags()` throws on a mistyped name when the spec loads; nothing checks a hand-written tag.
   - After adding or retagging tests, run this from the monorepo root and expect `Total: 0 tests`: `BASE_URL=http://localhost:3000 QA_GROUPS= pnpm -F @repo/tests-playwright exec playwright test --list --pass-with-no-tests --grep-invert "@(homepage|auth)(?![\w-])"`. The localhost `BASE_URL` and empty `QA_GROUPS` (which overrides `.env`) turn off the config filter, which a CLI `--grep` does not replace. The alternation lists `TEST_GROUPS`, so other `@` words, such as an email in a title, don't count.
   - A new feature gets a new group in `TEST_GROUPS`, in `ENV_GROUPS` where it is live, in the `groups` parameter of `.azuredevops/pipelines/qa.yml`, and in the audit alternation (here and in `apps/docs/docs/QA/playwright/index.md`).
-- **Page lists**: `seo`, `axe`, `visual` and `perfo` read their paths from `qa/tests/playwright/helpers/urls.json`, keyed by group. A group is one list for every environment, or `{ "dev": [...], "stg": [...], "prod": [...] }` when the content differs. Resolve them with `urlsByGroup(urls.<suite>)` from `helpers/flatten-urls.ts` and tag each generated test with its `group`; never index a key directly (`urls.axe.homepage`). `urlsByGroup` throws when `BASE_URL` is not set. To cover a new page, add it under its group in `urls.json`; no spec change is needed.
+- **Page lists**: `seo`, `axe` and `visual` read their paths from `qa/tests/playwright/helpers/urls.json`, keyed by group. A group is one list for every environment, or `{ "dev": [...], "stg": [...], "prod": [...] }` when the content differs. Resolve them with `urlsByGroup(urls.<suite>)` from `helpers/flatten-urls.ts` and tag each generated test with its `group`; never index a key directly (`urls.axe.homepage`). `urlsByGroup` throws when `BASE_URL` is not set. To cover a new page, add it under its group in `urls.json`; no spec change is needed.
 - **Production (`@no-prod`)**: a spec that cannot pass on production, or must not change data there, gets `"no-prod"` in the `tags(…)` of its `test` or `test.describe`, with a one-line comment saying why. `playwright.config.ts` leaves those tests out whenever `BASE_URL` resolves to production, locally and in the pipeline. A feature that is not deployed on production yet needs no tag; its group is simply missing from `ENV_GROUPS.prod`.
 - **Visual**: see `visual.spec.ts`. If no baseline snapshot exists yet for a page/browser combination, the spec creates one and skips comparison for that run instead of failing — inspect a newly created baseline before committing it. Update existing baselines only when the change is intentional: `pnpm tests:playwright:visual:update` (local OS) or `pnpm tests:playwright:visual:docker:update` (Linux, commit-ready — matches what CI compares against).
 - **Axe**: add per-page exceptions via `GLOBAL_WARNING_RULE_IDS` / `PATH_CONFIGS` in `axe.spec.ts` rather than skipping a page outright — a known, unfixable violation becomes a warning, not a silent gap.
@@ -223,7 +226,7 @@ Run only the relevant package, not the whole monorepo, while iterating.
 | Playwright seo                                 | `pnpm tests:playwright:seo`                                         |
 | Update visual snapshots (local OS)             | `pnpm tests:playwright:visual:update`                               |
 | Update visual snapshots (Docker, commit-ready) | `pnpm tests:playwright:visual:docker:update`                        |
-| LHCI performance collect                       | `pnpm tests:lhci:perfo`                                             |
+| k6 Core Web Vitals                             | `pnpm tests:k6:vitals`                                              |
 | k6 load                                        | `pnpm tests:k6:load:smoke` / `:average` / `:spike` / `:breakpoint`  |
 | All workspace tests                            | `pnpm test`                                                         |
 
@@ -243,7 +246,7 @@ Print:
 ```
 Tests added: <n>
 Files: <paths>
-Layer: vitest-ui | vitest-strapi | playwright-e2e-smoke | playwright-e2e-mock | playwright-visual | playwright-axe | playwright-seo | k6-load
+Layer: vitest-ui | vitest-strapi | playwright-e2e-smoke | playwright-e2e-mock | playwright-visual | playwright-axe | playwright-seo | k6-load | k6-web-vitals
 Result: pass
 Command: <exact command to re-run>
 ```

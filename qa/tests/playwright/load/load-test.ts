@@ -13,13 +13,12 @@ import http from "k6/http"
 import type { Options, Scenario } from "k6/options"
 
 import {
-  assertKnown,
-  ENV_GROUPS,
-  TEST_ENVS,
-  TEST_GROUPS,
-  testEnvForHost,
-  type TestEnv,
-} from "../helpers/test-groups.ts"
+  baseUrl,
+  hostOf,
+  pagesFor,
+  pageUrl,
+  testEnv,
+} from "../helpers/k6/target.ts"
 
 // ─── Settings ────────────────────────────────────────────────────────────────
 // Defaults for every run. Override any of them for one run from the command
@@ -48,139 +47,10 @@ if (!Number.isFinite(P95_MS) || P95_MS <= 0) {
   throw new Error(`LOAD_P95_MS must be a number above 0, got "${P95_MS}"`)
 }
 
-/**
- * KEY=value pairs from ../.env (k6 can't load it on its own). Follows dotenv,
- * which the Playwright suites read the same file with: quotes are removed, and
- * in an unquoted value `#` starts a comment.
- */
-function readDotEnv(): Record<string, string> {
-  let content: string
-  try {
-    content = open("../.env")
-  } catch {
-    return {}
-  }
-  const vars: Record<string, string> = {}
-  for (const line of content.split(/\r?\n/)) {
-    const separator = line.indexOf("=")
-    if (separator < 1 || line.trimStart().startsWith("#")) continue
-
-    const key = line
-      .slice(0, separator)
-      .trim()
-      .replace(/^export\s+/, "")
-    const raw = line.slice(separator + 1).trim()
-    const quoted = /^(["'`])(.*?)\1/.exec(raw)
-    vars[key] = quoted ? quoted[2] : raw.split("#", 1)[0].trim()
-  }
-
-  return vars
-}
-
-const DOT_ENV = readDotEnv()
-const BASE_URL = (__ENV.BASE_URL || DOT_ENV.BASE_URL || "").replace(/\/$/, "")
-if (!BASE_URL) throw new Error("Set BASE_URL in qa/tests/playwright/.env")
-
-/**
- * BASE_URL's hostname, the way `URL` reads it (k6 has no `URL`): without the
- * scheme, `user:password@` and port; an IPv6 host keeps its brackets.
- */
-const HOST = BASE_URL.replace(/^[a-z][\w+.-]*:\/\//i, "")
-  .split(/[/?#]/, 1)[0]
-  .replace(/^.*@/, "")
-  .replace(/:\d*$/, "")
-  .toLowerCase()
-
-/** The environment under test — the rule resolveTestEnv() uses for the other suites. */
-const ENV = testEnvForHost(HOST)
-
-type GroupUrls = string[] | Partial<Record<TestEnv, string[]>>
-
-/** Throws unless `urls` is a list of paths, which the test appends to BASE_URL. */
-function assertPaths(urls: unknown, where: string): asserts urls is string[] {
-  if (
-    !Array.isArray(urls) ||
-    urls.some((path) => typeof path !== "string" || !path.startsWith("/"))
-  ) {
-    throw new Error(
-      `helpers/urls.json "${where}" must be a list of paths starting with "/".`
-    )
-  }
-}
-
-/** A plain JSON object. */
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null && !Array.isArray(value)
-
-/** QA_GROUPS from the shell, else from .env. An empty shell value still wins, as in selectedGroups(). */
-const QA_GROUPS = __ENV.QA_GROUPS ?? DOT_ENV.QA_GROUPS ?? ""
-
-/**
- * The "load" pages to visit, picked like every other suite does it
- * (helpers/flatten-urls.ts and selectedGroups() in helpers/test-groups.ts):
- * groups from QA_GROUPS, else what ENV_GROUPS lists for the environment, and
- * each group's pages for that environment — or everything for a local host.
- * A mistyped group or environment fails the run instead of testing nothing.
- */
-function loadPaths(): string[] {
-  const urlsJson: unknown = JSON.parse(open("../helpers/urls.json"))
-  const suite = isRecord(urlsJson) ? (urlsJson.load ?? {}) : undefined
-  if (!isRecord(suite)) {
-    throw new Error('helpers/urls.json "load" must be an object of groups.')
-  }
-  const groups = Object.keys(suite)
-  assertKnown(groups, TEST_GROUPS, 'group under "load" in helpers/urls.json')
-  const urlsByGroup = new Map<string, GroupUrls>()
-  for (const group of groups) {
-    const urls: unknown = suite[group]
-    if (!isRecord(urls)) {
-      assertPaths(urls, `load.${group}`)
-      urlsByGroup.set(group, urls)
-      continue
-    }
-    const envs: string[] = Object.keys(urls)
-    assertKnown(
-      envs,
-      TEST_ENVS,
-      `environment in helpers/urls.json group "load.${group}"`
-    )
-    const perEnv: Partial<Record<TestEnv, string[]>> = {}
-    for (const env of envs) {
-      const list = urls[env]
-      assertPaths(list, `load.${group}.${env}`)
-      perEnv[env] = list
-    }
-    urlsByGroup.set(group, perEnv)
-  }
-
-  const picked = QA_GROUPS.split(/[\s,;]+/).filter(
-    (group) => group && group !== "auto"
-  )
-  assertKnown(picked, TEST_GROUPS, "group in QA_GROUPS")
-  const envGroups = ENV ? ENV_GROUPS[ENV] : "all"
-  const selected: readonly string[] | undefined =
-    picked.length > 0 ? picked : envGroups === "all" ? undefined : envGroups
-
-  return [
-    ...new Set(
-      groups
-        .filter((group) => !selected || selected.includes(group))
-        .flatMap((group) => {
-          const urls = urlsByGroup.get(group) ?? []
-          if (Array.isArray(urls)) return urls
-
-          return ENV ? (urls[ENV] ?? []) : Object.values(urls).flat()
-        })
-    ),
-  ]
-}
-
-const PATHS = loadPaths()
-if (PATHS.length === 0) {
-  throw new Error(
-    `No "load" pages for ${ENV ?? "a local run"}${QA_GROUPS ? ` and QA_GROUPS=${QA_GROUPS}` : ""} in helpers/urls.json`
-  )
-}
+const BASE_URL = baseUrl()
+const HOST = hostOf(BASE_URL)
+const ENV = testEnv(BASE_URL)
+const PATHS = pagesFor("load", BASE_URL)
 
 const VUS = {
   preAllocatedVUs: Math.max(5, RPS * 5),
@@ -316,7 +186,7 @@ export const options: Options = {
 export default function () {
   // Round-robin, so every page gets an equal share.
   const path = PATHS[exec.scenario.iterationInTest % PATHS.length]
-  const res = http.get(`${BASE_URL}${path}`, {
+  const res = http.get(pageUrl(BASE_URL, path), {
     // Ask for compression like every browser does. Without it k6 downloads
     // pages uncompressed (~6× bigger) and the run measures bandwidth, not the
     // site. k6 decompresses the response itself.

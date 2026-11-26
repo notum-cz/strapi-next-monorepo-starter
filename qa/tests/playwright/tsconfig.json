@@ -11,6 +11,6 @@
     "noEmit": true
   },
   "include": ["**/*.ts"],
-  // load/ runs in the k6 runtime, not Node — it has its own tsconfig.
-  "exclude": ["node_modules", "load"]
+  // These run in the k6 runtime, not Node — load/ and perfo/ have their own tsconfig.
+  "exclude": ["node_modules", "load", "perfo", "helpers/k6"]
 }

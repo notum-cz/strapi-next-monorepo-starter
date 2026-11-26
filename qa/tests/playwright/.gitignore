@@ -7,6 +7,9 @@ node_modules/
 /playwright/.cache/
 .env
 /axe/reports/
-/perfo/.lighthouseci/
+/perfo/report.html
+/perfo/web-vitals-history.md
+/perfo/investigations/*
+!/perfo/investigations/.gitkeep
 /visual/visual.spec.ts-snapshots/darwin/
 /load/report.html

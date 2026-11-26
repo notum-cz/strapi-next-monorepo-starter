@@ -65,18 +65,18 @@ Manual inputs:
 | `run_e2e`        | boolean          | Runs Playwright E2E tests.             |
 | `run_axe`        | boolean          | Runs accessibility tests.              |
 | `run_seo`        | boolean          | Runs SEO checks.                       |
-| `run_lhci_perfo` | boolean          | Runs Lighthouse CI performance checks. |
+| `run_web_vitals` | boolean          | Runs k6 Core Web Vitals checks.        |
 
 Each selected suite runs as its own job. Playwright jobs cache browser binaries, install Playwright browsers, set `BASE_URL` from the workflow input, and upload useful reports or traces when a job fails.
 
 Artifacts:
 
-| Job  | Artifact behavior                                     |
-| ---- | ----------------------------------------------------- |
-| E2E  | Uploads Playwright reports and traces on failure.     |
-| AXE  | Packs and uploads axe reports on every run.           |
-| SEO  | Packs and uploads reports on failure.                 |
-| LHCI | Packs and uploads Lighthouse CI reports on every run. |
+| Job        | Artifact behavior                                   |
+| ---------- | --------------------------------------------------- |
+| E2E        | Uploads Playwright reports and traces on failure.   |
+| AXE        | Packs and uploads axe reports on every run.         |
+| SEO        | Packs and uploads reports on failure.               |
+| Web Vitals | Uploads the k6 Core Web Vitals report on every run. |
 
 :::tip
 Use the QA workflow after deploying to a staging or test app. The workflow does not start the application; it tests the URL you provide.
