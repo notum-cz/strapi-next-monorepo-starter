@@ -106,6 +106,20 @@ const RECORD_HISTORY = (__ENV.VITALS_HISTORY || "true") === "true"
 
 const BASE_URL = baseUrl()
 const PATHS = pagesFor("perfo", BASE_URL)
+/**
+ * BASE_URL as written to the history and investigations, which CI pushes to
+ * Git: without `user:password@`, query and fragment. BASE_URL itself is only
+ * used to navigate.
+ */
+const SAFE_URL = (() => {
+  // baseUrl() guarantees the http(s):// scheme.
+  const schemeEnd = BASE_URL.indexOf("://") + 3
+  const rest = BASE_URL.slice(schemeEnd).split(/[?#]/, 1)[0]
+  const pathStart = rest.includes("/") ? rest.indexOf("/") : rest.length
+  const credentialsEnd = rest.lastIndexOf("@", pathStart) + 1
+
+  return BASE_URL.slice(0, schemeEnd) + rest.slice(credentialsEnd)
+})()
 
 /**
  * Google's bands (https://web.dev/articles/vitals), applied to the median
@@ -198,6 +212,11 @@ export default async function () {
     await context.addInitScript(OBSERVE_SCRIPT)
     const page = await context.newPage()
     await visitPage(page, mode, path, visit)
+  } catch (error) {
+    // A visit that broke (no page opened, say) must fail the run, not just
+    // end the iteration: k6 still counts such an iteration as done.
+    console.error(`${mode} ${path}: ${String(error)}`)
+    check(false, { [`visit completed · ${mode} ${path}`]: (ok) => ok })
   } finally {
     await context.close()
   }
@@ -429,7 +448,7 @@ export function handleSummary(data: SummaryData): Record<string, string> {
 
   const now = new Date()
   const date = now.toISOString().slice(0, 16).replace("T", " ")
-  const target = BASE_URL.replace(/^\w+:\/\//, "")
+  const target = SAFE_URL.replace(/^\w+:\/\//, "")
   // A file name that works on every OS: no port colon, no IPv6 brackets.
   const host = hostOf(BASE_URL).replaceAll(/[^\w.-]+/g, "-")
   // Seconds plus a random id, so two runs against one host never share a file.
@@ -512,7 +531,8 @@ export function handleSummary(data: SummaryData): Record<string, string> {
   // ── Investigation ───────────────────────────────────────────────────────────
   const modesUsed = [...new Set(failing.map(({ mode }) => mode))]
   const reproduce = [
-    `BASE_URL=${quote(BASE_URL)}`,
+    // Credentials or a token in BASE_URL stay out of the file: a placeholder.
+    `BASE_URL=${SAFE_URL === BASE_URL ? quote(BASE_URL) : "'<the BASE_URL of this run>'"}`,
     `VITALS_MODES=${modesUsed.join(",")}`,
     `VITALS_RUNS=${RUNS}`,
     ...(QA_GROUPS ? [`QA_GROUPS=${quote(QA_GROUPS)}`] : []),
@@ -521,7 +541,7 @@ export function handleSummary(data: SummaryData): Record<string, string> {
   const investigation = [
     `# Core Web Vitals investigation — ${date} UTC`,
     "",
-    `- **Target:** ${BASE_URL}`,
+    `- **Target:** ${SAFE_URL}`,
     `- **Visits:** median of ${RUNS} per page and device · ${devices}`,
     "- **Back to:** [the history](../web-vitals-history.md)",
     "",

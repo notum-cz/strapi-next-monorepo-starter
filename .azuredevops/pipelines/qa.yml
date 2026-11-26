@@ -497,7 +497,9 @@ jobs:
           cd "$WORKTREE"
           # -f: these files are gitignored on code branches, tracked only here.
           git add -f "$(HISTORY_FILE)" "$INVESTIGATIONS"
-          git commit -m "chore(qa): record Core Web Vitals for $BASE_URL" \
+          # Host and path only: credentials or a token in BASE_URL stay out of Git.
+          TARGET=$(printf '%s' "$BASE_URL" | sed -E 's#^([a-zA-Z][a-zA-Z0-9+.-]*://)([^/?#]*@)?#\1#; s#[?#].*$##')
+          git commit -m "chore(qa): record Core Web Vitals for $TARGET" \
             -m "Run: $(System.CollectionUri)$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)" \
             || { echo "No new rows to record."; exit 0; }
           git push origin "$(HISTORY_BRANCH)"
