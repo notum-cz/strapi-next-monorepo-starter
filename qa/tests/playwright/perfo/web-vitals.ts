@@ -135,6 +135,11 @@ const VITALS = [
 ]
 
 const VISITS = DEVICE_MODES.length * PATHS.length * RUNS
+/**
+ * 45 s per visit (a slow-4G load plus up to NETWORK_IDLE_MS), 15 minutes at
+ * least. The CI jobs' timeouts (60 minutes) must stay above this plus set-up.
+ */
+const MAX_DURATION_S = Math.max(15 * 60, VISITS * 45)
 
 export const options: Options = {
   scenarios: {
@@ -144,7 +149,7 @@ export const options: Options = {
       // Sequential (one browser at a time): a second Chrome running alongside
       // would compete for CPU and skew the throttled phone numbers.
       iterations: VISITS,
-      maxDuration: "15m",
+      maxDuration: `${MAX_DURATION_S}s`,
       options: { browser: { type: "chromium" } },
     },
   },

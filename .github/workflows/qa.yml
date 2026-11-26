@@ -291,7 +291,9 @@ jobs:
     if: ${{ inputs.run_web_vitals || github.event.schedule == '0 3 * * 1' }}
     name: Core Web Vitals (k6)
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Above the k6 run's own limit (45 s per visit, perfo/web-vitals.ts) plus
+    # set-up: enough for about 70 visits (7 pages × 2 devices × 5 visits).
+    timeout-minutes: 60
     permissions:
       # Pushes the trend row to the qa/web-vitals-history branch.
       contents: write

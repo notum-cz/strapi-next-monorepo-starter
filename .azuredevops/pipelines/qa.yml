@@ -373,7 +373,9 @@ jobs:
         and(eq(${{ parameters.run_web_vitals }}, true), ne(variables['Build.Reason'], 'Schedule')),
         eq(variables['Build.CronSchedule.DisplayName'], 'Weekly Core Web Vitals')
       ))
-    timeoutInMinutes: 20
+    # Above the k6 run's own limit (45 s per visit, perfo/web-vitals.ts) plus
+    # set-up: enough for about 70 visits (7 pages × 2 devices × 5 visits).
+    timeoutInMinutes: 60
     variables:
       K6_VERSION: "2.3.0"
       HISTORY_BRANCH: qa/web-vitals-history

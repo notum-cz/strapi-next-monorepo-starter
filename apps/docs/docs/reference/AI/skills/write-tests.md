@@ -26,11 +26,13 @@ Playwright tests run by [feature group](../../../QA/playwright/index.md#test-gro
 
 - It tags every top-level `test.describe` with `tags("<group>")` from `qa/tests/playwright/helpers/test-groups.ts`, never with a hand-written `{ tag: … }`. An untagged test stops running once an environment's groups are narrowed.
 - It marks tests that must stay off production with `no-prod`, or `NO_PROD` on a nested test.
-- For the `seo`, `axe`, `visual` and `perfo` suites, it adds pages under their group in `helpers/urls.json` and reads them with `urlsByGroup`.
+- For the `seo`, `axe` and `visual` suites, it adds pages under their group in `helpers/urls.json` and reads them with `urlsByGroup`.
 - After adding or retagging tests, it runs the untagged-test check from the [Playwright docs](../../../QA/playwright/index.md#checking-for-untagged-tests).
 
-## k6 load test
+## k6 load and Core Web Vitals tests
 
 For throughput and latency under traffic, the skill extends `qa/tests/playwright/load/load-test.ts` instead of adding files: new pages go under `load` in `helpers/urls.json`, new load shapes go in its `PROFILES`. See [Load Testing (k6)](../../../QA/playwright/load-testing.md).
+
+For LCP, CLS, FCP and TTFB, it extends `qa/tests/playwright/perfo/web-vitals.ts` the same way: a new page goes under `perfo` in `helpers/urls.json`, no script change needed. Both k6 scripts pick their pages through `helpers/k6/target.ts`. Run it with `pnpm tests:k6:vitals`. See [Core Web Vitals (k6)](../../../QA/playwright/web-vitals.md).
 
 See also: [Testing](../../../QA/overview.md).
