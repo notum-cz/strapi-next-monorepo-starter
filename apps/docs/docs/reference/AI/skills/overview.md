@@ -28,6 +28,7 @@ See the [Workflows](#workflows) section below for diagrams of how these chain to
 | [remove-azure-monitor](./remove-azure-monitor.md)               | Stack-coupled     | Remove the Azure Monitor exporter, keep logging + OTel.                                    |
 | [remove-cache-revalidation](./remove-cache-revalidation.md)     | Stack-coupled     | Uninstall the cache revalidation feature (and CDN purge).                                  |
 | [remove-cdn-purge](./remove-cdn-purge.md)                       | Stack-coupled     | Uninstall only the optional CDN purge layer.                                               |
+| [mutation-test](./mutation-test.md)                             | Stack-coupled     | Run StrykerJS on a module and add assertions until surviving mutants are killed.           |
 | [start-work](./start-work.md)                                   | Stack-agnostic    | Start work on an issue in an isolated worktree + plan.                                     |
 | [make-pr](./make-pr.md)                                         | Stack-agnostic    | Commit, push, and open a GitHub PR from the branch.                                        |
 | [review-pr](./review-pr.md)                                     | Stack-agnostic    | Review a PR or local branch diff before merge.                                             |
@@ -74,6 +75,7 @@ flowchart TB
   subgraph Finish["Finish"]
     direction TB
     T["/write-tests"]:::tail
+    M["/mutation-test<br/><small>Vitest: kill surviving mutants</small>"]:::tail
     R["/review-pr"]:::tail
     P["/make-pr"]:::tail
     RS["/resolve-review-suggestions<br/><small>GitHub review feedback</small>"]:::tail
@@ -88,6 +90,8 @@ flowchart TB
   A -.-> H
   A --> T
   C --> T
+  T -.->|"Vitest"| M
+  M -.-> T
   T --> R
   R --> P
   P -.-> RS

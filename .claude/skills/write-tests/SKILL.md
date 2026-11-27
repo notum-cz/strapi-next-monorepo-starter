@@ -58,6 +58,7 @@ Match imports, helper usage, describe/it nesting, naming.
 - `globals: true` already set — but **still import explicitly** (matches existing code).
 - File pattern: `*.test.ts`. UI include: `src/**/*.test.ts`. Strapi include: `tests/**/*.test.ts`.
 - Path alias `@` resolves to `apps/ui/src` (UI tests only).
+- **Mutation testing list.** A new test file for a module not tested before means adding that module to the app's `stryker.config.mjs` `mutate` list (`apps/ui` or `apps/strapi`). Otherwise StrykerJS never measures it.
 - **Strapi tests do not boot Strapi.** Import the unit under test directly and either keep it pure, read `schema.json` from disk (`app.test.ts`), or mock the `strapi` global with `vi.stubGlobal("strapi", …)` (`revalidate.test.ts`). There is no `setupStrapi` helper — do not add a DB or a real instance.
 
 ### Playwright — e2e (Page Object Model)
@@ -226,6 +227,7 @@ Run only the relevant package, not the whole monorepo, while iterating.
 | LHCI performance collect                       | `pnpm tests:lhci:perfo`                                             |
 | k6 load                                        | `pnpm tests:k6:load:smoke` / `:average` / `:spike` / `:breakpoint`  |
 | All workspace tests                            | `pnpm test`                                                         |
+| Mutation testing (test quality)                | `pnpm test:mutation:ui` / `pnpm test:mutation:strapi`               |
 
 Playwright requires a running app (`pnpm dev` or built+started). If e2e fails with connection refused, start the app first.
 
@@ -235,6 +237,7 @@ Playwright requires a running app (`pnpm dev` or built+started). If e2e fails wi
 2. Run the file's full suite — no regressions.
 3. If reproducing a bug: first confirm the test **fails** without the fix, then apply the fix, then confirm it **passes**. Do not skip the failing step.
 4. Snapshot updates: never update without inspecting the diff visually.
+5. **Vitest only — mutation check.** Run the `mutation-test` skill on the module under test (one file, takes seconds). Kill survivors that sit in the behaviour you just tested; list the rest in the report. Skip for Playwright and k6.
 
 ## Report
 
@@ -245,6 +248,7 @@ Tests added: <n>
 Files: <paths>
 Layer: vitest-ui | vitest-strapi | playwright-e2e-smoke | playwright-e2e-mock | playwright-visual | playwright-axe | playwright-seo | k6-load
 Result: pass
+Mutation score: <file> <before>% -> <after>%   (Vitest only)
 Command: <exact command to re-run>
 ```
 

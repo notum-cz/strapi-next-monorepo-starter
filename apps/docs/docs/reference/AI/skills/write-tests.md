@@ -20,6 +20,10 @@ Add or extend tests for a feature or a bug, following the project's existing tes
 
 It uses the test tools already in the project.
 
+## Mutation testing
+
+When the skill adds a Vitest test for a module that had no tests before, it also adds that module to the app's `stryker.config.mjs` `mutate` list, so [mutation testing](../../../QA/mutation-testing.md) covers it. As its last check it runs [mutation-test](./mutation-test.md) on that module and strengthens the new tests until the mutants in the tested behaviour are killed.
+
 ## Playwright feature groups
 
 Playwright tests run by [feature group](../../../QA/playwright/index.md#test-groups), so the skill follows these rules for Playwright specs:
