@@ -11,6 +11,7 @@
     "preview": "next build && next start",
     "start": "next start",
     "test": "vitest run",
+    "test:mutation": "stryker run",
     "test:watch": "vitest",
     "typecheck": "next typegen && tsc --noEmit"
   },
@@ -93,6 +94,8 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/strapi-types": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@stryker-mutator/core": "10.1.1",
+    "@stryker-mutator/vitest-runner": "10.1.1",
     "@tailwindcss/postcss": "4.3.5",
     "@types/lodash": "4.17.27",
     "@types/node": "26.6.6",
