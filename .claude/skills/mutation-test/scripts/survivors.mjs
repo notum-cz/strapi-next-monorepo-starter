@@ -61,7 +61,12 @@ const snippet = (source, { start, end }) => {
   return oneLine.length > 70 ? `${oneLine.slice(0, 67)}...` : oneLine
 }
 
-const targets = files.length ? files : Object.keys(report.files).sort()
+// Report keys are POSIX paths relative to the app, e.g. "src/lib/dates.ts".
+const toReportKey = (file) => file.replaceAll("\\", "/").replace(/^\.\//, "")
+
+const targets = files.length
+  ? files.map(toReportKey)
+  : Object.keys(report.files).sort()
 let exitCode = 0
 
 for (const file of targets) {

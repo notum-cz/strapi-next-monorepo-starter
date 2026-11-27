@@ -27,7 +27,7 @@ Open the HTML report to see each surviving mutant inline in the source.
 
 ## What Gets Mutated
 
-Only modules that already have tests are mutated, so the score reflects test quality rather than missing tests. The `mutate` list in each config names those modules explicitly.
+Only modules that already have tests are mutated, so untested files don't drag the score down. Tested modules can still have untested branches, which show up as `No coverage`. The score over covered code tells you how good the assertions are where tests do run. The `mutate` list in each config names those modules explicitly.
 
 **When you add a test for a module that isn't covered yet, add that module to the app's `mutate` list.** The other way round also holds: a module in `mutate` without tests only produces `No coverage` mutants.
 
@@ -47,11 +47,11 @@ Not every survivor is worth killing. Mutants in log messages, or equivalent muta
 
 ## Incremental Mode
 
-`incremental: true` stores the previous result in `reports/mutation/stryker-incremental.json`. The next run only retests mutants in changed source or test files and reuses the rest, so local reruns take seconds instead of a full run. Delete the file, or run `pnpm -F @repo/ui exec stryker run --force`, to force a full run.
+`incremental: true` stores the previous result in `reports/mutation/stryker-incremental.json`. The next run only retests mutants in changed source or test files and reuses the rest, so local reruns take seconds instead of a full run. Incremental mode only notices changes to mutated files and test files. After changing shared mocks, test helpers, `vitest.config.ts`, `stryker.config.mjs` or dependencies, force a full run so old results aren't reused: delete the file, or run `pnpm -F @repo/<app> exec stryker run --force`.
 
 ## CI
 
-`.github/workflows/mutation.yml` runs a full pass for both apps every Monday at 03:00 UTC, and on demand through **Actions → Mutation Testing → Run workflow**. Each app's report is uploaded as a `mutation-report-<app>` artifact. The workflow is separate from the PR checks in `ci.yml`, because a full run is too slow for the PR gate. The scheduled trigger only fires in the upstream starter repository. In a fork, use the manual trigger or remove the repository check from the job's `if:`.
+`.github/workflows/mutation.yml` runs a full pass for both apps every Monday at 03:00 UTC, and on demand through **Actions → Mutation Testing → Run workflow**. Each app's report is uploaded as a `mutation-report-<app>` artifact. The workflow is separate from the PR checks in `ci.yml`, because a full run is too slow for the PR gate. GitHub runs scheduled workflows from the default branch (`main`), so the weekly run starts once the workflow reaches it. The scheduled trigger only fires in the upstream starter repository. In a fork, use the manual trigger or remove the repository check from the job's `if:`.
 
 ## Thresholds
 

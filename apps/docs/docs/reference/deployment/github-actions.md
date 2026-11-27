@@ -22,13 +22,14 @@ Use the shared setup action when adding new workflows so pnpm, Node, and depende
 
 ## Workflows
 
-| Workflow                    | File                            | Trigger                                  | Purpose                                                    |
-| --------------------------- | ------------------------------- | ---------------------------------------- | ---------------------------------------------------------- |
-| CI                          | `.github/workflows/ci.yml`      | Pull requests to `main` or `dev`         | Lint, format-check, unit test, build UI, and build Strapi. |
-| QA (manual)                 | `.github/workflows/qa.yml`      | Manual `workflow_dispatch`               | Run selected E2E suites against a supplied `BASE_URL`.     |
-| Deploy Docs to GitHub Pages | `.github/workflows/docs.yml`    | Push to `main` touching docs, or manual  | Build Docusaurus and deploy docs to GitHub Pages.          |
-| Release                     | `.github/workflows/release.yml` | Push to `main`                           | Run semantic-release and publish a GitHub release.         |
-| Auto Create Pull Requests   | `.github/workflows/auto-pr.yml` | Push to `dev`, daily schedule, or manual | Create or update a `dev` to `main` pull request.           |
+| Workflow                    | File                             | Trigger                                  | Purpose                                                                                                 |
+| --------------------------- | -------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| CI                          | `.github/workflows/ci.yml`       | Pull requests to `main` or `dev`         | Lint, format-check, unit test, build UI, and build Strapi.                                              |
+| QA (manual)                 | `.github/workflows/qa.yml`       | Manual `workflow_dispatch`               | Run selected E2E suites against a supplied `BASE_URL`.                                                  |
+| Deploy Docs to GitHub Pages | `.github/workflows/docs.yml`     | Push to `main` touching docs, or manual  | Build Docusaurus and deploy docs to GitHub Pages.                                                       |
+| Release                     | `.github/workflows/release.yml`  | Push to `main`                           | Run semantic-release and publish a GitHub release.                                                      |
+| Auto Create Pull Requests   | `.github/workflows/auto-pr.yml`  | Push to `dev`, daily schedule, or manual | Create or update a `dev` to `main` pull request.                                                        |
+| Mutation Testing            | `.github/workflows/mutation.yml` | Weekly schedule, or manual               | Run StrykerJS on the UI and Strapi Vitest suites. See [Mutation Testing](../../QA/mutation-testing.md). |
 
 ## CI
 

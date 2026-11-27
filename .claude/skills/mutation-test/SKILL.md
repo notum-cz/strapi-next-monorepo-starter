@@ -5,13 +5,13 @@ description: >
   tightening weak tests — e.g. "mutation test", "run stryker", "surviving
   mutants", "kill mutants", "are these tests good enough", "improve test
   quality", "mutation score". Also the final check of `write-tests` after it
-  adds Vitest tests in apps/ui or apps/strapi. Not for Playwright or k6.
+  adds unit tests. Not for browser end-to-end or load tests.
 argument-hint: "[ui|strapi] [file-under-test]"
 ---
 
 # Mutation Test
 
-Use StrykerJS to find behaviour the Vitest tests don't pin down, then add assertions until those mutants are killed. The tests change; the source under test does not.
+Use StrykerJS to find behaviour the Vitest tests in `apps/ui` and `apps/strapi` don't pin down, then add assertions until those mutants are killed. The tests change; the source under test does not.
 
 Reference: `apps/docs/docs/QA/mutation-testing.md` (statuses, incremental mode, CI). Configs: `apps/ui/stryker.config.mjs`, `apps/strapi/stryker.config.mjs`.
 
@@ -22,7 +22,7 @@ Work on **one module at a time**: the source file whose tests you are judging.
 1. Pick the app (`ui` or `strapi`) and the source file, relative to the app (e.g. `src/lib/dates.ts`).
 2. Check the file is in the app's `mutate` list in `stryker.config.mjs`.
    - Listed: continue.
-   - Not listed, but has tests: add it to `mutate` (keep the list explicit — no broad globs), then continue.
+   - Not listed, but has tests: add it to `mutate` (keep the list explicit — name files, or at most `<dir>/*.ts` for one fully tested directory), then continue.
    - No tests at all: stop and use `write-tests` first. Mutating untested code only produces `NoCoverage`.
 3. Without a target (user asked "how good are our tests"), run Phase 2 for the whole app and Phase 3 with no file, then pick the lowest-scoring files and ask the user which to work on.
 
@@ -34,7 +34,7 @@ From the repo root:
 pnpm -F @repo/<app> exec stryker run --mutate <file>
 ```
 
-- Narrowing with `--mutate` keeps the run to seconds. The incremental file in `reports/mutation/` keeps results for every other file, so the full report stays complete.
+- Narrowing with `--mutate` keeps the run to seconds. The incremental file in `reports/mutation/` keeps results for every other file, so the report stays complete once one full `pnpm test:mutation:<app>` has run. On a fresh clone the report holds only the narrowed file.
 - For a large file, narrow to lines: `--mutate "<file>:40-90"`.
 - Whole app instead: `pnpm test:mutation:<app>` (also builds workspace packages first).
 - If it fails to resolve `@repo/logging` or `@repo/shared-data`, the workspace packages aren't built: run `pnpm test:mutation:<app>` once, or `pnpm build --filter=@repo/<app>^...`.
@@ -76,6 +76,8 @@ Prioritise `ConditionalExpression`, `EqualityOperator`, `LogicalOperator`, `Bloc
 1. `pnpm test:<app>` — the normal suite passes.
 2. Rerun the Phase 2 command. Incremental mode only re-tests the affected mutants.
 3. Rerun Phase 3 and confirm the mutants you targeted are now `Killed`.
+
+Incremental mode only notices changes to mutated files and test files. If you also changed a shared mock, a test helper, `vitest.config.ts` or `stryker.config.mjs`, add `--force` to the Phase 2 command so old results aren't reused.
 
 ## Report
 

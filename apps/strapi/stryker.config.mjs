@@ -32,8 +32,6 @@ export default {
   incremental: true,
   incrementalFile: "reports/mutation/stryker-incremental.json",
   ignoreStatic: true,
-  // Matches the vitest testTimeout in vitest.config.ts.
-  timeoutMS: 30000,
   // Report only for now; set `break` once a baseline score is established.
   thresholds: {
     high: 80,

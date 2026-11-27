@@ -34,7 +34,8 @@ describe("dates utilities", () => {
     })
 
     it("formats a Date object", () => {
-      const result = formatDate(new Date("2024-03-15"))
+      // Local midnight; a date-only ISO string would be UTC and shift west of UTC.
+      const result = formatDate(new Date(2024, 2, 15))
       expect(result).toBe("15/03/24")
     })
   })
