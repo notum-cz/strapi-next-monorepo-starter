@@ -1,5 +1,5 @@
 /** Every feature group a spec can be tagged with (`@homepage`, `@auth`, …). */
-export const TEST_GROUPS = ["homepage", "auth"] as const
+export const TEST_GROUPS = ["homepage", "auth", "crawling"] as const
 
 export type TestGroup = (typeof TEST_GROUPS)[number]
 
