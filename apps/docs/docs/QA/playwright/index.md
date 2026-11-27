@@ -42,7 +42,7 @@ qa/tests/playwright/
 Every test carries a feature tag such as `@homepage` or `@auth`. `helpers/test-groups.ts` lists the groups and which of them are live on each environment:
 
 ```typescript
-export const TEST_GROUPS = ["homepage", "auth"] as const
+export const TEST_GROUPS = ["homepage", "auth", "crawling"] as const
 
 export const ENV_GROUPS: Record<TestEnv, readonly TestGroup[] | "all"> = {
   dev: "all",
@@ -69,10 +69,11 @@ An unknown name in `QA_GROUPS` fails the run and lists the valid ones. A describ
 
 The environment comes from the `BASE_URL` hostname. A `dev` segment means dev and a `stg` or `staging` segment means staging, where a segment is a part of a subdomain between `-` or `.` characters. The domain never counts (the last two labels, or three after a short label before a country code such as `co.uk`), so `client.dev`, `dev.to` and `example-dev.co.uk` are production, and so is an IPv6 address other than `[::1]`. `localhost`, `127.0.0.1`, `[::1]` and `host.docker.internal` are local. Every other host counts as production, including preview domains such as `*.vercel.app`, so an unrecognised domain never runs `@no-prod` tests.
 
-| Group      | E2E specs        | `urls.json` suites            |
-| ---------- | ---------------- | ----------------------------- |
-| `homepage` | `smoke/homepage` | seo, axe, visual, perfo, load |
-| `auth`     | `mock/sign-in`   |                               |
+| Group      | E2E specs                                      | `urls.json` suites            |
+| ---------- | ---------------------------------------------- | ----------------------------- |
+| `homepage` | `smoke/homepage`                               | seo, axe, visual, perfo, load |
+| `auth`     | `mock/sign-in`                                 |                               |
+| `crawling` | `seo/sitemap-robots` (robots.txt, sitemap.xml) |                               |
 
 The package scripts pass `--pass-with-no-tests`, so a suite with nothing in the selection (AXE with only `auth`, say) still passes. LHCI is not Playwright; it filters `urls.perfo` by the same selection itself.
 
@@ -87,7 +88,7 @@ The package scripts pass `--pass-with-no-tests`, so a suite with nothing in the 
 While a group selection is active, an untagged test never runs. To find one, run this from the monorepo root; it must print `Total: 0 tests`:
 
 ```bash
-BASE_URL=http://localhost:3000 QA_GROUPS= pnpm -F @repo/tests-playwright exec playwright test --list --pass-with-no-tests --grep-invert "@(homepage|auth)(?![\w-])"
+BASE_URL=http://localhost:3000 QA_GROUPS= pnpm -F @repo/tests-playwright exec playwright test --list --pass-with-no-tests --grep-invert "@(homepage|auth|crawling)(?![\w-])"
 ```
 
 The localhost `BASE_URL` and the empty `QA_GROUPS`, which also overrides a value in `.env`, turn off the group filter in `playwright.config.ts`. That matters because a `--grep` on the command line does not replace the config filter, which would hide an untagged test from the check. The alternation lists `TEST_GROUPS`, so only a feature-group tag counts, not any other `@` word such as an email address in a test title.
@@ -241,6 +242,21 @@ test.describe("Title", () => {
 - New check → a new `test.describe` block inside the suite's `for (const { group, path } of PATHS)` loop.
 - Production-only checks (robots, Heroku references) `test.skip` themselves on every environment that does not [resolve to production](#test-groups), including local runs.
 - A page that does not answer with a 2xx status fails every check with its status, as in AXE, visual and LHCI.
+
+`seo/sitemap-robots.spec.ts` (group `crawling`) checks `/robots.txt` and `/sitemap.xml` once per site. It checks their structure, not their content:
+
+| Environment | robots.txt                                                                                | sitemap.xml                                                                                                                                   |
+| ----------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| every       | `text/plain`, known directives, rules after a `User-agent`, every listed `Sitemap:` loads | XML, `<urlset>`/`<sitemapindex>`, `<loc>` on `BASE_URL` origin, no duplicate pages, size limits, first 3 pages per file load without redirect |
+| prod        | no `Disallow: /` for `*`, `Sitemap:` points to `<BASE_URL>/sitemap.xml`                   | at least one page                                                                                                                             |
+| dev, stg    | `User-agent: *` + `Disallow: /`, no `Sitemap:`                                            | 404 is fine; otherwise stg: no entries, dev: structure only                                                                                   |
+
+- A `<sitemapindex>` is followed: the sitemaps it lists (first 50) get the same checks.
+- Size limits are the sitemaps.org ones: 50,000 entries and 50 MB per file.
+- The first 3 pages of each sitemap file (each part of an index) must answer 200 without a redirect. The sitemap must list final addresses.
+- Directives the spec doesn't know (such as Cloudflare's `Content-Signal`) are warnings in the report, not failures, because crawlers ignore them.
+
+Local runs check only the structure, because the app's `APP_ENV` is unknown there.
 
 ## Visual Regression
 

@@ -69,10 +69,6 @@ overrides:
   #                GHSA-7q85-xj36-vmfc, GHSA-j5f4-cc29-5x44 and three other high
   #                advisories. Fixed in 0.6.1. (GHSA-vwc7-r8mq-g2x9 has no fix.)
   "adm-zip@<0.6.1": 0.6.1
-  #   axios      - get-sitemap-links 1.1.0 (QA tests) pins the 0.21 line, open to
-  #                ten high advisories (SSRF, credential leaks, prototype
-  #                pollution). The 0.x line is fixed in 0.33.0.
-  "axios@<0.33.0": 0.35.0
   #   basic-ftp  - get-uri 6 (proxy-agent under Lighthouse CI) depends on ^5,
   #                open to GHSA-c475-qrg2-pj4r (high) and two medium ones. Fixed
   #                in 6.2.4, which get-uri 8 already uses.

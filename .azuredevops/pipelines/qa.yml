@@ -48,6 +48,7 @@ parameters:
       - auto
       - homepage
       - auth
+      - crawling
 
 variables:
   - group: qa-pipeline-vars # must define a BASE_URL variable
