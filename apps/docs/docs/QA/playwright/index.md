@@ -241,19 +241,20 @@ test.describe("Title", () => {
 - New page to cover → add it under its group in `helpers/urls.json`. Every check runs against it automatically.
 - New check → a new `test.describe` block inside the suite's `for (const { group, path } of PATHS)` loop.
 - Production-only checks (robots, Heroku references) `test.skip` themselves on every environment that does not [resolve to production](#test-groups), including local runs.
+- Both robots checks read `<meta name="robots">` and the `X-Robots-Tag` header: on production neither may contain `noindex`, on dev and staging one of them must.
 - A page that does not answer with a 2xx status fails every check with its status, as in AXE, visual and LHCI.
 
 `seo/sitemap-robots.spec.ts` (group `crawling`) checks `/robots.txt` and `/sitemap.xml` once per site. It checks their structure, not their content:
 
-| Environment | robots.txt                                                                                | sitemap.xml                                                                                                                                   |
-| ----------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| every       | `text/plain`, known directives, rules after a `User-agent`, every listed `Sitemap:` loads | XML, `<urlset>`/`<sitemapindex>`, `<loc>` on `BASE_URL` origin, no duplicate pages, size limits, first 3 pages per file load without redirect |
-| prod        | no `Disallow: /` for `*`, `Sitemap:` points to `<BASE_URL>/sitemap.xml`                   | at least one page                                                                                                                             |
-| dev, stg    | `User-agent: *` + `Disallow: /`, no `Sitemap:`                                            | 404 is fine; otherwise stg: no entries, dev: structure only                                                                                   |
+| Environment | robots.txt                                                                                | sitemap.xml                                                                                                                                                             |
+| ----------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| every       | `text/plain`, known directives, rules after a `User-agent`, every listed `Sitemap:` loads | XML, `<urlset>`/`<sitemapindex>`, `<loc>` on `BASE_URL` origin, no duplicate pages, size limits, first 3 pages per file load without redirect (prod: and are indexable) |
+| prod        | no `Disallow: /` for `*`, `Sitemap:` points to `<BASE_URL>/sitemap.xml`                   | at least one page                                                                                                                                                       |
+| dev, stg    | `User-agent: *` + `Disallow: /`, no `Sitemap:`                                            | 404 is fine; otherwise stg: no entries, dev: structure only                                                                                                             |
 
 - A `<sitemapindex>` is followed: the sitemaps it lists (first 50) get the same checks.
 - Size limits are the sitemaps.org ones: 50,000 entries and 50 MB per file.
-- The first 3 pages of each sitemap file (each part of an index) must answer 200 without a redirect. The sitemap must list final addresses.
+- The first 3 pages of each sitemap file (each part of an index) must answer 200 without a redirect; on production they also must not be `noindex` (meta tag or `X-Robots-Tag` header). The sitemap must list final, indexable addresses.
 - Directives the spec doesn't know (such as Cloudflare's `Content-Signal`) are warnings in the report, not failures, because crawlers ignore them.
 
 Local runs check only the structure, because the app's `APP_ENV` is unknown there.

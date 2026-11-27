@@ -7,8 +7,13 @@ import urls from "../helpers/urls.json"
 
 const PATHS = urlsByGroup(urls.seo)
 
+const TEST_ENV = resolveTestEnv()
+
 // The same rule as the @no-prod filter: any host that is not dev, staging or local.
-const IS_PROD = resolveTestEnv() === "prod"
+const IS_PROD = TEST_ENV === "prod"
+
+// Local runs are left out: the app's APP_ENV is unknown there.
+const IS_DEV_OR_STG = TEST_ENV === "dev" || TEST_ENV === "stg"
 
 function normalizePath(url: string): string {
   try {
@@ -17,6 +22,37 @@ function normalizePath(url: string): string {
     return parsedUrl.pathname.replace(/\/$/, "") || "/"
   } catch {
     return url
+  }
+}
+
+/**
+ * Robots directives of the current page from every `<meta name="robots">` and
+ * the `X-Robots-Tag` header. Search engines honour the header as much as the
+ * meta tag, and a proxy or CDN often sets it for a whole environment.
+ */
+async function readRobotsDirectives(page: Page) {
+  const robotsMetas = await page
+    .locator("meta[name='robots']")
+    .evaluateAll((els) =>
+      els.map((e) => (e.getAttribute("content") ?? "").toLowerCase())
+    )
+  const response = await page.request.get(page.url())
+  const header = (response.headers()["x-robots-tag"] ?? "").toLowerCase()
+
+  // `none` is shorthand for `noindex, nofollow`. Tokens, not substrings, so a
+  // bot name in the header (`somebot: nosnippet`) can't match by accident.
+  const noindex = [...robotsMetas, header].some((value) =>
+    value
+      .split(/[\s,:]+/)
+      .some((token) => token === "noindex" || token === "none")
+  )
+
+  return {
+    noindex,
+    summary: [
+      `robots meta: ${robotsMetas.length > 0 ? robotsMetas.map((m) => `"${m}"`).join(", ") : "missing"}`,
+      `X-Robots-Tag header: ${header ? `"${header}"` : "missing"}`,
+    ],
   }
 }
 
@@ -149,22 +185,36 @@ for (const { group, path } of PATHS) {
           "Robots noindex check runs only on production (dev, staging and local may be noindex)"
         )
 
-        const robots = page.locator("meta[name='robots']")
-
-        if ((await robots.count()) === 0) return
-
-        const content = (
-          (await robots.first().getAttribute("content")) ?? ""
-        ).toLowerCase()
+        const robots = await readRobotsDirectives(page)
 
         expect(
-          content,
+          robots.noindex,
           [
-            "robots meta must not contain noindex",
+            "Page is hidden from search engines on production",
             `URL: ${page.url()}`,
-            `Content: "${content}"`,
+            ...robots.summary,
           ].join("\n")
-        ).not.toContain("noindex")
+        ).toBe(false)
+      })
+
+      test("should have noindex directive outside production", async ({
+        page,
+      }) => {
+        test.skip(
+          !IS_DEV_OR_STG,
+          "Runs on dev and staging only (production must be indexable, local APP_ENV is unknown)"
+        )
+
+        const robots = await readRobotsDirectives(page)
+
+        expect(
+          robots.noindex,
+          [
+            `Page can be indexed by search engines on ${TEST_ENV}`,
+            `URL: ${page.url()}`,
+            ...robots.summary,
+          ].join("\n")
+        ).toBe(true)
       })
     })
 

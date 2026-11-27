@@ -335,6 +335,37 @@ function pageLocs(sitemaps: LoadedSitemap[]): string[] {
     .flatMap((s) => s.doc.locs.filter((loc): loc is string => !!loc))
 }
 
+/** `noindex` or `none` as a whole directive, not as part of another word. */
+const hasNoindex = (value: string) =>
+  value
+    .toLowerCase()
+    .split(/[\s,:]+/)
+    .some((token) => token === "noindex" || token === "none")
+
+/**
+ * Where a page is marked noindex: the `X-Robots-Tag` header or a
+ * `<meta name="robots">` in its HTML. `null` when it is indexable.
+ */
+async function findNoindex(
+  page: Page,
+  header: string,
+  html: string
+): Promise<string | null> {
+  if (hasNoindex(header)) return `X-Robots-Tag: ${header}`
+
+  const robotsMetas = await page.evaluate((source) => {
+    const doc = new DOMParser().parseFromString(source, "text/html")
+
+    return Array.from(
+      doc.querySelectorAll("meta[name='robots' i]"),
+      (el) => el.getAttribute("content") ?? ""
+    )
+  }, html)
+  const meta = robotsMetas.find(hasNoindex)
+
+  return meta === undefined ? null : `<meta name="robots" content="${meta}">`
+}
+
 /** Explains the common redirects a sitemap page shouldn't have. */
 function redirectHint(location: string): string {
   if (/404|not-?found|error/i.test(location)) {
@@ -694,7 +725,7 @@ test.describe("sitemap.xml", tags("crawling"), () => {
     ).toBe(0)
   })
 
-  test("sampled pages from the sitemap should load without a redirect", async ({
+  test("sampled pages from the sitemap should load directly and be indexable", async ({
     request,
     page,
     baseURL,
@@ -722,7 +753,22 @@ test.describe("sitemap.xml", tags("crawling"), () => {
         problems.push(
           `${loc} redirects (HTTP ${status}) to ${target}${redirectHint(target)}`
         )
-      } else if (status !== 200) {
+      } else if (status === 200) {
+        // Only production pages must be indexable; dev and staging are
+        // noindex on purpose, and local APP_ENV is unknown.
+        if (ENV !== "prod") continue
+
+        const noindex = await findNoindex(
+          page,
+          response.headers()["x-robots-tag"] ?? "",
+          await response.text()
+        )
+        if (noindex) {
+          problems.push(
+            `${loc} is marked noindex (${noindex}), so search engines won't index it`
+          )
+        }
+      } else {
         problems.push(`${loc} responds with HTTP ${status}`)
       }
     }
@@ -730,10 +776,10 @@ test.describe("sitemap.xml", tags("crawling"), () => {
     expect(
       problems.length,
       explain(
-        `${problems.length} of ${sample.length} checked pages in the sitemap don't load directly:`,
+        `${problems.length} of ${sample.length} checked pages in the sitemap don't load directly or can't be indexed:`,
         {
           items: problems,
-          fix: "the sitemap must list only public pages that load directly. Remove the listed addresses from the sitemap, or replace them with the address they redirect to.",
+          fix: "the sitemap must list only public, indexable pages that load directly. Remove the listed addresses from the sitemap, replace them with the address they redirect to, or remove their noindex.",
           url: root.url,
         }
       )
