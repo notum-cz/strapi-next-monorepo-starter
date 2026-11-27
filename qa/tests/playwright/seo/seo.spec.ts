@@ -1,6 +1,7 @@
 import { expect, test, type Page } from "@playwright/test"
 
 import { urlsByGroup } from "../helpers/flatten-urls"
+import { hasNoindex } from "../helpers/robots"
 import { resolveTestEnv, tags } from "../helpers/test-groups"
 
 import urls from "../helpers/urls.json"
@@ -39,16 +40,8 @@ async function readRobotsDirectives(page: Page) {
   const response = await page.request.get(page.url())
   const header = (response.headers()["x-robots-tag"] ?? "").toLowerCase()
 
-  // `none` is shorthand for `noindex, nofollow`. Tokens, not substrings, so a
-  // bot name in the header (`somebot: nosnippet`) can't match by accident.
-  const noindex = [...robotsMetas, header].some((value) =>
-    value
-      .split(/[\s,:]+/)
-      .some((token) => token === "noindex" || token === "none")
-  )
-
   return {
-    noindex,
+    noindex: [...robotsMetas, header].some(hasNoindex),
     summary: [
       `robots meta: ${robotsMetas.length > 0 ? robotsMetas.map((m) => `"${m}"`).join(", ") : "missing"}`,
       `X-Robots-Tag header: ${header ? `"${header}"` : "missing"}`,

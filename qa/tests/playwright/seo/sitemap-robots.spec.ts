@@ -1,100 +1,43 @@
-import {
-  expect,
-  test,
-  type APIRequestContext,
-  type Page,
-} from "@playwright/test"
+import { test as base, expect } from "@playwright/test"
 
+import {
+  isDisallowAll,
+  lintRobots,
+  parseRobots,
+  quoteLine,
+  type RobotsFile,
+} from "../helpers/robots"
+import {
+  checkSitemapPage,
+  countOccurrences,
+  isAbsolute,
+  isLoaded,
+  isOn,
+  loadChildSitemaps,
+  loadSitemap,
+  pageLocs,
+  readProblems,
+  requestTarget,
+  SITEMAP_MAX_URLS,
+  SITEMAP_ROOTS,
+  type LoadedSitemap,
+  type SitemapFile,
+} from "../helpers/sitemap"
 import { resolveTestEnv, tags } from "../helpers/test-groups"
 
 // `undefined` on a local host: only the structure is checked there, because
 // the app's own environment (APP_ENV) can be anything.
 const ENV = resolveTestEnv()
 
-const SITEMAP_NS = "http://www.sitemaps.org/schemas/sitemap/0.9"
+// Dev and staging may have no sitemap at all (404), which is as good as an
+// empty one: search engines find nothing to index there.
+const SITEMAP_MAY_BE_MISSING = ENV === "dev" || ENV === "stg"
 
-// Directives this spec checks. Crawlers ignore any other directive (RFC 9309),
-// so an unknown one such as Cloudflare's `Content-Signal` is only a warning.
-const ROBOTS_FIELDS = new Set([
-  "user-agent",
-  "allow",
-  "disallow",
-  "sitemap",
-  "crawl-delay",
-  "host",
-])
+// Pages opened from each sitemap file (each part of an index) to check they load.
+const PAGE_SAMPLE_SIZE = 3
 
 // Longer lists are cut so one broken generator doesn't flood the report.
 const MAX_LISTED = 10
-
-type RobotsLine = { field: string; value: string; line: number }
-
-type RobotsFile = {
-  lines: RobotsLine[]
-  /** Allow/Disallow rules per user agent (lowercase). */
-  rulesByAgent: Map<string, RobotsLine[]>
-  sitemaps: string[]
-}
-
-/** Splits robots.txt into `field: value` lines, keeping their line numbers. */
-function splitRobotsLines(body: string): RobotsLine[] {
-  const lines: RobotsLine[] = []
-
-  for (const [i, raw] of body.split("\n").entries()) {
-    const hash = raw.indexOf("#")
-    const text = (hash === -1 ? raw : raw.slice(0, hash)).trim()
-    if (!text) continue
-
-    const colon = text.indexOf(":")
-    const field = colon === -1 ? text : text.slice(0, colon)
-    lines.push({
-      field: field.trim().toLowerCase(),
-      value: colon === -1 ? "" : text.slice(colon + 1).trim(),
-      line: i + 1,
-    })
-  }
-
-  return lines
-}
-
-function parseRobots(body: string): RobotsFile {
-  const lines = splitRobotsLines(body)
-  const rulesByAgent = new Map<string, RobotsLine[]>()
-  // Consecutive User-agent lines share one group.
-  let agents: string[] = []
-  let lastWasAgent = false
-
-  for (const entry of lines) {
-    const isAgent = entry.field === "user-agent"
-
-    if (isAgent) {
-      const agent = entry.value.toLowerCase()
-      agents = lastWasAgent ? [...agents, agent] : [agent]
-      // Groups for the same agent merge (RFC 9309), e.g. two `User-agent: *`.
-      if (!rulesByAgent.has(agent)) rulesByAgent.set(agent, [])
-    } else if (entry.field === "allow" || entry.field === "disallow") {
-      for (const agent of agents) rulesByAgent.get(agent)?.push(entry)
-    }
-
-    lastWasAgent = isAgent
-  }
-
-  return {
-    lines,
-    rulesByAgent,
-    sitemaps: lines.filter((l) => l.field === "sitemap").map((l) => l.value),
-  }
-}
-
-/** BASE_URL origin; `URL.origin` drops Basic Auth credentials. */
-function baseOrigin(baseURL: string | undefined): string {
-  expect(
-    baseURL,
-    "BASE_URL is not set. Set it to the site you want to test."
-  ).toBeTruthy()
-
-  return new URL(baseURL!).origin
-}
 
 /**
  * A failure message for people who don't read test code: what is wrong, the
@@ -102,734 +45,433 @@ function baseOrigin(baseURL: string | undefined): string {
  */
 function explain(
   title: string,
-  options: { items?: string[]; fix: string; url: string }
-): string {
-  const items = options.items ?? []
+  fix: string,
+  url: string,
+  items: string[] = []
+) {
   const listed = items.slice(0, MAX_LISTED).map((item) => `  • ${item}`)
-  if (items.length > MAX_LISTED) {
+  if (items.length > MAX_LISTED)
     listed.push(`  … and ${items.length - MAX_LISTED} more`)
-  }
 
   return [
     title,
     ...(listed.length > 0 ? ["", ...listed] : []),
     "",
-    `How to fix: ${options.fix}`,
-    `Checked URL: ${options.url}`,
+    `How to fix: ${fix}`,
+    `Checked URL: ${url}`,
     "",
   ].join("\n")
 }
 
-function quoteLine({ field, value, line }: RobotsLine): string {
-  return `Line ${line}: "${field}: ${value}"`
-}
-
-async function fetchFile(
-  request: APIRequestContext,
-  baseURL: string | undefined,
-  path: string
+function expectNoProblems(
+  problems: string[],
+  title: string,
+  fix: string,
+  url: string
 ) {
-  const url = new URL(path, baseOrigin(baseURL)).href
-  const response = await request.get(path)
-
-  expectLoaded(response.ok(), response.status(), path, url)
-
-  return { response, url, body: await response.text() }
+  expect(problems.length, explain(title, fix, url, problems)).toBe(0)
 }
 
-function expectLoaded(ok: boolean, status: number, path: string, url: string) {
+function expectLoaded(
+  ok: boolean,
+  path: string,
+  reason: string | null,
+  url: string
+) {
   expect(
     ok,
-    explain(`${path} could not be loaded (HTTP ${status}).`, {
-      fix: `make sure the site serves ${path} and that BASE_URL points to the right site.`,
-      url,
-    })
+    explain(
+      `${path} ${reason}`,
+      `make sure the site serves ${path} and that BASE_URL points to the right site.`,
+      url
+    )
   ).toBe(true)
 }
 
-type SitemapDoc = {
-  parseError: string | null
-  root: string | null
-  namespace: string | null
-  /** `<loc>` of each `<url>` (urlset) or `<sitemap>` (index); `null` when missing. */
-  locs: (string | null)[]
-}
-
-type SitemapFile = {
-  /** Public URL, without Basic Auth credentials. */
-  url: string
-  status: number
-  contentType: string
-  bytes: number
-  /** `null` when the file did not load. */
-  doc: SitemapDoc | null
-}
-
-type LoadedSitemap = SitemapFile & { doc: SitemapDoc }
-
-// Dev and staging may have no sitemap at all (404), which is as good as an
-// empty one: search engines find nothing to index there.
-const SITEMAP_MAY_BE_MISSING = ENV === "dev" || ENV === "stg"
-
-// Limits per sitemap file from sitemaps.org; Google rejects bigger files.
-const SITEMAP_MAX_URLS = 50_000
-const SITEMAP_MAX_BYTES = 50 * 1024 * 1024
-
-// A sitemap index can list many files; the first ones are enough for a smoke test.
-const MAX_CHILD_SITEMAPS = 50
-
-// Pages opened from each sitemap file (each part of an index) to check they load.
-const PAGE_SAMPLE_SIZE = 3
-
-const isLoaded = (file: SitemapFile): file is LoadedSitemap => file.doc !== null
-
-const isAbsolute = (url: string | null): url is string =>
-  !!url && /^https?:\/\//.test(url)
-
-/**
- * A same-origin URL is requested by its path, so it goes through `baseURL`
- * and keeps the Basic Auth credentials from BASE_URL.
- */
-function requestTarget(url: string, origin: string): string {
-  const parsed = new URL(url)
-
-  return parsed.origin === origin ? `${parsed.pathname}${parsed.search}` : url
-}
-
-/** Downloads a sitemap and parses it with the browser's DOMParser, which reports malformed XML. */
-async function loadSitemap(
-  request: APIRequestContext,
-  page: Page,
-  origin: string,
-  url: string
-): Promise<SitemapFile> {
-  const response = await request.get(requestTarget(url, origin))
-  const file = {
-    url,
-    status: response.status(),
-    contentType: response.headers()["content-type"] ?? "(none)",
-  }
-
-  if (!response.ok()) return { ...file, bytes: 0, doc: null }
-
-  const body = await response.body()
-
-  return {
-    ...file,
-    bytes: body.length,
-    doc: await parseSitemapXml(page, body.toString("utf8")),
-  }
-}
-
-/**
- * `/sitemap.xml`, or `null` when it is missing (404) on dev or staging. Fails
- * the test when it does not load anywhere else.
- */
-async function fetchSitemap(
-  request: APIRequestContext,
-  page: Page,
-  baseURL: string | undefined
-): Promise<LoadedSitemap | null> {
-  const origin = baseOrigin(baseURL)
-  const file = await loadSitemap(
-    request,
-    page,
-    origin,
-    new URL("/sitemap.xml", origin).href
-  )
-
-  if (SITEMAP_MAY_BE_MISSING && file.status === 404) return null
-
-  expectLoaded(isLoaded(file), file.status, "/sitemap.xml", file.url)
-
-  return file as LoadedSitemap
-}
-
-async function parseSitemapXml(page: Page, body: string): Promise<SitemapDoc> {
-  return page.evaluate((xml): SitemapDoc => {
-    const parsed = new DOMParser().parseFromString(xml, "application/xml")
-    const error = parsed.querySelector("parsererror")
-    const root = parsed.documentElement
-    // A broken document has no entries worth checking.
-    const entries = error
-      ? []
-      : Array.from(root.children).filter(
-          (el) => el.localName === "url" || el.localName === "sitemap"
-        )
-    // Chromium wraps the message ("error on line 1 at column 14: …") in a <div>
-    // between headings meant for a rendered page.
-    const message = (
-      error?.querySelector("div")?.textContent ??
-      error?.textContent ??
-      ""
-    ).trim()
-
-    return {
-      parseError: error ? message || "unknown XML error" : null,
-      root: error ? null : root.localName,
-      namespace: root.namespaceURI,
-      locs: entries.map((entry) => {
-        const loc = Array.from(entry.children).find(
-          (el) => el.localName === "loc"
-        )
-
-        return loc ? (loc.textContent ?? "").trim() : null
-      }),
-    }
-  }, body)
-}
-
-/** Like fetchSitemap(), but skips the test when there is no sitemap to check. */
-async function requireSitemap(
-  request: APIRequestContext,
-  page: Page,
-  baseURL: string | undefined
-): Promise<LoadedSitemap> {
-  const sitemap = await fetchSitemap(request, page, baseURL)
-  test.skip(
-    sitemap === null,
-    `No sitemap on ${ENV} (404), which is fine outside production; nothing to check.`
-  )
-
-  return sitemap!
-}
-
-/**
- * `/sitemap.xml` and, when it is a `<sitemapindex>`, the sitemaps it lists
- * (the first MAX_CHILD_SITEMAPS of them).
- */
-async function requireAllSitemaps(
-  request: APIRequestContext,
-  page: Page,
-  baseURL: string | undefined
-) {
-  const root = await requireSitemap(request, page, baseURL)
-  const origin = baseOrigin(baseURL)
-  const childUrls =
-    root.doc.root === "sitemapindex"
-      ? root.doc.locs.filter(isAbsolute).slice(0, MAX_CHILD_SITEMAPS)
-      : []
-
-  const children: SitemapFile[] = []
-  for (const url of childUrls) {
-    children.push(await loadSitemap(request, page, origin, url))
-  }
-
-  return {
-    root,
-    children,
-    /**
-     * Every file that loaded and is valid XML, the root first. Broken files
-     * are reported only by the well-formed test.
-     */
-    loaded: [root, ...children.filter(isLoaded)].filter(
-      (file) => !file.doc.parseError
-    ),
-  }
-}
-
-/** Page addresses (`<url><loc>`) across every `<urlset>`. */
-function pageLocs(sitemaps: LoadedSitemap[]): string[] {
-  return sitemaps
-    .filter((s) => s.doc.root === "urlset")
-    .flatMap((s) => s.doc.locs.filter((loc): loc is string => !!loc))
-}
-
-/** `noindex` or `none` as a whole directive, not as part of another word. */
-const hasNoindex = (value: string) =>
-  value
-    .toLowerCase()
-    .split(/[\s,:]+/)
-    .some((token) => token === "noindex" || token === "none")
-
-/**
- * Where a page is marked noindex: the `X-Robots-Tag` header or a
- * `<meta name="robots">` in its HTML. `null` when it is indexable.
- */
-async function findNoindex(
-  page: Page,
-  header: string,
-  html: string
-): Promise<string | null> {
-  if (hasNoindex(header)) return `X-Robots-Tag: ${header}`
-
-  const robotsMetas = await page.evaluate((source) => {
-    const doc = new DOMParser().parseFromString(source, "text/html")
-
-    return Array.from(
-      doc.querySelectorAll("meta[name='robots' i]"),
-      (el) => el.getAttribute("content") ?? ""
-    )
-  }, html)
-  const meta = robotsMetas.find(hasNoindex)
-
-  return meta === undefined ? null : `<meta name="robots" content="${meta}">`
-}
-
-/** Explains the common redirects a sitemap page shouldn't have. */
-function redirectHint(location: string): string {
-  if (/404|not-?found|error/i.test(location)) {
-    return " (the page doesn't exist)"
-  }
-  if (/login|sign-?in|returnurl|redirect_?to|callbackurl/i.test(location)) {
-    return " (the page requires login, so search engines can't see it)"
-  }
-
-  return ""
+const warn = (description: string) => {
+  test.info().annotations.push({ type: "warning", description })
 }
 
 /** Prefixes a problem with its file when more than one sitemap is checked. */
-function inFile(file: SitemapFile, count: number, text: string): string {
-  return count > 1 ? `${file.url}: ${text}` : text
+const inFile = (file: SitemapFile, count: number, text: string) =>
+  count > 1 ? `${file.url}: ${text}` : text
+
+type Robots = RobotsFile & { url: string; contentType: string }
+
+type Sitemaps = {
+  root: LoadedSitemap
+  /** The files a `<sitemapindex>` lists; empty for a single `<urlset>`. */
+  children: SitemapFile[]
+  /** Every file that loaded and is valid XML, the root first. */
+  readable: LoadedSitemap[]
 }
+
+const test = base.extend<{
+  site: { baseURL: string; origin: string }
+  robots: Robots
+  /** `/sitemap.xml`, or `null` when it is missing (404) on dev or staging. */
+  rootSitemap: LoadedSitemap | null
+  /** `/sitemap.xml` and its children; skips the test when there is no sitemap. */
+  sitemaps: Sitemaps
+}>({
+  site: async ({ baseURL }, provide) => {
+    expect(
+      baseURL,
+      "BASE_URL is not set. Set it to the site you want to test."
+    ).toBeTruthy()
+    await provide({ baseURL: baseURL!, origin: new URL(baseURL!).origin })
+  },
+
+  robots: async ({ request, site }, provide) => {
+    const url = new URL("/robots.txt", site.origin).href
+    const response = await request.get(requestTarget(url, site.baseURL))
+    expectLoaded(
+      response.ok(),
+      "/robots.txt",
+      `could not be loaded (HTTP ${response.status()}).`,
+      url
+    )
+
+    await provide({
+      ...parseRobots(await response.text()),
+      url,
+      contentType: response.headers()["content-type"] ?? "(none)",
+    })
+  },
+
+  rootSitemap: async ({ request, page, site }, provide) => {
+    const url = new URL("/sitemap.xml", site.origin).href
+    const file = await loadSitemap(request, page, site.baseURL, url)
+
+    if (SITEMAP_MAY_BE_MISSING && file.status === 404) {
+      await provide(null)
+
+      return
+    }
+    expectLoaded(isLoaded(file), "/sitemap.xml", file.loadError, url)
+    await provide(file as LoadedSitemap)
+  },
+
+  sitemaps: async ({ request, page, site, rootSitemap }, provide, testInfo) => {
+    testInfo.skip(
+      rootSitemap === null,
+      `No sitemap on ${ENV} (404), which is fine outside production; nothing to check.`
+    )
+    const root = rootSitemap!
+    const children = await loadChildSitemaps(request, page, site.baseURL, root)
+    const readable = [root, ...children.filter(isLoaded)].filter(
+      (file) => !file.doc.parseError
+    )
+
+    await provide({ root, children, readable })
+  },
+})
 
 // No retries: the checks are plain requests, so a retry would only hide a
 // flaky robots.txt or sitemap (overrides the seo project's `retries: 1`).
 test.describe.configure({ mode: "parallel", retries: 0 })
 
 test.describe("robots.txt", tags("crawling"), () => {
-  test("should respond with plain text", async ({ request, baseURL }) => {
-    const { response, url } = await fetchFile(request, baseURL, "/robots.txt")
-    const type = response.headers()["content-type"] ?? "(none)"
-
+  test("should respond with plain text", async ({ robots }) => {
     expect(
-      type,
-      explain(`robots.txt is served as "${type}" instead of plain text.`, {
-        fix: 'serve robots.txt with the "Content-Type: text/plain" header.',
-        url,
-      })
+      robots.contentType,
+      explain(
+        `robots.txt is served as "${robots.contentType}" instead of plain text.`,
+        'serve robots.txt with the "Content-Type: text/plain" header.',
+        robots.url
+      )
     ).toContain("text/plain")
   })
 
-  test("should contain only valid directives", async ({ request, baseURL }) => {
-    const { body, url } = await fetchFile(request, baseURL, "/robots.txt")
-    const { lines } = parseRobots(body)
-    const firstAgent = lines.findIndex((l) => l.field === "user-agent")
-    const problems: string[] = []
-    const unknown: string[] = []
-
-    if (firstAgent === -1) {
-      problems.push(
-        'There is no "User-agent" line, so no crawler applies any rule.'
-      )
-    }
-
-    for (const [i, entry] of lines.entries()) {
-      const { field, value } = entry
-
-      if (!ROBOTS_FIELDS.has(field)) {
-        unknown.push(quoteLine(entry))
-      } else if (
-        (field === "allow" || field === "disallow") &&
-        firstAgent !== -1 &&
-        i < firstAgent
-      ) {
-        problems.push(
-          `${quoteLine(entry)} comes before any "User-agent" line, so crawlers ignore it.`
-        )
-      } else if ((field === "allow" || field === "disallow") && value) {
-        // An empty Disallow allows everything; any other value is a path.
-        if (!/^[/*]/.test(value)) {
-          problems.push(
-            `${quoteLine(entry)} must be a path starting with "/" (for example "/admin").`
-          )
-        }
-      } else if (field === "sitemap" && !/^https?:\/\//.test(value)) {
-        problems.push(
-          `${quoteLine(entry)} must be a full URL (for example "https://example.com/sitemap.xml").`
-        )
-      }
-    }
+  test("should contain only valid directives", async ({ robots }) => {
+    const { problems, unknown } = lintRobots(robots.lines)
 
     if (unknown.length > 0) {
-      test.info().annotations.push({
-        type: "warning",
-        description: `robots.txt has directives this test does not check (crawlers that don't know them ignore them): ${unknown.join("; ")}`,
-      })
+      warn(
+        `robots.txt has directives this test does not check (crawlers that don't know them ignore them): ${unknown.join("; ")}`
+      )
     }
-
-    expect(
-      problems.length,
-      explain(`robots.txt has ${problems.length} problem(s):`, {
-        items: problems,
-        fix: "correct the lines listed above in the robots.txt configuration.",
-        url,
-      })
-    ).toBe(0)
+    expectNoProblems(
+      problems,
+      `robots.txt has ${problems.length} problem(s):`,
+      "correct the lines listed above in the robots.txt configuration.",
+      robots.url
+    )
   })
 
   test("should allow crawling and point to the sitemap on production", async ({
-    request,
-    baseURL,
+    robots,
+    site,
   }) => {
     test.skip(ENV !== "prod", "Crawling is allowed only on production")
 
-    const { body, url } = await fetchFile(request, baseURL, "/robots.txt")
-    const { rulesByAgent, sitemaps } = parseRobots(body)
-    const blocking = (rulesByAgent.get("*") ?? []).filter(
-      (r) => r.field === "disallow" && r.value === "/"
+    expectNoProblems(
+      (robots.rulesByAgent.get("*") ?? []).filter(isDisallowAll).map(quoteLine),
+      "robots.txt blocks all search engines on production, so the site will drop out of search results.",
+      'remove "Disallow: /" from the "User-agent: *" group. Check the robots settings in Strapi and that APP_ENV is "production" and Basic Auth is off.',
+      robots.url
     )
 
+    const expected = new URL("/sitemap.xml", site.origin).href
     expect(
-      blocking.length,
+      robots.sitemaps,
       explain(
-        "robots.txt blocks all search engines on production, so the site will drop out of search results.",
-        {
-          items: blocking.map(quoteLine),
-          fix: 'remove "Disallow: /" from the "User-agent: *" group. Check the robots settings in Strapi and that APP_ENV is "production" and Basic Auth is off.',
-          url,
-        }
-      )
-    ).toBe(0)
-
-    const expected = new URL("/sitemap.xml", baseOrigin(baseURL)).href
-    expect(
-      sitemaps,
-      explain("robots.txt does not tell search engines where the sitemap is.", {
-        items: [
+        "robots.txt does not tell search engines where the sitemap is.",
+        "check that APP_PUBLIC_URL is set to the public address of the site.",
+        robots.url,
+        [
           `Expected: Sitemap: ${expected}`,
-          `Found: ${sitemaps.length > 0 ? sitemaps.join(", ") : "no Sitemap line"}`,
-        ],
-        fix: "check that APP_PUBLIC_URL is set to the public address of the site.",
-        url,
-      })
+          `Found: ${robots.sitemaps.join(", ") || "no Sitemap line"}`,
+        ]
+      )
     ).toContain(expected)
   })
 
   test("every sitemap listed in robots.txt should load", async ({
+    robots,
+    site,
     request,
     page,
-    baseURL,
   }) => {
-    const { body, url } = await fetchFile(request, baseURL, "/robots.txt")
-    // Relative Sitemap lines are reported by "should contain only valid directives".
-    const listed = parseRobots(body).sitemaps.filter(isAbsolute)
-    test.skip(listed.length === 0, "robots.txt lists no sitemap")
+    // Relative Sitemap lines are reported by "should contain only valid
+    // directives". A sitemap on another host is allowed (cross-submission),
+    // but the test only requests the tested origin.
+    const absolute = robots.sitemaps.filter(isAbsolute)
+    const listed = absolute.filter((url) => isOn(url, site.origin))
+    const elsewhere = absolute.filter((url) => !isOn(url, site.origin))
 
-    const origin = baseOrigin(baseURL)
+    if (elsewhere.length > 0) {
+      warn(
+        `robots.txt lists sitemaps on another origin, which this test does not check: ${elsewhere.join(", ")}`
+      )
+    }
+    test.skip(
+      listed.length === 0,
+      `robots.txt lists no sitemap on ${site.origin}`
+    )
+
     const problems: string[] = []
-
-    for (const sitemapUrl of listed) {
-      const file = await loadSitemap(request, page, origin, sitemapUrl)
-
-      if (!isLoaded(file)) {
-        problems.push(
-          `${sitemapUrl} could not be loaded (HTTP ${file.status}).`
-        )
-      } else if (file.doc.parseError) {
-        problems.push(`${sitemapUrl} is not valid XML.`)
-      } else if (!["urlset", "sitemapindex"].includes(file.doc.root ?? "")) {
-        problems.push(
-          `${sitemapUrl} is not a sitemap (it starts with <${file.doc.root}>).`
-        )
-      }
+    for (const url of listed) {
+      const file = await loadSitemap(request, page, site.baseURL, url)
+      problems.push(
+        ...readProblems(file, SITEMAP_ROOTS).map((p) => `${url} ${p}`)
+      )
     }
 
-    expect(
-      problems.length,
-      explain(
-        "robots.txt points search engines to a sitemap that doesn't work:",
-        {
-          items: problems,
-          fix: 'fix the "Sitemap:" line in robots.txt or the sitemap it points to.',
-          url,
-        }
-      )
-    ).toBe(0)
+    expectNoProblems(
+      problems,
+      "robots.txt points search engines to a sitemap that doesn't work:",
+      'fix the "Sitemap:" line in robots.txt or the sitemap it points to.',
+      robots.url
+    )
   })
 
-  test("should block crawling outside production", async ({
-    request,
-    baseURL,
-  }) => {
+  test("should block crawling outside production", async ({ robots }) => {
     test.skip(
       ENV !== "dev" && ENV !== "stg",
       "Runs on dev and staging only (local APP_ENV is unknown)"
     )
 
-    const { body, url } = await fetchFile(request, baseURL, "/robots.txt")
-    const { rulesByAgent, sitemaps } = parseRobots(body)
-    const blocksAll = (rulesByAgent.get("*") ?? []).some(
-      (r) => r.field === "disallow" && r.value === "/"
+    const rules = robots.rulesByAgent.get("*") ?? []
+    // The whole site must stay blocked: any Allow reopens part of it, and
+    // `Allow: /` even wins over `Disallow: /` (equal length, RFC 9309).
+    const problems = [
+      ...(rules.some(isDisallowAll)
+        ? []
+        : ['No "Disallow: /" for "User-agent: *"']),
+      ...rules
+        .filter((r) => r.field === "allow" && r.value)
+        .map((r) => `${quoteLine(r)} reopens part of the site`),
+      ...robots.sitemaps.map(
+        (s) => `"Sitemap: ${s}" points search engines to a sitemap`
+      ),
+    ]
+
+    expectNoProblems(
+      problems,
+      `robots.txt lets search engines crawl this ${ENV} site, so it can show up in search results:`,
+      'robots.txt must contain "User-agent: *" followed by "Disallow: /", with no "Allow" or "Sitemap" lines. Check that APP_ENV is not "production" on this environment.',
+      robots.url
     )
-
-    expect(
-      blocksAll,
-      explain(
-        `robots.txt lets search engines index this ${ENV} site, so it can show up in search results.`,
-        {
-          fix: 'robots.txt must contain "User-agent: *" followed by "Disallow: /". Check that APP_ENV is not "production" on this environment.',
-          url,
-        }
-      )
-    ).toBe(true)
-
-    expect(
-      sitemaps.length,
-      explain(
-        `robots.txt points search engines to a sitemap on this ${ENV} site.`,
-        {
-          items: sitemaps.map((s) => `Sitemap: ${s}`),
-          fix: 'remove the "Sitemap:" line outside production. Check that APP_ENV is not "production" on this environment.',
-          url,
-        }
-      )
-    ).toBe(0)
   })
 })
 
 test.describe("sitemap.xml", tags("crawling"), () => {
-  test("should respond with XML", async ({ request, page, baseURL }) => {
-    const { contentType: type, url } = await requireSitemap(
-      request,
-      page,
-      baseURL
-    )
-
+  test("should respond with XML", async ({ sitemaps: { root } }) => {
     expect(
-      type,
-      explain(`sitemap.xml is served as "${type}" instead of XML.`, {
-        fix: 'serve sitemap.xml with the "Content-Type: application/xml" header.',
-        url,
-      })
+      root.contentType,
+      explain(
+        `sitemap.xml is served as "${root.contentType}" instead of XML.`,
+        'serve sitemap.xml with the "Content-Type: application/xml" header.',
+        root.url
+      )
     ).toMatch(/[/+]xml\b/)
   })
 
   test("should be well-formed with a sitemap root element", async ({
-    request,
-    page,
-    baseURL,
+    sitemaps: { root, children },
   }) => {
-    const { root, children } = await requireAllSitemaps(request, page, baseURL)
-    const files = [root, ...children]
-    const problems: string[] = []
+    // Oversized files are not parsed; the size limits test reports them.
+    const files = [root, ...children].filter((file) => !file.tooBig)
+    // The root may be an index; the files an index lists must be page lists.
+    const problems = files.flatMap((file) =>
+      readProblems(file, file === root ? SITEMAP_ROOTS : ["urlset"]).map((p) =>
+        inFile(file, files.length, p)
+      )
+    )
 
-    for (const file of files) {
-      const say = (text: string) => {
-        problems.push(inFile(file, files.length, text))
-      }
-      // The root may be an index; the files an index lists must be page lists.
-      const allowed = file === root ? ["urlset", "sitemapindex"] : ["urlset"]
-
-      if (!isLoaded(file)) {
-        say(`could not be loaded (HTTP ${file.status}).`)
-      } else if (file.doc.parseError) {
-        say(`is not valid XML: ${file.doc.parseError.trim()}`)
-      } else if (!allowed.includes(file.doc.root ?? "")) {
-        say(
-          `starts with <${file.doc.root}> instead of <${allowed.join("> or <")}>.`
-        )
-      } else if (file.doc.namespace !== SITEMAP_NS) {
-        say(`is missing the standard namespace xmlns="${SITEMAP_NS}".`)
-      }
-    }
-
-    expect(
-      problems.length,
-      explain("The sitemap can't be read by search engines:", {
-        items: problems,
-        fix: "open the listed URL in a browser to see what it returns.",
-        url: root.url,
-      })
-    ).toBe(0)
+    expectNoProblems(
+      problems,
+      "The sitemap can't be read by search engines:",
+      "open the listed URL in a browser to see what it returns.",
+      root.url
+    )
   })
 
   test("every entry should have an absolute <loc> on the tested origin", async ({
-    request,
-    page,
-    baseURL,
+    sitemaps: { root, readable },
+    site,
   }) => {
-    const { root, loaded } = await requireAllSitemaps(request, page, baseURL)
-    const origin = baseOrigin(baseURL)
-    const problems: string[] = []
+    const locProblem = (loc: string | null) => {
+      if (!loc) return "has no <loc> address."
+      if (!isAbsolute(loc)) return `"${loc}" is not a full URL.`
+      if (!isOn(loc, site.origin)) return `"${loc}" is not on ${site.origin}.`
 
-    for (const file of loaded) {
-      for (const [i, loc] of file.doc.locs.entries()) {
-        const entry = inFile(file, loaded.length, `Entry ${i + 1}`)
-
-        if (!loc) {
-          problems.push(`${entry} has no <loc> address.`)
-        } else if (!isAbsolute(loc)) {
-          problems.push(`${entry}: "${loc}" is not a full URL.`)
-        } else if (new URL(loc).origin !== origin) {
-          problems.push(`${entry}: "${loc}" is not on ${origin}.`)
-        }
-      }
+      return null
     }
+    const problems = readable.flatMap((file) =>
+      file.doc.locs.flatMap((loc, i) => {
+        const problem = locProblem(loc)
 
-    expect(
-      problems.length,
-      explain(`The sitemap has ${problems.length} wrong address(es):`, {
-        items: problems,
-        fix: "check that APP_PUBLIC_URL is set to the public address of this site.",
-        url: root.url,
+        return problem
+          ? [inFile(file, readable.length, `Entry ${i + 1}: ${problem}`)]
+          : []
       })
-    ).toBe(0)
+    )
+
+    expectNoProblems(
+      problems,
+      `The sitemap has ${problems.length} wrong address(es):`,
+      "check that APP_PUBLIC_URL is set to the public address of this site.",
+      root.url
+    )
   })
 
   test("should not list the same page twice", async ({
-    request,
-    page,
-    baseURL,
+    sitemaps: { root, readable },
   }) => {
-    const { root, loaded } = await requireAllSitemaps(request, page, baseURL)
-    const counts = new Map<string, number>()
-    for (const loc of pageLocs(loaded)) {
-      counts.set(loc, (counts.get(loc) ?? 0) + 1)
-    }
-    const duplicates = [...counts]
+    const duplicates = [...countOccurrences(pageLocs(readable))]
       .filter(([, count]) => count > 1)
       .map(([loc, count]) => `${loc} (${count}×)`)
 
-    expect(
-      duplicates.length,
-      explain(
-        `The sitemap lists ${duplicates.length} page(s) more than once:`,
-        {
-          items: duplicates,
-          fix: "check the page slugs in Strapi; two pages (or two locales) may resolve to the same address.",
-          url: root.url,
-        }
-      )
-    ).toBe(0)
+    expectNoProblems(
+      duplicates,
+      `The sitemap lists ${duplicates.length} page(s) more than once:`,
+      "check the page slugs in Strapi; two pages (or two locales) may resolve to the same address.",
+      root.url
+    )
   })
 
   test("should stay within the sitemap size limits", async ({
-    request,
-    page,
-    baseURL,
+    sitemaps: { root, readable },
   }) => {
-    const { root, loaded } = await requireAllSitemaps(request, page, baseURL)
-    const problems: string[] = []
+    const problems = readable.flatMap((file) => {
+      const entries = file.doc.locs.length
+      const found = [
+        file.tooBig,
+        entries > SITEMAP_MAX_URLS
+          ? `has ${entries} entries (max ${SITEMAP_MAX_URLS}).`
+          : null,
+      ]
 
-    for (const file of loaded) {
-      const say = (text: string) => {
-        problems.push(inFile(file, loaded.length, text))
-      }
+      return found
+        .filter((p) => p !== null)
+        .map((p) => inFile(file, readable.length, p))
+    })
 
-      if (file.doc.locs.length > SITEMAP_MAX_URLS) {
-        say(`has ${file.doc.locs.length} entries (max ${SITEMAP_MAX_URLS}).`)
-      }
-      if (file.bytes > SITEMAP_MAX_BYTES) {
-        say(`is ${(file.bytes / 1024 / 1024).toFixed(1)} MB (max 50 MB).`)
-      }
-    }
-
-    expect(
-      problems.length,
-      explain("The sitemap is too big, so search engines will reject it:", {
-        items: problems,
-        fix: "split the sitemap into several files listed in a <sitemapindex>.",
-        url: root.url,
-      })
-    ).toBe(0)
+    expectNoProblems(
+      problems,
+      "The sitemap is too big, so search engines will reject it:",
+      "split the sitemap into several files listed in a <sitemapindex>.",
+      root.url
+    )
   })
 
   test("sampled pages from the sitemap should load directly and be indexable", async ({
+    sitemaps: { root, readable },
+    site,
     request,
     page,
-    baseURL,
   }) => {
-    const { root, loaded } = await requireAllSitemaps(request, page, baseURL)
-    const origin = baseOrigin(baseURL)
     // The first pages of every <urlset>, so each part of a sitemap index is
-    // covered. Addresses on another origin are reported by the <loc> test above.
-    const sample = loaded.flatMap((file) =>
+    // covered. Addresses on another origin are reported by the <loc> test.
+    const sample = readable.flatMap((file) =>
       pageLocs([file])
-        .filter((loc) => isAbsolute(loc) && new URL(loc).origin === origin)
+        .filter((loc) => isOn(loc, site.origin))
         .slice(0, PAGE_SAMPLE_SIZE)
     )
     test.skip(sample.length === 0, "The sitemap lists no pages")
 
     const problems: string[] = []
     for (const loc of sample) {
-      const response = await request.get(requestTarget(loc, origin), {
-        maxRedirects: 0,
-      })
-      const status = response.status()
-
-      if (status >= 300 && status < 400) {
-        const target = response.headers()["location"] ?? "(unknown)"
-        problems.push(
-          `${loc} redirects (HTTP ${status}) to ${target}${redirectHint(target)}`
-        )
-      } else if (status === 200) {
-        // Only production pages must be indexable; dev and staging are
-        // noindex on purpose, and local APP_ENV is unknown.
-        if (ENV !== "prod") continue
-
-        const noindex = await findNoindex(
-          page,
-          response.headers()["x-robots-tag"] ?? "",
-          await response.text()
-        )
-        if (noindex) {
-          problems.push(
-            `${loc} is marked noindex (${noindex}), so search engines won't index it`
-          )
-        }
-      } else {
-        problems.push(`${loc} responds with HTTP ${status}`)
-      }
+      // Only production pages must be indexable; dev and staging are noindex
+      // on purpose, and local APP_ENV is unknown.
+      const problem = await checkSitemapPage(
+        request,
+        page,
+        site.baseURL,
+        loc,
+        ENV === "prod"
+      )
+      if (problem) problems.push(problem)
     }
 
-    expect(
-      problems.length,
-      explain(
-        `${problems.length} of ${sample.length} checked pages in the sitemap don't load directly or can't be indexed:`,
-        {
-          items: problems,
-          fix: "the sitemap must list only public, indexable pages that load directly. Remove the listed addresses from the sitemap, replace them with the address they redirect to, or remove their noindex.",
-          url: root.url,
-        }
-      )
-    ).toBe(0)
+    expectNoProblems(
+      problems,
+      `${problems.length} of ${sample.length} checked pages in the sitemap don't load directly or can't be indexed:`,
+      "the sitemap must list only public, indexable pages that load directly. Remove the listed addresses from the sitemap, replace them with the address they redirect to, or remove their noindex.",
+      root.url
+    )
   })
 
   test("should list pages on production", async ({
-    request,
-    page,
-    baseURL,
+    sitemaps: { root, readable },
   }) => {
     test.skip(ENV !== "prod", "Runs on production only")
 
-    const { root, loaded } = await requireAllSitemaps(request, page, baseURL)
+    const pages = pageLocs(readable).length
+    test.skip(
+      pages === 0 && readable.some((file) => file.tooBig),
+      "The sitemap is too big to read; reported by the size limits test"
+    )
 
     expect(
-      pageLocs(loaded).length,
+      pages,
       explain(
         "The sitemap is empty on production, so search engines get no list of pages.",
-        {
-          fix: 'check that APP_ENV is "production", APP_PUBLIC_URL is set and Strapi has published pages.',
-          url: root.url,
-        }
+        'check that APP_ENV is "production", APP_PUBLIC_URL is set and Strapi has published pages.',
+        root.url
       )
     ).toBeGreaterThan(0)
   })
 
-  test("should be missing or empty on staging", async ({
-    request,
-    page,
-    baseURL,
-  }) => {
+  test("should be missing or empty on staging", async ({ rootSitemap }) => {
     test.skip(ENV !== "stg", "Runs on staging only")
 
-    const sitemap = await fetchSitemap(request, page, baseURL)
     // A missing sitemap (404) passes: there is nothing to index.
-    if (!sitemap) return
+    if (!rootSitemap) return
 
-    const { doc, url } = sitemap
+    const { doc, url, tooBig } = rootSitemap
+    // An oversized sitemap isn't parsed, but it certainly isn't empty.
+    const problems = tooBig
+      ? [`sitemap.xml ${tooBig}`]
+      : doc.locs.map((loc) => loc ?? "(no address)")
 
-    expect(
-      doc.locs.length,
-      explain(
-        `sitemap.xml lists ${doc.locs.length} address(es) on staging; it should be empty.`,
-        {
-          items: doc.locs.map((loc) => loc ?? "(no address)"),
-          fix: 'check that APP_ENV on staging is not "production" or "development".',
-          url,
-        }
-      )
-    ).toBe(0)
+    expectNoProblems(
+      problems,
+      `sitemap.xml on staging should be empty, but it isn't:`,
+      'check that APP_ENV on staging is not "production" or "development".',
+      url
+    )
   })
 })
