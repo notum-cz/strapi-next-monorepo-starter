@@ -11,6 +11,7 @@ Testing is split between fast app-level Vitest suites and browser-based QA check
 | ------------- | ---------------------- | ---------------------------- |
 | Strapi        | Vitest                 | `apps/strapi/tests`          |
 | UI            | Vitest                 | `apps/ui/**/*.test.ts`       |
+| Mutation      | StrykerJS + Vitest     | `apps/*/stryker.config.mjs`  |
 | E2E           | Playwright             | `qa/tests/playwright/e2e`    |
 | Accessibility | Playwright + axe-core  | `qa/tests/playwright/axe`    |
 | SEO           | Playwright             | `qa/tests/playwright/seo`    |
@@ -21,6 +22,7 @@ Testing is split between fast app-level Vitest suites and browser-based QA check
 ## References
 
 - [Unit Testing](./unit-testing.md) — Vitest tests for Strapi and UI code.
+- [Mutation Testing](./mutation-testing.md) — StrykerJS checks whether the Vitest suites actually catch bugs.
 - [Playwright Testing](./playwright/index.md) — E2E, accessibility, SEO, visual regression, and Lighthouse CI.
 - [Load Testing (k6)](./playwright/load-testing.md) — simulated visitor traffic: does the site hold, where does it break, does it recover.
 - [GitHub Actions QA Pipeline](./playwright/ci-pipeline.md) — how the `qa.yml` workflow triggers, runs, and reports.
@@ -31,6 +33,7 @@ Testing is split between fast app-level Vitest suites and browser-based QA check
 ## What To Test Where
 
 - Use Vitest for fast logic and API utility coverage.
+- Use StrykerJS mutation testing to find weak assertions in those Vitest suites.
 - Use Playwright E2E for user flows and route-level behavior.
 - Use axe tests for accessibility regressions.
 - Use SEO tests for metadata, robots, sitemap, and page structure.

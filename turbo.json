@@ -123,6 +123,10 @@
       "dependsOn": ["^build"],
       "cache": true
     },
+    "test:mutation": {
+      "dependsOn": ["^build"],
+      "cache": false
+    },
     "playwright-axe-test": {
       "cache": false,
       "persistent": false

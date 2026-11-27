@@ -1,0 +1,55 @@
+name: Mutation Testing
+
+# Full StrykerJS run against the Vitest suites. Too slow for the PR gate in
+# ci.yml, so it runs weekly and on demand. See apps/docs/docs/QA/mutation-testing.md.
+on:
+  schedule:
+    # Mondays at 03:00 UTC.
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CI: true
+  NPM_CONFIG_IGNORE_SCRIPTS: "true"
+
+jobs:
+  mutation:
+    name: Mutation testing (${{ matrix.app }})
+    # Scheduled runs only in the upstream starter; forks can still run it manually.
+    if: github.event_name == 'workflow_dispatch' || github.repository == 'notum-cz/strapi-next-monorepo-starter'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [ui, strapi]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7.0.1
+
+      - name: Setup pnpm with cache
+        uses: ./.github/actions/setup-pnpm
+
+      - name: Prepare Environment Variables
+        run: |
+          cp apps/strapi/.env.example apps/strapi/.env
+          cp apps/ui/.env.local.example apps/ui/.env.local
+
+      - name: Run StrykerJS
+        run: pnpm test:mutation:${{ matrix.app }}
+
+      - name: Upload mutation report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: mutation-report-${{ matrix.app }}
+          path: apps/${{ matrix.app }}/reports/mutation/
+          if-no-files-found: warn
+          retention-days: 14

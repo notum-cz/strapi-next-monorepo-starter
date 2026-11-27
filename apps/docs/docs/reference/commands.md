@@ -81,6 +81,9 @@ pnpm test                                   # Vitest in all apps
 pnpm test:ci                                # CI Vitest target (same suite as pnpm test)
 pnpm test:strapi                            # Vitest in Strapi
 pnpm test:ui                                # Vitest in Next.js
+pnpm test:mutation                          # StrykerJS mutation testing in all apps
+pnpm test:mutation:strapi                   # StrykerJS mutation testing in Strapi
+pnpm test:mutation:ui                       # StrykerJS mutation testing in Next.js
 pnpm tests:playwright:e2e:test              # Playwright E2E
 pnpm tests:playwright:e2e:test:interactive  # Playwright UI mode
 pnpm tests:playwright:axe                   # axe-core a11y
@@ -96,7 +99,7 @@ pnpm tests:k6:load:spike                    # k6 load test, campaign launch (5×
 pnpm tests:k6:load:breakpoint               # k6 load test, find the limit and check recovery
 ```
 
-See [Playwright Testing](../QA/playwright/index.md) for browser setup and visual snapshot workflow, and [Load Testing (k6)](../QA/playwright/load-testing.md) for load profiles.
+See [Mutation Testing](../QA/mutation-testing.md) for reading Stryker reports, [Playwright Testing](../QA/playwright/index.md) for browser setup and visual snapshot workflow, and [Load Testing (k6)](../QA/playwright/load-testing.md) for load profiles.
 
 ## Worktrees
 

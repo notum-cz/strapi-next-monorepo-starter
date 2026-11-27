@@ -29,12 +29,11 @@ export function formatDateRange(
   if (end.isSame(start, "month")) {
     return `${start.format("DD")}–${end.format(format)}`
   }
-  if (!end.isSame(start, "month") && end.isSame(start, "year")) {
+  if (end.isSame(start, "year")) {
     return `${start.format("DD/MM")}–${end.format(format)}`
   }
-  if (!end.isSame(start, "year")) {
-    return `${start.format(format)}–${end.format(format)}`
-  }
+
+  return `${start.format(format)}–${end.format(format)}`
 }
 
 export function formatDate(

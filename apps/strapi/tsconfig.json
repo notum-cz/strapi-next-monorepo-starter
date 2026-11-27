@@ -32,6 +32,8 @@
     "dist/",
     ".cache/",
     ".tmp/",
+    ".stryker-tmp/",
+    "reports/",
 
     // Do not include admin files in the server compilation
     "src/admin/",

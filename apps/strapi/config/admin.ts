@@ -62,6 +62,7 @@ export default ({ env }) => {
         },
       },
     },
-    watchIgnoreFiles: ["**/config/sync/**"],
+    // Stryker writes mutation reports under reports/; don't restart on them.
+    watchIgnoreFiles: ["**/config/sync/**", "**/reports/**"],
   }
 }

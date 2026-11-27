@@ -1,10 +1,19 @@
-import { beforeAll, describe, expect, it } from "vitest"
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest"
 
 import {
   DATE_FORMAT,
   formatDate,
   formatDateRange,
   getDiffInDays,
+  getToday,
   setupDayJs,
 } from "./dates"
 
@@ -25,7 +34,8 @@ describe("dates utilities", () => {
     })
 
     it("formats a Date object", () => {
-      const result = formatDate(new Date("2024-03-15"))
+      // Local midnight; a date-only ISO string would be UTC and shift west of UTC.
+      const result = formatDate(new Date(2024, 2, 15))
       expect(result).toBe("15/03/24")
     })
   })
@@ -33,6 +43,11 @@ describe("dates utilities", () => {
   describe("formatDateRange", () => {
     it("returns single date when start and end are same day", () => {
       const result = formatDateRange("2024-03-15", "2024-03-15")
+      expect(result).toBe("15/03/24")
+    })
+
+    it("returns single date when start and end are different times on the same day", () => {
+      const result = formatDateRange("2024-03-15T09:00", "2024-03-15T17:30")
       expect(result).toBe("15/03/24")
     })
 
@@ -49,6 +64,25 @@ describe("dates utilities", () => {
     it("returns full range when different years", () => {
       const result = formatDateRange("2023-12-25", "2024-01-05")
       expect(result).toBe("25/12/23–05/01/24")
+    })
+  })
+
+  describe("getToday", () => {
+    beforeEach(() => {
+      vi.useFakeTimers()
+      vi.setSystemTime(new Date("2024-03-15T12:00:00"))
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it("returns today's date with default format", () => {
+      expect(getToday()).toBe("15/03/24")
+    })
+
+    it("returns today's date with custom format", () => {
+      expect(getToday("YYYY-MM-DD")).toBe("2024-03-15")
     })
   })
 

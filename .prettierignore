@@ -23,3 +23,5 @@ ui-debug.log
 **/types/api/*d.ts
 **/types/generated/**
 **/.strapi/client/**
+**/.stryker-tmp/**
+**/reports/mutation/**
